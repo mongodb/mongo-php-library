@@ -20,3 +20,15 @@ tasks:
     commands:
       - func: "bootstrap mongohoused"
       - func: "run atlas data lake test"
+
+  - name: "run-benchmark"
+    exec_timeout_secs: 3600
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "server"
+          MONGODB_VERSION: "v6.0-perf"
+      - func: "run benchmark"
+      - command: perf.send
+        params:
+          file: src/benchmark/.phpbench/results.json

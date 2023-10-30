@@ -114,3 +114,18 @@ buildvariants:
     tasks:
       - "test_atlas_task_group"
       - ".csfle"
+
+  # Run benchmarks
+  - name: benchmark-rhel90
+    tags: ["benchmark", "rhel", "x64"]
+    display_name: "Benchmark: RHEL 9.0, MongoDB 6.0"
+    run_on: rhel90-dbx-perf-large
+    expansions:
+      FETCH_BUILD_VARIANT: "build-rhel90"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+    depends_on:
+      - variant: "build-rhel90"
+        name: "build-php-8.2"
+    tasks:
+      - "run-benchmark"

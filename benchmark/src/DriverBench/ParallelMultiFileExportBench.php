@@ -15,7 +15,6 @@ use PhpBench\Attributes\AfterMethods;
 use PhpBench\Attributes\BeforeClassMethods;
 use PhpBench\Attributes\Iterations;
 use PhpBench\Attributes\ParamProviders;
-use PhpBench\Attributes\Revs;
 use RuntimeException;
 
 use function array_chunk;
@@ -44,7 +43,6 @@ use function unlink;
 #[AfterClassMethods('afterClass')]
 #[AfterMethods('afterIteration')]
 #[Iterations(1)]
-#[Revs(1)]
 final class ParallelMultiFileExportBench
 {
     public static function beforeClass(): void
@@ -74,15 +72,15 @@ final class ParallelMultiFileExportBench
      * Using a single thread to export multiple files.
      * By executing a single Find command for multiple files, we can reduce the number of roundtrips to the server.
      *
-     * @param array{chunk:int} $params
+     * @param array{chunkSize:int} $params
      */
     #[ParamProviders(['provideChunkParams'])]
     public function benchSequential(array $params): void
     {
-        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $i => $files) {
+        foreach (array_chunk(self::getFileNames(), $params['chunkSize']) as $i => $files) {
             self::exportFile($files, [], [
-                'limit' => 5_000 * $params['chunk'],
-                'skip' => 5_000 * $params['chunk'] * $i,
+                'limit' => 5_000 * $params['chunkSize'],
+                'skip' => 5_000 * $params['chunkSize'] * $i,
             ]);
         }
     }
@@ -103,12 +101,12 @@ final class ParallelMultiFileExportBench
         Utils::reset();
 
         // Create a child process for each chunk of files
-        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $i => $files) {
+        foreach (array_chunk(self::getFileNames(), $params['chunkSize']) as $i => $files) {
             $pid = pcntl_fork();
             if ($pid === 0) {
                 self::exportFile($files, [], [
-                    'limit' => 5_000 * $params['chunk'],
-                    'skip' => 5_000 * $params['chunk'] * $i,
+                    'limit' => 5_000 * $params['chunkSize'],
+                    'skip' => 5_000 * $params['chunkSize'] * $i,
                 ]);
 
                 // Exit the child process
@@ -133,21 +131,21 @@ final class ParallelMultiFileExportBench
     /**
      * Using amphp/parallel with worker pool
      *
-     * @param array{chunk:int} $params
+     * @param array{chunkSize:int} $params
      */
     #[ParamProviders(['provideChunkParams'])]
     public function benchAmpWorkers(array $params): void
     {
-        $workerPool = new ContextWorkerPool(ceil(100 / $params['chunk']), new ContextWorkerFactory());
+        $workerPool = new ContextWorkerPool(ceil(100 / $params['chunkSize']), new ContextWorkerFactory());
 
         $futures = [];
-        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $i => $files) {
+        foreach (array_chunk(self::getFileNames(), $params['chunkSize']) as $i => $files) {
             $futures[] = $workerPool->submit(
                 new ExportFileTask(
                     files: $files,
                     options: [
-                        'limit' => 5_000 * $params['chunk'],
-                        'skip' => 5_000 * $params['chunk'] * $i,
+                        'limit' => 5_000 * $params['chunkSize'],
+                        'skip' => 5_000 * $params['chunkSize'] * $i,
                     ],
                 ),
             )->getFuture();
@@ -160,13 +158,9 @@ final class ParallelMultiFileExportBench
 
     public static function provideChunkParams(): Generator
     {
-        yield 'by 1' => ['chunk' => 1];
-        yield 'by 2' => ['chunk' => 2];
-        yield 'by 4' => ['chunk' => 4];
-        yield 'by 8' => ['chunk' => 8];
-        yield 'by 13' => ['chunk' => 13];
-        yield 'by 20' => ['chunk' => 20];
-        yield 'by 100' => ['chunk' => 100];
+        yield '100 chunks' => ['chunkSize' => 1];
+        yield '25 chunks' => ['chunkSize' => 4];
+        yield '10 chunks' => ['chunkSize' => 10];
     }
 
     /**

@@ -16,7 +16,6 @@ use PhpBench\Attributes\BeforeClassMethods;
 use PhpBench\Attributes\BeforeMethods;
 use PhpBench\Attributes\Iterations;
 use PhpBench\Attributes\ParamProviders;
-use PhpBench\Attributes\Revs;
 use RuntimeException;
 
 use function array_chunk;
@@ -47,7 +46,6 @@ use function unlink;
 #[AfterClassMethods('afterClass')]
 #[BeforeMethods('beforeIteration')]
 #[Iterations(1)]
-#[Revs(1)]
 final class ParallelMultiFileImportBench
 {
     public static function beforeClass(): void
@@ -71,20 +69,6 @@ final class ParallelMultiFileImportBench
         $database = Utils::getDatabase();
         $database->drop();
         $database->createCollection(Utils::getCollectionName());
-    }
-
-    /**
-     * Using Driver's BulkWrite in a single thread.
-     * The number of files to import in each iteration is controlled by the "chunk" parameter.
-     *
-     * @param array{chunk:int} $params
-     */
-    #[ParamProviders(['provideChunkParams'])]
-    public function benchBulkWrite(array $params): void
-    {
-        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $files) {
-            self::importFile($files);
-        }
     }
 
     /**
@@ -116,7 +100,7 @@ final class ParallelMultiFileImportBench
      * Using multiple forked threads. The number of threads is controlled by the "chunk" parameter,
      * which is the number of files to import in each thread.
      *
-     * @param array{chunk:int} $params
+     * @param array{chunkSize:int} $params
      */
     #[ParamProviders(['provideChunkParams'])]
     public function benchFork(array $params): void
@@ -128,7 +112,7 @@ final class ParallelMultiFileImportBench
         // of a new libmongoc client.
         Utils::reset();
 
-        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $files) {
+        foreach (array_chunk(self::getFileNames(), $params['chunkSize']) as $files) {
             $pid = pcntl_fork();
             if ($pid === 0) {
                 self::importFile($files);
@@ -155,16 +139,16 @@ final class ParallelMultiFileImportBench
     /**
      * Using amphp/parallel with worker pool
      *
-     * @param array{processes:int} $params
+     * @param array{chunkSize:int} $params
      */
     #[ParamProviders(['provideChunkParams'])]
     public function benchAmpWorkers(array $params): void
     {
-        $workerPool = new ContextWorkerPool(ceil(100 / $params['chunk']), new ContextWorkerFactory());
+        $workerPool = new ContextWorkerPool(ceil(100 / $params['chunkSize']), new ContextWorkerFactory());
 
         $futures = array_map(
             fn ($files) => $workerPool->submit(new ImportFileTask($files))->getFuture(),
-            array_chunk(self::getFileNames(), $params['chunk']),
+            array_chunk(self::getFileNames(), $params['chunkSize']),
         );
 
         foreach (Future::iterate($futures) as $future) {
@@ -176,13 +160,9 @@ final class ParallelMultiFileImportBench
 
     public function provideChunkParams(): Generator
     {
-        yield 'by 1' => ['chunk' => 1];
-        yield 'by 2' => ['chunk' => 2];
-        yield 'by 4' => ['chunk' => 4];
-        yield 'by 8' => ['chunk' => 8];
-        yield 'by 13' => ['chunk' => 13];
-        yield 'by 20' => ['chunk' => 20];
-        yield 'by 100' => ['chunk' => 100];
+        yield '100 chunks' => ['chunkSize' => 1];
+        yield '25 chunks' => ['chunkSize' => 4];
+        yield '10 chunks' => ['chunkSize' => 10];
     }
 
     /**

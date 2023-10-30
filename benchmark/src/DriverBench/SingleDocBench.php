@@ -9,7 +9,6 @@ use MongoDB\BSON\Document;
 use MongoDB\Driver\Command;
 use PhpBench\Attributes\BeforeMethods;
 use PhpBench\Attributes\ParamProviders;
-use PhpBench\Attributes\Revs;
 
 use function array_map;
 use function file_get_contents;
@@ -45,7 +44,6 @@ final class SingleDocBench
      */
     #[BeforeMethods('beforeFindOneById')]
     #[ParamProviders('provideFindOneByIdParams')]
-    #[Revs(1)]
     public function benchFindOneById(array $params): void
     {
         $collection = Utils::getCollection();
@@ -79,7 +77,6 @@ final class SingleDocBench
      * @param array{document: object|array, repeat: int, options?: array} $params
      */
     #[ParamProviders('provideInsertOneParams')]
-    #[Revs(1)]
     public function benchInsertOne(array $params): void
     {
         $collection = Utils::getCollection();

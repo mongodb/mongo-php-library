@@ -27,7 +27,7 @@ final class QueryObject implements QueryInterface
 {
     public readonly array $queries;
 
-    /** @param array<QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|FieldQueryInterface|stdClass|array|bool|float|int|string|null> $queries */
+    /** @param array<QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null> $queries */
     public static function create(array $queries): QueryInterface
     {
         // We don't wrap a single query in a QueryObject
@@ -38,7 +38,7 @@ final class QueryObject implements QueryInterface
         return new self($queries);
     }
 
-    /** @param array<QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|FieldQueryInterface|stdClass|array|bool|float|int|string|null> $queriesOrArrayOfQueries */
+    /** @param array<QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null> $queriesOrArrayOfQueries */
     private function __construct(array $queriesOrArrayOfQueries)
     {
         // If the first element is an array and not an operator, we assume variadic arguments were not used

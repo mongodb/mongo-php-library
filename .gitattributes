@@ -14,3 +14,4 @@ psalm-baseline.xml export-ignore
 /src/Builder/Query/*.php linguist-generated=true
 /src/Builder/Projection/*.php linguist-generated=true
 /src/Builder/Stage/*.php linguist-generated=true
+/tests/Builder/*/Pipelines.php linguist-generated=true

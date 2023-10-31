@@ -6,6 +6,7 @@ namespace MongoDB\CodeGenerator\Config;
 
 use MongoDB\CodeGenerator\OperatorClassGenerator;
 use MongoDB\CodeGenerator\OperatorFactoryGenerator;
+use MongoDB\CodeGenerator\OperatorTestGenerator;
 
 return [
     // Aggregation Pipeline Stages
@@ -16,6 +17,7 @@ return [
         'generators' => [
             OperatorClassGenerator::class,
             OperatorFactoryGenerator::class,
+            OperatorTestGenerator::class,
         ],
     ],
 
@@ -27,6 +29,7 @@ return [
         'generators' => [
             OperatorClassGenerator::class,
             OperatorFactoryGenerator::class,
+            OperatorTestGenerator::class,
         ],
     ],
 
@@ -38,6 +41,7 @@ return [
         'generators' => [
             OperatorClassGenerator::class,
             OperatorFactoryGenerator::class,
+            OperatorTestGenerator::class,
         ],
     ],
 
@@ -49,6 +53,7 @@ return [
         'generators' => [
             OperatorClassGenerator::class,
             OperatorFactoryGenerator::class,
+            OperatorTestGenerator::class,
         ],
     ],
 
@@ -60,6 +65,7 @@ return [
         'generators' => [
             OperatorClassGenerator::class,
             OperatorFactoryGenerator::class,
+            OperatorTestGenerator::class,
         ],
     ],
 ];

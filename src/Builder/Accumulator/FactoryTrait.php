@@ -11,6 +11,7 @@ namespace MongoDB\Builder\Accumulator;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\Javascript;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
@@ -35,22 +36,22 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
-     * @param non-empty-string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
-     * @param non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
+     * @param Javascript|non-empty-string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
+     * @param Javascript|non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
      * @param BSONArray|PackedArray|ResolvesToArray|array $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
-     * @param non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
+     * @param Javascript|non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
      * @param non-empty-string $lang The language used in the $accumulator code.
      * @param Optional|BSONArray|PackedArray|ResolvesToArray|array $initArgs Arguments passed to the init function.
-     * @param Optional|non-empty-string $finalize Function used to update the result of the accumulation.
+     * @param Optional|Javascript|non-empty-string $finalize Function used to update the result of the accumulation.
      */
     public static function accumulator(
-        string $init,
-        string $accumulate,
+        Javascript|string $init,
+        Javascript|string $accumulate,
         PackedArray|ResolvesToArray|BSONArray|array $accumulateArgs,
-        string $merge,
+        Javascript|string $merge,
         string $lang,
         Optional|PackedArray|ResolvesToArray|BSONArray|array $initArgs = Optional::Undefined,
-        Optional|string $finalize = Optional::Undefined,
+        Optional|Javascript|string $finalize = Optional::Undefined,
     ): AccumulatorAccumulator
     {
         return new AccumulatorAccumulator($init, $accumulate, $accumulateArgs, $merge, $lang, $initArgs, $finalize);

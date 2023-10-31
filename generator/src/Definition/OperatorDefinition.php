@@ -7,17 +7,22 @@ namespace MongoDB\CodeGenerator\Definition;
 use MongoDB\Builder\Type\Encode;
 use UnexpectedValueException;
 
+use function array_map;
 use function array_merge;
+use function array_values;
 use function assert;
 use function count;
 use function sprintf;
 
 final class OperatorDefinition
 {
-    public Encode $encode;
+    public readonly Encode $encode;
 
     /** @var list<ArgumentDefinition> */
-    public array $arguments;
+    public readonly array $arguments;
+
+    /** @var list<TestDefinition> */
+    public readonly array $tests;
 
     public function __construct(
         public string $name,
@@ -27,6 +32,7 @@ final class OperatorDefinition
         public array $type,
         public string|null $description = null,
         array $arguments = [],
+        array $tests = [],
     ) {
         $this->encode = match ($encode) {
             'single' => Encode::Single,
@@ -55,5 +61,7 @@ final class OperatorDefinition
         }
 
         $this->arguments = array_merge($requiredArgs, $optionalArgs);
+
+        $this->tests = array_map(static fn (array $test): TestDefinition => new TestDefinition(...$test), array_values($tests));
     }
 }

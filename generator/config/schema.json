@@ -15,9 +15,7 @@
                     "$comment": "The link to the operator's documentation on MongoDB's website.",
                     "type": "string",
                     "format": "uri",
-                    "qt-uri-protocols": [
-                        "https"
-                    ]
+                    "pattern": "^https://"
                 },
                 "type": {
                     "type": "array",
@@ -75,6 +73,13 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Argument"
+                    }
+                },
+                "tests": {
+                    "$comment": "An optional list of examples for the operator.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Test"
                     }
                 }
             },
@@ -168,6 +173,26 @@
                 "type"
             ],
             "title": "Argument"
+        },
+        "Test": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string",
+                    "format": "uri",
+                    "pattern": "^https://"
+                },
+                "pipeline": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                }
+            }
         }
     }
 }

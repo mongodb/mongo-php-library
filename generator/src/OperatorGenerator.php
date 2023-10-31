@@ -45,7 +45,7 @@ abstract class OperatorGenerator extends AbstractGenerator
 
     abstract public function generate(GeneratorDefinition $definition): void;
 
-    /** @return list<array<string, mixed>> */
+    /** @return list<OperatorDefinition> */
     final protected function getOperators(GeneratorDefinition $definition): array
     {
         // Remove unsupported operators

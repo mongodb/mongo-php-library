@@ -1,6 +1,6 @@
-=========
-Reference
-=========
+=================
+API Documentation
+=================
 
 .. default-domain:: mongodb
 

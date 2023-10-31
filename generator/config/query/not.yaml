@@ -10,5 +10,4 @@ arguments:
     -
         name: expression
         type:
-            - query
-            - regex
+            - fieldQuery

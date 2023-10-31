@@ -38,9 +38,11 @@ class AllOperator implements FieldQueryInterface, OperatorInterface
         if (\count($value) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $value, got %d.', 1, \count($value)));
         }
+
         if (! array_is_list($value)) {
             throw new InvalidArgumentException('Expected $value arguments to be a list (array), named arguments are not supported');
         }
+
         $this->value = $value;
     }
 

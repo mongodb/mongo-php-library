@@ -18,6 +18,7 @@ use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\GeometryInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\QueryInterface;
@@ -33,6 +34,7 @@ trait FactoryTrait
      * Matches arrays that contain all elements specified in the query.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/
+     * @no-named-arguments
      * @param Type|array|bool|float|int|non-empty-string|null|stdClass ...$value
      */
     public static function all(Type|stdClass|array|bool|float|int|null|string ...$value): AllOperator
@@ -44,11 +46,12 @@ trait FactoryTrait
      * Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/and/
-     * @param Document|QueryInterface|Serializable|array|stdClass ...$expression
+     * @no-named-arguments
+     * @param QueryInterface|array ...$queries
      */
-    public static function and(Document|Serializable|QueryInterface|stdClass|array ...$expression): AndOperator
+    public static function and(QueryInterface|array ...$queries): AndOperator
     {
-        return new AndOperator(...$expression);
+        return new AndOperator(...$queries);
     }
 
     /**
@@ -143,9 +146,9 @@ trait FactoryTrait
      * The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
-     * @param Document|QueryInterface|Serializable|array|stdClass $query
+     * @param QueryInterface|array $query
      */
-    public static function elemMatch(Document|Serializable|QueryInterface|stdClass|array $query): ElemMatchOperator
+    public static function elemMatch(QueryInterface|array $query): ElemMatchOperator
     {
         return new ElemMatchOperator($query);
     }
@@ -398,20 +401,23 @@ trait FactoryTrait
      * Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/
-     * @param Document|QueryInterface|Serializable|array|stdClass ...$expression
+     * @no-named-arguments
+     * @param QueryInterface|array ...$queries
      */
-    public static function nor(Document|Serializable|QueryInterface|stdClass|array ...$expression): NorOperator
+    public static function nor(QueryInterface|array ...$queries): NorOperator
     {
-        return new NorOperator(...$expression);
+        return new NorOperator(...$queries);
     }
 
     /**
      * Inverts the effect of a query expression and returns documents that do not match the query expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/
-     * @param Document|QueryInterface|Regex|Serializable|array|stdClass $expression
+     * @param Decimal128|FieldQueryInterface|Int64|Regex|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
-    public static function not(Document|Regex|Serializable|QueryInterface|stdClass|array $expression): NotOperator
+    public static function not(
+        Decimal128|Int64|Regex|FieldQueryInterface|stdClass|array|bool|float|int|null|string $expression,
+    ): NotOperator
     {
         return new NotOperator($expression);
     }
@@ -420,11 +426,12 @@ trait FactoryTrait
      * Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/or/
-     * @param Document|QueryInterface|Serializable|array|stdClass ...$expression
+     * @no-named-arguments
+     * @param QueryInterface|array ...$queries
      */
-    public static function or(Document|Serializable|QueryInterface|stdClass|array ...$expression): OrOperator
+    public static function or(QueryInterface|array ...$queries): OrOperator
     {
-        return new OrOperator(...$expression);
+        return new OrOperator(...$queries);
     }
 
     /**

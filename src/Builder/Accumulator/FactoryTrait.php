@@ -332,6 +332,7 @@ trait FactoryTrait
      * Combines multiple documents into a single document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/
+     * @no-named-arguments
      * @param Document|ResolvesToObject|Serializable|array|stdClass ...$document Any valid expression that resolves to a document.
      */
     public static function mergeObjects(

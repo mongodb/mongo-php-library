@@ -37,9 +37,11 @@ class ConcatArraysOperator implements ResolvesToArray, OperatorInterface
         if (\count($array) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $array, got %d.', 1, \count($array)));
         }
+
         if (! array_is_list($array)) {
             throw new InvalidArgumentException('Expected $array arguments to be a list (array), named arguments are not supported');
         }
+
         $this->array = $array;
     }
 

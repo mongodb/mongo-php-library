@@ -42,7 +42,7 @@ final class Query
 
     public static function query(FieldQueryInterface|QueryInterface|Serializable|array|bool|float|int|stdClass|string|null ...$query): QueryInterface
     {
-        return QueryObject::create(...$query);
+        return QueryObject::create($query);
     }
 
     private function __construct()

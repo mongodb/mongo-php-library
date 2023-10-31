@@ -213,14 +213,14 @@ class BuilderEncoder implements Encoder
             if ($value instanceof QueryInterface) {
                 // The sub-objects is merged into the main object, replacing duplicate keys
                 foreach (get_object_vars($this->recursiveEncode($value)) as $subKey => $subValue) {
-                    if (property_exists($result, $subKey)) {
+                    if (property_exists($result, (string) $subKey)) {
                         throw new LogicException(sprintf('Duplicate key "%s" in query object', $subKey));
                     }
 
                     $result->{$subKey} = $subValue;
                 }
             } else {
-                if (property_exists($result, $key)) {
+                if (property_exists($result, (string) $key)) {
                     throw new LogicException(sprintf('Duplicate key "%s" in query object', $key));
                 }
 

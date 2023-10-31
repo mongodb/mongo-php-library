@@ -247,7 +247,7 @@ trait FactoryTrait
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
      * @param Optional|Decimal128|Int64|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
-     * @param Optional|Document|QueryInterface|Serializable|array|stdClass $query Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Optional|QueryInterface|array $query Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
      * - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
@@ -262,7 +262,7 @@ trait FactoryTrait
         Optional|string $key = Optional::Undefined,
         Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
         Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
-        Optional|Document|Serializable|QueryInterface|stdClass|array $query = Optional::Undefined,
+        Optional|QueryInterface|array $query = Optional::Undefined,
         Optional|bool $spherical = Optional::Undefined,
     ): GeoNearStage
     {
@@ -281,7 +281,7 @@ trait FactoryTrait
      * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
      * @param Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth.
      * @param Optional|non-empty-string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
-     * @param Optional|Document|QueryInterface|Serializable|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
+     * @param Optional|QueryInterface|array $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
      */
     public static function graphLookup(
         string $from,
@@ -291,7 +291,7 @@ trait FactoryTrait
         string $as,
         Optional|int $maxDepth = Optional::Undefined,
         Optional|string $depthField = Optional::Undefined,
-        Optional|Document|Serializable|QueryInterface|stdClass|array $restrictSearchWithMatch = Optional::Undefined,
+        Optional|QueryInterface|array $restrictSearchWithMatch = Optional::Undefined,
     ): GraphLookupStage
     {
         return new GraphLookupStage($from, $startWith, $connectFromField, $connectToField, $as, $maxDepth, $depthField, $restrictSearchWithMatch);
@@ -422,9 +422,9 @@ trait FactoryTrait
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard MongoDB queries. For each input document, outputs either one document (a match) or zero documents (no match).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
-     * @param Document|QueryInterface|Serializable|array|stdClass $query
+     * @param QueryInterface|array $query
      */
-    public static function match(Document|Serializable|QueryInterface|stdClass|array $query): MatchStage
+    public static function match(QueryInterface|array $query): MatchStage
     {
         return new MatchStage($query);
     }
@@ -667,6 +667,7 @@ trait FactoryTrait
      * Alias for $project stage that removes or excludes fields.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/
+     * @no-named-arguments
      * @param FieldPath|non-empty-string ...$field
      */
     public static function unset(FieldPath|string ...$field): UnsetStage

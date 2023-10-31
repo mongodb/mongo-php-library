@@ -40,6 +40,63 @@ class BuilderEncoderTest extends TestCase
         $this->assertSamePipeline($expected, $pipeline);
     }
 
+    public function testMatchNumericFieldName(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::match(['1' => Query::eq('dave')]),
+            Stage::match(['1' => Query::not(Query::eq('dave'))]),
+            Stage::match(
+                Query::and(
+                    Query::query(['2' => Query::gt(3)]),
+                    Query::query(['2' => Query::lt(4)]),
+                ),
+            ),
+            Stage::match(
+                Query::or(
+                    Query::query(['2' => Query::gt(3)]),
+                    Query::query(['2' => Query::lt(4)]),
+                ),
+            ),
+            Stage::match(
+                Query::nor(
+                    Query::query(['2' => Query::gt(3)]),
+                    Query::query(['2' => Query::lt(4)]),
+                ),
+            ),
+        );
+
+        $expected = [
+            ['$match' => ['1' => ['$eq' => 'dave']]],
+            ['$match' => ['1' => ['$not' => ['$eq' => 'dave']]]],
+            [
+                '$match' => [
+                    '$and' => [
+                        ['2' => ['$gt' => 3]],
+                        ['2' => ['$lt' => 4]],
+                    ],
+                ],
+            ],
+            [
+                '$match' => [
+                    '$or' => [
+                        ['2' => ['$gt' => 3]],
+                        ['2' => ['$lt' => 4]],
+                    ],
+                ],
+            ],
+            [
+                '$match' => [
+                    '$nor' => [
+                        ['2' => ['$gt' => 3]],
+                        ['2' => ['$lt' => 4]],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline);
+    }
+
     /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/#ascending-descending-sort */
     public function testSort(): void
     {

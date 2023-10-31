@@ -8,9 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
-use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -25,7 +23,6 @@ use stdClass;
 
 use function array_is_list;
 use function is_array;
-use function is_object;
 
 /**
  * Performs a recursive search on a collection. To each output document, adds a new array field that contains the traversal results of the recursive search for that document.
@@ -60,8 +57,8 @@ class GraphLookupStage implements StageInterface, OperatorInterface
     /** @var Optional|non-empty-string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth. */
     public readonly Optional|string $depthField;
 
-    /** @var Optional|Document|QueryInterface|Serializable|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax. */
-    public readonly Optional|Document|Serializable|QueryInterface|stdClass|array $restrictSearchWithMatch;
+    /** @var Optional|QueryInterface|array $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax. */
+    public readonly Optional|QueryInterface|array $restrictSearchWithMatch;
 
     /**
      * @param non-empty-string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
@@ -72,7 +69,7 @@ class GraphLookupStage implements StageInterface, OperatorInterface
      * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
      * @param Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth.
      * @param Optional|non-empty-string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
-     * @param Optional|Document|QueryInterface|Serializable|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
+     * @param Optional|QueryInterface|array $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
      */
     public function __construct(
         string $from,
@@ -82,7 +79,7 @@ class GraphLookupStage implements StageInterface, OperatorInterface
         string $as,
         Optional|int $maxDepth = Optional::Undefined,
         Optional|string $depthField = Optional::Undefined,
-        Optional|Document|Serializable|QueryInterface|stdClass|array $restrictSearchWithMatch = Optional::Undefined,
+        Optional|QueryInterface|array $restrictSearchWithMatch = Optional::Undefined,
     ) {
         $this->from = $from;
         if (is_array($startWith) && ! array_is_list($startWith)) {
@@ -95,8 +92,8 @@ class GraphLookupStage implements StageInterface, OperatorInterface
         $this->as = $as;
         $this->maxDepth = $maxDepth;
         $this->depthField = $depthField;
-        if (is_array($restrictSearchWithMatch) || is_object($restrictSearchWithMatch)) {
-            $restrictSearchWithMatch = QueryObject::create(...$restrictSearchWithMatch);
+        if (is_array($restrictSearchWithMatch)) {
+            $restrictSearchWithMatch = QueryObject::create($restrictSearchWithMatch);
         }
 
         $this->restrictSearchWithMatch = $restrictSearchWithMatch;

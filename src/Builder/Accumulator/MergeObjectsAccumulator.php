@@ -40,9 +40,11 @@ class MergeObjectsAccumulator implements AccumulatorInterface, OperatorInterface
         if (\count($document) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $document, got %d.', 1, \count($document)));
         }
+
         if (! array_is_list($document)) {
             throw new InvalidArgumentException('Expected $document arguments to be a list (array), named arguments are not supported');
         }
+
         $this->document = $document;
     }
 

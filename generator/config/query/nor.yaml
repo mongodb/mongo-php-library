@@ -8,7 +8,8 @@ description: |
     Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
 arguments:
     -
-        name: expression
+        name: queries
         type:
             - query
         variadic: array
+        variadicMin: 1

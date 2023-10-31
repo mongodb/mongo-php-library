@@ -8,16 +8,13 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Projection;
 
-use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
-use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Model\BSONArray;
-use stdClass;
 
 /**
  * @internal
@@ -28,9 +25,9 @@ trait FactoryTrait
      * Projects the first element in an array that matches the specified $elemMatch condition.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/projection/elemMatch/
-     * @param Document|QueryInterface|Serializable|array|stdClass $query
+     * @param QueryInterface|array $query
      */
-    public static function elemMatch(Document|Serializable|QueryInterface|stdClass|array $query): ElemMatchOperator
+    public static function elemMatch(QueryInterface|array $query): ElemMatchOperator
     {
         return new ElemMatchOperator($query);
     }

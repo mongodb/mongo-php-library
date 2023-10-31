@@ -62,7 +62,7 @@ class OutputWindow implements WindowInterface
                 throw new InvalidArgumentException(sprintf('Expected $documents argument to be a list of 2 string or int. Got [%s, %s]', get_debug_type($documents[0]), get_debug_type($documents[1])));
             }
 
-            $window ??= new stdClass();
+            $window = new stdClass();
             $window->documents = $documents;
         }
 

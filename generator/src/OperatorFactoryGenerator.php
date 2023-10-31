@@ -6,6 +6,7 @@ namespace MongoDB\CodeGenerator;
 
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
+use MongoDB\CodeGenerator\Definition\VariadicType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\TraitType;
@@ -67,6 +68,12 @@ final class OperatorFactoryGenerator extends OperatorGenerator
             $parameter = $method->addParameter($argument->name);
             $parameter->setType($type->native);
             if ($argument->variadic) {
+                if ($argument->variadic === VariadicType::Array) {
+                    // Warn that named arguments are not supported
+                    // @see https://psalm.dev/docs/running_psalm/issues/NamedArgumentNotAllowed/
+                    $method->addComment('@no-named-arguments');
+                }
+
                 $method->setVariadic();
                 $method->addComment('@param ' . $type->doc . ' ...$' . $argument->name . rtrim(' ' . $argument->description));
                 $args[] = '...$' . $argument->name;

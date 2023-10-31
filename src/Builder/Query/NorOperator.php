@@ -8,13 +8,10 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Exception\InvalidArgumentException;
-use stdClass;
 
 use function array_is_list;
 
@@ -27,22 +24,24 @@ class NorOperator implements QueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<Document|QueryInterface|Serializable|array|stdClass> $expression */
-    public readonly array $expression;
+    /** @var list<QueryInterface|array> $queries */
+    public readonly array $queries;
 
     /**
-     * @param Document|QueryInterface|Serializable|array|stdClass ...$expression
+     * @param QueryInterface|array ...$queries
      * @no-named-arguments
      */
-    public function __construct(Document|Serializable|QueryInterface|stdClass|array ...$expression)
+    public function __construct(QueryInterface|array ...$queries)
     {
-        if (\count($expression) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        if (\count($queries) < 1) {
+            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $queries, got %d.', 1, \count($queries)));
         }
-        if (! array_is_list($expression)) {
-            throw new InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
+
+        if (! array_is_list($queries)) {
+            throw new InvalidArgumentException('Expected $queries arguments to be a list (array), named arguments are not supported');
         }
-        $this->expression = $expression;
+
+        $this->queries = $queries;
     }
 
     public function getOperator(): string

@@ -39,11 +39,13 @@ class FacetStage implements StageInterface, OperatorInterface
         if (\count($facet) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $facet, got %d.', 1, \count($facet)));
         }
+
         foreach($facet as $key => $value) {
             if (! is_string($key)) {
                 throw new InvalidArgumentException('Expected $facet arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
             }
         }
+
         $facet = (object) $facet;
         $this->facet = $facet;
     }

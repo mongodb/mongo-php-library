@@ -8,7 +8,8 @@ description: |
     Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
 arguments:
     -
-        name: expression
+        name: queries
         type:
             - query
         variadic: array
+        variadicMin: 1

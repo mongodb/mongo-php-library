@@ -41,11 +41,13 @@ class ProjectStage implements StageInterface, OperatorInterface
         if (\count($specification) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $specification, got %d.', 1, \count($specification)));
         }
+
         foreach($specification as $key => $value) {
             if (! is_string($key)) {
                 throw new InvalidArgumentException('Expected $specification arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
             }
         }
+
         $specification = (object) $specification;
         $this->specification = $specification;
     }

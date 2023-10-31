@@ -71,6 +71,7 @@ trait FactoryTrait
      * Adds numbers to return the sum, or adds numbers and a date to return a new date. If adding numbers and a date, treats the numbers as milliseconds. Accepts any number of argument expressions, but at most, one expression can resolve to a date.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/
+     * @no-named-arguments
      * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
      */
     public static function add(
@@ -84,6 +85,7 @@ trait FactoryTrait
      * Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/
+     * @no-named-arguments
      * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
      */
     public static function allElementsTrue(
@@ -97,6 +99,7 @@ trait FactoryTrait
      * Returns true only when all its expressions evaluate to true. Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/
+     * @no-named-arguments
      * @param Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function and(
@@ -219,6 +222,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/
+     * @no-named-arguments
      * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      */
     public static function avg(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): AvgOperator
@@ -244,6 +248,7 @@ trait FactoryTrait
      * New in MongoDB 6.3.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/
+     * @no-named-arguments
      * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
      */
     public static function bitAnd(Int64|ResolvesToInt|ResolvesToLong|int ...$expression): BitAndOperator
@@ -268,6 +273,7 @@ trait FactoryTrait
      * New in MongoDB 6.3.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/
+     * @no-named-arguments
      * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
      */
     public static function bitOr(Int64|ResolvesToInt|ResolvesToLong|int ...$expression): BitOrOperator
@@ -280,6 +286,7 @@ trait FactoryTrait
      * New in MongoDB 6.3.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/
+     * @no-named-arguments
      * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
      */
     public static function bitXor(Int64|ResolvesToInt|ResolvesToLong|int ...$expression): BitXorOperator
@@ -330,6 +337,7 @@ trait FactoryTrait
      * Concatenates any number of strings.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/
+     * @no-named-arguments
      * @param ResolvesToString|non-empty-string ...$expression
      */
     public static function concat(ResolvesToString|string ...$expression): ConcatOperator
@@ -341,6 +349,7 @@ trait FactoryTrait
      * Concatenates arrays to return the concatenated array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/
+     * @no-named-arguments
      * @param BSONArray|PackedArray|ResolvesToArray|array ...$array
      */
     public static function concatArrays(PackedArray|ResolvesToArray|BSONArray|array ...$array): ConcatArraysOperator
@@ -806,6 +815,7 @@ trait FactoryTrait
      * Returns either the non-null result of the first expression or the result of the second expression if the first expression results in a null result. Null result encompasses instances of undefined values or missing fields. Accepts two expressions as arguments. The result of the second expression can be null.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/
+     * @no-named-arguments
      * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function ifNull(
@@ -920,6 +930,7 @@ trait FactoryTrait
      * Determines if the operand is an array. Returns a boolean.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
+     * @no-named-arguments
      * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function isArray(
@@ -935,6 +946,7 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/
+     * @no-named-arguments
      * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function isNumber(
@@ -1153,6 +1165,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/
+     * @no-named-arguments
      * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function max(
@@ -1225,6 +1238,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/
+     * @no-named-arguments
      * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function min(
@@ -1298,6 +1312,7 @@ trait FactoryTrait
      * Multiplies numbers to return the product. Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/
+     * @no-named-arguments
      * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression The arguments can be any valid expression as long as they resolve to numbers.
      * Starting in MongoDB 6.1 you can optimize the $multiply operation. To improve performance, group references at the end of the argument list.
      */
@@ -1351,6 +1366,7 @@ trait FactoryTrait
      * Returns true when any of its expressions evaluates to true. Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/
+     * @no-named-arguments
      * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function or(
@@ -1655,6 +1671,7 @@ trait FactoryTrait
      * Returns true if the input sets have the same distinct elements. Accepts two or more argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/
+     * @no-named-arguments
      * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
      */
     public static function setEquals(PackedArray|ResolvesToArray|BSONArray|array ...$expression): SetEqualsOperator
@@ -1685,6 +1702,7 @@ trait FactoryTrait
      * Returns a set with elements that appear in all of the input sets. Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/
+     * @no-named-arguments
      * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
      */
     public static function setIntersection(
@@ -1713,6 +1731,7 @@ trait FactoryTrait
      * Returns a set with elements that appear in any of the input sets.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/
+     * @no-named-arguments
      * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
      */
     public static function setUnion(PackedArray|ResolvesToArray|BSONArray|array ...$expression): SetUnionOperator
@@ -1822,6 +1841,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
+     * @no-named-arguments
      * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      */
     public static function stdDevPop(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): StdDevPopOperator
@@ -1834,6 +1854,7 @@ trait FactoryTrait
      * If the values represent the entire population of data or you do not wish to generalize about a larger population, use $stdDevPop instead.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
+     * @no-named-arguments
      * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      */
     public static function stdDevSamp(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): StdDevSampOperator
@@ -1949,6 +1970,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/
+     * @no-named-arguments
      * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      */
     public static function sum(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): SumOperator

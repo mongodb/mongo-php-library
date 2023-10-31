@@ -38,11 +38,13 @@ class AddFieldsStage implements StageInterface, OperatorInterface
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
+
         foreach($expression as $key => $value) {
             if (! is_string($key)) {
                 throw new InvalidArgumentException('Expected $expression arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
             }
         }
+
         $expression = (object) $expression;
         $this->expression = $expression;
     }

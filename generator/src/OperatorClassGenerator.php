@@ -76,11 +76,12 @@ class OperatorClassGenerator extends OperatorGenerator
                 $constuctor->setVariadic();
                 $constuctor->addComment('@param ' . $type->doc . ' ...$' . $argument->name . rtrim(' ' . $argument->description));
 
-                if ($argument->variadicMin !== null) {
+                if ($argument->variadicMin > 0) {
                     $constuctor->addBody(<<<PHP
                     if (\count(\${$argument->name}) < {$argument->variadicMin}) {
                         throw new \InvalidArgumentException(\sprintf('Expected at least %d values for \${$argument->name}, got %d.', {$argument->variadicMin}, \count(\${$argument->name})));
                     }
+
                     PHP);
                 }
 
@@ -96,6 +97,7 @@ class OperatorClassGenerator extends OperatorGenerator
                     if (! array_is_list(\${$argument->name})) {
                         throw new InvalidArgumentException('Expected \${$argument->name} arguments to be a list (array), named arguments are not supported');
                     }
+
                     PHP);
                 } elseif ($argument->variadic === VariadicType::Object) {
                     $namespace->addUse(stdClass::class);
@@ -109,6 +111,7 @@ class OperatorClassGenerator extends OperatorGenerator
                             throw new InvalidArgumentException('Expected \${$argument->name} arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
                         }
                     }
+
                     \${$argument->name} = (object) \${$argument->name};
                     PHP);
                 }
@@ -140,11 +143,10 @@ class OperatorClassGenerator extends OperatorGenerator
 
                 if ($type->query) {
                     $namespace->addUseFunction('is_array');
-                    $namespace->addUseFunction('is_object');
                     $namespace->addUse(QueryObject::class);
                     $constuctor->addBody(<<<PHP
-                    if (is_array(\${$argument->name}) || is_object(\${$argument->name})) {
-                        \${$argument->name} = QueryObject::create(...\${$argument->name});
+                    if (is_array(\${$argument->name})) {
+                        \${$argument->name} = QueryObject::create(\${$argument->name});
                     }
 
                     PHP);

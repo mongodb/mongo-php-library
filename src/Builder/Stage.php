@@ -10,7 +10,7 @@ use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use stdClass;
 
-enum Stage
+final class Stage
 {
     use Stage\FactoryTrait {
         match as private generatedMatch;
@@ -27,5 +27,10 @@ enum Stage
     {
         // Override the generated method to allow variadic arguments
         return self::generatedMatch($queries);
+    }
+
+    private function __construct()
+    {
+        // This class cannot be instantiated
     }
 }

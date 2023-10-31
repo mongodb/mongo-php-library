@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\ExpressionInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/aggregation-variables/
  */
-enum Variable
+final class Variable
 {
     /**
      * A variable that returns the current datetime value.
@@ -149,5 +149,10 @@ enum Variable
     public static function variable(string $name): Expression\Variable
     {
         return new Expression\Variable($name);
+    }
+
+    private function __construct()
+    {
+        // This class cannot be instantiated
     }
 }

@@ -17,7 +17,7 @@ use stdClass;
  * @see https://www.mongodb.com/docs/v3.4/reference/operator/aggregation-group/
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
  */
-enum Accumulator
+final class Accumulator
 {
     use Accumulator\FactoryTrait;
 
@@ -34,5 +34,10 @@ enum Accumulator
         Optional|string $unit = Optional::Undefined,
     ): OutputWindow {
         return new OutputWindow($operator, $documents, $range, $unit);
+    }
+
+    private function __construct()
+    {
+        // This class cannot be instantiated
     }
 }

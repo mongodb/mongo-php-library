@@ -11,7 +11,12 @@ use MongoDB\Builder\Projection\FactoryTrait;
  *
  * @see https://docs.mongodb.com/manual/reference/operator/projection/
  */
-enum Projection
+final class Projection
 {
     use FactoryTrait;
+
+    private function __construct()
+    {
+        // This class cannot be instantiated
+    }
 }

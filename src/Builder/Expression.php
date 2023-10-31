@@ -9,8 +9,13 @@ namespace MongoDB\Builder;
  *
  * @see https://docs.mongodb.com/manual/reference/operator/aggregation/
  */
-enum Expression
+final class Expression
 {
     use Expression\ExpressionFactoryTrait;
     use Expression\FactoryTrait;
+
+    private function __construct()
+    {
+        // This class cannot be instantiated
+    }
 }

@@ -20,7 +20,7 @@ use function is_string;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/
  */
-enum Query
+final class Query
 {
     use Query\FactoryTrait {
         regex as private generatedRegex;
@@ -43,5 +43,10 @@ enum Query
     public static function query(FieldQueryInterface|QueryInterface|Serializable|array|bool|float|int|stdClass|string|null ...$query): QueryInterface
     {
         return QueryObject::create(...$query);
+    }
+
+    private function __construct()
+    {
+        // This class cannot be instantiated
     }
 }

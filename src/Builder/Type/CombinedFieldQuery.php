@@ -4,28 +4,78 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Type;
 
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Serializable;
+use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Int64;
+use MongoDB\BSON\Regex;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
+use function array_is_list;
+use function array_key_exists;
+use function array_key_first;
+use function array_merge;
+use function array_reduce;
+use function count;
 use function get_debug_type;
+use function get_object_vars;
 use function is_array;
+use function is_string;
 use function sprintf;
+use function str_starts_with;
 
 /**
- * List of filters that apply to the same field path.
+ * List of field queries that apply to the same field path.
  */
 class CombinedFieldQuery implements FieldQueryInterface
 {
-    public function __construct(
-        /** @var list<FieldQueryInterface|Serializable|array|stdClass> $fieldQueries */
-        public readonly array $fieldQueries,
-    ) {
-        foreach ($fieldQueries as $fieldQuery) {
-            if (! $fieldQuery instanceof FieldQueryInterface && ! $fieldQuery instanceof Serializable && ! is_array($fieldQuery) && ! $fieldQuery instanceof stdClass) {
-                throw new InvalidArgumentException(sprintf('Expected filters to be a list of %s, %s, array or stdClass, %s given.', FieldQueryInterface::class, Document::class, get_debug_type($fieldQuery)));
+    /** @var list<QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null> $fieldQueries */
+    public readonly array $fieldQueries;
+
+    /** @param list<QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null> $fieldQueries */
+    public function __construct(array $fieldQueries)
+    {
+        if (! array_is_list($fieldQueries)) {
+            throw new InvalidArgumentException('Expected filters to be a list, invalid array given.');
+        }
+
+        // Flatten nested CombinedFieldQuery
+        $this->fieldQueries = array_reduce($fieldQueries, static function (array $fieldQueries, QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null $fieldQuery): array {
+            if ($fieldQuery instanceof CombinedFieldQuery) {
+                return array_merge($fieldQueries, $fieldQuery->fieldQueries);
             }
+
+            $fieldQueries[] = $fieldQuery;
+
+            return $fieldQueries;
+        }, []);
+
+        // Validate FieldQuery types and non-duplicate operators
+        $seenOperators = [];
+        foreach ($this->fieldQueries as $fieldQuery) {
+            if ($fieldQuery instanceof stdClass) {
+                $fieldQuery = get_object_vars($fieldQuery);
+            }
+
+            if ($fieldQuery instanceof FieldQueryInterface && $fieldQuery instanceof OperatorInterface) {
+                $operator = $fieldQuery->getOperator();
+            } elseif (is_array($fieldQuery)) {
+                if (count($fieldQuery) !== 1) {
+                    throw new InvalidArgumentException(sprintf('Operator must contain exactly one key, %d given', count($fieldQuery)));
+                }
+
+                $operator = array_key_first($fieldQuery);
+                if (! is_string($operator) || ! str_starts_with($operator, '$')) {
+                    throw new InvalidArgumentException(sprintf('Operator must contain exactly one key starting with $, "%s" given', $operator));
+                }
+            } else {
+                throw new InvalidArgumentException(sprintf('Expected filters to be a list of field query operators, array or stdClass, %s given', get_debug_type($fieldQuery)));
+            }
+
+            if (array_key_exists($operator, $seenOperators)) {
+                throw new InvalidArgumentException(sprintf('Duplicate operator "%s" detected', $operator));
+            }
+
+            $seenOperators[$operator] = true;
         }
     }
 }

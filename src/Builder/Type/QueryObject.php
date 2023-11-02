@@ -84,7 +84,7 @@ final class QueryObject implements QueryInterface
         $this->queries = $queries;
     }
 
-    /** @psalm-assert-if-true list<mixed> $values */
+    /** @psalm-assert-if-true list<FieldQueryInterface> $values */
     private static function isListOfFilters(mixed $values): bool
     {
         if (! is_array($values) || ! array_is_list($values)) {

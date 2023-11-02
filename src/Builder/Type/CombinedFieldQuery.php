@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Type;
 
-use MongoDB\BSON\Decimal128;
-use MongoDB\BSON\Int64;
-use MongoDB\BSON\Regex;
+use MongoDB\BSON\Type;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
@@ -28,10 +26,10 @@ use function str_starts_with;
  */
 class CombinedFieldQuery implements FieldQueryInterface
 {
-    /** @var list<QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null> $fieldQueries */
+    /** @var list<QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $fieldQueries */
     public readonly array $fieldQueries;
 
-    /** @param list<QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null> $fieldQueries */
+    /** @param list<QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $fieldQueries */
     public function __construct(array $fieldQueries)
     {
         if (! array_is_list($fieldQueries)) {
@@ -39,7 +37,7 @@ class CombinedFieldQuery implements FieldQueryInterface
         }
 
         // Flatten nested CombinedFieldQuery
-        $this->fieldQueries = array_reduce($fieldQueries, static function (array $fieldQueries, QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null $fieldQuery): array {
+        $this->fieldQueries = array_reduce($fieldQueries, static function (array $fieldQueries, QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null $fieldQuery): array {
             if ($fieldQuery instanceof CombinedFieldQuery) {
                 return array_merge($fieldQueries, $fieldQuery->fieldQueries);
             }

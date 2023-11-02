@@ -83,7 +83,7 @@ return $expressions + [
     ],
     'fieldQuery' => [
         'returnType' => Type\FieldQueryInterface::class,
-        'acceptedTypes' => [Type\FieldQueryInterface::class, BSON\Regex::class, 'bool', 'string', 'array', 'null', stdClass::class, ...$bsonTypes['number']],
+        'acceptedTypes' => [Type\FieldQueryInterface::class, ...$bsonTypes['any']],
     ],
     'query' => [
         'returnType' => Type\QueryInterface::class,

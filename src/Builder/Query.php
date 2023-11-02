@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder;
 
-use MongoDB\BSON\Decimal128;
-use MongoDB\BSON\Int64;
 use MongoDB\BSON\Regex;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Query\RegexOperator;
 use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\QueryInterface;
@@ -41,7 +40,7 @@ final class Query
         return self::generatedRegex($regex);
     }
 
-    public static function query(QueryInterface|FieldQueryInterface|Decimal128|Int64|Regex|stdClass|array|bool|float|int|string|null ...$query): QueryInterface
+    public static function query(QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null ...$query): QueryInterface
     {
         return QueryObject::create($query);
     }

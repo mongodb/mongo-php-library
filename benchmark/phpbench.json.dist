@@ -5,6 +5,7 @@
     "runner.bootstrap": "vendor/autoload.php",
     "runner.file_pattern": "*Bench.php",
     "runner.path": "src",
+    "runner.timeout": 60,
     "runner.php_config": { "memory_limit": "1G" },
     "runner.iterations": 3
 }

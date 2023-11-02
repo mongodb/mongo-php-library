@@ -57,6 +57,7 @@ jobs:
           coverage: "none"
           extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
           php-version: "${{ env.PHP_VERSION }}"
+          ini-values: "extension=opcache.so, opcache.enable_cli=1, opcache.file_cache=${{ runner.temp }}/php-opcache"
 
       - name: "Show driver information"
         run: "php --ri mongodb"

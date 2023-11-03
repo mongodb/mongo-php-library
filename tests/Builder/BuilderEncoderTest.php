@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder;
 
 use Generator;
+use MongoDB\BSON\Document;
 use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Expression;
@@ -15,10 +16,7 @@ use MongoDB\Builder\Stage;
 use MongoDB\Builder\Variable;
 use PHPUnit\Framework\TestCase;
 
-use function array_is_list;
 use function array_merge;
-use function array_walk;
-use function is_array;
 use function MongoDB\object;
 use function var_export;
 
@@ -342,26 +340,11 @@ class BuilderEncoderTest extends TestCase
         $codec = new BuilderEncoder();
         $actual = $codec->encode($pipeline);
 
-        self::objectify($expected);
+        // Normalize with BSON round-trip
+        // BSON Documents doesn't support top-level arrays.
+        $actual = Document::fromPHP(['root' => $actual])->toCanonicalExtendedJSON();
+        $expected = Document::fromPHP(['root' => $expected])->toCanonicalExtendedJSON();
 
-        self::assertEquals($expected, $actual, var_export($actual, true));
-    }
-
-    /**
-     * Recursively convert associative arrays to objects.
-     *
-     * @param array<mixed> $array
-     */
-    private static function objectify(array &$array): void
-    {
-        array_walk($array, function (&$value): void {
-            if (is_array($value)) {
-                self::objectify($value);
-
-                if (! array_is_list($value)) {
-                    $value = (object) $value;
-                }
-            }
-        });
+        self::assertJsonStringEqualsJsonString($expected, $actual, var_export($actual, true));
     }
 }

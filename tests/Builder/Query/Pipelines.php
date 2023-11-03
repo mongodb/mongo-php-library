@@ -20,9 +20,11 @@ enum Pipelines: string
         {
             "$match": {
                 "sku": {
-                    "$regularExpression": {
-                        "pattern": "789$",
-                        "options": ""
+                    "$regex": {
+                        "$regularExpression": {
+                            "pattern": "789$",
+                            "options": ""
+                        }
                     }
                 }
             }
@@ -40,9 +42,11 @@ enum Pipelines: string
         {
             "$match": {
                 "sku": {
-                    "$regularExpression": {
-                        "pattern": "^ABC",
-                        "options": "i"
+                    "$regex": {
+                        "$regularExpression": {
+                            "pattern": "^ABC",
+                            "options": "i"
+                        }
                     }
                 }
             }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use MongoDB\BSON\Document;
 use MongoDB\Builder\Pipeline;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
@@ -16,6 +17,7 @@ use RuntimeException;
 use Throwable;
 
 use function basename;
+use function json_decode;
 use function json_encode;
 use function ksort;
 use function sprintf;
@@ -81,7 +83,9 @@ class OperatorTestGenerator extends OperatorGenerator
             $testName = 'test' . str_replace([' ', '-'], '', ucwords(str_replace('$', '', $test->name)));
             $caseName = str_replace([' ', '-'], '', ucwords(str_replace('$', '', $operator->name . ' ' . $test->name)));
 
-            $case = $dataEnum->addCase($caseName, new Literal('<<<\'JSON\'' . "\n" . json_encode($test->pipeline, JSON_PRETTY_PRINT) . "\n" . 'JSON'));
+            $json = Document::fromPHP(['pipeline' => $test->pipeline])->toCanonicalExtendedJSON();
+            $json = json_encode(json_decode($json)->pipeline, JSON_PRETTY_PRINT);
+            $case = $dataEnum->addCase($caseName, new Literal('<<<\'JSON\'' . "\n" . $json . "\n" . 'JSON'));
             $case->setComment($test->name);
             if ($test->link) {
                 $case->addComment('');

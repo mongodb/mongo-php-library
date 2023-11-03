@@ -25,8 +25,6 @@ use function sprintf;
  */
 class OutputWindow implements WindowInterface
 {
-    public const ENCODE = Encode::Object;
-
     /**
      * Function used to initialize the state. The init function receives its arguments from the initArgs array expression.
      * You can specify the function definition as either BSON type Code or String.

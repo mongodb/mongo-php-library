@@ -20,10 +20,10 @@ tests:
             -
                 $match:
                     sku:
-                        # Should be nested in $regex
-                        $regularExpression:
-                            pattern: '789$'
-                            options: ''
+                        $regex:
+                            $regularExpression:
+                                pattern: '789$'
+                                options: ''
     -
         name: 'Perform Case-Insensitive Regular Expression Match'
         link: 'https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-case-insensitive-regular-expression-match'
@@ -31,7 +31,7 @@ tests:
             -
                 $match:
                     sku:
-                        # Should be nested in $regex
-                        $regularExpression:
-                            pattern: '^ABC'
-                            options: 'i'
+                        $regex:
+                            $regularExpression:
+                                pattern: '^ABC'
+                                options: 'i'

@@ -126,7 +126,9 @@ enum Pipelines: string
             "$setWindowFields": {
                 "partitionBy": "$state",
                 "sortBy": {
-                    "orderDate": 1
+                    "orderDate": {
+                        "$numberInt": "1"
+                    }
                 },
                 "output": {
                     "cakeTypesForState": {

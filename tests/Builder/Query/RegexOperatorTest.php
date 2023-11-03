@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Builder\Query;
 
-use MongoDB\BSON\Regex;
 use MongoDB\Builder\Pipeline;
+use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
@@ -18,8 +18,7 @@ class RegexOperatorTest extends PipelineTestCase
     {
         $pipeline = new Pipeline(
             Stage::match(
-                // sku: \MongoDB\Builder\Query::regex('789$', ''),
-                sku: new Regex('789$', ''),
+                sku: Query::regex('789$', ''),
             ),
         );
 
@@ -30,8 +29,7 @@ class RegexOperatorTest extends PipelineTestCase
     {
         $pipeline = new Pipeline(
             Stage::match(
-                // sku: \MongoDB\Builder\Query::regex('^ABC', 'i'),
-                sku: new Regex('^ABC', 'i'),
+                sku: Query::regex('^ABC', 'i'),
             ),
         );
 

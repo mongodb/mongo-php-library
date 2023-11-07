@@ -1,0 +1,17 @@
+arg_name: option
+name: name
+type: string
+description: |
+  Name of the search index to create.
+
+  You cannot create multiple indexes with the same name on a single collection.
+
+  If you do not specify a name, the index is named "default".
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+...

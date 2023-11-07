@@ -1,0 +1,13 @@
+arg_name: param
+name: $name
+type: string
+description: |
+  Name of the index to drop.
+interface: phpmethod
+operation: ~
+optional: false
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+...

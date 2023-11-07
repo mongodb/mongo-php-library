@@ -1,0 +1,14 @@
+arg_name: param
+name: $definition
+type: array|object
+description: |
+  Document describing the index to create. For details on definition syntax, see 
+  :manual:`Search Index Definition Syntax </reference/command/createSearchIndexes/#search-index-definition-syntax>`.
+interface: phpmethod
+operation: ~
+optional: false
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+...

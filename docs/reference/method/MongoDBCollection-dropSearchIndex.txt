@@ -1,0 +1,52 @@
+======================================
+MongoDB\\Collection::dropSearchIndex()
+======================================
+
+.. versionadded:: 1.17
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::dropSearchIndex()
+
+   Drop an Atlas Search index for the collection.
+
+   .. code-block:: php
+
+      function dropSearchIndex(string $name, array $options = []): void
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-dropSearchIndex-param.rst
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-dropSearchIndex-option.rst
+
+   .. include:: /includes/extracts/note-atlas-search-requirement.rst
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::createSearchIndex()`
+- :phpmethod:`MongoDB\\Collection::createSearchIndexes()`
+- :phpmethod:`MongoDB\\Collection::listSearchIndexes()`
+- :phpmethod:`MongoDB\\Collection::updateSearchIndex()`
+- :manual:`dropSearchIndex </reference/command/dropSearchIndex>` command
+  reference in the MongoDB manual
+- `Atlas Search <https://www.mongodb.com/docs/atlas/atlas-search/>`__ documentation in the MongoDB Manual

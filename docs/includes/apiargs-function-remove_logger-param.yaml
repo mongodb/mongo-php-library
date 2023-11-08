@@ -1,0 +1,11 @@
+arg_name: param
+name: $logger
+type: Psr\\Log\\LoggerInterface
+description: |
+  A logger to unregister.
+
+  If the logger is not registered, the method will have no effect.
+interface: phpmethod
+operation: ~
+optional: false
+...

@@ -63,7 +63,7 @@ class ListSearchIndexes implements Executable
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->listSearchIndexesOptions = array_intersect_key($options, ['name' => 1]);
-        $this->aggregateOptions = array_intersect_key($options, ['batchSize' => 1, 'collation' => 1, 'comment' => 1, 'maxTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1, 'typeMap' => 1]);
+        $this->aggregateOptions = array_intersect_key($options, ['batchSize' => 1, 'codec' => 1, 'collation' => 1, 'comment' => 1, 'maxTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1, 'typeMap' => 1]);
 
         $this->aggregate = $this->createAggregate();
     }

@@ -35,16 +35,16 @@ This function allows the application to register one or more
 objects to receive log messages from libmongoc and the driver. Each registered
 logger will receive messages for *all* clients.
 
-Messages originating from libmongoc will have their log level translated to an
-equivalent `PSR log level <https://www.php-fig.org/psr/psr-3/#5-psrlogloglevel>`__.
-For performance reasons, trace-level messages from libmongoc are *not* forwarded
-to PSR loggers. The extension's
+Messages originating from the extension will have their log level translated to
+an equivalent `PSR log level <https://www.php-fig.org/psr/psr-3/#5-psrlogloglevel>`__.
+For performance reasons, trace-level messages from the extension are *not*
+forwarded to PSR loggers. The extension's
 :php:`mongodb.debug <manual/en/mongodb.configuration.php#ini.mongodb.debug>` INI
 configuration must be used to collect trace-level logs.
 
-Log messages in libmongoc also include a domain string to identify the driver
-component that emitted the log message. This value is provided to the PSR logger
-via the {{domain}} key of the context array.
+Log messages also include a domain string that identifies the driver component
+that emitted the log message. This value is provided to the PSR logger via the
+{{domain}} key of the context array.
 
 Errors/Exceptions
 -----------------

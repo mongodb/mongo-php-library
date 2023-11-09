@@ -1,0 +1,59 @@
+=====================
+MongoDB\\add_logger()
+=====================
+
+.. versionadded:: 1.17
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\add_logger()
+
+   Registers a PSR logger to receive log messages from the driver.
+
+   .. code-block:: php
+
+      function add_logger(Psr\Log\LoggerInterface $logger): void
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/function-add_logger-param.rst
+
+Behavior
+--------
+
+This function allows the application to register one or more
+`Psr\\Log\\LoggerInterface <https://www.php-fig.org/psr/psr-3/#3-psrlogloggerinterface>`__
+objects to receive log messages from libmongoc and the driver. Each registered
+logger will receive messages for *all* clients.
+
+Messages originating from the extension will have their log level translated to
+an equivalent `PSR log level <https://www.php-fig.org/psr/psr-3/#5-psrlogloglevel>`__.
+For performance reasons, trace-level messages from the extension are *not*
+forwarded to PSR loggers. The extension's
+:php:`mongodb.debug <manual/en/mongodb.configuration.php#ini.mongodb.debug>` INI
+configuration must be used to collect trace-level logs.
+
+Log messages also include a domain string that identifies the driver component
+that emitted the log message. This value is provided to the PSR logger via the
+{{domain}} key of the context array.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\remove_logger()`
+- `PSR-3: Logger Interface <https://www.php-fig.org/psr/psr-3/>`__
+- `libmongoc: Logging <https://mongoc.org/libmongoc/current/logging.html>`__

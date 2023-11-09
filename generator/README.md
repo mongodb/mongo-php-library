@@ -16,3 +16,6 @@ To run the generator, you need to have PHP 8.1+ installed and Composer.
 ## Configuration
 
 The `generator/config/*.yaml` files contains the list of operators and stages that are supported by the library.
+
+To add new test cases to operators, you can get inspiration from the official MongoDB documentation and use
+the `generator/js2yaml.html` web page to manually convert a pipeline array from JS to Yaml.

@@ -1,0 +1,105 @@
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+    }
+    h1 {
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+    textarea {
+        width: 100%;
+        height: 300px;
+        font-family: monospace;
+    }
+</style>
+
+<h1>Convert JS examples into Yaml</h1>
+
+<div>
+	<label for="input">Input JS code:</label>
+	<textarea id="input">
+[
+  // First Stage
+  {
+    $bucket: {
+      groupBy: "$year_born",                        // Field to group by
+      boundaries: [ 1840, 1850, 1860, 1870, 1880 ], // Boundaries for the buckets
+      default: "Other",                             // Bucket ID for documents which do not fall into a bucket
+      output: {                                     // Output for each bucket
+        "count": { $sum: 1 },
+        "artists" :
+          {
+            $push: {
+              "name": { $concat: [ "$first_name", " ", "$last_name"] },
+              "year_born": "$year_born"
+            }
+          }
+      }
+    }
+  },
+  // Second Stage
+  {
+    $match: { count: {$gt: 3} }
+  }
+]
+	</textarea>
+</div>
+
+<div>
+	<label for="output">Output YAML code:</label>
+	<textarea id="output"></textarea>
+</div>
+
+
+<script>
+    function convert(jsString) {
+      try {
+        return toYaml(eval(jsString), 1);
+      } catch (e) {
+        return e.toString();
+      }
+    }
+
+    function toYaml(object, indent = 0) {
+        const newline = '\n' + ('    '.repeat(indent + 1));
+        if (object === null) {
+            return ' ~';
+        }
+
+        if (Array.isArray(object)) {
+            return newline + '-' + object.map((item) => toYaml(item, indent + 1)).join(newline + '-');
+        }
+
+        switch (typeof object) {
+            case 'boolean':
+                return object ? ' true' : ' false';
+            case 'string':
+                return " '" + object.replace(/'/g, "\\'") + "'";
+            case 'number':
+                return ' ' + object.toString();
+            case 'object':
+                var dump = [];
+                for (var key in object) {
+                    dump.push(key + ':' + toYaml(object[key], indent + 1));
+                }
+                return newline + dump.join(newline);
+            case 'function':
+                return toYaml({
+                  $code: object.toString()
+                        .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
+                        .replace(/\s+/g, ' ')
+                }, indent)
+            default:
+                return 'Unsupported type: ' + typeof object;
+        }
+    }
+
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+
+    output.value = convert(input.value);
+
+    input.addEventListener('keyup', function () {
+      output.value = convert(input.value);
+    });
+</script>

@@ -1,0 +1,88 @@
+========================================
+MongoDB\\Collection::createSearchIndex()
+========================================
+
+.. versionadded:: 1.17
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::createSearchIndex()
+
+   Create an Atlas Search index for the collection.
+
+   .. code-block:: php
+
+      function createSearchIndex(array|object $definition, array $options = []): string
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-createSearchIndex-param.rst
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-createSearchIndex-option.rst
+
+   .. include:: /includes/extracts/note-atlas-search-requirement.rst
+   .. include:: /includes/extracts/note-atlas-search-async.rst
+
+Return Values
+-------------
+
+The name of the created Atlas Search index as a string.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Examples
+--------
+
+Create an Index with Dynamic Mappings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example creates an Atlas Search index using
+`dynamic mappings <https://www.mongodb.com/docs/atlas/atlas-search/define-field-mappings/#dynamic-mappings>`__
+to index all document fields containing
+`supported data types <https://www.mongodb.com/docs/atlas/atlas-search/define-field-mappings/#std-label-bson-data-chart>`__.
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->selectCollection('test', 'articles');
+
+   $indexName = $collection->createSearchIndex(
+      ['mappings' => ['dynamic' => true]],
+      ['name' => 'test-search-index']
+   );
+
+   var_dump($indexName);
+
+The output would then resemble:
+
+.. code-block:: none
+
+   string(17) "test-search-index"
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::createSearchIndexes()`
+- :phpmethod:`MongoDB\\Collection::dropSearchIndex()`
+- :phpmethod:`MongoDB\\Collection::listSearchIndexes()`
+- :phpmethod:`MongoDB\\Collection::updateSearchIndex()`
+- :manual:`createSearchIndexes </reference/command/createSearchIndexes>` command
+  reference in the MongoDB manual
+- `Atlas Search <https://www.mongodb.com/docs/atlas/atlas-search/>`__ documentation in the MongoDB Manual

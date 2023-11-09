@@ -1,0 +1,25 @@
+arg_name: param
+name: $name
+type: string
+description: |
+  Name of the index to update.
+interface: phpmethod
+operation: ~
+optional: false
+---
+arg_name: param
+name: $definition
+type: array|object
+description: |
+  Document describing the updated search index definition. The specified
+  definition replaces the prior definition in the search index. For details on
+  definition syntax, see 
+  :manual:`Search Index Definition Syntax </reference/command/createSearchIndexes/#search-index-definition-syntax>`.
+interface: phpmethod
+operation: ~
+optional: false
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+...

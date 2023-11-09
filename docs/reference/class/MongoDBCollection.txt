@@ -65,12 +65,15 @@ Methods
    /reference/method/MongoDBCollection-countDocuments
    /reference/method/MongoDBCollection-createIndex
    /reference/method/MongoDBCollection-createIndexes
+   /reference/method/MongoDBCollection-createSearchIndex
+   /reference/method/MongoDBCollection-createSearchIndexes
    /reference/method/MongoDBCollection-deleteMany
    /reference/method/MongoDBCollection-deleteOne
    /reference/method/MongoDBCollection-distinct
    /reference/method/MongoDBCollection-drop
    /reference/method/MongoDBCollection-dropIndex
    /reference/method/MongoDBCollection-dropIndexes
+   /reference/method/MongoDBCollection-dropSearchIndex
    /reference/method/MongoDBCollection-estimatedDocumentCount
    /reference/method/MongoDBCollection-explain
    /reference/method/MongoDBCollection-find
@@ -89,10 +92,12 @@ Methods
    /reference/method/MongoDBCollection-insertMany
    /reference/method/MongoDBCollection-insertOne
    /reference/method/MongoDBCollection-listIndexes
+   /reference/method/MongoDBCollection-listSearchIndexes
    /reference/method/MongoDBCollection-mapReduce
    /reference/method/MongoDBCollection-rename
    /reference/method/MongoDBCollection-replaceOne
    /reference/method/MongoDBCollection-updateMany
    /reference/method/MongoDBCollection-updateOne
+   /reference/method/MongoDBCollection-updateSearchIndex
    /reference/method/MongoDBCollection-watch
    /reference/method/MongoDBCollection-withOptions

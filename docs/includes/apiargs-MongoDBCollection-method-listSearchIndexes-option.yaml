@@ -1,0 +1,44 @@
+source:
+  file: apiargs-aggregate-option.yaml
+  ref: batchSize
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: collation
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+---
+arg_name: option
+name: name
+type: string
+description: |
+  Name of the index to return information about.
+
+  If name is not specified, information for all indexes on the collection will
+  be returned.
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: maxTimeMS
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: readConcern
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: readPreference
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: typeMap
+...

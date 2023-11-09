@@ -1,0 +1,21 @@
+arg_name: param
+name: $indexes
+type: array
+description: |
+  Array of documents describing the indexes to create.
+
+  A required ``definition`` document field describes the index to create. For
+  details on definition syntax, see 
+  :manual:`Search Index Definition Syntax </reference/command/createSearchIndexes/#search-index-definition-syntax>`.
+
+  An optional ``name`` string field specifies the name of the search index to
+  create. You cannot create multiple indexes with the same name on a single
+  collection. If you do not specify a name, the index is named "default".
+interface: phpmethod
+operation: ~
+optional: false
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+...

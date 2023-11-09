@@ -1,0 +1,60 @@
+========================================
+MongoDB\\Collection::listSearchIndexes()
+========================================
+
+.. versionadded:: 1.17
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::listSearchIndexes()
+
+   Gets index information for one or more search indexes in the collection.
+
+   .. code-block:: php
+
+      function listSearchIndexes(array $options = []): Countable&Iterator
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-listSearchIndexes-param.rst
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-listSearchIndexes-option.rst
+
+   .. include:: /includes/extracts/note-atlas-search-requirement.rst
+
+Return Values
+-------------
+
+A list of documents, each of which describes a search index on the collection.
+For details on the output fields, see
+:manual:`$listSearchIndexes: Output </reference/operator/aggregation/listSearchIndexes>`
+in the MongoDB manual.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::createSearchIndex()`
+- :phpmethod:`MongoDB\\Collection::createSearchIndexes()`
+- :phpmethod:`MongoDB\\Collection::dropSearchIndex()`
+- :phpmethod:`MongoDB\\Collection::updateSearchIndex()`
+- :manual:`$listSearchIndexes </reference/operator/aggregation/listSearchIndexes>`
+  aggregation pipeline stage reference in the MongoDB manual
+- `Atlas Search <https://www.mongodb.com/docs/atlas/atlas-search/>`__ documentation in the MongoDB Manual

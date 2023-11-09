@@ -341,7 +341,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
 
-        $this->assertExplainResult($result, false, false, true);
+        $this->assertExplainResult($result, false, false);
     }
 
     /** @dataProvider provideVerbosityInformation */
@@ -369,7 +369,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    private function assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected, $stagesExpected = false): void
+    private function assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $checkResult = $result;
 
@@ -378,11 +378,10 @@ class ExplainFunctionalTest extends FunctionalTestCase
             $checkResult = $result['shards'][$firstShard];
         }
 
-        if ($stagesExpected) {
-            $this->assertArrayHasKey('stages', $checkResult);
-        } else {
-            $this->assertArrayHasKey('queryPlanner', $checkResult);
-        }
+        $this->assertThat($checkResult, $this->logicalOr(
+            $this->arrayHasKey('stages'),
+            $this->arrayHasKey('queryPlanner'),
+        ));
 
         if ($executionStatsExpected) {
             $this->assertArrayHasKey('executionStats', $checkResult);

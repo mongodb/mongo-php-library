@@ -28,6 +28,8 @@ class ListSearchIndexesTest extends TestCase
             $options[][] = ['batchSize' => $value];
         }
 
+        $options[][] = ['codec' => 'foo'];
+
         return $options;
     }
 }

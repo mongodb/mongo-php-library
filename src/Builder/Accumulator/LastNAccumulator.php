@@ -11,6 +11,7 @@ namespace MongoDB\Builder\Accumulator;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\WindowInterface;
@@ -21,11 +22,13 @@ use function array_is_list;
 use function is_array;
 
 /**
- * Returns a specified number of elements from the end of an array. Distinct from the $lastN accumulator.
+ * Returns an aggregation of the last n elements within a group.
+ * The elements returned are meaningful only if in a specified sort order.
+ * If the group contains fewer than n elements, $lastN returns all elements in the group.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
  */
-class LastNAccumulator implements WindowInterface, OperatorInterface
+class LastNAccumulator implements AccumulatorInterface, WindowInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 

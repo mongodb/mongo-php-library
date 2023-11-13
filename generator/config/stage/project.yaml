@@ -10,9 +10,6 @@ arguments:
     -
         name: specification
         type:
-            - bool
-            - int
+            - expression
             - projection
-            - resolvesToBool
-            - object
         variadic: object

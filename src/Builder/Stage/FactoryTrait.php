@@ -18,7 +18,6 @@ use MongoDB\BSON\Type;
 use MongoDB\Builder\Expression\ArrayFieldPath;
 use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\ResolvesToArray;
-use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type\AccumulatorInterface;
@@ -26,7 +25,6 @@ use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Builder\Type\QueryInterface;
-use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -482,10 +480,10 @@ trait FactoryTrait
      * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
-     * @param Document|ProjectionInterface|ResolvesToBool|Serializable|array|bool|int|stdClass ...$specification
+     * @param Document|ExpressionInterface|ProjectionInterface|Serializable|Type|array|bool|float|int|non-empty-string|null|stdClass ...$specification
      */
     public static function project(
-        Document|Serializable|ResolvesToBool|ProjectionInterface|stdClass|array|bool|int ...$specification,
+        Document|Serializable|Type|ExpressionInterface|ProjectionInterface|stdClass|array|bool|float|int|null|string ...$specification,
     ): ProjectStage
     {
         return new ProjectStage(...$specification);
@@ -587,16 +585,14 @@ trait FactoryTrait
      * @param Document|Serializable|array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
      * @param Document|Serializable|array|stdClass $output Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
      * A field can contain dots to specify embedded document fields and array fields. The semantics for the embedded document dotted notation in the $setWindowFields stage are the same as the $addFields and $set stages.
-     * @param Optional|Document|Serializable|WindowInterface|array|stdClass $window Specifies the window boundaries and parameters. Window boundaries are inclusive. Default is an unbounded window, which includes all documents in the partition.
      */
     public static function setWindowFields(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $partitionBy,
         Document|Serializable|stdClass|array $sortBy,
         Document|Serializable|stdClass|array $output,
-        Optional|Document|Serializable|WindowInterface|stdClass|array $window = Optional::Undefined,
     ): SetWindowFieldsStage
     {
-        return new SetWindowFieldsStage($partitionBy, $sortBy, $output, $window);
+        return new SetWindowFieldsStage($partitionBy, $sortBy, $output);
     }
 
     /**

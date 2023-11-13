@@ -44,15 +44,15 @@ class AccumulatorAccumulatorTest extends PipelineTestCase
                 _id: object(city: Expression::fieldPath('city')),
                 restaurants: Accumulator::accumulator(
                     init: new Javascript('function (city, userProfileCity) { return { max: city === userProfileCity ? 3 : 1, restaurants: [] } }'),
+                    accumulate: new Javascript('function (state, restaurantName) { if (state.restaurants.length < state.max) { state.restaurants.push(restaurantName); } return state; }'),
+                    accumulateArgs: [Expression::fieldPath('name')],
+                    merge: new Javascript('function (state1, state2) { return { max: state1.max, restaurants: state1.restaurants.concat(state2.restaurants).slice(0, state1.max) } }'),
+                    lang: 'js',
                     initArgs: [
                         Expression::fieldPath('city'),
                         'Bettles',
                     ],
-                    accumulate: new Javascript('function (state, restaurantName) { if (state.restaurants.length < state.max) { state.restaurants.push(restaurantName); } return state; }'),
-                    accumulateArgs: [Expression::fieldPath('name')],
-                    merge: new Javascript('function (state1, state2) { return { max: state1.max, restaurants: state1.restaurants.concat(state2.restaurants).slice(0, state1.max) } }'),
                     finalize: new Javascript('function (state) { return state.restaurants }'),
-                    lang: 'js',
                 ),
             ),
         );

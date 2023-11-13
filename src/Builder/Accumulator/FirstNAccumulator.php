@@ -8,21 +8,19 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Accumulator;
 
-use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Expression\ResolvesToArray;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\WindowInterface;
-use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Model\BSONArray;
-
-use function array_is_list;
-use function is_array;
+use stdClass;
 
 /**
- * Returns a specified number of elements from the beginning of an array. Distinct from the $firstN accumulator.
+ * Returns an aggregation of the first n elements within a group.
+ * The elements returned are meaningful only if in a specified sort order.
+ * If the group contains fewer than n elements, $firstN returns all elements in the group.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/
  */
@@ -30,22 +28,20 @@ class FirstNAccumulator implements AccumulatorInterface, WindowInterface, Operat
 {
     public const ENCODE = Encode::Object;
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements. */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $input;
+    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input An expression that resolves to the array from which to return n elements. */
+    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input;
 
-    /** @var ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns. */
+    /** @var ResolvesToInt|int $n A positive integral expression that is either a constant or depends on the _id value for $group. */
     public readonly ResolvesToInt|int $n;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input An expression that resolves to the array from which to return n elements.
+     * @param ResolvesToInt|int $n A positive integral expression that is either a constant or depends on the _id value for $group.
      */
-    public function __construct(PackedArray|ResolvesToArray|BSONArray|array $input, ResolvesToInt|int $n)
-    {
-        if (is_array($input) && ! array_is_list($input)) {
-            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
-        }
-
+    public function __construct(
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
+        ResolvesToInt|int $n,
+    ) {
         $this->input = $input;
         $this->n = $n;
     }

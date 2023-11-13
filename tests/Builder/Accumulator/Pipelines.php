@@ -145,4 +145,307 @@ enum Pipelines: string
         }
     ]
     JSON;
+
+    /**
+     * Use in $group Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--group-stage
+     */
+    case FirstUseInGroupStage = <<<'JSON'
+    [
+        {
+            "$sort": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "date": {
+                    "$numberInt": "1"
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$item",
+                "firstSale": {
+                    "$first": "$date"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use in $setWindowFields Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--setwindowfields-stage
+     */
+    case FirstUseInSetWindowFieldsStage = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "orderDate": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "firstOrderTypeForState": {
+                        "$first": "$type",
+                        "window": {
+                            "documents": [
+                                "unbounded",
+                                "current"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Null and Missing Values
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#null-and-missing-values
+     */
+    case FirstNNullAndMissingValues = <<<'JSON'
+    [
+        {
+            "$documents": [
+                {
+                    "playerId": "PlayerA",
+                    "gameId": "G1",
+                    "score": {
+                        "$numberInt": "1"
+                    }
+                },
+                {
+                    "playerId": "PlayerB",
+                    "gameId": "G1",
+                    "score": {
+                        "$numberInt": "2"
+                    }
+                },
+                {
+                    "playerId": "PlayerC",
+                    "gameId": "G1",
+                    "score": {
+                        "$numberInt": "3"
+                    }
+                },
+                {
+                    "playerId": "PlayerD",
+                    "gameId": "G1"
+                },
+                {
+                    "playerId": "PlayerE",
+                    "gameId": "G1",
+                    "score": null
+                }
+            ]
+        },
+        {
+            "$group": {
+                "_id": "$gameId",
+                "firstFiveScores": {
+                    "$firstN": {
+                        "input": "$score",
+                        "n": {
+                            "$numberInt": "5"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use in $group Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
+     */
+    case LastUseInGroupStage = <<<'JSON'
+    [
+        {
+            "$sort": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "date": {
+                    "$numberInt": "1"
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$item",
+                "lastSalesDate": {
+                    "$last": "$date"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use in $setWindowFields Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--setwindowfields-stage
+     */
+    case LastUseInSetWindowFieldsStage = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "orderDate": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "lastOrderTypeForState": {
+                        "$last": "$type",
+                        "window": {
+                            "documents": [
+                                "current",
+                                "unbounded"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Find the Last Three Player Scores for a Single Game
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#find-the-last-three-player-scores-for-a-single-game
+     */
+    case LastNFindTheLastThreePlayerScoresForASingleGame = <<<'JSON'
+    [
+        {
+            "$match": {
+                "gameId": "G1"
+            }
+        },
+        {
+            "$group": {
+                "_id": "$gameId",
+                "lastThreeScores": {
+                    "$lastN": {
+                        "input": [
+                            "$playerId",
+                            "$score"
+                        ],
+                        "n": {
+                            "$numberInt": "3"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Finding the Last Three Player Scores Across Multiple Games
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#finding-the-last-three-player-scores-across-multiple-games
+     */
+    case LastNFindingTheLastThreePlayerScoresAcrossMultipleGames = <<<'JSON'
+    [
+        {
+            "$group": {
+                "_id": "$gameId",
+                "playerId": {
+                    "$lastN": {
+                        "input": [
+                            "$playerId",
+                            "$score"
+                        ],
+                        "n": {
+                            "$numberInt": "3"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Using $sort With $lastN
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#using--sort-with--lastn
+     */
+    case LastNUsingSortWithLastN = <<<'JSON'
+    [
+        {
+            "$sort": {
+                "score": {
+                    "$numberInt": "-1"
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$gameId",
+                "playerId": {
+                    "$lastN": {
+                        "input": [
+                            "$playerId",
+                            "$score"
+                        ],
+                        "n": {
+                            "$numberInt": "3"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Computing n Based on the Group Key for $group
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#computing-n-based-on-the-group-key-for--group
+     */
+    case LastNComputingNBasedOnTheGroupKeyForGroup = <<<'JSON'
+    [
+        {
+            "$group": {
+                "_id": {
+                    "gameId": "$gameId"
+                },
+                "gamescores": {
+                    "$lastN": {
+                        "input": "$score",
+                        "n": {
+                            "$cond": {
+                                "if": {
+                                    "$eq": [
+                                        "$gameId",
+                                        "G2"
+                                    ]
+                                },
+                                "then": {
+                                    "$numberInt": "1"
+                                },
+                                "else": {
+                                    "$numberInt": "3"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
 }

@@ -719,6 +719,32 @@ trait FactoryTrait
     }
 
     /**
+     * Returns the result of an expression for the first document in an array.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
+     * @param BSONArray|PackedArray|ResolvesToArray|array $expression
+     */
+    public static function first(PackedArray|ResolvesToArray|BSONArray|array $expression): FirstOperator
+    {
+        return new FirstOperator($expression);
+    }
+
+    /**
+     * Returns a specified number of elements from the beginning of an array.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/
+     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
+     */
+    public static function firstN(
+        ResolvesToInt|int $n,
+        PackedArray|ResolvesToArray|BSONArray|array $input,
+    ): FirstNOperator
+    {
+        return new FirstNOperator($n, $input);
+    }
+
+    /**
      * Returns the largest integer less than or equal to the specified number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/
@@ -999,6 +1025,32 @@ trait FactoryTrait
     ): IsoWeekYearOperator
     {
         return new IsoWeekYearOperator($date, $timezone);
+    }
+
+    /**
+     * Returns the result of an expression for the last document in an array.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
+     * @param BSONArray|PackedArray|ResolvesToArray|array $expression
+     */
+    public static function last(PackedArray|ResolvesToArray|BSONArray|array $expression): LastOperator
+    {
+        return new LastOperator($expression);
+    }
+
+    /**
+     * Returns a specified number of elements from the end of an array.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/
+     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
+     */
+    public static function lastN(
+        ResolvesToInt|int $n,
+        PackedArray|ResolvesToArray|BSONArray|array $input,
+    ): LastNOperator
+    {
+        return new LastNOperator($n, $input);
     }
 
     /**

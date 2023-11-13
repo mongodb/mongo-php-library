@@ -237,14 +237,16 @@ trait FactoryTrait
     }
 
     /**
-     * Returns a specified number of elements from the beginning of an array. Distinct from the $firstN accumulator.
+     * Returns an aggregation of the first n elements within a group.
+     * The elements returned are meaningful only if in a specified sort order.
+     * If the group contains fewer than n elements, $firstN returns all elements in the group.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input An expression that resolves to the array from which to return n elements.
+     * @param ResolvesToInt|int $n A positive integral expression that is either a constant or depends on the _id value for $group.
      */
     public static function firstN(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
         ResolvesToInt|int $n,
     ): FirstNAccumulator
     {
@@ -266,7 +268,9 @@ trait FactoryTrait
     }
 
     /**
-     * Returns a specified number of elements from the end of an array. Distinct from the $lastN accumulator.
+     * Returns an aggregation of the last n elements within a group.
+     * The elements returned are meaningful only if in a specified sort order.
+     * If the group contains fewer than n elements, $lastN returns all elements in the group.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
      * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.

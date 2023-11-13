@@ -185,10 +185,11 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $this->assertCount(1, $results);
 
         $checkResult = $results[0];
+
         // Sharded clusters and load balanced servers list plans per shard
-        if (array_key_exists('shards', $results[0])) {
-            $firstShard = array_key_first((array) $results[0]['shards']);
-            $checkResult = (array) $results[0]['shards']->$firstShard;
+        if (array_key_exists('shards', $checkResult)) {
+            $firstShard = array_key_first((array) $checkResult['shards']);
+            $checkResult = (array) $checkResult['shards']->$firstShard;
         }
 
         /* MongoDB 4.2 may optimize aggregate pipelines into queries, which can

@@ -17,6 +17,7 @@ return static function (RectorConfig $rectorConfig): void {
     // Modernize code
     $rectorConfig->sets([LevelSetList::UP_TO_PHP_74]);
 
+    // phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
     $rectorConfig->skip([
         // Do not use ternaries extensively
         IfIssetToCoalescingRector::class,
@@ -25,6 +26,7 @@ return static function (RectorConfig $rectorConfig): void {
             __DIR__ . '/tests/DocumentationExamplesTest.php',
         ],
     ]);
+    // phpcs:enable
 
     // All classes are public API by default, unless marked with @internal.
     $rectorConfig->ruleWithConfiguration(RemoveAnnotationRector::class, ['api']);

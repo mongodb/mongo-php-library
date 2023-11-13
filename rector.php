@@ -2,11 +2,9 @@
 
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
-use Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector;
-use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
+use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Set\ValueObject\LevelSetList;
-use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -19,24 +17,16 @@ return static function (RectorConfig $rectorConfig): void {
     // Modernize code
     $rectorConfig->sets([LevelSetList::UP_TO_PHP_74]);
 
+    // phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
     $rectorConfig->skip([
-        // Falsely detect unassigned variables in code paths stopped by PHPUnit\Framework\Assert::markTestSkipped()
-        AddDefaultValueForUndefinedVariableRector::class => [
-            __DIR__ . '/tests/',
-        ],
-        // @see https://github.com/phpstan/phpstan-src/pull/2429
-        RemoveExtraParametersRector::class => [
-            __DIR__ . '/src/Operation/',
-        ],
-        // Assigns wrong type due to outdated PHPStan stubs
-        TypedPropertyFromAssignsRector::class => [
-            __DIR__ . '/src/Model/BSONIterator.php',
-        ],
+        // Do not use ternaries extensively
+        IfIssetToCoalescingRector::class,
         // Not necessary in documentation examples
         JsonThrowOnErrorRector::class => [
             __DIR__ . '/tests/DocumentationExamplesTest.php',
         ],
     ]);
+    // phpcs:enable
 
     // All classes are public API by default, unless marked with @internal.
     $rectorConfig->ruleWithConfiguration(RemoveAnnotationRector::class, ['api']);

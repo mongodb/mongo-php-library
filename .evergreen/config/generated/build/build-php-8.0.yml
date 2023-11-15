@@ -7,38 +7,34 @@ tasks:
         vars:
           PHP_VERSION: "8.0"
       - func: "compile extension"
-        # TODO: Remove this variable once PHPC 1.17.0 is released
+      - func: "upload extension"
+  - name: "build-php-8.0-lowest"
+    tags: ["build", "php8.0", "lowest"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "8.0"
+      - func: "compile extension"
+        vars:
+         EXTENSION_VERSION: "1.17.0"
+      - func: "upload extension"
+  - name: "build-php-8.0-next-stable"
+    tags: ["build", "php8.0", "next-stable"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "8.0"
+      - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "v1.17"
+      - func: "upload extension"
+  - name: "build-php-8.0-next-minor"
+    tags: ["build", "php8.0", "next-minor"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "8.0"
+      - func: "compile extension"
         vars:
           EXTENSION_BRANCH: "master"
       - func: "upload extension"
-# TODO: Re-enable these tasks once PHPC 1.17.0 is released
-#  - name: "build-php-8.0-lowest"
-#    tags: ["build", "php8.0", "lowest"]
-#    commands:
-#      - func: "locate PHP binaries"
-#        vars:
-#          PHP_VERSION: "8.0"
-#      - func: "compile extension"
-#        vars:
-#         EXTENSION_VERSION: "1.17.0"
-#      - func: "upload extension"
-#  - name: "build-php-8.0-next-stable"
-#    tags: ["build", "php8.0", "next-stable"]
-#    commands:
-#      - func: "locate PHP binaries"
-#        vars:
-#          PHP_VERSION: "8.0"
-#      - func: "compile extension"
-#        vars:
-#          EXTENSION_BRANCH: "v1.17"
-#      - func: "upload extension"
-#  - name: "build-php-8.0-next-minor"
-#    tags: ["build", "php8.0", "next-minor"]
-#    commands:
-#      - func: "locate PHP binaries"
-#        vars:
-#          PHP_VERSION: "8.0"
-#      - func: "compile extension"
-#        vars:
-#          EXTENSION_BRANCH: "master"
-#      - func: "upload extension"

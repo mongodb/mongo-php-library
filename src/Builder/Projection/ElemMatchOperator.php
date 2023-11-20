@@ -23,7 +23,7 @@ use function is_array;
  */
 class ElemMatchOperator implements ProjectionInterface, OperatorInterface
 {
-    public const ENCODE = Encode::Object;
+    public const ENCODE = Encode::Single;
 
     /** @var QueryInterface|array $query */
     public readonly QueryInterface|array $query;

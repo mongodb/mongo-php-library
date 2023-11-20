@@ -3,7 +3,7 @@ name: $elemMatch
 link: 'https://www.mongodb.com/docs/manual/reference/operator/projection/elemMatch/'
 type:
     - projection
-encode: object
+encode: single
 description: |
     Projects the first element in an array that matches the specified $elemMatch condition.
 arguments:

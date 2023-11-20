@@ -26,14 +26,14 @@ class AllOperator implements FieldQueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<Type|array|bool|float|int|non-empty-string|null|stdClass> $value */
+    /** @var list<FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> $value */
     public readonly array $value;
 
     /**
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass ...$value
+     * @param FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$value
      * @no-named-arguments
      */
-    public function __construct(Type|stdClass|array|bool|float|int|null|string ...$value)
+    public function __construct(Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$value)
     {
         if (\count($value) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $value, got %d.', 1, \count($value)));

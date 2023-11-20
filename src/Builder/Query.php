@@ -7,6 +7,7 @@ namespace MongoDB\Builder;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Query\RegexOperator;
+use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
@@ -38,6 +39,14 @@ final class Query
         }
 
         return self::generatedRegex($regex);
+    }
+
+    /**
+     * Combine multiple field query operators that apply to a same field.
+     */
+    public static function fieldQuery(FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null ...$query): FieldQueryInterface
+    {
+        return new CombinedFieldQuery($query);
     }
 
     public static function query(QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null ...$query): QueryInterface

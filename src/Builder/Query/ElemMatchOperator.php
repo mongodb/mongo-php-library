@@ -8,11 +8,13 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
+use stdClass;
 
 use function is_array;
 
@@ -23,16 +25,17 @@ use function is_array;
  */
 class ElemMatchOperator implements FieldQueryInterface, OperatorInterface
 {
-    public const ENCODE = Encode::Object;
+    public const ENCODE = Encode::Single;
 
-    /** @var QueryInterface|array $query */
-    public readonly QueryInterface|array $query;
+    /** @var FieldQueryInterface|QueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $query */
+    public readonly Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query;
 
     /**
-     * @param QueryInterface|array $query
+     * @param FieldQueryInterface|QueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $query
      */
-    public function __construct(QueryInterface|array $query)
-    {
+    public function __construct(
+        Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query,
+    ) {
         if (is_array($query)) {
             $query = QueryObject::create($query);
         }

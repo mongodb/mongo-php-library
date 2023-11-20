@@ -35,9 +35,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/
      * @no-named-arguments
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass ...$value
+     * @param FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$value
      */
-    public static function all(Type|stdClass|array|bool|float|int|null|string ...$value): AllOperator
+    public static function all(
+        Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$value,
+    ): AllOperator
     {
         return new AllOperator(...$value);
     }
@@ -146,9 +148,11 @@ trait FactoryTrait
      * The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
-     * @param QueryInterface|array $query
+     * @param FieldQueryInterface|QueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $query
      */
-    public static function elemMatch(QueryInterface|array $query): ElemMatchOperator
+    public static function elemMatch(
+        Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query,
+    ): ElemMatchOperator
     {
         return new ElemMatchOperator($query);
     }

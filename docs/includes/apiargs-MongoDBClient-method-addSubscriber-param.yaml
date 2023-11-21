@@ -1,0 +1,9 @@
+arg_name: param
+name: $subscriber
+type: MongoDB\Driver\Monitoring\Subscriber
+description: |
+  A monitoring event subscriber to register with this Client.
+interface: phpmethod
+operation: ~
+optional: false
+...

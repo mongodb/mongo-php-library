@@ -9,7 +9,7 @@ tasks:
 
   - name: "test-serverless"
     tags: ["serverless"]
-    exec_timeout_secs: 1800
+    exec_timeout_secs: 3600
     commands:
       - func: "create serverless instance"
       - func: "start kms servers"
@@ -18,7 +18,7 @@ tasks:
 
   - name: "test-serverless-proxy"
     tags: ["serverless"]
-    exec_timeout_secs: 1800
+    exec_timeout_secs: 3600
     commands:
       # When testing with serverless proxies, update the group ID used in this task. The group ID is needed in a "post"
       # task that deletes the serverless cluster, so simply changing it for the "create serverless instance" function is

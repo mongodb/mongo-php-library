@@ -23,6 +23,7 @@ use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\Monitoring\Subscriber;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Session;
@@ -164,6 +165,16 @@ class Client
     }
 
     /**
+     * Registers a monitoring event subscriber with this Client's Manager
+     *
+     * @see Manager::addSubscriber()
+     */
+    final public function addSubscriber(Subscriber $subscriber): void
+    {
+        $this->manager->addSubscriber($subscriber);
+    }
+
+    /**
      * Returns a ClientEncryption instance for explicit encryption and decryption
      *
      * @param array $options Encryption options
@@ -294,6 +305,16 @@ class Client
         $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
+    }
+
+    /**
+     * Unregisters a monitoring event subscriber with this Client's Manager
+     *
+     * @see Manager::removeSubscriber()
+     */
+    final public function removeSubscriber(Subscriber $subscriber): void
+    {
+        $this->manager->removeSubscriber($subscriber);
     }
 
     /**

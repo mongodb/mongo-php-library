@@ -176,6 +176,7 @@ functions:
         working_dir: "src"
         script: |
           ${PREPARE_SHELL}
+
           SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP} \
           SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY} \
           SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY} \

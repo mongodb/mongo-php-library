@@ -16,6 +16,23 @@ tasks:
       - func: "set aws temp creds"
       - func: "run serverless tests"
 
+  - name: "test-serverless-proxy"
+    tags: ["serverless"]
+    exec_timeout_secs: 1800
+    commands:
+      # When testing with serverless proxies, update the group ID used in this task. The group ID is needed in a "post"
+      # task that deletes the serverless cluster, so simply changing it for the "create serverless instance" function is
+      # not sufficient.
+      - command: expansions.update
+        params:
+          updates:
+          - key: SERVERLESS_DRIVERS_GROUP
+            value: "${SERVERLESS_PROXY_DRIVERS_GROUP}"
+      - func: "create serverless instance"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run serverless tests"
+
   - name: "test-atlas-data-lake"
     commands:
       - func: "bootstrap mongohoused"

@@ -53,10 +53,11 @@ class StreamWrapper
 
     public function __destruct()
     {
-        /* This destructor is a workaround for PHP trying to use the stream well
-         * after all objects have been destructed. This can cause autoloading
-         * issues and possibly segmentation faults during PHP shutdown. */
-        $this->stream = null;
+        /* Ensure the stream is closed so the last chunk is written. This is
+         * necessary because PHP would close the stream after all objects have
+         * been destructed. This can cause autoloading issues and possibly
+         * segmentation faults during PHP shutdown. */
+        $this->stream_close();
     }
 
     /**

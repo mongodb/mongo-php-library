@@ -1,8 +1,8 @@
 arg_name: param
 name: $subscriber
-type: MongoDB\Driver\Monitoring\Subscriber
+type: :php:`MongoDB\\Driver\\Monitoring\\Subscriber <class.mongodb-driver-monitoring-subscriber>`
 description: |
-  A monitoring event subscriber to register with this Client.
+  A monitoring event subscriber to unregister with this Client.
 interface: phpmethod
 operation: ~
 optional: false

@@ -2,6 +2,8 @@
 MongoDB\\Client::removeSubscriber()
 ================================
 
+.. versionadded:: 1.18
+
 .. default-domain:: mongodb
 
 .. contents:: On this page
@@ -27,7 +29,7 @@ Definition
 
    .. note::
 
-         If $subscriber is not registered with this Client, this function
+         If ``$subscriber`` is not registered with this Client, this function
          is a no-op.
 
 Errors/Exceptions

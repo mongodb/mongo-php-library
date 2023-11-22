@@ -2,6 +2,8 @@
 MongoDB\\Client::addSubscriber()
 ================================
 
+.. versionadded:: 1.18
+
 .. default-domain:: mongodb
 
 .. contents:: On this page
@@ -28,8 +30,8 @@ Definition
 
    .. note::
 
-         If $subscriber is already registered with this Client, this function
-         is a no-op. If $subscriber is also registered globally, it will still
+         If ``$subscriber`` is already registered with this Client, this function
+         is a no-op. If ``$subscriber`` is also registered globally, it will still
          only be notified once of each event for this Client.
 
 Errors/Exceptions
@@ -109,7 +111,7 @@ The subscriber can then be registered with a Client:
 
         $client->test->users->insertOne(['username' => 'alice']);
 
-The above code will log the following to err output:
+The above code will write the following to stderr output:
 
 .. code-block:: text
 

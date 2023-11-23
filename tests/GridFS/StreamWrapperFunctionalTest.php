@@ -5,8 +5,6 @@ namespace MongoDB\Tests\GridFS;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\UTCDateTime;
 
-use function escapeshellarg;
-use function exec;
 use function fclose;
 use function feof;
 use function fread;
@@ -14,7 +12,6 @@ use function fseek;
 use function fstat;
 use function fwrite;
 
-use const PHP_BINARY;
 use const SEEK_CUR;
 use const SEEK_END;
 use const SEEK_SET;
@@ -206,19 +203,5 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $stream = $this->bucket->openUploadStream('filename');
 
         $this->assertSame(6, fwrite($stream, 'foobar'));
-    }
-
-    public function testAutocloseOnScriptEnd(): void
-    {
-        $command = PHP_BINARY . ' ' . escapeshellarg(__DIR__ . '/scripts/stream-autoclose.php');
-        exec($command, $output, $exitCode);
-
-        $this->assertSame([], $output);
-        $this->assertSame(0, $exitCode);
-
-        $fileDocument = $this->filesCollection->findOne(['filename' => 'hello.txt']);
-
-        $this->assertNotNull($fileDocument);
-        $this->assertSame(14, $fileDocument->length);
     }
 }

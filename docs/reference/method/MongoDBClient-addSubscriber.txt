@@ -1,0 +1,132 @@
+================================
+MongoDB\\Client::addSubscriber()
+================================
+
+.. versionadded:: 1.18
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::addSubscriber()
+
+    Registers a monitoring event subscriber with this Client. The subscriber
+    will be notified of all events for this Client.
+
+   .. code-block:: php
+
+      function addSubscriber(MongoDB\Driver\Monitoring\Subscriber $subscriber): void
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-addSubscriber-param.rst
+
+   .. note::
+
+         If ``$subscriber`` is already registered with this Client, this function
+         is a no-op. If ``$subscriber`` is also registered globally, it will still
+         only be notified once of each event for this Client.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+
+:php:`MongoDB\\Driver\\Exception\\InvalidArgumentException <mongodb-driver-exception-invalidargumentexception>`
+if subscriber is a :php:`MongoDB\\Driver\\Monitoring\\LogSubscriber <class.mongodb-driver-monitoring-logsubscriber>`,
+since loggers can only be registered globally with
+:php:`MongoDB\\Driver\\Monitoring\\addSubscriber <function.mongodb.driver.monitoring.addsubscriber>`.
+
+Example
+-------
+
+Create a :phpclass:`MongoDB\\Driver\\Monitoring\\CommandSubscriber` that
+logs all events:
+
+.. code-block:: php
+
+    <?php
+
+    use MongoDB\Driver\Monitoring\CommandSubscriber;
+    use MongoDB\Driver\Monitoring\CommandStartedEvent;
+    use MongoDB\Driver\Monitoring\CommandSucceededEvent;
+    use MongoDB\Driver\Monitoring\CommandFailedEvent;
+
+    class LogCommandSubscriber implements CommandSubscriber
+    {
+        private $stream;
+        public function __construct($stream)
+        {
+            $this->stream = $stream;
+        }
+
+        public function commandStarted(CommandStartedEvent $event): void
+        {
+            fwrite($this->stream, sprintf(
+                'Started command #%d "%s": %s%s',
+                $event->getRequestId(),
+                $event->getCommandName(),
+                Document::fromPHP($event->getCommand())->toCanonicalExtendedJSON(),
+                PHP_EOL,
+            ));
+        }
+
+        public function commandSucceeded(CommandSucceededEvent $event): void
+        {
+            fwrite($this->stream, sprintf(
+                'Succeeded command #%d "%s" in %d microseconds: %s%s',
+                $event->getRequestId(),
+                $event->getCommandName(),
+                $event->getDurationMicros(),
+                json_encode($event->getReply()),
+                PHP_EOL,
+            ));
+        }
+
+        public function commandFailed(CommandFailedEvent $event): void
+        {
+            fwrite($this->stream, sprintf(
+                'Failed command #%d "%s" in %d microseconds: %s%s',
+                $event->getRequestId(),
+                $event->getCommandName(),
+                $event->getDurationMicros(),
+                $event->getError()->getMessage(),
+                PHP_EOL,
+            ));
+        }
+    }
+
+The subscriber can then be registered with a Client:
+
+.. code-block:: php
+
+    <?php
+
+    $client = new MongoDB\Client();
+    $subscriber = new LogCommandSubscriber(STDERR);
+
+    $client->addSubscriber($subscriber);
+
+    $client->test->users->insertOne(['username' => 'alice']);
+
+The above code will write the following to stderr output:
+
+.. code-block:: text
+
+    Started command #1 "insert": { "insert" : "users", "ordered" : true, "$db" : "test", "lsid" : { "id" : { "$binary" : { "base64" : "dKTBhZD7Qvi0vUhvR58mCA==", "subType" : "04" } } }, "documents" : [ { "username" : "alice", "_id" : { "$oid" : "655d1fca12e81018340a4fc2" } } ] }
+    Succeeded command #1 "insert" in 876 microseconds: {"n":1,"ok":1}
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Client::removeSubscriber()`
+- :php:`Application Performance Monitoring (APM) <manual/en/mongodb.tutorial.apm>`
+- :php:`MongoDB\\Driver\\Manager::addSubscriber() <manual/en/mongodb-driver-manager.addsubscriber>`
+- :php:`MongoDB\Driver\Monitoring\CommandSubscriber <manual/en/class.mongodb-driver-monitoring-commandsubscriber>`

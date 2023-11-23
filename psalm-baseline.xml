@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.13.1@086b94371304750d1c673315321a55d15fc59015">
+<files psalm-version="5.16.0@2897ba636551a8cb61601cc26f6ccfbba6c36591">
   <file src="docs/examples/encryption/csfle-explicit_encryption.php">
     <MixedArgument>
       <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
@@ -148,14 +148,6 @@
       <code><![CDATA[$this->current()]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/Model/CollectionInfo.php">
-    <MixedArgument>
-      <code>$key</code>
-    </MixedArgument>
-    <MixedArrayOffset>
-      <code><![CDATA[$this->info[$key]]]></code>
-    </MixedArrayOffset>
-  </file>
   <file src="src/Model/CollectionInfoCommandIterator.php">
     <MixedArrayAssignment>
       <code><![CDATA[$info['idIndex']['ns']]]></code>
@@ -163,14 +155,6 @@
     <MixedOperand>
       <code><![CDATA[$info['name']]]></code>
     </MixedOperand>
-  </file>
-  <file src="src/Model/DatabaseInfo.php">
-    <MixedArgument>
-      <code>$key</code>
-    </MixedArgument>
-    <MixedArrayOffset>
-      <code><![CDATA[$this->info[$key]]]></code>
-    </MixedArrayOffset>
   </file>
   <file src="src/Model/DatabaseInfoLegacyIterator.php">
     <MixedArgument>
@@ -180,14 +164,6 @@
       <code>int</code>
       <code><![CDATA[key($this->databases)]]></code>
     </MixedReturnTypeCoercion>
-  </file>
-  <file src="src/Model/IndexInfo.php">
-    <MixedArgument>
-      <code>$key</code>
-    </MixedArgument>
-    <MixedArrayOffset>
-      <code><![CDATA[$this->info[$key]]]></code>
-    </MixedArrayOffset>
   </file>
   <file src="src/Model/IndexInput.php">
     <LessSpecificReturnStatement>
@@ -662,6 +638,13 @@
       <code><![CDATA[$this->changeStreamOptions['resumeAfter']]]></code>
       <code><![CDATA[$this->changeStreamOptions['startAfter']]]></code>
     </MixedReturnStatement>
+  </file>
+  <file src="src/PsrLogAdapter.php">
+    <MethodSignatureMismatch>
+      <code>$domain</code>
+      <code>$level</code>
+      <code>$message</code>
+    </MethodSignatureMismatch>
   </file>
   <file src="src/UpdateResult.php">
     <MixedAssignment>

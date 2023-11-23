@@ -74,7 +74,12 @@ BSON date and accompanying timezone string. Those same embedded documents can th
 .. literalinclude:: /examples/codecs/handling-data-types/DateTimeCodec.php
    :language: php
 
-This codec can now be leveraged by other codecs handle date fields.
+.. note::
+   When writing a codec, you should be as lenient as possible when it comes to handling data. In this case, the codec
+   handles any ``DateTimeInterface`` when encoding to BSON, as a ``UTCDateTime`` instance can be created from any such
+   object. When decoding data from BSON, it will always decode to a ``DateTimeImmutable`` instance.
+
+This codec can now be leveraged by other codecs that handle date fields.
 
 First, we add a ``createdAt`` field to the ``Person`` class:
 

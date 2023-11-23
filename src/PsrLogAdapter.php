@@ -90,21 +90,21 @@ final class PsrLogAdapter implements LogSubscriber
      *
      * @see LogSubscriber::log()
      */
-    public function log(int $mongocLevel, string $domain, string $message): void
+    public function log(int $level, string $domain, string $message): void
     {
-        if (! isset(self::MONGOC_TO_PSR[$mongocLevel])) {
+        if (! isset(self::MONGOC_TO_PSR[$level])) {
             throw new UnexpectedValueException(sprintf(
                 'Expected level to be >= %d and <= %d, %d given for domain "%s" and message: %s',
                 LogSubscriber::LEVEL_ERROR,
                 LogSubscriber::LEVEL_DEBUG,
-                $mongocLevel,
+                $level,
                 $domain,
                 $message,
             ));
         }
 
         $instance = self::getInstance();
-        $psrLevel = self::MONGOC_TO_PSR[$mongocLevel];
+        $psrLevel = self::MONGOC_TO_PSR[$level];
         $context = ['domain' => $domain];
 
         foreach ($instance->loggers as $logger) {

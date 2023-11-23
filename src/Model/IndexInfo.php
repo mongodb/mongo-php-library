@@ -183,13 +183,14 @@ class IndexInfo implements ArrayAccess
      * Check whether a field exists in the index information.
      *
      * @see https://php.net/arrayaccess.offsetexists
-     * @param mixed $key
+     * @param mixed $offset
      * @return boolean
+     * @psalm-param array-key $offset
      */
     #[ReturnTypeWillChange]
-    public function offsetExists($key)
+    public function offsetExists($offset)
     {
-        return array_key_exists($key, $this->info);
+        return array_key_exists($offset, $this->info);
     }
 
     /**
@@ -201,26 +202,27 @@ class IndexInfo implements ArrayAccess
      *
      * @see https://php.net/arrayaccess.offsetget
      * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst#getting-full-index-information
-     * @param mixed $key
+     * @param mixed $offset
      * @return mixed
+     * @psalm-param array-key $offset
      */
     #[ReturnTypeWillChange]
-    public function offsetGet($key)
+    public function offsetGet($offset)
     {
-        return $this->info[$key];
+        return $this->info[$offset];
     }
 
     /**
      * Not supported.
      *
      * @see https://php.net/arrayaccess.offsetset
-     * @param mixed $key
+     * @param mixed $offset
      * @param mixed $value
      * @throws BadMethodCallException
      * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetSet($key, $value)
+    public function offsetSet($offset, $value)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
     }
@@ -229,12 +231,12 @@ class IndexInfo implements ArrayAccess
      * Not supported.
      *
      * @see https://php.net/arrayaccess.offsetunset
-     * @param mixed $key
+     * @param mixed $offset
      * @throws BadMethodCallException
      * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetUnset($key)
+    public function offsetUnset($offset)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
     }

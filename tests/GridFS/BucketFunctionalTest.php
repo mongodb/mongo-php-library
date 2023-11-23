@@ -23,6 +23,7 @@ use stdClass;
 use function array_merge;
 use function call_user_func;
 use function current;
+use function escapeshellarg;
 use function exec;
 use function fclose;
 use function fopen;
@@ -39,7 +40,7 @@ use function strlen;
 use function strncasecmp;
 use function substr;
 
-use const PHP_EOL;
+use const PHP_BINARY;
 use const PHP_OS;
 
 /**
@@ -853,21 +854,33 @@ class BucketFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply to Windows');
         }
 
-        $path = __DIR__ . '/../../vendor/autoload.php';
-        $command = <<<CMD
-php -r "require '$path'; \\\$stream = (new MongoDB\Client)->test->selectGridFSBucket()->openUploadStream('filename', ['disableMD5' => true]);" 2>&1
-CMD;
+        $code = <<<'PHP'
+            require '%s';
+            $client = new \MongoDB\Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1:27017/?serverSelectionTimeoutMS=100');
+            $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
+            $gridfs = $database->selectGridFSBucket();
+            $stream = $gridfs->openUploadStream('hello.txt', ['disableMD5' => true]);
+            fwrite($stream, 'Hello MongoDB!');
+            PHP;
 
         @exec(
-            $command,
+            implode(' ', [
+                PHP_BINARY,
+                '-r',
+                escapeshellarg(sprintf($code, __DIR__ . '/../../vendor/autoload.php')),
+                '2>&1',
+            ]),
             $output,
             $return,
         );
 
+        $this->assertSame([], $output);
         $this->assertSame(0, $return);
-        $output = implode(PHP_EOL, $output);
 
-        $this->assertSame('', $output);
+        $fileDocument = $this->filesCollection->findOne(['filename' => 'hello.txt']);
+
+        $this->assertNotNull($fileDocument);
+        $this->assertSame(14, $fileDocument->length);
     }
 
     /**

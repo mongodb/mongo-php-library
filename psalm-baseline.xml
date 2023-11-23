@@ -639,6 +639,13 @@
       <code><![CDATA[$this->changeStreamOptions['startAfter']]]></code>
     </MixedReturnStatement>
   </file>
+  <file src="src/PsrLogAdapter.php">
+    <MethodSignatureMismatch>
+      <code>$domain</code>
+      <code>$level</code>
+      <code>$message</code>
+    </MethodSignatureMismatch>
+  </file>
   <file src="src/UpdateResult.php">
     <MixedAssignment>
       <code>$id</code>

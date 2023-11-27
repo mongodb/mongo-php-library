@@ -1,5 +1,5 @@
 tasks:
-  - name: "test-requireApiVersion-%mongodbVersion%"
+  - name: "test-mongodb-%mongodbVersion%-requireApiVersion"
     tags: ["standalone", "local", "%mongodbVersion%", "versioned_api"]
     commands:
       - func: "bootstrap mongo-orchestration"
@@ -14,7 +14,7 @@ tasks:
         vars:
           API_VERSION: "1"
 
-  - name: "test-acceptApiVersion2-%mongodbVersion%"
+  - name: "test-mongodb-%mongodbVersion%-acceptApiVersion2"
     tags: ["standalone", "local", "%mongodbVersion%", "versioned_api"]
     commands:
       - func: "bootstrap mongo-orchestration"

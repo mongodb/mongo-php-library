@@ -124,7 +124,7 @@ class ClientFunctionalTest extends FunctionalTestCase
 
     public function testAddAndRemoveSubscriber(): void
     {
-        $client = new Client(static::getUri());
+        $client = static::createTestClient();
 
         $addedSubscriber = $this->createMock(CommandSubscriber::class);
         $addedSubscriber->expects($this->once())->method('commandStarted');

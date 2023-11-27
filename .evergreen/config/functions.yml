@@ -158,12 +158,17 @@ functions:
     - command: shell.exec
       params:
         script: |
-          VARIANT=${VARIANT} DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/build-mongohouse-local.sh
+          cd ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake
+
+          DRIVERS_TOOLS="${DRIVERS_TOOLS}" \
+          bash pull-mongohouse-image.sh
     - command: shell.exec
       params:
-        background: true
         script: |
-          DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/run-mongohouse-local.sh
+          cd ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake
+
+          DRIVERS_TOOLS="${DRIVERS_TOOLS}" \
+          bash run-mongohouse-image.sh
 
   "create serverless instance":
     - command: shell.exec

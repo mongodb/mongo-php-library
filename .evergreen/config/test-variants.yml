@@ -21,7 +21,6 @@ buildvariants:
       - ".sharded .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".loadbalanced .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".serverless"
-      - "test-atlas-data-lake"
   - name: test-debian92-php82-local
     tags: ["test", "debian", "x64"]
     display_name: "Test: Debian 9.2, PHP 8.2"
@@ -156,3 +155,18 @@ buildvariants:
         name: "build-php-8.2"
     tasks:
       - "run-benchmark"
+
+  # Run Atlas Data Lake Tests on Ubuntu
+  - name: test-ubuntu2204-php82-local
+    tags: ["test", "ubuntu", "x64"]
+    display_name: "Test: Ubuntu 22.04 x64, PHP 8.2"
+    run_on: ubuntu2204-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-ubuntu2204"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+    depends_on:
+      - variant: "build-ubuntu2204"
+        name: "build-php-8.2"
+    tasks:
+      - "test-atlas-data-lake"

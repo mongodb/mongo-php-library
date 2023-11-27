@@ -856,7 +856,8 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $code = <<<'PHP'
             require '%s';
-            $client = new \MongoDB\Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1:27017/?serverSelectionTimeoutMS=100');
+            require '%s';
+            $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
             $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
             $gridfs = $database->selectGridFSBucket();
             $stream = $gridfs->openUploadStream('hello.txt', ['disableMD5' => true]);
@@ -867,7 +868,14 @@ class BucketFunctionalTest extends FunctionalTestCase
             implode(' ', [
                 PHP_BINARY,
                 '-r',
-                escapeshellarg(sprintf($code, __DIR__ . '/../../vendor/autoload.php')),
+                escapeshellarg(
+                    sprintf(
+                        $code,
+                        __DIR__ . '/../../vendor/autoload.php',
+                        // Include the PHPUnit autoload file to ensure PHPUnit classes can be loaded
+                        __DIR__ . '/../../vendor/bin/.phpunit/phpunit/vendor/autoload.php',
+                    ),
+                ),
                 '2>&1',
             ]),
             $output,

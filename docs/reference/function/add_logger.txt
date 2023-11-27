@@ -23,9 +23,24 @@ Definition
 
       function add_logger(Psr\Log\LoggerInterface $logger): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/function-add_logger-param.rst
+This function has the following parameters:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 20 80
+
+   * - Name
+     - Type
+     - Description
+
+   * - $logger
+     - Psr\\Log\\LoggerInterface
+     - A logger to register.
+
+       If the logger is already registered, the method will have no effect.
 
 Behavior
 --------

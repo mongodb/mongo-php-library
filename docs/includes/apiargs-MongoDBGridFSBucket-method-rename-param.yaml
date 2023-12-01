@@ -2,7 +2,7 @@ source:
   file: apiargs-MongoDBGridFSBucket-common-param.yaml
   ref: $id
 replacement:
-  resource: " to rename"
+  action: " to rename"
 ---
 arg_name: param
 name: $newFilename

@@ -23,13 +23,57 @@ Definition
 
       function listDatabaseNames(array $options = []): Iterator
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBClient-method-listDatabases-param.rst
+``$options`` : array
+  An array specifying the desired options.
 
-   The ``$options`` parameter supports the following options:
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
 
-   .. include:: /includes/apiargs/MongoDBClient-method-listDatabases-option.rst
+     * - Name
+       - Type
+       - Description
+
+     * - authorizedDatabases
+       - boolean
+       - A flag that determines which databases are returned based on the user
+         privileges when access control is enabled. For more information, see the
+         `listDatabases command documentation <https://mongodb.com/docs/manual/reference/command/listDatabases/>`_.
+
+         For servers < 4.0.5, this option is ignored.
+
+         .. versionadded:: 1.7
+
+     * - comment
+       - mixed
+       - .. include:: /includes/option-comment.rst
+
+         This is not supported for server versions prior to 4.4 and will result
+         in an exception at execution time if used.
+
+         .. versionadded:: 1.13
+
+     * - filter
+       - array|object
+       - A query expression to filter the list of databases.
+
+         You can specify a query expression for database fields (e.g. ``name``,
+         ``sizeOnDisk``, ``empty``).
+
+         .. versionadded:: 1.3
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/option-maxTimeMS.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/option-session.rst
+
+         .. versionadded:: 1.3
 
 Return Values
 -------------

@@ -23,19 +23,21 @@ Definition
 
       function removeSubscriber(MongoDB\Driver\Monitoring\Subscriber $subscriber): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBClient-method-removeSubscriber-param.rst
-
-   .. note::
-
-         If ``$subscriber`` is not registered with this Client, this function
-         is a no-op.
+``$subscriber`` : :php:`MongoDB\\Driver\\Monitoring\\Subscriber <class.mongodb-driver-monitoring-subscriber>`
+  A monitoring event subscriber to unregister with this Client.
 
 Errors/Exceptions
 -----------------
 
 .. include:: /includes/extracts/error-invalidargumentexception.rst
+
+Behavior
+--------
+
+If ``$subscriber`` is not registered with this Client, this function is a no-op.
 
 See Also
 --------

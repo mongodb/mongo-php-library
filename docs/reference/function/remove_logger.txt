@@ -26,21 +26,10 @@ Definition
 Parameters
 ----------
 
-This function has the following parameters:
+``$logger`` : Psr\\Log\\LoggerInterface
+  A logger to unregister.
 
-.. list-table::
-   :header-rows: 1
-   :widths: 20 20 80
-
-   * - Name
-     - Type
-     - Description
-
-   * - $logger
-     - Psr\\Log\\LoggerInterface
-     - A logger to unregister.
-
-       If the logger is not registered, the method will have no effect.
+  If the logger is not registered, the method will have no effect.
 
 Errors/Exceptions
 -----------------

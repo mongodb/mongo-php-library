@@ -22,15 +22,22 @@ Definition
 
    .. code-block:: php
 
-      function watch(array $pipeline = [], array $options = []): MongoDB\ChangeStream
+      function watch(
+          array $pipeline = [],
+          array $options = []
+      ): MongoDB\ChangeStream
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-watch-param.rst
+``$pipeline`` : array|object
+  The pipeline of stages to append to an initial ``$changeStream`` stage.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-watch-option.rst
+  .. |parent| replace:: database
+  .. include:: /includes/watch-options.rst
 
 Return Values
 -------------

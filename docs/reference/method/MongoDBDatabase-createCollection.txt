@@ -19,7 +19,10 @@ Definition
 
    .. code-block:: php
 
-      function createCollection(string $collectionName, array $options = []): array|object
+      function createCollection(
+          string $collectionName,
+          array $options = []
+      ): array|object
 
    MongoDB creates collections implicitly when you first reference the
    collection in a command, such as when inserting a document into a new
@@ -33,17 +36,302 @@ Definition
    :manual:`document validation criteria </core/document-validation>`,
    or configure your storage engine or indexing options.
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-createCollection-param.rst
+``$collectionName`` : string
+  The name of the collection to create.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-createCollection-option.rst
+  .. note::
 
-   Note that not all options are available on all versions of MongoDB. Refer to
-   the :manual:`create </reference/command/create>` command reference in the
-   MongoDB manual for compatibility considerations.
+     Not all options are available on all versions of MongoDB. Refer to the
+     :manual:`create </reference/command/create>` command reference in the
+     MongoDB manual for compatibility considerations.
+
+  .. |parent| replace:: database
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - autoIndexId
+       - boolean
+       - Specify ``false`` to disable the automatic creation of an index on the
+         ``_id`` field.
+
+         .. important::
+
+            For replica sets, do not set ``autoIndexId`` to ``false``.
+
+         .. deprecated:: 1.4
+            This option has been deprecated since MongoDB 3.2. As of MongoDB
+            4.0, this option cannot be ``false`` when creating a replicated
+            collection (i.e. a collection outside of the ``local`` database in
+            any mongod mode).
+
+     * - capped
+       - boolean
+       - To create a capped collection, specify ``true``. If you specify
+         ``true``, you must also set a maximum size in the ``size`` option.
+
+     * - changeStreamPreAndPostImages
+       - document
+       - Used to configure support for pre- and post-images in change streams.
+         See the :manual:`create </reference/command/create>` command
+         documentation for more information.
+
+         This option is available in MongoDB 6.0+ and will result in an
+         exception at execution time if specified for an older server version.
+
+         .. versionadded:: 1.13
+
+     * - clusteredIndex
+       - document
+       - A clustered index specification. See
+         :manual:`Clustered Collections </core/clustered-collections>` or the
+         :manual:`create </reference/command/create>` command documentation for
+         more information.
+
+         This option is available in MongoDB 5.3+ and will result in an
+         exception at execution time if specified for an older server version.
+
+         .. versionadded:: 1.13
+
+     * - collation
+       - array|object
+       - .. include:: /includes/option-collation.rst
+
+     * - comment
+       - mixed
+       - .. include:: /includes/option-comment.rst
+
+         This is not supported for server versions prior to 4.4 and will result
+         in an exception at execution time if used.
+
+         .. versionadded:: 1.13
+
+     * - encryptedFields
+       - document
+       - A document describing encrypted fields for queryable encryption. If
+         omitted, the ``encryptedFieldsMap`` option within the
+         ``autoEncryption`` driver option will be consulted. See
+         `Field Encryption and Queryability <https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/>`_
+         in the MongoDB manual for more information.
+
+         This option is available in MongoDB 7.0+ and will result in an
+         exception at execution time if specified for an older server version.
+
+         .. versionadded:: 1.13
+
+     * - expireAfterSeconds
+       - integer
+       - Used to automatically delete documents in time series collections. See
+         the :manual:`create </reference/command/create>` command documentation
+         for more information.
+
+         This option is available in MongoDB 5.0+ and will result in an
+         exception at execution time if specified for an older server version.
+
+         .. versionadded:: 1.9
+
+     * - flags
+       - integer
+       - Available for the MMAPv1 storage engine only to set the
+         ``usePowerOf2Sizes`` and ``noPadding`` flags.
+
+         The library provides constants that you can combine with a
+         :php:`bitwise OR operator <language.operators.bitwise>` to set the flag
+         values:
+
+         - ``MongoDB\Operation\CreateCollection::USE_POWER_OF_2_SIZES``: ``1``
+         - ``MongoDB\Operation\CreateCollection::NO_PADDING``: ``2``
+
+         Defaults to ``1``.
+
+         .. note::
+
+            MongoDB 3.0 and later ignores the ``usePowerOf2Sizes`` flag. See
+            :manual:`collMod </reference/command/collMod>` and
+            :manual:`db.createCollection()
+            </reference/method/db.createCollection>` for more information.
+
+     * - indexOptionDefaults
+       - array|object
+       - Allows users to specify a default configuration for indexes when
+         creating a collection.
+
+         The ``indexOptionDefaults`` option accepts a ``storageEngine``
+         document, which should take the following form:
+
+         .. code-block:: none
+
+            { <storage-engine-name>: <options> }
+
+         Storage engine configurations specified when creating indexes are
+         validated and logged to the :term:`oplog` during replication to support
+         replica sets with members that use different storage engines.
+
+     * - max
+       - integer
+       - The maximum number of documents allowed in the capped collection. The
+         ``size`` option takes precedence over this limit. If a capped
+         collection reaches the ``size`` limit before it reaches the maximum
+         number of documents, MongoDB removes old documents. If you prefer to
+         use the ``max`` limit, ensure that the ``size`` limit, which is
+         required for a capped collection, is sufficient to contain the maximum
+         number of documents.
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/option-maxTimeMS.rst
+
+     * - pipeline
+       - array
+       - An array that consists of the aggregation pipeline stage(s), which will
+         be applied to the collection or view specified by ``viewOn``. See the
+         :manual:`create </reference/command/create>` command documentation for
+         more information.
+
+         .. versionadded:: 1.13
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/option-session.rst
+
+         .. versionadded:: 1.3
+
+     * - size
+       - integer
+       - Specify a maximum size in bytes for a capped collection. Once a capped
+         collection reaches its maximum size, MongoDB removes the older
+         documents to make space for the new documents. The ``size`` option is
+         required for capped collections and ignored for other collections.
+
+     * - storageEngine
+       - array|object
+       - Available for the WiredTiger storage engine only.
+
+         Allows users to specify configuration to the storage engine on a
+         per-collection basis when creating a collection. The value of the
+         ``storageEngine`` option should take the following form:
+
+         .. code-block:: none
+
+            { <storage-engine-name>: <options> }
+
+         Storage engine configurations specified when creating collections are
+         validated and logged to the :term:`oplog` during replication to support
+         replica sets with members that use different storage engines.
+
+     * - timeseries
+       - array|object
+       - An object containing options for creating time series collections. See
+         the :manual:`create </reference/command/create>` command documentation
+         for supported options.
+
+         This option is available in MongoDB 5.0+ and will result in an
+         exception at execution time if specified for an older server version.
+
+         .. versionadded:: 1.9
+
+     * - typeMap
+       - array
+       - .. include:: /includes/option-typeMap.rst
+
+         This will be used for the returned command result document.
+
+     * - validator
+       - array|object
+       - Allows users to specify :manual:`validation rules or expressions
+         </core/document-validation>` for the collection. For more information,
+         see :manual:`Document Validation </core/document-validation>` in the
+         MongoDB manual.
+
+         The ``validator`` option takes an array that specifies the validation
+         rules or expressions. You can specify the expressions using the same
+         operators as MongoDB's
+         :manual:`query operators </reference/operator/query>` with the
+         exception of :query:`$geoNear`, :query:`$near`, :query:`$nearSphere`,
+         :query:`$text`, and :query:`$where`.
+
+         .. note::
+
+            - Validation occurs during updates and inserts. Existing documents
+              do not undergo validation checks until modification.
+
+            - You cannot specify a validator for collections in the ``admin``,
+              ``local``, and ``config`` databases.
+
+            - You cannot specify a validator for ``system.*`` collections.
+
+     * - validationAction
+       - string
+       - Determines whether to ``error`` on invalid documents or just ``warn``
+         about the violations but allow invalid documents to be inserted.
+
+         .. important::
+
+            Validation of documents only applies to those documents as
+            determined by the ``validationLevel``.
+
+         .. list-table::
+            :header-rows: 1
+
+            * - ``validationAction``
+              - Description
+
+            * - ``"error"``
+              - **Default**. Documents must pass validation before the write
+                occurs. Otherwise, the write operation fails.
+
+            * - ``"warn"``
+              - Documents do not have to pass validation. If the document fails
+                validation, the write operation logs the validation failure.
+
+     * - validationLevel
+       - string
+       - Determines how strictly MongoDB applies the validation rules to
+         existing documents during an update.
+
+         .. list-table::
+            :header-rows: 1
+
+            * - ``validationLevel``
+              - Description
+
+            * - ``"off"``
+              - No validation for inserts or updates.
+
+            * - ``"strict"``
+              - **Default**. Apply validation rules to all inserts and all updates.
+
+            * - ``"moderate"``
+              - Apply validation rules to inserts and to updates on existing
+                *valid* documents. Do not apply rules to updates on existing
+                *invalid* documents.
+
+     * - viewOn
+       - string
+       - The name of the source collection or view from which to create the view.
+
+         .. note::
+
+            The name is not the full namespace of the collection or view (i.e.
+            it does not include the database name). Views must be created in the
+            same databases as the source collection or view.
+
+            .. versionadded:: 1.13
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - .. include:: /includes/option-writeConcern.rst
 
 Return Values
 -------------

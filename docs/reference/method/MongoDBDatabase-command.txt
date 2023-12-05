@@ -35,8 +35,6 @@ Parameters
 ``$options`` : array
   An array specifying the desired options.
 
-  .. |parent| replace:: database
-
   .. list-table::
      :header-rows: 1
      :widths: 20 20 80
@@ -47,17 +45,17 @@ Parameters
 
      * - readPreference
        - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
-       - .. include:: /includes/option-readPreference.rst
+       - .. include:: /includes/extracts/database-option-readPreference.rst
 
      * - session
        - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
-       - .. include:: /includes/option-session.rst
+       - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
 
      * - typeMap
        - array
-       - .. include:: /includes/option-typeMap.rst
+       - .. include:: /includes/extracts/database-option-typeMap.rst
 
 Return Values
 -------------

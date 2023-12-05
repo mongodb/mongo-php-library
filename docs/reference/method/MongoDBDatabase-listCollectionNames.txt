@@ -50,7 +50,7 @@ Parameters
 
      * - comment
        - mixed
-       - .. include:: /includes/option-comment.rst
+       - .. include:: /includes/extracts/common-option-comment.rst
 
          This is not supported for server versions prior to 4.4 and will result
          in an exception at execution time if used.
@@ -66,11 +66,11 @@ Parameters
 
      * - maxTimeMS
        - integer
-       - .. include:: /includes/option-maxTimeMS.rst
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - session
        - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
-       - .. include:: /includes/option-session.rst
+       - .. include:: /includes/extracts/common-option-session.rst
 
 Return Values
 -------------

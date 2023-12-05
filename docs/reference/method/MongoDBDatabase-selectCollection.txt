@@ -33,8 +33,6 @@ Parameters
 ``$options`` : array
   An array specifying the desired options.
 
-  .. |parent| replace:: database
-
   .. list-table::
      :header-rows: 1
      :widths: 20 20 80
@@ -45,19 +43,23 @@ Parameters
 
      * - readConcern
        - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
-       - .. include:: /includes/option-readConcern.rst
+       - The default read concern to use for collection operations. Defaults to
+         the database's read concern.
 
      * - readPreference
        - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
-       - .. include:: /includes/option-readPreference.rst
+       - The default read preference to use for collection operations. Defaults
+         to the database's read preference.
 
      * - typeMap
        - array
-       - .. include:: /includes/option-typeMap.rst
+       - The default type map to use for collection operations. Defaults to the
+         database's type map.
 
      * - writeConcern
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
-       - .. include:: /includes/option-writeConcern.rst
+       - The default write concern to use for collection operations. Defaults to
+         the database's write concern.
 
 Return Values
 -------------

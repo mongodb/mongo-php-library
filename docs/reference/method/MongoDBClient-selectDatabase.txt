@@ -53,8 +53,8 @@ Parameters
 
      * - typeMap
        - array
-       - .. |parent| replace:: client
-         .. include:: /includes/option-typeMap.rst
+       - The default type map to use for database operations. Defaults to the
+         client's type map.
 
      * - writeConcern
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`

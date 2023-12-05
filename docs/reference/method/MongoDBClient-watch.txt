@@ -36,7 +36,6 @@ Parameters
 ``$options`` : array
   An array specifying the desired options.
 
-  .. |parent| replace:: client
   .. include:: /includes/watch-options.rst
 
 Return Values

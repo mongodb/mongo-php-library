@@ -22,11 +22,11 @@
 
    * - collation
      - array|object
-     - .. include:: /includes/option-collation.rst
+     - .. include:: /includes/extracts/common-option-collation.rst
 
    * - comment
      - mixed
-     - .. include:: /includes/option-comment.rst
+     - .. include:: /includes/extracts/common-option-comment.rst
 
        The comment can be any valid BSON type for server versions 4.4 and above.
        Earlier server versions only support string values.
@@ -92,11 +92,11 @@
 
    * - readConcern
      - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
-     - .. include:: /includes/option-readConcern.rst
+     - .. include:: /includes/extracts/common-option-readConcern.rst
 
    * - readPreference
      - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
-     - .. include:: /includes/option-readPreference.rst
+     - .. include:: /includes/extracts/common-option-readPreference.rst
 
        This is used for both the initial change stream aggregation and for
        server selection during an automatic resume.
@@ -117,7 +117,7 @@
 
    * - session
      - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
-     - .. include:: /includes/option-session.rst
+     - .. include:: /includes/extracts/common-option-session.rst
 
    * - showExpandedEvents
      - boolean
@@ -182,4 +182,4 @@
 
    * - typeMap
      - array
-     - .. include:: /includes/option-typeMap.rst
+     - .. include:: /includes/extracts/common-option-typeMap.rst

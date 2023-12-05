@@ -51,8 +51,6 @@ Parameters
      :manual:`create </reference/command/create>` command reference in the
      MongoDB manual for compatibility considerations.
 
-  .. |parent| replace:: database
-
   .. list-table::
      :header-rows: 1
      :widths: 20 20 80
@@ -106,11 +104,11 @@ Parameters
 
      * - collation
        - array|object
-       - .. include:: /includes/option-collation.rst
+       - .. include:: /includes/extracts/common-option-collation.rst
 
      * - comment
        - mixed
-       - .. include:: /includes/option-comment.rst
+       - .. include:: /includes/extracts/common-option-comment.rst
 
          This is not supported for server versions prior to 4.4 and will result
          in an exception at execution time if used.
@@ -190,7 +188,7 @@ Parameters
 
      * - maxTimeMS
        - integer
-       - .. include:: /includes/option-maxTimeMS.rst
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - pipeline
        - array
@@ -203,7 +201,7 @@ Parameters
 
      * - session
        - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
-       - .. include:: /includes/option-session.rst
+       - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
 
@@ -243,7 +241,7 @@ Parameters
 
      * - typeMap
        - array
-       - .. include:: /includes/option-typeMap.rst
+       - .. include:: /includes/extracts/database-option-typeMap.rst
 
          This will be used for the returned command result document.
 
@@ -331,7 +329,7 @@ Parameters
 
      * - writeConcern
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
-       - .. include:: /includes/option-writeConcern.rst
+       - .. include:: /includes/extracts/database-option-writeConcern.rst
 
 Return Values
 -------------

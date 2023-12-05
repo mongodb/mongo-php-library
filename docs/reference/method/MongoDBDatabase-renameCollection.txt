@@ -46,8 +46,6 @@ Parameters
 ``$options`` : array
   An array specifying the desired options.
 
-  .. |parent| replace:: database
-
   .. list-table::
      :header-rows: 1
      :widths: 20 20 80
@@ -58,7 +56,7 @@ Parameters
 
      * - comment
        - mixed
-       - .. include:: /includes/option-comment.rst
+       - .. include:: /includes/extracts/common-option-comment.rst
 
          This is not supported for server versions prior to 4.4 and will result
          in an exception at execution time if used.
@@ -67,17 +65,17 @@ Parameters
 
      * - session
        - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
-       - .. include:: /includes/option-session.rst
+       - .. include:: /includes/extracts/common-option-session.rst
 
      * - typeMap
        - array
-       - .. include:: /includes/option-typeMap.rst
+       - .. include:: /includes/extracts/database-option-typeMap.rst
 
          This will be used for the returned command result document.
 
      * - writeConcern
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
-       - .. include:: /includes/option-writeConcern.rst
+       - .. include:: /includes/extracts/database-option-writeConcern.rst
 
      * - dropTarget
        - boolean

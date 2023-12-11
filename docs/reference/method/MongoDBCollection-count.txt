@@ -51,8 +51,7 @@ Parameters
        - mixed
        - .. include:: /includes/extracts/common-option-comment.rst
 
-         This is not supported for server versions prior to 4.4 and will result
-         in an exception at execution time if used.
+         .. include:: /includes/extracts/option-requires-4.4.rst
 
          .. versionadded:: 1.13
 
@@ -78,10 +77,7 @@ Parameters
        - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
-         It is not possible to specify a :manual:`read concern
-         </reference/read-concern>` for individual operations as part of a
-         transaction. Instead, set the ``readConcern`` option when starting the
-         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+         .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
        - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`

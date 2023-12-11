@@ -69,8 +69,7 @@ Parameters
        - mixed
        - .. include:: /includes/extracts/common-option-comment.rst
 
-         The comment can be any valid BSON type for server versions 4.4 and above.
-         Earlier server versions only support string values.
+         .. include:: /includes/extracts/common-option-comment-string-before-4.4.rst
 
      * - cursorType
        - integer
@@ -175,10 +174,7 @@ Parameters
        - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/bucket-option-readConcern.rst
 
-         It is not possible to specify a :manual:`read concern
-         </reference/read-concern>` for individual operations as part of a
-         transaction. Instead, set the ``readConcern`` option when starting the
-         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+         .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
        - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`

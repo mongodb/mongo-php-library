@@ -56,8 +56,7 @@ Parameters
        - mixed
        - .. include:: /includes/extracts/common-option-comment.rst
   
-         The comment can be any valid BSON type for server versions 4.4 and above.
-         Earlier server versions only support string values.
+         .. include:: /includes/extracts/common-option-comment-string-before-4.4.rst
 
          .. versionadded:: 1.13
 

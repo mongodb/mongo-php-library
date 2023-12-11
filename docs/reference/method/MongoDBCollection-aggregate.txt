@@ -110,10 +110,7 @@ Parameters
        - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
-         It is not possible to specify a :manual:`read concern
-         </reference/read-concern>` for individual operations as part of a
-         transaction. Instead, set the ``readConcern`` option when starting the
-         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+         .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
        - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
@@ -133,10 +130,7 @@ Parameters
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
-         It is not possible to specify a :manual:`write concern
-         </reference/write-concern>` for individual operations as part of a
-         transaction. Instead, set the ``writeConcern`` option when starting the
-         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+         .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
 
          This only applies when a :ref:`$out <agg-out>` or
          :ref:`$merge <agg-merge>` stage is specified.

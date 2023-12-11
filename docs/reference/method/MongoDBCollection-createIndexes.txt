@@ -55,22 +55,22 @@ Parameters
        - mixed
        - .. include:: /includes/extracts/common-option-comment.rst
 
-         This is not supported for server versions prior to 4.4 and will result in an
-         exception at execution time if used.
+         .. include:: /includes/extracts/option-requires-4.4.rst
 
          .. versionadded:: 1.13
 
      * - commitQuorum
        - string|integer
        - Specifies how many data-bearing members of a replica set, including the
-         primary, must complete the index builds successfully before the primary marks
-         the indexes as ready.
+         primary, must complete the index builds successfully before the primary
+         marks the indexes as ready.
 
-         This option accepts the same values for the ``w`` field in a write concern
-         plus ``"votingMembers"``, which indicates all voting data-bearing nodes.
+         This option accepts the same values for the ``w`` field in a write
+         concern plus ``"votingMembers"``, which indicates all voting
+         data-bearing nodes.
 
-         This is not supported for server versions prior to 4.4 and will result in an
-         exception at execution time if used.
+         This is not supported for server versions prior to 4.4 and will result
+         in an exception at execution time if used.
 
          .. versionadded:: 1.7
 
@@ -90,10 +90,7 @@ Parameters
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
-         It is not possible to specify a :manual:`write concern
-         </reference/write-concern>` for individual operations as part of a
-         transaction. Instead, set the ``writeConcern`` option when starting the
-         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+         .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
 
 Return Values
 -------------

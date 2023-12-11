@@ -13,6 +13,11 @@ content: |
   :manual:`currentOp </reference/command/currentOp>` output, and
   :manual:`logs </reference/log-messages>`.
 ---
+ref: common-option-comment-string-before-4.4
+content: |
+  The comment can be any valid BSON type since MongoDB 4.4. Earlier server
+  versions only support string values.
+---
 ref: common-option-hint
 content: |
   The index to use. Specify either the index name as a string or the index key
@@ -41,6 +46,12 @@ content: |
 replacement:
   object: object
 ---
+ref: common-option-readConcern-transaction
+content: |
+  It is not possible to specify a read concern for individual operations as part
+  of a transaction. Instead, set the ``readConcern`` option when
+  :php:`starting the transaction <mongodb-driver-session.starttransaction>`.
+---
 ref: common-option-readPreference
 content: |
   :manual:`Read preference </reference/read-preference>` to use for the
@@ -66,4 +77,10 @@ content: |
   Defaults to the {{object}}'s write concern.
 replacement:
   object: object
+---
+ref: common-option-writeConcern-transaction
+content: |
+  It is not possible to specify a write concern for individual operations as
+  part of a transaction. Instead, set the ``writeConcern`` option when
+  :php:`starting the transaction <mongodb-driver-session.starttransaction>`.
 ...

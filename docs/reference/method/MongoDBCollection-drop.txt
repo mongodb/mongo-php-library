@@ -39,8 +39,7 @@ Parameters
        - mixed
        - .. include:: /includes/extracts/common-option-comment.rst
 
-         This is not supported for server versions prior to 4.4 and will result in an
-         exception at execution time if used.
+         .. include:: /includes/extracts/option-requires-4.4.rst
 
          .. versionadded:: 1.13
 
@@ -80,10 +79,7 @@ Parameters
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
-         It is not possible to specify a :manual:`write concern
-         </reference/write-concern>` for individual operations as part of a
-         transaction. Instead, set the ``writeConcern`` option when starting the
-         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+         .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
 
 
 

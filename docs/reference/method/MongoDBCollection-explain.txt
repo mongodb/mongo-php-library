@@ -47,10 +47,9 @@ Parameters
        - mixed
        - .. include:: /includes/extracts/common-option-comment.rst
 
-         Defaults to the ``comment`` of the explained operation (if any).
+         .. include:: /includes/extracts/option-requires-4.4.rst
 
-         This is not supported for server versions prior to 4.4 and will result in an
-         exception at execution time if used.
+         Defaults to the ``comment`` of the explained operation (if any).
 
          .. versionadded:: 1.13
 

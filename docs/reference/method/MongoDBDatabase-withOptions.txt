@@ -54,10 +54,8 @@ Parameters
 
      * - writeConcern
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
-       - The default write concern to use for database operations. Defaults
-         to the original database's write concern.
-
-
+       - The default write concern to use for database operations. Defaults to
+         the original database's write concern.
 
 Return Values
 -------------

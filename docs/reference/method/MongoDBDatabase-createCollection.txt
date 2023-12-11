@@ -245,30 +245,6 @@ Parameters
 
          This will be used for the returned command result document.
 
-     * - validator
-       - array|object
-       - Allows users to specify :manual:`validation rules or expressions
-         </core/document-validation>` for the collection. For more information,
-         see :manual:`Document Validation </core/document-validation>` in the
-         MongoDB manual.
-
-         The ``validator`` option takes an array that specifies the validation
-         rules or expressions. You can specify the expressions using the same
-         operators as MongoDB's
-         :manual:`query operators </reference/operator/query>` with the
-         exception of :query:`$geoNear`, :query:`$near`, :query:`$nearSphere`,
-         :query:`$text`, and :query:`$where`.
-
-         .. note::
-
-            - Validation occurs during updates and inserts. Existing documents
-              do not undergo validation checks until modification.
-
-            - You cannot specify a validator for collections in the ``admin``,
-              ``local``, and ``config`` databases.
-
-            - You cannot specify a validator for ``system.*`` collections.
-
      * - validationAction
        - string
        - Determines whether to ``error`` on invalid documents or just ``warn``
@@ -314,6 +290,30 @@ Parameters
               - Apply validation rules to inserts and to updates on existing
                 *valid* documents. Do not apply rules to updates on existing
                 *invalid* documents.
+
+     * - validator
+       - array|object
+       - Allows users to specify :manual:`validation rules or expressions
+         </core/document-validation>` for the collection. For more information,
+         see :manual:`Document Validation </core/document-validation>` in the
+         MongoDB manual.
+
+         The ``validator`` option takes an array that specifies the validation
+         rules or expressions. You can specify the expressions using the same
+         operators as MongoDB's
+         :manual:`query operators </reference/operator/query>` with the
+         exception of :query:`$geoNear`, :query:`$near`, :query:`$nearSphere`,
+         :query:`$text`, and :query:`$where`.
+
+         .. note::
+
+            - Validation occurs during updates and inserts. Existing documents
+              do not undergo validation checks until modification.
+
+            - You cannot specify a validator for collections in the ``admin``,
+              ``local``, and ``config`` databases.
+
+            - You cannot specify a validator for ``system.*`` collections.
 
      * - viewOn
        - string

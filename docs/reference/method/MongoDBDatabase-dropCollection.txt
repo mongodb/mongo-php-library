@@ -41,6 +41,15 @@ Parameters
        - Type
        - Description
 
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         This is not supported for server versions prior to 4.4 and will result
+         in an exception at execution time if used.
+
+         .. versionadded:: 1.13
+
      * - encryptedFields
        - array|object
        - A document describing encrypted fields for queryable encryption. If
@@ -58,15 +67,6 @@ Parameters
             :manual:`drop </reference/command/drop>` command. The library uses
             it to determine related metadata collections that should be dropped
             in addition to an encrypted collection.
-
-         .. versionadded:: 1.13
-
-     * - comment
-       - mixed
-       - .. include:: /includes/extracts/common-option-comment.rst
-
-         This is not supported for server versions prior to 4.4 and will result
-         in an exception at execution time if used.
 
          .. versionadded:: 1.13
 

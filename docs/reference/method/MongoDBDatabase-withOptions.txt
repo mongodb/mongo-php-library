@@ -47,8 +47,10 @@ Parameters
 
      * - typeMap
        - array
-       - .. |parent| replace:: original database
-         .. include:: /includes/extracts/database-option-typeMap.rst
+       - The :php:`type map
+         <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`
+         to apply to cursors, which determines how BSON documents are converted
+         to PHP values. Defaults to the original database's type map.
 
      * - writeConcern
        - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`

@@ -35,7 +35,78 @@ Parameters
 
 ``$options`` : array
   An array specifying the desired options.
-  .. include:: /includes/watch-options.rst
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - batchSize
+       - integer
+       - .. include:: /includes/extracts/watch-option-batchSize.rst
+
+     * - collation
+       - array|object
+       - .. include:: /includes/extracts/common-option-collation.rst
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+  
+         The comment can be any valid BSON type for server versions 4.4 and above.
+         Earlier server versions only support string values.
+
+         .. versionadded:: 1.13
+
+     * - fullDocument
+       - string
+       - .. include:: /includes/extracts/watch-option-fullDocument.rst
+
+     * - fullDocumentBeforeChange
+       - string
+       - .. include:: /includes/extracts/watch-option-fullDocumentBeforeChange.rst
+
+     * - maxAwaitTimeMS
+       - integer
+       - .. include:: /includes/extracts/watch-option-maxAwaitTimeMS.rst
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - .. include:: /includes/extracts/database-option-readConcern.rst
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/database-option-readPreference.rst
+
+         This is used for both the initial change stream aggregation and for
+         server selection during an automatic resume.
+
+     * - resumeAfter
+       - array|object
+       - .. include:: /includes/extracts/watch-option-resumeAfter.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+     * - showExpandedEvents
+       - boolean
+       - .. include:: /includes/extracts/watch-option-showExpandedEvents.rst
+
+     * - startAfter
+       - array|object
+       - .. include:: /includes/extracts/watch-option-startAfter.rst
+
+     * - startAtOperationTime
+       - :php:`MongoDB\\BSON\\TimestampInterface <class.mongodb-bson-timestampinterface>`
+       - .. include:: /includes/extracts/watch-option-startAtOperationTime.rst
+
+     * - typeMap
+       - array
+       - .. include:: /includes/extracts/database-option-typeMap.rst
 
 Return Values
 -------------

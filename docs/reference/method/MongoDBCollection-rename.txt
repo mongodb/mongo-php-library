@@ -21,15 +21,67 @@ Definition
 
    .. code-block:: php
 
-      function rename(string $toCollectionName, ?string $toDatabaseName = null, array $options = []): array|object
+      function rename(
+          string $toCollectionName,
+          ?string $toDatabaseName = null,
+          array $options = []
+      ): array|object
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-rename-param.rst
+``$toCollectionName`` : string
+  The new name of the collection.
 
-   The ``$options`` parameter supports the following options:
+``$toDatabaseName`` : string
+  The new database name of the collection. If a new database name is not
+  specified, the database of the original collection will be used. If the new
+  name specifies a different database, the command copies the collection
+  to the new database and drops the source collection.
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-rename-option.rst
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - dropTarget
+       - boolean
+       - If ``true``, MongoDB will drop the target before renaming the
+         collection. The default value is ``false``.
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         This is not supported for server versions prior to 4.4 and will result in an
+         exception at execution time if used.
+
+         .. versionadded:: 1.13
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+     * - typeMap
+       - array
+       - .. include:: /includes/extracts/collection-option-typeMap.rst
+
+         This will be used for the returned command result document.
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - .. include:: /includes/extracts/collection-option-writeConcern.rst
+
+         It is not possible to specify a :manual:`write concern
+         </reference/write-concern>` for individual operations as part of a
+         transaction. Instead, set the ``writeConcern`` option when starting the
+         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
 
 Return Values
 -------------

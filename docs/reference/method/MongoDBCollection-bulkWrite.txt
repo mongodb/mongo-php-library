@@ -19,15 +19,96 @@ Definition
 
    .. code-block:: php
 
-      function bulkWrite(array $operations, array $options = []): MongoDB\BulkWriteResult
+      function bulkWrite(
+          array $operations,
+          array $options = []
+      ): MongoDB\BulkWriteResult
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-bulkWrite-param.rst
+``$operations`` : array
+  An array containing the write operations to perform.
+  :phpmethod:`MongoDB\\Collection::bulkWrite()` supports
+  :phpmethod:`deleteMany() <MongoDB\\Collection::deleteMany>`,
+  :phpmethod:`deleteOne() <MongoDB\\Collection::deleteOne>`,
+  :phpmethod:`insertOne() <MongoDB\\Collection::insertOne>`,
+  :phpmethod:`replaceOne() <MongoDB\\Collection::replaceOne>`,
+  :phpmethod:`updateMany() <MongoDB\\Collection::updateMany>`, and
+  :phpmethod:`updateOne() <MongoDB\\Collection::updateOne>` operations in the
+  following array structure:
 
-   The ``$options`` parameter supports the following options:
+  .. code-block:: php
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-bulkWrite-option.rst
+     [
+         [ 'deleteMany' => [ $filter ] ],
+         [ 'deleteOne'  => [ $filter ] ],
+         [ 'insertOne'  => [ $document ] ],
+         [ 'replaceOne' => [ $filter, $replacement, $options ] ],
+         [ 'updateMany' => [ $filter, $update, $options ] ],
+         [ 'updateOne'  => [ $filter, $update, $options ] ],
+     ]
+
+  Arguments correspond to the respective operation methods. However, the
+  ``writeConcern`` option is specified as a top-level option to
+  :phpmethod:`MongoDB\\Collection::bulkWrite()` instead of each individual
+  operation.
+
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - bypassDocumentValidation
+       - boolean
+       - If ``true``, allows the write operation to circumvent document level
+         validation. Defaults to ``false``.
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         This is not supported for server versions prior to 4.4 and will result
+         in an exception at execution time if used.
+
+         .. versionadded:: 1.13
+
+     * - let
+       - array|object
+       - .. include:: /includes/extracts/common-option-let.rst
+
+         .. versionadded:: 1.13
+
+     * - ordered
+       - boolean
+       - If ``true``: when a single write fails, the operation will stop without
+         performing the remaining writes and throw an exception.
+
+         If ``false``: when a single write fails, the operation will continue
+         with the remaining writes, if any, and throw an exception.
+
+         The default is ``true``.
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+         .. versionadded:: 1.3
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - .. include:: /includes/extracts/collection-option-writeConcern.rst
+
+         It is not possible to specify a :manual:`write concern
+         </reference/write-concern>` for individual operations as part of a
+         transaction. Instead, set the ``writeConcern`` option when starting the
+         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
 
 Return Values
 -------------

@@ -21,15 +21,81 @@ Definition
 
    .. code-block:: php
 
-      function count(array|object $filter = [], array $options = []): integer
+      function count(
+          array|object $filter = [],
+          array $options = []
+      ): integer
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-count-param.rst
+``$filter`` : array|object
+  The filter criteria that specifies the documents to count.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-count-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - collation
+       - array|object
+       - .. include:: /includes/extracts/collection-option-collation.rst
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         This is not supported for server versions prior to 4.4 and will result
+         in an exception at execution time if used.
+
+         .. versionadded:: 1.13
+
+     * - hint
+       - string|array|object
+       - .. include:: /includes/extracts/common-option-hint.rst
+
+         .. versionchanged:: 1.2
+
+            If a document is provided, it is passed to the command as-is.
+            Previously, the library would convert the key pattern to an index
+            name.
+
+     * - limit
+       - integer
+       - The maximum number of matching documents to return.
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - .. include:: /includes/extracts/collection-option-readConcern.rst
+
+         It is not possible to specify a :manual:`read concern
+         </reference/read-concern>` for individual operations as part of a
+         transaction. Instead, set the ``readConcern`` option when starting the
+         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/collection-option-readPreference.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+         .. versionadded:: 1.3
+
+     * - skip
+       - integer
+       - The number of matching documents to skip before returning results.
 
 Return Values
 -------------

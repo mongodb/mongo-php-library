@@ -21,15 +21,53 @@ Definition
 
    .. code-block:: php
 
-      function explain(MongoDB\Operation\Explainable $explainable, array $options = []): array|object
+      function explain(
+          MongoDB\Operation\Explainable $explainable,
+          array $options = []
+      ): array|object
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-explain-param.rst
+``$explainable`` : :phpclass:`MongoDB\\Operation\\Explainable`
+  The command to explain.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-explain-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         Defaults to the ``comment`` of the explained operation (if any).
+
+         This is not supported for server versions prior to 4.4 and will result in an
+         exception at execution time if used.
+
+         .. versionadded:: 1.13
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/collection-option-readPreference.rst
+
+     * - typeMap
+       - array
+       - .. include:: /includes/extracts/collection-option-typeMap.rst
+
+         This will be used for the returned command result document.
+
+     * - verbosity
+       - string
+       - The verbosity level at which to run the command. See the :manual:`explain
+         </reference/command/explain>` command for more information.
 
 Return Values
 -------------

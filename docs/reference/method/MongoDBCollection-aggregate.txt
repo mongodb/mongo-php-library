@@ -20,15 +20,126 @@ Definition
 
    .. code-block:: php
 
-      function aggregate(array $pipeline, array $options = []): Traversable
+      function aggregate(
+          array $pipeline,
+          array $options = []
+      ): Traversable
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-aggregate-param.rst
+``$pipeline`` : array
+  Specifies an :manual:`aggregation pipeline </core/aggregation-pipeline>`
+  operation.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-aggregate-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - allowDiskUse
+       - boolean
+       - Enables writing to temporary files. When set to ``true``, aggregation
+         stages can write data to the ``_tmp`` sub-directory in the ``dbPath``
+         directory.
+
+     * - batchSize
+       - integer
+       - Specifies the batch size for the cursor, which will apply to both the
+         initial ``aggregate`` command and any subsequent ``getMore`` commands.
+         This determines the maximum number of documents to return in each
+         response from the server.
+
+         A batchSize of ``0`` is special in that and will only apply to the
+         initial ``aggregate`` command; subsequent ``getMore`` commands will use
+         the server's default batch size. This may be useful for quickly
+         returning a cursor or failure from ``aggregate`` without doing
+         significant server-side work.
+
+     * - bypassDocumentValidation
+       - boolean
+       - If ``true``, allows the write operation to circumvent document level
+         validation. Defaults to ``false``.
+
+         This only applies when using the :ref:`$out <agg-out>` and
+         :ref:`$out <agg-merge>` stages.
+
+     * - collation
+       - array|object
+       - .. include:: /includes/extracts/collection-option-collation.rst
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         The comment can be any valid BSON type for server versions 4.4 and
+         above. Earlier server versions only support string values.
+
+         .. versionadded:: 1.3
+
+     * - explain
+       - boolean
+       - Specifies whether or not to return the information on the processing of
+         the pipeline.
+
+         .. versionadded:: 1.4
+
+     * - hint
+       - string|array|object
+       - .. include:: /includes/extracts/common-option-hint.rst
+
+         .. versionadded:: 1.3
+
+     * - let
+       - array|object
+       - .. include:: /includes/extracts/common-option-let.rst
+
+         .. versionadded:: 1.9
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - .. include:: /includes/extracts/collection-option-readConcern.rst
+
+         It is not possible to specify a :manual:`read concern
+         </reference/read-concern>` for individual operations as part of a
+         transaction. Instead, set the ``readConcern`` option when starting the
+         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/collection-option-readPreference.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+         .. versionadded:: 1.3
+
+     * - typeMap
+       - array
+       - .. include:: /includes/extracts/collection-option-typeMap.rst
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - .. include:: /includes/extracts/collection-option-writeConcern.rst
+
+         It is not possible to specify a :manual:`write concern
+         </reference/write-concern>` for individual operations as part of a
+         transaction. Instead, set the ``writeConcern`` option when starting the
+         transaction with :php:`startTransaction <mongodb-driver-session.starttransaction>`.
+
+         This only applies when a :ref:`$out <agg-out>` or
+         :ref:`$merge <agg-merge>` stage is specified.
 
 Return Values
 -------------

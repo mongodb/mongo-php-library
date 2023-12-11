@@ -19,15 +19,43 @@ Definition
 
    .. code-block:: php
 
-      function openDownloadStreamByName(string $filename, array $options = []): resource
+      function openDownloadStreamByName(
+          string $filename,
+          array $options = []
+      ): resource
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openDownloadStreamByName-param.rst
+``$filename`` : string
+  The ``filename`` of the file to download.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openDownloadStreamByName-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - revision
+       - integer
+       - The revision of the file to retrieve. Files with the same ``filename``
+         will be differentiated by their ``uploadDate`` field.
+
+         Revision numbers are defined as follows:
+
+         - 0 = the original stored file
+         - 1 = the first revision
+         - 2 = the second revision
+         - etc...
+         - -2 = the second most recent revision
+         - -1 = the most recent revision
+
+         Defaults to -1 (i.e. the most recent revision).
 
 Return Values
 -------------

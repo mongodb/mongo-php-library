@@ -23,6 +23,8 @@ Definition
 
       function dropSearchIndex(string $name, array $options = []): void
 
+   .. include:: /includes/extracts/note-atlas-search-requirement.rst
+
 Parameters
 ----------
 
@@ -50,11 +52,6 @@ Errors/Exceptions
 .. include:: /includes/extracts/error-unsupportedexception.rst
 .. include:: /includes/extracts/error-invalidargumentexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
-
-Behavior
---------
-
-.. include:: /includes/extracts/note-atlas-search-requirement.rst
 
 See Also
 --------

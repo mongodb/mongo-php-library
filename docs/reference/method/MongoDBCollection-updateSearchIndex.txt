@@ -27,6 +27,8 @@ Definition
           array $options = []
       ): void
 
+   .. include:: /includes/extracts/note-atlas-search-requirement.rst
+
 Parameters
 ----------
 
@@ -64,7 +66,6 @@ Errors/Exceptions
 Behavior
 --------
 
-.. include:: /includes/extracts/note-atlas-search-requirement.rst
 .. include:: /includes/extracts/note-atlas-search-async.rst
 
 See Also

@@ -27,7 +27,6 @@ Definition
       ): string
 
    .. include:: /includes/extracts/note-atlas-search-requirement.rst
-   .. include:: /includes/extracts/note-atlas-search-async.rst
 
 Parameters
 ----------
@@ -73,7 +72,6 @@ Errors/Exceptions
 Behavior
 --------
 
-.. include:: /includes/extracts/note-atlas-search-requirement.rst
 .. include:: /includes/extracts/note-atlas-search-async.rst
 
 Examples

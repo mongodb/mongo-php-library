@@ -21,9 +21,11 @@ Definition
 
       function getFileDocumentForStream(resource $stream): array|object
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-getFileDocumentForStream-param.rst
+``$stream`` : resource
+  The GridFS stream resource.
 
 Return Values
 -------------

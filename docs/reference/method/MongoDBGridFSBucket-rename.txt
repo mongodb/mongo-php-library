@@ -21,9 +21,14 @@ Definition
 
       function rename($id, string $newFilename): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-rename-param.rst
+``$id`` : mixed
+  The ``_id`` of the file to rename.
+
+``$newFilename`` : string
+  The new ``filename`` value.
 
 Errors/Exceptions
 -----------------

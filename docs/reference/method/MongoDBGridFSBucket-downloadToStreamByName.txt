@@ -20,15 +20,47 @@ Definition
 
    .. code-block:: php
 
-      function downloadToStreamByName(string $filename, resource $destination, array $options = []): void
+      function downloadToStreamByName(
+          string $filename,
+          resource $destination,
+          array $options = []
+      ): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-downloadToStreamByName-param.rst
+``$filename`` : string
+  The ``filename`` of the file to download.
 
-   The ``$options`` parameter supports the following options:
+``$destination`` : resource
+  Writable stream, to which the GridFS file's contents will be written.
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-downloadToStreamByName-option.rst
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - revision
+       - integer
+       - The revision of the file to retrieve. Files with the same ``filename``
+         will be differentiated by their ``uploadDate`` field.
+
+         Revision numbers are defined as follows:
+
+         - 0 = the original stored file
+         - 1 = the first revision
+         - 2 = the second revision
+         - etc...
+         - -2 = the second most recent revision
+         - -1 = the most recent revision
+
+         Defaults to -1 (i.e. the most recent revision).
 
 Errors/Exceptions
 -----------------

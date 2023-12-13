@@ -23,13 +23,62 @@ Definition
 
       function countDocuments(array|object $filter = [], array $options = []): integer
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-countDocuments-param.rst
+``$filter`` : array|object
+  The filter criteria that specifies the documents to count.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-countDocuments-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - collation
+       - array|object
+       - .. include:: /includes/extracts/collection-option-collation.rst
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         .. include:: /includes/extracts/common-option-comment-string-before-4.4.rst
+
+     * - hint
+       - string|array|object
+       - .. include:: /includes/extracts/common-option-hint.rst
+
+     * - limit
+       - integer
+       - The maximum number of matching documents to return.
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - .. include:: /includes/extracts/collection-option-readConcern.rst
+
+         .. include:: /includes/extracts/common-option-readConcern-transaction.rst
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/collection-option-readPreference.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+     * - skip
+       - integer
+       - The number of matching documents to skip before returning results.
 
 Return Values
 -------------

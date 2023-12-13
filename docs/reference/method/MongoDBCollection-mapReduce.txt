@@ -24,15 +24,139 @@ Definition
 
    .. code-block:: php
 
-      function mapReduce(MongoDB\BSON\JavascriptInterface $map, MongoDB\BSON\JavascriptInterface $reduce, string|array|object $out, array $options = []): MongoDB\MapReduceResult
+      function mapReduce(
+          MongoDB\BSON\JavascriptInterface $map,
+          MongoDB\BSON\JavascriptInterface $reduce,
+          string|array|object $out,
+          array $options = []
+      ): MongoDB\MapReduceResult
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-mapReduce-param.rst
+``$map`` : :php:`MongoDB\\BSON\\Javascript <mongodb-bson-javascript>`
+  A JavaScript function that associates or "maps" a value with a key and emits
+  the key and value pair.
 
-   The ``$options`` parameter supports the following options:
+  .. note::
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-mapReduce-option.rst
+     Passing a Javascript instance with a scope is deprecated. Put all scope
+     variables in the ``scope`` option of the MapReduce operation.
+
+``$reduce`` : :php:`MongoDB\\BSON\\Javascript <class.mongodb-bson-javascript>`
+  A JavaScript function that "reduces" to a single object all the values
+  associated with a particular key.
+
+  .. note::
+
+     Passing a Javascript instance with a scope is deprecated. Put all scope
+     variables in the ``scope`` option of the MapReduce operation.
+
+``$out`` : string|array|object
+  Specifies where to output the result of the map-reduce operation. You can
+  either output to a collection or return the result inline. On a primary member
+  of a replica set you can output either to a collection or inline, but on a
+  secondary, only inline output is possible.
+
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - bypassDocumentValidation
+       - boolean
+       - If ``true``, allows the write operation to circumvent document level
+         validation. Defaults to ``false``.
+
+         This only applies when results are output to a collection.
+
+     * - collation
+       - array|object
+       - .. include:: /includes/extracts/collection-option-collation.rst
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         .. include:: /includes/extracts/option-requires-4.4.rst
+
+         .. versionadded:: 1.13
+
+     * - finalize
+       - :php:`MongoDB\\BSON\\Javascript <class.mongodb-bson-javascript>`
+       - Follows the reduce method and modifies the output.
+
+         .. note::
+
+            Passing a Javascript instance with a scope is deprecated. Put all
+            scope variables in the ``scope`` option of the MapReduce operation.
+
+     * - jsMode
+       - boolean
+       - Specifies whether to convert intermediate data into BSON format between
+         the execution of the map and reduce functions.
+
+     * - limit
+       - integer
+       - Specifies a maximum number of documents for the input into the map
+         function.
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
+
+     * - query
+       - array|object
+       - Specifies the selection criteria using query operators for determining
+         the documents input to the map function.
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - .. include:: /includes/extracts/collection-option-readConcern.rst
+
+         .. include:: /includes/extracts/common-option-readConcern-transaction.rst
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/collection-option-readPreference.rst
+
+         This option will be ignored when results are output to a collection.
+
+     * - scope
+       - array|object
+       - Specifies global variables that are accessible in the map, reduce, and
+         finalize functions.
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+         .. versionadded:: 1.3
+
+     * - sort
+       - array|object
+       - The sort specification for the ordering of the results.
+
+     * - typeMap
+       - array
+       - .. include:: /includes/extracts/collection-option-typeMap.rst
+
+     * - verbose
+       - boolean
+       - Specifies whether to include the timing information in the result
+         information.
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - .. include:: /includes/extracts/collection-option-writeConcern.rst
+
+         .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
 
 Return Values
 -------------

@@ -1,8 +1,0 @@
-source:
-  file: apiargs-method-watch-param.yaml
-  ref: $pipeline
----
-source:
-  file: apiargs-method-watch-param.yaml
-  ref: $options
-...

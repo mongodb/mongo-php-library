@@ -23,15 +23,71 @@ Definition
 
       function listSearchIndexes(array $options = []): Countable&Iterator
 
-   This method has the following parameters:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-listSearchIndexes-param.rst
-
-   The ``$options`` parameter supports the following options:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-listSearchIndexes-option.rst
-
    .. include:: /includes/extracts/note-atlas-search-requirement.rst
+
+Parameters
+----------
+
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - batchSize
+       - integer
+       - Specifies the batch size for the cursor, which will apply to both the
+         initial ``aggregate`` command and any subsequent ``getMore`` commands.
+         This determines the maximum number of documents to return in each
+         response from the server.
+
+         A batchSize of ``0`` is special in that and will only apply to the
+         initial ``aggregate`` command; subsequent ``getMore`` commands will use
+         the server's default batch size. This may be useful for quickly
+         returning a cursor or failure from ``aggregate`` without doing
+         significant server-side work.
+
+     * - collation
+       - array|object
+       - .. include:: /includes/extracts/common-option-collation.rst
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
+
+     * - name
+       - string
+       - Name of the index to return information about.
+
+         If name is not specified, information for all indexes on the collection
+         will be returned.
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - .. include:: /includes/extracts/collection-option-readConcern.rst
+
+         .. include:: /includes/extracts/common-option-readConcern-transaction.rst
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/collection-option-readPreference.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+     * - typeMap
+       - array
+       - .. include:: /includes/extracts/collection-option-typeMap.rst
 
 Return Values
 -------------

@@ -24,15 +24,11 @@ Definition
 
       function addSubscriber(MongoDB\Driver\Monitoring\Subscriber $subscriber): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBClient-method-addSubscriber-param.rst
-
-   .. note::
-
-         If ``$subscriber`` is already registered with this Client, this function
-         is a no-op. If ``$subscriber`` is also registered globally, it will still
-         only be notified once of each event for this Client.
+``$subscriber`` : :php:`MongoDB\\Driver\\Monitoring\\Subscriber <class.mongodb-driver-monitoring-subscriber>`
+  A monitoring event subscriber to register with this Client.
 
 Errors/Exceptions
 -----------------
@@ -43,6 +39,13 @@ Errors/Exceptions
 if subscriber is a :php:`MongoDB\\Driver\\Monitoring\\LogSubscriber <class.mongodb-driver-monitoring-logsubscriber>`,
 since loggers can only be registered globally with
 :php:`MongoDB\\Driver\\Monitoring\\addSubscriber <function.mongodb.driver.monitoring.addsubscriber>`.
+
+Behavior
+--------
+
+If ``$subscriber`` is already registered with this Client, this function is a
+no-op. If ``$subscriber`` is also registered globally, it will still only be
+notified once of each event for this Client.
 
 Example
 -------

@@ -19,20 +19,114 @@ Definition
 
    .. code-block:: php
 
-      function createIndex(array|object $key, array $options = []): string
+      function createIndex(
+          array|object $key,
+          array $options = []
+      ): string
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-createIndex-param.rst
+``$key`` : array|object
+  Specifies the field or fields to index and the index order.
 
-   The ``$options`` parameter accepts all index options that your MongoDB
-   version supports. MongoDB includes the following options:
+  For example, the following specifies a descending index on the ``username``
+  field:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-createIndex-option.rst
+  .. code-block:: php
 
-   For a full list of the supported index creation options, refer to the
-   :manual:`createIndexes </reference/command/createIndexes>` command reference
-   in the MongoDB manual.
+     [ 'username' => -1 ]
+
+``$options`` : array
+  An array specifying the desired options.
+
+  The ``$options`` parameter accepts both index *and* command options. A
+  non-exhaustive list of index options follows. For a complete list of index
+  options, refer to the
+  :manual:`createIndexes </reference/command/createIndexes>` command reference
+  in the MongoDB manual.
+
+  **Index Options** (non-exhaustive)
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - collation
+       - array|object
+       - .. include:: /includes/extracts/collection-option-collation.rst
+
+     * - expireAfterSeconds
+       - integer
+       - Creates a :manual:`TTL </core/index-ttl>` index.
+
+     * - name
+       - string
+       - A name that uniquely identifies the index. By default, MongoDB creates
+         index names based on the key.
+
+     * - partialFilterExpression
+       - array|object
+       - Creates a :manual:`partial </core/index-partial>` index.
+
+     * - sparse
+       - boolean
+       - Creates a :manual:`sparse </core/index-sparse>` index.
+
+     * - unique
+       - boolean
+       - Creates a :manual:`unique </core/index-unique>` index.
+
+  **Command Options**
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         .. include:: /includes/extracts/option-requires-4.4.rst
+
+         .. versionadded:: 1.13
+
+     * - commitQuorum
+       - string|integer
+       - Specifies how many data-bearing members of a replica set, including the
+         primary, must complete the index builds successfully before the primary
+         marks the indexes as ready.
+
+         This option accepts the same values for the ``w`` field in a write
+         concern plus ``"votingMembers"``, which indicates all voting
+         data-bearing nodes.
+
+         This is not supported for server versions prior to 4.4 and will result
+         in an exception at execution time if used.
+
+         .. versionadded:: 1.7
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
+
+         .. versionadded:: 1.3
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+         .. versionadded:: 1.3
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - .. include:: /includes/extracts/collection-option-writeConcern.rst
+
+         .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
 
 Return Values
 -------------

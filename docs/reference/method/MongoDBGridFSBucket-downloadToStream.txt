@@ -22,9 +22,14 @@ Definition
 
       function downloadToStream($id, $destination): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-downloadToStream-param.rst
+``$id`` : mixed
+  The ``_id`` of the file to download.
+
+``$destination`` : resource
+  Writable stream, to which the GridFS file's contents will be written.
 
 Errors/Exceptions
 -----------------

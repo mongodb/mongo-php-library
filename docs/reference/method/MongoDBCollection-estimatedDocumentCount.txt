@@ -23,13 +23,45 @@ Definition
 
       function countDocuments(array $options = []): integer
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-estimateDocumentCount-param.rst
+``$options`` : array
+  An array specifying the desired options.
 
-   The ``$options`` parameter supports the following options:
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-estimateDocumentCount-option.rst
+     * - Name
+       - Type
+       - Description
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         .. include:: /includes/extracts/option-requires-4.4.rst
+
+         .. versionadded:: 1.13
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - .. include:: /includes/extracts/collection-option-readConcern.rst
+
+         .. include:: /includes/extracts/common-option-readConcern-transaction.rst
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/collection-option-readPreference.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
 
 Return Values
 -------------

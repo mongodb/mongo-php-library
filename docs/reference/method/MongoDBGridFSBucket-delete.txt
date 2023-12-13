@@ -21,9 +21,11 @@ Definition
 
       function delete($id): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-delete-param.rst
+``$id`` : mixed
+  The ``_id`` of the file to delete.
 
 Errors/Exceptions
 -----------------

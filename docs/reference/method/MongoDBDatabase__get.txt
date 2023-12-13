@@ -21,9 +21,11 @@ Definition
 
       function __get(string $collectionName): MongoDB\Collection
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-get-param.rst
+``$collectionName`` : string
+  The name of the database to select.
 
 Return Values
 -------------

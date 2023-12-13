@@ -21,13 +21,56 @@ Definition
 
       function selectGridFSBucket(array $options = []): MongoDB\GridFS\Bucket
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-selectGridFSBucket-param.rst
+``$options`` : array
+  An array specifying the desired options.
 
-   The ``$options`` parameter supports the following options:
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-selectGridFSBucket-option.rst
+     * - Name
+       - Type
+       - Description
+
+     * - bucketName
+       - string
+       - The bucket name, which will be used as a prefix for the files and
+         chunks collections. Defaults to ``"fs"``.
+
+     * - chunkSizeBytes
+       - integer
+       - The chunk size in bytes. Defaults to ``261120`` (i.e. 255 KiB).
+
+     * - disableMD5
+       - boolean
+       - Whether to disable automatic MD5 generation when storing files.
+
+         Defaults to ``false``.
+
+         .. versionadded: 1.4
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - The default read concern to use for bucket operations. Defaults to the
+         database's read concern.
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - The default read preference to use for bucket operations. Defaults to
+         the database's read concern.
+
+     * - typeMap
+       - array
+       - The default type map to use for bucket operations. Defaults to the
+         database's type map.
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - The default write concern to use for bucket operations. Defaults to the
+         database's write concern.
 
 Return Values
 -------------

@@ -22,15 +22,90 @@ Definition
 
    .. code-block:: php
 
-      function watch(array $pipeline = [], array $options = []): MongoDB\ChangeStream
+      function watch(
+          array $pipeline = [],
+          array $options = []
+      ): MongoDB\ChangeStream
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBClient-method-watch-param.rst
+``$pipeline`` : array|object
+  The pipeline of stages to append to an initial ``$changeStream`` stage.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBClient-method-watch-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - batchSize
+       - integer
+       - .. include:: /includes/extracts/watch-option-batchSize.rst
+
+     * - collation
+       - array|object
+       - .. include:: /includes/extracts/common-option-collation.rst
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+  
+         .. include:: /includes/extracts/common-option-comment-string-before-4.4.rst
+
+         .. versionadded:: 1.13
+
+     * - fullDocument
+       - string
+       - .. include:: /includes/extracts/watch-option-fullDocument.rst
+
+     * - fullDocumentBeforeChange
+       - string
+       - .. include:: /includes/extracts/watch-option-fullDocumentBeforeChange.rst
+
+     * - maxAwaitTimeMS
+       - integer
+       - .. include:: /includes/extracts/watch-option-maxAwaitTimeMS.rst
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - .. include:: /includes/extracts/client-option-readConcern.rst
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - .. include:: /includes/extracts/client-option-readPreference.rst
+
+         This is used for both the initial change stream aggregation and for
+         server selection during an automatic resume.
+
+     * - resumeAfter
+       - array|object
+       - .. include:: /includes/extracts/watch-option-resumeAfter.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
+
+     * - showExpandedEvents
+       - boolean
+       - .. include:: /includes/extracts/watch-option-showExpandedEvents.rst
+
+     * - startAfter
+       - array|object
+       - .. include:: /includes/extracts/watch-option-startAfter.rst
+
+     * - startAtOperationTime
+       - :php:`MongoDB\\BSON\\TimestampInterface <class.mongodb-bson-timestampinterface>`
+       - .. include:: /includes/extracts/watch-option-startAtOperationTime.rst
+
+     * - typeMap
+       - array
+       - .. include:: /includes/extracts/client-option-typeMap.rst
 
 Return Values
 -------------

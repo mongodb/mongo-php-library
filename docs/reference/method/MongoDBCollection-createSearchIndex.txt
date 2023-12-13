@@ -21,18 +21,41 @@ Definition
 
    .. code-block:: php
 
-      function createSearchIndex(array|object $definition, array $options = []): string
-
-   This method has the following parameters:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-createSearchIndex-param.rst
-
-   The ``$options`` parameter supports the following options:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-createSearchIndex-option.rst
+      function createSearchIndex(
+          array|object $definition,
+          array $options = []
+      ): string
 
    .. include:: /includes/extracts/note-atlas-search-requirement.rst
-   .. include:: /includes/extracts/note-atlas-search-async.rst
+
+Parameters
+----------
+
+``$definition`` : array|object
+  Document describing the index to create. For details on definition syntax, see
+  :manual:`Search Index Definition Syntax </reference/command/createSearchIndexes/#search-index-definition-syntax>`.
+
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+     * - name
+       - string
+       - Name of the search index to create.
+
+         You cannot create multiple indexes with the same name on a single
+         collection. If you do not specify a name, the index is named "default".
 
 Return Values
 -------------
@@ -45,6 +68,11 @@ Errors/Exceptions
 .. include:: /includes/extracts/error-unsupportedexception.rst
 .. include:: /includes/extracts/error-invalidargumentexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Behavior
+--------
+
+.. include:: /includes/extracts/note-atlas-search-async.rst
 
 Examples
 --------

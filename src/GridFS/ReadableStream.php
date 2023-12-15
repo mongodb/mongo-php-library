@@ -19,6 +19,7 @@ namespace MongoDB\GridFS;
 
 use Iterator;
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\Document;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
@@ -174,6 +175,28 @@ class ReadableStream
         }
 
         return $data;
+    }
+
+    /**
+     * Rename all revisions of the file.
+     *
+     * @return int The number of revisions renamed
+     */
+    public function rename(string $newFilename): int
+    {
+        /** @var Document[] $revisions */
+        $revisions = $this->collectionWrapper->findFiles(
+            ['filename' => $this->file->filename],
+            ['typeMap' => ['root' => 'bson'], 'projection' => ['_id' => 1]],
+        );
+        $count = 0;
+
+        foreach ($revisions as $revision) {
+            $this->collectionWrapper->updateFilenameForId($revision->get('_id'), $newFilename);
+            $count++;
+        }
+
+        return $count;
     }
 
     /**

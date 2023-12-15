@@ -67,4 +67,14 @@ class LogicException extends BaseLogicException implements Exception
     {
         return new self(sprintf('Mode "%s" is not supported by "gridfs://" files. Use one of "r", "rb", "w", or "wb".', $mode));
     }
+
+    /**
+     * Thrown when the origin and destination paths are not in the same bucket.
+     *
+     * @internal
+     */
+    public static function renamePathMismatch(string $from, string $to): self
+    {
+        return new self(sprintf('Cannot rename "%s" to "%s" because they are not in the same GridFS bucket.', $from, $to));
+    }
 }

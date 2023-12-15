@@ -324,6 +324,19 @@ class StreamWrapper
         return $this->stream->writeBytes($data);
     }
 
+    public function unlink(string $path): bool
+    {
+        try {
+            $this->stream_open($path, 'w', 0, $openedPath);
+        } catch (FileNotFoundException $e) {
+            return false;
+        }
+
+        assert($this->stream instanceof WritableStream);
+
+        return $this->stream->delete() > 0;
+    }
+
     /** @return false|array */
     public function url_stat(string $path, int $flags)
     {

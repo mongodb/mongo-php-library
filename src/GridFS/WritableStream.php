@@ -19,6 +19,7 @@ namespace MongoDB\GridFS;
 
 use HashContext;
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -171,6 +172,33 @@ class WritableStream
 
         $this->fileCollectionInsert();
         $this->isClosed = true;
+    }
+
+    /**
+     * Delete all files and chunks associated with this stream filename.
+     *
+     * @return int The number of deleted files
+     */
+    public function delete(): int
+    {
+        /** @var Document[] $revisions */
+        $revisions = $this->collectionWrapper->findFiles(['filename' => $this->file['filename']], [
+            'codec' => null,
+            'typeMap' => ['root' => 'bson'],
+            'projection' => ['_id' => 1],
+        ]);
+
+        $count = 0;
+
+        foreach ($revisions as $file) {
+            $this->collectionWrapper->findFileById($file->get('_id'));
+            $this->collectionWrapper->deleteFileAndChunksById($file->get('_id'));
+            $count++;
+        }
+
+        $this->abort();
+
+        return $count;
     }
 
     /**

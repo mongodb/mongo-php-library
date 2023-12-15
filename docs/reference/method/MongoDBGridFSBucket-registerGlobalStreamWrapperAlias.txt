@@ -49,6 +49,7 @@ Supported stream functions:
 - :php:`file() <file>`
 - :php:`fopen() <fopen>` with "r", "rb", "w", and "wb" modes
 - :php:`rename() <rename>` rename all revisions of a file in the same bucket
+- :php:`unlink() <unlink>` (remove all revisions of a file)
 
 In read mode, the stream context can contain the option ``gridfs['revision']``
 to specify the revision number of the file to read. If omitted, the most recent
@@ -85,6 +86,8 @@ Each call to these functions makes a request to the server.
    var_dump(file_exists('gridfs://mybucket/hello.txt'));
 
    echo file_get_contents('gridfs://mybucket/hello.txt');
+
+   unlink('gridfs://mybucket/hello.txt');
 
 The output would then resemble:
 

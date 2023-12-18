@@ -100,6 +100,21 @@ OUTPUT;
         ];
 
         $expectedOutput = <<<'OUTPUT'
+File exists: no
+Writing file
+File exists: yes
+Reading file: Hello, GridFS!
+Writing new version of the file
+Reading new version of the file: Hello, GridFS! (v2)
+Reading previous version of the file: Hello, GridFS!
+OUTPUT;
+
+        yield 'gridfs-stream-wrapper' => [
+            'file' => __DIR__ . '/../examples/gridfs-stream-wrapper.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
 MongoDB\Examples\Persistable\PersistableEntry Object
 (
     [id:MongoDB\Examples\Persistable\PersistableEntry:private] => MongoDB\BSON\ObjectId Object

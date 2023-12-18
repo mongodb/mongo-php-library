@@ -55,5 +55,6 @@ Methods
    /reference/method/MongoDBGridFSBucket-openDownloadStream
    /reference/method/MongoDBGridFSBucket-openDownloadStreamByName
    /reference/method/MongoDBGridFSBucket-openUploadStream
+   /reference/method/MongoDBGridFSBucket-registerGlobalStreamWrapperAlias
    /reference/method/MongoDBGridFSBucket-rename
    /reference/method/MongoDBGridFSBucket-uploadFromStream

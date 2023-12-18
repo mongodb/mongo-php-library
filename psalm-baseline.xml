@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.16.0@2897ba636551a8cb61601cc26f6ccfbba6c36591">
+<files psalm-version="5.18.0@b113f3ed0259fd6e212d87c3df80eec95a6abf19">
   <file src="docs/examples/encryption/csfle-explicit_encryption.php">
     <MixedArgument>
       <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
@@ -114,10 +114,16 @@
     <InvalidParamDefault>
       <code><![CDATA[class-string<ArrayIterator<string,mixed>>|class-string<ArrayObject<string,mixed>>]]></code>
     </InvalidParamDefault>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[(object) $this->getArrayCopy()]]></code>
+    </LessSpecificReturnStatement>
     <MixedAssignment>
       <code>$this[$key]</code>
       <code>$value</code>
     </MixedAssignment>
+    <MoreSpecificReturnType>
+      <code>stdClass</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="src/Model/BSONIterator.php">
     <MixedArgument>
@@ -509,6 +515,9 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/FindOneAndReplace.php">
+    <MixedArgument>
+      <code><![CDATA[$options['codec'] ?? null]]></code>
+    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
@@ -638,13 +647,6 @@
       <code><![CDATA[$this->changeStreamOptions['resumeAfter']]]></code>
       <code><![CDATA[$this->changeStreamOptions['startAfter']]]></code>
     </MixedReturnStatement>
-  </file>
-  <file src="src/PsrLogAdapter.php">
-    <MethodSignatureMismatch>
-      <code>$domain</code>
-      <code>$level</code>
-      <code>$message</code>
-    </MethodSignatureMismatch>
   </file>
   <file src="src/UpdateResult.php">
     <MixedAssignment>

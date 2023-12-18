@@ -98,20 +98,20 @@ class StreamWrapper
      *
      * @return bool True on success or false on failure.
      */
-    public function rename(string $path_from, string $path_to): bool
+    public function rename(string $fromPath, string $toPath): bool
     {
-        $prefix = implode('/', array_slice(explode('/', $path_from, 4), 0, 3)) . '/';
-        if (! str_starts_with($path_to, $prefix)) {
-            throw LogicException::renamePathMismatch($path_from, $path_to);
+        $prefix = implode('/', array_slice(explode('/', $fromPath, 4), 0, 3)) . '/';
+        if (! str_starts_with($toPath, $prefix)) {
+            throw LogicException::renamePathMismatch($fromPath, $toPath);
         }
 
         try {
-            $this->stream_open($path_from, 'r', 0, $openedPath);
+            $this->stream_open($fromPath, 'r', 0, $openedPath);
         } catch (FileNotFoundException $e) {
             return false;
         }
 
-        $newName = explode('/', $path_to, 4)[3] ?? '';
+        $newName = explode('/', $toPath, 4)[3] ?? '';
         assert($this->stream instanceof ReadableStream);
 
         return $this->stream->rename($newName) > 0;

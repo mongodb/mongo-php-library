@@ -162,11 +162,4 @@
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
         <exclude-pattern>/docs/examples/codecs/</exclude-pattern>
     </rule>
-
-    <!-- **************************************** -->
-    <!-- Exclude certain rules for stream wrapper -->
-    <!-- **************************************** -->
-    <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps">
-        <exclude-pattern>/src/GridFS/StreamWrapper.php</exclude-pattern>
-    </rule>
 </ruleset>

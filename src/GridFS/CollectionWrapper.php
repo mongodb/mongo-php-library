@@ -254,6 +254,17 @@ class CollectionWrapper
     }
 
     /**
+     * Updates the filename field in the file document for all the files with a given filename.
+     */
+    public function updateFilenameForFilename(string $filename, string $newFilename): UpdateResult
+    {
+        return $this->filesCollection->updateMany(
+            ['filename' => $filename],
+            ['$set' => ['filename' => $newFilename]],
+        );
+    }
+
+    /**
      * Updates the filename field in the file document for a given ID.
      *
      * @param mixed $id

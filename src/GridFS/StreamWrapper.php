@@ -114,7 +114,7 @@ class StreamWrapper
         $newName = explode('/', $toPath, 4)[3] ?? '';
         assert($this->stream instanceof ReadableStream);
 
-        return $this->stream->rename($newName) > 0;
+        return $this->stream->rename($newName);
     }
 
     /**

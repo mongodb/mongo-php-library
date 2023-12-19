@@ -19,16 +19,17 @@ namespace MongoDB\GridFS;
 
 use Iterator;
 use MongoDB\BSON\Binary;
-use MongoDB\BSON\Document;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
+use MongoDB\GridFS\Exception\LogicException;
 
 use function assert;
 use function ceil;
 use function floor;
 use function is_integer;
 use function is_object;
+use function is_string;
 use function property_exists;
 use function sprintf;
 use function strlen;
@@ -179,24 +180,16 @@ class ReadableStream
 
     /**
      * Rename all revisions of the file.
-     *
-     * @return int The number of revisions renamed
      */
-    public function rename(string $newFilename): int
+    public function rename(string $newFilename): bool
     {
-        /** @var Document[] $revisions */
-        $revisions = $this->collectionWrapper->findFiles(
-            ['filename' => $this->file->filename],
-            ['typeMap' => ['root' => 'bson'], 'projection' => ['_id' => 1]],
-        );
-        $count = 0;
-
-        foreach ($revisions as $revision) {
-            $this->collectionWrapper->updateFilenameForId($revision->get('_id'), $newFilename);
-            $count++;
+        if (! isset($this->file->filename) || ! is_string($this->file->filename)) {
+            throw new LogicException('Cannot rename file without a filename');
         }
 
-        return $count;
+        $this->collectionWrapper->updateFilenameForFilename($this->file->filename, $newFilename);
+
+        return true;
     }
 
     /**

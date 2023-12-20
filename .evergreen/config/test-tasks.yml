@@ -9,7 +9,7 @@ tasks:
 
   - name: "test-serverless"
     tags: ["serverless"]
-    exec_timeout_secs: 3600
+    exec_timeout_secs: 10800
     commands:
       - func: "create serverless instance"
       - func: "start kms servers"

@@ -3,9 +3,15 @@
   "schemaVersion": "1.0",
   "runOnRequirements": [
     {
-      "minServerVersion": "3.6",
+      "minServerVersion": "4.0",
       "topologies": [
         "replicaset"
+      ]
+    },
+    {
+      "minServerVersion": "4.1.7",
+      "topologies": [
+        "sharded"
       ]
     }
   ],
@@ -53,20 +59,6 @@
   "tests": [
     {
       "description": "InsertOne succeeds after retryable writeConcernError",
-      "runOnRequirements": [
-        {
-          "minServerVersion": "4.0",
-          "topologies": [
-            "replicaset"
-          ]
-        },
-        {
-          "minServerVersion": "4.1.7",
-          "topologies": [
-            "sharded"
-          ]
-        }
-      ],
       "operations": [
         {
           "name": "failPoint",

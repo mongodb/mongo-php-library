@@ -1,14 +1,6 @@
 {
   "description": "poc-retryable-writes",
   "schemaVersion": "1.0",
-  "runOnRequirements": [
-    {
-      "minServerVersion": "3.6",
-      "topologies": [
-        "replicaset"
-      ]
-    }
-  ],
   "createEntities": [
     {
       "client": {
@@ -79,6 +71,14 @@
   "tests": [
     {
       "description": "FindOneAndUpdate is committed on first attempt",
+      "runOnRequirements": [
+        {
+          "minServerVersion": "3.6",
+          "topologies": [
+            "replicaset"
+          ]
+        }
+      ],
       "operations": [
         {
           "name": "failPoint",
@@ -132,6 +132,14 @@
     },
     {
       "description": "FindOneAndUpdate is not committed on first attempt",
+      "runOnRequirements": [
+        {
+          "minServerVersion": "3.6",
+          "topologies": [
+            "replicaset"
+          ]
+        }
+      ],
       "operations": [
         {
           "name": "failPoint",
@@ -188,6 +196,14 @@
     },
     {
       "description": "FindOneAndUpdate is never committed",
+      "runOnRequirements": [
+        {
+          "minServerVersion": "3.6",
+          "topologies": [
+            "replicaset"
+          ]
+        }
+      ],
       "operations": [
         {
           "name": "failPoint",
@@ -432,6 +448,9 @@
               "data": {
                 "failCommands": [
                   "insert"
+                ],
+                "errorLabels": [
+                  "RetryableWriteError"
                 ],
                 "writeConcernError": {
                   "code": 91,

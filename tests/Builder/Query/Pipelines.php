@@ -184,6 +184,75 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Compare Two Fields from A Single Document
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/#compare-two-fields-from-a-single-document
+     */
+    case ExprCompareTwoFieldsFromASingleDocument = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$gt": [
+                        "$spent",
+                        "$budget"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Using $expr With Conditional Statements
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/#using--expr-with-conditional-statements
+     */
+    case ExprUsingExprWithConditionalStatements = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$lt": [
+                        {
+                            "$cond": {
+                                "if": {
+                                    "$gte": [
+                                        "$qty",
+                                        {
+                                            "$numberInt": "100"
+                                        }
+                                    ]
+                                },
+                                "then": {
+                                    "$multiply": [
+                                        "$price",
+                                        {
+                                            "$numberDouble": "0.5"
+                                        }
+                                    ]
+                                },
+                                "else": {
+                                    "$multiply": [
+                                        "$price",
+                                        {
+                                            "$numberDouble": "0.75"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "$numberInt": "5"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Perform a LIKE Match
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-a-like-match

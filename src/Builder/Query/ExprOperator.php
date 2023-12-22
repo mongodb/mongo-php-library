@@ -11,8 +11,8 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
-use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Builder\Type\QueryInterface;
 use stdClass;
 
 /**
@@ -20,7 +20,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/
  */
-class ExprOperator implements FieldQueryInterface, OperatorInterface
+class ExprOperator implements QueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 

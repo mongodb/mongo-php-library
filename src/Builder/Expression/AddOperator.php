@@ -22,9 +22,9 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/
  */
-class AddOperator implements ResolvesToNumber, ResolvesToDate, OperatorInterface
+class AddOperator implements ResolvesToInt, ResolvesToLong, ResolvesToDouble, ResolvesToDecimal, ResolvesToDate, OperatorInterface
 {
-    public const ENCODE = Encode::Array;
+    public const ENCODE = Encode::Single;
 
     /** @var list<Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int> $expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date. */
     public readonly array $expression;

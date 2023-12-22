@@ -19,7 +19,7 @@ use MongoDB\Builder\Type\OperatorInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/
  */
-class SubtractOperator implements ResolvesToNumber, ResolvesToDate, OperatorInterface
+class SubtractOperator implements ResolvesToInt, ResolvesToLong, ResolvesToDouble, ResolvesToDecimal, ResolvesToDate, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 

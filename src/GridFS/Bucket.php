@@ -61,7 +61,10 @@ use function stream_context_create;
 use function stream_copy_to_stream;
 use function stream_get_meta_data;
 use function stream_get_wrappers;
+use function trigger_error;
 use function urlencode;
+
+use const E_USER_DEPRECATED;
 
 /**
  * Bucket provides a public API for interacting with the GridFS files and chunks
@@ -132,6 +135,10 @@ class Bucket
      */
     public function __construct(Manager $manager, string $databaseName, array $options = [])
     {
+        if (isset($options['disableMD5']) && $options['disableMD5'] === false) {
+            @trigger_error('Setting GridFS "disableMD5" option to "false" is deprecated since mongodb/mongodb 1.18 and will not be supported in version 2.0.', E_USER_DEPRECATED);
+        }
+
         $options += [
             'bucketName' => self::DEFAULT_BUCKET_NAME,
             'chunkSizeBytes' => self::DEFAULT_CHUNK_SIZE_BYTES,

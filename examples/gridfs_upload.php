@@ -17,9 +17,9 @@ use function fopen;
 use function fwrite;
 use function getenv;
 use function rewind;
+use function stream_get_contents;
 
 use const PHP_EOL;
-use const STDOUT;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -38,10 +38,13 @@ assert($id instanceof ObjectId);
 echo 'Inserted file with ID: ' . $id . PHP_EOL;
 fclose($stream);
 
-// Download the file and print the contents directly to STDOUT, chunk by chunk
-echo 'File contents: ';
-$gridfs->downloadToStreamByName('hello.txt', STDOUT);
-echo PHP_EOL;
+// Download the file and print the contents directly to an in-memory stream, chunk by chunk
+$stream = fopen('php://temp', 'w+');
+$gridfs->downloadToStreamByName('hello.txt', $stream);
+rewind($stream);
+echo 'File contents: ' . stream_get_contents($stream) . PHP_EOL;
 
 // Delete the file
 $gridfs->delete($id);
+
+echo 'Deleted file with ID: ' . $id . PHP_EOL;

@@ -5,7 +5,7 @@
       <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
     </MixedArgument>
   </file>
-  <file src="examples/atlas-search.php">
+  <file src="examples/atlas_search.php">
     <MixedArgument>
       <code><![CDATA[$document['name']]]></code>
       <code><![CDATA[$index->name]]></code>

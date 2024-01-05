@@ -8,8 +8,10 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples;
 
+use MongoDB\BSON\ObjectId;
 use MongoDB\Client;
 
+use function assert;
 use function fclose;
 use function feof;
 use function fread;
@@ -45,3 +47,10 @@ while (! feof($stream)) {
 }
 
 echo 'Read a total of ' . $size . ' bytes' . PHP_EOL;
+
+// Retrieve the file ID to delete it
+$id = $bucket->getFileIdForStream($stream);
+assert($id instanceof ObjectId);
+$bucket->delete($id);
+
+echo 'Deleted file with ID: ' . $id . PHP_EOL;

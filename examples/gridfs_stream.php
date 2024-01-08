@@ -22,7 +22,7 @@ use function strlen;
 require __DIR__ . '/../vendor/autoload.php';
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
-
+// Disable MD5 computation for faster uploads, this feature is deprecated
 $bucket = $client->test->selectGridFSBucket(['disableMD5' => true]);
 
 // Open a stream for writing, similar to fopen with mode 'w'

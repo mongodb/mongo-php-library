@@ -85,6 +85,11 @@
       <code>$context</code>
     </MixedArgumentTypeCoercion>
   </file>
+  <file src="src/GridFS/CollectionWrapper.php">
+    <MixedAssignment>
+      <code>$ids[]</code>
+    </MixedAssignment>
+  </file>
   <file src="src/GridFS/ReadableStream.php">
     <MixedArgument>
       <code><![CDATA[$currentChunk->n]]></code>
@@ -99,6 +104,11 @@
     <MixedAssignment>
       <code>$context</code>
     </MixedAssignment>
+  </file>
+  <file src="src/GridFS/WritableStream.php">
+    <MixedArgument>
+      <code><![CDATA[$this->file['filename']]]></code>
+    </MixedArgument>
   </file>
   <file src="src/Model/BSONArray.php">
     <MixedAssignment>

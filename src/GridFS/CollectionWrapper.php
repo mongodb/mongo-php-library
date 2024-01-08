@@ -91,6 +91,27 @@ class CollectionWrapper
         $this->chunksCollection->deleteMany(['files_id' => $id]);
     }
 
+    public function deleteFileAndChunksByFilename(string $filename): int
+    {
+        /** @var iterable<array{_id: mixed}> $files */
+        $files = $this->findFiles(['filename' => $filename], [
+            'codec' => null,
+            'typeMap' => ['root' => 'array'],
+            'projection' => ['_id' => 1],
+        ]);
+
+        /** @var list<mixed> $ids */
+        $ids = [];
+        foreach ($files as $file) {
+            $ids[] = $file['_id'];
+        }
+
+        $count = $this->filesCollection->deleteMany(['_id' => ['$in' => $ids]])->getDeletedCount();
+        $this->chunksCollection->deleteMany(['files_id' => ['$in' => $ids]]);
+
+        return $count ?? 0;
+    }
+
     /**
      * Drops the GridFS files and chunks collections.
      */

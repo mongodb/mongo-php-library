@@ -19,8 +19,6 @@ use function fwrite;
 use function getenv;
 use function strlen;
 
-use const PHP_EOL;
-
 require __DIR__ . '/../vendor/autoload.php';
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
@@ -31,7 +29,7 @@ $bucket = $client->test->selectGridFSBucket(['disableMD5' => true]);
 $stream = $bucket->openUploadStream('hello.txt');
 
 for ($i = 0; $i < 1_000_000; $i++) {
-    fwrite($stream, 'Hello line ' . $i . PHP_EOL);
+    fwrite($stream, 'Hello line ' . $i . "\n");
 }
 
 // Last data are flushed to the server when the stream is closed
@@ -46,11 +44,11 @@ while (! feof($stream)) {
     $size += strlen($data);
 }
 
-echo 'Read a total of ' . $size . ' bytes' . PHP_EOL;
+echo 'Read a total of ' . $size . ' bytes' . "\n";
 
 // Retrieve the file ID to delete it
 $id = $bucket->getFileIdForStream($stream);
 assert($id instanceof ObjectId);
 $bucket->delete($id);
 
-echo 'Deleted file with ID: ' . $id . PHP_EOL;
+echo 'Deleted file with ID: ' . $id . "\n";

@@ -23,7 +23,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
-$gridfs = $client->selectDatabase('test')->selectGridFSBucket();
+$gridfs = $client->selectDatabase('test')->selectGridFSBucket(['disableMD5' => true]);
 
 // Create an in-memory stream, this can be any stream source like STDIN or php://input for web requests
 $stream = fopen('php://temp', 'w+');

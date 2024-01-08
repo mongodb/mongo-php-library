@@ -21,7 +21,7 @@ use function stream_context_create;
 require __DIR__ . '/../vendor/autoload.php';
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
-$bucket = $client->test->selectGridFSBucket();
+$bucket = $client->test->selectGridFSBucket(['disableMD5' => true]);
 $bucket->drop();
 
 // Register the alias "mybucket" for default bucket of the "test" database

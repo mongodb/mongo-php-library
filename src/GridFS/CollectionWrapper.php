@@ -81,16 +81,8 @@ class CollectionWrapper
     }
 
     /**
-     * Deletes a GridFS file and related chunks by ID.
-     *
-     * @param mixed $id
+     * Delete all GridFS files and chunks for a given filename.
      */
-    public function deleteFileAndChunksById($id): void
-    {
-        $this->filesCollection->deleteOne(['_id' => $id]);
-        $this->chunksCollection->deleteMany(['files_id' => $id]);
-    }
-
     public function deleteFileAndChunksByFilename(string $filename): int
     {
         /** @var iterable<array{_id: mixed}> $files */
@@ -110,6 +102,17 @@ class CollectionWrapper
         $this->chunksCollection->deleteMany(['files_id' => ['$in' => $ids]]);
 
         return $count ?? 0;
+    }
+
+    /**
+     * Deletes a GridFS file and related chunks by ID.
+     *
+     * @param mixed $id
+     */
+    public function deleteFileAndChunksById($id): void
+    {
+        $this->filesCollection->deleteOne(['_id' => $id]);
+        $this->chunksCollection->deleteMany(['files_id' => $id]);
     }
 
     /**

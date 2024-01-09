@@ -47,7 +47,8 @@ Supported stream functions:
 - :php:`filemtime() <filemtime>`
 - :php:`filesize() <filesize>`
 - :php:`file() <file>`
-- :php:`fopen() <fopen>` (with "r", "rb", "w", and "wb" modes)
+- :php:`fopen() <fopen>` with "r", "rb", "w", and "wb" modes
+- :php:`rename() <rename>` rename all revisions of a file in the same bucket
 
 In read mode, the stream context can contain the option ``gridfs['revision']``
 to specify the revision number of the file to read. If omitted, the most recent

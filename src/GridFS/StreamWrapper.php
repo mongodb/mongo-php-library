@@ -22,12 +22,15 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\GridFS\Exception\LogicException;
 
+use function array_slice;
 use function assert;
 use function explode;
+use function implode;
 use function in_array;
 use function is_array;
 use function is_integer;
 use function is_resource;
+use function str_starts_with;
 use function stream_context_get_options;
 use function stream_get_wrappers;
 use function stream_wrapper_register;
@@ -88,6 +91,30 @@ class StreamWrapper
         }
 
         stream_wrapper_register($protocol, static::class, STREAM_IS_URL);
+    }
+
+    /**
+     * Rename all revisions of a filename.
+     *
+     * @return bool True on success or false on failure.
+     */
+    public function rename(string $fromPath, string $toPath): bool
+    {
+        $prefix = implode('/', array_slice(explode('/', $fromPath, 4), 0, 3)) . '/';
+        if (! str_starts_with($toPath, $prefix)) {
+            throw LogicException::renamePathMismatch($fromPath, $toPath);
+        }
+
+        try {
+            $this->stream_open($fromPath, 'r', 0, $openedPath);
+        } catch (FileNotFoundException $e) {
+            return false;
+        }
+
+        $newName = explode('/', $toPath, 4)[3] ?? '';
+        assert($this->stream instanceof ReadableStream);
+
+        return $this->stream->rename($newName);
     }
 
     /**

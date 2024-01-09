@@ -25,6 +25,7 @@ use function fwrite;
 use function is_dir;
 use function is_file;
 use function is_link;
+use function rename;
 use function stream_context_create;
 use function stream_get_contents;
 use function time;
@@ -362,5 +363,28 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         copy($path, $path . '.copy');
         $this->assertSame('foobar', file_get_contents($path . '.copy'));
         $this->assertSame('foobar', file_get_contents($path));
+    }
+
+    public function testRenameAllRevisions(): void
+    {
+        $this->bucket->registerGlobalStreamWrapperAlias('bucket');
+        $path = 'gridfs://bucket/filename';
+
+        $this->assertSame(6, file_put_contents($path, 'foobar'));
+        $this->assertSame(6, file_put_contents($path, 'foobar'));
+        $this->assertSame(6, file_put_contents($path, 'foobar'));
+
+        $this->assertTrue(rename($path, $path . '.renamed'));
+        $this->assertTrue(file_exists($path . '.renamed'));
+        $this->assertFalse(file_exists($path));
+        $this->assertSame('foobar', file_get_contents($path . '.renamed'));
+    }
+
+    public function testRenamePathMismatch(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Cannot rename "gridfs://bucket/filename" to "gridfs://other/newname" because they are not in the same GridFS bucket.');
+
+        rename('gridfs://bucket/filename', 'gridfs://other/newname');
     }
 }

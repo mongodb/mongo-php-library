@@ -22,14 +22,12 @@ use MongoDB\BSON\Binary;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
-use MongoDB\GridFS\Exception\LogicException;
 
 use function assert;
 use function ceil;
 use function floor;
 use function is_integer;
 use function is_object;
-use function is_string;
 use function property_exists;
 use function sprintf;
 use function strlen;
@@ -176,20 +174,6 @@ class ReadableStream
         }
 
         return $data;
-    }
-
-    /**
-     * Rename all revisions of the file.
-     */
-    public function rename(string $newFilename): bool
-    {
-        if (! isset($this->file->filename) || ! is_string($this->file->filename)) {
-            throw new LogicException('Cannot rename file without a filename');
-        }
-
-        $this->collectionWrapper->updateFilenameForFilename($this->file->filename, $newFilename);
-
-        return true;
     }
 
     /**

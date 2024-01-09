@@ -106,15 +106,15 @@ class StreamWrapper
         }
 
         try {
-            $this->stream_open($fromPath, 'r', 0, $openedPath);
+            $context = $this->getContext($fromPath, 'r');
         } catch (FileNotFoundException $e) {
             return false;
         }
 
-        $newName = explode('/', $toPath, 4)[3] ?? '';
-        assert($this->stream instanceof ReadableStream);
+        $newFilename = explode('/', $toPath, 4)[3] ?? '';
+        $context['collectionWrapper']->updateFilenameForFilename($context['file']->filename, $newFilename);
 
-        return $this->stream->rename($newName);
+        return true;
     }
 
     /**
@@ -170,41 +170,12 @@ class StreamWrapper
      */
     public function stream_open(string $path, string $mode, int $options, ?string &$openedPath): bool
     {
-        $context = [];
-
-        /**
-         * The Bucket methods { @see Bucket::openUploadStream() } and { @see Bucket::openDownloadStreamByFile() }
-         * always set an internal context. But the context can also be set by the user.
-         */
-        if (is_resource($this->context)) {
-            $context = stream_context_get_options($this->context)['gridfs'] ?? [];
-
-            if (! is_array($context)) {
-                throw LogicException::invalidContext($context);
-            }
-        }
-
-        // When the stream is opened using fopen(), the context is not required, it can contain only options.
-        if (! isset($context['collectionWrapper'])) {
-            $bucketAlias = explode('/', $path, 4)[2] ?? '';
-
-            if (! isset(self::$contextResolvers[$bucketAlias])) {
-                throw LogicException::bucketAliasNotRegistered($bucketAlias);
-            }
-
-            $context = self::$contextResolvers[$bucketAlias]($path, $mode, $context);
-        }
-
-        if (! $context['collectionWrapper'] instanceof CollectionWrapper) {
-            throw LogicException::invalidContextCollectionWrapper($context['collectionWrapper']);
-        }
-
         if ($mode === 'r' || $mode === 'rb') {
-            return $this->initReadableStream($context);
+            return $this->initReadableStream($this->getContext($path, $mode));
         }
 
         if ($mode === 'w' || $mode === 'wb') {
-            return $this->initWritableStream($context);
+            return $this->initWritableStream($this->getContext($path, $mode));
         }
 
         throw LogicException::openModeNotSupported($mode);
@@ -326,15 +297,10 @@ class StreamWrapper
 
     public function unlink(string $path): bool
     {
-        try {
-            $this->stream_open($path, 'w', 0, $openedPath);
-        } catch (FileNotFoundException $e) {
-            return false;
-        }
+        $context = $this->getContext($path, 'r');
+        $count = $context['collectionWrapper']->deleteFileAndChunksByFilename($context['file']->filename);
 
-        assert($this->stream instanceof WritableStream);
-
-        return $this->stream->delete() > 0;
+        return $count > 0;
     }
 
     /** @return false|array */
@@ -349,6 +315,41 @@ class StreamWrapper
         }
 
         return $this->stream_stat();
+    }
+
+    /** @return array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array */
+    private function getContext(string $path, string $mode): array
+    {
+        $context = [];
+
+        /**
+         * The Bucket methods { @see Bucket::openUploadStream() } and { @see Bucket::openDownloadStreamByFile() }
+         * always set an internal context. But the context can also be set by the user.
+         */
+        if (is_resource($this->context)) {
+            $context = stream_context_get_options($this->context)['gridfs'] ?? [];
+
+            if (! is_array($context)) {
+                throw LogicException::invalidContext($context);
+            }
+        }
+
+        // When the stream is opened using fopen(), the context is not required, it can contain only options.
+        if (! isset($context['collectionWrapper'])) {
+            $bucketAlias = explode('/', $path, 4)[2] ?? '';
+
+            if (! isset(self::$contextResolvers[$bucketAlias])) {
+                throw LogicException::bucketAliasNotRegistered($bucketAlias);
+            }
+
+            $context = self::$contextResolvers[$bucketAlias]($path, $mode, $context);
+        }
+
+        if (! $context['collectionWrapper'] instanceof CollectionWrapper) {
+            throw LogicException::invalidContextCollectionWrapper($context['collectionWrapper']);
+        }
+
+        return $context;
     }
 
     /**

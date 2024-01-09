@@ -174,21 +174,6 @@ class WritableStream
     }
 
     /**
-     * Delete all files and chunks associated with this stream filename.
-     *
-     * @return int The number of deleted files
-     */
-    public function delete(): int
-    {
-        try {
-            return $this->collectionWrapper->deleteFileAndChunksByFilename($this->file['filename']);
-        } finally {
-            // Prevent further operations on this stream
-            $this->abort();
-        }
-    }
-
-    /**
      * Return the stream's file document.
      */
     public function getFile(): object

@@ -87,7 +87,6 @@ class CollectionWrapper
     {
         /** @var iterable<array{_id: mixed}> $files */
         $files = $this->findFiles(['filename' => $filename], [
-            'codec' => null,
             'typeMap' => ['root' => 'array'],
             'projection' => ['_id' => 1],
         ]);

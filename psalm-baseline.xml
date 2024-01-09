@@ -98,17 +98,26 @@
   </file>
   <file src="src/GridFS/StreamWrapper.php">
     <InvalidArgument>
-      <code>$context</code>
-      <code>$context</code>
+      <code><![CDATA[$this->getContext($path, $mode)]]></code>
+      <code><![CDATA[$this->getContext($path, $mode)]]></code>
     </InvalidArgument>
+    <InvalidReturnStatement>
+      <code>$context</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code>array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array</code>
+    </InvalidReturnType>
+    <MixedArgument>
+      <code><![CDATA[$context['file']->filename]]></code>
+      <code><![CDATA[$context['file']->filename]]></code>
+    </MixedArgument>
     <MixedAssignment>
       <code>$context</code>
     </MixedAssignment>
-  </file>
-  <file src="src/GridFS/WritableStream.php">
-    <MixedArgument>
-      <code><![CDATA[$this->file['filename']]]></code>
-    </MixedArgument>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$context['file']]]></code>
+      <code><![CDATA[$context['file']]]></code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/Model/BSONArray.php">
     <MixedAssignment>

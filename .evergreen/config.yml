@@ -48,6 +48,7 @@ include:
   - filename: .evergreen/config/test-variants.yml
 
   # Automatically generated files
+  - filename: .evergreen/config/generated/build/build-php-8.3.yml
   - filename: .evergreen/config/generated/build/build-php-8.2.yml
   - filename: .evergreen/config/generated/build/build-php-8.1.yml
   - filename: .evergreen/config/generated/build/build-php-8.0.yml
@@ -78,3 +79,9 @@ include:
   - filename: .evergreen/config/generated/test/csfle-5.0.yml
   - filename: .evergreen/config/generated/test/csfle-4.4.yml
   - filename: .evergreen/config/generated/test/csfle-4.2.yml
+  - filename: .evergreen/config/generated/test-variant/latest-php-8.3.yml
+  - filename: .evergreen/config/generated/test-variant/replicaset-php-8.2.yml
+  - filename: .evergreen/config/generated/test-variant/replicaset-php-8.1.yml
+  - filename: .evergreen/config/generated/test-variant/replicaset-php-8.0.yml
+  - filename: .evergreen/config/generated/test-variant/replicaset-php-7.4.yml
+  - filename: .evergreen/config/generated/test-variant/lowest-php-7.4.yml

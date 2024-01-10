@@ -1,14 +1,9 @@
 {
   "runOn": [
     {
-      "minServerVersion": "4.0",
+      "minServerVersion": "4.3.1",
       "topology": [
-        "replicaset"
-      ]
-    },
-    {
-      "minServerVersion": "4.1.8",
-      "topology": [
+        "replicaset",
         "sharded",
         "load-balanced"
       ],
@@ -20,10 +15,7 @@
   "data": [],
   "tests": [
     {
-      "description": "commitTransaction fails after two errors",
-      "clientOptions": {
-        "retryWrites": false
-      },
+      "description": "add RetryableWriteError and UnknownTransactionCommitResult labels to retryable commit errors",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -33,7 +25,10 @@
           "failCommands": [
             "commitTransaction"
           ],
-          "closeConnection": true
+          "errorCode": 11602,
+          "errorLabels": [
+            "RetryableWriteError"
+          ]
         }
       },
       "operations": [
@@ -162,10 +157,7 @@
       }
     },
     {
-      "description": "commitTransaction applies majority write concern on retries",
-      "clientOptions": {
-        "retryWrites": false
-      },
+      "description": "add RetryableWriteError and UnknownTransactionCommitResult labels to writeConcernError ShutdownInProgress",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -175,7 +167,13 @@
           "failCommands": [
             "commitTransaction"
           ],
-          "closeConnection": true
+          "errorLabels": [
+            "RetryableWriteError"
+          ],
+          "writeConcernError": {
+            "code": 91,
+            "errmsg": "Replication is being shut down"
+          }
         }
       },
       "operations": [
@@ -185,9 +183,7 @@
           "arguments": {
             "options": {
               "writeConcern": {
-                "w": 2,
-                "j": true,
-                "wtimeout": 5000
+                "w": "majority"
               }
             }
           }
@@ -258,9 +254,7 @@
               "startTransaction": null,
               "autocommit": false,
               "writeConcern": {
-                "w": 2,
-                "j": true,
-                "wtimeout": 5000
+                "w": "majority"
               }
             },
             "command_name": "commitTransaction",
@@ -279,117 +273,8 @@
               "autocommit": false,
               "writeConcern": {
                 "w": "majority",
-                "j": true,
-                "wtimeout": 5000
+                "wtimeout": 10000
               }
-            },
-            "command_name": "commitTransaction",
-            "database_name": "admin"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "commitTransaction": 1,
-              "lsid": "session0",
-              "txnNumber": {
-                "$numberLong": "1"
-              },
-              "startTransaction": null,
-              "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "j": true,
-                "wtimeout": 5000
-              }
-            },
-            "command_name": "commitTransaction",
-            "database_name": "admin"
-          }
-        }
-      ],
-      "outcome": {
-        "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
-        }
-      }
-    },
-    {
-      "description": "commitTransaction succeeds after connection error",
-      "failPoint": {
-        "configureFailPoint": "failCommand",
-        "mode": {
-          "times": 1
-        },
-        "data": {
-          "failCommands": [
-            "commitTransaction"
-          ],
-          "closeConnection": true
-        }
-      },
-      "operations": [
-        {
-          "name": "startTransaction",
-          "object": "session0"
-        },
-        {
-          "name": "insertOne",
-          "object": "collection",
-          "arguments": {
-            "session": "session0",
-            "document": {
-              "_id": 1
-            }
-          },
-          "result": {
-            "insertedId": 1
-          }
-        },
-        {
-          "name": "commitTransaction",
-          "object": "session0"
-        }
-      ],
-      "expectations": [
-        {
-          "command_started_event": {
-            "command": {
-              "insert": "test",
-              "documents": [
-                {
-                  "_id": 1
-                }
-              ],
-              "ordered": true,
-              "readConcern": null,
-              "lsid": "session0",
-              "txnNumber": {
-                "$numberLong": "1"
-              },
-              "startTransaction": true,
-              "autocommit": false,
-              "writeConcern": null
-            },
-            "command_name": "insert",
-            "database_name": "transaction-tests"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "commitTransaction": 1,
-              "lsid": "session0",
-              "txnNumber": {
-                "$numberLong": "1"
-              },
-              "startTransaction": null,
-              "autocommit": false,
-              "writeConcern": null
             },
             "command_name": "commitTransaction",
             "database_name": "admin"

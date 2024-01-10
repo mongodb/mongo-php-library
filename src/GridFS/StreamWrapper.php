@@ -105,16 +105,14 @@ class StreamWrapper
             throw LogicException::renamePathMismatch($fromPath, $toPath);
         }
 
-        try {
-            $context = $this->getContext($fromPath, 'r');
-        } catch (FileNotFoundException $e) {
-            return false;
-        }
+        $context = $this->getContext($fromPath, 'w');
 
         $newFilename = explode('/', $toPath, 4)[3] ?? '';
-        $context['collectionWrapper']->updateFilenameForFilename($context['file']->filename, $newFilename);
+        $count = $context['collectionWrapper']->updateFilenameForFilename($context['filename'], $newFilename);
 
-        return true;
+        // If $count === 0, the file does not exist.
+        // If $count is null, the update is unacknowledged, the operation is considered successful.
+        return $count !== 0;
     }
 
     /**
@@ -297,10 +295,10 @@ class StreamWrapper
 
     public function unlink(string $path): bool
     {
-        $context = $this->getContext($path, 'r');
-        $count = $context['collectionWrapper']->deleteFileAndChunksByFilename($context['file']->filename);
+        $context = $this->getContext($path, 'w');
+        $count = $context['collectionWrapper']->deleteFileAndChunksByFilename($context['filename']);
 
-        return $count > 0;
+        return $count !== 0;
     }
 
     /** @return false|array */
@@ -317,7 +315,7 @@ class StreamWrapper
         return $this->stream_stat();
     }
 
-    /** @return array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array} */
+    /** @psalm-return ($mode == 'r' ? array{collectionWrapper: CollectionWrapper, file: object} : array{collectionWrapper: CollectionWrapper, filename: string, options: array}) */
     private function getContext(string $path, string $mode): array
     {
         $context = [];
@@ -342,6 +340,7 @@ class StreamWrapper
                 throw LogicException::bucketAliasNotRegistered($bucketAlias);
             }
 
+            /** @see Bucket::resolveStreamContext() */
             $context = self::$contextResolvers[$bucketAlias]($path, $mode, $context);
         }
 

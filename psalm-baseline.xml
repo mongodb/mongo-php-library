@@ -97,27 +97,22 @@
     </MixedArgument>
   </file>
   <file src="src/GridFS/StreamWrapper.php">
-    <InvalidArgument>
+    <InvalidDocblock>
+      <code>private function getContext(string $path, string $mode): array</code>
+    </InvalidDocblock>
+    <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->getContext($path, $mode)]]></code>
       <code><![CDATA[$this->getContext($path, $mode)]]></code>
-    </InvalidArgument>
-    <InvalidReturnStatement>
-      <code>$context</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array</code>
-    </InvalidReturnType>
-    <MixedArgument>
-      <code><![CDATA[$context['file']->filename]]></code>
-      <code><![CDATA[$context['file']->filename]]></code>
-    </MixedArgument>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code>$context</code>
+      <code>$count</code>
+      <code>$count</code>
     </MixedAssignment>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$context['file']]]></code>
-      <code><![CDATA[$context['file']]]></code>
-    </PossiblyUndefinedArrayOffset>
+    <MixedMethodCall>
+      <code>deleteFileAndChunksByFilename</code>
+      <code>updateFilenameForFilename</code>
+    </MixedMethodCall>
   </file>
   <file src="src/Model/BSONArray.php">
     <MixedAssignment>

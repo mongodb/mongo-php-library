@@ -375,10 +375,14 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(6, file_put_contents($path, 'foobar'));
         $this->assertSame(6, file_put_contents($path, 'foobar'));
 
-        $this->assertTrue(rename($path, $path . '.renamed'));
+        $result = rename($path, $path . '.renamed');
+        $this->assertTrue($result);
         $this->assertTrue(file_exists($path . '.renamed'));
         $this->assertFalse(file_exists($path));
         $this->assertSame('foobar', file_get_contents($path . '.renamed'));
+
+        $result = rename($path, $path . '.renamed');
+        $this->assertFalse($result, 'File does not exist anymore');
     }
 
     public function testRenamePathMismatch(): void
@@ -401,5 +405,8 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
 
         $this->assertTrue($result);
         $this->assertFalse(file_exists($path));
+
+        $result = unlink($path);
+        $this->assertFalse($result, 'File does not exist anymore');
     }
 }

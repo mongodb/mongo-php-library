@@ -83,7 +83,7 @@ class CollectionWrapper
     /**
      * Delete all GridFS files and chunks for a given filename.
      */
-    public function deleteFileAndChunksByFilename(string $filename): int
+    public function deleteFileAndChunksByFilename(string $filename): ?int
     {
         /** @var iterable<array{_id: mixed}> $files */
         $files = $this->findFiles(['filename' => $filename], [
@@ -100,7 +100,7 @@ class CollectionWrapper
         $count = $this->filesCollection->deleteMany(['_id' => ['$in' => $ids]])->getDeletedCount();
         $this->chunksCollection->deleteMany(['files_id' => ['$in' => $ids]]);
 
-        return $count ?? 0;
+        return $count;
     }
 
     /**
@@ -279,12 +279,12 @@ class CollectionWrapper
     /**
      * Updates the filename field in the file document for all the files with a given filename.
      */
-    public function updateFilenameForFilename(string $filename, string $newFilename): UpdateResult
+    public function updateFilenameForFilename(string $filename, string $newFilename): ?int
     {
         return $this->filesCollection->updateMany(
             ['filename' => $filename],
             ['$set' => ['filename' => $newFilename]],
-        );
+        )->getModifiedCount();
     }
 
     /**

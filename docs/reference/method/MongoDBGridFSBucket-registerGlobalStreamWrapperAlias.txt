@@ -48,8 +48,8 @@ Supported stream functions:
 - :php:`filesize() <filesize>`
 - :php:`file() <file>`
 - :php:`fopen() <fopen>` with "r", "rb", "w", and "wb" modes
-- :php:`rename() <rename>` rename all revisions of a file in the same bucket
-- :php:`unlink() <unlink>` remove all revisions of a file in the same bucket
+- :php:`rename() <rename>`
+- :php:`unlink() <unlink>`
 
 In read mode, the stream context can contain the option ``gridfs['revision']``
 to specify the revision number of the file to read. If omitted, the most recent
@@ -57,6 +57,9 @@ revision is read (revision ``-1``).
 
 In write mode, the stream context can contain the option ``gridfs['chunkSizeBytes']``.
 If omitted, the defaults are inherited from the ``Bucket`` instance option.
+
+The functions `rename` and `unlink` will rename or remove all revisions of a
+filename. If the filename does not exist, these functions will return ``false``.
 
 Example
 -------

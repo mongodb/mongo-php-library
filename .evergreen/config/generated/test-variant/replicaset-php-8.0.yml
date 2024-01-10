@@ -1,0 +1,15 @@
+# This file is generated automatically - please edit the "templates/test-variant/replicaset-only.yml" template file instead.
+buildvariants:
+  - name: test-debian11-php-8.0-local
+    tags: [ "test", "debian", "x64" ]
+    display_name: "Test: Debian 11, PHP 8.0"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.0"
+      PHP_VERSION: "8.0"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.0"
+    tasks:
+      - ".replicaset .local .7.0 !.csfle"

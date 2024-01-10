@@ -1,0 +1,15 @@
+buildvariants:
+  - name: test-debian92-php-%phpVersion%-local-lowest
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 9.2, PHP %phpVersion%, Lowest Dependencies"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      FETCH_BUILD_TASK: "build-php-%phpVersion%-lowest"
+      PHP_VERSION: "%phpVersion%"
+      DEPENDENCIES: "lowest"
+    depends_on:
+      - variant: "build-debian92"
+        name: "build-php-%phpVersion%-lowest"
+    tasks:
+      - ".replicaset .local .3.6 !.csfle"

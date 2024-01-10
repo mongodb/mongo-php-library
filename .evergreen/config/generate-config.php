@@ -10,6 +10,9 @@ $supportedPhpVersions = [
     '7.4'
 ];
 
+$latestPhpVersion = max($supportedPhpVersions);
+$lowestPhpVersion = min($supportedPhpVersions);
+
 // Supported MongoDB versions. Add new versions after "rapid"
 $supportedMongoDBVersions = [
     'latest',
@@ -51,6 +54,11 @@ $allFiles[] = generateConfigs('test', 'mongodbVersion', 'local.yml', 'local-%s',
 $allFiles[] = generateConfigs('test', 'mongodbVersion', 'load-balanced.yml', 'load-balanced-%s', $loadBalancedServerVersions);
 $allFiles[] = generateConfigs('test', 'mongodbVersion', 'require-api-version.yml', 'require-api-version-%s', $requireApiServerVersions);
 $allFiles[] = generateConfigs('test', 'mongodbVersion', 'csfle.yml', 'csfle-%s', $csfleServerVersions);
+
+// Test variants
+$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'latest.yml', 'latest-php-%s', [$latestPhpVersion]);
+$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'replicaset-only.yml', 'replicaset-php-%s', array_diff($supportedPhpVersions, [$latestPhpVersion]));
+$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'lowest.yml', 'lowest-php-%s', [$lowestPhpVersion]);
 
 echo "Generated config. Use the following list to import files:\n";
 echo implode("\n", array_map('getImportConfig', array_merge(...$allFiles))) . "\n";

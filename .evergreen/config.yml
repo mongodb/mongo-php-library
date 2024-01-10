@@ -48,6 +48,7 @@ include:
   - filename: .evergreen/config/test-variants.yml
 
   # Automatically generated files
+  - filename: .evergreen/config/generated/build/build-php-8.3.yml
   - filename: .evergreen/config/generated/build/build-php-8.2.yml
   - filename: .evergreen/config/generated/build/build-php-8.1.yml
   - filename: .evergreen/config/generated/build/build-php-8.0.yml

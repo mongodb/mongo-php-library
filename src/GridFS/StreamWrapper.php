@@ -317,7 +317,7 @@ class StreamWrapper
         return $this->stream_stat();
     }
 
-    /** @return array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array */
+    /** @return array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array} */
     private function getContext(string $path, string $mode): array
     {
         $context = [];

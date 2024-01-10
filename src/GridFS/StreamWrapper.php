@@ -96,7 +96,8 @@ class StreamWrapper
     /**
      * Rename all revisions of a filename.
      *
-     * @return bool True on success or false on failure.
+     * @return true
+     * @throws FileNotFoundException
      */
     public function rename(string $fromPath, string $toPath): bool
     {
@@ -110,9 +111,12 @@ class StreamWrapper
         $newFilename = explode('/', $toPath, 4)[3] ?? '';
         $count = $context['collectionWrapper']->updateFilenameForFilename($context['filename'], $newFilename);
 
-        // If $count === 0, the file does not exist.
+        if ($count === 0) {
+            throw FileNotFoundException::byFilename($fromPath);
+        }
+
         // If $count is null, the update is unacknowledged, the operation is considered successful.
-        return $count !== 0;
+        return true;
     }
 
     /**
@@ -293,12 +297,23 @@ class StreamWrapper
         return $this->stream->writeBytes($data);
     }
 
+    /**
+     * Remove all revisions of a filename.
+     *
+     * @return true
+     * @throws FileNotFoundException
+     */
     public function unlink(string $path): bool
     {
         $context = $this->getContext($path, 'w');
         $count = $context['collectionWrapper']->deleteFileAndChunksByFilename($context['filename']);
 
-        return $count !== 0;
+        if ($count === 0) {
+            throw FileNotFoundException::byFilename($path);
+        }
+
+        // If $count is null, the update is unacknowledged, the operation is considered successful.
+        return true;
     }
 
     /** @return false|array */

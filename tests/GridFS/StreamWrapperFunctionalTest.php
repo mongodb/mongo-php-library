@@ -381,8 +381,9 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertFalse(file_exists($path));
         $this->assertSame('foobar', file_get_contents($path . '.renamed'));
 
-        $result = rename($path, $path . '.renamed');
-        $this->assertFalse($result, 'File does not exist anymore');
+        $this->expectException(FileNotFoundException::class);
+        $this->expectExceptionMessage('File with name "gridfs://bucket/filename" not found');
+        rename($path, $path . '.renamed');
     }
 
     public function testRenamePathMismatch(): void
@@ -406,7 +407,8 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertTrue($result);
         $this->assertFalse(file_exists($path));
 
-        $result = unlink($path);
-        $this->assertFalse($result, 'File does not exist anymore');
+        $this->expectException(FileNotFoundException::class);
+        $this->expectExceptionMessage('File with name "gridfs://bucket/path/to/filename" not found');
+        unlink($path);
     }
 }

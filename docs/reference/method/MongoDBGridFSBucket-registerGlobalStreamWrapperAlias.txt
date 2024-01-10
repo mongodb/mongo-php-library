@@ -59,7 +59,7 @@ In write mode, the stream context can contain the option ``gridfs['chunkSizeByte
 If omitted, the defaults are inherited from the ``Bucket`` instance option.
 
 The functions `rename` and `unlink` will rename or remove all revisions of a
-filename. If the filename does not exist, these functions will return ``false``.
+filename. If the filename does not exist, these functions throw a ``FileNotFoundException``.
 
 Example
 -------

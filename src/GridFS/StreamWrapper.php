@@ -330,7 +330,10 @@ class StreamWrapper
         return $this->stream_stat();
     }
 
-    /** @psalm-return ($mode == 'r' ? array{collectionWrapper: CollectionWrapper, file: object} : array{collectionWrapper: CollectionWrapper, filename: string, options: array}) */
+    /**
+     * @return array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array}
+     * @psalm-return ($mode == 'r' or $mode == 'rb' ? array{collectionWrapper: CollectionWrapper, file: object} : array{collectionWrapper: CollectionWrapper, filename: string, options: array})
+     */
     private function getContext(string $path, string $mode): array
     {
         $context = [];

@@ -386,6 +386,24 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         rename($path, $path . '.renamed');
     }
 
+    public function testRenameSameFilename(): void
+    {
+        $this->bucket->registerGlobalStreamWrapperAlias('bucket');
+        $path = 'gridfs://bucket/filename';
+
+        $this->assertSame(6, file_put_contents($path, 'foobar'));
+
+        $result = rename($path, $path);
+        $this->assertTrue($result);
+        $this->assertTrue(file_exists($path));
+        $this->assertSame('foobar', file_get_contents($path));
+
+        $path = 'gridfs://bucket/missing';
+        $this->expectException(FileNotFoundException::class);
+        $this->expectExceptionMessage('File with name "gridfs://bucket/missing" not found');
+        rename($path, $path);
+    }
+
     public function testRenamePathMismatch(): void
     {
         $this->expectException(LogicException::class);

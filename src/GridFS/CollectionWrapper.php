@@ -284,7 +284,7 @@ class CollectionWrapper
         return $this->filesCollection->updateMany(
             ['filename' => $filename],
             ['$set' => ['filename' => $newFilename]],
-        )->getModifiedCount();
+        )->getMatchedCount();
     }
 
     /**

@@ -11,3 +11,12 @@ arguments:
         name: value
         type:
             - any
+tests:
+    -
+        name: 'Match Document Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/ne/#match-document-fields'
+        pipeline:
+            -
+                $match:
+                    quantity:
+                        $ne: 20

@@ -11,3 +11,55 @@ arguments:
         name: value
         type:
             - any
+tests:
+    -
+        name: 'Equals a Specified Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-a-specified-value'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $eq: 20
+
+    -
+        name: 'Field in Embedded Document Equals a Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/#field-in-embedded-document-equals-a-value'
+        pipeline:
+            -
+                $match:
+                    'item.name':
+                        $eq: 'ab'
+
+    -
+        name: 'Equals an Array Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-an-array-value'
+        pipeline:
+            -
+                $match:
+                    tags:
+                        $eq: ['A', 'B']
+
+    -
+        name: 'Regex Match Behaviour'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/#regex-match-behaviour'
+        pipeline:
+            -
+                $match:
+                    company: 'MongoDB'
+            -
+                $match:
+                    company:
+                        $eq: 'MongoDB'
+            -
+                $match:
+                    company:
+                        $regularExpression:
+                            options: ''
+                            pattern: '^MongoDB'
+            -
+                $match:
+                    company:
+                        $eq:
+                            $regularExpression:
+                                options: ''
+                                pattern: '^MongoDB'

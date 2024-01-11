@@ -184,6 +184,106 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Equals a Specified Value
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-a-specified-value
+     */
+    case EqEqualsASpecifiedValue = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$eq": {
+                        "$numberInt": "20"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Field in Embedded Document Equals a Value
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/#field-in-embedded-document-equals-a-value
+     */
+    case EqFieldInEmbeddedDocumentEqualsAValue = <<<'JSON'
+    [
+        {
+            "$match": {
+                "item.name": {
+                    "$eq": "ab"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Equals an Array Value
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-an-array-value
+     */
+    case EqEqualsAnArrayValue = <<<'JSON'
+    [
+        {
+            "$match": {
+                "tags": {
+                    "$eq": [
+                        "A",
+                        "B"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Regex Match Behaviour
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/#regex-match-behaviour
+     */
+    case EqRegexMatchBehaviour = <<<'JSON'
+    [
+        {
+            "$match": {
+                "company": "MongoDB"
+            }
+        },
+        {
+            "$match": {
+                "company": {
+                    "$eq": "MongoDB"
+                }
+            }
+        },
+        {
+            "$match": {
+                "company": {
+                    "$regularExpression": {
+                        "options": "",
+                        "pattern": "^MongoDB"
+                    }
+                }
+            }
+        },
+        {
+            "$match": {
+                "company": {
+                    "$eq": {
+                        "$regularExpression": {
+                            "options": "",
+                            "pattern": "^MongoDB"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Compare Two Fields from A Single Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/#compare-two-fields-from-a-single-document
@@ -245,6 +345,194 @@ enum Pipelines: string
                         {
                             "$numberInt": "5"
                         }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Match Document Fields
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/gt/#match-document-fields
+     */
+    case GtMatchDocumentFields = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$gt": {
+                        "$numberInt": "20"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Match Document Fields
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/gte/#match-document-fields
+     */
+    case GteMatchDocumentFields = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$gte": {
+                        "$numberInt": "20"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use the $in Operator to Match Values in an Array
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-to-match-values
+     */
+    case InUseTheInOperatorToMatchValuesInAnArray = <<<'JSON'
+    [
+        {
+            "$match": {
+                "tags": {
+                    "$in": [
+                        "home",
+                        "school"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use the $in Operator with a Regular Expression
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-with-a-regular-expression
+     */
+    case InUseTheInOperatorWithARegularExpression = <<<'JSON'
+    [
+        {
+            "$match": {
+                "tags": {
+                    "$in": [
+                        {
+                            "$regularExpression": {
+                                "options": "",
+                                "pattern": "^be"
+                            }
+                        },
+                        {
+                            "$regularExpression": {
+                                "options": "",
+                                "pattern": "^st"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Match Document Fields
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/lt/#match-document-fields
+     */
+    case LtMatchDocumentFields = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$lt": {
+                        "$numberInt": "20"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Match Document Fields
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/lte/#match-document-fields
+     */
+    case LteMatchDocumentFields = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$lte": {
+                        "$numberInt": "20"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Match Document Fields
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/#match-document-fields
+     */
+    case NeMatchDocumentFields = <<<'JSON'
+    [
+        {
+            "$match": {
+                "quantity": {
+                    "$ne": {
+                        "$numberInt": "20"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Select on Unmatching Documents
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/#select-on-unmatching-documents
+     */
+    case NinSelectOnUnmatchingDocuments = <<<'JSON'
+    [
+        {
+            "$match": {
+                "quantity": {
+                    "$nin": [
+                        {
+                            "$numberInt": "5"
+                        },
+                        {
+                            "$numberInt": "15"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Select on Elements Not in an Array
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/#select-on-elements-not-in-an-array
+     */
+    case NinSelectOnElementsNotInAnArray = <<<'JSON'
+    [
+        {
+            "$match": {
+                "tags": {
+                    "$nin": [
+                        "school"
                     ]
                 }
             }

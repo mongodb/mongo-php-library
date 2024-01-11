@@ -141,7 +141,7 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} SKIP_LEGACY_SHELL=true MONGODB_VERSION=${MONGODB_VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} SKIP_LEGACY_SHELL=true MONGODB_VERSION=${MONGODB_VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
     # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:
@@ -152,18 +152,18 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          sh ${DRIVERS_TOOLS}/.evergreen/stop-orchestration.sh
+          ${DRIVERS_TOOLS}/.evergreen/stop-orchestration.sh
 
   "bootstrap mongohoused":
     - command: shell.exec
       params:
         script: |
-          VARIANT=${VARIANT} DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/build-mongohouse-local.sh
+          VARIANT=${VARIANT} DRIVERS_TOOLS="${DRIVERS_TOOLS}" ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/build-mongohouse-local.sh
     - command: shell.exec
       params:
         background: true
         script: |
-          DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/run-mongohouse-local.sh
+          DRIVERS_TOOLS="${DRIVERS_TOOLS}" ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/run-mongohouse-local.sh
 
   "create serverless instance":
     - command: shell.exec
@@ -272,7 +272,7 @@ functions:
           PHP_VERSION=${PHP_VERSION} \
           SSL=${SSL} \
           TESTS=${TESTS} \
-          sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run atlas data lake test":
     - command: shell.exec
@@ -285,7 +285,7 @@ functions:
           
           MONGODB_URI="mongodb://mhuser:pencil@127.0.0.1:27017" \
           TESTS="atlas-data-lake" \
-          sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run serverless tests":
     - command: shell.exec
@@ -318,7 +318,7 @@ functions:
           CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
           MONGODB_URI="${SERVERLESS_URI}" \
           TESTS="serverless" \
-          sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "cleanup":
     - command: shell.exec

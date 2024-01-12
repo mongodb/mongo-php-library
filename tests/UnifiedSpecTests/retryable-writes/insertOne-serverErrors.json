@@ -59,6 +59,11 @@
   "tests": [
     {
       "description": "InsertOne succeeds after retryable writeConcernError",
+      "runOnRequirements": [
+        {
+          "minServerVersion": "4.3.1"
+        }
+      ],
       "operations": [
         {
           "name": "failPoint",

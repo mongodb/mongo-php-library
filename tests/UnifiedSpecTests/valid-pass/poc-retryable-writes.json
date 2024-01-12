@@ -261,14 +261,9 @@
       "description": "InsertMany succeeds after PrimarySteppedDown",
       "runOnRequirements": [
         {
-          "minServerVersion": "4.0",
+          "minServerVersion": "4.3.1",
           "topologies": [
-            "replicaset"
-          ]
-        },
-        {
-          "minServerVersion": "4.1.7",
-          "topologies": [
+            "replicaset",
             "sharded"
           ]
         }
@@ -422,14 +417,9 @@
       "description": "InsertOne fails after multiple retryable writeConcernErrors",
       "runOnRequirements": [
         {
-          "minServerVersion": "4.0",
+          "minServerVersion": "4.3.1",
           "topologies": [
-            "replicaset"
-          ]
-        },
-        {
-          "minServerVersion": "4.1.7",
-          "topologies": [
+            "replicaset",
             "sharded"
           ]
         }

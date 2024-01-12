@@ -80,7 +80,7 @@ class RetryableWritesSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test 1: when encountering a NoWritesPerformed error after an error with a RetryableWriteError label
+     * Prose test 3: when encountering a NoWritesPerformed error after an error with a RetryableWriteError label
      */
     public function testNoWritesPerformedErrorReturnsOriginalError(): void
     {
@@ -88,7 +88,9 @@ class RetryableWritesSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Test only applies to replica sets');
         }
 
-        $this->skipIfServerVersion('<', '4.4.0', 'NoWritesPerformed error label is only supported on MongoDB 4.4+');
+        /* Note: the NoWritesPerformed label was introduced in MongoDB 6.1
+         * (SERVER-66479), but the test can still be run on earlier versions. */
+        $this->skipIfServerVersion('<', '6.0.0', 'Test should only be run for MongoDB 6.0+');
 
         $client = self::createTestClient(null, ['retryWrites' => true]);
 
@@ -97,11 +99,9 @@ class RetryableWritesSpecTest extends FunctionalTestCase
             'configureFailPoint' => 'failCommand',
             'mode' => ['times' => 1],
             'data' => [
-                'writeConcernError' => [
-                    'code' => self::SHUTDOWN_IN_PROGRESS,
-                    'errorLabels' => ['RetryableWriteError'],
-                ],
                 'failCommands' => ['insert'],
+                'errorLabels' => ['RetryableWriteError'],
+                'writeConcernError' => ['code' => self::SHUTDOWN_IN_PROGRESS],
             ],
         ]);
 

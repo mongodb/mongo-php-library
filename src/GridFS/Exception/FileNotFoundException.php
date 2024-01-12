@@ -26,6 +26,17 @@ use function sprintf;
 class FileNotFoundException extends RuntimeException
 {
     /**
+     * Thrown when a file cannot be found by its filename.
+     *
+     * @param string $filename Filename
+     * @return self
+     */
+    public static function byFilename(string $filename)
+    {
+        return new self(sprintf('File with name "%s" not found', $filename));
+    }
+
+    /**
      * Thrown when a file cannot be found by its filename and revision.
      *
      * @param string  $filename  Filename

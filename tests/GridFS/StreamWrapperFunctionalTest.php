@@ -29,6 +29,7 @@ use function rename;
 use function stream_context_create;
 use function stream_get_contents;
 use function time;
+use function unlink;
 use function usleep;
 
 use const SEEK_CUR;
@@ -374,10 +375,33 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(6, file_put_contents($path, 'foobar'));
         $this->assertSame(6, file_put_contents($path, 'foobar'));
 
-        $this->assertTrue(rename($path, $path . '.renamed'));
+        $result = rename($path, $path . '.renamed');
+        $this->assertTrue($result);
         $this->assertTrue(file_exists($path . '.renamed'));
         $this->assertFalse(file_exists($path));
         $this->assertSame('foobar', file_get_contents($path . '.renamed'));
+
+        $this->expectException(FileNotFoundException::class);
+        $this->expectExceptionMessage('File with name "gridfs://bucket/filename" not found');
+        rename($path, $path . '.renamed');
+    }
+
+    public function testRenameSameFilename(): void
+    {
+        $this->bucket->registerGlobalStreamWrapperAlias('bucket');
+        $path = 'gridfs://bucket/filename';
+
+        $this->assertSame(6, file_put_contents($path, 'foobar'));
+
+        $result = rename($path, $path);
+        $this->assertTrue($result);
+        $this->assertTrue(file_exists($path));
+        $this->assertSame('foobar', file_get_contents($path));
+
+        $path = 'gridfs://bucket/missing';
+        $this->expectException(FileNotFoundException::class);
+        $this->expectExceptionMessage('File with name "gridfs://bucket/missing" not found');
+        rename($path, $path);
     }
 
     public function testRenamePathMismatch(): void
@@ -386,5 +410,23 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->expectExceptionMessage('Cannot rename "gridfs://bucket/filename" to "gridfs://other/newname" because they are not in the same GridFS bucket.');
 
         rename('gridfs://bucket/filename', 'gridfs://other/newname');
+    }
+
+    public function testUnlinkAllRevisions(): void
+    {
+        $this->bucket->registerGlobalStreamWrapperAlias('bucket');
+        $path = 'gridfs://bucket/path/to/filename';
+
+        file_put_contents($path, 'version 0');
+        file_put_contents($path, 'version 1');
+
+        $result = unlink($path);
+
+        $this->assertTrue($result);
+        $this->assertFalse(file_exists($path));
+
+        $this->expectException(FileNotFoundException::class);
+        $this->expectExceptionMessage('File with name "gridfs://bucket/path/to/filename" not found');
+        unlink($path);
     }
 }

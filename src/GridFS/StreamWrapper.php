@@ -96,7 +96,8 @@ class StreamWrapper
     /**
      * Rename all revisions of a filename.
      *
-     * @return bool True on success or false on failure.
+     * @return true
+     * @throws FileNotFoundException
      */
     public function rename(string $fromPath, string $toPath): bool
     {
@@ -105,16 +106,17 @@ class StreamWrapper
             throw LogicException::renamePathMismatch($fromPath, $toPath);
         }
 
-        try {
-            $this->stream_open($fromPath, 'r', 0, $openedPath);
-        } catch (FileNotFoundException $e) {
-            return false;
+        $context = $this->getContext($fromPath, 'w');
+
+        $newFilename = explode('/', $toPath, 4)[3] ?? '';
+        $count = $context['collectionWrapper']->updateFilenameForFilename($context['filename'], $newFilename);
+
+        if ($count === 0) {
+            throw FileNotFoundException::byFilename($fromPath);
         }
 
-        $newName = explode('/', $toPath, 4)[3] ?? '';
-        assert($this->stream instanceof ReadableStream);
-
-        return $this->stream->rename($newName);
+        // If $count is null, the update is unacknowledged, the operation is considered successful.
+        return true;
     }
 
     /**
@@ -170,41 +172,12 @@ class StreamWrapper
      */
     public function stream_open(string $path, string $mode, int $options, ?string &$openedPath): bool
     {
-        $context = [];
-
-        /**
-         * The Bucket methods { @see Bucket::openUploadStream() } and { @see Bucket::openDownloadStreamByFile() }
-         * always set an internal context. But the context can also be set by the user.
-         */
-        if (is_resource($this->context)) {
-            $context = stream_context_get_options($this->context)['gridfs'] ?? [];
-
-            if (! is_array($context)) {
-                throw LogicException::invalidContext($context);
-            }
-        }
-
-        // When the stream is opened using fopen(), the context is not required, it can contain only options.
-        if (! isset($context['collectionWrapper'])) {
-            $bucketAlias = explode('/', $path, 4)[2] ?? '';
-
-            if (! isset(self::$contextResolvers[$bucketAlias])) {
-                throw LogicException::bucketAliasNotRegistered($bucketAlias);
-            }
-
-            $context = self::$contextResolvers[$bucketAlias]($path, $mode, $context);
-        }
-
-        if (! $context['collectionWrapper'] instanceof CollectionWrapper) {
-            throw LogicException::invalidContextCollectionWrapper($context['collectionWrapper']);
-        }
-
         if ($mode === 'r' || $mode === 'rb') {
-            return $this->initReadableStream($context);
+            return $this->initReadableStream($this->getContext($path, $mode));
         }
 
         if ($mode === 'w' || $mode === 'wb') {
-            return $this->initWritableStream($context);
+            return $this->initWritableStream($this->getContext($path, $mode));
         }
 
         throw LogicException::openModeNotSupported($mode);
@@ -324,6 +297,25 @@ class StreamWrapper
         return $this->stream->writeBytes($data);
     }
 
+    /**
+     * Remove all revisions of a filename.
+     *
+     * @return true
+     * @throws FileNotFoundException
+     */
+    public function unlink(string $path): bool
+    {
+        $context = $this->getContext($path, 'w');
+        $count = $context['collectionWrapper']->deleteFileAndChunksByFilename($context['filename']);
+
+        if ($count === 0) {
+            throw FileNotFoundException::byFilename($path);
+        }
+
+        // If $count is null, the update is unacknowledged, the operation is considered successful.
+        return true;
+    }
+
     /** @return false|array */
     public function url_stat(string $path, int $flags)
     {
@@ -336,6 +328,45 @@ class StreamWrapper
         }
 
         return $this->stream_stat();
+    }
+
+    /**
+     * @return array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array}
+     * @psalm-return ($mode == 'r' or $mode == 'rb' ? array{collectionWrapper: CollectionWrapper, file: object} : array{collectionWrapper: CollectionWrapper, filename: string, options: array})
+     */
+    private function getContext(string $path, string $mode): array
+    {
+        $context = [];
+
+        /**
+         * The Bucket methods { @see Bucket::openUploadStream() } and { @see Bucket::openDownloadStreamByFile() }
+         * always set an internal context. But the context can also be set by the user.
+         */
+        if (is_resource($this->context)) {
+            $context = stream_context_get_options($this->context)['gridfs'] ?? [];
+
+            if (! is_array($context)) {
+                throw LogicException::invalidContext($context);
+            }
+        }
+
+        // When the stream is opened using fopen(), the context is not required, it can contain only options.
+        if (! isset($context['collectionWrapper'])) {
+            $bucketAlias = explode('/', $path, 4)[2] ?? '';
+
+            if (! isset(self::$contextResolvers[$bucketAlias])) {
+                throw LogicException::bucketAliasNotRegistered($bucketAlias);
+            }
+
+            /** @see Bucket::resolveStreamContext() */
+            $context = self::$contextResolvers[$bucketAlias]($path, $mode, $context);
+        }
+
+        if (! $context['collectionWrapper'] instanceof CollectionWrapper) {
+            throw LogicException::invalidContextCollectionWrapper($context['collectionWrapper']);
+        }
+
+        return $context;
     }
 
     /**

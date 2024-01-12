@@ -85,6 +85,11 @@
       <code>$context</code>
     </MixedArgumentTypeCoercion>
   </file>
+  <file src="src/GridFS/CollectionWrapper.php">
+    <MixedAssignment>
+      <code>$ids[]</code>
+    </MixedAssignment>
+  </file>
   <file src="src/GridFS/ReadableStream.php">
     <MixedArgument>
       <code><![CDATA[$currentChunk->n]]></code>
@@ -92,13 +97,22 @@
     </MixedArgument>
   </file>
   <file src="src/GridFS/StreamWrapper.php">
-    <InvalidArgument>
-      <code>$context</code>
-      <code>$context</code>
-    </InvalidArgument>
+    <InvalidDocblock>
+      <code>private function getContext(string $path, string $mode): array</code>
+    </InvalidDocblock>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->getContext($path, $mode)]]></code>
+      <code><![CDATA[$this->getContext($path, $mode)]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code>$context</code>
+      <code>$count</code>
+      <code>$count</code>
     </MixedAssignment>
+    <MixedMethodCall>
+      <code>deleteFileAndChunksByFilename</code>
+      <code>updateFilenameForFilename</code>
+    </MixedMethodCall>
   </file>
   <file src="src/Model/BSONArray.php">
     <MixedAssignment>

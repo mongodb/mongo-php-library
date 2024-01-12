@@ -83,6 +83,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/createEntities-operation: createEntities operation' => 'CSOT is not yet implemented (PHPC-1760)',
         'valid-pass/entity-cursor-iterateOnce: iterateOnce' => 'CSOT is not yet implemented (PHPC-1760)',
         'valid-pass/matches-lte-operator: special lte matching operator' => 'CSOT is not yet implemented (PHPC-1760)',
+        // libmongoc always adds readConcern to aggregate command
+        'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
     ];
 
     private static UnifiedTestRunner $runner;

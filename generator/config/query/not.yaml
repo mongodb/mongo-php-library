@@ -11,3 +11,24 @@ arguments:
         name: expression
         type:
             - fieldQuery
+tests:
+    -
+        name: 'Syntax'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/not/#syntax'
+        pipeline:
+            -
+                $match:
+                    price:
+                        $not:
+                            $gt: 1.99
+    -
+        name: 'Regular Expressions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/not/#-not-and-regular-expressions'
+        pipeline:
+            -
+                $match:
+                    price:
+                        $not:
+                            $regularExpression:
+                                pattern: '^p.*'
+                                options: ''

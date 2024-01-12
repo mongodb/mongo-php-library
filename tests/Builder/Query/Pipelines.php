@@ -68,6 +68,82 @@ enum Pipelines: string
     JSON;
 
     /**
+     * AND Queries With Multiple Expressions Specifying the Same Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-field
+     */
+    case AndANDQueriesWithMultipleExpressionsSpecifyingTheSameField = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$and": [
+                    {
+                        "price": {
+                            "$ne": {
+                                "$numberDouble": "1.9899999999999999911"
+                            }
+                        }
+                    },
+                    {
+                        "price": {
+                            "$exists": true
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * AND Queries With Multiple Expressions Specifying the Same Operator
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-operator
+     */
+    case AndANDQueriesWithMultipleExpressionsSpecifyingTheSameOperator = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$and": [
+                    {
+                        "$or": [
+                            {
+                                "qty": {
+                                    "$lt": {
+                                        "$numberInt": "10"
+                                    }
+                                }
+                            },
+                            {
+                                "qty": {
+                                    "$gt": {
+                                        "$numberInt": "50"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$or": [
+                            {
+                                "sale": true
+                            },
+                            {
+                                "price": {
+                                    "$lt": {
+                                        "$numberInt": "5"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Element Match
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#element-match
@@ -535,6 +611,206 @@ enum Pipelines: string
                         "school"
                     ]
                 }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Query with Two Expressions
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-query-with-two-expressions
+     */
+    case NorQueryWithTwoExpressions = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$nor": [
+                    {
+                        "price": {
+                            "$numberDouble": "1.9899999999999999911"
+                        }
+                    },
+                    {
+                        "sale": true
+                    }
+                ]
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Additional Comparisons
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and-additional-comparisons
+     */
+    case NorAdditionalComparisons = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$nor": [
+                    {
+                        "price": {
+                            "$numberDouble": "1.9899999999999999911"
+                        }
+                    },
+                    {
+                        "qty": {
+                            "$lt": {
+                                "$numberInt": "20"
+                            }
+                        }
+                    },
+                    {
+                        "sale": true
+                    }
+                ]
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * $nor and $exists
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and--exists
+     */
+    case NorNorAndExists = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$nor": [
+                    {
+                        "price": {
+                            "$numberDouble": "1.9899999999999999911"
+                        }
+                    },
+                    {
+                        "price": {
+                            "$exists": false
+                        }
+                    },
+                    {
+                        "sale": true
+                    },
+                    {
+                        "sale": {
+                            "$exists": false
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Syntax
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/#syntax
+     */
+    case NotSyntax = <<<'JSON'
+    [
+        {
+            "$match": {
+                "price": {
+                    "$not": {
+                        "$gt": {
+                            "$numberDouble": "1.9899999999999999911"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Regular Expressions
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/#-not-and-regular-expressions
+     */
+    case NotRegularExpressions = <<<'JSON'
+    [
+        {
+            "$match": {
+                "price": {
+                    "$not": {
+                        "$regularExpression": {
+                            "pattern": "^p.*",
+                            "options": ""
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * $or Clauses
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/or/#-or-clauses-and-indexes
+     */
+    case OrOrClauses = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$or": [
+                    {
+                        "quantity": {
+                            "$lt": {
+                                "$numberInt": "20"
+                            }
+                        }
+                    },
+                    {
+                        "price": {
+                            "$numberInt": "10"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Error Handling
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/or/#error-handling
+     */
+    case OrErrorHandling = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$or": [
+                    {
+                        "x": {
+                            "$eq": {
+                                "$numberInt": "0"
+                            }
+                        }
+                    },
+                    {
+                        "$expr": {
+                            "$eq": [
+                                {
+                                    "$divide": [
+                                        {
+                                            "$numberInt": "1"
+                                        },
+                                        "$x"
+                                    ]
+                                },
+                                {
+                                    "$numberInt": "3"
+                                }
+                            ]
+                        }
+                    }
+                ]
             }
         }
     ]

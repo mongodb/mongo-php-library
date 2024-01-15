@@ -23,15 +23,28 @@ Definition
 
       function dropSearchIndex(string $name, array $options = []): void
 
-   This method has the following parameters:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-dropSearchIndex-param.rst
-
-   The ``$options`` parameter supports the following options:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-dropSearchIndex-option.rst
-
    .. include:: /includes/extracts/note-atlas-search-requirement.rst
+
+Parameters
+----------
+
+``$name`` : string
+  Name of the index to drop.
+
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
 
 Errors/Exceptions
 -----------------

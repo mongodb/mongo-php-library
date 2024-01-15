@@ -21,11 +21,27 @@ Definition
 
    .. code-block:: php
 
-      function with_transaction(MongoDB\Driver\Session $session, callable $callback, array $transactionOptions = []): void
+      function with_transaction(
+          MongoDB\Driver\Session $session,
+          callable $callback,
+          array $transactionOptions = []
+      ): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/function-with_transaction-param.rst
+``$session`` : :php:`MongoDB\\Driver\\Session <mongodb-driver-session>`
+  A client session used to execute the transaction.
+
+``$callback`` : :php:`callable <language.types.callable>`
+  A callback that will be run inside the transaction. The callback must accept a
+  :php:`MongoDB\\Driver\\Session <mongodb-driver-session>` object as its first
+  argument.
+
+``$transactionOptions`` : array
+  Transaction options, which will be passed to
+  :php:`MongoDB\\Driver\\Session::startTransaction <mongodb-driver-session.starttransaction>`.
+  See the extension documentation for a list of supported options.
 
 Behavior
 --------

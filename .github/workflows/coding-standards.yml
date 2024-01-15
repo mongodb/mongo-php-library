@@ -1,6 +1,7 @@
 name: "Coding Standards"
 
 on:
+  merge_group:
   pull_request:
     branches:
       - "v*.*"

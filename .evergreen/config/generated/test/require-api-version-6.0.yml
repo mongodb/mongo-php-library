@@ -1,6 +1,6 @@
 # This file is generated automatically - please edit the "templates/test/require-api-version.yml" template file instead.
 tasks:
-  - name: "test-requireApiVersion-6.0"
+  - name: "test-mongodb-6.0-requireApiVersion"
     tags: ["standalone", "local", "6.0", "versioned_api"]
     commands:
       - func: "bootstrap mongo-orchestration"
@@ -15,7 +15,7 @@ tasks:
         vars:
           API_VERSION: "1"
 
-  - name: "test-acceptApiVersion2-6.0"
+  - name: "test-mongodb-6.0-acceptApiVersion2"
     tags: ["standalone", "local", "6.0", "versioned_api"]
     commands:
       - func: "bootstrap mongo-orchestration"

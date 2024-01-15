@@ -21,7 +21,13 @@ Definition
 
    .. code-block:: php
 
-      function createEncryptedCollection(string $collectionName, MongoDB\Driver\ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
+      function createEncryptedCollection(
+          string $collectionName,
+          MongoDB\Driver\ClientEncryption $clientEncryption,
+          string $kmsProvider,
+          ?array $masterKey,
+          array $options
+      ): array
 
    This method will automatically create data keys for any encrypted fields
    where ``keyId`` is ``null``. Data keys will be created using
@@ -34,13 +40,33 @@ Definition
    :phpclass:`MongoDB\\Client` objects. Users must configure auto encryption
    after creating the encrypted collection with ``createEncryptedCollection()``.
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-createEncryptedCollection-param.rst
+``$collectionName`` : string
+  The name of the encrypted collection to create.
 
-   The ``$options`` parameter supports the same options as
-   :phpmethod:`MongoDB\\Database::createCollection()`. The ``encryptedFields``
-   option is required.
+``$clientEncryption`` : :php:`MongoDB\\Driver\\ClientEncryption <mongodb-driver-clientencryption>`
+  The ClientEncryption object used to create data keys.
+
+``$kmsProvider`` : string
+  KMS provider (e.g. "local", "aws") that will be used to encrypt new data keys.
+  This corresponds to the ``$kmsProvider`` parameter for
+  :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
+
+``$masterKey`` : array|null
+  KMS-specific key options that will be used to encrypt new data keys. This
+  corresponds to the ``masterKey`` option for
+  :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
+
+  If ``$kmsProvider`` is "local", this should be ``null``.
+
+``$options`` : array
+  An array specifying the desired options.
+
+  The ``$options`` parameter supports the same options as
+  :phpmethod:`MongoDB\\Database::createCollection()`. The ``encryptedFields``
+  option is required.
 
 Return Values
 -------------

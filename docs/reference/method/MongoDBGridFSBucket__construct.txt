@@ -19,15 +19,79 @@ Definition
 
    .. code-block:: php
 
-      function __construct(MongoDB\Driver\Manager $manager, string $databaseName, array $options = [])
+      function __construct(
+          MongoDB\Driver\Manager $manager,
+          string $databaseName,
+          array $options = []
+      )
 
-   This constructor has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-construct-param.rst
+``$manager`` : :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
+  The :php:`Manager <mongodb-driver-manager>` instance from the driver. The
+  manager maintains connections between the driver and your MongoDB instances.
 
-   The ``$options`` parameter supports the following options:
+``$databaseName`` : string
+  The name of the database.
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-construct-option.rst
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - bucketName
+       - string
+       - The bucket name, which will be used as a prefix for the files and
+         chunks collections. Defaults to ``"fs"``.
+
+     * - chunkSizeBytes
+       - integer
+       - The chunk size in bytes. Defaults to ``261120`` (i.e. 255 KiB).
+
+     * - disableMD5
+       - boolean
+       - Whether to disable automatic MD5 generation when storing files.
+
+         Defaults to ``false``. Only ``true`` will be supported in 2.0.
+
+         .. versionadded: 1.4
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - The default read concern to use for bucket operations. Defaults to the
+         manager's read concern.
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - The default read preference to use for bucket operations. Defaults to
+         the manager's read preference.
+
+     * - typeMap
+       - array
+       - Default :php:`type map
+         <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`
+         to apply to cursors, which determines how BSON documents are converted
+         to PHP values. The library uses the following type map by default:
+
+         .. code-block:: php
+
+            [
+                'array' => 'MongoDB\Model\BSONArray',
+                'document' => 'MongoDB\Model\BSONDocument',
+                'root' => 'MongoDB\Model\BSONDocument',
+            ]
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - The default write concern to use for bucket operations. Defaults to the
+         manager's write concern.
 
 Errors/Exceptions
 -----------------

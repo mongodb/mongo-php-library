@@ -1,0 +1,16 @@
+# This file is generated automatically - please edit the "templates/test-variant/lowest.yml" template file instead.
+buildvariants:
+  - name: test-debian92-php-7.4-local-lowest
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 9.2, PHP 7.4, Lowest Dependencies"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      FETCH_BUILD_TASK: "build-php-7.4-lowest"
+      PHP_VERSION: "7.4"
+      DEPENDENCIES: "lowest"
+    depends_on:
+      - variant: "build-debian92"
+        name: "build-php-7.4-lowest"
+    tasks:
+      - ".replicaset .local .3.6 !.csfle"

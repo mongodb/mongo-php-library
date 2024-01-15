@@ -100,6 +100,43 @@ OUTPUT;
         ];
 
         $expectedOutput = <<<'OUTPUT'
+Read a total of 17888890 bytes
+Deleted file with ID: %s
+OUTPUT;
+
+        yield 'gridfs_stream' => [
+            'file' => __DIR__ . '/../examples/gridfs_stream.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+Inserted file with ID: %s
+File contents: Hello world!
+Deleted file with ID: %s
+
+OUTPUT;
+
+        yield 'gridfs_upload' => [
+            'file' => __DIR__ . '/../examples/gridfs_upload.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+File exists: no
+Writing file
+File exists: yes
+Reading file: Hello, GridFS!
+Writing new version of the file
+Reading new version of the file: Hello, GridFS! (v2)
+Reading previous version of the file: Hello, GridFS!
+OUTPUT;
+
+        yield 'gridfs_stream_wrapper' => [
+            'file' => __DIR__ . '/../examples/gridfs_stream_wrapper.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
 MongoDB\Examples\Persistable\PersistableEntry Object
 (
     [id:MongoDB\Examples\Persistable\PersistableEntry:private] => MongoDB\BSON\ObjectId Object
@@ -228,7 +265,7 @@ Enjoy MongoDB Atlas Search!
 
 OUTPUT;
 
-        $this->assertExampleOutput(__DIR__ . '/../examples/atlas-search.php', $expectedOutput);
+        $this->assertExampleOutput(__DIR__ . '/../examples/atlas_search.php', $expectedOutput);
     }
 
     public function testChangeStream(): void

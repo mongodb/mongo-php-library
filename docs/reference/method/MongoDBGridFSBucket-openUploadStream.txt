@@ -19,15 +19,50 @@ Definition
 
    .. code-block:: php
 
-      function openUploadStream(string $filename, array $options = []): resource
+      function openUploadStream(
+          string $filename,
+          array $options = []
+      ): resource
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openUploadStream-param.rst
+``$filename`` : string
+  The ``filename`` of the file to create.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openUploadStream-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - _id
+       - mixed
+       - Value to use as the file document identifier. Defaults to a new
+         :php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>` object.
+
+     * - chunkSizeBytes
+       - integer
+       - The chunk size in bytes. Defaults to the bucket's ``chunkSizeBytes``
+         option.
+
+     * - disableMD5
+       - boolean
+       - Whether to disable automatic MD5 generation when storing files.
+
+         Defaults to ``false``. Only ``true`` will be supported in 2.0.
+
+         .. versionadded: 1.4
+
+     * - metadata
+       - array|object
+       - User data for the ``metadata`` field of the file document. If not
+         specified, the ``metadata`` field will not be set on the file document.
 
 Return Values
 -------------

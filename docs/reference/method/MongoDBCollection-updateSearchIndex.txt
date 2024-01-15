@@ -21,18 +21,40 @@ Definition
 
    .. code-block:: php
 
-      function updateSearchIndex(string $name, array|object $definition, array $options = []): void
-
-   This method has the following parameters:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-updateSearchIndex-param.rst
-
-   The ``$options`` parameter supports the following options:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-updateSearchIndex-option.rst
+      function updateSearchIndex(
+          string $name,
+          array|object $definition,
+          array $options = []
+      ): void
 
    .. include:: /includes/extracts/note-atlas-search-requirement.rst
-   .. include:: /includes/extracts/note-atlas-search-async.rst
+
+Parameters
+----------
+
+``$name`` : string
+  Name of the index to update.
+
+``$definition`` : array|object
+  Document describing the updated search index definition. The specified
+  definition replaces the prior definition in the search index. For details on
+  definition syntax, see
+  :manual:`Search Index Definition Syntax </reference/command/createSearchIndexes/#search-index-definition-syntax>`.
+
+``$options`` : array
+  An array specifying the desired options.
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
 
 Errors/Exceptions
 -----------------
@@ -40,6 +62,11 @@ Errors/Exceptions
 .. include:: /includes/extracts/error-unsupportedexception.rst
 .. include:: /includes/extracts/error-invalidargumentexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Behavior
+--------
+
+.. include:: /includes/extracts/note-atlas-search-async.rst
 
 See Also
 --------

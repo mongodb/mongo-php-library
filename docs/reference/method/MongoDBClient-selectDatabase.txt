@@ -19,15 +19,47 @@ Definition
 
    .. code-block:: php
 
-      function selectDatabase(string $databaseName, array $options = []): MongoDB\Database
+      function selectDatabase(
+          string $databaseName,
+          array $options = []
+      ): MongoDB\Database
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBClient-method-selectDatabase-param.rst
+``$databaseName`` : string
+  The name of the database to select.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBClient-method-selectDatabase-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - The default read concern to use for database operations. Defaults to
+         the client's read concern.
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - The default read preference to use for database operations. Defaults to
+         the client's read preference.
+
+     * - typeMap
+       - array
+       - The default type map to use for database operations. Defaults to the
+         client's type map.
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - The default write concern to use for database operations. Defaults to
+         the client's write concern.
 
 Return Values
 -------------

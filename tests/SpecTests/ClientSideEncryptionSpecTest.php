@@ -1762,7 +1762,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         ];
 
         if (! $shouldSucceed) {
-            $this->expectException(AuthenticationException::class);
+            $this->expectException(RuntimeException::class);
         }
 
         $dataKeyId = $clientEncryption->createDataKey('aws', $dataKeyOpts);

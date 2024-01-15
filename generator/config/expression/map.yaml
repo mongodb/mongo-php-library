@@ -26,3 +26,51 @@ arguments:
             - expression
         description: |
             An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
+tests:
+    -
+        name: 'Add to Each Element of an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/#add-to-each-element-of-an-array'
+        pipeline:
+            -
+                $project:
+                    adjustedGrades:
+                        $map:
+                            input: '$quizzes'
+                            as: 'grade'
+                            in:
+                                $add:
+                                    - '$$grade'
+                                    - 2
+    -
+        name: 'Truncate Each Array Element'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/#truncate-each-array-element'
+        pipeline:
+            -
+                $project:
+                    city: '$city'
+                    integerValues:
+                        $map:
+                            input: '$distances'
+                            as: 'decimalValue'
+                            in:
+                                # The example renders a single value, but the builder generates an array for consistency
+                                # $trunc: '$$decimalValue'
+                                $trunc:
+                                    - '$$decimalValue'
+    -
+        name: 'Convert Celsius Temperatures to Fahrenheit'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/#convert-celsius-temperatures-to-fahrenheit'
+        pipeline:
+            -
+                $addFields:
+                    tempsF:
+                        $map:
+                            input: '$tempsC'
+                            as: 'tempInCelsius'
+                            in:
+                                $add:
+                                    -
+                                        $multiply:
+                                            - '$$tempInCelsius'
+                                            - 1.8
+                                    - 32

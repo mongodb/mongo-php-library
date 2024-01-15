@@ -26,3 +26,17 @@ arguments:
         optional: true
         description: |
             An integer that specifies the increment value. Can be any valid expression that resolves to a non-zero integer. Defaults to 1.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/range/#example'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    city: 1
+                    Rest stops:
+                        $range:
+                            - 0
+                            - '$distance'
+                            - 25

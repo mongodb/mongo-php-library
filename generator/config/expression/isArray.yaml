@@ -11,4 +11,27 @@ arguments:
         name: expression
         type:
             - expression
-        variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/#example'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $cond:
+                            if:
+                                $and:
+                                    # The example in the docs uses the short syntax for $isArray,
+                                    # but the aggregation builder always uses the more verbose syntax.
+                                    -
+                                        $isArray:
+                                            - '$instock'
+                                    -
+                                        $isArray:
+                                            - '$ordered'
+                            then:
+                                $concatArrays:
+                                    - '$instock'
+                                    - '$ordered'
+                            else: 'One or more fields is not an array.'

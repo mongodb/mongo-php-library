@@ -956,14 +956,13 @@ trait FactoryTrait
      * Determines if the operand is an array. Returns a boolean.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
-     * @no-named-arguments
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function isArray(
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): IsArrayOperator
     {
-        return new IsArrayOperator(...$expression);
+        return new IsArrayOperator($expression);
     }
 
     /**
@@ -1868,11 +1867,11 @@ trait FactoryTrait
      * @param BSONArray|PackedArray|ResolvesToArray|array $input The array to be sorted.
      * The result is null if the expression: is missing, evaluates to null, or evaluates to undefined
      * If the expression evaluates to any other non-array value, the document returns an error.
-     * @param Document|Serializable|array|stdClass $sortBy The document specifies a sort ordering.
+     * @param Document|Serializable|array|int|stdClass $sortBy The document specifies a sort ordering.
      */
     public static function sortArray(
         PackedArray|ResolvesToArray|BSONArray|array $input,
-        Document|Serializable|stdClass|array $sortBy,
+        Document|Serializable|stdClass|array|int $sortBy,
     ): SortArrayOperator
     {
         return new SortArrayOperator($input, $sortBy);

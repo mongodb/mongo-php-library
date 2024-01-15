@@ -19,3 +19,15 @@ arguments:
             - resolvesToArray
         description: |
             Any valid expression that resolves to an array.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/in/#example'
+        pipeline:
+            -
+                $project:
+                    store location: '$location'
+                    has bananas:
+                        $in:
+                            - 'bananas'
+                            - '$in_stock'

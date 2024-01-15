@@ -13,3 +13,13 @@ arguments:
             - resolvesToArray
         description: |
             The argument can be any valid expression as long as it resolves to an array.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reverseArray/#example'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    reverseFavorites:
+                        $reverseArray: '$favorites'

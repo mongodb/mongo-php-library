@@ -13,3 +13,33 @@ arguments:
             - resolvesToObject
         description: |
             Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields.
+tests:
+    # "$objectToArray and $arrayToObject Example" omitted as it's already in arrayToObject.yaml
+    -
+        name: '$objectToArray Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/#-objecttoarray-example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    dimensions:
+                        $objectToArray: '$dimensions'
+    -
+        name: '$objectToArray to Sum Nested Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/#-objecttoarray-to-sum-nested-fields'
+        pipeline:
+            -
+                $project:
+                    warehouses:
+                        $objectToArray: '$instock'
+            -
+                # The example in the docs uses the short syntax for $unwind,
+                # but the aggregation builder always uses the more verbose syntax.
+                # $unwind: '$warehouses'
+                $unwind:
+                    path: '$warehouses'
+            -
+                $group:
+                    _id: '$warehouses.k'
+                    total:
+                        $sum: '$warehouses.v'

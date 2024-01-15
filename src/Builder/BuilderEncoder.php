@@ -278,6 +278,8 @@ class BuilderEncoder implements Encoder
             foreach (get_object_vars($value) as $key => $val) {
                 $value->{$key} = $this->recursiveEncode($val);
             }
+
+            return $value;
         }
 
         return $this->encodeIfSupported($value);

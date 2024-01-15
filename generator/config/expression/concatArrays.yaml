@@ -12,3 +12,14 @@ arguments:
         type:
             - resolvesToArray
         variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/#example'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $concatArrays:
+                            - '$instock'
+                            - '$ordered'

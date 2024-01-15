@@ -31,3 +31,15 @@ arguments:
             Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
             If positive, $slice returns up to the first n elements in the array. If the position is specified, $slice returns the first n elements starting from the position.
             If negative, $slice returns up to the last n elements in the array. n cannot resolve to a negative number if <position> is specified.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/#example'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    threeFavorites:
+                        $slice:
+                            - '$favorites'
+                            - 3

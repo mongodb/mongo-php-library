@@ -15,3 +15,17 @@ arguments:
         name: expression2
         type:
             - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    qty: 1
+                    qtyGt250:
+                        $gt:
+                            - '$qty'
+                            - 250
+                    _id: 0

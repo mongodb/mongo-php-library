@@ -15,3 +15,17 @@ arguments:
         name: expression2
         type:
             - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    qty: 1
+                    qtyEq250:
+                        $eq:
+                            - '$qty'
+                            - 250
+                    _id: 0

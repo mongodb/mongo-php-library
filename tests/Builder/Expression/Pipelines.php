@@ -322,6 +322,37 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/#example
+     */
+    case CmpExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "qty": {
+                    "$numberInt": "1"
+                },
+                "cmpTo250": {
+                    "$cmp": [
+                        "$qty",
+                        {
+                            "$numberInt": "250"
+                        }
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/#example
      */
     case ConcatArraysExample = <<<'JSON'
@@ -333,6 +364,37 @@ enum Pipelines: string
                         "$instock",
                         "$ordered"
                     ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/#example
+     */
+    case EqExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "qty": {
+                    "$numberInt": "1"
+                },
+                "qtyEq250": {
+                    "$eq": [
+                        "$qty",
+                        {
+                            "$numberInt": "250"
+                        }
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
                 }
             }
         }
@@ -498,6 +560,68 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/#example
+     */
+    case GtExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "qty": {
+                    "$numberInt": "1"
+                },
+                "qtyGt250": {
+                    "$gt": [
+                        "$qty",
+                        {
+                            "$numberInt": "250"
+                        }
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/#example
+     */
+    case GteExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "qty": {
+                    "$numberInt": "1"
+                },
+                "qtyGte250": {
+                    "$gte": [
+                        "$qty",
+                        {
+                            "$numberInt": "250"
+                        }
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/in/#example
      */
     case InExample = <<<'JSON'
@@ -648,6 +772,68 @@ enum Pipelines: string
                             "$numberInt": "3"
                         }
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/#example
+     */
+    case LtExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "qty": {
+                    "$numberInt": "1"
+                },
+                "qtyLt250": {
+                    "$lt": [
+                        "$qty",
+                        {
+                            "$numberInt": "250"
+                        }
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lte/#example
+     */
+    case LteExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "qty": {
+                    "$numberInt": "1"
+                },
+                "qtyLte250": {
+                    "$lte": [
+                        "$qty",
+                        {
+                            "$numberInt": "250"
+                        }
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
                 }
             }
         }
@@ -823,6 +1009,37 @@ enum Pipelines: string
                         },
                         "input": "$score"
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/#example
+     */
+    case NeExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "qty": {
+                    "$numberInt": "1"
+                },
+                "qtyNe250": {
+                    "$ne": [
+                        "$qty",
+                        {
+                            "$numberInt": "250"
+                        }
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
                 }
             }
         }

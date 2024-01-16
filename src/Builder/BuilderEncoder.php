@@ -26,6 +26,7 @@ use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
+use function array_key_exists;
 use function array_key_first;
 use function assert;
 use function get_debug_type;
@@ -182,7 +183,19 @@ class BuilderEncoder implements Encoder
                 continue;
             }
 
-            $result->{'$' . $key} = $this->recursiveEncode($val);
+            $val = $this->recursiveEncode($val);
+
+            if ($key === 'geometry') {
+                if (is_object($val) && property_exists($val, '$geometry')) {
+                    $result->{'$geometry'} = $val->{'$geometry'};
+                } elseif (is_array($val) && array_key_exists('$geometry', $val)) {
+                    $result->{'$geometry'} = $val->{'$geometry'};
+                } else {
+                    $result->{'$geometry'} = $val;
+                }
+            } else {
+                $result->{'$' . $key} = $val;
+            }
         }
 
         return $this->wrap($value, $result);

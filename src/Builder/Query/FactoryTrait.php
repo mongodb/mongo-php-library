@@ -211,12 +211,12 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
      * @param non-empty-string $type
      * @param BSONArray|PackedArray|array $coordinates
-     * @param Document|Serializable|array|stdClass $crs
+     * @param Optional|Document|Serializable|array|stdClass $crs
      */
     public static function geometry(
         string $type,
         PackedArray|BSONArray|array $coordinates,
-        Document|Serializable|stdClass|array $crs,
+        Optional|Document|Serializable|stdClass|array $crs = Optional::Undefined,
     ): GeometryOperator
     {
         return new GeometryOperator($type, $coordinates, $crs);
@@ -364,13 +364,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/
      * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
-     * @param Optional|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
-     * @param Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function near(
         Document|Serializable|GeometryInterface|stdClass|array $geometry,
-        Optional|int $maxDistance = Optional::Undefined,
-        Optional|int $minDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
     ): NearOperator
     {
         return new NearOperator($geometry, $maxDistance, $minDistance);
@@ -381,13 +381,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/
      * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
-     * @param Optional|int $maxDistance Distance in meters.
-     * @param Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int $maxDistance Distance in meters.
+     * @param Optional|Decimal128|Int64|float|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function nearSphere(
         Document|Serializable|GeometryInterface|stdClass|array $geometry,
-        Optional|int $maxDistance = Optional::Undefined,
-        Optional|int $minDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
     ): NearSphereOperator
     {
         return new NearSphereOperator($geometry, $maxDistance, $minDistance);

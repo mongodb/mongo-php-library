@@ -11,3 +11,42 @@ arguments:
         name: geometry
         type:
             - geometry
+tests:
+    -
+        name: 'Within a Polygon'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a-polygon'
+        pipeline:
+            -
+                $match:
+                    loc:
+                        $geoWithin:
+                            $geometry:
+                                type: 'Polygon'
+                                coordinates:
+                                    -
+                                        - [ 0, 0 ]
+                                        - [ 3, 6 ]
+                                        - [ 6, 1 ]
+                                        - [ 0, 0 ]
+    -
+        name: 'Within a Big Polygon'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a--big--polygon'
+        pipeline:
+            -
+                $match:
+                    loc:
+                        $geoWithin:
+                            $geometry:
+                                type: 'Polygon'
+                                coordinates:
+                                    -
+                                        - [ -100, 60 ]
+                                        - [ -100, 0 ]
+                                        - [ -100, -60 ]
+                                        - [ 100, -60 ]
+                                        - [ 100, 60 ]
+                                        - [ -100, 60 ]
+                                crs:
+                                    type: 'name'
+                                    properties:
+                                        name: 'urn:x-mongodb:crs:strictwinding:EPSG:4326'

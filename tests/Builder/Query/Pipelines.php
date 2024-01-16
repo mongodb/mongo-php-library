@@ -471,6 +471,278 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Intersects a Polygon
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#intersects-a-polygon
+     */
+    case GeoIntersectsIntersectsAPolygon = <<<'JSON'
+    [
+        {
+            "$match": {
+                "loc": {
+                    "$geoIntersects": {
+                        "$geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                                [
+                                    [
+                                        {
+                                            "$numberInt": "0"
+                                        },
+                                        {
+                                            "$numberInt": "0"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "3"
+                                        },
+                                        {
+                                            "$numberInt": "6"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "6"
+                                        },
+                                        {
+                                            "$numberInt": "1"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "0"
+                                        },
+                                        {
+                                            "$numberInt": "0"
+                                        }
+                                    ]
+                                ]
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Intersects a Big Polygon
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#intersects-a--big--polygon
+     */
+    case GeoIntersectsIntersectsABigPolygon = <<<'JSON'
+    [
+        {
+            "$match": {
+                "loc": {
+                    "$geoIntersects": {
+                        "$geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                                [
+                                    [
+                                        {
+                                            "$numberInt": "-100"
+                                        },
+                                        {
+                                            "$numberInt": "60"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "-100"
+                                        },
+                                        {
+                                            "$numberInt": "0"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "-100"
+                                        },
+                                        {
+                                            "$numberInt": "-60"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "100"
+                                        },
+                                        {
+                                            "$numberInt": "-60"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "100"
+                                        },
+                                        {
+                                            "$numberInt": "60"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "-100"
+                                        },
+                                        {
+                                            "$numberInt": "60"
+                                        }
+                                    ]
+                                ]
+                            ],
+                            "crs": {
+                                "type": "name",
+                                "properties": {
+                                    "name": "urn:x-mongodb:crs:strictwinding:EPSG:4326"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Within a Polygon
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a-polygon
+     */
+    case GeoWithinWithinAPolygon = <<<'JSON'
+    [
+        {
+            "$match": {
+                "loc": {
+                    "$geoWithin": {
+                        "$geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                                [
+                                    [
+                                        {
+                                            "$numberInt": "0"
+                                        },
+                                        {
+                                            "$numberInt": "0"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "3"
+                                        },
+                                        {
+                                            "$numberInt": "6"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "6"
+                                        },
+                                        {
+                                            "$numberInt": "1"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "0"
+                                        },
+                                        {
+                                            "$numberInt": "0"
+                                        }
+                                    ]
+                                ]
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Within a Big Polygon
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a--big--polygon
+     */
+    case GeoWithinWithinABigPolygon = <<<'JSON'
+    [
+        {
+            "$match": {
+                "loc": {
+                    "$geoWithin": {
+                        "$geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                                [
+                                    [
+                                        {
+                                            "$numberInt": "-100"
+                                        },
+                                        {
+                                            "$numberInt": "60"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "-100"
+                                        },
+                                        {
+                                            "$numberInt": "0"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "-100"
+                                        },
+                                        {
+                                            "$numberInt": "-60"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "100"
+                                        },
+                                        {
+                                            "$numberInt": "-60"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "100"
+                                        },
+                                        {
+                                            "$numberInt": "60"
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "$numberInt": "-100"
+                                        },
+                                        {
+                                            "$numberInt": "60"
+                                        }
+                                    ]
+                                ]
+                            ],
+                            "crs": {
+                                "type": "name",
+                                "properties": {
+                                    "name": "urn:x-mongodb:crs:strictwinding:EPSG:4326"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Match Document Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gt/#match-document-fields
@@ -726,6 +998,130 @@ enum Pipelines: string
                 "quantity": {
                     "$ne": {
                         "$numberInt": "20"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Query on GeoJSON Data
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/#query-on-geojson-data
+     */
+    case NearQueryOnGeoJSONData = <<<'JSON'
+    [
+        {
+            "$match": {
+                "location": {
+                    "$near": {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                {
+                                    "$numberDouble": "-73.966700000000003001"
+                                },
+                                {
+                                    "$numberDouble": "40.780000000000001137"
+                                }
+                            ]
+                        },
+                        "$minDistance": {
+                            "$numberInt": "1000"
+                        },
+                        "$maxDistance": {
+                            "$numberInt": "5000"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Query on Legacy Coordinates
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/#query-on-legacy-coordinates
+     */
+    case NearQueryOnLegacyCoordinates = <<<'JSON'
+    [
+        {
+            "$match": {
+                "location": {
+                    "$near": [
+                        {
+                            "$numberDouble": "-73.966700000000003001"
+                        },
+                        {
+                            "$numberDouble": "40.780000000000001137"
+                        }
+                    ],
+                    "$maxDistance": {
+                        "$numberDouble": "0.10000000000000000555"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Specify Center Point Using GeoJSON
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/#specify-center-point-using-geojson
+     */
+    case NearSphereSpecifyCenterPointUsingGeoJSON = <<<'JSON'
+    [
+        {
+            "$match": {
+                "location": {
+                    "$nearSphere": {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                {
+                                    "$numberDouble": "-73.966700000000003001"
+                                },
+                                {
+                                    "$numberDouble": "40.780000000000001137"
+                                }
+                            ]
+                        },
+                        "$minDistance": {
+                            "$numberInt": "1000"
+                        },
+                        "$maxDistance": {
+                            "$numberInt": "5000"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Specify Center Point Using Legacy Coordinates
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/#specify-center-point-using-legacy-coordinates
+     */
+    case NearSphereSpecifyCenterPointUsingLegacyCoordinates = <<<'JSON'
+    [
+        {
+            "$match": {
+                "location": {
+                    "$nearSphere": [
+                        {
+                            "$numberDouble": "-73.966700000000003001"
+                        },
+                        {
+                            "$numberDouble": "40.780000000000001137"
+                        }
+                    ],
+                    "$maxDistance": {
+                        "$numberDouble": "0.10000000000000000555"
                     }
                 }
             }

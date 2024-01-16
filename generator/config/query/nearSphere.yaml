@@ -3,7 +3,7 @@ name: $nearSphere
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/'
 type:
     - fieldQuery
-encode: object
+encode: dollar_object
 description: |
     Returns geospatial objects in proximity to a point on a sphere. Requires a geospatial index. The 2dsphere and 2d indexes support $nearSphere.
 arguments:
@@ -14,14 +14,28 @@ arguments:
     -
         name: maxDistance
         type:
-            - int
+            - number
         optional: true
         description: |
             Distance in meters.
     -
         name: minDistance
         type:
-            - int
+            - number
         optional: true
         description: |
             Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+tests:
+    -
+        name: 'Specify Center Point Using GeoJSON'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/#specify-center-point-using-geojson'
+        pipeline:
+            -
+                $match:
+                    location:
+                        $nearSphere:
+                            $geometry:
+                                type: 'Point'
+                                coordinates: [-73.9667, 40.78]
+                            $minDistance: 1000
+                            $maxDistance: 5000

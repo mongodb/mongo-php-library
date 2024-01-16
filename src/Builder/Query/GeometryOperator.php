@@ -14,6 +14,7 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\GeometryInterface;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -36,18 +37,18 @@ class GeometryOperator implements GeometryInterface, OperatorInterface
     /** @var BSONArray|PackedArray|array $coordinates */
     public readonly PackedArray|BSONArray|array $coordinates;
 
-    /** @var Document|Serializable|array|stdClass $crs */
-    public readonly Document|Serializable|stdClass|array $crs;
+    /** @var Optional|Document|Serializable|array|stdClass $crs */
+    public readonly Optional|Document|Serializable|stdClass|array $crs;
 
     /**
      * @param non-empty-string $type
      * @param BSONArray|PackedArray|array $coordinates
-     * @param Document|Serializable|array|stdClass $crs
+     * @param Optional|Document|Serializable|array|stdClass $crs
      */
     public function __construct(
         string $type,
         PackedArray|BSONArray|array $coordinates,
-        Document|Serializable|stdClass|array $crs,
+        Optional|Document|Serializable|stdClass|array $crs = Optional::Undefined,
     ) {
         $this->type = $type;
         if (is_array($coordinates) && ! array_is_list($coordinates)) {

@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
+use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
+use MongoDB\BSON\Int64;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\FieldQueryInterface;
@@ -24,26 +26,26 @@ use stdClass;
  */
 class NearOperator implements FieldQueryInterface, OperatorInterface
 {
-    public const ENCODE = Encode::Object;
+    public const ENCODE = Encode::DollarObject;
 
     /** @var Document|GeometryInterface|Serializable|array|stdClass $geometry */
     public readonly Document|Serializable|GeometryInterface|stdClass|array $geometry;
 
-    /** @var Optional|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point. */
-    public readonly Optional|int $maxDistance;
+    /** @var Optional|Decimal128|Int64|float|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point. */
+    public readonly Optional|Decimal128|Int64|float|int $maxDistance;
 
-    /** @var Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point. */
-    public readonly Optional|int $minDistance;
+    /** @var Optional|Decimal128|Int64|float|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point. */
+    public readonly Optional|Decimal128|Int64|float|int $minDistance;
 
     /**
      * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
-     * @param Optional|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
-     * @param Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public function __construct(
         Document|Serializable|GeometryInterface|stdClass|array $geometry,
-        Optional|int $maxDistance = Optional::Undefined,
-        Optional|int $minDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
     ) {
         $this->geometry = $geometry;
         $this->maxDistance = $maxDistance;

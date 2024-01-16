@@ -19,3 +19,4 @@ arguments:
         name: crs
         type:
             - object
+        optional: true

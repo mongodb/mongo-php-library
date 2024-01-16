@@ -15,3 +15,24 @@ arguments:
             - resolvesToInt
             - resolvesToLong
         variadic: array
+tests:
+    -
+        name: 'Bitwise OR with Two Integers'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/#bitwise-or-with-two-integers'
+        pipeline:
+            -
+                $project:
+                    result:
+                        $bitOr:
+                            - '$a'
+                            - '$b'
+    -
+        name: 'Bitwise OR with a Long and Integer'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/#bitwise-or-with-a-long-and-integer'
+        pipeline:
+            -
+                $project:
+                    result:
+                        $bitOr:
+                            - '$a'
+                            - { "$numberLong": "63" }

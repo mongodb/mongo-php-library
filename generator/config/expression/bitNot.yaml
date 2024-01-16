@@ -14,3 +14,12 @@ arguments:
         type:
             - resolvesToInt
             - resolvesToLong
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/#example'
+        pipeline:
+            -
+                $project:
+                    result:
+                        $bitNot: '$a'

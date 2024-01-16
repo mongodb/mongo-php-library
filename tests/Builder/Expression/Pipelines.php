@@ -159,6 +159,127 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Bitwise AND with Two Integers
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-two-integers
+     */
+    case BitAndBitwiseANDWithTwoIntegers = <<<'JSON'
+    [
+        {
+            "$project": {
+                "result": {
+                    "$bitAnd": [
+                        "$a",
+                        "$b"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Bitwise AND with a Long and Integer
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-a-long-and-integer
+     */
+    case BitAndBitwiseANDWithALongAndInteger = <<<'JSON'
+    [
+        {
+            "$project": {
+                "result": {
+                    "$bitAnd": [
+                        "$a",
+                        {
+                            "$numberLong": "63"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/#example
+     */
+    case BitNotExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "result": {
+                    "$bitNot": "$a"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Bitwise OR with Two Integers
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/#bitwise-or-with-two-integers
+     */
+    case BitOrBitwiseORWithTwoIntegers = <<<'JSON'
+    [
+        {
+            "$project": {
+                "result": {
+                    "$bitOr": [
+                        "$a",
+                        "$b"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Bitwise OR with a Long and Integer
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/#bitwise-or-with-a-long-and-integer
+     */
+    case BitOrBitwiseORWithALongAndInteger = <<<'JSON'
+    [
+        {
+            "$project": {
+                "result": {
+                    "$bitOr": [
+                        "$a",
+                        {
+                            "$numberLong": "63"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/#example
+     */
+    case BitXorExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "result": {
+                    "$bitXor": [
+                        "$a",
+                        "$b"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/#example

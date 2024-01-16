@@ -15,3 +15,14 @@ arguments:
             - resolvesToInt
             - resolvesToLong
         variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/#example'
+        pipeline:
+            -
+                $project:
+                    result:
+                        $bitXor:
+                            - '$a'
+                            - '$b'

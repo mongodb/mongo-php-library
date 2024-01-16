@@ -509,11 +509,12 @@ trait FactoryTrait
      * Selects documents if a field is of the specified type.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/
-     * @param BSONArray|PackedArray|array|int|non-empty-string $type
+     * @no-named-arguments
+     * @param int|non-empty-string ...$type
      */
-    public static function type(PackedArray|BSONArray|array|int|string $type): TypeOperator
+    public static function type(int|string ...$type): TypeOperator
     {
-        return new TypeOperator($type);
+        return new TypeOperator(...$type);
     }
 
     /**

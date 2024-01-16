@@ -360,6 +360,48 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Exists and Not Equal To
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/exists/#exists-and-not-equal-to
+     */
+    case ExistsExistsAndNotEqualTo = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$exists": true,
+                    "$nin": [
+                        {
+                            "$numberInt": "5"
+                        },
+                        {
+                            "$numberInt": "15"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Null Values
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/exists/#null-values
+     */
+    case ExistsNullValues = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$exists": true
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Compare Two Fields from A Single Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/#compare-two-fields-from-a-single-document
@@ -1119,6 +1161,146 @@ enum Pipelines: string
         {
             "$limit": {
                 "$numberInt": "5"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Querying by Data Type
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-data-type
+     */
+    case TypeQueryingByDataType = <<<'JSON'
+    [
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        {
+                            "$numberInt": "2"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        "string"
+                    ]
+                }
+            }
+        },
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        "double"
+                    ]
+                }
+            }
+        },
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        "number"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Querying by Multiple Data Type
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-multiple-data-type
+     */
+    case TypeQueryingByMultipleDataType = <<<'JSON'
+    [
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        {
+                            "$numberInt": "2"
+                        },
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        "string",
+                        "double"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Querying by MinKey and MaxKey
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-minkey-and-maxkey
+     */
+    case TypeQueryingByMinKeyAndMaxKey = <<<'JSON'
+    [
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        "minKey"
+                    ]
+                }
+            }
+        },
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        "maxKey"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Querying by Array Type
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-array-type
+     */
+    case TypeQueryingByArrayType = <<<'JSON'
+    [
+        {
+            "$match": {
+                "zipCode": {
+                    "$type": [
+                        "array"
+                    ]
+                }
             }
         }
     ]

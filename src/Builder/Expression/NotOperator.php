@@ -21,7 +21,7 @@ use stdClass;
  */
 class NotOperator implements ResolvesToBool, OperatorInterface
 {
-    public const ENCODE = Encode::Single;
+    public const ENCODE = Encode::Array;
 
     /** @var ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass $expression */
     public readonly Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;

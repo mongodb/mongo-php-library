@@ -13,3 +13,21 @@ arguments:
             - expression
             - resolvesToBool
         variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    result:
+                        $or:
+                            -
+                                $gt:
+                                    - '$qty'
+                                    - 250
+                            -
+                                $lt:
+                                    - '$qty'
+                                    - 200

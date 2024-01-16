@@ -61,6 +61,46 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/#example
+     */
+    case AndExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "qty": {
+                    "$numberInt": "1"
+                },
+                "result": {
+                    "$and": [
+                        {
+                            "$gt": [
+                                "$qty",
+                                {
+                                    "$numberInt": "100"
+                                }
+                            ]
+                        },
+                        {
+                            "$lt": [
+                                "$qty",
+                                {
+                                    "$numberInt": "250"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/#example
      */
     case ArrayElemAtExample = <<<'JSON'
@@ -790,6 +830,35 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/#example
+     */
+    case NotExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "result": {
+                    "$not": [
+                        {
+                            "$gt": [
+                                "$qty",
+                                {
+                                    "$numberInt": "250"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * $objectToArray Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/#-objecttoarray-example
@@ -833,6 +902,43 @@ enum Pipelines: string
                 "_id": "$warehouses.k",
                 "total": {
                     "$sum": "$warehouses.v"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/#example
+     */
+    case OrExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "result": {
+                    "$or": [
+                        {
+                            "$gt": [
+                                "$qty",
+                                {
+                                    "$numberInt": "250"
+                                }
+                            ]
+                        },
+                        {
+                            "$lt": [
+                                "$qty",
+                                {
+                                    "$numberInt": "200"
+                                }
+                            ]
+                        }
+                    ]
                 }
             }
         }

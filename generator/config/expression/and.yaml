@@ -16,3 +16,22 @@ arguments:
             - resolvesToString
             - resolvesToNull
         variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    qty: 1
+                    result:
+                        $and:
+                            -
+                                $gt:
+                                    - '$qty'
+                                    - 100
+                            -
+                                $lt:
+                                    - '$qty'
+                                    - 250

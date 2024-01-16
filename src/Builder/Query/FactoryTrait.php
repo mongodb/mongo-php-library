@@ -327,10 +327,13 @@ trait FactoryTrait
      * Performs a modulo operation on the value of a field and selects documents with a specified result.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/
-     * @param int $divisor
-     * @param int $remainder
+     * @param Decimal128|Int64|float|int $divisor
+     * @param Decimal128|Int64|float|int $remainder
      */
-    public static function mod(int $divisor, int $remainder): ModOperator
+    public static function mod(
+        Decimal128|Int64|float|int $divisor,
+        Decimal128|Int64|float|int $remainder,
+    ): ModOperator
     {
         return new ModOperator($divisor, $remainder);
     }

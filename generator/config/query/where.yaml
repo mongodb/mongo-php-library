@@ -11,3 +11,21 @@ arguments:
         name: function
         type:
             - javascript
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/where/#example'
+        pipeline:
+            -
+                $match:
+                    $where: 'function() { return hex_md5(this.name) == "9b53e667f30cd329dca1ec9e6a83e994" }'
+            -
+                $match:
+                    $expr:
+                        $function:
+                            body: |-
+                                function(name) {
+                                    return hex_md5(name) == "9b53e667f30cd329dca1ec9e6a83e994";
+                                }
+                            args: ['$name']
+                            lang: 'js'

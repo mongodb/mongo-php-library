@@ -517,6 +517,48 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#syntax
+     */
+    case JsonSchemaExample = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$jsonSchema": {
+                    "required": [
+                        "name",
+                        "major",
+                        "gpa",
+                        "address"
+                    ],
+                    "properties": {
+                        "name": {
+                            "bsonType": "string",
+                            "description": "must be a string and is required"
+                        },
+                        "address": {
+                            "bsonType": "object",
+                            "required": [
+                                "zipcode"
+                            ],
+                            "properties": {
+                                "street": {
+                                    "bsonType": "string"
+                                },
+                                "zipcode": {
+                                    "bsonType": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Match Document Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lt/#match-document-fields
@@ -548,6 +590,82 @@ enum Pipelines: string
                     "$lte": {
                         "$numberInt": "20"
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use $mod to Select Documents
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/#use--mod-to-select-documents
+     */
+    case ModUseModToSelectDocuments = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$mod": [
+                        {
+                            "$numberInt": "4"
+                        },
+                        {
+                            "$numberInt": "0"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Floating Point Arguments
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/#floating-point-arguments
+     */
+    case ModFloatingPointArguments = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$mod": [
+                        {
+                            "$numberDouble": "4.0"
+                        },
+                        {
+                            "$numberInt": "0"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$match": {
+                "qty": {
+                    "$mod": [
+                        {
+                            "$numberDouble": "4.5"
+                        },
+                        {
+                            "$numberInt": "0"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$match": {
+                "qty": {
+                    "$mod": [
+                        {
+                            "$numberDouble": "4.9900000000000002132"
+                        },
+                        {
+                            "$numberInt": "0"
+                        }
+                    ]
                 }
             }
         }
@@ -853,6 +971,180 @@ enum Pipelines: string
                             "pattern": "^ABC",
                             "options": "i"
                         }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Search for a Single Word
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word
+     */
+    case TextSearchForASingleWord = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$text": {
+                    "$search": "coffee"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Match Any of the Search Terms
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word
+     */
+    case TextMatchAnyOfTheSearchTerms = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$text": {
+                    "$search": "bake coffee cake"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Search a Different Language
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-a-different-language
+     */
+    case TextSearchADifferentLanguage = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$text": {
+                    "$search": "leche",
+                    "$language": "es"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Case and Diacritic Insensitive Search
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#case-and-diacritic-insensitive-search
+     */
+    case TextCaseAndDiacriticInsensitiveSearch = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$text": {
+                    "$search": "\u0441\u044b\u0301\u0440\u043d\u0438\u043a\u0438 CAF\u00c9S"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Perform Case Sensitive Search
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
+     */
+    case TextPerformCaseSensitiveSearch = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$text": {
+                    "$search": "Coffee",
+                    "$caseSensitive": true
+                }
+            }
+        },
+        {
+            "$match": {
+                "$text": {
+                    "$search": "\\\"Caf\u00e9 Con Leche\\\"",
+                    "$caseSensitive": true
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Diacritic Sensitive Search
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
+     */
+    case TextDiacriticSensitiveSearch = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$text": {
+                    "$search": "CAF\u00c9",
+                    "$diacriticSensitive": true
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Text Search Score Examples
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
+     */
+    case TextTextSearchScoreExamples = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$text": {
+                    "$search": "CAF\u00c9",
+                    "$diacriticSensitive": true
+                },
+                "score": {
+                    "$meta": "textScore"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "score": {
+                    "$meta": "textScore"
+                }
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "5"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/where/#example
+     */
+    case WhereExample = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$where": "function() { return hex_md5(this.name) == \"9b53e667f30cd329dca1ec9e6a83e994\" }"
+            }
+        },
+        {
+            "$match": {
+                "$expr": {
+                    "$function": {
+                        "body": "function(name) {\n    return hex_md5(name) == \"9b53e667f30cd329dca1ec9e6a83e994\";\n}",
+                        "args": [
+                            "$name"
+                        ],
+                        "lang": "js"
                     }
                 }
             }

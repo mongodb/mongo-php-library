@@ -24,6 +24,11 @@ enum Encode
     case Object;
 
     /**
+     * Parameters are encoded as an object with keys matching the parameter names prefixed with a dollar sign ($)
+     */
+    case DollarObject;
+
+    /**
      * Get the single parameter value
      */
     case Single;

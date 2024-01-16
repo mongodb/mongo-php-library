@@ -10,8 +10,33 @@ arguments:
     -
         name: divisor
         type:
-            - int
+            - number
     -
         name: remainder
         type:
-            - int
+            - number
+tests:
+    -
+        name: 'Use $mod to Select Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/mod/#use--mod-to-select-documents'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $mod: [4, 0]
+    -
+        name: 'Floating Point Arguments'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/mod/#floating-point-arguments'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $mod: [4.0, 0]
+            -
+                $match:
+                    qty:
+                        $mod: [4.5, 0]
+            -
+                $match:
+                    qty:
+                        $mod: [4.99, 0]

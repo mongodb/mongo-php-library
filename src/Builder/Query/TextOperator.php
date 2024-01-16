@@ -20,7 +20,7 @@ use MongoDB\Builder\Type\QueryInterface;
  */
 class TextOperator implements QueryInterface, OperatorInterface
 {
-    public const ENCODE = Encode::Object;
+    public const ENCODE = Encode::DollarObject;
 
     /** @var non-empty-string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase. */
     public readonly string $search;

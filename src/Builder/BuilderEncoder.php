@@ -111,6 +111,9 @@ class BuilderEncoder implements Encoder
             case Encode::Object:
                 return $this->encodeAsObject($value);
 
+            case Encode::DollarObject:
+                return $this->encodeAsDollarObject($value);
+
             case Encode::Group:
                 assert($value instanceof GroupStage);
 
@@ -165,6 +168,21 @@ class BuilderEncoder implements Encoder
             }
 
             $result->{$key} = $this->recursiveEncode($val);
+        }
+
+        return $this->wrap($value, $result);
+    }
+
+    private function encodeAsDollarObject(OperatorInterface $value): stdClass
+    {
+        $result = new stdClass();
+        foreach (get_object_vars($value) as $key => $val) {
+            // Skip optional arguments. If they have a default value, it is resolved by the server.
+            if ($val === Optional::Undefined) {
+                continue;
+            }
+
+            $result->{'$' . $key} = $this->recursiveEncode($val);
         }
 
         return $this->wrap($value, $result);

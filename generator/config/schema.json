@@ -60,6 +60,7 @@
                     "enum": [
                         "array",
                         "object",
+                        "dollar_object",
                         "single",
                         "group"
                     ]

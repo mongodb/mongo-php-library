@@ -1041,33 +1041,6 @@ enum Pipelines: string
     JSON;
 
     /**
-     * Query on Legacy Coordinates
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/#query-on-legacy-coordinates
-     */
-    case NearQueryOnLegacyCoordinates = <<<'JSON'
-    [
-        {
-            "$match": {
-                "location": {
-                    "$near": [
-                        {
-                            "$numberDouble": "-73.966700000000003001"
-                        },
-                        {
-                            "$numberDouble": "40.780000000000001137"
-                        }
-                    ],
-                    "$maxDistance": {
-                        "$numberDouble": "0.10000000000000000555"
-                    }
-                }
-            }
-        }
-    ]
-    JSON;
-
-    /**
      * Specify Center Point Using GeoJSON
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/#specify-center-point-using-geojson
@@ -1095,33 +1068,6 @@ enum Pipelines: string
                         "$maxDistance": {
                             "$numberInt": "5000"
                         }
-                    }
-                }
-            }
-        }
-    ]
-    JSON;
-
-    /**
-     * Specify Center Point Using Legacy Coordinates
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/#specify-center-point-using-legacy-coordinates
-     */
-    case NearSphereSpecifyCenterPointUsingLegacyCoordinates = <<<'JSON'
-    [
-        {
-            "$match": {
-                "location": {
-                    "$nearSphere": [
-                        {
-                            "$numberDouble": "-73.966700000000003001"
-                        },
-                        {
-                            "$numberDouble": "40.780000000000001137"
-                        }
-                    ],
-                    "$maxDistance": {
-                        "$numberDouble": "0.10000000000000000555"
                     }
                 }
             }

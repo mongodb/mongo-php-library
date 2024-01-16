@@ -373,6 +373,41 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/#example
+     */
+    case CondExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "discount": {
+                    "$cond": {
+                        "if": {
+                            "$gte": [
+                                "$qty",
+                                {
+                                    "$numberInt": "250"
+                                }
+                            ]
+                        },
+                        "then": {
+                            "$numberInt": "30"
+                        },
+                        "else": {
+                            "$numberInt": "20"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/#example
      */
     case EqExample = <<<'JSON'
@@ -613,6 +648,53 @@ enum Pipelines: string
                 },
                 "_id": {
                     "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Single Input Expression
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#single-input-expression
+     */
+    case IfNullSingleInputExpression = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "description": {
+                    "$ifNull": [
+                        "$description",
+                        "Unspecified"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Multiple Input Expressions
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#multiple-input-expressions
+     */
+    case IfNullMultipleInputExpressions = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "value": {
+                    "$ifNull": [
+                        "$description",
+                        "$quantity",
+                        "Unspecified"
+                    ]
                 }
             }
         }
@@ -1715,6 +1797,91 @@ enum Pipelines: string
                             "$numberInt": "300000"
                         }
                     ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/#example
+     */
+    case SwitchExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "name": {
+                    "$numberInt": "1"
+                },
+                "summary": {
+                    "$switch": {
+                        "branches": [
+                            {
+                                "case": {
+                                    "$gte": [
+                                        {
+                                            "$avg": [
+                                                "$scores"
+                                            ]
+                                        },
+                                        {
+                                            "$numberInt": "90"
+                                        }
+                                    ]
+                                },
+                                "then": "Doing great!"
+                            },
+                            {
+                                "case": {
+                                    "$and": [
+                                        {
+                                            "$gte": [
+                                                {
+                                                    "$avg": [
+                                                        "$scores"
+                                                    ]
+                                                },
+                                                {
+                                                    "$numberInt": "80"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "$lt": [
+                                                {
+                                                    "$avg": [
+                                                        "$scores"
+                                                    ]
+                                                },
+                                                {
+                                                    "$numberInt": "90"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "then": "Doing pretty well."
+                            },
+                            {
+                                "case": {
+                                    "$lt": [
+                                        {
+                                            "$avg": [
+                                                "$scores"
+                                            ]
+                                        },
+                                        {
+                                            "$numberInt": "80"
+                                        }
+                                    ]
+                                },
+                                "then": "Needs improvement."
+                            }
+                        ],
+                        "default": "No scores found."
+                    }
                 }
             }
         }

@@ -19,3 +19,19 @@ arguments:
         name: else
         type:
             - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    discount:
+                        $cond:
+                            if:
+                                $gte:
+                                    - '$qty'
+                                    - 250
+                            then: 30
+                            else: 20

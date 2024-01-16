@@ -12,3 +12,27 @@ arguments:
         type:
             - expression
         variadic: array
+tests:
+    -
+        name: 'Single Input Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#single-input-expression'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    description:
+                        $ifNull:
+                            - '$description'
+                            - 'Unspecified'
+    -
+        name: 'Multiple Input Expressions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#multiple-input-expressions'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    value:
+                        $ifNull:
+                            - '$description'
+                            - '$quantity'
+                            - 'Unspecified'

@@ -24,3 +24,47 @@ arguments:
         description: |
             The path to take if no branch case expression evaluates to true.
             Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/#example'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    summary:
+                        $switch:
+                            branches:
+                                -
+                                    case:
+                                        $gte:
+                                            -
+                                                #$avg: '$scores'
+                                                $avg: [ '$scores' ]
+                                            - 90
+                                    then: 'Doing great!'
+                                -
+                                    case:
+                                        $and:
+                                            -
+                                                $gte:
+                                                    -
+                                                        #$avg: '$scores'
+                                                        $avg: [ '$scores' ]
+                                                    - 80
+                                            -
+                                                $lt:
+                                                    -
+                                                        #$avg: '$scores'
+                                                        $avg: [ '$scores' ]
+                                                    - 90
+                                    then: 'Doing pretty well.'
+                                -
+                                    case:
+                                        $lt:
+                                            -
+                                                #$avg: '$scores'
+                                                $avg: [ '$scores' ]
+                                            - 80
+                                    then: 'Needs improvement.'
+                            default: 'No scores found.'

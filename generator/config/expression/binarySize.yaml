@@ -13,3 +13,13 @@ arguments:
             - resolvesToString
             - resolvesToBinData
             - resolvesToNull
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/#example'
+        pipeline:
+            -
+                $project:
+                    name: '$name'
+                    imageSize:
+                        $binarySize: '$binary'

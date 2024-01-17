@@ -199,6 +199,24 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/#example
+     */
+    case BinarySizeExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "name": "$name",
+                "imageSize": {
+                    "$binarySize": "$binary"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Bitwise AND with Two Integers
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-two-integers
@@ -314,6 +332,76 @@ enum Pipelines: string
                         "$b"
                     ]
                 }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Return Sizes of Documents
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-sizes-of-documents
+     */
+    case BsonSizeReturnSizesOfDocuments = <<<'JSON'
+    [
+        {
+            "$project": {
+                "name": {
+                    "$numberInt": "1"
+                },
+                "object_size": {
+                    "$bsonSize": "$$ROOT"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Return Combined Size of All Documents in a Collection
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-combined-size-of-all-documents-in-a-collection
+     */
+    case BsonSizeReturnCombinedSizeOfAllDocumentsInACollection = <<<'JSON'
+    [
+        {
+            "$group": {
+                "_id": null,
+                "combined_object_size": {
+                    "$sum": {
+                        "$bsonSize": "$$ROOT"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Return Document with Largest Specified Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-document-with-largest-specified-field
+     */
+    case BsonSizeReturnDocumentWithLargestSpecifiedField = <<<'JSON'
+    [
+        {
+            "$project": {
+                "name": "$name",
+                "task_object_size": {
+                    "$bsonSize": "$current_task"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "task_object_size": {
+                    "$numberInt": "-1"
+                }
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "1"
             }
         }
     ]

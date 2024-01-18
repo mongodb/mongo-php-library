@@ -15,9 +15,10 @@
     "require": {
         "php": ">=8.1",
         "ext-mongodb": "^1.17.0",
+        "mongodb/builder": "@dev",
         "mongodb/mongodb": "^1.17.0",
-        "nette/php-generator": "^4",
-        "nikic/php-parser": "^4.17",
+        "nette/php-generator": "dev-master#933bb0368df508c759c8c9a047873741fcd9fe17",
+        "nikic/php-parser": "^5",
         "symfony/console": "^6.3|^7.0",
         "symfony/finder": "^6.3|^7.0",
         "symfony/yaml": "^6.3|^7.0"

@@ -17,6 +17,69 @@ use function MongoDB\object;
  */
 class FirstNAccumulatorTest extends PipelineTestCase
 {
+    public function testComputingNBasedOnTheGroupKeyForGroup(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::group(
+                _id: object(
+                    gameId: Expression::fieldPath('gameId'),
+                ),
+                gamescores: Accumulator::firstN(
+                    input: Expression::fieldPath('score'),
+                    n: Expression::cond(
+                        if: Expression::eq(
+                            Expression::fieldPath('gameId'),
+                            'G2',
+                        ),
+                        then: 1,
+                        else: 3,
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FirstNComputingNBasedOnTheGroupKeyForGroup, $pipeline);
+    }
+
+    public function testFindTheFirstThreePlayerScoresForASingleGame(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::match(
+                gameId: 'G1',
+            ),
+            Stage::group(
+                _id: Expression::fieldPath('gameId'),
+                firstThreeScores: Accumulator::firstN(
+                    input: [
+                        Expression::fieldPath('playerId'),
+                        Expression::fieldPath('score'),
+                    ],
+                    n: 3,
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FirstNFindTheFirstThreePlayerScoresForASingleGame, $pipeline);
+    }
+
+    public function testFindingTheFirstThreePlayerScoresAcrossMultipleGames(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::group(
+                _id: Expression::fieldPath('gameId'),
+                playerId: Accumulator::firstN(
+                    input: [
+                        Expression::fieldPath('playerId'),
+                        Expression::fieldPath('score'),
+                    ],
+                    n: 3,
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FirstNFindingTheFirstThreePlayerScoresAcrossMultipleGames, $pipeline);
+    }
+
     public function testNullAndMissingValues(): void
     {
         $pipeline = new Pipeline(
@@ -37,5 +100,28 @@ class FirstNAccumulatorTest extends PipelineTestCase
         );
 
         $this->assertSamePipeline(Pipelines::FirstNNullAndMissingValues, $pipeline);
+    }
+
+    public function testUsingSortWithFirstN(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::sort(
+                object(
+                    score: -1,
+                ),
+            ),
+            Stage::group(
+                _id: Expression::fieldPath('gameId'),
+                playerId: Accumulator::firstN(
+                    input: [
+                        Expression::fieldPath('playerId'),
+                        Expression::fieldPath('score'),
+                    ],
+                    n: 3,
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FirstNUsingSortWithFirstN, $pipeline);
     }
 }

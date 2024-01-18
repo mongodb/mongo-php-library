@@ -9,12 +9,6 @@ description: |
     New in MongoDB 5.0.
 arguments:
     -
-        name: partitionBy
-        type:
-            - expression
-        description: |
-            Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
-    -
         name: sortBy
         type:
             - object # SortSpec
@@ -27,3 +21,10 @@ arguments:
         description: |
             Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
             A field can contain dots to specify embedded document fields and array fields. The semantics for the embedded document dotted notation in the $setWindowFields stage are the same as the $addFields and $set stages.
+    -
+        name: partitionBy
+        type:
+            - expression
+        description: |
+            Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
+        optional: true

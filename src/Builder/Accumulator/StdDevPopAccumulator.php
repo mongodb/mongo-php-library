@@ -14,6 +14,7 @@ use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Builder\Type\WindowInterface;
 
 /**
  * Calculates the population standard deviation of the input values. Use if the values encompass the entire population of data you want to represent and do not wish to generalize about a larger population. $stdDevPop ignores non-numeric values.
@@ -22,7 +23,7 @@ use MongoDB\Builder\Type\OperatorInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
  */
-class StdDevPopAccumulator implements AccumulatorInterface, OperatorInterface
+class StdDevPopAccumulator implements AccumulatorInterface, WindowInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 

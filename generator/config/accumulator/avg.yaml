@@ -13,3 +13,33 @@ arguments:
         name: expression
         type:
             - resolvesToNumber
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--group-stage'
+        pipeline:
+            - $group:
+                    _id: '$item'
+                    avgAmount:
+                        $avg:
+                            $multiply:
+                                - '$price'
+                                - '$quantity'
+                    avgQuantity:
+                        $avg: '$quantity'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        averageQuantityForState:
+                            $avg: '$quantity'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

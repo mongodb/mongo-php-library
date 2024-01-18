@@ -12,6 +12,7 @@ use function array_merge;
 use function array_values;
 use function assert;
 use function count;
+use function get_object_vars;
 use function sprintf;
 
 final class OperatorDefinition
@@ -47,7 +48,7 @@ final class OperatorDefinition
         // Optional arguments must be after required arguments
         $requiredArgs = $optionalArgs = [];
         foreach ($arguments as $arg) {
-            $arg = new ArgumentDefinition(...$arg);
+            $arg = new ArgumentDefinition(...get_object_vars($arg));
             if ($arg->optional) {
                 $optionalArgs[] = $arg;
             } else {
@@ -63,6 +64,9 @@ final class OperatorDefinition
 
         $this->arguments = array_merge($requiredArgs, $optionalArgs);
 
-        $this->tests = array_map(static fn (array $test): TestDefinition => new TestDefinition(...$test), array_values($tests));
+        $this->tests = array_map(
+            static fn (object $test): TestDefinition => new TestDefinition(...get_object_vars($test)),
+            array_values($tests),
+        );
     }
 }

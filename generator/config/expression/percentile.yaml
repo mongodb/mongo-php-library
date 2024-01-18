@@ -19,6 +19,7 @@ arguments:
         name: input
         type:
             - resolvesToNumber
+            - array # of number
         description: |
             $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
     -
@@ -34,3 +35,17 @@ arguments:
             - string # AccumulatorPercentile
         description: |
             The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
+tests:
+    -
+        name: 'Use $percentile in a $project Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#use-operatorname-in-a--project-stage'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    studentId: 1
+                    testPercentiles:
+                        $percentile:
+                            input: ['$test01', '$test02', '$test03']
+                            p: [0.5, 0.95]
+                            method: 'approximate'

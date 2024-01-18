@@ -13,3 +13,22 @@ arguments:
         type:
             - resolvesToNumber
         variadic: array
+tests:
+    -
+        name: 'Use in $project Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--project-stage'
+        pipeline:
+            -
+                $project:
+                    quizAvg:
+                        # $avg: '$quizzes'
+                        $avg:
+                            - '$quizzes'
+                    labAvg:
+                        # $avg: '$labs'
+                        $avg:
+                            - '$labs'
+                    examAvg:
+                        $avg:
+                            - '$final'
+                            - '$midterm'

@@ -11,6 +11,15 @@ arguments:
         name: document
         type:
             - resolvesToObject
-        variadic: array
         description: |
             Any valid expression that resolves to a document.
+tests:
+    -
+        name: '$mergeObjects as an Accumulator'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/#-mergeobjects-as-an-accumulator'
+        pipeline:
+            -
+                $group:
+                    _id: '$item'
+                    mergedSales:
+                        $mergeObjects: '$quantity'

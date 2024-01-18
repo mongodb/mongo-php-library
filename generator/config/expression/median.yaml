@@ -16,6 +16,7 @@ arguments:
         name: input
         type:
             - resolvesToNumber
+            - array # of number
         description: |
             $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
     -
@@ -24,3 +25,19 @@ arguments:
             - string # AccumulatorPercentile
         description: |
             The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
+tests:
+    -
+        name: 'Use $median in a $project Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-in-a--project-stage'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    studentId: 1
+                    testMedians:
+                        $median:
+                            input:
+                                - '$test01'
+                                - '$test02'
+                                - '$test03'
+                            method: 'approximate'

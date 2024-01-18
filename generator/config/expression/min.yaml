@@ -13,3 +13,22 @@ arguments:
         type:
             - expression
         variadic: array
+tests:
+    -
+        name: 'Use in $project Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--project-stage'
+        pipeline:
+            -
+                $project:
+                    quizMin:
+                        # $min: '$quizzes'
+                        $min:
+                            - '$quizzes'
+                    labMin:
+                        # $min: '$labs'
+                        $min:
+                            - '$labs'
+                    examMin:
+                        $min:
+                            - '$final'
+                            - '$midterm'

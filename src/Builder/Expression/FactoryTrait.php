@@ -1250,10 +1250,13 @@ trait FactoryTrait
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
+     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
      * @param non-empty-string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
      */
-    public static function median(Decimal128|Int64|ResolvesToNumber|float|int $input, string $method): MedianOperator
+    public static function median(
+        Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input,
+        string $method,
+    ): MedianOperator
     {
         return new MedianOperator($input, $method);
     }
@@ -1453,13 +1456,13 @@ trait FactoryTrait
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
+     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
      * @param BSONArray|PackedArray|ResolvesToArray|array $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
      * @param non-empty-string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
      */
     public static function percentile(
-        Decimal128|Int64|ResolvesToNumber|float|int $input,
+        Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input,
         PackedArray|ResolvesToArray|BSONArray|array $p,
         string $method,
     ): PercentileOperator

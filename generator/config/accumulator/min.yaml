@@ -13,3 +13,29 @@ arguments:
         name: expression
         type:
             - expression
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--group-stage'
+        pipeline:
+            -
+                $group:
+                    _id: '$item'
+                    minQuantity:
+                        $min: '$quantity'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        minimumQuantityForState:
+                            $min: '$quantity'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

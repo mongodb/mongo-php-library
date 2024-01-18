@@ -25,3 +25,37 @@ arguments:
             - string # AccumulatorPercentile
         description: |
             The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
+tests:
+    -
+        name: 'Use $median as an Accumulator'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-as-an-accumulator'
+        pipeline:
+            -
+                $group:
+                    _id: ~
+                    test01_median:
+                        $median:
+                            input: '$test01'
+                            method: 'approximate'
+    -
+        name: 'Use $median in a $setWindowField Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-in-a--setwindowfield-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    sortBy:
+                        test01: 1
+                    output:
+                        test01_median:
+                            $median:
+                                input: '$test01'
+                                method: 'approximate'
+                            window:
+                                range:
+                                    - -3
+                                    - 3
+            -
+                $project:
+                    _id: 0
+                    studentId: 1
+                    test01_median: 1

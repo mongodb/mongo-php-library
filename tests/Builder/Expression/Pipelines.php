@@ -199,6 +199,36 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Use in $project Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--project-stage
+     */
+    case AvgUseInProjectStage = <<<'JSON'
+    [
+        {
+            "$project": {
+                "quizAvg": {
+                    "$avg": [
+                        "$quizzes"
+                    ]
+                },
+                "labAvg": {
+                    "$avg": [
+                        "$labs"
+                    ]
+                },
+                "examAvg": {
+                    "$avg": [
+                        "$final",
+                        "$midterm"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/#example
@@ -681,6 +711,48 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Using $firstN as an Aggregation Expression
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#using--firstn-as-an-aggregation-expression
+     */
+    case FirstNUsingFirstNAsAnAggregationExpression = <<<'JSON'
+    [
+        {
+            "$documents": [
+                {
+                    "array": [
+                        {
+                            "$numberInt": "10"
+                        },
+                        {
+                            "$numberInt": "20"
+                        },
+                        {
+                            "$numberInt": "30"
+                        },
+                        {
+                            "$numberInt": "40"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "$project": {
+                "firstThreeElements": {
+                    "$firstN": {
+                        "input": "$array",
+                        "n": {
+                            "$numberInt": "3"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/#example
@@ -1100,6 +1172,36 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Use in $project Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/#use-in--project-stage
+     */
+    case MaxUseInProjectStage = <<<'JSON'
+    [
+        {
+            "$project": {
+                "quizMax": {
+                    "$max": [
+                        "$quizzes"
+                    ]
+                },
+                "labMax": {
+                    "$max": [
+                        "$labs"
+                    ]
+                },
+                "examMax": {
+                    "$max": [
+                        "$final",
+                        "$midterm"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/#example
@@ -1114,6 +1216,36 @@ enum Pipelines: string
                             "$numberInt": "2"
                         },
                         "input": "$score"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use $median in a $project Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-in-a--project-stage
+     */
+    case MedianUseMedianInAProjectStage = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "studentId": {
+                    "$numberInt": "1"
+                },
+                "testMedians": {
+                    "$median": {
+                        "input": [
+                            "$test01",
+                            "$test02",
+                            "$test03"
+                        ],
+                        "method": "approximate"
                     }
                 }
             }
@@ -1157,6 +1289,36 @@ enum Pipelines: string
             "$project": {
                 "fromItems": {
                     "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use in $project Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--project-stage
+     */
+    case MinUseInProjectStage = <<<'JSON'
+    [
+        {
+            "$project": {
+                "quizMin": {
+                    "$min": [
+                        "$quizzes"
+                    ]
+                },
+                "labMin": {
+                    "$min": [
+                        "$labs"
+                    ]
+                },
+                "examMin": {
+                    "$min": [
+                        "$final",
+                        "$midterm"
+                    ]
                 }
             }
         }
@@ -1326,6 +1488,44 @@ enum Pipelines: string
                             ]
                         }
                     ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use $percentile in a $project Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#use-operatorname-in-a--project-stage
+     */
+    case PercentileUsePercentileInAProjectStage = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "studentId": {
+                    "$numberInt": "1"
+                },
+                "testPercentiles": {
+                    "$percentile": {
+                        "input": [
+                            "$test01",
+                            "$test02",
+                            "$test03"
+                        ],
+                        "p": [
+                            {
+                                "$numberDouble": "0.5"
+                            },
+                            {
+                                "$numberDouble": "0.94999999999999995559"
+                            }
+                        ],
+                        "method": "approximate"
+                    }
                 }
             }
         }
@@ -1816,6 +2016,25 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Use in $project Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--project-stage
+     */
+    case StdDevPopUseInProjectStage = <<<'JSON'
+    [
+        {
+            "$project": {
+                "stdDev": {
+                    "$stdDevPop": [
+                        "$scores.score"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Subtract Numbers
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-numbers
@@ -1884,6 +2103,36 @@ enum Pipelines: string
                         {
                             "$numberInt": "300000"
                         }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use in $project Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#use-in--project-stage
+     */
+    case SumUseInProjectStage = <<<'JSON'
+    [
+        {
+            "$project": {
+                "quizTotal": {
+                    "$sum": [
+                        "$quizzes"
+                    ]
+                },
+                "labTotal": {
+                    "$sum": [
+                        "$labs"
+                    ]
+                },
+                "examTotal": {
+                    "$sum": [
+                        "$final",
+                        "$midterm"
                     ]
                 }
             }

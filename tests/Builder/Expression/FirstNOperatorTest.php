@@ -9,6 +9,8 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
+use function MongoDB\object;
+
 /**
  * Test $firstN expression
  */
@@ -23,5 +25,24 @@ class FirstNOperatorTest extends PipelineTestCase
         );
 
         $this->assertSamePipeline(Pipelines::FirstNExample, $pipeline);
+    }
+
+    public function testUsingFirstNAsAnAggregationExpression(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::documents([
+                object(
+                    array: [10, 20, 30, 40],
+                ),
+            ]),
+            Stage::project(
+                firstThreeElements: Expression::firstN(
+                    input: Expression::arrayFieldPath('array'),
+                    n: 3,
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FirstNUsingFirstNAsAnAggregationExpression, $pipeline);
     }
 }

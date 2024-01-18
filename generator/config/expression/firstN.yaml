@@ -22,8 +22,8 @@ arguments:
 
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/#example'
         pipeline:
             -
                 $addFields:
@@ -31,3 +31,17 @@ tests:
                         $firstN:
                             n: 3
                             input: '$score'
+    -
+        name: 'Using $firstN as an Aggregation Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#using--firstn-as-an-aggregation-expression'
+        pipeline:
+            -
+                $documents:
+                    -
+                        array: [10, 20, 30, 40]
+            -
+                $project:
+                    firstThreeElements:
+                        $firstN:
+                            input: '$array'
+                            n: 3

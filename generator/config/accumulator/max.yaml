@@ -13,3 +13,34 @@ arguments:
         name: expression
         type:
             - expression
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/#use-in--group-stage'
+        pipeline:
+            -
+                $group:
+                    _id: '$item'
+                    maxTotalAmount:
+                        $max:
+                            $multiply:
+                                - '$price'
+                                - '$quantity'
+                    maxQuantity:
+                        $max: '$quantity'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        maximumQuantityForState:
+                            $max: '$quantity'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

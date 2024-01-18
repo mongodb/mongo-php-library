@@ -22,3 +22,35 @@ arguments:
             - expression
         description: |
             Represents the output for each element in the group and can be any expression.
+tests:
+    -
+        name: 'Find the Top Score'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score'
+        pipeline:
+            -
+                $match:
+                    gameId: 'G1'
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $top:
+                            output:
+                                - '$playerId'
+                                - '$score'
+                            sortBy:
+                                score: -1
+    -
+        name: 'Find the Top Score Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score-across-multiple-games'
+        pipeline:
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $top:
+                            output:
+                                - '$playerId'
+                                - '$score'
+                            sortBy:
+                                score: -1

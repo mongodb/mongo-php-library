@@ -166,7 +166,7 @@
                 },
                 "default": {
                     "$comment": "The default value for the argument.",
-                    "type": ["string", "number", "boolean"]
+                    "type": ["array", "boolean", "number", "string"]
                 }
             },
             "required": [

@@ -767,8 +767,8 @@ trait FactoryTrait
      */
     public static function function(
         Javascript|string $body,
-        PackedArray|BSONArray|array $args,
-        string $lang,
+        PackedArray|BSONArray|array $args = [],
+        string $lang = 'js',
     ): FunctionOperator
     {
         return new FunctionOperator($body, $args, $lang);

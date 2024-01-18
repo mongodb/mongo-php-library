@@ -80,6 +80,8 @@ final class OperatorFactoryGenerator extends OperatorGenerator
             } else {
                 if ($argument->optional) {
                     $parameter->setDefaultValue(new Literal('Optional::Undefined'));
+                } elseif ($argument->default !== null) {
+                    $parameter->setDefaultValue($argument->default);
                 }
 
                 $method->addComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Builder\Accumulator;
 
-use MongoDB\BSON\Javascript;
 use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
@@ -24,11 +23,30 @@ class AccumulatorAccumulatorTest extends PipelineTestCase
             Stage::group(
                 _id: Expression::fieldPath('author'),
                 avgCopies: Accumulator::accumulator(
-                    init: new Javascript('function () { return { count: 0, sum: 0 } }'),
-                    accumulate: new Javascript('function (state, numCopies) { return { count: state.count + 1, sum: state.sum + numCopies } }'),
+                    init: <<<'JS'
+                        function() {
+                            return { count: 0, sum: 0 }
+                        }
+                        JS,
+                    accumulate: <<<'JS'
+                        function(state, numCopies) {
+                            return { count: state.count + 1, sum: state.sum + numCopies }
+                        }
+                        JS,
                     accumulateArgs: [Expression::fieldPath('copies')],
-                    merge: new Javascript('function (state1, state2) { return { count: state1.count + state2.count, sum: state1.sum + state2.sum } }'),
-                    finalize: new Javascript('function (state) { return (state.sum / state.count) }'),
+                    merge: <<<'JS'
+                        function(state1, state2) {
+                            return {
+                                count: state1.count + state2.count,
+                                sum: state1.sum + state2.sum
+                            }
+                        }
+                        JS,
+                    finalize: <<<'JS'
+                        function(state) {
+                            return (state.sum / state.count)
+                        }
+                        JS,
                     lang: 'js',
                 ),
             ),
@@ -43,16 +61,38 @@ class AccumulatorAccumulatorTest extends PipelineTestCase
             Stage::group(
                 _id: object(city: Expression::fieldPath('city')),
                 restaurants: Accumulator::accumulator(
-                    init: new Javascript('function (city, userProfileCity) { return { max: city === userProfileCity ? 3 : 1, restaurants: [] } }'),
-                    accumulate: new Javascript('function (state, restaurantName) { if (state.restaurants.length < state.max) { state.restaurants.push(restaurantName); } return state; }'),
+                    init: <<<'JS'
+                        function(city, userProfileCity) {
+                            return { max: city === userProfileCity ? 3 : 1, restaurants: [] }
+                        }
+                        JS,
+                    accumulate: <<<'JS'
+                        function(state, restaurantName) {
+                            if (state.restaurants.length < state.max) {
+                                state.restaurants.push(restaurantName);
+                            }
+                            return state;
+                        }
+                        JS,
                     accumulateArgs: [Expression::fieldPath('name')],
-                    merge: new Javascript('function (state1, state2) { return { max: state1.max, restaurants: state1.restaurants.concat(state2.restaurants).slice(0, state1.max) } }'),
+                    merge: <<<'JS'
+                        function(state1, state2) {
+                            return {
+                                max: state1.max,
+                                restaurants: state1.restaurants.concat(state2.restaurants).slice(0, state1.max)
+                            }
+                        }
+                        JS,
                     lang: 'js',
                     initArgs: [
                         Expression::fieldPath('city'),
                         'Bettles',
                     ],
-                    finalize: new Javascript('function (state) { return state.restaurants }'),
+                    finalize: <<<'JS'
+                        function(state) {
+                            return state.restaurants
+                        }
+                        JS,
                 ),
             ),
         );

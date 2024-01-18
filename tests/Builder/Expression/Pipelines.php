@@ -753,6 +753,68 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Usage Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-1--usage-example
+     */
+    case FunctionUsageExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "isFound": {
+                    "$function": {
+                        "body": {
+                            "$code": "function(name) {\n    return hex_md5(name) == \"15b0a220baa16331e8d80e15367677ad\"\n}"
+                        },
+                        "args": [
+                            "$name"
+                        ],
+                        "lang": "js"
+                    }
+                },
+                "message": {
+                    "$function": {
+                        "body": {
+                            "$code": "function(name, scores) {\n    let total = Array.sum(scores);\n    return `Hello ${name}. Your total score is ${total}.`\n}"
+                        },
+                        "args": [
+                            "$name",
+                            "$scores"
+                        ],
+                        "lang": "js"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Alternative to $where
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-2--alternative-to--where
+     */
+    case FunctionAlternativeToWhere = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$function": {
+                        "body": {
+                            "$code": "function(name) {\n    return hex_md5(name) == \"15b0a220baa16331e8d80e15367677ad\";\n}"
+                        },
+                        "args": [
+                            "$name"
+                        ],
+                        "lang": "js"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/#example

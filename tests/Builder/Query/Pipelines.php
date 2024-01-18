@@ -1657,14 +1657,18 @@ enum Pipelines: string
     [
         {
             "$match": {
-                "$where": "function() { return hex_md5(this.name) == \"9b53e667f30cd329dca1ec9e6a83e994\" }"
+                "$where": {
+                    "$code": "function() {\n    return hex_md5(this.name) == \"9b53e667f30cd329dca1ec9e6a83e994\"\n}"
+                }
             }
         },
         {
             "$match": {
                 "$expr": {
                     "$function": {
-                        "body": "function(name) {\n    return hex_md5(name) == \"9b53e667f30cd329dca1ec9e6a83e994\";\n}",
+                        "body": {
+                            "$code": "function(name) {\n    return hex_md5(name) == \"9b53e667f30cd329dca1ec9e6a83e994\";\n}"
+                        },
                         "args": [
                             "$name"
                         ],

@@ -19,7 +19,11 @@ class WhereOperatorTest extends PipelineTestCase
     {
         $pipeline = new Pipeline(
             Stage::match(
-                Query::where('function() { return hex_md5(this.name) == "9b53e667f30cd329dca1ec9e6a83e994" }'),
+                Query::where(<<<'JS'
+                    function() {
+                        return hex_md5(this.name) == "9b53e667f30cd329dca1ec9e6a83e994"
+                    }
+                    JS),
             ),
             Stage::match(
                 Query::expr(

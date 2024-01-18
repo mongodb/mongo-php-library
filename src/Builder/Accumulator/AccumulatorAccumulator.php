@@ -20,6 +20,7 @@ use MongoDB\Model\BSONArray;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
 
 /**
  * Defines a custom accumulator function.
@@ -70,13 +71,25 @@ class AccumulatorAccumulator implements AccumulatorInterface, OperatorInterface
         Optional|PackedArray|ResolvesToArray|BSONArray|array $initArgs = Optional::Undefined,
         Optional|Javascript|string $finalize = Optional::Undefined,
     ) {
+        if (is_string($init)) {
+            $init = new Javascript($init);
+        }
+
         $this->init = $init;
+        if (is_string($accumulate)) {
+            $accumulate = new Javascript($accumulate);
+        }
+
         $this->accumulate = $accumulate;
         if (is_array($accumulateArgs) && ! array_is_list($accumulateArgs)) {
             throw new InvalidArgumentException('Expected $accumulateArgs argument to be a list, got an associative array.');
         }
 
         $this->accumulateArgs = $accumulateArgs;
+        if (is_string($merge)) {
+            $merge = new Javascript($merge);
+        }
+
         $this->merge = $merge;
         $this->lang = $lang;
         if (is_array($initArgs) && ! array_is_list($initArgs)) {
@@ -84,6 +97,10 @@ class AccumulatorAccumulator implements AccumulatorInterface, OperatorInterface
         }
 
         $this->initArgs = $initArgs;
+        if (is_string($finalize)) {
+            $finalize = new Javascript($finalize);
+        }
+
         $this->finalize = $finalize;
     }
 

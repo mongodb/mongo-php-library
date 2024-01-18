@@ -17,6 +17,7 @@ use MongoDB\Model\BSONArray;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
 
 /**
  * Defines a custom function.
@@ -46,8 +47,12 @@ class FunctionOperator implements ResolvesToAny, OperatorInterface
      * @param BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
      * @param non-empty-string $lang
      */
-    public function __construct(Javascript|string $body, PackedArray|BSONArray|array $args, string $lang = 'js')
+    public function __construct(Javascript|string $body, PackedArray|BSONArray|array $args = [], string $lang = 'js')
     {
+        if (is_string($body)) {
+            $body = new Javascript($body);
+        }
+
         $this->body = $body;
         if (is_array($args) && ! array_is_list($args)) {
             throw new InvalidArgumentException('Expected $args argument to be a list, got an associative array.');

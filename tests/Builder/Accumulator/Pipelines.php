@@ -23,19 +23,19 @@ enum Pipelines: string
                 "avgCopies": {
                     "$accumulator": {
                         "init": {
-                            "$code": "function () { return { count: 0, sum: 0 } }"
+                            "$code": "function() {\n    return { count: 0, sum: 0 }\n}"
                         },
                         "accumulate": {
-                            "$code": "function (state, numCopies) { return { count: state.count + 1, sum: state.sum + numCopies } }"
+                            "$code": "function(state, numCopies) {\n    return { count: state.count + 1, sum: state.sum + numCopies }\n}"
                         },
                         "accumulateArgs": [
                             "$copies"
                         ],
                         "merge": {
-                            "$code": "function (state1, state2) { return { count: state1.count + state2.count, sum: state1.sum + state2.sum } }"
+                            "$code": "function(state1, state2) {\n    return {\n        count: state1.count + state2.count,\n        sum: state1.sum + state2.sum\n    }\n}"
                         },
                         "finalize": {
-                            "$code": "function (state) { return (state.sum \/ state.count) }"
+                            "$code": "function(state) {\n    return (state.sum \/ state.count)\n}"
                         },
                         "lang": "js"
                     }
@@ -60,23 +60,23 @@ enum Pipelines: string
                 "restaurants": {
                     "$accumulator": {
                         "init": {
-                            "$code": "function (city, userProfileCity) { return { max: city === userProfileCity ? 3 : 1, restaurants: [] } }"
+                            "$code": "function(city, userProfileCity) {\n    return { max: city === userProfileCity ? 3 : 1, restaurants: [] }\n}"
                         },
                         "initArgs": [
                             "$city",
                             "Bettles"
                         ],
                         "accumulate": {
-                            "$code": "function (state, restaurantName) { if (state.restaurants.length < state.max) { state.restaurants.push(restaurantName); } return state; }"
+                            "$code": "function(state, restaurantName) {\n    if (state.restaurants.length < state.max) {\n        state.restaurants.push(restaurantName);\n    }\n    return state;\n}"
                         },
                         "accumulateArgs": [
                             "$name"
                         ],
                         "merge": {
-                            "$code": "function (state1, state2) { return { max: state1.max, restaurants: state1.restaurants.concat(state2.restaurants).slice(0, state1.max) } }"
+                            "$code": "function(state1, state2) {\n    return {\n        max: state1.max,\n        restaurants: state1.restaurants.concat(state2.restaurants).slice(0, state1.max)\n    }\n}"
                         },
                         "finalize": {
-                            "$code": "function (state) { return state.restaurants }"
+                            "$code": "function(state) {\n    return state.restaurants\n}"
                         },
                         "lang": "js"
                     }

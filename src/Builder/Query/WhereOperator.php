@@ -13,6 +13,8 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\QueryInterface;
 
+use function is_string;
+
 /**
  * Matches documents that satisfy a JavaScript expression.
  *
@@ -30,6 +32,10 @@ class WhereOperator implements QueryInterface, OperatorInterface
      */
     public function __construct(Javascript|string $function)
     {
+        if (is_string($function)) {
+            $function = new Javascript($function);
+        }
+
         $this->function = $function;
     }
 

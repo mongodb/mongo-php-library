@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use MongoDB\BSON\Javascript;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\QueryObject;
@@ -147,6 +148,17 @@ class OperatorClassGenerator extends OperatorGenerator
                     $constuctor->addBody(<<<PHP
                     if (is_array(\${$argument->name})) {
                         \${$argument->name} = QueryObject::create(\${$argument->name});
+                    }
+
+                    PHP);
+                }
+
+                if ($type->javascript) {
+                    $namespace->addUseFunction('is_string');
+                    $namespace->addUse(Javascript::class);
+                    $constuctor->addBody(<<<PHP
+                    if (is_string(\${$argument->name})) {
+                        \${$argument->name} = new Javascript(\${$argument->name});
                     }
 
                     PHP);

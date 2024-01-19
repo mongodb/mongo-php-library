@@ -1363,6 +1363,26 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/#examples
+     */
+    case SampleRateExample = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$sampleRate": {
+                    "$numberDouble": "0.33000000000000001554"
+                }
+            }
+        },
+        {
+            "$count": "numMatches"
+        }
+    ]
+    JSON;
+
+    /**
      * Query an Array by Array Length
      *
      * @see https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length

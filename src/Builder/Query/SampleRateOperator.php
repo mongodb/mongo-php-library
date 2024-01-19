@@ -6,18 +6,20 @@
 
 declare(strict_types=1);
 
-namespace MongoDB\Builder\Expression;
+namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Int64;
+use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Randomly select documents at a given rate. Although the exact number of documents selected varies on each run, the quantity chosen approximates the sample rate expressed as a percentage of the total number of documents.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/
  */
-class SampleRateOperator implements ResolvesToAny, OperatorInterface
+class SampleRateOperator implements QueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 

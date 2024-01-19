@@ -865,6 +865,89 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Query Fields that Contain Periods
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-contain-periods--.-
+     */
+    case GetFieldQueryFieldsThatContainPeriods = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$gt": [
+                        {
+                            "$getField": {
+                                "field": "price.usd"
+                            }
+                        },
+                        {
+                            "$numberInt": "200"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Query Fields that Start with a Dollar Sign
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-start-with-a-dollar-sign----
+     */
+    case GetFieldQueryFieldsThatStartWithADollarSign = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$gt": [
+                        {
+                            "$getField": {
+                                "field": {
+                                    "$literal": "$price"
+                                }
+                            }
+                        },
+                        {
+                            "$numberInt": "200"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Query a Field in a Sub-document
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-a-field-in-a-sub-document
+     */
+    case GetFieldQueryAFieldInASubdocument = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$lte": [
+                        {
+                            "$getField": {
+                                "field": {
+                                    "$literal": "$small"
+                                },
+                                "input": "$quantity"
+                            }
+                        },
+                        {
+                            "$numberInt": "20"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/#example
@@ -1645,6 +1728,86 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Generate Random Data Points
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#generate-random-data-points
+     */
+    case RandGenerateRandomDataPoints = <<<'JSON'
+    [
+        {
+            "$set": {
+                "amount": {
+                    "$multiply": [
+                        {
+                            "$rand": {}
+                        },
+                        {
+                            "$numberInt": "100"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$set": {
+                "amount": {
+                    "$floor": "$amount"
+                }
+            }
+        },
+        {
+            "$merge": {
+                "into": "donors"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Select Random Items From a Collection
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#select-random-items-from-a-collection
+     */
+    case RandSelectRandomItemsFromACollection = <<<'JSON'
+    [
+        {
+            "$match": {
+                "district": {
+                    "$numberInt": "3"
+                }
+            }
+        },
+        {
+            "$match": {
+                "$expr": {
+                    "$lt": [
+                        {
+                            "$numberDouble": "0.5"
+                        },
+                        {
+                            "$rand": {}
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "name": {
+                    "$numberInt": "1"
+                },
+                "registered": {
+                    "$numberInt": "1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/range/#example
@@ -1883,6 +2046,64 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/#example
+     */
+    case SetDifferenceExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "flowerFieldA": {
+                    "$numberInt": "1"
+                },
+                "flowerFieldB": {
+                    "$numberInt": "1"
+                },
+                "inBOnly": {
+                    "$setDifference": [
+                        "$flowerFieldB",
+                        "$flowerFieldA"
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/#example
+     */
+    case SetEqualsExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "cakes": {
+                    "$numberInt": "1"
+                },
+                "cupcakes": {
+                    "$numberInt": "1"
+                },
+                "sameFlavors": {
+                    "$setEquals": [
+                        "$cakes",
+                        "$cupcakes"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Add Fields that Contain Periods
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#add-fields-that-contain-periods--.-
@@ -2024,64 +2245,6 @@ enum Pipelines: string
                     },
                     "input": "$$ROOT",
                     "value": "$$REMOVE"
-                }
-            }
-        }
-    ]
-    JSON;
-
-    /**
-     * Example
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/#example
-     */
-    case SetDifferenceExample = <<<'JSON'
-    [
-        {
-            "$project": {
-                "flowerFieldA": {
-                    "$numberInt": "1"
-                },
-                "flowerFieldB": {
-                    "$numberInt": "1"
-                },
-                "inBOnly": {
-                    "$setDifference": [
-                        "$flowerFieldB",
-                        "$flowerFieldA"
-                    ]
-                },
-                "_id": {
-                    "$numberInt": "0"
-                }
-            }
-        }
-    ]
-    JSON;
-
-    /**
-     * Example
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/#example
-     */
-    case SetEqualsExample = <<<'JSON'
-    [
-        {
-            "$project": {
-                "_id": {
-                    "$numberInt": "0"
-                },
-                "cakes": {
-                    "$numberInt": "1"
-                },
-                "cupcakes": {
-                    "$numberInt": "1"
-                },
-                "sameFlavors": {
-                    "$setEquals": [
-                        "$cakes",
-                        "$cupcakes"
-                    ]
                 }
             }
         }
@@ -2653,6 +2816,30 @@ enum Pipelines: string
                         ],
                         "default": "No scores found."
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toHashedIndexKey/#example
+     */
+    case ToHashedIndexKeyExample = <<<'JSON'
+    [
+        {
+            "$documents": [
+                {
+                    "val": "string to hash"
+                }
+            ]
+        },
+        {
+            "$addFields": {
+                "hashedVal": {
+                    "$toHashedIndexKey": "$val"
                 }
             }
         }

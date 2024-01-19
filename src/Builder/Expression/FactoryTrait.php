@@ -778,13 +778,13 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/
-     * @param non-empty-string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
+     * @param ResolvesToString|non-empty-string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
      * If field begins with a dollar sign ($), place the field name inside of a $literal expression to return its value.
      * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input Default: $$CURRENT
      * A valid expression that contains the field for which you want to return a value. input must resolve to an object, missing, null, or undefined. If omitted, defaults to the document currently being processed in the pipeline ($$CURRENT).
      */
     public static function getField(
-        string $field,
+        ResolvesToString|string $field,
         Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input = Optional::Undefined,
     ): GetFieldOperator
     {
@@ -1693,18 +1693,6 @@ trait FactoryTrait
     }
 
     /**
-     * Randomly select documents at a given rate. Although the exact number of documents selected varies on each run, the quantity chosen approximates the sample rate expressed as a percentage of the total number of documents.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/
-     * @param Int64|ResolvesToDouble|float|int $rate The selection process uses a uniform random distribution. The sample rate is a floating point number between 0 and 1, inclusive, which represents the probability that a given document will be selected as it passes through the pipeline.
-     * For example, a sample rate of 0.33 selects roughly one document in three.
-     */
-    public static function sampleRate(Int64|ResolvesToDouble|float|int $rate): SampleRateOperator
-    {
-        return new SampleRateOperator($rate);
-    }
-
-    /**
      * Returns the seconds for a date as a number between 0 and 60 (leap seconds).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/second/
@@ -2142,6 +2130,19 @@ trait FactoryTrait
     ): ToDoubleOperator
     {
         return new ToDoubleOperator($expression);
+    }
+
+    /**
+     * Computes and returns the hash value of the input expression using the same hash function that MongoDB uses to create a hashed index. A hash function maps a key or string to a fixed-size numeric value.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toHashedIndexKey/
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $value key or string to hash
+     */
+    public static function toHashedIndexKey(
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value,
+    ): ToHashedIndexKeyOperator
+    {
+        return new ToHashedIndexKeyOperator($value);
     }
 
     /**

@@ -1363,6 +1363,25 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Query an Array by Array Length
+     *
+     * @see https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length
+     */
+    case SizeQueryAnArrayByArrayLength = <<<'JSON'
+    [
+        {
+            "$match": {
+                "tags": {
+                    "$size": {
+                        "$numberInt": "3"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Search for a Single Word
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word

@@ -11,3 +11,12 @@ arguments:
         name: value
         type:
             - int
+tests:
+    -
+        name: 'Query an Array by Array Length'
+        link: 'https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length'
+        pipeline:
+            -
+                $match:
+                    tags:
+                        $size: 3

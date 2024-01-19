@@ -19,3 +19,17 @@ arguments:
             - resolvesToArray
         description: |
             The arguments can be any valid expression as long as they each resolve to an array.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/#example'
+        pipeline:
+            -
+                $project:
+                    flowerFieldA: 1
+                    flowerFieldB: 1
+                    inBOnly:
+                        $setDifference:
+                            - '$flowerFieldB'
+                            - '$flowerFieldA'
+                    _id: 0

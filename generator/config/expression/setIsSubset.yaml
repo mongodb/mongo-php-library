@@ -15,3 +15,18 @@ arguments:
         name: expression2
         type:
             - resolvesToArray
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/#example'
+        pipeline:
+            -
+                $project:
+                    flowerFieldA: 1
+                    flowerFieldB: 1
+                    AisSubset:
+                        $setIsSubset:
+                            - '$flowerFieldA'
+                            - '$flowerFieldB'
+                    _id: 0
+

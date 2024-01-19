@@ -85,14 +85,13 @@ trait FactoryTrait
      * Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/
-     * @no-named-arguments
-     * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array $expression
      */
     public static function allElementsTrue(
-        PackedArray|ResolvesToArray|BSONArray|array ...$expression,
+        PackedArray|ResolvesToArray|BSONArray|array $expression,
     ): AllElementsTrueOperator
     {
-        return new AllElementsTrueOperator(...$expression);
+        return new AllElementsTrueOperator($expression);
     }
 
     /**

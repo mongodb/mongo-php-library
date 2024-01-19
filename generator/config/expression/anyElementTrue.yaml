@@ -11,3 +11,15 @@ arguments:
         name: expression
         type:
             - resolvesToArray
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/#example'
+        pipeline:
+            -
+                $project:
+                    responses: 1
+                    isAnyTrue:
+                        $anyElementTrue:
+                            - '$responses'
+                    _id: 0

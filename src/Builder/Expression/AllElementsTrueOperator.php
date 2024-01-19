@@ -15,6 +15,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
 use function array_is_list;
+use function is_array;
 
 /**
  * Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument expression.
@@ -25,21 +26,16 @@ class AllElementsTrueOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> $expression */
-    public readonly array $expression;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array $expression */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array $expression;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
-     * @no-named-arguments
+     * @param BSONArray|PackedArray|ResolvesToArray|array $expression
      */
-    public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$expression)
+    public function __construct(PackedArray|ResolvesToArray|BSONArray|array $expression)
     {
-        if (\count($expression) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
-        }
-
-        if (! array_is_list($expression)) {
-            throw new InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
+        if (is_array($expression) && ! array_is_list($expression)) {
+            throw new InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
         }
 
         $this->expression = $expression;

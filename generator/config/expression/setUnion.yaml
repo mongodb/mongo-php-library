@@ -12,3 +12,17 @@ arguments:
         type:
             - resolvesToArray
         variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/#example'
+        pipeline:
+            -
+                $project:
+                    flowerFieldA: 1
+                    flowerFieldB: 1
+                    allValues:
+                        $setUnion:
+                            - '$flowerFieldA'
+                            - '$flowerFieldB'
+                    _id: 0

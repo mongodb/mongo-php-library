@@ -61,6 +61,31 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/#example
+     */
+    case AllElementsTrueExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "responses": {
+                    "$numberInt": "1"
+                },
+                "isAllTrue": {
+                    "$allElementsTrue": [
+                        "$responses"
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/#example
      */
     case AndExample = <<<'JSON'
@@ -92,6 +117,31 @@ enum Pipelines: string
                             ]
                         }
                     ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/#example
+     */
+    case AnyElementTrueExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "responses": {
+                    "$numberInt": "1"
+                },
+                "isAnyTrue": {
+                    "$anyElementTrue": [
+                        "$responses"
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
                 }
             }
         }
@@ -1974,6 +2024,180 @@ enum Pipelines: string
                     },
                     "input": "$$ROOT",
                     "value": "$$REMOVE"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/#example
+     */
+    case SetDifferenceExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "flowerFieldA": {
+                    "$numberInt": "1"
+                },
+                "flowerFieldB": {
+                    "$numberInt": "1"
+                },
+                "inBOnly": {
+                    "$setDifference": [
+                        "$flowerFieldB",
+                        "$flowerFieldA"
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/#example
+     */
+    case SetEqualsExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "cakes": {
+                    "$numberInt": "1"
+                },
+                "cupcakes": {
+                    "$numberInt": "1"
+                },
+                "sameFlavors": {
+                    "$setEquals": [
+                        "$cakes",
+                        "$cupcakes"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Elements Array Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/#elements-array-example
+     */
+    case SetIntersectionElementsArrayExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "flowerFieldA": {
+                    "$numberInt": "1"
+                },
+                "flowerFieldB": {
+                    "$numberInt": "1"
+                },
+                "commonToBoth": {
+                    "$setIntersection": [
+                        "$flowerFieldA",
+                        "$flowerFieldB"
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Retrieve Documents for Roles Granted to the Current User
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/#retrieve-documents-for-roles-granted-to-the-current-user
+     */
+    case SetIntersectionRetrieveDocumentsForRolesGrantedToTheCurrentUser = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$not": [
+                        {
+                            "$eq": [
+                                {
+                                    "$setIntersection": [
+                                        "$allowedRoles",
+                                        "$$USER_ROLES.role"
+                                    ]
+                                },
+                                []
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/#example
+     */
+    case SetIsSubsetExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "flowerFieldA": {
+                    "$numberInt": "1"
+                },
+                "flowerFieldB": {
+                    "$numberInt": "1"
+                },
+                "AisSubset": {
+                    "$setIsSubset": [
+                        "$flowerFieldA",
+                        "$flowerFieldB"
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/#example
+     */
+    case SetUnionExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "flowerFieldA": {
+                    "$numberInt": "1"
+                },
+                "flowerFieldB": {
+                    "$numberInt": "1"
+                },
+                "allValues": {
+                    "$setUnion": [
+                        "$flowerFieldA",
+                        "$flowerFieldB"
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
                 }
             }
         }

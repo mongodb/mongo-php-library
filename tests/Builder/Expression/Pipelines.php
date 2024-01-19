@@ -1833,6 +1833,154 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Add Fields that Contain Periods
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#add-fields-that-contain-periods--.-
+     */
+    case SetFieldAddFieldsThatContainPeriods = <<<'JSON'
+    [
+        {
+            "$replaceWith": {
+                "$setField": {
+                    "field": "price.usd",
+                    "input": "$$ROOT",
+                    "value": "$price"
+                }
+            }
+        },
+        {
+            "$unset": [
+                "price"
+            ]
+        }
+    ]
+    JSON;
+
+    /**
+     * Add Fields that Start with a Dollar Sign
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#add-fields-that-start-with-a-dollar-sign----
+     */
+    case SetFieldAddFieldsThatStartWithADollarSign = <<<'JSON'
+    [
+        {
+            "$replaceWith": {
+                "$setField": {
+                    "field": {
+                        "$literal": "$price"
+                    },
+                    "input": "$$ROOT",
+                    "value": "$price"
+                }
+            }
+        },
+        {
+            "$unset": [
+                "price"
+            ]
+        }
+    ]
+    JSON;
+
+    /**
+     * Update Fields that Contain Periods
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#update-fields-that-contain-periods--.-
+     */
+    case SetFieldUpdateFieldsThatContainPeriods = <<<'JSON'
+    [
+        {
+            "$match": {
+                "_id": {
+                    "$numberInt": "1"
+                }
+            }
+        },
+        {
+            "$replaceWith": {
+                "$setField": {
+                    "field": "price.usd",
+                    "input": "$$ROOT",
+                    "value": {
+                        "$numberDouble": "49.99000000000000199"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Update Fields that Start with a Dollar Sign
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#update-fields-that-start-with-a-dollar-sign----
+     */
+    case SetFieldUpdateFieldsThatStartWithADollarSign = <<<'JSON'
+    [
+        {
+            "$match": {
+                "_id": {
+                    "$numberInt": "1"
+                }
+            }
+        },
+        {
+            "$replaceWith": {
+                "$setField": {
+                    "field": {
+                        "$literal": "$price"
+                    },
+                    "input": "$$ROOT",
+                    "value": {
+                        "$numberDouble": "49.99000000000000199"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Remove Fields that Contain Periods
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#remove-fields-that-contain-periods--.-
+     */
+    case SetFieldRemoveFieldsThatContainPeriods = <<<'JSON'
+    [
+        {
+            "$replaceWith": {
+                "$setField": {
+                    "field": "price.usd",
+                    "input": "$$ROOT",
+                    "value": "$$REMOVE"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Remove Fields that Start with a Dollar Sign
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#remove-fields-that-start-with-a-dollar-sign----
+     */
+    case SetFieldRemoveFieldsThatStartWithADollarSign = <<<'JSON'
+    [
+        {
+            "$replaceWith": {
+                "$setField": {
+                    "field": {
+                        "$literal": "$price"
+                    },
+                    "input": "$$ROOT",
+                    "value": "$$REMOVE"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/#example
@@ -2280,6 +2428,72 @@ enum Pipelines: string
                             }
                         ],
                         "default": "No scores found."
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Remove Fields that Contain Periods
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-contain-periods--.-
+     */
+    case UnsetFieldRemoveFieldsThatContainPeriods = <<<'JSON'
+    [
+        {
+            "$replaceWith": {
+                "$unsetField": {
+                    "field": "price.usd",
+                    "input": "$$ROOT"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Remove Fields that Start with a Dollar Sign
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-start-with-a-dollar-sign----
+     */
+    case UnsetFieldRemoveFieldsThatStartWithADollarSign = <<<'JSON'
+    [
+        {
+            "$replaceWith": {
+                "$unsetField": {
+                    "field": {
+                        "$literal": "$price"
+                    },
+                    "input": "$$ROOT"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Remove A Subfield
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-a-subfield
+     */
+    case UnsetFieldRemoveASubfield = <<<'JSON'
+    [
+        {
+            "$replaceWith": {
+                "$setField": {
+                    "field": "price",
+                    "input": "$$ROOT",
+                    "value": {
+                        "$unsetField": {
+                            "field": "euro",
+                            "input": {
+                                "$getField": {
+                                    "field": "price"
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -27,3 +27,81 @@ arguments:
         description: |
             The value that you want to assign to field. value can be any valid expression.
             Set to $$REMOVE to remove field from the input document.
+tests:
+    -
+        name: 'Add Fields that Contain Periods'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#add-fields-that-contain-periods--.-'
+        pipeline:
+            -
+                $replaceWith:
+                    $setField:
+                        field: 'price.usd'
+                        input: '$$ROOT'
+                        value: '$price'
+            -
+                # $unset: 'price'
+                $unset:
+                    - 'price'
+    -
+        name: 'Add Fields that Start with a Dollar Sign'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#add-fields-that-start-with-a-dollar-sign----'
+        pipeline:
+            -
+                $replaceWith:
+                    $setField:
+                        field:
+                            $literal: '$price'
+                        input: '$$ROOT'
+                        value: '$price'
+            -
+                # $unset: 'price'
+                $unset:
+                    - 'price'
+    -
+        name: 'Update Fields that Contain Periods'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#update-fields-that-contain-periods--.-'
+        pipeline:
+            -
+                $match:
+                    _id: 1
+            -
+                $replaceWith:
+                    $setField:
+                        field: 'price.usd'
+                        input: '$$ROOT'
+                        value: 49.99
+    -
+        name: 'Update Fields that Start with a Dollar Sign'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#update-fields-that-start-with-a-dollar-sign----'
+        pipeline:
+            -
+                $match:
+                    _id: 1
+            -
+                $replaceWith:
+                    $setField:
+                        field:
+                            $literal: '$price'
+                        input: '$$ROOT'
+                        value: 49.99
+    -
+        name: 'Remove Fields that Contain Periods'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#remove-fields-that-contain-periods--.-'
+        pipeline:
+            -
+                $replaceWith:
+                    $setField:
+                        field: 'price.usd'
+                        input: '$$ROOT'
+                        value: '$$REMOVE'
+    -
+        name: 'Remove Fields that Start with a Dollar Sign'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#remove-fields-that-start-with-a-dollar-sign----'
+        pipeline:
+            -
+                $replaceWith:
+                    $setField:
+                        field:
+                            $literal: '$price'
+                        input: '$$ROOT'
+                        value: '$$REMOVE'

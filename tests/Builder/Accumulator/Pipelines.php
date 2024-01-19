@@ -35,7 +35,7 @@ enum Pipelines: string
                             "$code": "function(state1, state2) {\n    return {\n        count: state1.count + state2.count,\n        sum: state1.sum + state2.sum\n    }\n}"
                         },
                         "finalize": {
-                            "$code": "function(state) {\n    return (state.sum \/ state.count)\n}"
+                            "$code": "function(state) {\n    return (state.sum / state.count)\n}"
                         },
                         "lang": "js"
                     }

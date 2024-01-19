@@ -19,6 +19,15 @@
 	<label for="input">Input JS code:</label>
 	<textarea id="input">
 [
+  // Tests
+  {
+    $project: {
+      date: new Date(36),
+	  regex: /^123/,
+	  regex_with_flags: /^123/i,
+	  binary: BinData(0, "ID=="),
+    }
+  },
   // First Stage
   {
     $bucket: {
@@ -52,6 +61,17 @@
 
 
 <script>
+    class TaggedValue {
+        constructor(tag, value) {
+            this.tag = tag;
+            this.value = value;
+        }
+    }
+
+    function BinData(type, value) {
+        return new TaggedValue('binary', value);
+    }
+
     function convert(jsString) {
       try {
         return toYaml(eval(jsString), 1);
@@ -68,6 +88,18 @@
 
         if (Array.isArray(object)) {
             return newline + '-' + object.map((item) => toYaml(item, indent + 1)).join(newline + '-');
+        }
+
+        if (object instanceof RegExp) {
+            return ' !regex ' + (object.flags ? "['" + object.source + "', '" + object.flags + "']" : "'" + object.source + "'");
+        }
+
+        if (object instanceof Date) {
+            return ' !date ' + object.getTime();
+        }
+
+        if (object instanceof TaggedValue) {
+			return " !" + object.tag + toYaml(object.value);
         }
 
         switch (typeof object) {

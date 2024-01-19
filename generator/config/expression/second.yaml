@@ -22,3 +22,14 @@ arguments:
         optional: true
         description: |
             The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/second/#example'
+        pipeline:
+            -
+                $project:
+                    seconds:
+                        # $second: '$date'
+                        $second:
+                            date: '$date'

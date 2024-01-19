@@ -338,8 +338,8 @@ enum Pipelines: string
             "$match": {
                 "company": {
                     "$regularExpression": {
-                        "options": "",
-                        "pattern": "^MongoDB"
+                        "pattern": "^MongoDB",
+                        "options": ""
                     }
                 }
             }
@@ -349,8 +349,8 @@ enum Pipelines: string
                 "company": {
                     "$eq": {
                         "$regularExpression": {
-                            "options": "",
-                            "pattern": "^MongoDB"
+                            "pattern": "^MongoDB",
+                            "options": ""
                         }
                     }
                 }
@@ -813,14 +813,14 @@ enum Pipelines: string
                     "$in": [
                         {
                             "$regularExpression": {
-                                "options": "",
-                                "pattern": "^be"
+                                "pattern": "^be",
+                                "options": ""
                             }
                         },
                         {
                             "$regularExpression": {
-                                "options": "",
-                                "pattern": "^st"
+                                "pattern": "^st",
+                                "options": ""
                             }
                         }
                     ]

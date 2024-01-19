@@ -12,3 +12,15 @@ arguments:
         name: expression
         type:
             - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedDate:
+                        $toDate: '$order_date'
+            -
+                $sort:
+                    convertedDate: 1

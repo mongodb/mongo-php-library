@@ -53,13 +53,9 @@ tests:
             -
                 $match:
                     company:
-                        $regularExpression:
-                            options: ''
-                            pattern: '^MongoDB'
+                        !regex '^MongoDB'
             -
                 $match:
                     company:
                         $eq:
-                            $regularExpression:
-                                options: ''
-                                pattern: '^MongoDB'
+                            !regex '^MongoDB'

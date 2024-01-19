@@ -28,11 +28,5 @@ tests:
                 $match:
                     tags:
                         $in:
-                            -
-                                $regularExpression:
-                                    options: ''
-                                    pattern: '^be'
-                            -
-                                $regularExpression:
-                                    options: ''
-                                    pattern: '^st'
+                            - !regex '^be'
+                            - !regex '^st'

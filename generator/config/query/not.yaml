@@ -28,7 +28,4 @@ tests:
             -
                 $match:
                     price:
-                        $not:
-                            $regularExpression:
-                                pattern: '^p.*'
-                                options: ''
+                        $not: !regex '^p.*'

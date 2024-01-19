@@ -463,8 +463,8 @@ trait FactoryTrait
      * Constructs a BSON Date object given the date's constituent parts.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $year Calendar year. Can be any expression that evaluates to a number.
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $isoWeekYear ISO Week Date Year. Can be any expression that evaluates to a number.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $year Calendar year. Can be any expression that evaluates to a number.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeekYear ISO Week Date Year. Can be any expression that evaluates to a number.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $month Month. Defaults to 1.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeek Week of year. Defaults to 1.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $day Day of month. Defaults to 1.
@@ -476,8 +476,8 @@ trait FactoryTrait
      * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dateFromParts(
-        Decimal128|Int64|ResolvesToNumber|float|int $year,
-        Decimal128|Int64|ResolvesToNumber|float|int $isoWeekYear,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $year = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeekYear = Optional::Undefined,
         Optional|Decimal128|Int64|ResolvesToNumber|float|int $month = Optional::Undefined,
         Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeek = Optional::Undefined,
         Optional|Decimal128|Int64|ResolvesToNumber|float|int $day = Optional::Undefined,

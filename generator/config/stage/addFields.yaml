@@ -14,7 +14,6 @@ arguments:
         variadic: object
         description: |
             Specify the name of each field to add and set its value to an aggregation expression or an empty object.
-
 tests:
     -
         name: 'Using Two $addFields Stages'
@@ -37,5 +36,6 @@ tests:
         name: 'Adding Fields to an Embedded Document'
         link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#adding-fields-to-an-embedded-document'
         pipeline:
-            - $addFields:
-                  specs.fuel_type: 'unleaded'
+            -
+                $addFields:
+                    specs.fuel_type: 'unleaded'

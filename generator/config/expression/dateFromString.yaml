@@ -44,3 +44,38 @@ arguments:
         description: |
             If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
             If you do not specify onNull and dateString is null or missing, then $dateFromString outputs null.
+tests:
+    -
+        name: 'Converting Dates'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#converting-dates'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateFromString:
+                            dateString: '$date'
+                            timezone: 'America/New_York'
+    -
+        name: 'onError'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onerror'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateFromString:
+                            dateString: '$date'
+                            timezone: '$timezone'
+                            onError: '$date'
+    -
+        name: 'onNull'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onnull'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateFromString:
+                            dateString: '$date'
+                            timezone: '$timezone'
+                            # onNull: new Date(0)
+                            onNull: !date 0
+

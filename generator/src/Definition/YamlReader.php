@@ -19,7 +19,10 @@ final class YamlReader
 
         $definitions = [];
         foreach ($finder as $file) {
-            $operator = Yaml::parseFile($file->getPathname(), Yaml::PARSE_OBJECT | Yaml::PARSE_OBJECT_FOR_MAP);
+            $operator = Yaml::parseFile(
+                $file->getPathname(),
+                Yaml::PARSE_OBJECT | Yaml::PARSE_OBJECT_FOR_MAP | Yaml::PARSE_CUSTOM_TAGS,
+            );
             $definitions[] = new OperatorDefinition(...get_object_vars($operator));
         }
 

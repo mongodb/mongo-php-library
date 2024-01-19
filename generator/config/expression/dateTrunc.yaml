@@ -45,3 +45,33 @@ arguments:
         description: |
             The start of the week. Used when 
             unit is week. Defaults to Sunday.
+tests:
+    -
+        name: 'Truncate Order Dates in a $project Pipeline Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/#truncate-order-dates-in-a--project-pipeline-stage'
+        pipeline:
+            -
+                $project:
+                    _id: 1
+                    orderDate: 1
+                    truncatedOrderDate:
+                        $dateTrunc:
+                            date: '$orderDate'
+                            unit: 'week'
+                            binSize: 2
+                            timezone: 'America/Los_Angeles'
+                            startOfWeek: 'Monday'
+    -
+        name: 'Truncate Order Dates and Obtain Quantity Sum in a $group Pipeline Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/#truncate-order-dates-and-obtain-quantity-sum-in-a--group-pipeline-stage'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        truncatedOrderDate:
+                            $dateTrunc:
+                                date: '$orderDate'
+                                unit: 'month'
+                                binSize: 6
+                    sumQuantity:
+                        $sum: '$quantity'

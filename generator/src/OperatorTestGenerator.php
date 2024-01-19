@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use InvalidArgumentException;
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
+use MongoDB\BSON\Int64;
+use MongoDB\BSON\Regex;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Pipeline;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
@@ -14,9 +20,14 @@ use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\Type;
 use RuntimeException;
+use Symfony\Component\Yaml\Tag\TaggedValue;
 use Throwable;
 
+use function base64_decode;
 use function basename;
+use function get_object_vars;
+use function is_array;
+use function is_object;
 use function json_decode;
 use function json_encode;
 use function ksort;
@@ -25,6 +36,7 @@ use function str_replace;
 use function ucwords;
 
 use const JSON_PRETTY_PRINT;
+use const JSON_UNESCAPED_SLASHES;
 
 /**
  * Generates a tests for all operators.
@@ -83,8 +95,12 @@ class OperatorTestGenerator extends OperatorGenerator
             $testName = 'test' . str_replace([' ', '-'], '', ucwords(str_replace('$', '', $test->name)));
             $caseName = str_replace([' ', '-'], '', ucwords(str_replace('$', '', $operator->name . ' ' . $test->name)));
 
-            $json = Document::fromPHP(['pipeline' => $test->pipeline])->toCanonicalExtendedJSON();
-            $json = json_encode(json_decode($json)->pipeline, JSON_PRETTY_PRINT);
+            $pipeline = $this->convertYamlTaggedValues($test->pipeline);
+
+            // Wrap the pipeline array into a document
+            $json = Document::fromPHP(['pipeline' => $pipeline])->toCanonicalExtendedJSON();
+            // Unwrap the pipeline array and reformat for prettier JSON
+            $json = json_encode(json_decode($json)->pipeline, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             $case = $dataEnum->addCase($caseName, new Literal('<<<\'JSON\'' . "\n" . $json . "\n" . 'JSON'));
             $case->setComment($test->name);
             if ($test->link) {
@@ -114,5 +130,39 @@ class OperatorTestGenerator extends OperatorGenerator
         $class->setMethods($methods);
 
         return $namespace;
+    }
+
+    private function convertYamlTaggedValues(mixed $object): mixed
+    {
+        if ($object instanceof TaggedValue) {
+            $value = $object->getValue();
+
+            return match ($object->getTag()) {
+                'regex' => new Regex(...(array) $value),
+                'long' => new Int64($value),
+                'double' => new Decimal128($value),
+                'date' => new UTCDateTime($value),
+                'binary' => new Binary(base64_decode($value)),
+                default => throw new InvalidArgumentException(sprintf('Yaml tag "%s" is not supported.', $object->getTag())),
+            };
+        }
+
+        if (is_array($object)) {
+            foreach ($object as $key => $value) {
+                $object[$key] = $this->convertYamlTaggedValues($value);
+            }
+
+            return $object;
+        }
+
+        if (is_object($object)) {
+            foreach (get_object_vars($object) as $key => $value) {
+                $object->{$key} = $this->convertYamlTaggedValues($value);
+            }
+
+            return $object;
+        }
+
+        return $object;
     }
 }

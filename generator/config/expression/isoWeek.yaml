@@ -22,3 +22,16 @@ arguments:
         optional: true
         description: |
             The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/#example'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    city: '$city'
+                    weekNumber:
+                        # $isoWeek: '$date'
+                        $isoWeek:
+                            date: '$date'

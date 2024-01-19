@@ -29,3 +29,21 @@ arguments:
         optional: true
         description: |
             If set to true, modifies the output document to use ISO week date fields. Defaults to false.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/#example'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateToParts:
+                            date: '$date'
+                    date_iso:
+                        $dateToParts:
+                            date: '$date'
+                            iso8601: true
+                    date_timezone:
+                        $dateToParts:
+                            date: '$date'
+                            timezone: 'America/New_York'

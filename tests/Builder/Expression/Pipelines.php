@@ -574,6 +574,825 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Add a Future Date
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#add-a-future-date
+     */
+    case DateAddAddAFutureDate = <<<'JSON'
+    [
+        {
+            "$project": {
+                "expectedDeliveryDate": {
+                    "$dateAdd": {
+                        "startDate": "$purchaseDate",
+                        "unit": "day",
+                        "amount": {
+                            "$numberInt": "3"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$merge": {
+                "into": "shipping"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Filter on a Date Range
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#filter-on-a-date-range
+     */
+    case DateAddFilterOnADateRange = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$gt": [
+                        "$deliveryDate",
+                        {
+                            "$dateAdd": {
+                                "startDate": "$purchaseDate",
+                                "unit": "day",
+                                "amount": {
+                                    "$numberInt": "5"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "custId": {
+                    "$numberInt": "1"
+                },
+                "purchased": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d",
+                        "date": "$purchaseDate"
+                    }
+                },
+                "delivery": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d",
+                        "date": "$deliveryDate"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Adjust for Daylight Savings Time
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#adjust-for-daylight-savings-time
+     */
+    case DateAddAdjustForDaylightSavingsTime = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "location": {
+                    "$numberInt": "1"
+                },
+                "start": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": "$login"
+                    }
+                },
+                "days": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": {
+                            "$dateAdd": {
+                                "startDate": "$login",
+                                "unit": "day",
+                                "amount": {
+                                    "$numberInt": "1"
+                                },
+                                "timezone": "$location"
+                            }
+                        }
+                    }
+                },
+                "hours": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": {
+                            "$dateAdd": {
+                                "startDate": "$login",
+                                "unit": "hour",
+                                "amount": {
+                                    "$numberInt": "24"
+                                },
+                                "timezone": "$location"
+                            }
+                        }
+                    }
+                },
+                "startTZInfo": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": "$login",
+                        "timezone": "$location"
+                    }
+                },
+                "daysTZInfo": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": {
+                            "$dateAdd": {
+                                "startDate": "$login",
+                                "unit": "day",
+                                "amount": {
+                                    "$numberInt": "1"
+                                },
+                                "timezone": "$location"
+                            }
+                        },
+                        "timezone": "$location"
+                    }
+                },
+                "hoursTZInfo": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": {
+                            "$dateAdd": {
+                                "startDate": "$login",
+                                "unit": "hour",
+                                "amount": {
+                                    "$numberInt": "24"
+                                },
+                                "timezone": "$location"
+                            }
+                        },
+                        "timezone": "$location"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Elapsed Time
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/#elapsed-time
+     */
+    case DateDiffElapsedTime = <<<'JSON'
+    [
+        {
+            "$group": {
+                "_id": null,
+                "averageTime": {
+                    "$avg": {
+                        "$dateDiff": {
+                            "startDate": "$purchased",
+                            "endDate": "$delivered",
+                            "unit": "day"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "numDays": {
+                    "$trunc": [
+                        "$averageTime",
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Result Precision
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/#result-precision
+     */
+    case DateDiffResultPrecision = <<<'JSON'
+    [
+        {
+            "$project": {
+                "Start": "$start",
+                "End": "$end",
+                "years": {
+                    "$dateDiff": {
+                        "startDate": "$start",
+                        "endDate": "$end",
+                        "unit": "year"
+                    }
+                },
+                "months": {
+                    "$dateDiff": {
+                        "startDate": "$start",
+                        "endDate": "$end",
+                        "unit": "month"
+                    }
+                },
+                "days": {
+                    "$dateDiff": {
+                        "startDate": "$start",
+                        "endDate": "$end",
+                        "unit": "day"
+                    }
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Weeks Per Month
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/#weeks-per-month
+     */
+    case DateDiffWeeksPerMonth = <<<'JSON'
+    [
+        {
+            "$project": {
+                "wks_default": {
+                    "$dateDiff": {
+                        "startDate": "$start",
+                        "endDate": "$end",
+                        "unit": "week"
+                    }
+                },
+                "wks_monday": {
+                    "$dateDiff": {
+                        "startDate": "$start",
+                        "endDate": "$end",
+                        "unit": "week",
+                        "startOfWeek": "Monday"
+                    }
+                },
+                "wks_friday": {
+                    "$dateDiff": {
+                        "startDate": "$start",
+                        "endDate": "$end",
+                        "unit": "week",
+                        "startOfWeek": "fri"
+                    }
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/#example
+     */
+    case DateFromPartsExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "date": {
+                    "$dateFromParts": {
+                        "year": {
+                            "$numberInt": "2017"
+                        },
+                        "month": {
+                            "$numberInt": "2"
+                        },
+                        "day": {
+                            "$numberInt": "8"
+                        },
+                        "hour": {
+                            "$numberInt": "12"
+                        }
+                    }
+                },
+                "date_iso": {
+                    "$dateFromParts": {
+                        "isoWeekYear": {
+                            "$numberInt": "2017"
+                        },
+                        "isoWeek": {
+                            "$numberInt": "6"
+                        },
+                        "isoDayOfWeek": {
+                            "$numberInt": "3"
+                        },
+                        "hour": {
+                            "$numberInt": "12"
+                        }
+                    }
+                },
+                "date_timezone": {
+                    "$dateFromParts": {
+                        "year": {
+                            "$numberInt": "2016"
+                        },
+                        "month": {
+                            "$numberInt": "12"
+                        },
+                        "day": {
+                            "$numberInt": "31"
+                        },
+                        "hour": {
+                            "$numberInt": "23"
+                        },
+                        "minute": {
+                            "$numberInt": "46"
+                        },
+                        "second": {
+                            "$numberInt": "12"
+                        },
+                        "timezone": "America/New_York"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Converting Dates
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#converting-dates
+     */
+    case DateFromStringConvertingDates = <<<'JSON'
+    [
+        {
+            "$project": {
+                "date": {
+                    "$dateFromString": {
+                        "dateString": "$date",
+                        "timezone": "America/New_York"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * onError
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onerror
+     */
+    case DateFromStringOnError = <<<'JSON'
+    [
+        {
+            "$project": {
+                "date": {
+                    "$dateFromString": {
+                        "dateString": "$date",
+                        "timezone": "$timezone",
+                        "onError": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * onNull
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onnull
+     */
+    case DateFromStringOnNull = <<<'JSON'
+    [
+        {
+            "$project": {
+                "date": {
+                    "$dateFromString": {
+                        "dateString": "$date",
+                        "timezone": "$timezone",
+                        "onNull": {
+                            "$date": {
+                                "$numberLong": "0"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Subtract A Fixed Amount
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/#subtract-a-fixed-amount
+     */
+    case DateSubtractSubtractAFixedAmount = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$eq": [
+                        {
+                            "$month": {
+                                "date": "$logout"
+                            }
+                        },
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$project": {
+                "logoutTime": {
+                    "$dateSubtract": {
+                        "startDate": "$logout",
+                        "unit": "hour",
+                        "amount": {
+                            "$numberInt": "3"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$merge": {
+                "into": "connectionTime"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Filter by Relative Dates
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/#filter-by-relative-dates
+     */
+    case DateSubtractFilterByRelativeDates = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$gt": [
+                        "$logoutTime",
+                        {
+                            "$dateSubtract": {
+                                "startDate": "$$NOW",
+                                "unit": "week",
+                                "amount": {
+                                    "$numberInt": "1"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "custId": {
+                    "$numberInt": "1"
+                },
+                "loggedOut": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d",
+                        "date": "$logoutTime"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Adjust for Daylight Savings Time
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/#adjust-for-daylight-savings-time
+     */
+    case DateSubtractAdjustForDaylightSavingsTime = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "location": {
+                    "$numberInt": "1"
+                },
+                "start": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": "$login"
+                    }
+                },
+                "days": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": {
+                            "$dateSubtract": {
+                                "startDate": "$login",
+                                "unit": "day",
+                                "amount": {
+                                    "$numberInt": "1"
+                                },
+                                "timezone": "$location"
+                            }
+                        }
+                    }
+                },
+                "hours": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": {
+                            "$dateSubtract": {
+                                "startDate": "$login",
+                                "unit": "hour",
+                                "amount": {
+                                    "$numberInt": "24"
+                                },
+                                "timezone": "$location"
+                            }
+                        }
+                    }
+                },
+                "startTZInfo": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": "$login",
+                        "timezone": "$location"
+                    }
+                },
+                "daysTZInfo": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": {
+                            "$dateSubtract": {
+                                "startDate": "$login",
+                                "unit": "day",
+                                "amount": {
+                                    "$numberInt": "1"
+                                },
+                                "timezone": "$location"
+                            }
+                        },
+                        "timezone": "$location"
+                    }
+                },
+                "hoursTZInfo": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d %H:%M",
+                        "date": {
+                            "$dateSubtract": {
+                                "startDate": "$login",
+                                "unit": "hour",
+                                "amount": {
+                                    "$numberInt": "24"
+                                },
+                                "timezone": "$location"
+                            }
+                        },
+                        "timezone": "$location"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/#example
+     */
+    case DateToPartsExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "date": {
+                    "$dateToParts": {
+                        "date": "$date"
+                    }
+                },
+                "date_iso": {
+                    "$dateToParts": {
+                        "date": "$date",
+                        "iso8601": true
+                    }
+                },
+                "date_timezone": {
+                    "$dateToParts": {
+                        "date": "$date",
+                        "timezone": "America/New_York"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/#example
+     */
+    case DateToStringExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "yearMonthDayUTC": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d",
+                        "date": "$date"
+                    }
+                },
+                "timewithOffsetNY": {
+                    "$dateToString": {
+                        "format": "%H:%M:%S:%L%z",
+                        "date": "$date",
+                        "timezone": "America/New_York"
+                    }
+                },
+                "timewithOffset430": {
+                    "$dateToString": {
+                        "format": "%H:%M:%S:%L%z",
+                        "date": "$date",
+                        "timezone": "+04:30"
+                    }
+                },
+                "minutesOffsetNY": {
+                    "$dateToString": {
+                        "format": "%Z",
+                        "date": "$date",
+                        "timezone": "America/New_York"
+                    }
+                },
+                "minutesOffset430": {
+                    "$dateToString": {
+                        "format": "%Z",
+                        "date": "$date",
+                        "timezone": "+04:30"
+                    }
+                },
+                "abbreviated_month": {
+                    "$dateToString": {
+                        "format": "%b",
+                        "date": "$date",
+                        "timezone": "+04:30"
+                    }
+                },
+                "full_month": {
+                    "$dateToString": {
+                        "format": "%B",
+                        "date": "$date",
+                        "timezone": "+04:30"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Truncate Order Dates in a $project Pipeline Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/#truncate-order-dates-in-a--project-pipeline-stage
+     */
+    case DateTruncTruncateOrderDatesInAProjectPipelineStage = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "1"
+                },
+                "orderDate": {
+                    "$numberInt": "1"
+                },
+                "truncatedOrderDate": {
+                    "$dateTrunc": {
+                        "date": "$orderDate",
+                        "unit": "week",
+                        "binSize": {
+                            "$numberInt": "2"
+                        },
+                        "timezone": "America/Los_Angeles",
+                        "startOfWeek": "Monday"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Truncate Order Dates and Obtain Quantity Sum in a $group Pipeline Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/#truncate-order-dates-and-obtain-quantity-sum-in-a--group-pipeline-stage
+     */
+    case DateTruncTruncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage = <<<'JSON'
+    [
+        {
+            "$group": {
+                "_id": {
+                    "truncatedOrderDate": {
+                        "$dateTrunc": {
+                            "date": "$orderDate",
+                            "unit": "month",
+                            "binSize": {
+                                "$numberInt": "6"
+                            }
+                        }
+                    }
+                },
+                "sumQuantity": {
+                    "$sum": "$quantity"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/#example
+     */
+    case DayOfMonthExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "day": {
+                    "$dayOfMonth": {
+                        "date": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/#example
+     */
+    case DayOfWeekExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "dayOfWeek": {
+                    "$dayOfWeek": {
+                        "date": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfYear/#example
+     */
+    case DayOfYearExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "dayOfYear": {
+                    "$dayOfYear": {
+                        "date": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/#example
@@ -1010,6 +1829,25 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/#example
+     */
+    case HourExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "hour": {
+                    "$hour": {
+                        "date": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Single Input Expression
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#single-input-expression
@@ -1131,6 +1969,71 @@ enum Pipelines: string
                             ]
                         },
                         "else": "One or more fields is not an array."
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/#example
+     */
+    case IsoDayOfWeekExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "name": "$name",
+                "dayOfWeek": {
+                    "$isoDayOfWeek": {
+                        "date": "$birthday"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/#example
+     */
+    case IsoWeekExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "city": "$city",
+                "weekNumber": {
+                    "$isoWeek": {
+                        "date": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/#example
+     */
+    case IsoWeekYearExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "yearNumber": {
+                    "$isoWeekYear": {
+                        "date": "$date"
                     }
                 }
             }
@@ -1491,6 +2394,25 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/millisecond/#example
+     */
+    case MillisecondExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "milliseconds": {
+                    "$millisecond": {
+                        "date": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Use in $project Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--project-stage
@@ -1535,6 +2457,44 @@ enum Pipelines: string
                             "$numberInt": "2"
                         },
                         "input": "$score"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/#example
+     */
+    case MinuteExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "minutes": {
+                    "$minute": {
+                        "date": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/month/#example
+     */
+    case MonthExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "month": {
+                    "$month": {
+                        "date": "$date"
                     }
                 }
             }
@@ -2039,6 +2999,25 @@ enum Pipelines: string
                 },
                 "reverseFavorites": {
                     "$reverseArray": "$favorites"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/second/#example
+     */
+    case SecondExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "seconds": {
+                    "$second": {
+                        "date": "$date"
+                    }
                 }
             }
         }
@@ -2825,6 +3804,30 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/#example
+     */
+    case ToDateExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "convertedDate": {
+                    "$toDate": "$order_date"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "convertedDate": {
+                    "$numberInt": "1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toHashedIndexKey/#example
      */
     case ToHashedIndexKeyExample = <<<'JSON'
@@ -2905,6 +3908,44 @@ enum Pipelines: string
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/#example
+     */
+    case WeekExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "week": {
+                    "$week": {
+                        "date": "$date"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/#example
+     */
+    case YearExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "year": {
+                    "$year": {
+                        "date": "$date"
                     }
                 }
             }

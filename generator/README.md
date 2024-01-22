@@ -22,13 +22,13 @@ The `generator/config/*.yaml` files contains the list of operators and stages th
 Each operator can contain a `tests` section with a list if pipelines. To represent specific BSON objects,
 it is necessary to use Yaml tags:
 
-| BSON Type   | Example                                      |
-|-------------|----------------------------------------------|
-| Regex       | `!regex '^abc'` <br/> `!regex ['^abc', 'i']` |
-| Int64       | `!long '123456789'`                          |
-| Decimal128  | `!double '0.9'`                              |
-| UTCDateTime | `!date 0`                                    |
-| Binary      | `!binary 'IA=='`                             |
+| BSON Type   | Example                                                |
+|-------------|--------------------------------------------------------|
+| Regex       | `!bson_regex '^abc'` <br/> `!bson_regex ['^abc', 'i']` |
+| Int64       | `!bson_int64 '123456789'`                              |
+| Decimal128  | `!bson_decimal128 '0.9'`                               |
+| UTCDateTime | `!bson_utcdatetime 0`                                  |
+| Binary      | `!bson_binary 'IA=='`                                  |
 
 To add new test cases to operators, you can get inspiration from the official MongoDB documentation and use
 the `generator/js2yaml.html` web page to manually convert a pipeline array from JS to Yaml.

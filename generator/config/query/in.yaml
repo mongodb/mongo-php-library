@@ -28,5 +28,5 @@ tests:
                 $match:
                     tags:
                         $in:
-                            - !regex '^be'
-                            - !regex '^st'
+                            - !bson_regex '^be'
+                            - !bson_regex '^st'

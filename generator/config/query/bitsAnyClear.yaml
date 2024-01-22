@@ -35,4 +35,4 @@ tests:
         pipeline:
             - $match:
                   a:
-                      $bitsAnyClear: !binary 'MA=='
+                      $bitsAnyClear: !bson_binary 'MA=='

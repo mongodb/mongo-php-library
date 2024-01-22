@@ -53,9 +53,9 @@ tests:
             -
                 $match:
                     company:
-                        !regex '^MongoDB'
+                        !bson_regex '^MongoDB'
             -
                 $match:
                     company:
                         $eq:
-                            !regex '^MongoDB'
+                            !bson_regex '^MongoDB'

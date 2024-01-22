@@ -69,7 +69,7 @@
     }
 
     function BinData(type, value) {
-        return new TaggedValue('binary', value);
+        return new TaggedValue('bson_binary', value);
     }
 
     function convert(jsString) {
@@ -91,11 +91,11 @@
         }
 
         if (object instanceof RegExp) {
-            return ' !regex ' + (object.flags ? "['" + object.source + "', '" + object.flags + "']" : "'" + object.source + "'");
+            return ' !bson_regex ' + (object.flags ? "['" + object.source + "', '" + object.flags + "']" : "'" + object.source + "'");
         }
 
         if (object instanceof Date) {
-            return ' !date ' + object.getTime();
+            return ' !bson_utcdatetime ' + object.getTime();
         }
 
         if (object instanceof TaggedValue) {

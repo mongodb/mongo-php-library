@@ -21,7 +21,7 @@ tests:
                 $match:
                     sku:
                         $regex:
-                            !regex '789$'
+                            !bson_regex '789$'
     -
         name: 'Perform Case-Insensitive Regular Expression Match'
         link: 'https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-case-insensitive-regular-expression-match'
@@ -30,4 +30,4 @@ tests:
                 $match:
                     sku:
                         $regex:
-                            !regex ['^ABC', 'i']
+                            !bson_regex ['^ABC', 'i']

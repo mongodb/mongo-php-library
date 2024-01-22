@@ -28,4 +28,4 @@ tests:
             -
                 $match:
                     price:
-                        $not: !regex '^p.*'
+                        $not: !bson_regex '^p.*'

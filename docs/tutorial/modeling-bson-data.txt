@@ -10,6 +10,7 @@ Modeling BSON Data
    :depth: 2
    :class: singlecol
 
+.. _php-type-map:
 
 Type Maps
 ---------
@@ -155,7 +156,6 @@ The same document in the MongoDB shell might display as:
 
    :php:`MongoDB\\BSON\\Persistable <mongodb-bson-persistable>` may only be used
    for root and embedded BSON documents. It may not be used for BSON arrays.
-.. _php-type-map:
 
 Working with Enums
 ------------------

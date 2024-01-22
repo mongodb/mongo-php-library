@@ -23,13 +23,53 @@ Definition
 
       function listCollectionNames(array $options = []): Iterator
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-listCollections-param.rst
+``$options`` : array
+  An array specifying the desired options.
 
-   The ``$options`` parameter supports the following options:
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-listCollections-option.rst
+     * - Name
+       - Type
+       - Description
+
+     * - authorizedCollections
+       - boolean
+       - A flag that determines which collections are returned based on the user
+         privileges when access control is enabled. For more information, see
+         the :manual:`listCollections </reference/command/listCollections>`
+         command documentation.
+
+         For servers < 4.0, this option is ignored.
+
+         .. versionadded:: 1.12
+
+     * - comment
+       - mixed
+       - .. include:: /includes/extracts/common-option-comment.rst
+
+         .. include:: /includes/extracts/option-requires-4.4.rst
+
+         .. versionadded:: 1.13
+
+     * - filter
+       - array|object
+       - A query expression to filter the list of collections.
+
+         You can specify a query expression for collection fields (e.g.
+         ``name``, ``options``).
+
+     * - maxTimeMS
+       - integer
+       - .. include:: /includes/extracts/common-option-maxTimeMS.rst
+
+     * - session
+       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - .. include:: /includes/extracts/common-option-session.rst
 
 Return Values
 -------------

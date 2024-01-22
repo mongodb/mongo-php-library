@@ -19,15 +19,47 @@ Definition
 
    .. code-block:: php
 
-      function selectCollection(string $collectionName, array $options = []): MongoDB\Collection
+      function selectCollection(
+          string $collectionName,
+          array $options = []
+      ): MongoDB\Collection
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-selectCollection-param.rst
+``$collectionName`` : string
+  The name of the collection to select.
 
-   The ``$options`` parameter supports the following options:
+``$options`` : array
+  An array specifying the desired options.
 
-   .. include:: /includes/apiargs/MongoDBDatabase-method-selectCollection-option.rst
+  .. list-table::
+     :header-rows: 1
+     :widths: 20 20 80
+
+     * - Name
+       - Type
+       - Description
+
+     * - readConcern
+       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - The default read concern to use for collection operations. Defaults to
+         the database's read concern.
+
+     * - readPreference
+       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - The default read preference to use for collection operations. Defaults
+         to the database's read preference.
+
+     * - typeMap
+       - array
+       - The default type map to use for collection operations. Defaults to the
+         database's type map.
+
+     * - writeConcern
+       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - The default write concern to use for collection operations. Defaults to
+         the database's write concern.
 
 Return Values
 -------------

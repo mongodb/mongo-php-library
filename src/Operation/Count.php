@@ -187,7 +187,7 @@ class Count implements Executable, Explainable
     {
         $cmd = ['count' => $this->collectionName];
 
-        if (! empty($this->filter)) {
+        if ($this->filter !== []) {
             $cmd['query'] = (object) $this->filter;
         }
 

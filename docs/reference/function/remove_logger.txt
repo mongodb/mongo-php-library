@@ -23,9 +23,13 @@ Definition
 
       function remove_logger(Psr\Log\LoggerInterface $logger): void
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/function-remove_logger-param.rst
+``$logger`` : Psr\\Log\\LoggerInterface
+  A logger to unregister.
+
+  If the logger is not registered, the method will have no effect.
 
 Errors/Exceptions
 -----------------

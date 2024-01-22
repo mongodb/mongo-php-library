@@ -20,7 +20,7 @@ Definition
 
    .. code-block:: php
 
-      function getModifiedCount(): integer|null
+      function getModifiedCount(): integer
 
    This method should only be called if the write was acknowledged.
 

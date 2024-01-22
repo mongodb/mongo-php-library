@@ -1,0 +1,38 @@
+ref: collection-option-collation
+source: 
+  ref: common-option-collation
+  file: extracts-common-option.yaml
+post: |
+  If the collation is unspecified but the collection has a default collation,
+  the operation uses the collation specified for the collection. If no
+  collation is specified for the collection or for the operation, MongoDB uses
+  the simple binary comparison used in prior versions for string comparisons.
+---
+ref: collection-option-readConcern
+source:
+  ref: common-option-readConcern
+  file: extracts-common-option.yaml
+replacement:
+  object: collection
+---
+ref: collection-option-readPreference
+source:
+  ref: common-option-readPreference
+  file: extracts-common-option.yaml
+replacement:
+  object: collection
+---
+ref: collection-option-typeMap
+source:
+  ref: common-option-typeMap
+  file: extracts-common-option.yaml
+replacement:
+  object: collection
+---
+ref: collection-option-writeConcern
+source:
+  ref: common-option-writeConcern
+  file: extracts-common-option.yaml
+replacement:
+  object: collection
+...

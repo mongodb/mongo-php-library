@@ -21,9 +21,11 @@ Definition
 
       function openDownloadStream($id): resource
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openDownloadStream-param.rst
+``$id`` : mixed
+  The ``_id`` of the file to download.
 
 Return Values
 -------------

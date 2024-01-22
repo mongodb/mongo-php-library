@@ -22,15 +22,18 @@ Definition
 
       function createClientEncryption(array $options): MongoDB\Driver\ClientEncryption
 
-   This method has the following parameters:
+Parameters
+----------
 
-   .. include:: /includes/apiargs/MongoDBClient-method-createClientEncryption-param.rst
+``$options`` : array
+  An array specifying the desired options. Refer to the
+  :php:`MongoDB\\Driver\\Manager::createClientEncryption() <manual/en/mongodb-driver-manager.createclientencryption.php>`
+  extension documentation for a list of supported options.
 
-   The ``$options`` parameter supports all options documented in the
-   :php:`extension manual <manual/en/mongodb-driver-manager.createclientencryption.php>`.
-   For the ``keyVaultClient`` option, an instance of :phpclass:`MongoDB\\Client`
-   is automatically unwrapped and the :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
-   instance is passed to the extension.
+  If a :phpclass:`MongoDB\\Client` is provided for the ``keyVaultClient``
+  option, it will be unwrapped into a
+  :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` for the
+  extension.
 
 Return Values
 -------------

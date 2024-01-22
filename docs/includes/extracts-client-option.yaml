@@ -1,0 +1,28 @@
+ref: client-option-readConcern
+source:
+  ref: common-option-readConcern
+  file: extracts-common-option.yaml
+replacement:
+  object: client
+---
+ref: client-option-readPreference
+source:
+  ref: common-option-readPreference
+  file: extracts-common-option.yaml
+replacement:
+  object: client
+---
+ref: client-option-typeMap
+source:
+  ref: common-option-typeMap
+  file: extracts-common-option.yaml
+replacement:
+  object: client
+---
+ref: client-option-writeConcern
+source:
+  ref: common-option-writeConcern
+  file: extracts-common-option.yaml
+replacement:
+  object: client
+...

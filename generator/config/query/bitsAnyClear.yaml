@@ -13,3 +13,26 @@ arguments:
             - int
             - binData
             - array # of int
+tests:
+    -
+        name: 'Bit Position Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bit-position-array'
+        pipeline:
+            -
+                $match:
+                    a:
+                        $bitsAnyClear: [1, 5]
+    -
+        name: 'Integer Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#integer-bitmask'
+        pipeline:
+            - $match:
+                  a:
+                      $bitsAnyClear: 35
+    -
+        name: 'BinData Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bindata-bitmask'
+        pipeline:
+            - $match:
+                  a:
+                      $bitsAnyClear: !binary 'MA=='

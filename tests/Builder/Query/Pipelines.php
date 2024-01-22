@@ -144,6 +144,266 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Bit Position Array
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bit-position-array
+     */
+    case BitsAllClearBitPositionArray = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAllClear": [
+                        {
+                            "$numberInt": "1"
+                        },
+                        {
+                            "$numberInt": "5"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Integer Bitmask
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#integer-bitmask
+     */
+    case BitsAllClearIntegerBitmask = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAllClear": {
+                        "$numberInt": "35"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * BinData Bitmask
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bindata-bitmask
+     */
+    case BitsAllClearBinDataBitmask = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAllClear": {
+                        "$binary": {
+                            "base64": "IA==",
+                            "subType": "00"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Bit Position Array
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#bit-position-array
+     */
+    case BitsAllSetBitPositionArray = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAllSet": [
+                        {
+                            "$numberInt": "1"
+                        },
+                        {
+                            "$numberInt": "5"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Integer Bitmask
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#integer-bitmask
+     */
+    case BitsAllSetIntegerBitmask = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAllSet": {
+                        "$numberInt": "50"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * BinData Bitmask
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#bindata-bitmask
+     */
+    case BitsAllSetBinDataBitmask = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAllSet": {
+                        "$binary": {
+                            "base64": "MA==",
+                            "subType": "00"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Bit Position Array
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bit-position-array
+     */
+    case BitsAnyClearBitPositionArray = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAnyClear": [
+                        {
+                            "$numberInt": "1"
+                        },
+                        {
+                            "$numberInt": "5"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Integer Bitmask
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#integer-bitmask
+     */
+    case BitsAnyClearIntegerBitmask = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAnyClear": {
+                        "$numberInt": "35"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * BinData Bitmask
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bindata-bitmask
+     */
+    case BitsAnyClearBinDataBitmask = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAnyClear": {
+                        "$binary": {
+                            "base64": "MA==",
+                            "subType": "00"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Bit Position Array
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bit-position-array
+     */
+    case BitsAnySetBitPositionArray = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAnySet": [
+                        {
+                            "$numberInt": "1"
+                        },
+                        {
+                            "$numberInt": "5"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Integer Bitmask
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#integer-bitmask
+     */
+    case BitsAnySetIntegerBitmask = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAnySet": {
+                        "$numberInt": "35"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * BinData Bitmask
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bindata-bitmask
+     */
+    case BitsAnySetBinDataBitmask = <<<'JSON'
+    [
+        {
+            "$match": {
+                "a": {
+                    "$bitsAnySet": {
+                        "$binary": {
+                            "base64": "MA==",
+                            "subType": "00"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Element Match
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#element-match

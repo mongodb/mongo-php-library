@@ -16,16 +16,18 @@
 <h1>Convert JS examples into Yaml</h1>
 
 <div>
-	<label for="input">Input JS code:</label>
-	<textarea id="input">
+    <label for="input">Input JS code:</label>
+    <textarea id="input">
 [
   // Tests
   {
     $project: {
       date: new Date(36),
-	  regex: /^123/,
-	  regex_with_flags: /^123/i,
-	  binary: BinData(0, "ID=="),
+      regex: /^123/,
+      regex_with_flags: /^123/i,
+      binary: BinData(0, "IA=="),
+      empty_object: {},
+      empty_array: [],
     }
   },
   // First Stage
@@ -51,12 +53,12 @@
     $match: { count: {$gt: 3} }
   }
 ]
-	</textarea>
+    </textarea>
 </div>
 
 <div>
-	<label for="output">Output YAML code:</label>
-	<textarea id="output"></textarea>
+    <label for="output">Output YAML code:</label>
+    <textarea id="output"></textarea>
 </div>
 
 
@@ -73,11 +75,11 @@
     }
 
     function convert(jsString) {
-      try {
-        return toYaml(eval(jsString), 1);
-      } catch (e) {
-        return e.toString();
-      }
+        try {
+            return toYaml(eval(jsString), 1);
+        } catch (e) {
+            return e.toString();
+        }
     }
 
     function toYaml(object, indent = 0) {
@@ -87,6 +89,10 @@
         }
 
         if (Array.isArray(object)) {
+            if (object.length === 0) {
+                return ' []';
+            }
+
             return newline + '-' + object.map((item) => toYaml(item, indent + 1)).join(newline + '-');
         }
 
@@ -99,7 +105,7 @@
         }
 
         if (object instanceof TaggedValue) {
-			return " !" + object.tag + toYaml(object.value);
+            return " !" + object.tag + toYaml(object.value);
         }
 
         switch (typeof object) {
@@ -114,6 +120,10 @@
                 for (var key in object) {
                     dump.push(key + ':' + toYaml(object[key], indent + 1));
                 }
+                if (dump.length === 0) {
+                    return ' {}';
+                }
+
                 return newline + dump.join(newline);
             case 'function':
                 return toYaml({

@@ -11,3 +11,14 @@ arguments:
         name: expression
         type:
             - resolvesToString
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/#example'
+        pipeline:
+            -
+                $project:
+                    item:
+                        $toUpper: '$item'
+                    description:
+                        $toUpper: '$description'

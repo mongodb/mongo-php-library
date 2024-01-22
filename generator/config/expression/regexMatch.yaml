@@ -26,3 +26,55 @@ arguments:
         type:
             - string
         optional: true
+tests:
+    -
+        name: '$regexMatch and Its Options'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#-regexmatch-and-its-options'
+        pipeline:
+            -
+                $addFields:
+                    result:
+                        $regexMatch:
+                            input: '$description'
+                            regex: !regex 'line'
+    -
+        name: 'i Option'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#i-option'
+        pipeline:
+            -
+                $addFields:
+                    result:
+                        # Specify i as part of the Regex type
+                        $regexMatch:
+                            input: '$description'
+                            regex: !regex ['line', 'i']
+            -
+                $addFields:
+                    result:
+                        # Specify i in the options field
+                        $regexMatch:
+                            input: '$description'
+                            regex: 'line'
+                            options: 'i'
+            -
+                $addFields:
+                    result:
+                        # Mix Regex type with options field
+                        $regexMatch:
+                            input: '$description'
+                            regex: !regex 'line'
+                            options: 'i'
+    -
+        name: 'Use $regexMatch to Check Email Address'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#use--regexmatch-to-check-email-address'
+        pipeline:
+            -
+                $addFields:
+                    category:
+                        $cond:
+                            if:
+                                $regexMatch:
+                                    input: '$comment'
+                                    regex: !regex ['[a-z0-9_.+-]+@mongodb.com', 'i']
+                            then: 'Employee'
+                            else: 'External'

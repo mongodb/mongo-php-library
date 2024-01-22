@@ -26,3 +26,41 @@ arguments:
         type:
             - string
         optional: true
+tests:
+    -
+        name: '$regexFind and Its Options'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/#-regexfind-and-its-options'
+        pipeline:
+            -
+                $addFields:
+                    returnObject:
+                        $regexFind:
+                            input: '$description'
+                            regex: !regex 'line'
+    -
+        name: 'i Option'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/#i-option'
+        pipeline:
+            -
+                $addFields:
+                    returnObject:
+                        # Specify i as part of the Regex type
+                        $regexFind:
+                            input: '$description'
+                            regex: !regex ['line', 'i']
+            -
+                $addFields:
+                    returnObject:
+                        # Specify i in the options field
+                        $regexFind:
+                            input: '$description'
+                            regex: 'line'
+                            options: 'i'
+            -
+                $addFields:
+                    returnObject:
+                        # Mix Regex type with options field
+                        $regexFind:
+                            input: '$description'
+                            regex: !regex 'line'
+                            options: 'i'

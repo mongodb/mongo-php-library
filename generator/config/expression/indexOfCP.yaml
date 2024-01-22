@@ -37,3 +37,14 @@ arguments:
         description: |
             An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
             If unspecified, the ending index position for the search is the end of the string.
+tests:
+    -
+        name: 'Examples'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/#examples'
+        pipeline:
+            -
+                $project:
+                    cpLocation:
+                        $indexOfCP:
+                            - '$item'
+                            - 'foo'

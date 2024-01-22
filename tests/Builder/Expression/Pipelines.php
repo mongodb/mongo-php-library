@@ -521,6 +521,27 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/#examples
+     */
+    case ConcatExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "itemDescription": {
+                    "$concat": [
+                        "$item",
+                        " - ",
+                        "$description"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/#example
      */
     case ConcatArraysExample = <<<'JSON'
@@ -1940,6 +1961,46 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfBytes/#examples
+     */
+    case IndexOfBytesExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "byteLocation": {
+                    "$indexOfBytes": [
+                        "$item",
+                        "foo"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Examples
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/#examples
+     */
+    case IndexOfCPExamples = <<<'JSON'
+    [
+        {
+            "$project": {
+                "cpLocation": {
+                    "$indexOfCP": [
+                        "$item",
+                        "foo"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/#example
      */
     case IsArrayExample = <<<'JSON'
@@ -2174,6 +2235,28 @@ enum Pipelines: string
                 },
                 "_id": {
                     "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/#example
+     */
+    case LtrimExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "description": {
+                    "$ltrim": {
+                        "input": "$description"
+                    }
                 }
             }
         }
@@ -2986,6 +3069,381 @@ enum Pipelines: string
     JSON;
 
     /**
+     * $regexFind and Its Options
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/#-regexfind-and-its-options
+     */
+    case RegexFindRegexFindAndItsOptions = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "returnObject": {
+                    "$regexFind": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": ""
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * i Option
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/#i-option
+     */
+    case RegexFindIOption = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "returnObject": {
+                    "$regexFind": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": "i"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$addFields": {
+                "returnObject": {
+                    "$regexFind": {
+                        "input": "$description",
+                        "regex": "line",
+                        "options": "i"
+                    }
+                }
+            }
+        },
+        {
+            "$addFields": {
+                "returnObject": {
+                    "$regexFind": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": ""
+                            }
+                        },
+                        "options": "i"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * $regexFindAll and Its Options
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#-regexfindall-and-its-options
+     */
+    case RegexFindAllRegexFindAllAndItsOptions = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "returnObject": {
+                    "$regexFindAll": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": ""
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * i Option
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#i-option
+     */
+    case RegexFindAllIOption = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "returnObject": {
+                    "$regexFindAll": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": "i"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$addFields": {
+                "returnObject": {
+                    "$regexFindAll": {
+                        "input": "$description",
+                        "regex": "line",
+                        "options": "i"
+                    }
+                }
+            }
+        },
+        {
+            "$addFields": {
+                "returnObject": {
+                    "$regexFindAll": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": ""
+                            }
+                        },
+                        "options": "i"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use $regexFindAll to Parse Email from String
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#use--regexfindall-to-parse-email-from-string
+     */
+    case RegexFindAllUseRegexFindAllToParseEmailFromString = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "email": {
+                    "$regexFindAll": {
+                        "input": "$comment",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+",
+                                "options": "i"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$set": {
+                "email": "$email.match"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use Captured Groupings to Parse User Name
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#use-captured-groupings-to-parse-user-name
+     */
+    case RegexFindAllUseCapturedGroupingsToParseUserName = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "names": {
+                    "$regexFindAll": {
+                        "input": "$comment",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "([a-z0-9_.+-]+)@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+",
+                                "options": "i"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$set": {
+                "names": {
+                    "$reduce": {
+                        "input": "$names.captures",
+                        "initialValue": [],
+                        "in": {
+                            "$concatArrays": [
+                                "$$value",
+                                "$$this"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * $regexMatch and Its Options
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#-regexmatch-and-its-options
+     */
+    case RegexMatchRegexMatchAndItsOptions = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "result": {
+                    "$regexMatch": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": ""
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * i Option
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#i-option
+     */
+    case RegexMatchIOption = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "result": {
+                    "$regexMatch": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": "i"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$addFields": {
+                "result": {
+                    "$regexMatch": {
+                        "input": "$description",
+                        "regex": "line",
+                        "options": "i"
+                    }
+                }
+            }
+        },
+        {
+            "$addFields": {
+                "result": {
+                    "$regexMatch": {
+                        "input": "$description",
+                        "regex": {
+                            "$regularExpression": {
+                                "pattern": "line",
+                                "options": ""
+                            }
+                        },
+                        "options": "i"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use $regexMatch to Check Email Address
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#use--regexmatch-to-check-email-address
+     */
+    case RegexMatchUseRegexMatchToCheckEmailAddress = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "category": {
+                    "$cond": {
+                        "if": {
+                            "$regexMatch": {
+                                "input": "$comment",
+                                "regex": {
+                                    "$regularExpression": {
+                                        "pattern": "[a-z0-9_.+-]+@mongodb.com",
+                                        "options": "i"
+                                    }
+                                }
+                            }
+                        },
+                        "then": "Employee",
+                        "else": "External"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/#example
+     */
+    case ReplaceAllExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$replaceAll": {
+                        "input": "$item",
+                        "find": "blue paint",
+                        "replacement": "red paint"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/#example
+     */
+    case ReplaceOneExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$replaceOne": {
+                        "input": "$item",
+                        "find": "blue paint",
+                        "replacement": "red paint"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reverseArray/#example
@@ -2999,6 +3457,28 @@ enum Pipelines: string
                 },
                 "reverseFavorites": {
                     "$reverseArray": "$favorites"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/#example
+     */
+    case RtrimExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "description": {
+                    "$rtrim": {
+                        "input": "$description"
+                    }
                 }
             }
         }
@@ -3592,6 +4072,61 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/#example
+     */
+    case SplitExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "city_state": {
+                    "$split": [
+                        "$city",
+                        ", "
+                    ]
+                },
+                "qty": {
+                    "$numberInt": "1"
+                }
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$city_state"
+            }
+        },
+        {
+            "$match": {
+                "city_state": {
+                    "$regularExpression": {
+                        "pattern": "[A-Z]{2}",
+                        "options": ""
+                    }
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": {
+                    "state": "$city_state"
+                },
+                "total_qty": {
+                    "$sum": "$qty"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "total_qty": {
+                    "$numberInt": "-1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Use in $project Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--project-stage
@@ -3603,6 +4138,256 @@ enum Pipelines: string
                 "stdDev": {
                     "$stdDevPop": [
                         "$scores.score"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Single-Byte and Multibyte Character Set
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/#single-byte-and-multibyte-character-set
+     */
+    case StrLenBytesSingleByteAndMultibyteCharacterSet = <<<'JSON'
+    [
+        {
+            "$project": {
+                "name": {
+                    "$numberInt": "1"
+                },
+                "length": {
+                    "$strLenBytes": "$name"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Single-Byte and Multibyte Character Set
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/#single-byte-and-multibyte-character-set
+     */
+    case StrLenCPSingleByteAndMultibyteCharacterSet = <<<'JSON'
+    [
+        {
+            "$project": {
+                "name": {
+                    "$numberInt": "1"
+                },
+                "length": {
+                    "$strLenCP": "$name"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/#example
+     */
+    case StrcasecmpExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "comparisonResult": {
+                    "$strcasecmp": [
+                        "$quarter",
+                        "13q4"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substr/#example
+     */
+    case SubstrExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "yearSubstring": {
+                    "$substr": [
+                        "$quarter",
+                        {
+                            "$numberInt": "0"
+                        },
+                        {
+                            "$numberInt": "2"
+                        }
+                    ]
+                },
+                "quarterSubtring": {
+                    "$substr": [
+                        "$quarter",
+                        {
+                            "$numberInt": "2"
+                        },
+                        {
+                            "$numberInt": "-1"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Single-Byte Character Set
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/#single-byte-character-set
+     */
+    case SubstrBytesSingleByteCharacterSet = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "yearSubstring": {
+                    "$substrBytes": [
+                        "$quarter",
+                        {
+                            "$numberInt": "0"
+                        },
+                        {
+                            "$numberInt": "2"
+                        }
+                    ]
+                },
+                "quarterSubtring": {
+                    "$substrBytes": [
+                        "$quarter",
+                        {
+                            "$numberInt": "2"
+                        },
+                        {
+                            "$subtract": [
+                                {
+                                    "$strLenBytes": "$quarter"
+                                },
+                                {
+                                    "$numberInt": "2"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Single-Byte and Multibyte Character Set
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/#single-byte-and-multibyte-character-set
+     */
+    case SubstrBytesSingleByteAndMultibyteCharacterSet = <<<'JSON'
+    [
+        {
+            "$project": {
+                "name": {
+                    "$numberInt": "1"
+                },
+                "menuCode": {
+                    "$substrBytes": [
+                        "$name",
+                        {
+                            "$numberInt": "0"
+                        },
+                        {
+                            "$numberInt": "3"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Single-Byte Character Set
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/#single-byte-character-set
+     */
+    case SubstrCPSingleByteCharacterSet = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "yearSubstring": {
+                    "$substrCP": [
+                        "$quarter",
+                        {
+                            "$numberInt": "0"
+                        },
+                        {
+                            "$numberInt": "2"
+                        }
+                    ]
+                },
+                "quarterSubtring": {
+                    "$substrCP": [
+                        "$quarter",
+                        {
+                            "$numberInt": "2"
+                        },
+                        {
+                            "$subtract": [
+                                {
+                                    "$strLenCP": "$quarter"
+                                },
+                                {
+                                    "$numberInt": "2"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Single-Byte and Multibyte Character Set
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/#single-byte-and-multibyte-character-set
+     */
+    case SubstrCPSingleByteAndMultibyteCharacterSet = <<<'JSON'
+    [
+        {
+            "$project": {
+                "name": {
+                    "$numberInt": "1"
+                },
+                "menuCode": {
+                    "$substrCP": [
+                        "$name",
+                        {
+                            "$numberInt": "0"
+                        },
+                        {
+                            "$numberInt": "3"
+                        }
                     ]
                 }
             }
@@ -3843,6 +4628,92 @@ enum Pipelines: string
             "$addFields": {
                 "hashedVal": {
                     "$toHashedIndexKey": "$val"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/#example
+     */
+    case ToLowerExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$toLower": "$item"
+                },
+                "description": {
+                    "$toLower": "$description"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/#example
+     */
+    case ToStringExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "convertedZipCode": {
+                    "$toString": "$zipcode"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "convertedZipCode": {
+                    "$numberInt": "1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/#example
+     */
+    case ToUpperExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$toUpper": "$item"
+                },
+                "description": {
+                    "$toUpper": "$description"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/#example
+     */
+    case TrimExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$numberInt": "1"
+                },
+                "description": {
+                    "$trim": {
+                        "input": "$description"
+                    }
                 }
             }
         }

@@ -29,3 +29,15 @@ arguments:
             - resolvesToNull
         description: |
             The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/#example'
+        pipeline:
+            -
+                $project:
+                    item:
+                        $replaceOne:
+                            input: '$item'
+                            find: 'blue paint'
+                            replacement: 'red paint'

@@ -11,3 +11,14 @@ arguments:
         name: expression
         type:
             - resolvesToString
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/#example'
+        pipeline:
+            -
+                $project:
+                    item:
+                        $toLower: '$item'
+                    description:
+                        $toLower: '$description'

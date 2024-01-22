@@ -12,3 +12,15 @@ arguments:
         type:
             - resolvesToString
         variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/#examples'
+        pipeline:
+            -
+                $project:
+                    itemDescription:
+                        $concat:
+                            - '$item'
+                            - ' - '
+                            - '$description'

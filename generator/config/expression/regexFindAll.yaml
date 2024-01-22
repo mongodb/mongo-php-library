@@ -26,3 +26,74 @@ arguments:
         type:
             - string
         optional: true
+tests:
+    -
+        name: '$regexFindAll and Its Options'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#-regexfindall-and-its-options'
+        pipeline:
+            -
+                $addFields:
+                    returnObject:
+                        $regexFindAll:
+                            input: '$description'
+                            regex: !regex 'line'
+    -
+        name: 'i Option'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#i-option'
+        pipeline:
+            -
+                $addFields:
+                    returnObject:
+                        # Specify i as part of the regex type
+                        $regexFindAll:
+                            input: '$description'
+                            regex: !regex ['line', 'i']
+            -
+                $addFields:
+                    returnObject:
+                        # Specify i in the options field
+                        $regexFindAll:
+                            input: '$description'
+                            regex: 'line'
+                            options: 'i'
+            -
+                $addFields:
+                    returnObject:
+                        # Mix Regex type with options field
+                        $regexFindAll:
+                            input: '$description'
+                            regex: !regex 'line'
+                            options: 'i'
+    -
+        name: 'Use $regexFindAll to Parse Email from String'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#use--regexfindall-to-parse-email-from-string'
+        pipeline:
+            -
+                $addFields:
+                    email:
+                        $regexFindAll:
+                            input: '$comment'
+                            regex: !regex ['[a-z0-9_.+-]+@[a-z0-9_.+-]+\.[a-z0-9_.+-]+', 'i']
+            -
+                $set:
+                    email: '$email.match'
+    -
+        name: 'Use Captured Groupings to Parse User Name'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#use-captured-groupings-to-parse-user-name'
+        pipeline:
+            -
+                $addFields:
+                    names:
+                        $regexFindAll:
+                            input: '$comment'
+                            regex: !regex ['([a-z0-9_.+-]+)@[a-z0-9_.+-]+\.[a-z0-9_.+-]+', 'i']
+            -
+                $set:
+                    names:
+                        $reduce:
+                            input: '$names.captures'
+                            initialValue: []
+                            in:
+                                $concatArrays:
+                                    - '$$value'
+                                    - '$$this'

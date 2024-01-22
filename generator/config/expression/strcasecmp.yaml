@@ -15,3 +15,15 @@ arguments:
         name: expression2
         type:
             - resolvesToString
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    comparisonResult:
+                        $strcasecmp:
+                            - '$quarter'
+                            - '13q4'

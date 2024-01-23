@@ -4721,6 +4721,100 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Obtain the Incrementing Ordinal from a Timestamp Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/#obtain-the-incrementing-ordinal-from-a-timestamp-field
+     */
+    case TsIncrementObtainTheIncrementingOrdinalFromATimestampField = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "saleTimestamp": {
+                    "$numberInt": "1"
+                },
+                "saleIncrement": {
+                    "$tsIncrement": "$saleTimestamp"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use $tsSecond in a Change Stream Cursor to Monitor Collection Changes
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#use--tssecond-in-a-change-stream-cursor-to-monitor-collection-changes
+     */
+    case TsIncrementUseTsSecondInAChangeStreamCursorToMonitorCollectionChanges = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$expr": {
+                    "$eq": [
+                        {
+                            "$mod": [
+                                {
+                                    "$tsIncrement": "$clusterTime"
+                                },
+                                {
+                                    "$numberInt": "2"
+                                }
+                            ]
+                        },
+                        {
+                            "$numberInt": "0"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Obtain the Number of Seconds from a Timestamp Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#obtain-the-number-of-seconds-from-a-timestamp-field
+     */
+    case TsSecondObtainTheNumberOfSecondsFromATimestampField = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "saleTimestamp": {
+                    "$numberInt": "1"
+                },
+                "saleSeconds": {
+                    "$tsSecond": "$saleTimestamp"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use $tsSecond in a Change Stream Cursor to Monitor Collection Changes
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#use--tssecond-in-a-change-stream-cursor-to-monitor-collection-changes
+     */
+    case TsSecondUseTsSecondInAChangeStreamCursorToMonitorCollectionChanges = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "clusterTimeSeconds": {
+                    "$tsSecond": "$clusterTime"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Remove Fields that Contain Periods
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-contain-periods--.-

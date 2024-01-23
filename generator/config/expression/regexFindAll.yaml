@@ -36,7 +36,7 @@ tests:
                     returnObject:
                         $regexFindAll:
                             input: '$description'
-                            regex: !regex 'line'
+                            regex: !bson_regex 'line'
     -
         name: 'i Option'
         link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#i-option'
@@ -47,7 +47,7 @@ tests:
                         # Specify i as part of the regex type
                         $regexFindAll:
                             input: '$description'
-                            regex: !regex ['line', 'i']
+                            regex: !bson_regex ['line', 'i']
             -
                 $addFields:
                     returnObject:
@@ -62,7 +62,7 @@ tests:
                         # Mix Regex type with options field
                         $regexFindAll:
                             input: '$description'
-                            regex: !regex 'line'
+                            regex: !bson_regex 'line'
                             options: 'i'
     -
         name: 'Use $regexFindAll to Parse Email from String'
@@ -73,7 +73,7 @@ tests:
                     email:
                         $regexFindAll:
                             input: '$comment'
-                            regex: !regex ['[a-z0-9_.+-]+@[a-z0-9_.+-]+\.[a-z0-9_.+-]+', 'i']
+                            regex: !bson_regex ['[a-z0-9_.+-]+@[a-z0-9_.+-]+\.[a-z0-9_.+-]+', 'i']
             -
                 $set:
                     email: '$email.match'
@@ -86,7 +86,7 @@ tests:
                     names:
                         $regexFindAll:
                             input: '$comment'
-                            regex: !regex ['([a-z0-9_.+-]+)@[a-z0-9_.+-]+\.[a-z0-9_.+-]+', 'i']
+                            regex: !bson_regex ['([a-z0-9_.+-]+)@[a-z0-9_.+-]+\.[a-z0-9_.+-]+', 'i']
             -
                 $set:
                     names:

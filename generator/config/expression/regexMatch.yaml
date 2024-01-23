@@ -36,7 +36,7 @@ tests:
                     result:
                         $regexMatch:
                             input: '$description'
-                            regex: !regex 'line'
+                            regex: !bson_regex 'line'
     -
         name: 'i Option'
         link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#i-option'
@@ -47,7 +47,7 @@ tests:
                         # Specify i as part of the Regex type
                         $regexMatch:
                             input: '$description'
-                            regex: !regex ['line', 'i']
+                            regex: !bson_regex ['line', 'i']
             -
                 $addFields:
                     result:
@@ -62,7 +62,7 @@ tests:
                         # Mix Regex type with options field
                         $regexMatch:
                             input: '$description'
-                            regex: !regex 'line'
+                            regex: !bson_regex 'line'
                             options: 'i'
     -
         name: 'Use $regexMatch to Check Email Address'
@@ -75,6 +75,6 @@ tests:
                             if:
                                 $regexMatch:
                                     input: '$comment'
-                                    regex: !regex ['[a-z0-9_.+-]+@mongodb.com', 'i']
+                                    regex: !bson_regex ['[a-z0-9_.+-]+@mongodb.com', 'i']
                             then: 'Employee'
                             else: 'External'

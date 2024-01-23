@@ -36,7 +36,7 @@ tests:
                     path: '$city_state'
             -
                 $match:
-                    city_state: !regex '[A-Z]{2}'
+                    city_state: !bson_regex '[A-Z]{2}'
             -
                 $group:
                     _id:

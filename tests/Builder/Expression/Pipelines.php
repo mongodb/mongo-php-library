@@ -11,6 +11,49 @@ namespace MongoDB\Tests\Builder\Expression;
 enum Pipelines: string
 {
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/#example
+     */
+    case AcosExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "angle_a": {
+                    "$radiansToDegrees": {
+                        "$acos": {
+                            "$divide": [
+                                "$side_b",
+                                "$hypotenuse"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/#example
+     */
+    case AcoshExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "y-coordinate": {
+                    "$radiansToDegrees": {
+                        "$acosh": "$x-coordinate"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Add Numbers
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/#add-numbers
@@ -242,6 +285,114 @@ enum Pipelines: string
                     "$arrayToObject": [
                         "$instock"
                     ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/#example
+     */
+    case AsinExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "angle_a": {
+                    "$radiansToDegrees": {
+                        "$asin": {
+                            "$divide": [
+                                "$side_a",
+                                "$hypotenuse"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/#example
+     */
+    case AsinhExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "y-coordinate": {
+                    "$radiansToDegrees": {
+                        "$asinh": "$x-coordinate"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/#example
+     */
+    case AtanExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "angle_a": {
+                    "$radiansToDegrees": {
+                        "$atan": {
+                            "$divide": [
+                                "$side_b",
+                                "$side_a"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/#example
+     */
+    case Atan2Example = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "angle_a": {
+                    "$radiansToDegrees": {
+                        "$atan2": [
+                            "$side_b",
+                            "$side_a"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/#example
+     */
+    case AtanhExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "y-coordinate": {
+                    "$radiansToDegrees": {
+                        "$atanh": "$x-coordinate"
+                    }
                 }
             }
         }
@@ -587,6 +738,49 @@ enum Pipelines: string
                         "else": {
                             "$numberInt": "20"
                         }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/#example
+     */
+    case CosExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "side_a": {
+                    "$multiply": [
+                        {
+                            "$cos": {
+                                "$degreesToRadians": "$angle_a"
+                            }
+                        },
+                        "$hypotenuse"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/#example
+     */
+    case CoshExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "cosh_output": {
+                    "$cosh": {
+                        "$degreesToRadians": "$angle"
                     }
                 }
             }
@@ -1407,6 +1601,29 @@ enum Pipelines: string
                     "$dayOfYear": {
                         "date": "$date"
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/#example
+     */
+    case DegreesToRadiansExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "angle_a_rad": {
+                    "$degreesToRadians": "$angle_a"
+                },
+                "angle_b_rad": {
+                    "$degreesToRadians": "$angle_b"
+                },
+                "angle_c_rad": {
+                    "$degreesToRadians": "$angle_c"
                 }
             }
         }
@@ -2771,6 +2988,29 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/#example
+     */
+    case RadiansToDegreesExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "angle_a_deg": {
+                    "$radiansToDegrees": "$angle_a"
+                },
+                "angle_b_deg": {
+                    "$radiansToDegrees": "$angle_b"
+                },
+                "angle_c_deg": {
+                    "$radiansToDegrees": "$angle_c"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Generate Random Data Points
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#generate-random-data-points
@@ -3829,6 +4069,49 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/#example
+     */
+    case SinExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "side_b": {
+                    "$multiply": [
+                        {
+                            "$sin": {
+                                "$degreesToRadians": "$angle_a"
+                            }
+                        },
+                        "$hypotenuse"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/#example
+     */
+    case SinhExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "sinh_output": {
+                    "$sinh": {
+                        "$degreesToRadians": "$angle"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/#example
      */
     case SizeExample = <<<'JSON'
@@ -4579,6 +4862,49 @@ enum Pipelines: string
                             }
                         ],
                         "default": "No scores found."
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/#example
+     */
+    case TanExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "side_b": {
+                    "$multiply": [
+                        {
+                            "$tan": {
+                                "$degreesToRadians": "$angle_a"
+                            }
+                        },
+                        "$side_a"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/#example
+     */
+    case TanhExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "tanh_output": {
+                    "$tanh": {
+                        "$degreesToRadians": "$angle"
                     }
                 }
             }

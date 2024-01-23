@@ -20,3 +20,15 @@ arguments:
         name: x
         type:
             - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/#example'
+        pipeline:
+            -
+                $addFields:
+                    angle_a:
+                        $radiansToDegrees:
+                            $atan2:
+                                - '$side_b'
+                                - '$side_a'

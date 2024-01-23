@@ -16,3 +16,13 @@ arguments:
             $acosh takes any valid expression that resolves to a number between 1 and +Infinity, e.g. 1 <= value <= +Infinity.
             $acosh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
             By default $acosh returns values as a double. $acosh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/#example'
+        pipeline:
+            -
+                $addFields:
+                    y-coordinate:
+                        $radiansToDegrees:
+                            $acosh: '$x-coordinate'

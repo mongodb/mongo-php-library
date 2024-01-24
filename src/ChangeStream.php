@@ -262,7 +262,7 @@ class ChangeStream implements Iterator
      */
     private function resume(): void
     {
-        if (! $this->resumeCallable) {
+        if ($this->resumeCallable === null) {
             throw new BadMethodCallException('Cannot resume a closed change stream.');
         }
 

@@ -12,3 +12,15 @@ arguments:
         name: expression
         type:
             - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedQty:
+                        $toLong: '$qty'
+            -
+                $sort:
+                    convertedQty: -1

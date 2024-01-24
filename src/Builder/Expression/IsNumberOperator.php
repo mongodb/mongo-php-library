@@ -12,10 +12,7 @@ use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\OperatorInterface;
-use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
-
-use function array_is_list;
 
 /**
  * Returns boolean true if the specified expression resolves to an integer, decimal, double, or long.
@@ -28,23 +25,14 @@ class IsNumberOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> $expression */
-    public readonly array $expression;
+    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression */
+    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
-     * @no-named-arguments
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
-    public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression)
+    public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression)
     {
-        if (\count($expression) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
-        }
-
-        if (! array_is_list($expression)) {
-            throw new InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
-        }
-
         $this->expression = $expression;
     }
 

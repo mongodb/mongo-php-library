@@ -748,6 +748,86 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/#example
+     */
+    case ConvertExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "convertedPrice": {
+                    "$convert": {
+                        "input": "$price",
+                        "to": "decimal",
+                        "onError": "Error",
+                        "onNull": {
+                            "$numberDecimal": "0"
+                        }
+                    }
+                },
+                "convertedQty": {
+                    "$convert": {
+                        "input": "$qty",
+                        "to": "int",
+                        "onError": {
+                            "$concat": [
+                                "Could not convert ",
+                                {
+                                    "$toString": "$qty"
+                                },
+                                " to type integer."
+                            ]
+                        },
+                        "onNull": {
+                            "$numberInt": "0"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$project": {
+                "totalPrice": {
+                    "$switch": {
+                        "branches": [
+                            {
+                                "case": {
+                                    "$eq": [
+                                        {
+                                            "$type": "$convertedPrice"
+                                        },
+                                        "string"
+                                    ]
+                                },
+                                "then": "NaN"
+                            },
+                            {
+                                "case": {
+                                    "$eq": [
+                                        {
+                                            "$type": "$convertedQty"
+                                        },
+                                        "string"
+                                    ]
+                                },
+                                "then": "NaN"
+                            }
+                        ],
+                        "default": {
+                            "$multiply": [
+                                "$convertedPrice",
+                                "$convertedQty"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/#example
      */
     case CosExample = <<<'JSON'
@@ -2248,6 +2328,117 @@ enum Pipelines: string
                         },
                         "else": "One or more fields is not an array."
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use $isNumber to Check if a Field is Numeric
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/#use--isnumber-to-check-if-a-field-is-numeric
+     */
+    case IsNumberUseIsNumberToCheckIfAFieldIsNumeric = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "isNumber": {
+                    "$isNumber": "$reading"
+                },
+                "hasType": {
+                    "$type": "$reading"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Conditionally Modify Fields using $isNumber
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/#conditionally-modify-fields-using--isnumber
+     */
+    case IsNumberConditionallyModifyFieldsUsingIsNumber = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "points": {
+                    "$cond": {
+                        "if": {
+                            "$isNumber": "$grade"
+                        },
+                        "then": "$grade",
+                        "else": {
+                            "$switch": {
+                                "branches": [
+                                    {
+                                        "case": {
+                                            "$eq": [
+                                                "$grade",
+                                                "A"
+                                            ]
+                                        },
+                                        "then": {
+                                            "$numberInt": "4"
+                                        }
+                                    },
+                                    {
+                                        "case": {
+                                            "$eq": [
+                                                "$grade",
+                                                "B"
+                                            ]
+                                        },
+                                        "then": {
+                                            "$numberInt": "3"
+                                        }
+                                    },
+                                    {
+                                        "case": {
+                                            "$eq": [
+                                                "$grade",
+                                                "C"
+                                            ]
+                                        },
+                                        "then": {
+                                            "$numberInt": "2"
+                                        }
+                                    },
+                                    {
+                                        "case": {
+                                            "$eq": [
+                                                "$grade",
+                                                "D"
+                                            ]
+                                        },
+                                        "then": {
+                                            "$numberInt": "1"
+                                        }
+                                    },
+                                    {
+                                        "case": {
+                                            "$eq": [
+                                                "$grade",
+                                                "F"
+                                            ]
+                                        },
+                                        "then": {
+                                            "$numberInt": "0"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$student_id",
+                "GPA": {
+                    "$avg": "$points"
                 }
             }
         }
@@ -4915,6 +5106,52 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/#example
+     */
+    case ToBoolExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "convertedShippedFlag": {
+                    "$switch": {
+                        "branches": [
+                            {
+                                "case": {
+                                    "$eq": [
+                                        "$shipped",
+                                        "false"
+                                    ]
+                                },
+                                "then": false
+                            },
+                            {
+                                "case": {
+                                    "$eq": [
+                                        "$shipped",
+                                        ""
+                                    ]
+                                },
+                                "then": false
+                            }
+                        ],
+                        "default": {
+                            "$toBool": "$shipped"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$match": {
+                "convertedShippedFlag": false
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/#example
      */
     case ToDateExample = <<<'JSON'
@@ -4930,6 +5167,50 @@ enum Pipelines: string
             "$sort": {
                 "convertedDate": {
                     "$numberInt": "1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/#example
+     */
+    case ToDecimalExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "convertedPrice": {
+                    "$toDecimal": "$price"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/#example
+     */
+    case ToDoubleExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "degrees": {
+                    "$toDouble": {
+                        "$substrBytes": [
+                            "$temp",
+                            {
+                                "$numberInt": "0"
+                            },
+                            {
+                                "$numberInt": "4"
+                            }
+                        ]
+                    }
                 }
             }
         }
@@ -4963,6 +5244,47 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/#example
+     */
+    case ToIntExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "convertedQty": {
+                    "$toInt": "$qty"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/#example
+     */
+    case ToLongExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "convertedQty": {
+                    "$toLong": "$qty"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "convertedQty": {
+                    "$numberInt": "-1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/#example
      */
     case ToLowerExample = <<<'JSON'
@@ -4974,6 +5296,30 @@ enum Pipelines: string
                 },
                 "description": {
                     "$toLower": "$description"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/#example
+     */
+    case ToObjectIdExample = <<<'JSON'
+    [
+        {
+            "$addFields": {
+                "convertedId": {
+                    "$toObjectId": "$_id"
+                }
+            }
+        },
+        {
+            "$sort": {
+                "convertedId": {
+                    "$numberInt": "-1"
                 }
             }
         }
@@ -5134,6 +5480,23 @@ enum Pipelines: string
             "$addFields": {
                 "clusterTimeSeconds": {
                     "$tsSecond": "$clusterTime"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/#example
+     */
+    case TypeExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "a": {
+                    "$type": "$a"
                 }
             }
         }

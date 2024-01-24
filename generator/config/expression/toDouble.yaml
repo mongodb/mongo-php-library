@@ -12,3 +12,16 @@ arguments:
         name: expression
         type:
             - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/#example'
+        pipeline:
+            -
+                $addFields:
+                    degrees:
+                        $toDouble:
+                            $substrBytes:
+                                - '$temp'
+                                - 0
+                                - 4

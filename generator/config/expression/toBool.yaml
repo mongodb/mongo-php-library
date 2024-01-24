@@ -12,3 +12,30 @@ arguments:
         name: expression
         type:
             - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedShippedFlag:
+                        $switch:
+                            branches:
+                                -
+                                    case:
+                                        $eq:
+                                            - '$shipped'
+                                            - 'false'
+                                    then: false
+                                -
+                                    case:
+                                        $eq:
+                                            - '$shipped'
+                                            - ''
+                                    then: false
+                            default:
+                                $toBool: '$shipped'
+            -
+                $match:
+                    convertedShippedFlag: false

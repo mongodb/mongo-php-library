@@ -12,3 +12,12 @@ arguments:
         name: expression
         type:
             - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedPrice:
+                        $toDecimal: '$price'

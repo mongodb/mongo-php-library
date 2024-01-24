@@ -74,6 +74,18 @@
         return new TaggedValue('bson_binary', value);
     }
 
+    function Decimal128(value) {
+        return new TaggedValue('bson_decimal128', value)
+    }
+
+    function Int32(value) {
+        return parseInt(value);
+    }
+
+    function Int64(value) {
+        return new TaggedValue('bson_int64', value)
+    }
+
     function convert(jsString) {
         try {
             return toYaml(eval(jsString), 1);

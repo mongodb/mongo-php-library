@@ -970,14 +970,13 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/
-     * @no-named-arguments
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function isNumber(
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): IsNumberOperator
     {
-        return new IsNumberOperator(...$expression);
+        return new IsNumberOperator($expression);
     }
 
     /**

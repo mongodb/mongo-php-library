@@ -2590,6 +2590,49 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/#example
+     */
+    case LetExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "finalTotal": {
+                    "$let": {
+                        "vars": {
+                            "total": {
+                                "$add": [
+                                    "$price",
+                                    "$tax"
+                                ]
+                            },
+                            "discounted": {
+                                "$cond": {
+                                    "if": "$applyDiscount",
+                                    "then": {
+                                        "$numberDouble": "0.9000000000000000222"
+                                    },
+                                    "else": {
+                                        "$numberInt": "1"
+                                    }
+                                }
+                            }
+                        },
+                        "in": {
+                            "$multiply": [
+                                "$$total",
+                                "$$discounted"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/#example
      */
     case LtExample = <<<'JSON'

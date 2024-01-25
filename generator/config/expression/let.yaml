@@ -21,3 +21,26 @@ arguments:
             - expression
         description: |
             The expression to evaluate.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/#example'
+        pipeline:
+            -
+                $project:
+                    finalTotal:
+                        $let:
+                            vars:
+                                total:
+                                    $add:
+                                        - '$price'
+                                        - '$tax'
+                                discounted:
+                                    $cond:
+                                        if: '$applyDiscount'
+                                        then: 0.9
+                                        else: 1
+                            in:
+                                $multiply:
+                                    - '$$total'
+                                    - '$$discounted'

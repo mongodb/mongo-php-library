@@ -34,3 +34,41 @@ task_groups:
     setup_group_timeout_secs: 1800
     tasks:
       - test-atlas
+
+  - name: test_serverless_task_group
+    setup_group:
+      - func: "fetch source"
+      - func: "prepare resources"
+      - func: "fix absolute paths"
+      - func: "install dependencies"
+      - func: "locate PHP binaries"
+      - func: "fetch extension"
+      - func: "install composer"
+      - func: "create serverless instance"
+    teardown_group:
+      - func: "delete serverless instance"
+      - func: "upload test results"
+      - func: "cleanup"
+    setup_group_can_fail_task: true
+    setup_group_timeout_secs: 1800
+    tasks:
+      - test-serverless
+
+  - name: test_serverless_proxy_task_group
+    setup_group:
+      - func: "fetch source"
+      - func: "prepare resources"
+      - func: "fix absolute paths"
+      - func: "install dependencies"
+      - func: "locate PHP binaries"
+      - func: "fetch extension"
+      - func: "install composer"
+      - func: "create serverless proxy instance"
+    teardown_group:
+      - func: "delete serverless instance"
+      - func: "upload test results"
+      - func: "cleanup"
+    setup_group_can_fail_task: true
+    setup_group_timeout_secs: 1800
+    tasks:
+      - test-serverless-proxy

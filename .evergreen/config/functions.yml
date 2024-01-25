@@ -177,9 +177,20 @@ functions:
         script: |
           ${PREPARE_SHELL}
 
-          SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP} \
-          SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY} \
-          SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY} \
+          bash ${DRIVERS_TOOLS}/.evergreen/serverless/setup-secrets.sh
+          bash ${DRIVERS_TOOLS}/.evergreen/serverless/create-instance.sh
+    - command: expansions.update
+      params:
+        file: src/serverless-expansion.yml
+
+  "create serverless proxy instance":
+    - command: shell.exec
+      params:
+        working_dir: "src"
+        script: |
+          ${PREPARE_SHELL}
+
+          bash ${DRIVERS_TOOLS}/.evergreen/serverless/setup-secrets.sh serverless_next
           bash ${DRIVERS_TOOLS}/.evergreen/serverless/create-instance.sh
     - command: expansions.update
       params:
@@ -189,14 +200,7 @@ functions:
     - command: shell.exec
       params:
         script: |
-          # Only run if a serverless instance was started
-          if [ -n "${SERVERLESS_INSTANCE_NAME}" ]; then
-            SERVERLESS_INSTANCE_NAME=${SERVERLESS_INSTANCE_NAME} \
-            SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP} \
-            SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY} \
-            SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY} \
-            bash ${DRIVERS_TOOLS}/.evergreen/serverless/delete-instance.sh
-          fi
+          bash ${DRIVERS_TOOLS}/.evergreen/serverless/delete-instance.sh
 
   "run tests":
     - command: shell.exec

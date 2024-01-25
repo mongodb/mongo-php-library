@@ -21,8 +21,8 @@ extension may be found in
 
 ## Documentation
 
- - https://mongodb.com/docs/php-library/current
- - https://mongodb.com/docs/ecosystem/drivers/php/
+ - https://www.mongodb.com/docs/php-library/current/
+ - https://www.mongodb.com/docs/drivers/php/
 
 ## Installation
 

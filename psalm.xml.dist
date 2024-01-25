@@ -34,5 +34,13 @@
 
         <!-- This is often the result of type checks due to missing native types -->
         <DocblockTypeContradiction errorLevel="info" />
+
+        <!-- If the result of getenv is falsy, using the default URI is fine -->
+        <RiskyTruthyFalsyComparison>
+            <errorLevel type="suppress">
+                <directory name="examples" />
+                <directory name="docs/examples" />
+            </errorLevel>
+        </RiskyTruthyFalsyComparison>
     </issueHandlers>
 </psalm>

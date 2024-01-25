@@ -13,7 +13,7 @@
         "php": "^7.4 || ^8.0",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-mongodb": "^1.17.0",
+        "ext-mongodb": "^1.18.0",
         "jean85/pretty-package-versions": "^2.0.1",
         "psr/log": "^1.1.4|^2|^3",
         "symfony/polyfill-php80": "^1.27",

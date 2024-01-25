@@ -19,7 +19,9 @@ on:
 
 env:
   PHP_VERSION: "8.2"
-  DRIVER_VERSION: "stable"
+  # TODO: change to "stable" once 1.18.0 is released
+  # DRIVER_VERSION: "stable"
+  DRIVER_VERSION: "mongodb/mongo-php-driver@master"
 
 jobs:
   psalm:
@@ -35,7 +37,7 @@ jobs:
         uses: shivammathur/cache-extensions@v1
         with:
           php-version: ${{ env.PHP_VERSION }}
-          extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           key: "extcache-v1"
 
       - name: Cache extensions
@@ -49,7 +51,7 @@ jobs:
         uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
-          extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           php-version: "${{ env.PHP_VERSION }}"
           tools: "cs2pr"
 

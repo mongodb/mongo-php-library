@@ -28,14 +28,14 @@ class FirstNAccumulator implements AccumulatorInterface, WindowInterface, Operat
 {
     public const ENCODE = Encode::Object;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input An expression that resolves to the array from which to return n elements. */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements. */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input;
 
     /** @var ResolvesToInt|int $n A positive integral expression that is either a constant or depends on the _id value for $group. */
     public readonly ResolvesToInt|int $n;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input An expression that resolves to the array from which to return n elements.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements.
      * @param ResolvesToInt|int $n A positive integral expression that is either a constant or depends on the _id value for $group.
      */
     public function __construct(

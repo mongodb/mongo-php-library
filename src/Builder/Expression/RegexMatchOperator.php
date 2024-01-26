@@ -23,19 +23,19 @@ class RegexMatchOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var ResolvesToString|non-empty-string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string. */
+    /** @var ResolvesToString|string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string. */
     public readonly ResolvesToString|string $input;
 
-    /** @var Regex|ResolvesToString|non-empty-string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options) */
+    /** @var Regex|ResolvesToString|string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options) */
     public readonly Regex|ResolvesToString|string $regex;
 
-    /** @var Optional|non-empty-string $options */
+    /** @var Optional|string $options */
     public readonly Optional|string $options;
 
     /**
-     * @param ResolvesToString|non-empty-string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
-     * @param Regex|ResolvesToString|non-empty-string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
-     * @param Optional|non-empty-string $options
+     * @param ResolvesToString|string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
+     * @param Regex|ResolvesToString|string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
+     * @param Optional|string $options
      */
     public function __construct(
         ResolvesToString|string $input,

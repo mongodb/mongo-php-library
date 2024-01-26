@@ -23,11 +23,11 @@ class LtOperator implements FieldQueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var Type|array|bool|float|int|non-empty-string|null|stdClass $value */
+    /** @var Type|array|bool|float|int|null|stdClass|string $value */
     public readonly Type|stdClass|array|bool|float|int|null|string $value;
 
     /**
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|null|stdClass|string $value
      */
     public function __construct(Type|stdClass|array|bool|float|int|null|string $value)
     {

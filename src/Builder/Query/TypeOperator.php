@@ -24,11 +24,11 @@ class TypeOperator implements FieldQueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<int|non-empty-string> $type */
+    /** @var list<int|string> $type */
     public readonly array $type;
 
     /**
-     * @param int|non-empty-string ...$type
+     * @param int|string ...$type
      * @no-named-arguments
      */
     public function __construct(int|string ...$type)

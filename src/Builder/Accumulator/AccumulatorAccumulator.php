@@ -32,35 +32,35 @@ class AccumulatorAccumulator implements AccumulatorInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var Javascript|non-empty-string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String. */
+    /** @var Javascript|string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String. */
     public readonly Javascript|string $init;
 
-    /** @var Javascript|non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String. */
+    /** @var Javascript|string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String. */
     public readonly Javascript|string $accumulate;
 
     /** @var BSONArray|PackedArray|ResolvesToArray|array $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function. */
     public readonly PackedArray|ResolvesToArray|BSONArray|array $accumulateArgs;
 
-    /** @var Javascript|non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge. */
+    /** @var Javascript|string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge. */
     public readonly Javascript|string $merge;
 
-    /** @var non-empty-string $lang The language used in the $accumulator code. */
+    /** @var string $lang The language used in the $accumulator code. */
     public readonly string $lang;
 
     /** @var Optional|BSONArray|PackedArray|ResolvesToArray|array $initArgs Arguments passed to the init function. */
     public readonly Optional|PackedArray|ResolvesToArray|BSONArray|array $initArgs;
 
-    /** @var Optional|Javascript|non-empty-string $finalize Function used to update the result of the accumulation. */
+    /** @var Optional|Javascript|string $finalize Function used to update the result of the accumulation. */
     public readonly Optional|Javascript|string $finalize;
 
     /**
-     * @param Javascript|non-empty-string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
-     * @param Javascript|non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
+     * @param Javascript|string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
+     * @param Javascript|string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
      * @param BSONArray|PackedArray|ResolvesToArray|array $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
-     * @param Javascript|non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
-     * @param non-empty-string $lang The language used in the $accumulator code.
+     * @param Javascript|string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
+     * @param string $lang The language used in the $accumulator code.
      * @param Optional|BSONArray|PackedArray|ResolvesToArray|array $initArgs Arguments passed to the init function.
-     * @param Optional|Javascript|non-empty-string $finalize Function used to update the result of the accumulation.
+     * @param Optional|Javascript|string $finalize Function used to update the result of the accumulation.
      */
     public function __construct(
         Javascript|string $init,

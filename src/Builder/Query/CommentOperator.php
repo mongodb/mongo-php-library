@@ -21,11 +21,11 @@ class CommentOperator implements QueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var non-empty-string $comment */
+    /** @var string $comment */
     public readonly string $comment;
 
     /**
-     * @param non-empty-string $comment
+     * @param string $comment
      */
     public function __construct(string $comment)
     {

@@ -22,15 +22,15 @@ class ListSearchIndexesStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var Optional|non-empty-string $id The id of the index to return information about. */
+    /** @var Optional|string $id The id of the index to return information about. */
     public readonly Optional|string $id;
 
-    /** @var Optional|non-empty-string $name The name of the index to return information about. */
+    /** @var Optional|string $name The name of the index to return information about. */
     public readonly Optional|string $name;
 
     /**
-     * @param Optional|non-empty-string $id The id of the index to return information about.
-     * @param Optional|non-empty-string $name The name of the index to return information about.
+     * @param Optional|string $id The id of the index to return information about.
+     * @param Optional|string $name The name of the index to return information about.
      */
     public function __construct(
         Optional|string $id = Optional::Undefined,

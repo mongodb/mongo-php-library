@@ -28,11 +28,11 @@ class BitsAllSetOperator implements FieldQueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask */
+    /** @var BSONArray|Binary|PackedArray|array|int|string $bitmask */
     public readonly Binary|PackedArray|BSONArray|array|int|string $bitmask;
 
     /**
-     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|string $bitmask
      */
     public function __construct(Binary|PackedArray|BSONArray|array|int|string $bitmask)
     {

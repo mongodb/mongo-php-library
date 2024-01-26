@@ -26,16 +26,16 @@ class CondOperator implements ResolvesToAny, OperatorInterface
     /** @var ResolvesToBool|bool $if */
     public readonly ResolvesToBool|bool $if;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $then */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $else */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $else */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $else;
 
     /**
      * @param ResolvesToBool|bool $if
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $then
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $else
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $else
      */
     public function __construct(
         ResolvesToBool|bool $if,

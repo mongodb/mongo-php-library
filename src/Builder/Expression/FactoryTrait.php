@@ -99,7 +99,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/
      * @no-named-arguments
-     * @param Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|null|stdClass|string ...$expression
      */
     public static function and(
         Decimal128|Int64|Type|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
@@ -233,7 +233,7 @@ trait FactoryTrait
      * Returns the size of a given string or binary data value's content in bytes.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/
-     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|non-empty-string|null $expression
+     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression
      */
     public static function binarySize(
         Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression,
@@ -321,8 +321,8 @@ trait FactoryTrait
      * Returns 0 if the two values are equivalent, 1 if the first value is greater than the second, and -1 if the first value is less than the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public static function cmp(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
@@ -337,7 +337,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/
      * @no-named-arguments
-     * @param ResolvesToString|non-empty-string ...$expression
+     * @param ResolvesToString|string ...$expression
      */
     public static function concat(ResolvesToString|string ...$expression): ConcatOperator
     {
@@ -361,8 +361,8 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/
      * @param ResolvesToBool|bool $if
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $then
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $else
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $else
      */
     public static function cond(
         ResolvesToBool|bool $if,
@@ -378,11 +378,11 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input
-     * @param ResolvesToInt|ResolvesToString|int|non-empty-string $to
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onError The value to return on encountering an error during conversion, including unsupported type conversions. The arguments can be any valid expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input
+     * @param ResolvesToInt|ResolvesToString|int|string $to
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onError The value to return on encountering an error during conversion, including unsupported type conversions. The arguments can be any valid expression.
      * If unspecified, the operation throws an error upon encountering an error and stops.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onNull The value to return if the input is null or missing. The arguments can be any valid expression.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull The value to return if the input is null or missing. The arguments can be any valid expression.
      * If unspecified, $convert returns null if the input is null or missing.
      */
     public static function convert(
@@ -424,9 +424,9 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param ResolvesToString|non-empty-string $unit The unit used to measure the amount of time added to the startDate.
+     * @param ResolvesToString|string $unit The unit used to measure the amount of time added to the startDate.
      * @param Int64|ResolvesToInt|ResolvesToLong|int $amount
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dateAdd(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,
@@ -444,9 +444,9 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The start of the time period. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $endDate The end of the time period. The endDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param ResolvesToString|non-empty-string $unit The time measurement unit between the startDate and endDate
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
-     * @param Optional|ResolvesToString|non-empty-string $startOfWeek Used when the unit is equal to week. Defaults to Sunday. The startOfWeek parameter is an expression that resolves to a case insensitive string
+     * @param ResolvesToString|string $unit The time measurement unit between the startDate and endDate
+     * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $startOfWeek Used when the unit is equal to week. Defaults to Sunday. The startOfWeek parameter is an expression that resolves to a case insensitive string
      */
     public static function dateDiff(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,
@@ -473,7 +473,7 @@ trait FactoryTrait
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $minute Minute. Defaults to 0.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $second Second. Defaults to 0.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $millisecond Millisecond. Defaults to 0.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dateFromParts(
         Optional|Decimal128|Int64|ResolvesToNumber|float|int $year = Optional::Undefined,
@@ -496,13 +496,13 @@ trait FactoryTrait
      * Converts a date/time string to a date object.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/
-     * @param ResolvesToString|non-empty-string $dateString The date/time string to convert to a date object.
-     * @param Optional|ResolvesToString|non-empty-string $format The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
+     * @param ResolvesToString|string $dateString The date/time string to convert to a date object.
+     * @param Optional|ResolvesToString|string $format The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
      * If unspecified, $dateFromString uses "%Y-%m-%dT%H:%M:%S.%LZ" as the default format but accepts a variety of formats and attempts to parse the dateString if possible.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The time zone to use to format the date.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onError If $dateFromString encounters an error while parsing the given dateString, it outputs the result value of the provided onError expression. This result value can be of any type.
+     * @param Optional|ResolvesToString|string $timezone The time zone to use to format the date.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onError If $dateFromString encounters an error while parsing the given dateString, it outputs the result value of the provided onError expression. This result value can be of any type.
      * If you do not specify onError, $dateFromString throws an error if it cannot parse dateString.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onNull If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
      * If you do not specify onNull and dateString is null or missing, then $dateFromString outputs null.
      */
     public static function dateFromString(
@@ -521,9 +521,9 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param ResolvesToString|non-empty-string $unit The unit used to measure the amount of time added to the startDate.
+     * @param ResolvesToString|string $unit The unit used to measure the amount of time added to the startDate.
      * @param Int64|ResolvesToInt|ResolvesToLong|int $amount
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dateSubtract(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,
@@ -540,7 +540,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The input date for which to return parts. date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      * @param Optional|bool $iso8601 If set to true, modifies the output document to use ISO week date fields. Defaults to false.
      */
     public static function dateToParts(
@@ -557,10 +557,10 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to convert to string. Must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $format The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
+     * @param Optional|ResolvesToString|string $format The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
      * If unspecified, $dateFromString uses "%Y-%m-%dT%H:%M:%S.%LZ" as the default format but accepts a variety of formats and attempts to parse the dateString if possible.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The time zone to use to format the date.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onNull The value to return if the date is null or missing.
+     * @param Optional|ResolvesToString|string $timezone The time zone to use to format the date.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull The value to return if the date is null or missing.
      * If unspecified, $dateToString returns null if the date is null or missing.
      */
     public static function dateToString(
@@ -578,12 +578,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param ResolvesToString|non-empty-string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
+     * @param ResolvesToString|string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
-     * @param Optional|non-empty-string $startOfWeek The start of the week. Used when
+     * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|string $startOfWeek The start of the week. Used when
      * unit is week. Defaults to Sunday.
      */
     public static function dateTrunc(
@@ -602,7 +602,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dayOfMonth(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -617,7 +617,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dayOfWeek(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -632,7 +632,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfYear/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dayOfYear(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -675,8 +675,8 @@ trait FactoryTrait
      * Returns true if the values are equivalent.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public static function eq(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
@@ -703,7 +703,7 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
      * @param BSONArray|PackedArray|ResolvesToArray|array $input
      * @param ResolvesToBool|bool $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
-     * @param Optional|non-empty-string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+     * @param Optional|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      * @param Optional|ResolvesToInt|int $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
      * If the specified limit is greater than the number of matching array elements, $filter returns all matching array elements. If the limit is null, $filter returns all matching array elements.
      */
@@ -759,10 +759,10 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
-     * @param Javascript|non-empty-string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
+     * @param Javascript|string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
      * function(arg1, arg2, ...) { ... }
      * @param BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
-     * @param non-empty-string $lang
+     * @param string $lang
      */
     public static function function(
         Javascript|string $body,
@@ -778,9 +778,9 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/
-     * @param ResolvesToString|non-empty-string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
+     * @param ResolvesToString|string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
      * If field begins with a dollar sign ($), place the field name inside of a $literal expression to return its value.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input Default: $$CURRENT
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input Default: $$CURRENT
      * A valid expression that contains the field for which you want to return a value. input must resolve to an object, missing, null, or undefined. If omitted, defaults to the document currently being processed in the pipeline ($$CURRENT).
      */
     public static function getField(
@@ -795,8 +795,8 @@ trait FactoryTrait
      * Returns true if the first value is greater than the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public static function gt(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
@@ -810,8 +810,8 @@ trait FactoryTrait
      * Returns true if the first value is greater than or equal to the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public static function gte(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
@@ -826,7 +826,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function hour(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -841,7 +841,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/
      * @no-named-arguments
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$expression
      */
     public static function ifNull(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
@@ -854,7 +854,7 @@ trait FactoryTrait
      * Returns a boolean indicating whether a specified value is in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/in/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression Any valid expression expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression.
      * @param BSONArray|PackedArray|ResolvesToArray|array $array Any valid expression that resolves to an array.
      */
     public static function in(
@@ -872,7 +872,7 @@ trait FactoryTrait
      * @param BSONArray|PackedArray|ResolvesToArray|array $array Can be any valid expression as long as it resolves to an array.
      * If the array expression resolves to a value of null or refers to a field that is missing, $indexOfArray returns null.
      * If the array expression does not resolve to an array or null nor refers to a missing field, $indexOfArray returns an error.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $search
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $search
      * @param Optional|ResolvesToInt|int $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
      * @param Optional|ResolvesToInt|int $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
@@ -892,10 +892,10 @@ trait FactoryTrait
      * Searches a string for an occurrence of a substring and returns the UTF-8 byte index of the first occurrence. If the substring is not found, returns -1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfBytes/
-     * @param ResolvesToString|non-empty-string $string Can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $string Can be any valid expression as long as it resolves to a string.
      * If the string expression resolves to a value of null or refers to a field that is missing, $indexOfBytes returns null.
      * If the string expression does not resolve to a string or null nor refers to a missing field, $indexOfBytes returns an error.
-     * @param ResolvesToString|non-empty-string $substring Can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $substring Can be any valid expression as long as it resolves to a string.
      * @param Optional|ResolvesToInt|int $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
      * @param Optional|ResolvesToInt|int $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
@@ -915,10 +915,10 @@ trait FactoryTrait
      * Searches a string for an occurrence of a substring and returns the UTF-8 code point index of the first occurrence. If the substring is not found, returns -1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/
-     * @param ResolvesToString|non-empty-string $string Can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $string Can be any valid expression as long as it resolves to a string.
      * If the string expression resolves to a value of null or refers to a field that is missing, $indexOfCP returns null.
      * If the string expression does not resolve to a string or null nor refers to a missing field, $indexOfCP returns an error.
-     * @param ResolvesToString|non-empty-string $substring Can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $substring Can be any valid expression as long as it resolves to a string.
      * @param Optional|ResolvesToInt|int $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
      * @param Optional|ResolvesToInt|int $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
@@ -940,7 +940,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
      * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
-     * @param Optional|ResolvesToString|non-empty-string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+     * @param Optional|ResolvesToString|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public static function integral(
@@ -955,7 +955,7 @@ trait FactoryTrait
      * Determines if the operand is an array. Returns a boolean.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function isArray(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -970,7 +970,7 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function isNumber(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -984,7 +984,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function isoDayOfWeek(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -999,7 +999,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function isoWeek(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -1014,7 +1014,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function isoWeekYear(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -1057,7 +1057,7 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/
      * @param Document|Serializable|array|stdClass $vars Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
      * The variable assignments have no meaning outside the in expression, not even within the vars block itself.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $in The expression to evaluate.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in The expression to evaluate.
      */
     public static function let(
         Document|Serializable|stdClass|array $vars,
@@ -1084,7 +1084,7 @@ trait FactoryTrait
      * Return a value without parsing. Use for values that the aggregation pipeline may interpret as an expression. For example, use a $literal expression to a string that starts with a dollar sign ($) to avoid parsing as a field path.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/literal/
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression.
+     * @param Type|array|bool|float|int|null|stdClass|string $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression.
      */
     public static function literal(Type|stdClass|array|bool|float|int|null|string $value): LiteralOperator
     {
@@ -1109,7 +1109,7 @@ trait FactoryTrait
      * New in MongoDB 5.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function locf(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -1148,8 +1148,8 @@ trait FactoryTrait
      * Returns true if the first value is less than the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public static function lt(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
@@ -1163,8 +1163,8 @@ trait FactoryTrait
      * Returns true if the first value is less than or equal to the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lte/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public static function lte(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
@@ -1179,8 +1179,8 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/
-     * @param ResolvesToString|non-empty-string $input The string to trim. The argument can be any valid expression that resolves to a string.
-     * @param Optional|ResolvesToString|non-empty-string $chars The character(s) to trim from the beginning of the input.
+     * @param ResolvesToString|string $input The string to trim. The argument can be any valid expression that resolves to a string.
+     * @param Optional|ResolvesToString|string $chars The character(s) to trim from the beginning of the input.
      * The argument can be any valid expression that resolves to a string. The $ltrim operator breaks down the string into individual UTF code point to trim from input.
      * If unspecified, $ltrim removes whitespace characters, including the null character.
      */
@@ -1197,8 +1197,8 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/
      * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to an array.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
-     * @param Optional|ResolvesToString|non-empty-string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
+     * @param Optional|ResolvesToString|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      */
     public static function map(
         PackedArray|ResolvesToArray|BSONArray|array $input,
@@ -1215,7 +1215,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/
      * @no-named-arguments
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$expression
      */
     public static function max(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
@@ -1249,7 +1249,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
      * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
-     * @param non-empty-string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
+     * @param string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
      */
     public static function median(
         Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input,
@@ -1277,7 +1277,7 @@ trait FactoryTrait
      * Access available per-document metadata related to the aggregation operation.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/
-     * @param non-empty-string $keyword
+     * @param string $keyword
      */
     public static function meta(string $keyword): MetaOperator
     {
@@ -1289,7 +1289,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/millisecond/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function millisecond(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -1305,7 +1305,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/
      * @no-named-arguments
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$expression
      */
     public static function min(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
@@ -1334,7 +1334,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function minute(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -1364,7 +1364,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/month/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function month(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -1391,8 +1391,8 @@ trait FactoryTrait
      * Returns true if the values are not equivalent.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public static function ne(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
@@ -1406,7 +1406,7 @@ trait FactoryTrait
      * Returns the boolean value that is the opposite of its argument expression. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/
-     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function not(
         Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -1433,7 +1433,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/
      * @no-named-arguments
-     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|null|stdClass|string ...$expression
      */
     public static function or(
         Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
@@ -1457,7 +1457,7 @@ trait FactoryTrait
      * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
      * @param BSONArray|PackedArray|ResolvesToArray|array $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
-     * @param non-empty-string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
+     * @param string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
      */
     public static function percentile(
         Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input,
@@ -1541,8 +1541,8 @@ trait FactoryTrait
      * @param BSONArray|PackedArray|ResolvesToArray|array $input Can be any valid expression that resolves to an array.
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $initialValue The initial cumulative value set before in is applied to the first element of the input array.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $initialValue The initial cumulative value set before in is applied to the first element of the input array.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
      * During evaluation of the in expression, two variables will be available:
      * - value is the variable that represents the cumulative value of the expression.
      * - this is the variable that refers to the element being processed.
@@ -1561,9 +1561,9 @@ trait FactoryTrait
      * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/
-     * @param ResolvesToString|non-empty-string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
-     * @param Regex|ResolvesToString|non-empty-string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
-     * @param Optional|non-empty-string $options
+     * @param ResolvesToString|string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
+     * @param Regex|ResolvesToString|string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
+     * @param Optional|string $options
      */
     public static function regexFind(
         ResolvesToString|string $input,
@@ -1579,9 +1579,9 @@ trait FactoryTrait
      * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/
-     * @param ResolvesToString|non-empty-string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
-     * @param Regex|ResolvesToString|non-empty-string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
-     * @param Optional|non-empty-string $options
+     * @param ResolvesToString|string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
+     * @param Regex|ResolvesToString|string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
+     * @param Optional|string $options
      */
     public static function regexFindAll(
         ResolvesToString|string $input,
@@ -1597,9 +1597,9 @@ trait FactoryTrait
      * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/
-     * @param ResolvesToString|non-empty-string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
-     * @param Regex|ResolvesToString|non-empty-string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
-     * @param Optional|non-empty-string $options
+     * @param ResolvesToString|string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
+     * @param Regex|ResolvesToString|string $regex The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
+     * @param Optional|string $options
      */
     public static function regexMatch(
         ResolvesToString|string $input,
@@ -1616,9 +1616,9 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/
-     * @param ResolvesToNull|ResolvesToString|non-empty-string|null $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|non-empty-string|null $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|non-empty-string|null $replacement The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
+     * @param ResolvesToNull|ResolvesToString|null|string $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
+     * @param ResolvesToNull|ResolvesToString|null|string $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
+     * @param ResolvesToNull|ResolvesToString|null|string $replacement The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
      */
     public static function replaceAll(
         ResolvesToNull|ResolvesToString|null|string $input,
@@ -1634,9 +1634,9 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/
-     * @param ResolvesToNull|ResolvesToString|non-empty-string|null $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|non-empty-string|null $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|non-empty-string|null $replacement The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
+     * @param ResolvesToNull|ResolvesToString|null|string $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
+     * @param ResolvesToNull|ResolvesToString|null|string $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
+     * @param ResolvesToNull|ResolvesToString|null|string $replacement The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
      */
     public static function replaceOne(
         ResolvesToNull|ResolvesToString|null|string $input,
@@ -1678,8 +1678,8 @@ trait FactoryTrait
      * Removes whitespace characters, including null, or the specified characters from the end of a string.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/
-     * @param ResolvesToString|non-empty-string $input The string to trim. The argument can be any valid expression that resolves to a string.
-     * @param Optional|ResolvesToString|non-empty-string $chars The character(s) to trim from the beginning of the input.
+     * @param ResolvesToString|string $input The string to trim. The argument can be any valid expression that resolves to a string.
+     * @param Optional|ResolvesToString|string $chars The character(s) to trim from the beginning of the input.
      * The argument can be any valid expression that resolves to a string. The $ltrim operator breaks down the string into individual UTF code point to trim from input.
      * If unspecified, $ltrim removes whitespace characters, including the null character.
      */
@@ -1696,7 +1696,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/second/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function second(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -1738,9 +1738,9 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/
-     * @param ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
+     * @param ResolvesToString|string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
      * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $value The value that you want to assign to field. value can be any valid expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value The value that you want to assign to field. value can be any valid expression.
      * Set to $$REMOVE to remove field from the input document.
      */
     public static function setField(
@@ -1870,8 +1870,8 @@ trait FactoryTrait
      * Splits a string into substrings based on a delimiter. Returns an array of substrings. If the delimiter is not found within the string, returns an array containing the original string.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/
-     * @param ResolvesToString|non-empty-string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
-     * @param ResolvesToString|non-empty-string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
      */
     public static function split(ResolvesToString|string $string, ResolvesToString|string $delimiter): SplitOperator
     {
@@ -1920,8 +1920,8 @@ trait FactoryTrait
      * Performs case-insensitive string comparison and returns: 0 if two strings are equivalent, 1 if the first string is greater than the second, and -1 if the first string is less than the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/
-     * @param ResolvesToString|non-empty-string $expression1
-     * @param ResolvesToString|non-empty-string $expression2
+     * @param ResolvesToString|string $expression1
+     * @param ResolvesToString|string $expression2
      */
     public static function strcasecmp(
         ResolvesToString|string $expression1,
@@ -1935,7 +1935,7 @@ trait FactoryTrait
      * Returns the number of UTF-8 encoded bytes in a string.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/
-     * @param ResolvesToString|non-empty-string $expression
+     * @param ResolvesToString|string $expression
      */
     public static function strLenBytes(ResolvesToString|string $expression): StrLenBytesOperator
     {
@@ -1946,7 +1946,7 @@ trait FactoryTrait
      * Returns the number of UTF-8 code points in a string.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/
-     * @param ResolvesToString|non-empty-string $expression
+     * @param ResolvesToString|string $expression
      */
     public static function strLenCP(ResolvesToString|string $expression): StrLenCPOperator
     {
@@ -1957,7 +1957,7 @@ trait FactoryTrait
      * Deprecated. Use $substrBytes or $substrCP.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substr/
-     * @param ResolvesToString|non-empty-string $string
+     * @param ResolvesToString|string $string
      * @param ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "".
      * @param ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
      */
@@ -1974,7 +1974,7 @@ trait FactoryTrait
      * Returns the substring of a string. Starts with the character at the specified UTF-8 byte index (zero-based) in the string and continues for the specified number of bytes.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/
-     * @param ResolvesToString|non-empty-string $string
+     * @param ResolvesToString|string $string
      * @param ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "".
      * @param ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
      */
@@ -1991,7 +1991,7 @@ trait FactoryTrait
      * Returns the substring of a string. Starts with the character at the specified UTF-8 code point (CP) index (zero-based) in the string and continues for the number of code points specified.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/
-     * @param ResolvesToString|non-empty-string $string
+     * @param ResolvesToString|string $string
      * @param ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "".
      * @param ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
      */
@@ -2040,7 +2040,7 @@ trait FactoryTrait
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $default The path to take if no branch case expression evaluates to true.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default The path to take if no branch case expression evaluates to true.
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
     public static function switch(
@@ -2080,7 +2080,7 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function toBool(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2094,7 +2094,7 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function toDate(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2108,7 +2108,7 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function toDecimal(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2122,7 +2122,7 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function toDouble(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2135,7 +2135,7 @@ trait FactoryTrait
      * Computes and returns the hash value of the input expression using the same hash function that MongoDB uses to create a hashed index. A hash function maps a key or string to a fixed-size numeric value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toHashedIndexKey/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $value key or string to hash
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value key or string to hash
      */
     public static function toHashedIndexKey(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value,
@@ -2149,7 +2149,7 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function toInt(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2163,7 +2163,7 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function toLong(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2176,7 +2176,7 @@ trait FactoryTrait
      * Converts a string to lowercase. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/
-     * @param ResolvesToString|non-empty-string $expression
+     * @param ResolvesToString|string $expression
      */
     public static function toLower(ResolvesToString|string $expression): ToLowerOperator
     {
@@ -2188,7 +2188,7 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function toObjectId(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2202,7 +2202,7 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function toString(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2215,7 +2215,7 @@ trait FactoryTrait
      * Converts a string to uppercase. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/
-     * @param ResolvesToString|non-empty-string $expression
+     * @param ResolvesToString|string $expression
      */
     public static function toUpper(ResolvesToString|string $expression): ToUpperOperator
     {
@@ -2227,8 +2227,8 @@ trait FactoryTrait
      * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/
-     * @param ResolvesToString|non-empty-string $input The string to trim. The argument can be any valid expression that resolves to a string.
-     * @param Optional|ResolvesToString|non-empty-string $chars The character(s) to trim from the beginning of the input.
+     * @param ResolvesToString|string $input The string to trim. The argument can be any valid expression that resolves to a string.
+     * @param Optional|ResolvesToString|string $chars The character(s) to trim from the beginning of the input.
      * The argument can be any valid expression that resolves to a string. The $ltrim operator breaks down the string into individual UTF code point to trim from input.
      * If unspecified, $ltrim removes whitespace characters, including the null character.
      */
@@ -2284,7 +2284,7 @@ trait FactoryTrait
      * Return the BSON data type of the field.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function type(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -2298,7 +2298,7 @@ trait FactoryTrait
      * $unsetField is an alias for $setField using $$REMOVE to remove fields.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/
-     * @param ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
+     * @param ResolvesToString|string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
      * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
      */
     public static function unsetField(
@@ -2314,7 +2314,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function week(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
@@ -2329,7 +2329,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function year(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,

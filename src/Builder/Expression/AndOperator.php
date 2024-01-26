@@ -28,11 +28,11 @@ class AndOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|non-empty-string|null|stdClass> $expression */
+    /** @var list<Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|null|stdClass|string> $expression */
     public readonly array $expression;
 
     /**
-     * @param Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|null|stdClass|string ...$expression
      * @no-named-arguments
      */
     public function __construct(

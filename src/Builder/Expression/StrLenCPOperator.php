@@ -20,11 +20,11 @@ class StrLenCPOperator implements ResolvesToInt, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var ResolvesToString|non-empty-string $expression */
+    /** @var ResolvesToString|string $expression */
     public readonly ResolvesToString|string $expression;
 
     /**
-     * @param ResolvesToString|non-empty-string $expression
+     * @param ResolvesToString|string $expression
      */
     public function __construct(ResolvesToString|string $expression)
     {

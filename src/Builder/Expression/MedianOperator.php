@@ -36,12 +36,12 @@ class MedianOperator implements ResolvesToDouble, OperatorInterface
     /** @var BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it. */
     public readonly Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input;
 
-    /** @var non-empty-string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'. */
+    /** @var string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'. */
     public readonly string $method;
 
     /**
      * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
-     * @param non-empty-string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
+     * @param string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
      */
     public function __construct(
         Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input,

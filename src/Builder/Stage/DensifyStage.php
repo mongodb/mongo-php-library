@@ -32,7 +32,7 @@ class DensifyStage implements StageInterface, OperatorInterface
     public const ENCODE = Encode::Object;
 
     /**
-     * @var non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
+     * @var string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
      */
@@ -45,7 +45,7 @@ class DensifyStage implements StageInterface, OperatorInterface
     public readonly Optional|PackedArray|BSONArray|array $partitionByFields;
 
     /**
-     * @param non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
+     * @param string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
      * @param Document|Serializable|array|stdClass $range Specification for range based densification.

@@ -20,15 +20,15 @@ class StrcasecmpOperator implements ResolvesToInt, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var ResolvesToString|non-empty-string $expression1 */
+    /** @var ResolvesToString|string $expression1 */
     public readonly ResolvesToString|string $expression1;
 
-    /** @var ResolvesToString|non-empty-string $expression2 */
+    /** @var ResolvesToString|string $expression2 */
     public readonly ResolvesToString|string $expression2;
 
     /**
-     * @param ResolvesToString|non-empty-string $expression1
-     * @param ResolvesToString|non-empty-string $expression2
+     * @param ResolvesToString|string $expression1
+     * @param ResolvesToString|string $expression2
      */
     public function __construct(ResolvesToString|string $expression1, ResolvesToString|string $expression2)
     {

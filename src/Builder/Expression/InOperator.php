@@ -29,14 +29,14 @@ class InOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression Any valid expression expression. */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression. */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /** @var BSONArray|PackedArray|ResolvesToArray|array $array Any valid expression that resolves to an array. */
     public readonly PackedArray|ResolvesToArray|BSONArray|array $array;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression Any valid expression expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression.
      * @param BSONArray|PackedArray|ResolvesToArray|array $array Any valid expression that resolves to an array.
      */
     public function __construct(

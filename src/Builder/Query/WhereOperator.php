@@ -24,11 +24,11 @@ class WhereOperator implements QueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var Javascript|non-empty-string $function */
+    /** @var Javascript|string $function */
     public readonly Javascript|string $function;
 
     /**
-     * @param Javascript|non-empty-string $function
+     * @param Javascript|string $function
      */
     public function __construct(Javascript|string $function)
     {

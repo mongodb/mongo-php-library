@@ -22,11 +22,11 @@ class ListSampledQueriesStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var Optional|non-empty-string $namespace */
+    /** @var Optional|string $namespace */
     public readonly Optional|string $namespace;
 
     /**
-     * @param Optional|non-empty-string $namespace
+     * @param Optional|string $namespace
      */
     public function __construct(Optional|string $namespace = Optional::Undefined)
     {

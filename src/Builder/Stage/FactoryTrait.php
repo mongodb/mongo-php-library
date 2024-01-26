@@ -37,7 +37,7 @@ trait FactoryTrait
      * Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression Specify the name of each field to add and set its value to an aggregation expression or an empty object.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$expression Specify the name of each field to add and set its value to an aggregation expression or an empty object.
      */
     public static function addFields(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
@@ -50,11 +50,11 @@ trait FactoryTrait
      * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * Unless $bucket includes a default specification, each input document must resolve the groupBy field path or expression to a value that falls within one of the ranges specified by the boundaries.
      * @param BSONArray|PackedArray|array $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
      * The specified values must be in ascending order and all of the same type. The exception is if the values are of mixed numeric types, such as:
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $default A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does not fall into a bucket specified by boundaries.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does not fall into a bucket specified by boundaries.
      * If unspecified, each input document must resolve the groupBy expression to a value within one of the bucket ranges specified by boundaries or the operation throws an error.
      * The default value must be less than the lowest boundaries value, or greater than or equal to the highest boundaries value.
      * The default value can be of a different type than the entries in boundaries.
@@ -76,7 +76,7 @@ trait FactoryTrait
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * @param int $buckets A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
      * @param Optional|Document|Serializable|array|stdClass $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
      * The default count field is not included in the output document when output is specified. Explicitly specify the count expression as part of the output document to include it.
@@ -98,8 +98,8 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/
      * @param Optional|bool $allChangesForCluster A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections.
-     * @param Optional|non-empty-string $fullDocument Specifies whether change notifications include a copy of the full document when modified by update operations.
-     * @param Optional|non-empty-string $fullDocumentBeforeChange Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available.
+     * @param Optional|string $fullDocument Specifies whether change notifications include a copy of the full document when modified by update operations.
+     * @param Optional|string $fullDocumentBeforeChange Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available.
      * @param Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
      * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      * New in MongoDB 6.0.
@@ -146,7 +146,7 @@ trait FactoryTrait
      * Distinct from the $count aggregation accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
-     * @param non-empty-string $field Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character.
+     * @param string $field Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character.
      */
     public static function count(string $field): CountStage
     {
@@ -167,7 +167,7 @@ trait FactoryTrait
      * Creates new documents in a sequence of documents where certain values in a field are missing.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/
-     * @param non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
+     * @param string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
      * @param Document|Serializable|array|stdClass $range Specification for range based densification.
@@ -214,7 +214,7 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/
      * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
      * The object name is the name of the field to fill. The object value specifies how the field is filled.
-     * @param Optional|Document|Serializable|array|non-empty-string|stdClass $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
+     * @param Optional|Document|Serializable|array|stdClass|string $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
      * @param Optional|BSONArray|PackedArray|array $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
@@ -236,11 +236,11 @@ trait FactoryTrait
      * Returns an ordered stream of documents based on the proximity to a geospatial point. Incorporates the functionality of $match, $sort, and $limit for geospatial data. The output documents include an additional distance field and can include a location identifier field.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
-     * @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
+     * @param string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
      * @param Document|Serializable|array|stdClass $near The point for which to find the closest documents.
      * @param Optional|Decimal128|Int64|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
-     * @param Optional|non-empty-string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
-     * @param Optional|non-empty-string $key Specify the geospatial indexed field to use when calculating the distance.
+     * @param Optional|string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
+     * @param Optional|string $key Specify the geospatial indexed field to use when calculating the distance.
      * @param Optional|Decimal128|Int64|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
      * @param Optional|Decimal128|Int64|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
@@ -271,14 +271,14 @@ trait FactoryTrait
      * Performs a recursive search on a collection. To each output document, adds a new array field that contains the traversal results of the recursive search for that document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
-     * @param non-empty-string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
+     * @param string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
      * Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
-     * @param BSONArray|ExpressionInterface|PackedArray|Type|array|bool|float|int|non-empty-string|null|stdClass $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
-     * @param non-empty-string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process.
-     * @param non-empty-string $connectToField Field name in other documents against which to match the value of the field specified by the connectFromField parameter.
-     * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
+     * @param BSONArray|ExpressionInterface|PackedArray|Type|array|bool|float|int|null|stdClass|string $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
+     * @param string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process.
+     * @param string $connectToField Field name in other documents against which to match the value of the field specified by the connectFromField parameter.
+     * @param string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
      * @param Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth.
-     * @param Optional|non-empty-string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
+     * @param Optional|string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
      * @param Optional|QueryInterface|array $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
      */
     public static function graphLookup(
@@ -299,7 +299,7 @@ trait FactoryTrait
      * Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group. Consumes all input documents and outputs one document per each distinct group. The output documents only contain the identifier field and, if specified, accumulated fields.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
      * @param AccumulatorInterface|Document|Serializable|array|stdClass ...$field Computed using the accumulator operators.
      */
     public static function group(
@@ -350,7 +350,7 @@ trait FactoryTrait
      * Lists sampled queries for all collections or a specific collection.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/
-     * @param Optional|non-empty-string $namespace
+     * @param Optional|string $namespace
      */
     public static function listSampledQueries(
         Optional|string $namespace = Optional::Undefined,
@@ -363,8 +363,8 @@ trait FactoryTrait
      * Returns information about existing Atlas Search indexes on a specified collection.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/
-     * @param Optional|non-empty-string $id The id of the index to return information about.
-     * @param Optional|non-empty-string $name The name of the index to return information about.
+     * @param Optional|string $id The id of the index to return information about.
+     * @param Optional|string $name The name of the index to return information about.
      */
     public static function listSearchIndexes(
         Optional|string $id = Optional::Undefined,
@@ -393,12 +393,12 @@ trait FactoryTrait
      * Performs a left outer join to another collection in the same database to filter in documents from the "joined" collection for processing.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/
-     * @param non-empty-string $as Specifies the name of the new array field to add to the input documents. The new array field contains the matching documents from the from collection. If the specified name already exists in the input document, the existing field is overwritten.
-     * @param Optional|non-empty-string $from Specifies the collection in the same database to perform the join with.
+     * @param string $as Specifies the name of the new array field to add to the input documents. The new array field contains the matching documents from the from collection. If the specified name already exists in the input document, the existing field is overwritten.
+     * @param Optional|string $from Specifies the collection in the same database to perform the join with.
      * from is optional, you can use a $documents stage in a $lookup stage instead. For an example, see Use a $documents Stage in a $lookup Stage.
      * Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
-     * @param Optional|non-empty-string $localField Specifies the field from the documents input to the $lookup stage. $lookup performs an equality match on the localField to the foreignField from the documents of the from collection. If an input document does not contain the localField, the $lookup treats the field as having a value of null for matching purposes.
-     * @param Optional|non-empty-string $foreignField Specifies the field from the documents in the from collection. $lookup performs an equality match on the foreignField to the localField from the input documents. If a document in the from collection does not contain the foreignField, the $lookup treats the value as null for matching purposes.
+     * @param Optional|string $localField Specifies the field from the documents input to the $lookup stage. $lookup performs an equality match on the localField to the foreignField from the documents of the from collection. If an input document does not contain the localField, the $lookup treats the field as having a value of null for matching purposes.
+     * @param Optional|string $foreignField Specifies the field from the documents in the from collection. $lookup performs an equality match on the foreignField to the localField from the input documents. If a document in the from collection does not contain the foreignField, the $lookup treats the value as null for matching purposes.
      * @param Optional|Document|Serializable|array|stdClass $let Specifies variables to use in the pipeline stages. Use the variable expressions to access the fields from the joined collection's documents that are input to the pipeline.
      * @param Optional|BSONArray|PackedArray|Pipeline|array $pipeline Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].
      * The pipeline cannot include the $out stage or the $merge stage. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
@@ -432,11 +432,11 @@ trait FactoryTrait
      * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
-     * @param non-empty-string $into The output collection.
-     * @param Optional|BSONArray|PackedArray|array|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
+     * @param string $into The output collection.
+     * @param Optional|BSONArray|PackedArray|array|string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
      * @param Optional|Document|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
-     * @param Optional|non-empty-string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
-     * @param Optional|non-empty-string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.
+     * @param Optional|string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
+     * @param Optional|string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.
      */
     public static function merge(
         string $into,
@@ -453,8 +453,8 @@ trait FactoryTrait
      * Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the last stage in the pipeline.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
-     * @param non-empty-string $db Target collection name to write documents from $out to.
-     * @param non-empty-string $coll Target database name to write documents from $out to.
+     * @param string $db Target collection name to write documents from $out to.
+     * @param string $coll Target database name to write documents from $out to.
      * @param Optional|Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
      */
     public static function out(
@@ -480,7 +480,7 @@ trait FactoryTrait
      * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
-     * @param Document|ExpressionInterface|ProjectionInterface|Serializable|Type|array|bool|float|int|non-empty-string|null|stdClass ...$specification
+     * @param Document|ExpressionInterface|ProjectionInterface|Serializable|Type|array|bool|float|int|null|stdClass|string ...$specification
      */
     public static function project(
         Document|Serializable|Type|ExpressionInterface|ProjectionInterface|stdClass|array|bool|float|int|null|string ...$specification,
@@ -493,7 +493,7 @@ trait FactoryTrait
      * Reshapes each document in the stream by restricting the content for each document based on information stored in the documents themselves. Incorporates the functionality of $project and $match. Can be used to implement field level redaction. For each input document, outputs either one or zero documents.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function redact(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -569,7 +569,7 @@ trait FactoryTrait
      * Alias for $addFields.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$field
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$field
      */
     public static function set(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$field): SetStage
     {
@@ -584,7 +584,7 @@ trait FactoryTrait
      * @param Document|Serializable|array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
      * @param Document|Serializable|array|stdClass $output Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
      * A field can contain dots to specify embedded document fields and array fields. The semantics for the embedded document dotted notation in the $setWindowFields stage are the same as the $addFields and $set stages.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
      */
     public static function setWindowFields(
         Document|Serializable|stdClass|array $sortBy,
@@ -632,7 +632,7 @@ trait FactoryTrait
      * Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function sortByCount(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -646,7 +646,7 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/
-     * @param non-empty-string $coll The collection or view whose pipeline results you wish to include in the result set.
+     * @param string $coll The collection or view whose pipeline results you wish to include in the result set.
      * @param Optional|BSONArray|PackedArray|Pipeline|array $pipeline An aggregation pipeline to apply to the specified coll.
      * The pipeline cannot include the $out and $merge stages. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
      */
@@ -664,7 +664,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/
      * @no-named-arguments
-     * @param FieldPath|non-empty-string ...$field
+     * @param FieldPath|string ...$field
      */
     public static function unset(FieldPath|string ...$field): UnsetStage
     {
@@ -675,8 +675,8 @@ trait FactoryTrait
      * Deconstructs an array field from the input documents to output a document for each element. Each output document replaces the array with an element value. For each input document, outputs n documents where n is the number of array elements and can be zero for an empty array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
-     * @param ArrayFieldPath|non-empty-string $path Field path to an array field.
-     * @param Optional|non-empty-string $includeArrayIndex The name of a new field to hold the array index of the element. The name cannot start with a dollar sign $.
+     * @param ArrayFieldPath|string $path Field path to an array field.
+     * @param Optional|string $includeArrayIndex The name of a new field to hold the array index of the element. The name cannot start with a dollar sign $.
      * @param Optional|bool $preserveNullAndEmptyArrays If true, if the path is null, missing, or an empty array, $unwind outputs the document.
      * If false, if path is null, missing, or an empty array, $unwind does not output a document.
      * The default value is false.

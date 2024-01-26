@@ -53,7 +53,7 @@ class DateFromPartsOperator implements ResolvesToDate, OperatorInterface
     /** @var Optional|Decimal128|Int64|ResolvesToNumber|float|int $millisecond Millisecond. Defaults to 0. */
     public readonly Optional|Decimal128|Int64|ResolvesToNumber|float|int $millisecond;
 
-    /** @var Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC. */
+    /** @var Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC. */
     public readonly Optional|ResolvesToString|string $timezone;
 
     /**
@@ -67,7 +67,7 @@ class DateFromPartsOperator implements ResolvesToDate, OperatorInterface
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $minute Minute. Defaults to 0.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $second Second. Defaults to 0.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $millisecond Millisecond. Defaults to 0.
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public function __construct(
         Optional|Decimal128|Int64|ResolvesToNumber|float|int $year = Optional::Undefined,

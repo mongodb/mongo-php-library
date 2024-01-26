@@ -20,15 +20,15 @@ class SplitOperator implements ResolvesToArray, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var ResolvesToString|non-empty-string $string The string to be split. string expression can be any valid expression as long as it resolves to a string. */
+    /** @var ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string. */
     public readonly ResolvesToString|string $string;
 
-    /** @var ResolvesToString|non-empty-string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string. */
+    /** @var ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string. */
     public readonly ResolvesToString|string $delimiter;
 
     /**
-     * @param ResolvesToString|non-empty-string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
-     * @param ResolvesToString|non-empty-string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
      */
     public function __construct(ResolvesToString|string $string, ResolvesToString|string $delimiter)
     {

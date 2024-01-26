@@ -27,11 +27,11 @@ class ElemMatchOperator implements FieldQueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var FieldQueryInterface|QueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $query */
+    /** @var FieldQueryInterface|QueryInterface|Type|array|bool|float|int|null|stdClass|string $query */
     public readonly Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query;
 
     /**
-     * @param FieldQueryInterface|QueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $query
+     * @param FieldQueryInterface|QueryInterface|Type|array|bool|float|int|null|stdClass|string $query
      */
     public function __construct(
         Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query,

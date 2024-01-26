@@ -29,14 +29,14 @@ class IntegralOperator implements ResolvesToDouble, ResolvesToDecimal, OperatorI
     public readonly Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $input;
 
     /**
-     * @var Optional|ResolvesToString|non-empty-string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+     * @var Optional|ResolvesToString|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public readonly Optional|ResolvesToString|string $unit;
 
     /**
      * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
-     * @param Optional|ResolvesToString|non-empty-string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+     * @param Optional|ResolvesToString|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public function __construct(

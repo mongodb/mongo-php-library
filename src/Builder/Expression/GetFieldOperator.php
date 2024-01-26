@@ -26,21 +26,21 @@ class GetFieldOperator implements ResolvesToAny, OperatorInterface
     public const ENCODE = Encode::Object;
 
     /**
-     * @var ResolvesToString|non-empty-string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
+     * @var ResolvesToString|string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
      * If field begins with a dollar sign ($), place the field name inside of a $literal expression to return its value.
      */
     public readonly ResolvesToString|string $field;
 
     /**
-     * @var Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input Default: $$CURRENT
+     * @var Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input Default: $$CURRENT
      * A valid expression that contains the field for which you want to return a value. input must resolve to an object, missing, null, or undefined. If omitted, defaults to the document currently being processed in the pipeline ($$CURRENT).
      */
     public readonly Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input;
 
     /**
-     * @param ResolvesToString|non-empty-string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
+     * @param ResolvesToString|string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
      * If field begins with a dollar sign ($), place the field name inside of a $literal expression to return its value.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input Default: $$CURRENT
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input Default: $$CURRENT
      * A valid expression that contains the field for which you want to return a value. input must resolve to an object, missing, null, or undefined. If omitted, defaults to the document currently being processed in the pipeline ($$CURRENT).
      */
     public function __construct(

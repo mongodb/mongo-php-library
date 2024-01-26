@@ -23,15 +23,15 @@ class LtOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1 */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1 */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2 */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2 */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public function __construct(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,

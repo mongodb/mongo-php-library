@@ -25,18 +25,18 @@ class OutStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var non-empty-string $db Target collection name to write documents from $out to. */
+    /** @var string $db Target collection name to write documents from $out to. */
     public readonly string $db;
 
-    /** @var non-empty-string $coll Target database name to write documents from $out to. */
+    /** @var string $coll Target database name to write documents from $out to. */
     public readonly string $coll;
 
     /** @var Optional|Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace. */
     public readonly Optional|Document|Serializable|stdClass|array $timeseries;
 
     /**
-     * @param non-empty-string $db Target collection name to write documents from $out to.
-     * @param non-empty-string $coll Target database name to write documents from $out to.
+     * @param string $db Target collection name to write documents from $out to.
+     * @param string $coll Target database name to write documents from $out to.
      * @param Optional|Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
      */
     public function __construct(

@@ -20,11 +20,11 @@ class MetaOperator implements ResolvesToAny, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var non-empty-string $keyword */
+    /** @var string $keyword */
     public readonly string $keyword;
 
     /**
-     * @param non-empty-string $keyword
+     * @param string $keyword
      */
     public function __construct(string $keyword)
     {

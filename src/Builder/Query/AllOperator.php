@@ -26,11 +26,11 @@ class AllOperator implements FieldQueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> $value */
+    /** @var list<FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string> $value */
     public readonly array $value;
 
     /**
-     * @param FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$value
+     * @param FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string ...$value
      * @no-named-arguments
      */
     public function __construct(Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$value)

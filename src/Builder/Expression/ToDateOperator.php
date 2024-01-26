@@ -24,11 +24,11 @@ class ToDateOperator implements ResolvesToDate, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression)
     {

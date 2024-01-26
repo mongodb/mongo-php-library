@@ -31,7 +31,7 @@ class GeometryOperator implements GeometryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var non-empty-string $type */
+    /** @var string $type */
     public readonly string $type;
 
     /** @var BSONArray|PackedArray|array $coordinates */
@@ -41,7 +41,7 @@ class GeometryOperator implements GeometryInterface, OperatorInterface
     public readonly Optional|Document|Serializable|stdClass|array $crs;
 
     /**
-     * @param non-empty-string $type
+     * @param string $type
      * @param BSONArray|PackedArray|array $coordinates
      * @param Optional|Document|Serializable|array|stdClass $crs
      */

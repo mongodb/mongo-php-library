@@ -37,7 +37,7 @@ class IndexOfArrayOperator implements ResolvesToInt, OperatorInterface
      */
     public readonly PackedArray|ResolvesToArray|BSONArray|array $array;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $search */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $search */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $search;
 
     /**
@@ -56,7 +56,7 @@ class IndexOfArrayOperator implements ResolvesToInt, OperatorInterface
      * @param BSONArray|PackedArray|ResolvesToArray|array $array Can be any valid expression as long as it resolves to an array.
      * If the array expression resolves to a value of null or refers to a field that is missing, $indexOfArray returns null.
      * If the array expression does not resolve to an array or null nor refers to a missing field, $indexOfArray returns an error.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $search
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $search
      * @param Optional|ResolvesToInt|int $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
      * @param Optional|ResolvesToInt|int $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.

@@ -24,14 +24,14 @@ class UnsetFieldOperator implements ResolvesToObject, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant. */
+    /** @var ResolvesToString|string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant. */
     public readonly ResolvesToString|string $field;
 
     /** @var Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined. */
     public readonly Document|Serializable|ResolvesToObject|stdClass|array $input;
 
     /**
-     * @param ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
+     * @param ResolvesToString|string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
      * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
      */
     public function __construct(

@@ -20,7 +20,7 @@ class SubstrCPOperator implements ResolvesToString, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var ResolvesToString|non-empty-string $string */
+    /** @var ResolvesToString|string $string */
     public readonly ResolvesToString|string $string;
 
     /** @var ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "". */
@@ -30,7 +30,7 @@ class SubstrCPOperator implements ResolvesToString, OperatorInterface
     public readonly ResolvesToInt|int $length;
 
     /**
-     * @param ResolvesToString|non-empty-string $string
+     * @param ResolvesToString|string $string
      * @param ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "".
      * @param ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
      */

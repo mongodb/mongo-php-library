@@ -26,11 +26,11 @@ class UnsetStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<FieldPath|non-empty-string> $field */
+    /** @var list<FieldPath|string> $field */
     public readonly array $field;
 
     /**
-     * @param FieldPath|non-empty-string ...$field
+     * @param FieldPath|string ...$field
      * @no-named-arguments
      */
     public function __construct(FieldPath|string ...$field)

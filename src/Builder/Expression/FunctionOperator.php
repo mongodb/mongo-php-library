@@ -30,7 +30,7 @@ class FunctionOperator implements ResolvesToAny, OperatorInterface
     public const ENCODE = Encode::Object;
 
     /**
-     * @var Javascript|non-empty-string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
+     * @var Javascript|string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
      * function(arg1, arg2, ...) { ... }
      */
     public readonly Javascript|string $body;
@@ -38,14 +38,14 @@ class FunctionOperator implements ResolvesToAny, OperatorInterface
     /** @var BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ]. */
     public readonly PackedArray|BSONArray|array $args;
 
-    /** @var non-empty-string $lang */
+    /** @var string $lang */
     public readonly string $lang;
 
     /**
-     * @param Javascript|non-empty-string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
+     * @param Javascript|string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
      * function(arg1, arg2, ...) { ... }
      * @param BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
-     * @param non-empty-string $lang
+     * @param string $lang
      */
     public function __construct(Javascript|string $body, PackedArray|BSONArray|array $args = [], string $lang = 'js')
     {

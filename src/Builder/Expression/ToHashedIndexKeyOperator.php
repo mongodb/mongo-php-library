@@ -23,11 +23,11 @@ class ToHashedIndexKeyOperator implements ResolvesToLong, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $value key or string to hash */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value key or string to hash */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $value key or string to hash
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value key or string to hash
      */
     public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value)
     {

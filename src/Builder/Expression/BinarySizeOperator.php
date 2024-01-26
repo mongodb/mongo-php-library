@@ -21,11 +21,11 @@ class BinarySizeOperator implements ResolvesToInt, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|non-empty-string|null $expression */
+    /** @var Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression */
     public readonly Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression;
 
     /**
-     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|non-empty-string|null $expression
+     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression
      */
     public function __construct(Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression)
     {

@@ -30,14 +30,14 @@ class GroupStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Group;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents. */
+    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents. */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $_id;
 
     /** @var stdClass<AccumulatorInterface|Document|Serializable|array|stdClass> $field Computed using the accumulator operators. */
     public readonly stdClass $field;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
      * @param AccumulatorInterface|Document|Serializable|array|stdClass ...$field Computed using the accumulator operators.
      */
     public function __construct(

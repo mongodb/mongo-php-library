@@ -28,20 +28,20 @@ class DateSubtractOperator implements ResolvesToDate, OperatorInterface
     /** @var ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
     public readonly ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate;
 
-    /** @var ResolvesToString|non-empty-string $unit The unit used to measure the amount of time added to the startDate. */
+    /** @var ResolvesToString|string $unit The unit used to measure the amount of time added to the startDate. */
     public readonly ResolvesToString|string $unit;
 
     /** @var Int64|ResolvesToInt|ResolvesToLong|int $amount */
     public readonly Int64|ResolvesToInt|ResolvesToLong|int $amount;
 
-    /** @var Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC. */
+    /** @var Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC. */
     public readonly Optional|ResolvesToString|string $timezone;
 
     /**
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param ResolvesToString|non-empty-string $unit The unit used to measure the amount of time added to the startDate.
+     * @param ResolvesToString|string $unit The unit used to measure the amount of time added to the startDate.
      * @param Int64|ResolvesToInt|ResolvesToLong|int $amount
-     * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public function __construct(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,

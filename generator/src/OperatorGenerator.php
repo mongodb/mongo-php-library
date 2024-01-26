@@ -95,11 +95,6 @@ abstract class OperatorGenerator extends AbstractGenerator
         $use = [];
 
         foreach ($nativeTypes as $key => $typeName) {
-            // strings cannot be empty
-            if ($typeName === 'string') {
-                $docTypes[$key] = 'non-empty-string';
-            }
-
             if (interface_exists($typeName) || class_exists($typeName)) {
                 $use[] = $nativeTypes[$key] = '\\' . $typeName;
                 $docTypes[$key] = $this->splitNamespaceAndClassName($typeName)[1];

@@ -23,11 +23,11 @@ class NotOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass $expression */
+    /** @var ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|null|stdClass|string $expression */
     public readonly Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /**
-     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public function __construct(
         Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,

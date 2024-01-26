@@ -23,11 +23,11 @@ class NotOperator implements FieldQueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression */
+    /** @var FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string $expression */
     public readonly Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /**
-     * @param FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public function __construct(Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string $expression)
     {

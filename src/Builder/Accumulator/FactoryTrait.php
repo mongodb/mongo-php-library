@@ -36,13 +36,13 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
-     * @param Javascript|non-empty-string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
-     * @param Javascript|non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
+     * @param Javascript|string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
+     * @param Javascript|string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
      * @param BSONArray|PackedArray|ResolvesToArray|array $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
-     * @param Javascript|non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
-     * @param non-empty-string $lang The language used in the $accumulator code.
+     * @param Javascript|string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
+     * @param string $lang The language used in the $accumulator code.
      * @param Optional|BSONArray|PackedArray|ResolvesToArray|array $initArgs Arguments passed to the init function.
-     * @param Optional|Javascript|non-empty-string $finalize Function used to update the result of the accumulation.
+     * @param Optional|Javascript|string $finalize Function used to update the result of the accumulation.
      */
     public static function accumulator(
         Javascript|string $init,
@@ -62,7 +62,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function addToSet(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -89,7 +89,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public static function bottom(
         Document|Serializable|stdClass|array $sortBy,
@@ -107,7 +107,7 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/
      * @param ResolvesToInt|int $n Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public static function bottomN(
         ResolvesToInt|int $n,
@@ -179,7 +179,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/
      * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
-     * @param Optional|non-empty-string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+     * @param Optional|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public static function derivative(
@@ -227,7 +227,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function first(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -242,7 +242,7 @@ trait FactoryTrait
      * If the group contains fewer than n elements, $firstN returns all elements in the group.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input An expression that resolves to the array from which to return n elements.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements.
      * @param ResolvesToInt|int $n A positive integral expression that is either a constant or depends on the _id value for $group.
      */
     public static function firstN(
@@ -258,7 +258,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function last(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -289,7 +289,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function max(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -323,7 +323,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
      * @param Decimal128|Int64|ResolvesToNumber|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
-     * @param non-empty-string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
+     * @param string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
      */
     public static function median(
         Decimal128|Int64|ResolvesToNumber|float|int $input,
@@ -351,7 +351,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function min(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -390,7 +390,7 @@ trait FactoryTrait
      * @param Decimal128|Int64|ResolvesToNumber|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
      * @param BSONArray|PackedArray|ResolvesToArray|array $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
-     * @param non-empty-string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
+     * @param string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
      */
     public static function percentile(
         Decimal128|Int64|ResolvesToNumber|float|int $input,
@@ -406,7 +406,7 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function push(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -420,13 +420,13 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $output Specifies an expression to evaluate and return in the output.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Specifies an expression to evaluate and return in the output.
      * @param int $by Specifies an integer with a numeric document position relative to the current document in the output.
      * For example:
      * 1 specifies the document position after the current document.
      * -1 specifies the document position before the current document.
      * -2 specifies the document position that is two positions before the current document.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $default Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
      * The default expression must evaluate to a constant value.
      * If you do not specify a default expression, $shift returns null for documents whose positions are outside of the implicit $setWindowFields stage window.
      */
@@ -485,7 +485,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public static function top(
         Document|Serializable|stdClass|array $sortBy,
@@ -504,7 +504,7 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/
      * @param ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public static function topN(
         ResolvesToInt|int $n,

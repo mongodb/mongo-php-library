@@ -22,11 +22,11 @@ class TextOperator implements QueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::DollarObject;
 
-    /** @var non-empty-string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase. */
+    /** @var string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase. */
     public readonly string $search;
 
     /**
-     * @var Optional|non-empty-string $language The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer. If not specified, the search uses the default language of the index.
+     * @var Optional|string $language The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer. If not specified, the search uses the default language of the index.
      * If you specify a default_language value of none, then the text index parses through each word in the field, including stop words, and ignores suffix stemming.
      */
     public readonly Optional|string $language;
@@ -41,8 +41,8 @@ class TextOperator implements QueryInterface, OperatorInterface
     public readonly Optional|bool $diacriticSensitive;
 
     /**
-     * @param non-empty-string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase.
-     * @param Optional|non-empty-string $language The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer. If not specified, the search uses the default language of the index.
+     * @param string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase.
+     * @param Optional|string $language The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer. If not specified, the search uses the default language of the index.
      * If you specify a default_language value of none, then the text index parses through each word in the field, including stop words, and ignores suffix stemming.
      * @param Optional|bool $caseSensitive A boolean flag to enable or disable case sensitive search. Defaults to false; i.e. the search defers to the case insensitivity of the text index.
      * @param Optional|bool $diacriticSensitive A boolean flag to enable or disable diacritic sensitive search against version 3 text indexes. Defaults to false; i.e. the search defers to the diacritic insensitivity of the text index.

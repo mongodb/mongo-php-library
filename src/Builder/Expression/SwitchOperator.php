@@ -39,7 +39,7 @@ class SwitchOperator implements ResolvesToAny, OperatorInterface
     public readonly PackedArray|BSONArray|array $branches;
 
     /**
-     * @var Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $default The path to take if no branch case expression evaluates to true.
+     * @var Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default The path to take if no branch case expression evaluates to true.
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
     public readonly Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default;
@@ -49,7 +49,7 @@ class SwitchOperator implements ResolvesToAny, OperatorInterface
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $default The path to take if no branch case expression evaluates to true.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default The path to take if no branch case expression evaluates to true.
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
     public function __construct(

@@ -31,7 +31,7 @@ class GeoNearStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation. */
+    /** @var string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation. */
     public readonly string $distanceField;
 
     /** @var Document|Serializable|array|stdClass $near The point for which to find the closest documents. */
@@ -40,10 +40,10 @@ class GeoNearStage implements StageInterface, OperatorInterface
     /** @var Optional|Decimal128|Int64|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth. */
     public readonly Optional|Decimal128|Int64|float|int $distanceMultiplier;
 
-    /** @var Optional|non-empty-string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation. */
+    /** @var Optional|string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation. */
     public readonly Optional|string $includeLocs;
 
-    /** @var Optional|non-empty-string $key Specify the geospatial indexed field to use when calculating the distance. */
+    /** @var Optional|string $key Specify the geospatial indexed field to use when calculating the distance. */
     public readonly Optional|string $key;
 
     /**
@@ -73,11 +73,11 @@ class GeoNearStage implements StageInterface, OperatorInterface
     public readonly Optional|bool $spherical;
 
     /**
-     * @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
+     * @param string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
      * @param Document|Serializable|array|stdClass $near The point for which to find the closest documents.
      * @param Optional|Decimal128|Int64|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
-     * @param Optional|non-empty-string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
-     * @param Optional|non-empty-string $key Specify the geospatial indexed field to use when calculating the distance.
+     * @param Optional|string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
+     * @param Optional|string $key Specify the geospatial indexed field to use when calculating the distance.
      * @param Optional|Decimal128|Int64|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
      * @param Optional|Decimal128|Int64|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.

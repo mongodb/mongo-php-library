@@ -36,7 +36,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/
      * @no-named-arguments
-     * @param FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$value
+     * @param FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string ...$value
      */
     public static function all(
         Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$value,
@@ -61,7 +61,7 @@ trait FactoryTrait
      * Matches numeric or binary values in which a set of bit positions all have a value of 0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/
-     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|string $bitmask
      */
     public static function bitsAllClear(Binary|PackedArray|BSONArray|array|int|string $bitmask): BitsAllClearOperator
     {
@@ -72,7 +72,7 @@ trait FactoryTrait
      * Matches numeric or binary values in which a set of bit positions all have a value of 1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/
-     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|string $bitmask
      */
     public static function bitsAllSet(Binary|PackedArray|BSONArray|array|int|string $bitmask): BitsAllSetOperator
     {
@@ -83,7 +83,7 @@ trait FactoryTrait
      * Matches numeric or binary values in which any bit from a set of bit positions has a value of 0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/
-     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|string $bitmask
      */
     public static function bitsAnyClear(Binary|PackedArray|BSONArray|array|int|string $bitmask): BitsAnyClearOperator
     {
@@ -94,7 +94,7 @@ trait FactoryTrait
      * Matches numeric or binary values in which any bit from a set of bit positions has a value of 1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/
-     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|string $bitmask
      */
     public static function bitsAnySet(Binary|PackedArray|BSONArray|array|int|string $bitmask): BitsAnySetOperator
     {
@@ -138,7 +138,7 @@ trait FactoryTrait
      * Adds a comment to a query predicate.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/comment/
-     * @param non-empty-string $comment
+     * @param string $comment
      */
     public static function comment(string $comment): CommentOperator
     {
@@ -149,7 +149,7 @@ trait FactoryTrait
      * The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
-     * @param FieldQueryInterface|QueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $query
+     * @param FieldQueryInterface|QueryInterface|Type|array|bool|float|int|null|stdClass|string $query
      */
     public static function elemMatch(
         Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query,
@@ -162,7 +162,7 @@ trait FactoryTrait
      * Matches values that are equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|null|stdClass|string $value
      */
     public static function eq(Type|stdClass|array|bool|float|int|null|string $value): EqOperator
     {
@@ -184,7 +184,7 @@ trait FactoryTrait
      * Allows use of aggregation expressions within the query language.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/
-     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function expr(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -210,7 +210,7 @@ trait FactoryTrait
      * Specifies a geometry in GeoJSON format to geospatial query operators.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
-     * @param non-empty-string $type
+     * @param string $type
      * @param BSONArray|PackedArray|array $coordinates
      * @param Optional|Document|Serializable|array|stdClass $crs
      */
@@ -240,7 +240,7 @@ trait FactoryTrait
      * Matches values that are greater than a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gt/
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|null|stdClass|string $value
      */
     public static function gt(Type|stdClass|array|bool|float|int|null|string $value): GtOperator
     {
@@ -251,7 +251,7 @@ trait FactoryTrait
      * Matches values that are greater than or equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gte/
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|null|stdClass|string $value
      */
     public static function gte(Type|stdClass|array|bool|float|int|null|string $value): GteOperator
     {
@@ -284,7 +284,7 @@ trait FactoryTrait
      * Matches values that are less than a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lt/
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|null|stdClass|string $value
      */
     public static function lt(Type|stdClass|array|bool|float|int|null|string $value): LtOperator
     {
@@ -295,7 +295,7 @@ trait FactoryTrait
      * Matches values that are less than or equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lte/
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|null|stdClass|string $value
      */
     public static function lte(Type|stdClass|array|bool|float|int|null|string $value): LteOperator
     {
@@ -353,7 +353,7 @@ trait FactoryTrait
      * Matches all values that are not equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/
-     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|null|stdClass|string $value
      */
     public static function ne(Type|stdClass|array|bool|float|int|null|string $value): NeOperator
     {
@@ -421,7 +421,7 @@ trait FactoryTrait
      * Inverts the effect of a query expression and returns documents that do not match the query expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/
-     * @param FieldQueryInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public static function not(
         Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string $expression,
@@ -501,8 +501,8 @@ trait FactoryTrait
      * Performs text search.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/
-     * @param non-empty-string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase.
-     * @param Optional|non-empty-string $language The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer. If not specified, the search uses the default language of the index.
+     * @param string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase.
+     * @param Optional|string $language The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer. If not specified, the search uses the default language of the index.
      * If you specify a default_language value of none, then the text index parses through each word in the field, including stop words, and ignores suffix stemming.
      * @param Optional|bool $caseSensitive A boolean flag to enable or disable case sensitive search. Defaults to false; i.e. the search defers to the case insensitivity of the text index.
      * @param Optional|bool $diacriticSensitive A boolean flag to enable or disable diacritic sensitive search against version 3 text indexes. Defaults to false; i.e. the search defers to the diacritic insensitivity of the text index.
@@ -523,7 +523,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/
      * @no-named-arguments
-     * @param int|non-empty-string ...$type
+     * @param int|string ...$type
      */
     public static function type(int|string ...$type): TypeOperator
     {
@@ -534,7 +534,7 @@ trait FactoryTrait
      * Matches documents that satisfy a JavaScript expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/where/
-     * @param Javascript|non-empty-string $function
+     * @param Javascript|string $function
      */
     public static function where(Javascript|string $function): WhereOperator
     {

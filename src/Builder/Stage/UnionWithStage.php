@@ -30,7 +30,7 @@ class UnionWithStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var non-empty-string $coll The collection or view whose pipeline results you wish to include in the result set. */
+    /** @var string $coll The collection or view whose pipeline results you wish to include in the result set. */
     public readonly string $coll;
 
     /**
@@ -40,7 +40,7 @@ class UnionWithStage implements StageInterface, OperatorInterface
     public readonly Optional|PackedArray|Pipeline|BSONArray|array $pipeline;
 
     /**
-     * @param non-empty-string $coll The collection or view whose pipeline results you wish to include in the result set.
+     * @param string $coll The collection or view whose pipeline results you wish to include in the result set.
      * @param Optional|BSONArray|PackedArray|Pipeline|array $pipeline An aggregation pipeline to apply to the specified coll.
      * The pipeline cannot include the $out and $merge stages. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
      */

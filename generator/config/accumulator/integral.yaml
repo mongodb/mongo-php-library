@@ -1,11 +1,11 @@
 # $schema: ../schema.json
-name: $derivative
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/'
+name: $integral
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/'
 type:
     - window
 encode: object
 description: |
-    Returns the average rate of change within the specified window.
+    Returns the approximation of the area under a curve.
     New in MongoDB 5.0.
 arguments:
     -
@@ -16,7 +16,7 @@ arguments:
     -
         name: unit
         type:
-            - string
+            - resolvesToString
         optional: true
         description: |
             A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
@@ -24,24 +24,20 @@ arguments:
 tests:
     -
         name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/#example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/#example'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$truckID'
+                    partitionBy: '$powerMeterID'
                     sortBy:
                         timeStamp: 1
                     output:
-                        truckAverageSpeed:
-                            $derivative:
-                                input: '$miles'
+                        powerMeterKilowattHours:
+                            $integral:
+                                input: '$kilowatts'
                                 unit: 'hour'
                             window:
                                 range:
-                                    - -30
-                                    - 0
-                                unit: 'second'
-            -
-                $match:
-                    truckAverageSpeed:
-                        $gt: 50
+                                    - 'unbounded'
+                                    - 'current'
+                                unit: 'hour'

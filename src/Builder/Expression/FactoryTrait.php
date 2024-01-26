@@ -935,23 +935,6 @@ trait FactoryTrait
     }
 
     /**
-     * Returns the approximation of the area under a curve.
-     * New in MongoDB 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
-     * @param Optional|ResolvesToString|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
-     * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
-     */
-    public static function integral(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $input,
-        Optional|ResolvesToString|string $unit = Optional::Undefined,
-    ): IntegralOperator
-    {
-        return new IntegralOperator($input, $unit);
-    }
-
-    /**
      * Determines if the operand is an array. Returns a boolean.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
@@ -1068,19 +1051,6 @@ trait FactoryTrait
     }
 
     /**
-     * Fills null and missing fields in a window using linear interpolation based on surrounding field values.
-     * Available in the $setWindowFields stage.
-     * New in MongoDB 5.3.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
-     */
-    public static function linearFill(Decimal128|Int64|ResolvesToNumber|float|int $expression): LinearFillOperator
-    {
-        return new LinearFillOperator($expression);
-    }
-
-    /**
      * Return a value without parsing. Use for values that the aggregation pipeline may interpret as an expression. For example, use a $literal expression to a string that starts with a dollar sign ($) to avoid parsing as a field path.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/literal/
@@ -1101,21 +1071,6 @@ trait FactoryTrait
     public static function ln(Decimal128|Int64|ResolvesToNumber|float|int $number): LnOperator
     {
         return new LnOperator($number);
-    }
-
-    /**
-     * Last observation carried forward. Sets values for null and missing fields in a window to the last non-null value for the field.
-     * Available in the $setWindowFields stage.
-     * New in MongoDB 5.2.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
-     */
-    public static function locf(
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
-    ): LocfOperator
-    {
-        return new LocfOperator($expression);
     }
 
     /**
@@ -1521,17 +1476,6 @@ trait FactoryTrait
     ): RangeOperator
     {
         return new RangeOperator($start, $end, $step);
-    }
-
-    /**
-     * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.
-     * New in MongoDB 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/
-     */
-    public static function rank(): RankOperator
-    {
-        return new RankOperator();
     }
 
     /**

@@ -16,3 +16,25 @@ arguments:
         name: expression2
         type:
             - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/#example'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        covarianceSampForState:
+                            $covarianceSamp:
+                                -
+                                    # $year: '$orderDate'
+                                    $year:
+                                        date: '$orderDate'
+                                - '$quantity'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

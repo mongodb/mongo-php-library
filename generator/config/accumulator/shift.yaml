@@ -32,3 +32,34 @@ arguments:
             Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
             The default expression must evaluate to a constant value.
             If you do not specify a default expression, $shift returns null for documents whose positions are outside of the implicit $setWindowFields stage window.
+tests:
+    -
+        name: 'Shift Using a Positive Integer'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-positive-integer'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        quantity: -1
+                    output:
+                        shiftQuantityForState:
+                            $shift:
+                                output: '$quantity'
+                                by: 1
+                                default: 'Not available'
+    -
+        name: 'Shift Using a Negative Integer'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-negative-integer'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        quantity: -1
+                    output:
+                        shiftQuantityForState:
+                            $shift:
+                                output: '$quantity'
+                                by: -1
+                                default: 'Not available'

@@ -21,6 +21,7 @@ use MongoDB\Builder\Expression\ResolvesToDate;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Builder\Expression\ResolvesToObject;
+use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Model\BSONArray;
@@ -254,6 +255,23 @@ trait FactoryTrait
     }
 
     /**
+     * Returns the approximation of the area under a curve.
+     * New in MongoDB 5.0.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
+     * @param Optional|ResolvesToString|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+     * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
+     */
+    public static function integral(
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $input,
+        Optional|ResolvesToString|string $unit = Optional::Undefined,
+    ): IntegralAccumulator
+    {
+        return new IntegralAccumulator($input, $unit);
+    }
+
+    /**
      * Returns the result of an expression for the last document in a group or window.
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
@@ -282,6 +300,34 @@ trait FactoryTrait
     ): LastNAccumulator
     {
         return new LastNAccumulator($input, $n);
+    }
+
+    /**
+     * Fills null and missing fields in a window using linear interpolation based on surrounding field values.
+     * Available in the $setWindowFields stage.
+     * New in MongoDB 5.3.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     */
+    public static function linearFill(Decimal128|Int64|ResolvesToNumber|float|int $expression): LinearFillAccumulator
+    {
+        return new LinearFillAccumulator($expression);
+    }
+
+    /**
+     * Last observation carried forward. Sets values for null and missing fields in a window to the last non-null value for the field.
+     * Available in the $setWindowFields stage.
+     * New in MongoDB 5.2.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
+     */
+    public static function locf(
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
+    ): LocfAccumulator
+    {
+        return new LocfAccumulator($expression);
     }
 
     /**
@@ -413,6 +459,17 @@ trait FactoryTrait
     ): PushAccumulator
     {
         return new PushAccumulator($expression);
+    }
+
+    /**
+     * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.
+     * New in MongoDB 5.0.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/
+     */
+    public static function rank(): RankAccumulator
+    {
+        return new RankAccumulator();
     }
 
     /**

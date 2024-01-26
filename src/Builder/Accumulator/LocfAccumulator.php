@@ -6,12 +6,13 @@
 
 declare(strict_types=1);
 
-namespace MongoDB\Builder\Expression;
+namespace MongoDB\Builder\Accumulator;
 
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Builder\Type\WindowInterface;
 use stdClass;
 
 /**
@@ -21,7 +22,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
  */
-class LocfOperator implements ResolvesToAny, OperatorInterface
+class LocfAccumulator implements WindowInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 

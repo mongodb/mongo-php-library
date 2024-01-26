@@ -424,6 +424,265 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/#example
+     */
+    case CovariancePopExample = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "orderDate": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "covariancePopForState": {
+                        "$covariancePop": [
+                            {
+                                "$year": {
+                                    "date": "$orderDate"
+                                }
+                            },
+                            "$quantity"
+                        ],
+                        "window": {
+                            "documents": [
+                                "unbounded",
+                                "current"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/#example
+     */
+    case CovarianceSampExample = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "orderDate": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "covarianceSampForState": {
+                        "$covarianceSamp": [
+                            {
+                                "$year": {
+                                    "date": "$orderDate"
+                                }
+                            },
+                            "$quantity"
+                        ],
+                        "window": {
+                            "documents": [
+                                "unbounded",
+                                "current"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Dense Rank Partitions by an Integer Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-an-integer-field
+     */
+    case DenseRankDenseRankPartitionsByAnIntegerField = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "quantity": {
+                        "$numberInt": "-1"
+                    }
+                },
+                "output": {
+                    "denseRankQuantityForState": {
+                        "$denseRank": {}
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Dense Rank Partitions by a Date Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-a-date-field
+     */
+    case DenseRankDenseRankPartitionsByADateField = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "orderDate": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "denseRankOrderDateForState": {
+                        "$denseRank": {}
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/#example
+     */
+    case DerivativeExample = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$truckID",
+                "sortBy": {
+                    "timeStamp": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "truckAverageSpeed": {
+                        "$derivative": {
+                            "input": "$miles",
+                            "unit": "hour"
+                        },
+                        "window": {
+                            "range": [
+                                {
+                                    "$numberInt": "-30"
+                                },
+                                {
+                                    "$numberInt": "0"
+                                }
+                            ],
+                            "unit": "second"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$match": {
+                "truckAverageSpeed": {
+                    "$gt": {
+                        "$numberInt": "50"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Document Number for Each State
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/#document-number-for-each-state
+     */
+    case DocumentNumberDocumentNumberForEachState = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "quantity": {
+                        "$numberInt": "-1"
+                    }
+                },
+                "output": {
+                    "documentNumberForState": {
+                        "$documentNumber": {}
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Exponential Moving Average Using N
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/#exponential-moving-average-using-n
+     */
+    case ExpMovingAvgExponentialMovingAverageUsingN = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$stock",
+                "sortBy": {
+                    "date": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "expMovingAvgForStock": {
+                        "$expMovingAvg": {
+                            "input": "$price",
+                            "N": {
+                                "$numberInt": "2"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Exponential Moving Average Using alpha
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/#exponential-moving-average-using-alpha
+     */
+    case ExpMovingAvgExponentialMovingAverageUsingAlpha = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$stock",
+                "sortBy": {
+                    "date": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "expMovingAvgForStock": {
+                        "$expMovingAvg": {
+                            "input": "$price",
+                            "alpha": {
+                                "$numberDouble": "0.75"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--group-stage
@@ -668,6 +927,41 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/#example
+     */
+    case IntegralExample = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$powerMeterID",
+                "sortBy": {
+                    "timeStamp": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "powerMeterKilowattHours": {
+                        "$integral": {
+                            "input": "$kilowatts",
+                            "unit": "hour"
+                        },
+                        "window": {
+                            "range": [
+                                "unbounded",
+                                "current"
+                            ],
+                            "unit": "hour"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
@@ -847,6 +1141,81 @@ enum Pipelines: string
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Fill Missing Values with Linear Interpolation
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#fill-missing-values-with-linear-interpolation
+     */
+    case LinearFillFillMissingValuesWithLinearInterpolation = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "sortBy": {
+                    "time": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "price": {
+                        "$linearFill": "$price"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Use Multiple Fill Methods in a Single Stage
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#use-multiple-fill-methods-in-a-single-stage
+     */
+    case LinearFillUseMultipleFillMethodsInASingleStage = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "sortBy": {
+                    "time": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "linearFillPrice": {
+                        "$linearFill": "$price"
+                    },
+                    "locfPrice": {
+                        "$locf": "$price"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Fill Missing Values with the Last Observed Value
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/#fill-missing-values-with-the-last-observed-value
+     */
+    case LocfFillMissingValuesWithTheLastObservedValue = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "sortBy": {
+                    "time": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "price": {
+                        "$locf": "$price"
                     }
                 }
             }
@@ -1148,6 +1517,104 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Find the Minimum Three Scores for a Single Game
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#find-the-minimum-three-scores-for-a-single-game
+     */
+    case MinNFindTheMinimumThreeScoresForASingleGame = <<<'JSON'
+    [
+        {
+            "$match": {
+                "gameId": "G1"
+            }
+        },
+        {
+            "$group": {
+                "_id": "$gameId",
+                "minScores": {
+                    "$minN": {
+                        "input": [
+                            "$score",
+                            "$playerId"
+                        ],
+                        "n": {
+                            "$numberInt": "3"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Finding the Minimum Three Documents Across Multiple Games
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#finding-the-minimum-three-documents-across-multiple-games
+     */
+    case MinNFindingTheMinimumThreeDocumentsAcrossMultipleGames = <<<'JSON'
+    [
+        {
+            "$group": {
+                "_id": "$gameId",
+                "minScores": {
+                    "$minN": {
+                        "input": [
+                            "$score",
+                            "$playerId"
+                        ],
+                        "n": {
+                            "$numberInt": "3"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Computing n Based on the Group Key for $group
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#computing-n-based-on-the-group-key-for--group
+     */
+    case MinNComputingNBasedOnTheGroupKeyForGroup = <<<'JSON'
+    [
+        {
+            "$group": {
+                "_id": {
+                    "gameId": "$gameId"
+                },
+                "gamescores": {
+                    "$minN": {
+                        "input": [
+                            "$score",
+                            "$playerId"
+                        ],
+                        "n": {
+                            "$cond": {
+                                "if": {
+                                    "$eq": [
+                                        "$gameId",
+                                        "G2"
+                                    ]
+                                },
+                                "then": {
+                                    "$numberInt": "1"
+                                },
+                                "else": {
+                                    "$numberInt": "3"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Calculate a Single Value as an Accumulator
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#calculate-a-single-value-as-an-accumulator
@@ -1388,6 +1855,118 @@ enum Pipelines: string
                                 "unbounded",
                                 "current"
                             ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Rank Partitions by an Integer Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/#rank-partitions-by-an-integer-field
+     */
+    case RankRankPartitionsByAnIntegerField = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "quantity": {
+                        "$numberInt": "-1"
+                    }
+                },
+                "output": {
+                    "rankQuantityForState": {
+                        "$rank": {}
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Rank Partitions by a Date Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/#rank-partitions-by-a-date-field
+     */
+    case RankRankPartitionsByADateField = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "orderDate": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "rankOrderDateForState": {
+                        "$rank": {}
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Shift Using a Positive Integer
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-positive-integer
+     */
+    case ShiftShiftUsingAPositiveInteger = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "quantity": {
+                        "$numberInt": "-1"
+                    }
+                },
+                "output": {
+                    "shiftQuantityForState": {
+                        "$shift": {
+                            "output": "$quantity",
+                            "by": {
+                                "$numberInt": "1"
+                            },
+                            "default": "Not available"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Shift Using a Negative Integer
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-negative-integer
+     */
+    case ShiftShiftUsingANegativeInteger = <<<'JSON'
+    [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$state",
+                "sortBy": {
+                    "quantity": {
+                        "$numberInt": "-1"
+                    }
+                },
+                "output": {
+                    "shiftQuantityForState": {
+                        "$shift": {
+                            "output": "$quantity",
+                            "by": {
+                                "$numberInt": "-1"
+                            },
+                            "default": "Not available"
                         }
                     }
                 }

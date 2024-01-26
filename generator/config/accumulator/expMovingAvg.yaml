@@ -29,3 +29,32 @@ arguments:
         description: |
             A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher alpha value assigns a lower mathematical significance to previous results from the calculation.
             You must specify either N or alpha. You cannot specify both.
+tests:
+    -
+        name: 'Exponential Moving Average Using N'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/#exponential-moving-average-using-n'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$stock'
+                    sortBy:
+                        date: 1
+                    output:
+                        expMovingAvgForStock:
+                            $expMovingAvg:
+                                input: '$price'
+                                N: 2
+    -
+        name: 'Exponential Moving Average Using alpha'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/#exponential-moving-average-using-alpha'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$stock'
+                    sortBy:
+                        date: 1
+                    output:
+                        expMovingAvgForStock:
+                            $expMovingAvg:
+                                input: '$price'
+                                alpha: 0.75

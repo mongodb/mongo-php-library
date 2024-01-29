@@ -6,3 +6,21 @@ type:
 encode: object
 description: |
     Generates a random float between 0 and 1.
+tests:
+    -
+        name: 'Select Random Items From a Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/rand/#select-random-items-from-a-collection'
+        pipeline:
+            -
+                $match:
+                    district: 3
+                    $expr:
+                        $lt:
+                            - 0.5
+                            -
+                                $rand: {}
+            -
+                $project:
+                    _id: 0
+                    name: 1
+                    registered: 1

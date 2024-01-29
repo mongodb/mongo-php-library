@@ -124,7 +124,7 @@
             case 'boolean':
                 return object ? ' true' : ' false';
             case 'string':
-                return " '" + object.replace(/'/g, "\\'") + "'";
+                return " '" + object.replace(/'/g, "''") + "'";
             case 'number':
                 return ' ' + object.toString();
             case 'object':

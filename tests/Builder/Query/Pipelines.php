@@ -404,6 +404,41 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Attach a Comment to an Aggregation Expression
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/comment/#attach-a-comment-to-an-aggregation-expression
+     */
+    case CommentAttachACommentToAnAggregationExpression = <<<'JSON'
+    [
+        {
+            "$match": {
+                "x": {
+                    "$gt": {
+                        "$numberInt": "0"
+                    }
+                },
+                "$comment": "Don't allow negative inputs."
+            }
+        },
+        {
+            "$group": {
+                "_id": {
+                    "$mod": [
+                        "$x",
+                        {
+                            "$numberInt": "2"
+                        }
+                    ]
+                },
+                "total": {
+                    "$sum": "$x"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Element Match
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#element-match
@@ -1573,6 +1608,46 @@ enum Pipelines: string
                         }
                     }
                 ]
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Select Random Items From a Collection
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/rand/#select-random-items-from-a-collection
+     */
+    case RandSelectRandomItemsFromACollection = <<<'JSON'
+    [
+        {
+            "$match": {
+                "district": {
+                    "$numberInt": "3"
+                },
+                "$expr": {
+                    "$lt": [
+                        {
+                            "$numberDouble": "0.5"
+                        },
+                        {
+                            "$rand": {}
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "name": {
+                    "$numberInt": "1"
+                },
+                "registered": {
+                    "$numberInt": "1"
+                }
             }
         }
     ]

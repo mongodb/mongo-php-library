@@ -22,6 +22,7 @@ use MongoDB\Tests\Fixtures\Codec\TestFileCodec;
 use MongoDB\Tests\Fixtures\Document\TestFile;
 use ReflectionMethod;
 use stdClass;
+use Throwable;
 
 use function array_merge;
 use function call_user_func;
@@ -29,6 +30,7 @@ use function current;
 use function escapeshellarg;
 use function exec;
 use function fclose;
+use function feof;
 use function fopen;
 use function fread;
 use function fwrite;
@@ -195,6 +197,27 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->expectException(CorruptFileException::class);
         $this->expectExceptionMessage('Expected chunk to have size "6" but found "5"');
         stream_get_contents($this->bucket->openDownloadStream($id));
+    }
+
+    public function testDownloadingFileErrorWithEof(): void
+    {
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'));
+
+        $this->chunksCollection->deleteOne(
+            ['files_id' => $id, 'n' => 0],
+        );
+
+        $stream = $this->bucket->openDownloadStream($id);
+
+        $this->expectException(CorruptFileException::class);
+        $this->expectExceptionMessage('Chunk not found for index "0"');
+        while (! feof($stream)) {
+            try {
+                fread($stream, 8192);
+            } catch (Throwable $e) {
+                // Ignore exception initially thrown in fread
+            }
+        }
     }
 
     /** @dataProvider provideInputDataAndExpectedChunks */

@@ -22,6 +22,7 @@ use MongoDB\BSON\Binary;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
+use Throwable;
 
 use function assert;
 use function ceil;
@@ -60,6 +61,8 @@ class ReadableStream
     private int $length;
 
     private int $numChunks = 0;
+
+    private Throwable $error;
 
     /**
      * Constructs a readable GridFS stream.
@@ -129,6 +132,10 @@ class ReadableStream
      */
     public function isEOF(): bool
     {
+        if (isset($this->error)) {
+            throw $this->error;
+        }
+
         if ($this->chunkOffset === $this->numChunks - 1) {
             return $this->bufferOffset >= $this->expectedLastChunkSize;
         }
@@ -147,6 +154,10 @@ class ReadableStream
      */
     public function readBytes(int $length): string
     {
+        if (isset($this->error)) {
+            throw $this->error;
+        }
+
         if ($length < 0) {
             throw new InvalidArgumentException(sprintf('$length must be >= 0; given: %d', $length));
         }
@@ -252,18 +263,24 @@ class ReadableStream
         }
 
         if (! $this->chunksIterator->valid()) {
-            throw CorruptFileException::missingChunk($this->chunkOffset);
+            $this->chunksIterator = null;
+
+            throw $this->error = CorruptFileException::missingChunk($this->chunkOffset);
         }
 
         $currentChunk = $this->chunksIterator->current();
         assert(is_object($currentChunk));
 
         if ($currentChunk->n !== $this->chunkOffset) {
-            throw CorruptFileException::unexpectedIndex($currentChunk->n, $this->chunkOffset);
+            $this->chunksIterator = null;
+
+            throw $this->error = CorruptFileException::unexpectedIndex($currentChunk->n, $this->chunkOffset);
         }
 
         if (! $currentChunk->data instanceof Binary) {
-            throw CorruptFileException::invalidChunkData($this->chunkOffset);
+            $this->chunksIterator = null;
+
+            throw $this->error = CorruptFileException::invalidChunkData($this->chunkOffset);
         }
 
         $this->buffer = $currentChunk->data->getData();
@@ -275,7 +292,9 @@ class ReadableStream
             : $this->chunkSize;
 
         if ($actualChunkSize !== $expectedChunkSize) {
-            throw CorruptFileException::unexpectedSize($actualChunkSize, $expectedChunkSize);
+            $this->chunksIterator = null;
+
+            throw $this->error = CorruptFileException::unexpectedSize($actualChunkSize, $expectedChunkSize);
         }
 
         return true;

@@ -25,7 +25,6 @@ pre:
   - func: "install composer"
 post:
   - func: "upload test results"
-  - func: "delete serverless instance"
   - func: "stop load balancer"
   - func: "stop mongo-orchestration"
   - func: "cleanup"

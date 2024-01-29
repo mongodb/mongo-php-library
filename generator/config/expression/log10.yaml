@@ -13,3 +13,15 @@ arguments:
             - resolvesToNumber
         description: |
             Any valid expression as long as it resolves to a non-negative number.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/#example'
+        pipeline:
+            -
+                $project:
+                    pH:
+                        $multiply:
+                            - -1
+                            -
+                                $log10: '$H3O'

@@ -14,3 +14,13 @@ arguments:
             - resolvesToNumber
         description: |
             Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/#example'
+        pipeline:
+            -
+                $project:
+                    x: '$year'
+                    y:
+                        $ln: '$sales'

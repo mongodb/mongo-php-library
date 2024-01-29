@@ -17,3 +17,15 @@ arguments:
         name: divisor
         type:
             - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/#example'
+        pipeline:
+            -
+                $project:
+                    city: 1
+                    workdays:
+                        $divide:
+                            - '$hours'
+                            - 8

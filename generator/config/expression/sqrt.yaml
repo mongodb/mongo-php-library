@@ -13,3 +13,27 @@ arguments:
             - resolvesToNumber
         description: |
             The argument can be any valid expression as long as it resolves to a non-negative number.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sqrt/#example'
+        pipeline:
+            -
+                $project:
+                    distance:
+                        $sqrt:
+                            $add:
+                                -
+                                    $pow:
+                                        -
+                                            $subtract:
+                                                - '$p2.y'
+                                                - '$p1.y'
+                                        - 2
+                                -
+                                    $pow:
+                                        -
+                                            $subtract:
+                                                - '$p2.x'
+                                                - '$p1.x'
+                                        - 2

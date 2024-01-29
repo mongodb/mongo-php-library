@@ -13,6 +13,28 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/#example
+     */
+    case AbsExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "delta": {
+                    "$abs": {
+                        "$subtract": [
+                            "$startTemp",
+                            "$endTemp"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/#example
      */
     case AcosExample = <<<'JSON'
@@ -633,6 +655,26 @@ enum Pipelines: string
         {
             "$limit": {
                 "$numberInt": "1"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/#example
+     */
+    case CeilExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "value": {
+                    "$numberInt": "1"
+                },
+                "ceilingValue": {
+                    "$ceil": "$value"
+                }
             }
         }
     ]
@@ -1713,6 +1755,31 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/#example
+     */
+    case DivideExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "city": {
+                    "$numberInt": "1"
+                },
+                "workdays": {
+                    "$divide": [
+                        "$hours",
+                        {
+                            "$numberInt": "8"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/#example
      */
     case EqExample = <<<'JSON'
@@ -1735,6 +1802,30 @@ enum Pipelines: string
                 },
                 "_id": {
                     "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/#example
+     */
+    case ExpExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "effectiveRate": {
+                    "$subtract": [
+                        {
+                            "$exp": "$interestRate"
+                        },
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
                 }
             }
         }
@@ -1933,6 +2024,26 @@ enum Pipelines: string
                             "$numberInt": "3"
                         }
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/#example
+     */
+    case FloorExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "value": {
+                    "$numberInt": "1"
+                },
+                "floorValue": {
+                    "$floor": "$value"
                 }
             }
         }
@@ -2633,6 +2744,79 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/#example
+     */
+    case LnExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "x": "$year",
+                "y": {
+                    "$ln": "$sales"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/#example
+     */
+    case LogExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "bitsNeeded": {
+                    "$floor": {
+                        "$add": [
+                            {
+                                "$numberInt": "1"
+                            },
+                            {
+                                "$log": [
+                                    "$int",
+                                    {
+                                        "$numberInt": "2"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/#example
+     */
+    case Log10Example = <<<'JSON'
+    [
+        {
+            "$project": {
+                "pH": {
+                    "$multiply": [
+                        {
+                            "$numberInt": "-1"
+                        },
+                        {
+                            "$log10": "$H3O"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/#example
      */
     case LtExample = <<<'JSON'
@@ -3020,6 +3204,26 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/#example
+     */
+    case ModExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "remainder": {
+                    "$mod": [
+                        "$hours",
+                        "$tasks"
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/month/#example
      */
     case MonthExample = <<<'JSON'
@@ -3030,6 +3234,32 @@ enum Pipelines: string
                     "$month": {
                         "date": "$date"
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/#example
+     */
+    case MultiplyExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "date": {
+                    "$numberInt": "1"
+                },
+                "item": {
+                    "$numberInt": "1"
+                },
+                "total": {
+                    "$multiply": [
+                        "$price",
+                        "$quantity"
+                    ]
                 }
             }
         }
@@ -3215,6 +3445,32 @@ enum Pipelines: string
                         ],
                         "method": "approximate"
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/pow/#example
+     */
+    case PowExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "variance": {
+                    "$pow": [
+                        {
+                            "$stdDevPop": [
+                                "$scores.score"
+                            ]
+                        },
+                        {
+                            "$numberInt": "2"
+                        }
+                    ]
                 }
             }
         }
@@ -3940,6 +4196,28 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/#example
+     */
+    case RoundExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "roundedValue": {
+                    "$round": [
+                        "$value",
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/#example
      */
     case RtrimExample = <<<'JSON'
@@ -4637,6 +4915,52 @@ enum Pipelines: string
             "$sort": {
                 "total_qty": {
                     "$numberInt": "-1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sqrt/#example
+     */
+    case SqrtExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "distance": {
+                    "$sqrt": {
+                        "$add": [
+                            {
+                                "$pow": [
+                                    {
+                                        "$subtract": [
+                                            "$p2.y",
+                                            "$p1.y"
+                                        ]
+                                    },
+                                    {
+                                        "$numberInt": "2"
+                                    }
+                                ]
+                            },
+                            {
+                                "$pow": [
+                                    {
+                                        "$subtract": [
+                                            "$p2.x",
+                                            "$p1.x"
+                                        ]
+                                    },
+                                    {
+                                        "$numberInt": "2"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
                 }
             }
         }
@@ -5429,6 +5753,28 @@ enum Pipelines: string
                     "$trim": {
                         "input": "$description"
                     }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/#example
+     */
+    case TruncExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "truncatedValue": {
+                    "$trunc": [
+                        "$value",
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
                 }
             }
         }

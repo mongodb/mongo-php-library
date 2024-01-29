@@ -15,3 +15,17 @@ arguments:
         name: exponent
         type:
             - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/pow/#example'
+        pipeline:
+            -
+                $project:
+                    variance:
+                        $pow:
+                            -
+                                # The builder renders $stdDevPop with the array form, even with a single value
+                                # $stdDevPop: '$scores.score'
+                                $stdDevPop: ['$scores.score']
+                            - 2

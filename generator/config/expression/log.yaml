@@ -19,3 +19,18 @@ arguments:
             - resolvesToNumber
         description: |
             Any valid expression as long as it resolves to a positive number greater than 1.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/#example'
+        pipeline:
+            -
+                $project:
+                    bitsNeeded:
+                        $floor:
+                            $add:
+                                - 1
+                                -
+                                    $log:
+                                        - '$int'
+                                        - 2

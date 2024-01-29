@@ -13,3 +13,13 @@ arguments:
             - resolvesToNumber
         description: |
             If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/#example'
+        pipeline:
+            -
+                $project:
+                    value: 1
+                    ceilingValue:
+                        $ceil: '$value'

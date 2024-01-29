@@ -37,15 +37,24 @@ class CombinedFieldQuery implements FieldQueryInterface
         }
 
         // Flatten nested CombinedFieldQuery
-        $this->fieldQueries = array_reduce($fieldQueries, static function (array $fieldQueries, QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null $fieldQuery): array {
-            if ($fieldQuery instanceof CombinedFieldQuery) {
-                return array_merge($fieldQueries, $fieldQuery->fieldQueries);
-            }
+        $this->fieldQueries = array_reduce(
+            $fieldQueries,
+            /**
+             * @param list<QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $fieldQueries
+             *
+             * @return list<QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null>
+             */
+            static function (array $fieldQueries, QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null $fieldQuery): array {
+                if ($fieldQuery instanceof CombinedFieldQuery) {
+                    return array_merge($fieldQueries, $fieldQuery->fieldQueries);
+                }
 
-            $fieldQueries[] = $fieldQuery;
+                $fieldQueries[] = $fieldQuery;
 
-            return $fieldQueries;
-        }, []);
+                return $fieldQueries;
+            },
+            [],
+        );
 
         // Validate FieldQuery types and non-duplicate operators
         $seenOperators = [];

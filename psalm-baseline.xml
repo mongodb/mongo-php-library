@@ -1,3 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.15.0@5c774aca4746caf3d239d9c8cadb9f882ca29352">
+<files psalm-version="5.20.0@3f284e96c9d9be6fe6b15c79416e1d1903dcfef4">
+  <file src="src/Builder/Encoder/AbstractExpressionEncoder.php">
+    <MixedAssignment>
+      <code>$val</code>
+      <code>$val</code>
+      <code>$value[$key]</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Builder/Encoder/CombinedFieldQueryEncoder.php">
+    <MixedAssignment>
+      <code>$filter</code>
+      <code>$filterValue</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Builder/Encoder/FieldPathEncoder.php">
+    <NoInterfaceProperties>
+      <code><![CDATA[$value->name]]></code>
+    </NoInterfaceProperties>
+  </file>
+  <file src="src/Builder/Encoder/OperatorEncoder.php">
+    <MixedAssignment>
+      <code>$result</code>
+      <code>$result[]</code>
+      <code>$val</code>
+      <code>$val</code>
+      <code>$val</code>
+      <code>$val</code>
+      <code>$val</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Builder/Encoder/OutputWindowEncoder.php">
+    <MixedArgument>
+      <code>$result</code>
+    </MixedArgument>
+  </file>
+  <file src="src/Builder/Encoder/QueryEncoder.php">
+    <MixedArgument>
+      <code><![CDATA[$this->recursiveEncode($value)]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code>$subValue</code>
+      <code>$value</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Builder/Projection/ElemMatchOperator.php">
+    <MixedArgumentTypeCoercion>
+      <code>$query</code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Builder/Query.php">
+    <ArgumentTypeCoercion>
+      <code>$query</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Builder/Query/ElemMatchOperator.php">
+    <MixedArgumentTypeCoercion>
+      <code>$query</code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Builder/Stage/AddFieldsStage.php">
+    <PropertyTypeCoercion>
+      <code>$expression</code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code>stdClass</code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Stage/FacetStage.php">
+    <PropertyTypeCoercion>
+      <code>$facet</code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code>stdClass</code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Stage/GeoNearStage.php">
+    <MixedArgumentTypeCoercion>
+      <code>$query</code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Builder/Stage/GraphLookupStage.php">
+    <MixedArgumentTypeCoercion>
+      <code>$restrictSearchWithMatch</code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Builder/Stage/GroupStage.php">
+    <PropertyTypeCoercion>
+      <code>$field</code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code>stdClass</code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Stage/MatchStage.php">
+    <MixedArgumentTypeCoercion>
+      <code>$query</code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/Builder/Stage/ProjectStage.php">
+    <PropertyTypeCoercion>
+      <code>$specification</code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code>stdClass</code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Stage/SetStage.php">
+    <PropertyTypeCoercion>
+      <code>$field</code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code>stdClass</code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Type/OutputWindow.php">
+    <DocblockTypeContradiction>
+      <code><![CDATA[! is_string($documents[1]) && ! is_int($documents[1])]]></code>
+      <code><![CDATA[! is_string($range[1]) && ! is_numeric($range[1])]]></code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Builder/Type/QueryObject.php">
+    <MixedAssignment>
+      <code>$queries[$fieldPath]</code>
+      <code>$query</code>
+    </MixedAssignment>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[count($queriesOrArrayOfQueries) === 1 &&
+            isset($queriesOrArrayOfQueries[0]) &&
+            is_array($queriesOrArrayOfQueries[0]) &&
+            count($queriesOrArrayOfQueries[0]) > 0]]></code>
+    </RedundantConditionGivenDocblockType>
+  </file>
 </files>

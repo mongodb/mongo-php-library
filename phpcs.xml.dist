@@ -42,7 +42,6 @@
         <exclude name="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn" />
         <exclude name="SlevomatCodingStandard.Functions.StaticClosure" />
         <exclude name="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure" />
-        <exclude name="SlevomatCodingStandard.Operators.DisallowEqualOperators" />
 
         <!-- ********************* -->
         <!-- Exclude broken sniffs -->

@@ -20,7 +20,8 @@ buildvariants:
       - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".sharded .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".loadbalanced .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
-      - ".serverless"
+      - "test_serverless_task_group"
+      - "test_serverless_proxy_task_group"
   - name: test-debian92-php82-local
     tags: ["test", "debian", "x64"]
     display_name: "Test: Debian 9.2, PHP 8.2"

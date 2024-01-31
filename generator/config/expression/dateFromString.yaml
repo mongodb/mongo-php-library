@@ -76,6 +76,5 @@ tests:
                         $dateFromString:
                             dateString: '$date'
                             timezone: '$timezone'
-                            # onNull: new Date(0)
                             onNull: !bson_utcdatetime 0
 

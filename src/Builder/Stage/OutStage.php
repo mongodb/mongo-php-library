@@ -12,7 +12,6 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
-use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
@@ -23,30 +22,17 @@ use stdClass;
  */
 class OutStage implements StageInterface, OperatorInterface
 {
-    public const ENCODE = Encode::Object;
+    public const ENCODE = Encode::Single;
 
-    /** @var string $db Target collection name to write documents from $out to. */
-    public readonly string $db;
-
-    /** @var string $coll Target database name to write documents from $out to. */
-    public readonly string $coll;
-
-    /** @var Optional|Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace. */
-    public readonly Optional|Document|Serializable|stdClass|array $timeseries;
+    /** @var Document|Serializable|array|stdClass|string $coll Target database name to write documents from $out to. */
+    public readonly Document|Serializable|stdClass|array|string $coll;
 
     /**
-     * @param string $db Target collection name to write documents from $out to.
-     * @param string $coll Target database name to write documents from $out to.
-     * @param Optional|Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
+     * @param Document|Serializable|array|stdClass|string $coll Target database name to write documents from $out to.
      */
-    public function __construct(
-        string $db,
-        string $coll,
-        Optional|Document|Serializable|stdClass|array $timeseries = Optional::Undefined,
-    ) {
-        $this->db = $db;
+    public function __construct(Document|Serializable|stdClass|array|string $coll)
+    {
         $this->coll = $coll;
-        $this->timeseries = $timeseries;
     }
 
     public function getOperator(): string

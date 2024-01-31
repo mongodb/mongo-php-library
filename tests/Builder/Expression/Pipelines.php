@@ -4850,7 +4850,7 @@ enum Pipelines: string
                                 }
                             },
                             {
-                                "$numberDouble": "10.230000000000000426"
+                                "$numberDecimal": "10.23"
                             },
                             {
                                 "a": "On sale"

@@ -11,3 +11,30 @@ arguments:
         name: query
         type:
             - query
+tests:
+    -
+        name: 'Equality Match'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#equality-match'
+        pipeline:
+            -
+                $match:
+                    author: 'dave'
+    -
+        name: 'Perform a Count'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#perform-a-count'
+        pipeline:
+            -
+                $match:
+                    $or:
+                        -
+                            score:
+                                $gt: 70
+                                $lt: 90
+                        -
+                            views:
+                                $gte: 1000
+            -
+                $group:
+                    _id: ~
+                    count:
+                        $sum: 1

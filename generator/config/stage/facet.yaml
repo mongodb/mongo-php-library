@@ -12,3 +12,40 @@ arguments:
         type:
             - pipeline
         variadic: object
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/#example'
+        pipeline:
+            -
+                $facet:
+                    categorizedByTags:
+                        -
+                            # The builder uses the verbose form of the $unwind operator
+                            # $unwind: '$tags'
+                            $unwind:
+                                path: '$tags'
+                        -
+                            $sortByCount: '$tags'
+                    categorizedByPrice:
+                        -
+                            $match:
+                                price:
+                                    # The example uses an int, but the builder requires a bool
+                                    # $exists: 1
+                                    $exists: true
+                        -
+                            $bucket:
+                                groupBy: '$price'
+                                boundaries: [0, 150, 200, 300, 400]
+                                default: 'Other'
+                                output:
+                                    count:
+                                        $sum: 1
+                                    titles:
+                                        $push: '$title'
+                    categorizedByYears(Auto):
+                        -
+                            $bucketAuto:
+                                groupBy: '$year'
+                                buckets: 4

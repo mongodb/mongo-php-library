@@ -11,3 +11,10 @@ arguments:
         name: skip
         type:
             - int
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/#example'
+        pipeline:
+            -
+                $skip: 5

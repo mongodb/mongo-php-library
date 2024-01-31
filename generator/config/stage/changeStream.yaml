@@ -57,3 +57,10 @@ arguments:
         optional: true
         description: |
             Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/#examples'
+        pipeline:
+            -
+                $changeStream: {}

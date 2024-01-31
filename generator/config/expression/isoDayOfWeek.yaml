@@ -32,6 +32,7 @@ tests:
                     _id: 0
                     name: '$name'
                     dayOfWeek:
+                        # Example uses the short form, the builder always generates the verbose form
                         # $isoDayOfWeek: '$birthday'
                         $isoDayOfWeek:
                             date: '$birthday'

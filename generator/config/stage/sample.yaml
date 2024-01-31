@@ -13,3 +13,11 @@ arguments:
             - int
         description: |
             The number of documents to randomly select.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/#example'
+        pipeline:
+            -
+                $sample:
+                    size: 3

@@ -133,11 +133,19 @@ trait FactoryTrait
      * Returns statistics regarding a collection or view.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/
-     * @param Document|Serializable|array|stdClass $config
+     * @param Optional|Document|Serializable|array|stdClass $latencyStats
+     * @param Optional|Document|Serializable|array|stdClass $storageStats
+     * @param Optional|Document|Serializable|array|stdClass $count
+     * @param Optional|Document|Serializable|array|stdClass $queryExecStats
      */
-    public static function collStats(Document|Serializable|stdClass|array $config): CollStatsStage
+    public static function collStats(
+        Optional|Document|Serializable|stdClass|array $latencyStats = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $storageStats = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $count = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $queryExecStats = Optional::Undefined,
+    ): CollStatsStage
     {
-        return new CollStatsStage($config);
+        return new CollStatsStage($latencyStats, $storageStats, $count, $queryExecStats);
     }
 
     /**
@@ -156,10 +164,21 @@ trait FactoryTrait
      * Returns information on active and/or dormant operations for the MongoDB deployment. To run, use the db.aggregate() method.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/
+     * @param Optional|bool $allUsers
+     * @param Optional|bool $idleConnections
+     * @param Optional|bool $idleCursors
+     * @param Optional|bool $idleSessions
+     * @param Optional|bool $localOps
      */
-    public static function currentOp(): CurrentOpStage
+    public static function currentOp(
+        Optional|bool $allUsers = Optional::Undefined,
+        Optional|bool $idleConnections = Optional::Undefined,
+        Optional|bool $idleCursors = Optional::Undefined,
+        Optional|bool $idleSessions = Optional::Undefined,
+        Optional|bool $localOps = Optional::Undefined,
+    ): CurrentOpStage
     {
-        return new CurrentOpStage();
+        return new CurrentOpStage($allUsers, $idleConnections, $idleCursors, $idleSessions, $localOps);
     }
 
     /**
@@ -236,7 +255,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
      * @param string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
-     * @param Document|Serializable|array|stdClass $near The point for which to find the closest documents.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass $near The point for which to find the closest documents.
      * @param Optional|Decimal128|Int64|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
      * @param Optional|string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
      * @param Optional|string $key Specify the geospatial indexed field to use when calculating the distance.
@@ -253,7 +272,7 @@ trait FactoryTrait
      */
     public static function geoNear(
         string $distanceField,
-        Document|Serializable|stdClass|array $near,
+        Document|Serializable|ResolvesToObject|stdClass|array $near,
         Optional|Decimal128|Int64|float|int $distanceMultiplier = Optional::Undefined,
         Optional|string $includeLocs = Optional::Undefined,
         Optional|string $key = Optional::Undefined,
@@ -431,17 +450,17 @@ trait FactoryTrait
      * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
-     * @param string $into The output collection.
+     * @param Document|Serializable|array|stdClass|string $into The output collection.
      * @param Optional|BSONArray|PackedArray|array|string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
      * @param Optional|Document|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
-     * @param Optional|string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
+     * @param Optional|BSONArray|PackedArray|Pipeline|array|string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
      * @param Optional|string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.
      */
     public static function merge(
-        string $into,
+        Document|Serializable|stdClass|array|string $into,
         Optional|PackedArray|BSONArray|array|string $on = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $let = Optional::Undefined,
-        Optional|string $whenMatched = Optional::Undefined,
+        Optional|PackedArray|Pipeline|BSONArray|array|string $whenMatched = Optional::Undefined,
         Optional|string $whenNotMatched = Optional::Undefined,
     ): MergeStage
     {
@@ -452,17 +471,11 @@ trait FactoryTrait
      * Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the last stage in the pipeline.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
-     * @param string $db Target collection name to write documents from $out to.
-     * @param string $coll Target database name to write documents from $out to.
-     * @param Optional|Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
+     * @param Document|Serializable|array|stdClass|string $coll Target database name to write documents from $out to.
      */
-    public static function out(
-        string $db,
-        string $coll,
-        Optional|Document|Serializable|stdClass|array $timeseries = Optional::Undefined,
-    ): OutStage
+    public static function out(Document|Serializable|stdClass|array|string $coll): OutStage
     {
-        return new OutStage($db, $coll, $timeseries);
+        return new OutStage($coll);
     }
 
     /**

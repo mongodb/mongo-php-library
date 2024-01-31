@@ -1969,9 +1969,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/
      * @no-named-arguments
-     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
+     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|array|float|int ...$expression
      */
-    public static function sum(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): SumOperator
+    public static function sum(
+        Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|BSONArray|array|float|int ...$expression,
+    ): SumOperator
     {
         return new SumOperator(...$expression);
     }

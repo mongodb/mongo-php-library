@@ -28,3 +28,29 @@ arguments:
             - object # Range
         description: |
             Specification for range based densification.
+tests:
+    -
+        name: 'Densify Time Series Data'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densify-time-series-data'
+        pipeline:
+            -
+                $densify:
+                    field: 'timestamp'
+                    range:
+                        step: 1
+                        unit: 'hour'
+                        bounds:
+                            - !bson_utcdatetime '2021-05-18T00:00:00.000Z'
+                            - !bson_utcdatetime '2021-05-18T08:00:00.000Z'
+    -
+        name: 'Densifiction with Partitions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densifiction-with-partitions'
+        pipeline:
+            -
+                $densify:
+                    field: 'altitude'
+                    partitionByFields:
+                        - 'variety'
+                    range:
+                        bounds: 'full'
+                        step: 200

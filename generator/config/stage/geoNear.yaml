@@ -54,6 +54,7 @@ arguments:
         name: near
         type:
             - object # GeoPoint
+            - resolvesToObject
         description: |
             The point for which to find the closest documents.
     -
@@ -74,3 +75,86 @@ arguments:
             - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
             - When false, MongoDB uses $near semantics: spherical geometry for 2dsphere indexes and planar geometry for 2d indexes.
             Default: false.
+tests:
+    -
+        name: 'Maximum Distance'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#maximum-distance'
+        pipeline:
+            -
+                $geoNear:
+                    near:
+                        type: 'Point'
+                        coordinates:
+                            - -73.99279
+                            - 40.719296
+                    distanceField: 'dist.calculated'
+                    maxDistance: 2
+                    query:
+                        category: 'Parks'
+                    includeLocs: 'dist.location'
+                    spherical: true
+    -
+        name: 'Minimum Distance'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#minimum-distance'
+        pipeline:
+            -
+                $geoNear:
+                    near:
+                        type: 'Point'
+                        coordinates:
+                            - -73.99279
+                            - 40.719296
+                    distanceField: 'dist.calculated'
+                    minDistance: 2
+                    query:
+                        category: 'Parks'
+                    includeLocs: 'dist.location'
+                    spherical: true
+    -
+        name: 'with the let option'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-the-let-option'
+        pipeline:
+            -
+                $geoNear:
+                    near: '$$pt'
+                    distanceField: 'distance'
+                    maxDistance: 2
+                    query:
+                        category: 'Parks'
+                    includeLocs: 'dist.location'
+                    spherical: true
+    -
+        name: 'with Bound let Option'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-bound-let-option'
+        pipeline:
+            -
+                $lookup:
+                    from: 'places'
+                    let:
+                        pt: '$location'
+                    pipeline:
+                        -
+                            $geoNear:
+                                near: '$$pt'
+                                distanceField: 'distance'
+                    as: 'joinedField'
+            -
+                $match:
+                    name: 'Sara D. Roosevelt Park'
+    -
+        name: 'Specify Which Geospatial Index to Use'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#specify-which-geospatial-index-to-use'
+        pipeline:
+            -
+                $geoNear:
+                    near:
+                        type: 'Point'
+                        coordinates:
+                            - -73.98142
+                            - 40.71782
+                    key: 'location'
+                    distanceField: 'dist.calculated'
+                    query:
+                        category: 'Parks'
+            -
+                $limit: 5

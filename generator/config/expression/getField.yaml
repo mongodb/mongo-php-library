@@ -33,7 +33,7 @@ tests:
                     $expr:
                         $gt:
                             -
-                                # the builder uses the verbose form with parameter names
+                                # Example uses the short form, the builder always generates the verbose form
                                 # $getField: 'price.usd'
                                 $getField:
                                     field: 'price.usd'
@@ -48,7 +48,7 @@ tests:
                         $gt:
                             -
                                 $getField:
-                                    # the builder uses the verbose form with parameter names
+                                    # Example uses the short form, the builder always generates the verbose form
                                     # $literal: '$price'
                                     field:
                                         $literal: '$price'

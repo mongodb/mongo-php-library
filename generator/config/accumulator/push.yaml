@@ -26,10 +26,12 @@ tests:
                 $group:
                     _id:
                         day:
+                            # Example uses the short form, the builder always generates the verbose form
                             # $dayOfYear: '$date'
                             $dayOfYear:
                                 date: '$date'
                         year:
+                            # Example uses the short form, the builder always generates the verbose form
                             # $year: '$date'
                             $year:
                                 date: '$date'

@@ -11,3 +11,42 @@ arguments:
         name: expression
         type:
             - expression
+tests:
+    -
+        name: 'Evaluate Access at Every Document Level'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#evaluate-access-at-every-document-level'
+        pipeline:
+            -
+                $match:
+                    year: 2014
+            -
+                $redact:
+                    $cond:
+                        if:
+                            $gt:
+                                -
+                                    $size:
+                                        $setIntersection:
+                                            - '$tags'
+                                            -
+                                                - 'STLW'
+                                                - 'G'
+                                - 0
+                        then: '$$DESCEND'
+                        else: '$$PRUNE'
+    -
+        name: 'Exclude All Fields at a Given Level'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#exclude-all-fields-at-a-given-level'
+        pipeline:
+            -
+                $match:
+                    status: 'A'
+            -
+                $redact:
+                    $cond:
+                        if:
+                            $eq:
+                                - '$level'
+                                - 5
+                        then: '$$PRUNE'
+                        else: '$$DESCEND'

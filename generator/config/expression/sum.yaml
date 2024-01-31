@@ -12,6 +12,7 @@ arguments:
         name: expression
         type:
             - resolvesToNumber
+            - resolvesToArray
         variadic: array
 tests:
     -
@@ -21,6 +22,7 @@ tests:
             -
                 $project:
                     quizTotal:
+                        # Example uses the short form, the builder always generates the verbose form
                         # $sum: '$quizzes'
                         $sum:
                             - '$quizzes'

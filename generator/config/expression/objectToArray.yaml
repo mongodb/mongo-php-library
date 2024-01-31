@@ -33,8 +33,7 @@ tests:
                     warehouses:
                         $objectToArray: '$instock'
             -
-                # The example in the docs uses the short syntax for $unwind,
-                # but the aggregation builder always uses the more verbose syntax.
+                # Example uses the short form, the builder always generates the verbose form
                 # $unwind: '$warehouses'
                 $unwind:
                     path: '$warehouses'

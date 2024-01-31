@@ -30,6 +30,7 @@ tests:
                         covarianceSampForState:
                             $covarianceSamp:
                                 -
+                                    # Example uses the short form, the builder always generates the verbose form
                                     # $year: '$orderDate'
                                     $year:
                                         date: '$orderDate'

@@ -40,3 +40,71 @@ arguments:
         description: |
             Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
             The object name is the name of the field to fill. The object value specifies how the field is filled.
+tests:
+    -
+        name: 'Fill Missing Field Values with a Constant Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-a-constant-value'
+        pipeline:
+            -
+                $fill:
+                    output:
+                        bootsSold:
+                            value: 0
+                        sandalsSold:
+                            value: 0
+                        sneakersSold:
+                            value: 0
+    -
+        name: 'Fill Missing Field Values with Linear Interpolation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-linear-interpolation'
+        pipeline:
+            -
+                $fill:
+                    sortBy:
+                        time: 1
+                    output:
+                        price:
+                            method: 'linear'
+    -
+        name: 'Fill Missing Field Values Based on the Last Observed Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-based-on-the-last-observed-value'
+        pipeline:
+            -
+                $fill:
+                    sortBy:
+                        date: 1
+                    output:
+                        score:
+                            method: 'locf'
+    -
+        name: 'Fill Data for Distinct Partitions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-data-for-distinct-partitions'
+        pipeline:
+            -
+                $fill:
+                    sortBy:
+                        date: 1
+                    partitionBy:
+                        restaurant: '$restaurant'
+                    output:
+                        score:
+                            method: 'locf'
+    -
+        name: 'Indicate if a Field was Populated Using $fill'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#indicate-if-a-field-was-populated-using--fill'
+        pipeline:
+            -
+                $set:
+                    valueExisted:
+                        $ifNull:
+                            -
+                                $toBool:
+                                    $toString: '$score'
+                            - false
+            -
+                $fill:
+                    sortBy:
+                        date: 1
+                    output:
+                        score:
+                            method: 'locf'

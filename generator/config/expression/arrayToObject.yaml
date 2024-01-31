@@ -20,7 +20,7 @@ tests:
                 $project:
                     item: 1
                     dimensions:
-                        # The example renders a single value, but the builder generates an array for consistency
+                        # Example uses the short form, the builder always generates the verbose form
                         # $arrayToObject: '$dimensions'
                         $arrayToObject:
                             - '$dimensions'

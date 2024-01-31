@@ -14,6 +14,23 @@ use MongoDB\Tests\Builder\PipelineTestCase;
  */
 class AddFieldsStageTest extends PipelineTestCase
 {
+    public function testAddElementToAnArray(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::match(
+                _id: 1,
+            ),
+            Stage::addFields(
+                homework: Expression::concatArrays(
+                    Expression::arrayFieldPath('homework'),
+                    [7],
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::AddFieldsAddElementToAnArray, $pipeline);
+    }
+
     public function testAddingFieldsToAnEmbeddedDocument(): void
     {
         $pipeline = new Pipeline(
@@ -25,10 +42,19 @@ class AddFieldsStageTest extends PipelineTestCase
         $this->assertSamePipeline(Pipelines::AddFieldsAddingFieldsToAnEmbeddedDocument, $pipeline);
     }
 
+    public function testOverwritingAnExistingField(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::addFields(
+                cats: 20,
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::AddFieldsOverwritingAnExistingField, $pipeline);
+    }
+
     public function testUsingTwoAddFieldsStages(): void
     {
-        $this->markTestSkipped('$sum must accept arrayFieldPath and render it as a single value: https://jira.mongodb.org/browse/PHPLIB-1287');
-
         $pipeline = new Pipeline(
             Stage::addFields(
                 totalHomework: Expression::sum(Expression::fieldPath('homework')),

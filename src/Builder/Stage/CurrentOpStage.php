@@ -10,6 +10,7 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\StageInterface;
 
 /**
@@ -21,8 +22,40 @@ class CurrentOpStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    public function __construct()
-    {
+    /** @var Optional|bool $allUsers */
+    public readonly Optional|bool $allUsers;
+
+    /** @var Optional|bool $idleConnections */
+    public readonly Optional|bool $idleConnections;
+
+    /** @var Optional|bool $idleCursors */
+    public readonly Optional|bool $idleCursors;
+
+    /** @var Optional|bool $idleSessions */
+    public readonly Optional|bool $idleSessions;
+
+    /** @var Optional|bool $localOps */
+    public readonly Optional|bool $localOps;
+
+    /**
+     * @param Optional|bool $allUsers
+     * @param Optional|bool $idleConnections
+     * @param Optional|bool $idleCursors
+     * @param Optional|bool $idleSessions
+     * @param Optional|bool $localOps
+     */
+    public function __construct(
+        Optional|bool $allUsers = Optional::Undefined,
+        Optional|bool $idleConnections = Optional::Undefined,
+        Optional|bool $idleCursors = Optional::Undefined,
+        Optional|bool $idleSessions = Optional::Undefined,
+        Optional|bool $localOps = Optional::Undefined,
+    ) {
+        $this->allUsers = $allUsers;
+        $this->idleConnections = $idleConnections;
+        $this->idleCursors = $idleCursors;
+        $this->idleSessions = $idleSessions;
+        $this->localOps = $localOps;
     }
 
     public function getOperator(): string

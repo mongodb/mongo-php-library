@@ -74,6 +74,10 @@
         return new TaggedValue('bson_binary', value);
     }
 
+    function ISODate(value) {
+        return new TaggedValue('bson_utcdatetime', value);
+    }
+
     function Decimal128(value) {
         return new TaggedValue('bson_decimal128', value)
     }

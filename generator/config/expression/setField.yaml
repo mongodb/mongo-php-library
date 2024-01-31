@@ -39,6 +39,7 @@ tests:
                         input: '$$ROOT'
                         value: '$price'
             -
+                # Example uses the short form, the builder always generates the verbose form
                 # $unset: 'price'
                 $unset:
                     - 'price'
@@ -54,6 +55,7 @@ tests:
                         input: '$$ROOT'
                         value: '$price'
             -
+                # Example uses the short form, the builder always generates the verbose form
                 # $unset: 'price'
                 $unset:
                     - 'price'

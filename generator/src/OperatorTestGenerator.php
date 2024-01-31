@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use DateTimeImmutable;
 use InvalidArgumentException;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
@@ -27,6 +28,7 @@ use function base64_decode;
 use function basename;
 use function get_object_vars;
 use function is_array;
+use function is_numeric;
 use function is_object;
 use function json_decode;
 use function json_encode;
@@ -141,7 +143,7 @@ class OperatorTestGenerator extends OperatorGenerator
                 'bson_regex' => new Regex(...(array) $value),
                 'bson_int128' => new Int64($value),
                 'bson_decimal128' => new Decimal128($value),
-                'bson_utcdatetime' => new UTCDateTime($value),
+                'bson_utcdatetime' => new UTCDateTime(is_numeric($value) ? $value : new DateTimeImmutable($value)),
                 'bson_binary' => new Binary(base64_decode($value)),
                 default => throw new InvalidArgumentException(sprintf('Yaml tag "%s" is not supported.', $object->getTag())),
             };

@@ -45,10 +45,6 @@ class GroupStage implements StageInterface, OperatorInterface
         Document|Serializable|AccumulatorInterface|stdClass|array ...$field,
     ) {
         $this->_id = $_id;
-        if (\count($field) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $field, got %d.', 1, \count($field)));
-        }
-
         foreach($field as $key => $value) {
             if (! is_string($key)) {
                 throw new InvalidArgumentException('Expected $field arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');

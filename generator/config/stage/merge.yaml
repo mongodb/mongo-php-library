@@ -12,7 +12,7 @@ arguments:
         name: into
         type:
             - string
-            #- OutCollection
+            - object # OutCollection
         description: |
             The output collection.
     -
@@ -34,6 +34,7 @@ arguments:
         name: whenMatched
         type:
             - string # WhenMatched
+            - pipeline
         optional: true
         description: |
             The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
@@ -44,3 +45,136 @@ arguments:
         optional: true
         description: |
             The behavior of $merge if a result document does not match an existing document in the out collection.
+tests:
+    -
+        name: 'On-Demand Materialized View Initial Creation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#on-demand-materialized-view--initial-creation'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        fiscal_year: '$fiscal_year'
+                        dept: '$dept'
+                    salaries:
+                        $sum: '$salary'
+            -
+                $merge:
+                    into:
+                        db: 'reporting'
+                        coll: 'budgets'
+                    on: '_id'
+                    whenMatched: 'replace'
+                    whenNotMatched: 'insert'
+    -
+        name: 'On-Demand Materialized View Update Replace Data'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#on-demand-materialized-view--update-replace-data'
+        pipeline:
+            -
+                $match:
+                    fiscal_year:
+                        $gte: 2019
+            -
+                $group:
+                    _id:
+                        fiscal_year: '$fiscal_year'
+                        dept: '$dept'
+                    salaries:
+                        $sum: '$salary'
+            -
+                $merge:
+                    into:
+                        db: 'reporting'
+                        coll: 'budgets'
+                    on: '_id'
+                    whenMatched: 'replace'
+                    whenNotMatched: 'insert'
+    -
+        name: 'Only Insert New Data'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#only-insert-new-data'
+        pipeline:
+            -
+                $match:
+                    fiscal_year: 2019
+            -
+                $group:
+                    _id:
+                        fiscal_year: '$fiscal_year'
+                        dept: '$dept'
+                    employees:
+                        $push: '$employee'
+            -
+                $project:
+                    _id: 0
+                    dept: '$_id.dept'
+                    fiscal_year: '$_id.fiscal_year'
+                    employees: 1
+            -
+                $merge:
+                    into:
+                        db: 'reporting'
+                        coll: 'orgArchive'
+                    on:
+                        - 'dept'
+                        - 'fiscal_year'
+                    whenMatched: 'fail'
+    -
+        name: 'Merge Results from Multiple Collections'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#merge-results-from-multiple-collections'
+        pipeline:
+            -
+                $group:
+                    _id: '$quarter'
+                    purchased:
+                        $sum: '$qty'
+            -
+                $merge:
+                    into: 'quarterlyreport'
+                    on: '_id'
+                    whenMatched: 'merge'
+                    whenNotMatched: 'insert'
+    -
+        name: 'Use the Pipeline to Customize the Merge'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#use-the-pipeline-to-customize-the-merge'
+        pipeline:
+            -
+                $match:
+                    date:
+                        $gte: !bson_utcdatetime '2019-05-07'
+                        $lt: !bson_utcdatetime '2019-05-08'
+            -
+                $project:
+                    _id:
+                        $dateToString:
+                            format: '%Y-%m'
+                            date: '$date'
+                    thumbsup: 1
+                    thumbsdown: 1
+            -
+                $merge:
+                    into: 'monthlytotals'
+                    on: '_id'
+                    whenMatched:
+                        -
+                            $addFields:
+                                thumbsup:
+                                    $add:
+                                        - '$thumbsup'
+                                        - '$$new.thumbsup'
+                                thumbsdown:
+                                    $add:
+                                        - '$thumbsdown'
+                                        - '$$new.thumbsdown'
+                    whenNotMatched: 'insert'
+    -
+        name: 'Use Variables to Customize the Merge'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#use-variables-to-customize-the-merge'
+        pipeline:
+            -
+                $merge:
+                    into: 'cakeSales'
+                    let:
+                        year: '2020'
+                    whenMatched:
+                        -
+                            $addFields:
+                                salesYear: '$$year'

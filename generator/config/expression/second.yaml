@@ -30,6 +30,7 @@ tests:
             -
                 $project:
                     seconds:
+                        # Example uses the short form, the builder always generates the verbose form
                         # $second: '$date'
                         $second:
                             date: '$date'

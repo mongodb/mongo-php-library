@@ -21,6 +21,7 @@ tests:
             -
                 $project:
                     quizMax:
+                        # Example uses the short form, the builder always generates the verbose form
                         # $max: '$quizzes'
                         $max:
                             - '$quizzes'

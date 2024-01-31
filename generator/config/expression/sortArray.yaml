@@ -101,8 +101,7 @@ tests:
                                     a:
                                         sale: true
                                         price: 19
-                                # Decimal128( "10.23" )
-                                - 10.23
+                                - !bson_decimal128 '10.23'
                                 -
                                     a: 'On sale'
                             sortBy: 1

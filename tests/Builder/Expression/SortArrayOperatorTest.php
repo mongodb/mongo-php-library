@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Builder\Expression;
 
+use MongoDB\BSON\Decimal128;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
@@ -83,7 +84,7 @@ class SortArrayOperatorTest extends PipelineTestCase
                         'Gratis',
                         ['a' => null],
                         object(a: object(sale: true, price: 19)),
-                        10.23,
+                        new Decimal128('10.23'),
                         ['a' => 'On sale'],
                     ],
                     sortBy: 1,

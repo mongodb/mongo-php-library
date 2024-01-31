@@ -22,7 +22,7 @@ use stdClass;
  */
 class SortByCountStage implements StageInterface, OperatorInterface
 {
-    public const ENCODE = Encode::Object;
+    public const ENCODE = Encode::Single;
 
     /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;

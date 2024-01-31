@@ -43,6 +43,7 @@ tests:
                     $expr:
                         $eq:
                             -
+                                # Example uses the short form, the builder always generates the verbose form
                                 # $month: '$logout'
                                 $month:
                                     date: '$logout'
@@ -55,6 +56,7 @@ tests:
                             unit: 'hour'
                             amount: 3
             -
+                # Example uses the short form, the builder always generates the verbose form
                 # $merge: 'connectionTime'
                 $merge:
                     into: 'connectionTime'

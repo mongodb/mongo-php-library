@@ -25,7 +25,7 @@ tests:
                     variance:
                         $pow:
                             -
-                                # The builder renders $stdDevPop with the array form, even with a single value
+                                # Example uses the short form, the builder always generates the verbose form
                                 # $stdDevPop: '$scores.score'
                                 $stdDevPop: ['$scores.score']
                             - 2

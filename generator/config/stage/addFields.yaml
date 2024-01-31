@@ -22,9 +22,12 @@ tests:
             -
                 $addFields:
                     totalHomework:
-                        $sum: '$homework'
+                        # The example renders a single value, but the builder generates an array for consistency
+                        # $sum: '$homework'
+                        $sum: ['$homework']
                     totalQuiz:
-                        $sum: '$quiz'
+                        # $sum: '$quiz'
+                        $sum: ['$quiz']
             -
                 $addFields:
                     totalScore:
@@ -39,3 +42,23 @@ tests:
             -
                 $addFields:
                     specs.fuel_type: 'unleaded'
+    -
+        name: 'Overwriting an existing field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#overwriting-an-existing-field'
+        pipeline:
+            -
+                $addFields:
+                    cats: 20
+    -
+        name: 'Add Element to an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#add-element-to-an-array'
+        pipeline:
+            -
+                $match:
+                    _id: 1
+            -
+                $addFields:
+                    homework:
+                        $concatArrays:
+                            - '$homework'
+                            - [7]

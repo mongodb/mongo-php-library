@@ -53,6 +53,7 @@ tests:
                             $unsetField:
                                 field: 'euro'
                                 input:
+                                    # Example uses the short form, the builder always generates the verbose form
                                     # $getField: 'price'
                                     $getField:
                                         field: 'price'

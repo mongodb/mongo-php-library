@@ -11,3 +11,25 @@ arguments:
         name: sort
         type:
             - object # SortSpec
+tests:
+    -
+        name: 'Ascending Descending Sort'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/#ascending-descending-sort'
+        pipeline:
+            -
+                $sort:
+                    age: -1
+                    posts: 1
+    -
+        name: 'Text Score Metadata Sort'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/#text-score-metadata-sort'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'operating'
+            -
+                $sort:
+                    score:
+                        $meta: 'textScore'
+                    posts: -1

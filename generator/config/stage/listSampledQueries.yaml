@@ -12,3 +12,18 @@ arguments:
         type:
             - string
         optional: true
+tests:
+    -
+        name: 'List Sampled Queries for All Collections'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/#list-sampled-queries-for-all-collections'
+        pipeline:
+            -
+                $listSampledQueries: {}
+
+    -
+        name: 'List Sampled Queries for A Specific Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/#list-sampled-queries-for-a-specific-collection'
+        pipeline:
+            -
+                $listSampledQueries:
+                    namespace: 'social.post'

@@ -53,7 +53,7 @@ tests:
                             input: '$distances'
                             as: 'decimalValue'
                             in:
-                                # The example renders a single value, but the builder generates an array for consistency
+                                # Example uses the short form, the builder always generates the verbose form
                                 # $trunc: '$$decimalValue'
                                 $trunc:
                                     - '$$decimalValue'

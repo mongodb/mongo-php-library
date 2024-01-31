@@ -3,7 +3,6 @@ name: $slice
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/'
 type:
     - resolvesToArray
-    - projection
 encode: array
 description: |
     Returns a subset of an array.

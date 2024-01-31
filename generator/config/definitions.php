@@ -56,16 +56,4 @@ return [
             OperatorTestGenerator::class,
         ],
     ],
-
-    // Projection Operators
-    [
-        'configFiles' => __DIR__ . '/projection',
-        'namespace' => 'MongoDB\\Builder\\Projection',
-        'classNameSuffix' => 'Operator',
-        'generators' => [
-            OperatorClassGenerator::class,
-            OperatorFactoryGenerator::class,
-            OperatorTestGenerator::class,
-        ],
-    ],
 ];

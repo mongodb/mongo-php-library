@@ -12,7 +12,6 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
-use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -24,7 +23,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/
  */
-class SliceOperator implements ResolvesToArray, ProjectionInterface, OperatorInterface
+class SliceOperator implements ResolvesToArray, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 

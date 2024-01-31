@@ -89,10 +89,6 @@ return $expressions + [
         'returnType' => Type\QueryInterface::class,
         'acceptedTypes' => [Type\QueryInterface::class, 'array'],
     ],
-    'projection' => [
-        'returnType' => Type\ProjectionInterface::class,
-        'acceptedTypes' => [Type\ProjectionInterface::class, ...$bsonTypes['object']],
-    ],
     'accumulator' => [
         'returnType' => Type\AccumulatorInterface::class,
         'acceptedTypes' => [Type\AccumulatorInterface::class, ...$bsonTypes['object']],

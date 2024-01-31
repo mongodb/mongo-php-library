@@ -23,7 +23,6 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
-use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -480,10 +479,10 @@ trait FactoryTrait
      * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
-     * @param Document|ExpressionInterface|ProjectionInterface|Serializable|Type|array|bool|float|int|null|stdClass|string ...$specification
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$specification
      */
     public static function project(
-        Document|Serializable|Type|ExpressionInterface|ProjectionInterface|stdClass|array|bool|float|int|null|string ...$specification,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$specification,
     ): ProjectStage
     {
         return new ProjectStage(...$specification);

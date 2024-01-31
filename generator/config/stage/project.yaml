@@ -11,5 +11,4 @@ arguments:
         name: specification
         type:
             - expression
-            - projection
         variadic: object

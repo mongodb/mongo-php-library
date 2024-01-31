@@ -340,16 +340,6 @@ trait FactoryTrait
     }
 
     /**
-     * A special hint that can be provided via the sort() or hint() methods that can be used to force either a forward or reverse collection scan.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/meta/natural/
-     */
-    public static function natural(): NaturalOperator
-    {
-        return new NaturalOperator();
-    }
-
-    /**
      * Matches all values that are not equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/

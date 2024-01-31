@@ -23,7 +23,6 @@
                         "type": "string",
                         "enum": [
                             "accumulator",
-                            "projection",
                             "stage",
                             "query",
                             "fieldQuery",
@@ -113,7 +112,6 @@
                             "window",
                             "expression",
                             "geometry",
-                            "projection",
                             "fieldPath",
                             "any",
                             "resolvesToNumber", "numberFieldPath", "number",

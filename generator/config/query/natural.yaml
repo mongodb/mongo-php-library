@@ -1,8 +1,0 @@
-# $schema: ../schema.json
-name: $natural
-link: 'https://www.mongodb.com/docs/manual/reference/operator/meta/natural/'
-type:
-    - projection # @todo: used in sort
-encode: object
-description: |
-    A special hint that can be provided via the sort() or hint() methods that can be used to force either a forward or reverse collection scan.

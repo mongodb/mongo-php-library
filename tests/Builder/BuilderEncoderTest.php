@@ -10,7 +10,6 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
-use MongoDB\Builder\Projection;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
 use MongoDB\Builder\Variable;
@@ -157,7 +156,7 @@ class BuilderEncoderTest extends TestCase
     {
         $pipeline = new Pipeline(
             Stage::project(
-                items: Projection::filter(
+                items: Expression::filter(
                     ...$limit,
                     input: Expression::arrayFieldPath('items'),
                     cond: Expression::gte(Expression::variable('item.price'), 100),

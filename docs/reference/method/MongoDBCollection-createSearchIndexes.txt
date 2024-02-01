@@ -77,8 +77,8 @@ Behavior
 Examples
 --------
 
-Create Indexes with Static and Dynamic Mappings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create an Index with Dynamic Mappings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following example creates an Atlas Search index using
 `dynamic mappings <https://www.mongodb.com/docs/atlas/atlas-search/define-field-mappings/#dynamic-mappings>`__
@@ -91,18 +91,25 @@ to index all document fields containing
 
    $collection = (new MongoDB\Client)->selectCollection('test', 'articles');
 
-   $indexName = $collection->createSearchIndex(
-      ['mappings' => ['dynamic' => true]],
-      ['name' => 'test-search-index']
+   $indexNames = $collection->createSearchIndexes(
+       [
+           [
+               'name' => 'test-search-index',
+               'definition' => ['mappings' => ['dynamic' => true]],
+           ],
+       ]
    );
 
-   var_dump($indexName);
+   var_dump($indexNames);
 
 The output would then resemble:
 
 .. code-block:: none
 
-   string(17) "test-search-index"
+   array(1) {
+     [0]=>
+     string(17) "test-search-index"
+   }
 
 See Also
 --------

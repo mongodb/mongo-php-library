@@ -91,12 +91,14 @@ to index all document fields containing
 
    $collection = (new MongoDB\Client)->selectCollection('test', 'articles');
 
-   $indexNames = $collection->createSearchIndexes([
+   $indexNames = $collection->createSearchIndexes(
        [
-           'name' => 'test-search-index',
-           'definition' => ['mappings' => ['dynamic' => true]],
-       ],
-   ]);
+           [
+               'name' => 'test-search-index',
+               'definition' => ['mappings' => ['dynamic' => true]],
+           ],
+       ]
+   );
 
    var_dump($indexNames);
 

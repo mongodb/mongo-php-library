@@ -894,6 +894,15 @@ final class Operation
                 assertInstanceOf(Session::class, $args['session']);
                 assertNull($args['session']->getServer());
                 break;
+            case 'createEntities':
+                assertArrayHasKey('entities', $args);
+                assertIsArray($args['entities']);
+                $this->context->createEntities($args['entities']);
+                /* Ensure EventObserver and EventCollector for any new clients
+                 * are subscribed. This is a NOP for existing clients. */
+                $this->context->startEventObservers();
+                $this->context->startEventCollectors();
+                break;
             case 'failPoint':
                 assertArrayHasKey('client', $args);
                 assertArrayHasKey('failPoint', $args);

@@ -3112,6 +3112,57 @@ enum Pipelines: string
     JSON;
 
     /**
+     * textScore
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---textscore-
+     */
+    case MetaTextScore = <<<'JSON'
+    [
+        {
+            "$match": {
+                "$text": {
+                    "$search": "cake"
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": {
+                    "$meta": "textScore"
+                },
+                "count": {
+                    "$sum": {
+                        "$numberInt": "1"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * indexKey
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---indexkey-
+     */
+    case MetaIndexKey = <<<'JSON'
+    [
+        {
+            "$match": {
+                "type": "apparel"
+            }
+        },
+        {
+            "$addFields": {
+                "idxKey": {
+                    "$meta": "indexKey"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/millisecond/#example

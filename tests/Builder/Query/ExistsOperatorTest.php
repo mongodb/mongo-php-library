@@ -19,7 +19,7 @@ class ExistsOperatorTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::match(
                 qty: [
-                    Query::exists(true),
+                    Query::exists(),
                     Query::nin([5, 15]),
                 ],
             ),
@@ -28,13 +28,22 @@ class ExistsOperatorTest extends PipelineTestCase
         $this->assertSamePipeline(Pipelines::ExistsExistsAndNotEqualTo, $pipeline);
     }
 
+    public function testMissingField(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::match(
+                qty: Query::exists(false),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::ExistsMissingField, $pipeline);
+    }
+
     public function testNullValues(): void
     {
         $pipeline = new Pipeline(
             Stage::match(
-                qty: [
-                    Query::exists(true),
-                ],
+                qty: Query::exists(),
             ),
         );
 

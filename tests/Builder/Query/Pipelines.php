@@ -696,6 +696,19 @@ enum Pipelines: string
     ]
     JSON;
 
+    /** Missing Field */
+    case ExistsMissingField = <<<'JSON'
+    [
+        {
+            "$match": {
+                "qty": {
+                    "$exists": false
+                }
+            }
+        }
+    ]
+    JSON;
+
     /**
      * Compare Two Fields from A Single Document
      *

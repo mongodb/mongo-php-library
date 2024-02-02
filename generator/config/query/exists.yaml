@@ -11,6 +11,7 @@ arguments:
         name: exists
         type:
             - bool
+        default: true
 tests:
     -
         name: 'Exists and Not Equal To'
@@ -29,3 +30,10 @@ tests:
                 $match:
                     qty:
                         $exists: true
+    -
+        name: 'Missing Field'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $exists: false

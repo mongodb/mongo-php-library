@@ -175,7 +175,7 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/exists/
      * @param bool $exists
      */
-    public static function exists(bool $exists): ExistsOperator
+    public static function exists(bool $exists = true): ExistsOperator
     {
         return new ExistsOperator($exists);
     }

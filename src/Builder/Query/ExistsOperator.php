@@ -27,7 +27,7 @@ class ExistsOperator implements FieldQueryInterface, OperatorInterface
     /**
      * @param bool $exists
      */
-    public function __construct(bool $exists)
+    public function __construct(bool $exists = true)
     {
         $this->exists = $exists;
     }

@@ -23,7 +23,7 @@ class CurrentOpStageTest extends PipelineTestCase
             ),
             Stage::match(
                 active: false,
-                transaction: Query::exists(true),
+                transaction: Query::exists(),
             ),
         );
 

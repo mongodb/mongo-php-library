@@ -40,7 +40,7 @@ class FacetStageTest extends PipelineTestCase
                 ),
                 categorizedByPrice: new Pipeline(
                     Stage::match(
-                        price: Query::exists(true),
+                        price: Query::exists(),
                     ),
                     Stage::bucket(
                         groupBy: Expression::numberFieldPath('price'),

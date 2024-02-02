@@ -23,7 +23,7 @@ class AndOperatorTest extends PipelineTestCase
                         price: Query::ne(1.99),
                     ),
                     Query::query(
-                        price: Query::exists(true),
+                        price: Query::exists(),
                     ),
                 ),
             ),

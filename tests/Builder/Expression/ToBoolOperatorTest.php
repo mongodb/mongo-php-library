@@ -9,8 +9,6 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
-use function MongoDB\object;
-
 /**
  * Test $toBool expression
  */
@@ -22,14 +20,14 @@ class ToBoolOperatorTest extends PipelineTestCase
             Stage::addFields(
                 convertedShippedFlag: Expression::switch(
                     branches: [
-                        object(
+                        Expression::case(
                             case: Expression::eq(
                                 Expression::fieldPath('shipped'),
                                 'false',
                             ),
                             then: false,
                         ),
-                        object(
+                        Expression::case(
                             case: Expression::eq(
                                 Expression::fieldPath('shipped'),
                                 '',

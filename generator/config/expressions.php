@@ -113,6 +113,10 @@ return $expressions + [
         'returnType' => Type\GeometryInterface::class,
         'acceptedTypes' => [Type\GeometryInterface::class, ...$bsonTypes['object']],
     ],
+    'switchBranch' => [
+        'returnType' => Type\SwitchBranchInterface::class,
+        'acceptedTypes' => [Type\SwitchBranchInterface::class, ...$bsonTypes['object']],
+    ],
 
     // @todo add enum values
     'Granularity' => [

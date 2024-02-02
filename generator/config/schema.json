@@ -29,6 +29,7 @@
                             "filter",
                             "window",
                             "geometry",
+                            "switchBranch",
                             "resolvesToAny",
                             "resolvesToNumber",
                             "resolvesToDouble",
@@ -59,6 +60,7 @@
                     "enum": [
                         "array",
                         "object",
+                        "flat_object",
                         "dollar_object",
                         "single",
                         "group"

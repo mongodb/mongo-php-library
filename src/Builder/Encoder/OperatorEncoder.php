@@ -46,6 +46,7 @@ class OperatorEncoder extends AbstractExpressionEncoder
                 return $this->encodeAsArray($value);
 
             case Encode::Object:
+            case Encode::FlatObject:
                 return $this->encodeAsObject($value);
 
             case Encode::DollarObject:
@@ -107,7 +108,9 @@ class OperatorEncoder extends AbstractExpressionEncoder
             $result->{$key} = $this->recursiveEncode($val);
         }
 
-        return $this->wrap($value, $result);
+        return $value::ENCODE === Encode::FlatObject
+            ? $result
+            : $this->wrap($value, $result);
     }
 
     private function encodeAsDollarObject(OperatorInterface $value): stdClass

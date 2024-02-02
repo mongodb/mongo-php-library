@@ -10,8 +10,6 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
-use function MongoDB\object;
-
 /**
  * Test $convert expression
  */
@@ -43,7 +41,7 @@ class ConvertOperatorTest extends PipelineTestCase
             Stage::project(
                 totalPrice: Expression::switch(
                     branches: [
-                        object(
+                        Expression::case(
                             case: Expression::eq(
                                 Expression::type(
                                     Expression::fieldPath('convertedPrice'),
@@ -52,7 +50,7 @@ class ConvertOperatorTest extends PipelineTestCase
                             ),
                             then: 'NaN',
                         ),
-                        object(
+                        Expression::case(
                             case: Expression::eq(
                                 Expression::type(
                                     Expression::fieldPath('convertedQty'),

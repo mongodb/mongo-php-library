@@ -307,6 +307,21 @@ trait FactoryTrait
     }
 
     /**
+     * Represents a single case in a $switch expression
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
+     * @param ResolvesToBool|bool $case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
+     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then Can be any valid expression.
+     */
+    public static function case(
+        ResolvesToBool|bool $case,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then,
+    ): CaseOperator
+    {
+        return new CaseOperator($case, $then);
+    }
+
+    /**
      * Returns the smallest integer greater than or equal to the specified number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/

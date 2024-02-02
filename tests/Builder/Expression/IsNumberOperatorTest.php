@@ -10,8 +10,6 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
-use function MongoDB\object;
-
 /**
  * Test $isNumber expression
  */
@@ -28,35 +26,35 @@ class IsNumberOperatorTest extends PipelineTestCase
                     then: Expression::fieldPath('grade'),
                     else: Expression::switch(
                         branches: [
-                            object(
+                            Expression::case(
                                 case: Expression::eq(
                                     Expression::fieldPath('grade'),
                                     'A',
                                 ),
                                 then: 4,
                             ),
-                            object(
+                            Expression::case(
                                 case: Expression::eq(
                                     Expression::fieldPath('grade'),
                                     'B',
                                 ),
                                 then: 3,
                             ),
-                            object(
+                            Expression::case(
                                 case: Expression::eq(
                                     Expression::fieldPath('grade'),
                                     'C',
                                 ),
                                 then: 2,
                             ),
-                            object(
+                            Expression::case(
                                 case: Expression::eq(
                                     Expression::fieldPath('grade'),
                                     'D',
                                 ),
                                 then: 1,
                             ),
-                            object(
+                            Expression::case(
                                 case: Expression::eq(
                                     Expression::fieldPath('grade'),
                                     'F',

@@ -9,8 +9,6 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
-use function MongoDB\object;
-
 /**
  * Test $switch expression
  */
@@ -23,7 +21,7 @@ class SwitchOperatorTest extends PipelineTestCase
                 name: 1,
                 summary: Expression::switch(
                     branches: [
-                        object(
+                        Expression::case(
                             case: Expression::gte(
                                 Expression::avg(
                                     Expression::intFieldPath('scores'),
@@ -32,7 +30,7 @@ class SwitchOperatorTest extends PipelineTestCase
                             ),
                             then: 'Doing great!',
                         ),
-                        object(
+                        Expression::case(
                             case:Expression::and(
                                 Expression::gte(
                                     Expression::avg(
@@ -49,7 +47,7 @@ class SwitchOperatorTest extends PipelineTestCase
                             ),
                             then: 'Doing pretty well.',
                         ),
-                        object(
+                        Expression::case(
                             case: Expression::lt(
                                 Expression::avg(
                                     Expression::intFieldPath('scores'),

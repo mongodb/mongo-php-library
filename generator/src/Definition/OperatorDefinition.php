@@ -39,6 +39,7 @@ final class OperatorDefinition
             'single' => Encode::Single,
             'array' => Encode::Array,
             'object' => Encode::Object,
+            'flat_object' => Encode::FlatObject,
             'dollar_object' => Encode::DollarObject,
             'group' => Encode::Group,
             default => throw new UnexpectedValueException(sprintf('Unexpected "encode" value for operator "%s". Got "%s"', $name, $encode)),

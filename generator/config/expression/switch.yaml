@@ -10,7 +10,7 @@ arguments:
     -
         name: branches
         type:
-            - array # of object{case:resolvesToBool, then:expression}
+            - array # of CaseOperator
         description: |
             An array of control branch documents. Each branch is a document with the following fields:
             - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.

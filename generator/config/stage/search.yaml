@@ -12,3 +12,30 @@ arguments:
         name: search
         type:
             - object
+
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#aggregation-variable'
+        pipeline:
+            -
+                $search:
+                    near:
+                        path: 'released'
+                        origin: !bson_utcdatetime '2011-09-01T00:00:00.000+00:00'
+                        pivot: 7776000000
+            -
+                $project:
+                    _id: 0
+                    title: 1
+                    released: 1
+            -
+                $limit: 5
+            -
+                $facet:
+                    docs: []
+                    meta:
+                        -
+                            $replaceWith: '$$SEARCH_META'
+                        -
+                            $limit: 1

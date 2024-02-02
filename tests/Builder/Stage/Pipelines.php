@@ -2555,6 +2555,90 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#aggregation-variable
+     */
+    case SearchExample = <<<'JSON'
+    [
+        {
+            "$search": {
+                "near": {
+                    "path": "released",
+                    "origin": {
+                        "$date": {
+                            "$numberLong": "1314835200000"
+                        }
+                    },
+                    "pivot": {
+                        "$numberLong": "7776000000"
+                    }
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "released": {
+                    "$numberInt": "1"
+                }
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "5"
+            }
+        },
+        {
+            "$facet": {
+                "docs": [],
+                "meta": [
+                    {
+                        "$replaceWith": "$$SEARCH_META"
+                    },
+                    {
+                        "$limit": {
+                            "$numberInt": "1"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#example
+     */
+    case SearchMetaExample = <<<'JSON'
+    [
+        {
+            "$searchMeta": {
+                "range": {
+                    "path": "year",
+                    "gte": {
+                        "$numberInt": "1998"
+                    },
+                    "lt": {
+                        "$numberInt": "1999"
+                    }
+                },
+                "count": {
+                    "type": "total"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Using Two $set Stages
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#using-two--set-stages

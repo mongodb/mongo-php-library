@@ -12,3 +12,17 @@ arguments:
         name: meta
         type:
             - object
+
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#example'
+        pipeline:
+            -
+                $searchMeta:
+                    range:
+                        path: 'year'
+                        gte: 1998
+                        lt: 1999
+                    count:
+                        type: 'total'

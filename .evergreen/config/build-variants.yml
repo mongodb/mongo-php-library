@@ -53,12 +53,6 @@ buildvariants:
     run_on: rhel80-small
     tasks:
       - name: "build-all-php"
-  - name: build-rhel76
-    display_name: "Build: RHEL 7.6"
-    tags: ["build", "rhel", "x64"]
-    run_on: rhel76-small
-    tasks:
-      - name: "build-all-php"
 
   # Ubuntu LTS
   - name: build-ubuntu2204

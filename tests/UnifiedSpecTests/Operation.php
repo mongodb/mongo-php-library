@@ -410,11 +410,6 @@ final class Operation
                 );
 
             case 'distinct':
-                if (isset($args['session']) && $args['session']->isInTransaction()) {
-                    // Transaction, but sharded cluster?
-                    $collection->distinct('foo');
-                }
-
                 assertArrayHasKey('fieldName', $args);
                 assertArrayHasKey('filter', $args);
                 assertIsString($args['fieldName']);

@@ -18,93 +18,13 @@ use function get_object_vars;
 use function glob;
 
 /**
- * Transactions spec tests.
+ * Transactions Convenient API spec tests.
  *
- * @see https://github.com/mongodb/specifications/tree/master/source/transactions
+ * @see https://github.com/mongodb/specifications/tree/master/source/transactions-convenient-api
  */
 class TransactionsSpecTest extends FunctionalTestCase
 {
     public const INTERRUPTED = 11601;
-
-    /**
-     * In addition to the useMultipleMongoses tests, these should all pass
-     * before the driver can be considered compatible with MongoDB 4.2.
-     */
-    private static array $incompleteTests = [
-        'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
-        'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on SPEC-1320',
-        'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
-    ];
-
-    /**
-     * Any tests that rely on session pinning (including targetedFailPoint) must
-     * be skipped since libmongoc does not pin on load-balanced toplogies. */
-    private static array $incompleteLoadBalancerTests = [
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on insertOne' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient error within a transaction' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on insertOne insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on insertMany insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on updateOne update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on replaceOne update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on updateMany update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on deleteOne delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on deleteMany delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on findOneAndDelete findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on findOneAndUpdate findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on findOneAndReplace findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on bulkWrite insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on bulkWrite update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on bulkWrite delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on find find' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on countDocuments aggregate' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on aggregate aggregate' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on distinct distinct' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: remain pinned after non-transient Interrupted error on runCommand insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on insertOne insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on insertOne insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on insertMany insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on insertMany insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on updateOne update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on updateOne update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on replaceOne update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on replaceOne update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on updateMany update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on updateMany update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on deleteOne delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on deleteOne delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on deleteMany delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on deleteMany delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on findOneAndDelete findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on findOneAndDelete findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on findOneAndUpdate findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on findOneAndUpdate findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on findOneAndReplace findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on findOneAndReplace findAndModify' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on bulkWrite insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on bulkWrite insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on bulkWrite update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on bulkWrite update' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on bulkWrite delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on bulkWrite delete' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on find find' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on find find' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on countDocuments aggregate' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on countDocuments aggregate' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on aggregate aggregate' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on aggregate aggregate' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on distinct distinct' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on distinct distinct' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient connection error on runCommand insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on runCommand insert' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-recovery-token: commitTransaction explicit retries include recoveryToken' => 'libmongoc omits recoveryToken for load-balanced topology (CDRIVER-4718)',
-        'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-recovery-token: abortTransaction sends recoveryToken' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/pin-mongos: multiple commits' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/pin-mongos: unpin after transient error within a transaction' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'libmongoc does not pin for load-balanced topology',
-        'transactions/mongos-recovery-token-errorLabels: commitTransaction retry succeeds on new mongos' => 'libmongoc does not pin for load-balanced topology',
-    ];
 
     public function setUp(): void
     {
@@ -173,20 +93,6 @@ class TransactionsSpecTest extends FunctionalTestCase
         static::assertDocumentsMatch($expected, $actual);
     }
 
-    /**
-     * @dataProvider provideTransactionsTests
-     * @group serverless
-     */
-    public function testTransactions(stdClass $test, ?array $runOn, array $data, ?string $databaseName = null, ?string $collectionName = null): void
-    {
-        $this->runTransactionTest($test, $runOn, $data, $databaseName, $collectionName);
-    }
-
-    public function provideTransactionsTests(): array
-    {
-        return $this->provideTests('transactions');
-    }
-
     /** @dataProvider provideTransactionsConvenientApiTests */
     public function testTransactionsConvenientApi(stdClass $test, ?array $runOn, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
@@ -209,14 +115,6 @@ class TransactionsSpecTest extends FunctionalTestCase
      */
     private function runTransactionTest(stdClass $test, ?array $runOn, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
-        if (isset(self::$incompleteTests[$this->dataDescription()])) {
-            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
-        }
-
-        if ($this->isLoadBalanced() && isset(self::$incompleteLoadBalancerTests[$this->dataDescription()])) {
-            $this->markTestIncomplete(self::$incompleteLoadBalancerTests[$this->dataDescription()]);
-        }
-
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }

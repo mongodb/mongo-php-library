@@ -75,7 +75,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         'retryable-writes/retryable writes handshake failures: collection.bulkWrite succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
         // Skips dating back to legacy transaction tests
         'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
-        'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on SPEC-1320',
+        'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on DRIVERS-2104',
         'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
         // PHPC does not implement CMAP
         'valid-pass/assertNumberConnectionsCheckedOut: basic assertion succeeds' => 'PHPC does not implement CMAP',
@@ -156,9 +156,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         'transactions/mongos-pin-auto: unpin after transient connection error on runCommand insert' => 'libmongoc does not pin for load-balanced topology',
         'transactions/mongos-pin-auto: unpin after transient ShutdownInProgress error on runCommand insert' => 'libmongoc does not pin for load-balanced topology',
         'transactions/mongos-recovery-token: commitTransaction explicit retries include recoveryToken' => 'libmongoc omits recoveryToken for load-balanced topology (CDRIVER-4718)',
-        'transactions/mongos-recovery-token: commitTransaction retry succeeds on new mongos' => 'libmongoc does not pin for load-balanced topology',
         'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'libmongoc does not pin for load-balanced topology',
         'transactions/mongos-recovery-token: abortTransaction sends recoveryToken' => 'libmongoc does not pin for load-balanced topology',
+        'transactions/mongos-recovery-token-errorLabels: commitTransaction retry succeeds on new mongos' => 'libmongoc does not pin for load-balanced topology',
         'transactions/pin-mongos: multiple commits' => 'libmongoc does not pin for load-balanced topology',
         'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'libmongoc does not pin for load-balanced topology',
         'transactions/pin-mongos: unpin after transient error within a transaction' => 'libmongoc does not pin for load-balanced topology',

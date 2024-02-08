@@ -1,6 +1,6 @@
-=============================
-MongoDB\\Client::getManager()
-=============================
+============
+getManager()
+============
 
 .. default-domain:: mongodb
 

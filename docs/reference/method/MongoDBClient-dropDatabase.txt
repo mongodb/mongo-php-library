@@ -1,6 +1,6 @@
-===============================
-MongoDB\\Client::dropDatabase()
-===============================
+==============
+dropDatabase()
+==============
 
 .. default-domain:: mongodb
 

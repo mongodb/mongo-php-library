@@ -8,6 +8,7 @@ use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 /**
@@ -21,7 +22,7 @@ class DateAddOperatorTest extends PipelineTestCase
             Stage::project(
                 expectedDeliveryDate: Expression::dateAdd(
                     startDate: Expression::dateFieldPath('purchaseDate'),
-                    unit: 'day',
+                    unit: TimeUnit::Day,
                     amount: 3,
                 ),
             ),
@@ -45,7 +46,7 @@ class DateAddOperatorTest extends PipelineTestCase
                     format: '%Y-%m-%d %H:%M',
                     date: Expression::dateAdd(
                         startDate: Expression::dateFieldPath('login'),
-                        unit: 'day',
+                        unit: TimeUnit::Day,
                         amount: 1,
                         timezone: Expression::stringFieldPath('location'),
                     ),
@@ -54,7 +55,7 @@ class DateAddOperatorTest extends PipelineTestCase
                     format: '%Y-%m-%d %H:%M',
                     date: Expression::dateAdd(
                         startDate: Expression::dateFieldPath('login'),
-                        unit: 'hour',
+                        unit: TimeUnit::Hour,
                         amount: 24,
                         timezone: Expression::stringFieldPath('location'),
                     ),
@@ -68,7 +69,7 @@ class DateAddOperatorTest extends PipelineTestCase
                     format: '%Y-%m-%d %H:%M',
                     date: Expression::dateAdd(
                         startDate: Expression::dateFieldPath('login'),
-                        unit: 'day',
+                        unit: TimeUnit::Day,
                         amount: 1,
                         timezone: Expression::stringFieldPath('location'),
                     ),
@@ -78,7 +79,7 @@ class DateAddOperatorTest extends PipelineTestCase
                     format: '%Y-%m-%d %H:%M',
                     date: Expression::dateAdd(
                         startDate: Expression::dateFieldPath('login'),
-                        unit: 'hour',
+                        unit: TimeUnit::Hour,
                         amount: 24,
                         timezone: Expression::stringFieldPath('location'),
                     ),
@@ -99,7 +100,7 @@ class DateAddOperatorTest extends PipelineTestCase
                         Expression::dateFieldPath('deliveryDate'),
                         Expression::dateAdd(
                             startDate: Expression::dateFieldPath('purchaseDate'),
-                            unit: 'day',
+                            unit: TimeUnit::Day,
                             amount: 5,
                         ),
                     ),

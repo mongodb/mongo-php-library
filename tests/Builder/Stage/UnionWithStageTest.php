@@ -8,9 +8,8 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
-
-use function MongoDB\object;
 
 /**
  * Test $unionWith stage
@@ -48,11 +47,9 @@ class UnionWithStageTest extends PipelineTestCase
                 ),
             ),
             Stage::sort(
-                object(
-                    _id: 1,
-                    store: 1,
-                    item: 1,
-                ),
+                _id: Sort::Asc,
+                store: Sort::Asc,
+                item: Sort::Asc,
             ),
         );
 
@@ -72,9 +69,7 @@ class UnionWithStageTest extends PipelineTestCase
                 ),
             ),
             Stage::sort(
-                object(
-                    total: -1,
-                ),
+                total: Sort::Desc,
             ),
         );
 

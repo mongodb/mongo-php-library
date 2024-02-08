@@ -16,7 +16,7 @@ arguments:
     -
         name: unit
         type:
-            - resolvesToString
+            - timeUnit
         optional: true
         description: |
             A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".

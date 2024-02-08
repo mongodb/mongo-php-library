@@ -8,6 +8,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -35,7 +36,7 @@ class TopNAccumulatorTest extends PipelineTestCase
                         else: 3,
                     ),
                     sortBy: object(
-                        score: -1,
+                        score: Sort::Desc,
                     ),
                 ),
             ),
@@ -58,7 +59,7 @@ class TopNAccumulatorTest extends PipelineTestCase
                         Expression::fieldPath('score'),
                     ],
                     sortBy: object(
-                        score: -1,
+                        score: Sort::Desc,
                     ),
                     n: 3,
                 ),
@@ -79,7 +80,7 @@ class TopNAccumulatorTest extends PipelineTestCase
                         Expression::fieldPath('score'),
                     ],
                     sortBy: object(
-                        score: -1,
+                        score: Sort::Desc,
                     ),
                     n: 3,
                 ),

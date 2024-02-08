@@ -7,6 +7,7 @@ namespace MongoDB\Tests\Builder\Stage;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -21,7 +22,7 @@ class FillStageTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::fill(
                 sortBy: object(
-                    date: 1,
+                    date: Sort::Asc,
                 ),
                 partitionBy: object(
                     restaurant: Expression::stringFieldPath('restaurant'),
@@ -40,7 +41,7 @@ class FillStageTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::fill(
                 sortBy: object(
-                    date: 1,
+                    date: Sort::Asc,
                 ),
                 output: object(
                     score: object(method: 'locf'),
@@ -71,7 +72,7 @@ class FillStageTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::fill(
                 sortBy: object(
-                    time: 1,
+                    time: Sort::Asc,
                 ),
                 output: object(
                     price: object(method: 'linear'),
@@ -97,7 +98,7 @@ class FillStageTest extends PipelineTestCase
             ),
             Stage::fill(
                 sortBy: object(
-                    date: 1,
+                    date: Sort::Asc,
                 ),
                 output: object(
                     score: object(method: 'locf'),

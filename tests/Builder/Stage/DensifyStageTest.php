@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -40,7 +41,7 @@ class DensifyStageTest extends PipelineTestCase
                 field: 'timestamp',
                 range: object(
                     step: 1,
-                    unit: 'hour',
+                    unit: TimeUnit::Hour,
                     bounds: [
                         new UTCDateTime(new DateTimeImmutable('2021-05-18T00:00:00.000Z')),
                         new UTCDateTime(new DateTimeImmutable('2021-05-18T08:00:00.000Z')),

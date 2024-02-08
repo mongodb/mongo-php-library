@@ -7,9 +7,8 @@ namespace MongoDB\Tests\Builder\Expression;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
-
-use function MongoDB\object;
 
 /**
  * Test $toLong expression
@@ -25,9 +24,7 @@ class ToLongOperatorTest extends PipelineTestCase
                 ),
             ),
             Stage::sort(
-                object(
-                    convertedQty: -1,
-                ),
+                convertedQty: Sort::Desc,
             ),
         );
 

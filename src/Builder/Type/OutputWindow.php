@@ -46,7 +46,7 @@ class OutputWindow implements WindowInterface
         Document|Serializable|WindowInterface|stdClass|array $operator,
         Optional|array $documents = Optional::Undefined,
         Optional|array $range = Optional::Undefined,
-        Optional|string $unit = Optional::Undefined,
+        Optional|TimeUnit|string $unit = Optional::Undefined,
     ) {
         $this->operator = $operator;
 

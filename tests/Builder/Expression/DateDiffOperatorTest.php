@@ -8,6 +8,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 /**
@@ -24,7 +25,7 @@ class DateDiffOperatorTest extends PipelineTestCase
                     Expression::dateDiff(
                         startDate: Expression::dateFieldPath('purchased'),
                         endDate: Expression::dateFieldPath('delivered'),
-                        unit: 'day',
+                        unit: TimeUnit::Day,
                     ),
                 ),
             ),
@@ -49,17 +50,17 @@ class DateDiffOperatorTest extends PipelineTestCase
                 years: Expression::dateDiff(
                     startDate: Expression::dateFieldPath('start'),
                     endDate: Expression::dateFieldPath('end'),
-                    unit: 'year',
+                    unit: TimeUnit::Year,
                 ),
                 months: Expression::dateDiff(
                     startDate: Expression::dateFieldPath('start'),
                     endDate: Expression::dateFieldPath('end'),
-                    unit: 'month',
+                    unit: TimeUnit::Month,
                 ),
                 days: Expression::dateDiff(
                     startDate: Expression::dateFieldPath('start'),
                     endDate: Expression::dateFieldPath('end'),
-                    unit: 'day',
+                    unit: TimeUnit::Day,
                 ),
                 _id: 0,
             ),
@@ -75,18 +76,18 @@ class DateDiffOperatorTest extends PipelineTestCase
                 wks_default: Expression::dateDiff(
                     startDate: Expression::dateFieldPath('start'),
                     endDate: Expression::dateFieldPath('end'),
-                    unit: 'week',
+                    unit: TimeUnit::Week,
                 ),
                 wks_monday: Expression::dateDiff(
                     startDate: Expression::dateFieldPath('start'),
                     endDate: Expression::dateFieldPath('end'),
-                    unit: 'week',
+                    unit: TimeUnit::Week,
                     startOfWeek: 'Monday',
                 ),
                 wks_friday: Expression::dateDiff(
                     startDate: Expression::dateFieldPath('start'),
                     endDate: Expression::dateFieldPath('end'),
-                    unit: 'week',
+                    unit: TimeUnit::Week,
                     startOfWeek: 'fri',
                 ),
                 _id: 0,

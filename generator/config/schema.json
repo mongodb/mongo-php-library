@@ -115,6 +115,8 @@
                             "expression",
                             "geometry",
                             "fieldPath",
+                            "timeUnit",
+                            "sortSpec",
                             "any",
                             "resolvesToNumber", "numberFieldPath", "number",
                             "resolvesToDouble", "doubleFieldPath", "double",

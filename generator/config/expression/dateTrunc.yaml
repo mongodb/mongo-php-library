@@ -18,7 +18,7 @@ arguments:
     -
         name: unit
         type:
-            - resolvesToString
+            - timeUnit
         description: |
             The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
             Together, binSize and unit specify the time period used in the $dateTrunc calculation.

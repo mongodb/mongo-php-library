@@ -8,6 +8,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -20,10 +21,10 @@ class FirstAccumulatorTest extends PipelineTestCase
     public function testUseInGroupStage(): void
     {
         $pipeline = new Pipeline(
-            Stage::sort(object(
-                item: 1,
-                date: 1,
-            )),
+            Stage::sort(
+                item: Sort::Asc,
+                date: Sort::Asc,
+            ),
             Stage::group(
                 _id: Expression::fieldPath('item'),
                 firstSale: Accumulator::first(Expression::dateFieldPath('date')),
@@ -39,7 +40,7 @@ class FirstAccumulatorTest extends PipelineTestCase
             Stage::setWindowFields(
                 partitionBy: Expression::fieldPath('state'),
                 sortBy: object(
-                    orderDate: 1,
+                    orderDate: Sort::Asc,
                 ),
                 output: object(
                     firstOrderTypeForState: Accumulator::outputWindow(

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Builder\Query;
 
+use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 /**
@@ -97,20 +99,18 @@ class TextOperatorTest extends PipelineTestCase
 
     public function testTextSearchScoreExamples(): void
     {
-        /**
-         * @todo: add support for $meta: "textScore"
-         * @todo: add support for $sort spec with object
-         */
         $pipeline = new Pipeline(
             Stage::match(
                 Query::text(
                     search: 'CAFÉ',
                     diacriticSensitive: true,
                 ),
-                score: ['$meta' => 'textScore'],
+            ),
+            Stage::project(
+                score: Expression::meta('textScore'),
             ),
             Stage::sort(
-                ['score' => ['$meta' => 'textScore']],
+                score: Sort::TextScore,
             ),
             Stage::limit(5),
         );

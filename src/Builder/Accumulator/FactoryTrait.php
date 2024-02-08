@@ -24,6 +24,7 @@ use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -180,12 +181,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/
      * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
-     * @param Optional|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+     * @param Optional|ResolvesToString|TimeUnit|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public static function derivative(
         Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $input,
-        Optional|string $unit = Optional::Undefined,
+        Optional|ResolvesToString|TimeUnit|string $unit = Optional::Undefined,
     ): DerivativeAccumulator
     {
         return new DerivativeAccumulator($input, $unit);
@@ -260,12 +261,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
      * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
-     * @param Optional|ResolvesToString|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+     * @param Optional|ResolvesToString|TimeUnit|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public static function integral(
         Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $input,
-        Optional|ResolvesToString|string $unit = Optional::Undefined,
+        Optional|ResolvesToString|TimeUnit|string $unit = Optional::Undefined,
     ): IntegralAccumulator
     {
         return new IntegralAccumulator($input, $unit);

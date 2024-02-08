@@ -8,6 +8,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -23,7 +24,7 @@ class RankAccumulatorTest extends PipelineTestCase
             Stage::setWindowFields(
                 partitionBy: Expression::stringFieldPath('state'),
                 sortBy: object(
-                    orderDate: 1,
+                    orderDate:Sort::Asc,
                 ),
                 output: object(
                     rankOrderDateForState: Accumulator::rank(),
@@ -40,7 +41,7 @@ class RankAccumulatorTest extends PipelineTestCase
             Stage::setWindowFields(
                 partitionBy: Expression::stringFieldPath('state'),
                 sortBy: object(
-                    quantity: -1,
+                    quantity: Sort::Desc,
                 ),
                 output: object(
                     rankQuantityForState: Accumulator::rank(),

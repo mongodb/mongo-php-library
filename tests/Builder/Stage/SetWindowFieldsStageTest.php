@@ -8,6 +8,8 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -22,7 +24,7 @@ class SetWindowFieldsStageTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::setWindowFields(
                 partitionBy: Expression::stringFieldPath('state'),
-                sortBy: object(price: 1),
+                sortBy: object(price: Sort::Asc),
                 output: object(
                     quantityFromSimilarOrders: Accumulator::outputWindow(
                         Accumulator::sum(
@@ -42,14 +44,14 @@ class SetWindowFieldsStageTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::setWindowFields(
                 partitionBy: Expression::stringFieldPath('state'),
-                sortBy: object(orderDate: 1),
+                sortBy: object(orderDate: Sort::Asc),
                 output: object(
                     recentOrders: Accumulator::outputWindow(
                         Accumulator::push(
                             Expression::dateFieldPath('orderDate'),
                         ),
                         range: ['unbounded', -10],
-                        unit: 'month',
+                        unit: TimeUnit::Month,
                     ),
                 ),
             ),
@@ -63,14 +65,14 @@ class SetWindowFieldsStageTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::setWindowFields(
                 partitionBy: Expression::stringFieldPath('state'),
-                sortBy: object(orderDate: 1),
+                sortBy: object(orderDate: Sort::Asc),
                 output: object(
                     recentOrders: Accumulator::outputWindow(
                         Accumulator::push(
                             Expression::dateFieldPath('orderDate'),
                         ),
                         range: ['unbounded', 10],
-                        unit: 'month',
+                        unit: TimeUnit::Month,
                     ),
                 ),
             ),
@@ -86,7 +88,7 @@ class SetWindowFieldsStageTest extends PipelineTestCase
                 partitionBy: Expression::year(
                     Expression::dateFieldPath('orderDate'),
                 ),
-                sortBy: object(orderDate: 1),
+                sortBy: object(orderDate: Sort::Asc),
                 output: object(
                     cumulativeQuantityForYear: Accumulator::outputWindow(
                         Accumulator::sum(
@@ -112,7 +114,7 @@ class SetWindowFieldsStageTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::setWindowFields(
                 partitionBy: Expression::stringFieldPath('state'),
-                sortBy: object(orderDate: 1),
+                sortBy: object(orderDate: Sort::Asc),
                 output: object(
                     cumulativeQuantityForState: Accumulator::outputWindow(
                         Accumulator::sum(
@@ -134,7 +136,7 @@ class SetWindowFieldsStageTest extends PipelineTestCase
                 partitionBy: Expression::year(
                     Expression::dateFieldPath('orderDate'),
                 ),
-                sortBy: object(orderDate: 1),
+                sortBy: object(orderDate: Sort::Asc),
                 output: object(
                     cumulativeQuantityForYear: Accumulator::outputWindow(
                         Accumulator::sum(
@@ -156,7 +158,7 @@ class SetWindowFieldsStageTest extends PipelineTestCase
                 partitionBy: Expression::year(
                     Expression::dateFieldPath('orderDate'),
                 ),
-                sortBy: object(orderDate: 1),
+                sortBy: object(orderDate: Sort::Asc),
                 output: object(
                     averageQuantity: Accumulator::outputWindow(
                         Accumulator::avg(

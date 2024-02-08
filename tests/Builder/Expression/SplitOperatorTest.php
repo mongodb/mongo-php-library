@@ -9,6 +9,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -43,9 +44,7 @@ class SplitOperatorTest extends PipelineTestCase
                 ),
             ),
             Stage::sort(
-                object(
-                    total_qty: -1,
-                ),
+                total_qty: Sort::Desc,
             ),
         );
 

@@ -8,6 +8,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\OutputWindow;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Builder\Type\WindowInterface;
 use stdClass;
 
@@ -31,7 +32,7 @@ final class Accumulator
         Document|Serializable|WindowInterface|stdClass|array $operator,
         Optional|array $documents = Optional::Undefined,
         Optional|array $range = Optional::Undefined,
-        Optional|string $unit = Optional::Undefined,
+        Optional|TimeUnit|string $unit = Optional::Undefined,
     ): OutputWindow {
         return new OutputWindow($operator, $documents, $range, $unit);
     }

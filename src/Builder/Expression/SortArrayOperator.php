@@ -13,6 +13,7 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -36,18 +37,18 @@ class SortArrayOperator implements ResolvesToArray, OperatorInterface
      */
     public readonly PackedArray|ResolvesToArray|BSONArray|array $input;
 
-    /** @var Document|Serializable|array|int|stdClass $sortBy The document specifies a sort ordering. */
-    public readonly Document|Serializable|stdClass|array|int $sortBy;
+    /** @var Document|Serializable|Sort|array|int|stdClass $sortBy The document specifies a sort ordering. */
+    public readonly Document|Serializable|Sort|stdClass|array|int $sortBy;
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|array $input The array to be sorted.
      * The result is null if the expression: is missing, evaluates to null, or evaluates to undefined
      * If the expression evaluates to any other non-array value, the document returns an error.
-     * @param Document|Serializable|array|int|stdClass $sortBy The document specifies a sort ordering.
+     * @param Document|Serializable|Sort|array|int|stdClass $sortBy The document specifies a sort ordering.
      */
     public function __construct(
         PackedArray|ResolvesToArray|BSONArray|array $input,
-        Document|Serializable|stdClass|array|int $sortBy,
+        Document|Serializable|Sort|stdClass|array|int $sortBy,
     ) {
         if (is_array($input) && ! array_is_list($input)) {
             throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');

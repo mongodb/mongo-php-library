@@ -11,7 +11,7 @@ use function get_object_vars;
 use function is_array;
 
 /**
- * @template BSONType of stdClass|array|string
+ * @template BSONType of stdClass|array|string|int
  * @template NativeType
  * @template-implements ExpressionEncoder<BSONType, NativeType>
  */

@@ -7,9 +7,8 @@ namespace MongoDB\Tests\Builder\Expression;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
-
-use function MongoDB\object;
 
 /**
  * Test $toString expression
@@ -25,9 +24,7 @@ class ToStringOperatorTest extends PipelineTestCase
                 ),
             ),
             Stage::sort(
-                object(
-                    convertedZipCode: 1,
-                ),
+                convertedZipCode: Sort::Asc,
             ),
         );
 

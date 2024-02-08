@@ -8,6 +8,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -24,7 +25,7 @@ class DateTruncOperatorTest extends PipelineTestCase
                 _id: object(
                     truncatedOrderDate: Expression::dateTrunc(
                         date: Expression::dateFieldPath('orderDate'),
-                        unit: 'month',
+                        unit: TimeUnit::Month,
                         binSize: 6,
                     ),
                 ),
@@ -45,7 +46,7 @@ class DateTruncOperatorTest extends PipelineTestCase
                 orderDate: 1,
                 truncatedOrderDate: Expression::dateTrunc(
                     date: Expression::dateFieldPath('orderDate'),
-                    unit: 'week',
+                    unit: TimeUnit::Week,
                     binSize: 2,
                     timezone: 'America/Los_Angeles',
                     startOfWeek: 'Monday',

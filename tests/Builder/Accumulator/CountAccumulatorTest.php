@@ -8,6 +8,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -35,7 +36,7 @@ class CountAccumulatorTest extends PipelineTestCase
             Stage::setWindowFields(
                 partitionBy: Expression::fieldPath('state'),
                 sortBy: object(
-                    orderDate: 1,
+                    orderDate: Sort::Asc,
                 ),
                 output: object(
                     countNumberOfDocumentsForState: Accumulator::outputWindow(

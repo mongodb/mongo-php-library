@@ -24,6 +24,7 @@ use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -633,11 +634,13 @@ trait FactoryTrait
      * Reorders the document stream by a specified sort key. Only the order changes; the documents remain unmodified. For each input document, outputs one document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/
-     * @param Document|Serializable|array|stdClass $sort
+     * @param ExpressionInterface|Sort|Type|array|bool|float|int|null|stdClass|string ...$sort
      */
-    public static function sort(Document|Serializable|stdClass|array $sort): SortStage
+    public static function sort(
+        Type|ExpressionInterface|Sort|stdClass|array|bool|float|int|null|string ...$sort,
+    ): SortStage
     {
-        return new SortStage($sort);
+        return new SortStage(...$sort);
     }
 
     /**

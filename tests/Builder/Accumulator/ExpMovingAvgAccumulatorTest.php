@@ -8,6 +8,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -23,7 +24,7 @@ class ExpMovingAvgAccumulatorTest extends PipelineTestCase
             Stage::setWindowFields(
                 partitionBy: Expression::stringFieldPath('stock'),
                 sortBy: object(
-                    date: 1,
+                    date: Sort::Asc,
                 ),
                 output: object(
                     expMovingAvgForStock: Accumulator::expMovingAvg(
@@ -43,7 +44,7 @@ class ExpMovingAvgAccumulatorTest extends PipelineTestCase
             Stage::setWindowFields(
                 partitionBy: Expression::stringFieldPath('stock'),
                 sortBy: object(
-                    date: 1,
+                    date: Sort::Asc,
                 ),
                 output: object(
                     expMovingAvgForStock: Accumulator::expMovingAvg(

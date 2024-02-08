@@ -8,6 +8,7 @@ use MongoDB\BSON\Decimal128;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 use function MongoDB\object;
@@ -24,7 +25,7 @@ class SortArrayOperatorTest extends PipelineTestCase
                 _id: 0,
                 result: Expression::sortArray(
                     input: [1, 4, 1, 6, 12, 5],
-                    sortBy: 1,
+                    sortBy: Sort::Asc,
                 ),
             ),
         );
@@ -41,7 +42,7 @@ class SortArrayOperatorTest extends PipelineTestCase
                     input: Expression::arrayFieldPath('team'),
                     // @todo This object should be typed as "sort spec"
                     sortBy: object(
-                        name: 1,
+                        name: Sort::Asc,
                     ),
                 ),
             ),
@@ -57,9 +58,8 @@ class SortArrayOperatorTest extends PipelineTestCase
                 _id: 0,
                 result: Expression::sortArray(
                     input: Expression::arrayFieldPath('team'),
-                    // @todo This array should be typed as "sort spec"
                     sortBy: [
-                        'address.city' => -1,
+                        'address.city' => Sort::Desc,
                     ],
                 ),
             ),
@@ -87,7 +87,7 @@ class SortArrayOperatorTest extends PipelineTestCase
                         new Decimal128('10.23'),
                         ['a' => 'On sale'],
                     ],
-                    sortBy: 1,
+                    sortBy: Sort::Asc,
                 ),
             ),
         );
@@ -104,8 +104,8 @@ class SortArrayOperatorTest extends PipelineTestCase
                     input: Expression::arrayFieldPath('team'),
                     // @todo This array should be typed as "sort spec"
                     sortBy: object(
-                        age: -1,
-                        name: 1,
+                        age: Sort::Desc,
+                        name: Sort::Asc,
                     ),
                 ),
             ),

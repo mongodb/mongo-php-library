@@ -10,7 +10,9 @@ arguments:
     -
         name: sort
         type:
-            - object # SortSpec
+            - expression
+            - sortSpec
+        variadic: object
 tests:
     -
         name: 'Ascending Descending Sort'

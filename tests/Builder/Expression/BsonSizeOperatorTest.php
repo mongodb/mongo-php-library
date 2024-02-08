@@ -8,9 +8,8 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
-
-use function MongoDB\object;
 
 /**
  * Test $bsonSize expression
@@ -43,7 +42,7 @@ class BsonSizeOperatorTest extends PipelineTestCase
                 ),
             ),
             Stage::sort(
-                object(task_object_size: -1),
+                task_object_size: Sort::Desc,
             ),
             Stage::limit(1),
         );

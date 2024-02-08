@@ -12,6 +12,7 @@ use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Builder\Variable;
 use PHPUnit\Framework\TestCase;
 
@@ -98,7 +99,10 @@ class BuilderEncoderTest extends TestCase
     public function testSort(): void
     {
         $pipeline = new Pipeline(
-            Stage::sort(object(age: -1, posts: 1)),
+            Stage::sort(
+                age: Sort::Desc,
+                posts: Sort::Asc,
+            ),
         );
 
         $expected = [
@@ -228,7 +232,7 @@ class BuilderEncoderTest extends TestCase
         $pipeline = new Pipeline(
             Stage::setWindowFields(
                 partitionBy: Expression::year(Expression::dateFieldPath('orderDate')),
-                sortBy: object(orderDate: 1),
+                sortBy: object(orderDate: Sort::Asc),
                 output: object(
                     cumulativeQuantityForYear: Accumulator::outputWindow(
                         Accumulator::sum(Expression::intFieldPath('quantity')),

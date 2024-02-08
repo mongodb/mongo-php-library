@@ -7,9 +7,8 @@ namespace MongoDB\Tests\Builder\Stage;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
-
-use function MongoDB\object;
 
 /**
  * Test $sort stage
@@ -20,10 +19,8 @@ class SortStageTest extends PipelineTestCase
     {
         $pipeline = new Pipeline(
             Stage::sort(
-                object(
-                    age: -1,
-                    posts: 1,
-                ),
+                age: Sort::Desc,
+                posts: Sort::Asc,
             ),
         );
 
@@ -37,10 +34,8 @@ class SortStageTest extends PipelineTestCase
                 Query::text('operating'),
             ),
             Stage::sort(
-                object(
-                    score: ['$meta' => 'textScore'],
-                    posts: -1,
-                ),
+                score: Sort::TextScore,
+                posts: Sort::Desc,
             ),
         );
 

@@ -20,6 +20,7 @@ arguments:
         type:
             - object # SortSpec
             - int
+            - sortSpec
         description: |
             The document specifies a sort ordering.
 tests:

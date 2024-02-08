@@ -7,6 +7,7 @@ namespace MongoDB\Tests\Builder\Type;
 use Generator;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\OutputWindow;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -49,11 +50,11 @@ class OutputWindowTest extends TestCase
     {
         $outputWindow = new OutputWindow(
             operator: $operator = $this->createMock(WindowInterface::class),
-            unit: 'day',
+            unit: TimeUnit::Day,
         );
 
         $this->assertSame($operator, $outputWindow->operator);
-        $this->assertEquals((object) ['unit' => 'day'], $outputWindow->window);
+        $this->assertEquals((object) ['unit' => TimeUnit::Day], $outputWindow->window);
     }
 
     /**

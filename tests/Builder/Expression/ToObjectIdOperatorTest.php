@@ -7,9 +7,8 @@ namespace MongoDB\Tests\Builder\Expression;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\Sort;
 use MongoDB\Tests\Builder\PipelineTestCase;
-
-use function MongoDB\object;
 
 /**
  * Test $toObjectId expression
@@ -25,9 +24,7 @@ class ToObjectIdOperatorTest extends PipelineTestCase
                 ),
             ),
             Stage::sort(
-                object(
-                    convertedId: -1,
-                ),
+                convertedId: Sort::Desc,
             ),
         );
 

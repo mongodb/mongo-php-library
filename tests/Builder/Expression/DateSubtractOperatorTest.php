@@ -8,6 +8,7 @@ use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
 /**
@@ -29,7 +30,7 @@ class DateSubtractOperatorTest extends PipelineTestCase
                     format: '%Y-%m-%d %H:%M',
                     date: Expression::dateSubtract(
                         startDate: Expression::dateFieldPath('login'),
-                        unit: 'day',
+                        unit: TimeUnit::Day,
                         amount: 1,
                         timezone: Expression::stringFieldPath('location'),
                     ),
@@ -38,7 +39,7 @@ class DateSubtractOperatorTest extends PipelineTestCase
                     format: '%Y-%m-%d %H:%M',
                     date: Expression::dateSubtract(
                         startDate: Expression::dateFieldPath('login'),
-                        unit: 'hour',
+                        unit: TimeUnit::Hour,
                         amount: 24,
                         timezone: Expression::stringFieldPath('location'),
                     ),
@@ -52,7 +53,7 @@ class DateSubtractOperatorTest extends PipelineTestCase
                     format: '%Y-%m-%d %H:%M',
                     date: Expression::dateSubtract(
                         startDate: Expression::dateFieldPath('login'),
-                        unit: 'day',
+                        unit: TimeUnit::Day,
                         amount: 1,
                         timezone: Expression::stringFieldPath('location'),
                     ),
@@ -62,7 +63,7 @@ class DateSubtractOperatorTest extends PipelineTestCase
                     format: '%Y-%m-%d %H:%M',
                     date: Expression::dateSubtract(
                         startDate: Expression::dateFieldPath('login'),
-                        unit: 'hour',
+                        unit: TimeUnit::Hour,
                         amount: 24,
                         timezone: Expression::stringFieldPath('location'),
                     ),
@@ -83,7 +84,7 @@ class DateSubtractOperatorTest extends PipelineTestCase
                         Expression::dateFieldPath('logoutTime'),
                         Expression::dateSubtract(
                             startDate: Expression::variable('NOW'),
-                            unit: 'week',
+                            unit: TimeUnit::Week,
                             amount: 1,
                         ),
                     ),
@@ -118,7 +119,7 @@ class DateSubtractOperatorTest extends PipelineTestCase
             Stage::project(
                 logoutTime: Expression::dateSubtract(
                     startDate: Expression::dateFieldPath('logout'),
-                    unit: 'hour',
+                    unit: TimeUnit::Hour,
                     amount: 3,
                 ),
             ),

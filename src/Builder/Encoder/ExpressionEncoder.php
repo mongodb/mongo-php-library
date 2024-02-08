@@ -9,7 +9,7 @@ use MongoDB\Codec\Encoder;
 use stdClass;
 
 /**
- * @template BSONType of stdClass|array|string
+ * @template BSONType of stdClass|array|string|int
  * @template NativeType
  * @template-extends Encoder<BSONType, NativeType>
  */

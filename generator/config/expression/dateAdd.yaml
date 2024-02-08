@@ -18,7 +18,7 @@ arguments:
     -
         name: unit
         type:
-            - resolvesToString
+            - timeUnit
         description: |
             The unit used to measure the amount of time added to the startDate.
     -

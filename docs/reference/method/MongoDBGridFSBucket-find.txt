@@ -1,6 +1,6 @@
-===============================
-MongoDB\\GridFS\\Bucket::find()
-===============================
+======
+find()
+======
 
 .. default-domain:: mongodb
 

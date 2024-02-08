@@ -1,6 +1,6 @@
-=======================================
-MongoDB\\Model\\IndexInfo::getVersion()
-=======================================
+=======================
+IndexInfo::getVersion()
+=======================
 
 .. default-domain:: mongodb
 

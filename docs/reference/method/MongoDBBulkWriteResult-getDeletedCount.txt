@@ -1,6 +1,6 @@
-===========================================
-MongoDB\\BulkWriteResult::getDeletedCount()
-===========================================
+==================================
+BulkWriteResult::getDeletedCount()
+==================================
 
 .. default-domain:: mongodb
 

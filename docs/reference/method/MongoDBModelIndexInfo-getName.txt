@@ -1,6 +1,6 @@
-====================================
-MongoDB\\Model\\IndexInfo::getName()
-====================================
+====================
+IndexInfo::getName()
+====================
 
 .. default-domain:: mongodb
 

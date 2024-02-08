@@ -1,6 +1,6 @@
-=============================================
-MongoDB\\GridFS\\Bucket::openDownloadStream()
-=============================================
+====================
+openDownloadStream()
+====================
 
 .. default-domain:: mongodb
 

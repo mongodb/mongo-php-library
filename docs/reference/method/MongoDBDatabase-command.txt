@@ -1,6 +1,6 @@
-============================
-MongoDB\\Database::command()
-============================
+=========
+command()
+=========
 
 .. default-domain:: mongodb
 

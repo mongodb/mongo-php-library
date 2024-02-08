@@ -1,6 +1,6 @@
-===========================================
-MongoDB\\GridFS\\Bucket::uploadFromStream()
-===========================================
+==================
+uploadFromStream()
+==================
 
 .. default-domain:: mongodb
 

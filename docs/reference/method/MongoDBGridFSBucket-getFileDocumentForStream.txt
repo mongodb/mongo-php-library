@@ -1,6 +1,6 @@
-===================================================
-MongoDB\\GridFS\\Bucket::getFileDocumentForStream()
-===================================================
+==========================
+getFileDocumentForStream()
+==========================
 
 .. default-domain:: mongodb
 

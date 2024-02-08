@@ -1,6 +1,6 @@
-=================================
-MongoDB\\Collection::getManager()
-=================================
+============
+getManager()
+============
 
 .. default-domain:: mongodb
 

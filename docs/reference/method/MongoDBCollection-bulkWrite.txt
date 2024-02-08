@@ -1,6 +1,6 @@
-================================
-MongoDB\\Collection::bulkWrite()
-================================
+===========
+bulkWrite()
+===========
 
 .. default-domain:: mongodb
 

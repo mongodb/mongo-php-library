@@ -1,6 +1,6 @@
-======================================
-MongoDB\\UpdateResult::getUpsertedId()
-======================================
+=============================
+UpdateResult::getUpsertedId()
+=============================
 
 .. default-domain:: mongodb
 

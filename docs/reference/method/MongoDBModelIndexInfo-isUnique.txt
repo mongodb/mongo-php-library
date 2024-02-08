@@ -1,6 +1,6 @@
-=====================================
-MongoDB\\Model\\IndexInfo::isUnique()
-=====================================
+=====================
+IndexInfo::isUnique()
+=====================
 
 .. default-domain:: mongodb
 

@@ -1,6 +1,6 @@
-===================================
-MongoDB\\Model\\IndexInfo::getKey()
-===================================
+===================
+IndexInfo::getKey()
+===================
 
 .. default-domain:: mongodb
 

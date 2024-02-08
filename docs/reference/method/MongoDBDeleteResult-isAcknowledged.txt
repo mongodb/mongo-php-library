@@ -1,6 +1,6 @@
-=======================================
-MongoDB\\DeleteResult::isAcknowledged()
-=======================================
+================
+isAcknowledged()
+================
 
 .. default-domain:: mongodb
 

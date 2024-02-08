@@ -1,6 +1,6 @@
-==================================
-MongoDB\\Collection::listIndexes()
-==================================
+=============
+listIndexes()
+=============
 
 .. default-domain:: mongodb
 

@@ -1,6 +1,6 @@
-==============================================
-MongoDB\\MapReduceResult::getExecutionTimeMS()
-==============================================
+=====================================
+MapReduceResult::getExecutionTimeMS()
+=====================================
 
 .. default-domain:: mongodb
 

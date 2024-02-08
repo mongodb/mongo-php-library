@@ -1,6 +1,6 @@
-=======================================
-MongoDB\\Database::selectGridFSBucket()
-=======================================
+====================
+selectGridFSBucket()
+====================
 
 .. default-domain:: mongodb
 

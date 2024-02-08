@@ -1,6 +1,6 @@
-=======================================
-MongoDB\\Model\\DatabaseInfo::isEmpty()
-=======================================
+=======================
+DatabaseInfo::isEmpty()
+=======================
 
 .. default-domain:: mongodb
 

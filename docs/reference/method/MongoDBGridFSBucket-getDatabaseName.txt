@@ -1,6 +1,6 @@
-==========================================
-MongoDB\\GridFS\\Bucket::getDatabaseName()
-==========================================
+=================
+getDatabaseName()
+=================
 
 .. default-domain:: mongodb
 

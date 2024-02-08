@@ -1,6 +1,6 @@
-=========================================
-MongoDB\\UpdateResult::getUpsertedCount()
-=========================================
+================================
+UpdateResult::getUpsertedCount()
+================================
 
 .. default-domain:: mongodb
 

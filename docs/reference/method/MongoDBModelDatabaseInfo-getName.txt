@@ -1,6 +1,6 @@
-=======================================
-MongoDB\\Model\\DatabaseInfo::getName()
-=======================================
+=======================
+DatabaseInfo::getName()
+=======================
 
 .. default-domain:: mongodb
 

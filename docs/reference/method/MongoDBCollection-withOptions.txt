@@ -1,6 +1,6 @@
-==================================
-MongoDB\\Collection::withOptions()
-==================================
+=============
+withOptions()
+=============
 
 .. default-domain:: mongodb
 

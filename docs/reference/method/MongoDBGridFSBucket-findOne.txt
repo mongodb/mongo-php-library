@@ -1,6 +1,6 @@
-==================================
-MongoDB\\GridFS\\Bucket::findOne()
-==================================
+=========
+findOne()
+=========
 
 .. default-domain:: mongodb
 

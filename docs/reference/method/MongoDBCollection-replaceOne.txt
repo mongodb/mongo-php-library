@@ -1,6 +1,6 @@
-=================================
-MongoDB\\Collection::replaceOne()
-=================================
+============
+replaceOne()
+============
 
 .. default-domain:: mongodb
 

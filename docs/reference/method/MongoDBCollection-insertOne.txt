@@ -1,6 +1,6 @@
-================================
-MongoDB\\Collection::insertOne()
-================================
+===========
+insertOne()
+===========
 
 .. default-domain:: mongodb
 

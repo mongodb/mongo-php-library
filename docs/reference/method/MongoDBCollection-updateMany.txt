@@ -1,6 +1,6 @@
-=================================
-MongoDB\\Collection::updateMany()
-=================================
+============
+updateMany()
+============
 
 .. default-domain:: mongodb
 

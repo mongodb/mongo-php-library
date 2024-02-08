@@ -1,6 +1,6 @@
-=================================
-MongoDB\\GridFS\\Bucket::delete()
-=================================
+========
+delete()
+========
 
 .. default-domain:: mongodb
 

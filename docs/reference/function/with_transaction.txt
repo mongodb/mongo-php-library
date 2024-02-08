@@ -1,6 +1,6 @@
-===========================
-MongoDB\\with_transaction()
-===========================
+==================
+with_transaction()
+==================
 
 .. default-domain:: mongodb
 

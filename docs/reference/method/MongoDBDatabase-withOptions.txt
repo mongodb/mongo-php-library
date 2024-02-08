@@ -1,6 +1,6 @@
-================================
-MongoDB\\Database::withOptions()
-================================
+=============
+withOptions()
+=============
 
 .. default-domain:: mongodb
 

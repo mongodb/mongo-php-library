@@ -1,6 +1,6 @@
-================================
-MongoDB\\Database::__construct()
-================================
+===========
+construct()
+===========
 
 .. default-domain:: mongodb
 

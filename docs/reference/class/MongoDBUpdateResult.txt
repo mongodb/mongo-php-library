@@ -1,3 +1,5 @@
+.. _php-update-result:
+
 ===========================
 MongoDB\\UpdateResult Class
 ===========================

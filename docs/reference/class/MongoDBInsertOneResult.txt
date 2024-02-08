@@ -1,3 +1,5 @@
+.. _php-insert-one-result:
+
 ==============================
 MongoDB\\InsertOneResult Class
 ==============================

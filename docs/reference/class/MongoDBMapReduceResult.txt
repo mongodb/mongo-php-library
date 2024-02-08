@@ -1,3 +1,5 @@
+.. _php-map-reduce-result:
+
 ==============================
 MongoDB\\MapReduceResult Class
 ==============================

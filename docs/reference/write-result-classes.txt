@@ -29,15 +29,10 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBBulkWriteResult-getDeletedCount
-   /reference/method/MongoDBBulkWriteResult-getInsertedCount
-   /reference/method/MongoDBBulkWriteResult-getInsertedIds
-   /reference/method/MongoDBBulkWriteResult-getMatchedCount
-   /reference/method/MongoDBBulkWriteResult-getModifiedCount
-   /reference/method/MongoDBBulkWriteResult-getUpsertedCount
-   /reference/method/MongoDBBulkWriteResult-getUpsertedIds
-   /reference/method/MongoDBBulkWriteResult-isAcknowledged
+   /reference/class/MongoDBBulkWriteResult
 
+- :ref:`BulkWriteResult Methods <php-bulk-write-result>`
+  
 ----
 
 MongoDB\\DeleteResult
@@ -60,8 +55,9 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBDeleteResult-getDeletedCount
-   /reference/method/MongoDBDeleteResult-isAcknowledged
+   /reference/class/MongoDBDeleteResult
+
+- :ref:`DeleteResult Methods <php-delete-result>`
 
 ----
 
@@ -84,9 +80,10 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBInsertManyResult-getInsertedCount
-   /reference/method/MongoDBInsertManyResult-getInsertedIds
-   /reference/method/MongoDBInsertManyResult-isAcknowledged
+   /reference/class/MongoDBInsertManyResult
+
+- :ref:`InsertManyResult Methods <php-insert-many-result>`
+
 
 ----
 
@@ -109,9 +106,9 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBInsertOneResult-getInsertedCount
-   /reference/method/MongoDBInsertOneResult-getInsertedId
-   /reference/method/MongoDBInsertOneResult-isAcknowledged
+   /reference/class/MongoDInsertOneResult
+
+- :ref:`InsertOneResult Methods <php-insert-one-result>`
 
 ----
 
@@ -136,8 +133,6 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBUpdateResult-getMatchedCount
-   /reference/method/MongoDBUpdateResult-getModifiedCount
-   /reference/method/MongoDBUpdateResult-getUpsertedCount
-   /reference/method/MongoDBUpdateResult-getUpsertedId
-   /reference/method/MongoDBUpdateResult-isAcknowledged
+   /reference/class/MongoDBUpdateResult
+
+- :ref:`UpdateResult Methods <php-update-result>`

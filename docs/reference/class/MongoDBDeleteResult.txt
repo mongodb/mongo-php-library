@@ -1,3 +1,5 @@
+.. _php-delete-result:
+
 ===========================
 MongoDB\\DeleteResult Class
 ===========================

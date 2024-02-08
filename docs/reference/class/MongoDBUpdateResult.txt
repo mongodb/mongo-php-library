@@ -12,3 +12,9 @@ MongoDB\\UpdateResult Class
    /reference/method/MongoDBUpdateResult-getUpsertedCount
    /reference/method/MongoDBUpdateResult-getUpsertedId
    /reference/method/MongoDBUpdateResult-isAcknowledged
+
+- :phpmethod:`MongoDB\\UpdateResult::getMatchedCount()`
+- :phpmethod:`MongoDB\\UpdateResult::getModifiedCount()`
+- :phpmethod:`MongoDB\\UpdateResult::getUpsertedCount()`
+- :phpmethod:`MongoDB\\UpdateResult::getUpsertedId()`
+- :phpmethod:`MongoDB\\UpdateResult::isAcknowledged()`

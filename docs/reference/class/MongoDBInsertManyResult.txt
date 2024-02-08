@@ -10,3 +10,7 @@ MongoDB\\InsertManyResult Class
    /reference/method/MongoDBInsertManyResult-getInsertedCount
    /reference/method/MongoDBInsertManyResult-getInsertedIds
    /reference/method/MongoDBInsertManyResult-isAcknowledged
+
+- :phpmethod:`MongoDB\\InsertManyResult::getInsertedCount()`
+- :phpmethod:`MongoDB\\InsertManyResult::getInsertedIds()`
+- :phpmethod:`MongoDB\\InsertManyResult::isAcknowledged()`

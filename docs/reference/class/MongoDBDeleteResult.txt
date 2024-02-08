@@ -9,3 +9,6 @@ MongoDB\\DeleteResult Class
 
    /reference/method/MongoDBDeleteResult-getDeletedCount
    /reference/method/MongoDBDeleteResult-isAcknowledged
+
+- :phpmethod:`MongoDB\\DeleteResult::getDeletedCount()`
+- :phpmethod:`MongoDB\\DeleteResult::isAcknowledged()`

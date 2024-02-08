@@ -41,14 +41,9 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBModelCollectionInfo-getCappedMax
-   /reference/method/MongoDBModelCollectionInfo-getCappedSize
-   /reference/method/MongoDBModelCollectionInfo-getIdIndex
-   /reference/method/MongoDBModelCollectionInfo-getInfo
-   /reference/method/MongoDBModelCollectionInfo-getName
-   /reference/method/MongoDBModelCollectionInfo-getOptions
-   /reference/method/MongoDBModelCollectionInfo-getType
-   /reference/method/MongoDBModelCollectionInfo-isCapped
+   /reference/class/MongoDBModelCollectionInfo
+
+- :ref:`CollectionInfo Methods <php-model-collection-info>`
 
 ----
 
@@ -105,9 +100,9 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBModelDatabaseInfo-getName
-   /reference/method/MongoDBModelDatabaseInfo-getSizeOnDisk
-   /reference/method/MongoDBModelDatabaseInfo-isEmpty
+   /reference/class/MongoDBModelDatabaseInfo
+
+- :ref:`DatabaseInfo Methods <php-model-database-info>`
 
 ----
 
@@ -159,16 +154,9 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBModelIndexInfo-getKey
-   /reference/method/MongoDBModelIndexInfo-getName
-   /reference/method/MongoDBModelIndexInfo-getNamespace
-   /reference/method/MongoDBModelIndexInfo-getVersion
-   /reference/method/MongoDBModelIndexInfo-is2dSphere
-   /reference/method/MongoDBModelIndexInfo-isGeoHaystack
-   /reference/method/MongoDBModelIndexInfo-isSparse
-   /reference/method/MongoDBModelIndexInfo-isText
-   /reference/method/MongoDBModelIndexInfo-isTtl
-   /reference/method/MongoDBModelIndexInfo-isUnique
+   /reference/class/MongoDBModelIndexInfo
+
+- :ref:`IndexInfo Methods <php-model-index-info>`
 
 ----
 

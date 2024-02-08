@@ -10,3 +10,7 @@ MongoDB\\Model\\DatabaseInfo Class
    /reference/method/MongoDBModelDatabaseInfo-getName
    /reference/method/MongoDBModelDatabaseInfo-getSizeOnDisk
    /reference/method/MongoDBModelDatabaseInfo-isEmpty
+
+- :phpmethod:`MongoDB\\Model\\DatabaseInfo::getName()`
+- :phpmethod:`MongoDB\\Model\\DatabaseInfo::getSizeOnDisk()`
+- :phpmethod:`MongoDB\\Model\\DatabaseInfo::isEmpty()`

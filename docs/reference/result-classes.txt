@@ -36,13 +36,9 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBChangeStream-current
-   /reference/method/MongoDBChangeStream-getCursorId
-   /reference/method/MongoDBChangeStream-getResumeToken
-   /reference/method/MongoDBChangeStream-key
-   /reference/method/MongoDBChangeStream-next
-   /reference/method/MongoDBChangeStream-rewind
-   /reference/method/MongoDBChangeStream-valid
+   /reference/class/MongoDBChangeStream
+
+- :ref:`ChangeStream Methods <php-change-stream>`
 
 ----
 
@@ -70,7 +66,6 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBMapReduceResult-getCounts
-   /reference/method/MongoDBMapReduceResult-getExecutionTimeMS
-   /reference/method/MongoDBMapReduceResult-getIterator
-   /reference/method/MongoDBMapReduceResult-getTiming
+   /reference/class/MongoDBMapReduceResult
+
+- :ref:`MapReduceResult Methods <php-map-reduce-result>`

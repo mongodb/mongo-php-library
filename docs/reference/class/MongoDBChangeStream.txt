@@ -14,3 +14,11 @@ MongoDB\\ChangeStream Class
    /reference/method/MongoDBChangeStream-next
    /reference/method/MongoDBChangeStream-rewind
    /reference/method/MongoDBChangeStream-valid
+
+- :phpmethod:`MongoDB\\ChangeStream::current()`
+- :phpmethod:`MongoDB\\ChangeStream::getCursorId()`
+- :phpmethod:`MongoDB\\ChangeStream::getResumeToken()`
+- :phpmethod:`MongoDB\\ChangeStream::key()`
+- :phpmethod:`MongoDB\\ChangeStream::next()`
+- :phpmethod:`MongoDB\\ChangeStream::rewind()`
+- :phpmethod:`MongoDB\\ChangeStream::valid()`

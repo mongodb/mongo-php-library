@@ -17,3 +17,14 @@ MongoDB\\Model\\IndexInfo Class
    /reference/method/MongoDBModelIndexInfo-isText
    /reference/method/MongoDBModelIndexInfo-isTtl
    /reference/method/MongoDBModelIndexInfo-isUnique
+
+- :phpmethod:`MongoDB\\Model\\IndexInfo::getKey()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::getName()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::getNamespace()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::getVersion()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::is2dSphere()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::isGeoHaystack()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::isSparse()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::isText()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::isTtl()`
+- :phpmethod:`MongoDB\\Model\\IndexInfo::isUnique()`

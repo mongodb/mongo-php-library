@@ -10,3 +10,7 @@ MongoDB\\InsertOneResult Class
    /reference/method/MongoDBInsertOneResult-getInsertedCount
    /reference/method/MongoDBInsertOneResult-getInsertedId
    /reference/method/MongoDBInsertOneResult-isAcknowledged
+
+- :phpmethod:`MongoDB\\InsertOneResult::getInsertedCount()`
+- :phpmethod:`MongoDB\\InsertOneResult::getInsertedId()`
+- :phpmethod:`MongoDB\\InsertOneResult::isAcknowledged()`

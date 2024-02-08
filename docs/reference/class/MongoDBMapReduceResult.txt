@@ -11,3 +11,8 @@ MongoDB\\MapReduceResult Class
    /reference/method/MongoDBMapReduceResult-getExecutionTimeMS
    /reference/method/MongoDBMapReduceResult-getIterator
    /reference/method/MongoDBMapReduceResult-getTiming
+
+- :phpmethod:`MongoDB\\MapReduceResult::getCounts()`
+- :phpmethod:`MongoDB\\MapReduceResult::getExecutionTimeMS()`
+- :phpmethod:`MongoDB\\MapReduceResult::getIterator()`
+- :phpmethod:`MongoDB\\MapReduceResult::getTiming()`

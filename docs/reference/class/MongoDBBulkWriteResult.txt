@@ -15,3 +15,12 @@ MongoDB\\BulkWriteResult Class
    /reference/method/MongoDBBulkWriteResult-getUpsertedCount
    /reference/method/MongoDBBulkWriteResult-getUpsertedIds
    /reference/method/MongoDBBulkWriteResult-isAcknowledged
+
+- :phpmethod:`MongoDB\\BulkWriteResult::getDeletedCount()`
+- :phpmethod:`MongoDB\\BulkWriteResult::getInsertedCount()`
+- :phpmethod:`MongoDB\\BulkWriteResult::getInsertedIds()`
+- :phpmethod:`MongoDB\\BulkWriteResult::getMatchedCount()`
+- :phpmethod:`MongoDB\\BulkWriteResult::getModifiedCount()`
+- :phpmethod:`MongoDB\\BulkWriteResult::getUpsertedCount()`
+- :phpmethod:`MongoDB\\BulkWriteResult::getUpsertedIds()`
+- :phpmethod:`MongoDB\\BulkWriteResult::isAcknowledged()`

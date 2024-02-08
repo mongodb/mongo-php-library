@@ -15,3 +15,12 @@ MongoDB\\Model\\CollectionInfo Class
    /reference/method/MongoDBModelCollectionInfo-getOptions
    /reference/method/MongoDBModelCollectionInfo-getType
    /reference/method/MongoDBModelCollectionInfo-isCapped
+
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedMax()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedSize()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getIdIndex()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getInfo()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getName()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getOptions()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getType()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::isCapped()`

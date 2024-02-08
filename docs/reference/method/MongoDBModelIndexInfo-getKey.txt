@@ -1,6 +1,6 @@
-===================
-IndexInfo::getKey()
-===================
+========
+getKey()
+========
 
 .. default-domain:: mongodb
 

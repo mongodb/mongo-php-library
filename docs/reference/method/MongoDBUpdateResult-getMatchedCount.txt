@@ -1,6 +1,6 @@
-===============================
-UpdateResult::getMatchedCount()
-===============================
+=================
+getMatchedCount()
+=================
 
 .. default-domain:: mongodb
 

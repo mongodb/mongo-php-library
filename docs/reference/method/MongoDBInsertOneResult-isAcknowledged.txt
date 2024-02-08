@@ -1,6 +1,6 @@
-=================================
-InsertOneResult::isAcknowledged()
-=================================
+================
+isAcknowledged()
+================
 
 .. default-domain:: mongodb
 

@@ -1,6 +1,6 @@
-==================================
-BulkWriteResult::getDeletedCount()
-==================================
+=================
+getDeletedCount()
+=================
 
 .. default-domain:: mongodb
 

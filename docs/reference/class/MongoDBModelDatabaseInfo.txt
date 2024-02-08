@@ -1,0 +1,10 @@
+==================================
+MongoDB\\Model\\DatabaseInfo Class
+==================================
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBModelDatabaseInfo-getName
+   /reference/method/MongoDBModelDatabaseInfo-getSizeOnDisk
+   /reference/method/MongoDBModelDatabaseInfo-isEmpty

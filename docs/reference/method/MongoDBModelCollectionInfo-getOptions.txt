@@ -1,6 +1,6 @@
-============================
-CollectionInfo::getOptions()
-============================
+============
+getOptions()
+============
 
 .. default-domain:: mongodb
 

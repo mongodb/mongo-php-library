@@ -1,0 +1,12 @@
+===========================
+MongoDB\\UpdateResult Class
+===========================
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBUpdateResult-getMatchedCount
+   /reference/method/MongoDBUpdateResult-getModifiedCount
+   /reference/method/MongoDBUpdateResult-getUpsertedCount
+   /reference/method/MongoDBUpdateResult-getUpsertedId
+   /reference/method/MongoDBUpdateResult-isAcknowledged

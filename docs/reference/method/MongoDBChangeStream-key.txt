@@ -1,6 +1,6 @@
-===================
-ChangeStream::key()
-===================
+=====
+key()
+=====
 
 .. default-domain:: mongodb
 

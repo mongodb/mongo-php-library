@@ -1,0 +1,10 @@
+==============================
+MongoDB\\InsertOneResult Class
+==============================
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBInsertOneResult-getInsertedCount
+   /reference/method/MongoDBInsertOneResult-getInsertedId
+   /reference/method/MongoDBInsertOneResult-isAcknowledged

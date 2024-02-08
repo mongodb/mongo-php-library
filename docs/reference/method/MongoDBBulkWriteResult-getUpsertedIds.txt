@@ -1,6 +1,6 @@
-=================================
-BulkWriteResult::getUpsertedIds()
-=================================
+================
+getUpsertedIds()
+================
 
 .. default-domain:: mongodb
 

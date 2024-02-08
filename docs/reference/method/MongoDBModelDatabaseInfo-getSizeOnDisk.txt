@@ -1,6 +1,6 @@
-=============================
-DatabaseInfo::getSizeOnDisk()
-=============================
+===============
+getSizeOnDisk()
+===============
 
 .. default-domain:: mongodb
 

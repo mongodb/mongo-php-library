@@ -1,6 +1,6 @@
-===========================
-ChangeStream::getCursorId()
-===========================
+=============
+getCursorId()
+=============
 
 .. default-domain:: mongodb
 

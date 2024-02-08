@@ -1,6 +1,6 @@
-=======================
-IndexInfo::getVersion()
-=======================
+============
+getVersion()
+============
 
 .. default-domain:: mongodb
 

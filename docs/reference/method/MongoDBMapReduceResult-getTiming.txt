@@ -1,6 +1,6 @@
-============================
-MapReduceResult::getTiming()
-============================
+===========
+getTiming()
+===========
 
 .. default-domain:: mongodb
 

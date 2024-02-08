@@ -1,0 +1,15 @@
+==============================
+MongoDB\\BulkWriteResult Class
+==============================
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBBulkWriteResult-getDeletedCount
+   /reference/method/MongoDBBulkWriteResult-getInsertedCount
+   /reference/method/MongoDBBulkWriteResult-getInsertedIds
+   /reference/method/MongoDBBulkWriteResult-getMatchedCount
+   /reference/method/MongoDBBulkWriteResult-getModifiedCount
+   /reference/method/MongoDBBulkWriteResult-getUpsertedCount
+   /reference/method/MongoDBBulkWriteResult-getUpsertedIds
+   /reference/method/MongoDBBulkWriteResult-isAcknowledged

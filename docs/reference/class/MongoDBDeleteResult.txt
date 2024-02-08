@@ -1,0 +1,9 @@
+===========================
+MongoDB\\DeleteResult Class
+===========================
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBDeleteResult-getDeletedCount
+   /reference/method/MongoDBDeleteResult-isAcknowledged

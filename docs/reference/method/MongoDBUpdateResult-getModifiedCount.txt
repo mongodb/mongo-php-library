@@ -1,6 +1,6 @@
-================================
-UpdateResult::getModifiedCount()
-================================
+==================
+getModifiedCount()
+==================
 
 .. default-domain:: mongodb
 

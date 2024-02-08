@@ -1,0 +1,17 @@
+===============================
+MongoDB\\Model\\IndexInfo Class
+===============================
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBModelIndexInfo-getKey
+   /reference/method/MongoDBModelIndexInfo-getName
+   /reference/method/MongoDBModelIndexInfo-getNamespace
+   /reference/method/MongoDBModelIndexInfo-getVersion
+   /reference/method/MongoDBModelIndexInfo-is2dSphere
+   /reference/method/MongoDBModelIndexInfo-isGeoHaystack
+   /reference/method/MongoDBModelIndexInfo-isSparse
+   /reference/method/MongoDBModelIndexInfo-isText
+   /reference/method/MongoDBModelIndexInfo-isTtl
+   /reference/method/MongoDBModelIndexInfo-isUnique

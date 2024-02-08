@@ -1,6 +1,6 @@
-==================================
-InsertManyResult::getInsertedIds()
-==================================
+================
+getInsertedIds()
+================
 
 .. default-domain:: mongodb
 

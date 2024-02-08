@@ -1,6 +1,6 @@
-====================================
-InsertManyResult::getInsertedCount()
-====================================
+==================
+getInsertedCount()
+==================
 
 .. default-domain:: mongodb
 

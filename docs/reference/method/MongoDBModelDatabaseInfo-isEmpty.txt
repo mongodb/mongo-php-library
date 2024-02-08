@@ -1,6 +1,6 @@
-=======================
-DatabaseInfo::isEmpty()
-=======================
+=========
+isEmpty()
+=========
 
 .. default-domain:: mongodb
 

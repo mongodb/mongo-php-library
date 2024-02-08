@@ -1,6 +1,6 @@
-=============================
-UpdateResult::getUpsertedId()
-=============================
+===============
+getUpsertedId()
+===============
 
 .. default-domain:: mongodb
 

@@ -1,6 +1,6 @@
-=======================
-DatabaseInfo::getName()
-=======================
+=========
+getName()
+=========
 
 .. default-domain:: mongodb
 

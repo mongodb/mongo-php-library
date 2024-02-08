@@ -1,6 +1,6 @@
-==================
-IndexInfo::isTtl()
-==================
+=======
+isTtl()
+=======
 
 .. default-domain:: mongodb
 

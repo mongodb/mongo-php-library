@@ -1,6 +1,6 @@
-================================
-InsertOneResult::getInsertedId()
-================================
+===============
+getInsertedId()
+===============
 
 .. default-domain:: mongodb
 

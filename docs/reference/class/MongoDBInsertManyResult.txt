@@ -1,0 +1,10 @@
+===============================
+MongoDB\\InsertManyResult Class
+===============================
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBInsertManyResult-getInsertedCount
+   /reference/method/MongoDBInsertManyResult-getInsertedIds
+   /reference/method/MongoDBInsertManyResult-isAcknowledged

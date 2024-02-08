@@ -1,6 +1,6 @@
-=================================
-BulkWriteResult::isAcknowledged()
-=================================
+================
+isAcknowledged()
+================
 
 .. default-domain:: mongodb
 

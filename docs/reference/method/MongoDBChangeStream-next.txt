@@ -1,6 +1,6 @@
-====================
-ChangeStream::next()
-====================
+======
+next()
+======
 
 .. default-domain:: mongodb
 

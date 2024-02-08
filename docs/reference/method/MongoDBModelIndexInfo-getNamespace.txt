@@ -1,6 +1,6 @@
-=========================
-IndexInfo::getNamespace()
-=========================
+==============
+getNamespace()
+==============
 
 .. default-domain:: mongodb
 

@@ -1,6 +1,6 @@
-====================
-IndexInfo::getName()
-====================
+=========
+getName()
+=========
 
 .. default-domain:: mongodb
 

@@ -1,6 +1,6 @@
-=====================
-IndexInfo::isSparse()
-=====================
+==========
+isSparse()
+==========
 
 .. default-domain:: mongodb
 

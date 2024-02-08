@@ -1,6 +1,6 @@
-==============================
-UpdateResult::isAcknowledged()
-==============================
+================
+isAcknowledged()
+================
 
 .. default-domain:: mongodb
 

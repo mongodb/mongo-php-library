@@ -1,6 +1,6 @@
-===================================
-BulkWriteResult::getModifiedCount()
-===================================
+==================
+getModifiedCount()
+==================
 
 .. default-domain:: mongodb
 

@@ -101,3 +101,47 @@ Methods
    /reference/method/MongoDBCollection-updateSearchIndex
    /reference/method/MongoDBCollection-watch
    /reference/method/MongoDBCollection-withOptions
+
+- :phpmethod:`MongoDB\\Collection::__construct()`
+- :phpmethod:`MongoDB\\Collection::aggregate()`
+- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :phpmethod:`MongoDB\\Collection::count()`
+- :phpmethod:`MongoDB\\Collection::countDocuments()`
+- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :phpmethod:`MongoDB\\Collection::createIndexes()`
+- :phpmethod:`MongoDB\\Collection::createSearchIndex()`
+- :phpmethod:`MongoDB\\Collection::createSearchIndexes()`
+- :phpmethod:`MongoDB\\Collection::deleteMany()`
+- :phpmethod:`MongoDB\\Collection::deleteOne()`
+- :phpmethod:`MongoDB\\Collection::distinct()`
+- :phpmethod:`MongoDB\\Collection::drop()`
+- :phpmethod:`MongoDB\\Collection::dropIndex()`
+- :phpmethod:`MongoDB\\Collection::dropIndexes()`
+- :phpmethod:`MongoDB\\Collection::dropSearchIndex()`
+- :phpmethod:`MongoDB\\Collection::estimatedDocumentCount()`
+- :phpmethod:`MongoDB\\Collection::explain()`
+- :phpmethod:`MongoDB\\Collection::find()`
+- :phpmethod:`MongoDB\\Collection::findOne()`
+- :phpmethod:`MongoDB\\Collection::findOneAndDelete()`
+- :phpmethod:`MongoDB\\Collection::findOneAndReplace()`
+- :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
+- :phpmethod:`MongoDB\\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\\Collection::getDatabaseName()`
+- :phpmethod:`MongoDB\\Collection::getManager()`
+- :phpmethod:`MongoDB\\Collection::getNamespace()`
+- :phpmethod:`MongoDB\\Collection::getReadConcern()`
+- :phpmethod:`MongoDB\\Collection::getReadPreference()`
+- :phpmethod:`MongoDB\\Collection::getTypeMap()`
+- :phpmethod:`MongoDB\\Collection::getWriteConcern()`
+- :phpmethod:`MongoDB\\Collection::insertMany()`
+- :phpmethod:`MongoDB\\Collection::insertOne()`
+- :phpmethod:`MongoDB\\Collection::listIndexes()`
+- :phpmethod:`MongoDB\\Collection::listSearchIndexes()`
+- :phpmethod:`MongoDB\\Collection::mapReduce()`
+- :phpmethod:`MongoDB\\Collection::rename()`
+- :phpmethod:`MongoDB\\Collection::replaceOne()`
+- :phpmethod:`MongoDB\\Collection::updateMany()`
+- :phpmethod:`MongoDB\\Collection::updateOne()`
+- :phpmethod:`MongoDB\\Collection::updateSearchIndex()`
+- :phpmethod:`MongoDB\\Collection::watch()`
+- :phpmethod:`MongoDB\\Collection::withOptions()`

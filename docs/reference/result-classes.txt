@@ -38,7 +38,7 @@ Methods
 
    /reference/class/MongoDBChangeStream
 
-- :ref:`ChangeStream Methods <php-change-stream>`
+:ref:`ChangeStream Methods <php-change-stream>`
 
 ----
 
@@ -68,4 +68,4 @@ Methods
 
    /reference/class/MongoDBMapReduceResult
 
-- :ref:`MapReduceResult Methods <php-map-reduce-result>`
+:ref:`MapReduceResult Methods <php-map-reduce-result>`

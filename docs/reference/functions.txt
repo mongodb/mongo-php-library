@@ -16,3 +16,7 @@ Functions
    /reference/function/add_logger
    /reference/function/remove_logger
    /reference/function/with_transaction
+
+- :phpmethod:`MongoDB\\add_logger()`
+- :phpmethod:`MongoDB\\remove_logger()`
+- :phpmethod:`MongoDB\\with_transaction()`

@@ -45,3 +45,21 @@ Methods
    /reference/method/MongoDBClient-selectDatabase
    /reference/method/MongoDBClient-startSession
    /reference/method/MongoDBClient-watch
+
+- :phpmethod:`MongoDB\\Client::__construct()`
+- :phpmethod:`MongoDB\\Client::__get()`
+- :phpmethod:`MongoDB\\Client::addSubscriber()`
+- :phpmethod:`MongoDB\\Client::createClientEncryption()`
+- :phpmethod:`MongoDB\\Client::dropDatabase()`
+- :phpmethod:`MongoDB\\Client::getManager()`
+- :phpmethod:`MongoDB\\Client::getReadConcern()`
+- :phpmethod:`MongoDB\\Client::getReadPreference()`
+- :phpmethod:`MongoDB\\Client::getTypeMap()`
+- :phpmethod:`MongoDB\\Client::getWriteConcern()`
+- :phpmethod:`MongoDB\\Client::listDatabaseNames()`
+- :phpmethod:`MongoDB\\Client::listDatabases()`
+- :phpmethod:`MongoDB\\Client::removeSubscriber()`
+- :phpmethod:`MongoDB\\Client::selectCollection()`
+- :phpmethod:`MongoDB\\Client::selectDatabase()`
+- :phpmethod:`MongoDB\\Client::startSession()`
+- :phpmethod:`MongoDB\\Client::watch()`

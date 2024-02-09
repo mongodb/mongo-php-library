@@ -43,7 +43,7 @@ Methods
 
    /reference/class/MongoDBModelCollectionInfo
 
-- :ref:`CollectionInfo Methods <php-model-collection-info>`
+:ref:`CollectionInfo Methods <php-model-collection-info>`
 
 ----
 
@@ -102,7 +102,7 @@ Methods
 
    /reference/class/MongoDBModelDatabaseInfo
 
-- :ref:`DatabaseInfo Methods <php-model-database-info>`
+:ref:`DatabaseInfo Methods <php-model-database-info>`
 
 ----
 
@@ -156,7 +156,7 @@ Methods
 
    /reference/class/MongoDBModelIndexInfo
 
-- :ref:`IndexInfo Methods <php-model-index-info>`
+:ref:`IndexInfo Methods <php-model-index-info>`
 
 ----
 

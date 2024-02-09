@@ -58,3 +58,27 @@ Methods
    /reference/method/MongoDBGridFSBucket-registerGlobalStreamWrapperAlias
    /reference/method/MongoDBGridFSBucket-rename
    /reference/method/MongoDBGridFSBucket-uploadFromStream
+
+- :phpmethod:`MongoDB\\GridFS\\Bucket::__construct()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::delete()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::drop()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::find()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::findOne()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getBucketName()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getChunksCollection()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getChunkSizeBytes()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getDatabaseName()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getFileDocumentForStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getFileIdForStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getFilesCollection()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getReadConcern()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getReadPreference()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getTypeMap()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getWriteConcern()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStreamByName()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::openUploadStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::registerGlobalStreamWrapperAlias()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::rename()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::uploadFromStream()`

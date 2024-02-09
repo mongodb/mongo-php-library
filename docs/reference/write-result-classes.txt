@@ -31,7 +31,7 @@ Methods
 
    /reference/class/MongoDBBulkWriteResult
 
-- :ref:`BulkWriteResult Methods <php-bulk-write-result>`
+:ref:`BulkWriteResult Methods <php-bulk-write-result>`
   
 ----
 
@@ -57,7 +57,7 @@ Methods
 
    /reference/class/MongoDBDeleteResult
 
-- :ref:`DeleteResult Methods <php-delete-result>`
+:ref:`DeleteResult Methods <php-delete-result>`
 
 ----
 
@@ -82,8 +82,7 @@ Methods
 
    /reference/class/MongoDBInsertManyResult
 
-- :ref:`InsertManyResult Methods <php-insert-many-result>`
-
+:ref:`InsertManyResult Methods <php-insert-many-result>`
 
 ----
 
@@ -108,7 +107,7 @@ Methods
 
    /reference/class/MongoDInsertOneResult
 
-- :ref:`InsertOneResult Methods <php-insert-one-result>`
+:ref:`InsertOneResult Methods <php-insert-one-result>`
 
 ----
 
@@ -135,4 +134,4 @@ Methods
 
    /reference/class/MongoDBUpdateResult
 
-- :ref:`UpdateResult Methods <php-update-result>`
+:ref:`UpdateResult Methods <php-update-result>`

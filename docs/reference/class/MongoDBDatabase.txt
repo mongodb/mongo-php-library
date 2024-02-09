@@ -66,3 +66,25 @@ Methods
    /reference/method/MongoDBDatabase-watch
    /reference/method/MongoDBDatabase-withOptions
 
+- :phpmethod:`MongoDB\\Database::__construct()`
+- :phpmethod:`MongoDB\\Database::__get()`
+- :phpmethod:`MongoDB\\Database::aggregate()`
+- :phpmethod:`MongoDB\\Database::command()`
+- :phpmethod:`MongoDB\\Database::createCollection()`
+- :phpmethod:`MongoDB\\Database::createEncryptedCollection()`
+- :phpmethod:`MongoDB\\Database::drop()`
+- :phpmethod:`MongoDB\\Database::dropCollection()`
+- :phpmethod:`MongoDB\\Database::getDatabaseName()`
+- :phpmethod:`MongoDB\\Database::getManager()`
+- :phpmethod:`MongoDB\\Database::getReadConcern()`
+- :phpmethod:`MongoDB\\Database::getReadPreference()`
+- :phpmethod:`MongoDB\\Database::getTypeMap()`
+- :phpmethod:`MongoDB\\Database::getWriteConcern()`
+- :phpmethod:`MongoDB\\Database::listCollectionNames()`
+- :phpmethod:`MongoDB\\Database::listCollections()`
+- :phpmethod:`MongoDB\\Database::modifyCollection()`
+- :phpmethod:`MongoDB\\Database::renameCollection()`
+- :phpmethod:`MongoDB\\Database::selectCollection()`
+- :phpmethod:`MongoDB\\Database::selectGridFSBucket()`
+- :phpmethod:`MongoDB\\Database::watch()`
+- :phpmethod:`MongoDB\\Database::withOptions()`

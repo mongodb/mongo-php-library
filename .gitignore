@@ -20,5 +20,3 @@ psalm.xml
 phpbench.json
 
 mongocryptd.pid
-
-.vscode/

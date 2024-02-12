@@ -4,6 +4,26 @@
 MongoDB\\ChangeStream Class
 ===========================
 
+.. versionadded:: 1.3
+
+Definition
+----------
+
+.. phpclass:: MongoDB\\ChangeStream
+
+   This class extends PHP's :php:`Iterator <manual/en/class.iterator.php>`
+   interface. An instance of this class is returned by
+   :phpmethod:`MongoDB\\Client::watch()`,
+   :phpmethod:`MongoDB\\Database::watch()`, and
+   :phpmethod:`MongoDB\\Collection::watch()`.
+
+   This class allows for iteration of events in a change stream. It also allows
+   iteration to automatically resume after certain errors, such as a replica set
+   failover.
+
+Methods
+-------
+
 .. toctree::
    :titlesonly:
 

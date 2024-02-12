@@ -4,6 +4,29 @@
 MongoDB\\Model\\IndexInfo Class
 ===============================
 
+Definition
+----------
+
+.. phpclass:: MongoDB\\Model\\IndexInfo
+
+   This class models information about an index. Instances of this class are
+   returned by traversing a :phpclass:`MongoDB\\Model\\IndexInfoIterator`,
+   which is returned by :phpmethod:`MongoDB\\Collection::listIndexes()`.
+
+   This class implements PHP's :php:`ArrayAccess <arrayaccess>` interface. This
+   provides a mechanism for accessing index fields for which there exists no
+   helper method. :php:`isset() <isset>` may be used to check for the existence
+   of a field before accessing it with ``[]``.
+
+   .. note::
+
+      The :phpclass:`MongoDB\\Model\\IndexInfo` class is immutable. Attempting
+      to modify it via the :php:`ArrayAccess <arrayaccess>` interface will
+      result in a :phpclass:`MongoDB\\Exception\\BadMethodCallException`.
+
+Methods
+-------
+
 .. toctree::
    :titlesonly:
 

@@ -4,6 +4,19 @@
 MongoDB\\InsertOneResult Class
 ==============================
 
+Definition
+----------
+
+.. phpclass:: MongoDB\\InsertOneResult
+
+   This class contains information about an executed insert operation. It
+   encapsulates a :php:`MongoDB\\Driver\\WriteResult
+   <class.mongodb-driver-writeresult>` object and is returned from
+   :phpmethod:`MongoDB\\Collection::insertOne()`.
+
+Methods
+-------
+
 .. toctree::
    :titlesonly:
 

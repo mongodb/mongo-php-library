@@ -4,6 +4,24 @@
 MongoDB\\MapReduceResult Class
 ==============================
 
+.. versionadded:: 1.2
+
+Definition
+----------
+
+.. phpclass:: MongoDB\\MapReduceResult
+
+   This class extends PHP's :php:`IteratorAggregate <iteratoraggregate>`
+   interface. An instance of this class is returned by
+   :phpmethod:`MongoDB\\Collection::mapReduce()`.
+
+   This class allows for iteration of map-reduce results irrespective of the
+   output method (e.g. inline, collection). It also provides access to command
+   statistics.
+
+Methods
+-------
+
 .. toctree::
    :titlesonly:
 

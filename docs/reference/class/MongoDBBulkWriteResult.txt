@@ -4,6 +4,19 @@
 MongoDB\\BulkWriteResult Class
 ==============================
 
+Definition
+----------
+
+.. phpclass:: MongoDB\\BulkWriteResult
+
+   This class contains information about an executed bulk write operation. It
+   encapsulates a :php:`MongoDB\\Driver\\WriteResult
+   <class.mongodb-driver-writeresult>` object and is returned from
+   :phpmethod:`MongoDB\\Collection::bulkWrite()`.
+
+Methods
+-------
+
 .. toctree::
    :titlesonly:
 

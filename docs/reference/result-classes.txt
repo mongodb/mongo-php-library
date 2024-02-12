@@ -4,68 +4,21 @@ Result Classes
 
 .. default-domain:: mongodb
 
-.. contents:: On this page
-   :local:
-   :backlinks: none
-   :depth: 1
-   :class: singlecol
-
-MongoDB\\ChangeStream
----------------------
-
-.. versionadded:: 1.3
-
-Definition
-~~~~~~~~~~
-
-.. phpclass:: MongoDB\\ChangeStream
-
-   This class extends PHP's :php:`Iterator <manual/en/class.iterator.php>`
-   interface. An instance of this class is returned by
-   :phpmethod:`MongoDB\\Client::watch()`,
-   :phpmethod:`MongoDB\\Database::watch()`, and
-   :phpmethod:`MongoDB\\Collection::watch()`.
-
-   This class allows for iteration of events in a change stream. It also allows
-   iteration to automatically resume after certain errors, such as a replica set
-   failover.
-
-Methods
-~~~~~~~
-
 .. toctree::
    :titlesonly:
 
+   /reference/class/MongoDBBulkWriteResult
+   /reference/class/MongoDBDeleteResult
+   /reference/class/MongoDBInsertManyResult
+   /reference/class/MongoDInsertOneResult
+   /reference/class/MongoDBUpdateResult
    /reference/class/MongoDBChangeStream
-
-:ref:`ChangeStream Methods <php-change-stream>`
-
-----
-
-MongoDB\\MapReduceResult
-------------------------
-
-.. versionadded:: 1.2
-
-Definition
-~~~~~~~~~~
-
-.. phpclass:: MongoDB\\MapReduceResult
-
-   This class extends PHP's :php:`IteratorAggregate <iteratoraggregate>`
-   interface. An instance of this class is returned by
-   :phpmethod:`MongoDB\\Collection::mapReduce()`.
-
-   This class allows for iteration of map-reduce results irrespective of the
-   output method (e.g. inline, collection). It also provides access to command
-   statistics.
-
-Methods
-~~~~~~~
-
-.. toctree::
-   :titlesonly:
-
    /reference/class/MongoDBMapReduceResult
 
-:ref:`MapReduceResult Methods <php-map-reduce-result>`
+- :ref:`BulkWriteResult <php-bulk-write-result>`
+- :ref:`DeleteResult <php-delete-result>`
+- :ref:`InsertManyResult <php-insert-many-result>`
+- :ref:`InsertOneResult <php-insert-one-result>`
+- :ref:`UpdateResult <php-update-result>`
+- :ref:`ChangeStream <php-change-stream>`
+- :ref:`MapReduceResult <php-map-reduce-result>`

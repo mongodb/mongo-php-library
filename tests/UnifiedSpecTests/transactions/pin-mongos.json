@@ -936,6 +936,13 @@
     },
     {
       "description": "remain pinned after non-transient error on commit",
+      "runOnRequirements": [
+        {
+          "topologies": [
+            "sharded"
+          ]
+        }
+      ],
       "operations": [
         {
           "object": "session0",
@@ -1044,6 +1051,13 @@
     },
     {
       "description": "unpin after transient error within a transaction",
+      "runOnRequirements": [
+        {
+          "topologies": [
+            "sharded"
+          ]
+        }
+      ],
       "operations": [
         {
           "object": "session0",
@@ -1217,6 +1231,13 @@
     },
     {
       "description": "unpin after transient error within a transaction and commit",
+      "runOnRequirements": [
+        {
+          "topologies": [
+            "sharded"
+          ]
+        }
+      ],
       "operations": [
         {
           "object": "testRunner",

@@ -217,7 +217,7 @@
           "name": "startTransaction",
           "arguments": {
             "readPreference": {
-              "mode": "Primary"
+              "mode": "primary"
             }
           }
         },
@@ -362,7 +362,7 @@
           "name": "startTransaction",
           "arguments": {
             "readPreference": {
-              "mode": "Secondary"
+              "mode": "secondary"
             }
           }
         },
@@ -470,7 +470,7 @@
           "name": "startTransaction",
           "arguments": {
             "readPreference": {
-              "mode": "PrimaryPreferred"
+              "mode": "primaryPreferred"
             }
           }
         },
@@ -578,7 +578,7 @@
           "name": "startTransaction",
           "arguments": {
             "readPreference": {
-              "mode": "Nearest"
+              "mode": "nearest"
             }
           }
         },
@@ -686,7 +686,7 @@
           "name": "startTransaction",
           "arguments": {
             "readPreference": {
-              "mode": "Secondary"
+              "mode": "secondary"
             }
           }
         },

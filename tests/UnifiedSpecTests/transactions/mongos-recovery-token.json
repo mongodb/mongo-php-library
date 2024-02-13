@@ -214,6 +214,13 @@
     },
     {
       "description": "commitTransaction retry fails on new mongos",
+      "runOnRequirements": [
+        {
+          "topologies": [
+            "sharded"
+          ]
+        }
+      ],
       "operations": [
         {
           "object": "testRunner",
@@ -408,6 +415,13 @@
     },
     {
       "description": "abortTransaction sends recoveryToken",
+      "runOnRequirements": [
+        {
+          "topologies": [
+            "sharded"
+          ]
+        }
+      ],
       "operations": [
         {
           "object": "session0",

@@ -185,7 +185,7 @@
           "name": "startTransaction",
           "arguments": {
             "readPreference": {
-              "mode": "Primary"
+              "mode": "primary"
             }
           }
         },
@@ -292,7 +292,7 @@
               ]
             },
             "readPreference": {
-              "mode": "Primary"
+              "mode": "primary"
             },
             "commandName": "insert"
           },
@@ -379,7 +379,7 @@
               "find": "test"
             },
             "readPreference": {
-              "mode": "Secondary"
+              "mode": "secondary"
             },
             "commandName": "find"
           },
@@ -397,7 +397,7 @@
           "name": "startTransaction",
           "arguments": {
             "readPreference": {
-              "mode": "Secondary"
+              "mode": "secondary"
             }
           }
         },

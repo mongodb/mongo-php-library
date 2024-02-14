@@ -1,5 +1,3 @@
-.. _php-change-stream:
-
 ===========================
 MongoDB\\ChangeStream Class
 ===========================

@@ -1,5 +1,3 @@
-.. _php-model-collection-info:
-
 ====================================
 MongoDB\\Model\\CollectionInfo Class
 ====================================

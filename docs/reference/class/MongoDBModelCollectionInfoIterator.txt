@@ -1,5 +1,3 @@
-.. _php-model-collection-info-iterator:
-
 ============================================
 MongoDB\\Model\\CollectionInfoIterator Class
 ============================================

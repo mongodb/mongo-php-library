@@ -14,11 +14,9 @@ Result Classes
    /reference/class/MongoDBUpdateResult
    /reference/class/MongoDBChangeStream
    /reference/class/MongoDBMapReduceResult
-
-- :ref:`BulkWriteResult <php-bulk-write-result>`
-- :ref:`DeleteResult <php-delete-result>`
-- :ref:`InsertManyResult <php-insert-many-result>`
-- :ref:`InsertOneResult <php-insert-one-result>`
-- :ref:`UpdateResult <php-update-result>`
-- :ref:`ChangeStream <php-change-stream>`
-- :ref:`MapReduceResult <php-map-reduce-result>`
+   CollectionInfo Class </reference/class/MongoDBModelCollectionInfo>
+   CollectionInfoIterator Class </reference/class/MongoDBModelCollectionInfoIterator>
+   DatabaseInfo Class </reference/class/MongoDBModelDatabaseInfo>
+   DatabaseInfoIterator Class </reference/class/MongoDBModelDatabaseInfoIterator>
+   IndexInfo Class </reference/class/MongoDBModelIndexInfo>
+   IndexInfoIterator Class </reference/class/MongoDBModelIndexInfoIterator>

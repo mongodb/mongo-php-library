@@ -1,5 +1,3 @@
-.. _php-model-database-info:
-
 ==================================
 MongoDB\\Model\\DatabaseInfo Class
 ==================================

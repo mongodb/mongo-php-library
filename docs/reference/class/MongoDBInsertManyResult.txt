@@ -1,5 +1,3 @@
-.. _php-insert-many-result:
-
 ===============================
 MongoDB\\InsertManyResult Class
 ===============================

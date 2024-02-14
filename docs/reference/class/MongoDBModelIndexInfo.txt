@@ -1,5 +1,3 @@
-.. _php-model-index-info:
-
 ===============================
 MongoDB\\Model\\IndexInfo Class
 ===============================

@@ -1,5 +1,3 @@
-.. _php-model-database-info-iterator:
-
 ==========================================
 MongoDB\\Model\\DatabaseInfoIterator Class
 ==========================================

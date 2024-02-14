@@ -1,6 +1,6 @@
-=============================================
-MongoDB\\InsertManyResult::getInsertedCount()
-=============================================
+============================================
+MongoDB\\InsertOneResult::getInsertedCount()
+============================================
 
 .. default-domain:: mongodb
 

@@ -1,6 +1,6 @@
-==========
-isSparse()
-==========
+=====================================
+MongoDB\\Model\\IndexInfo::isSparse()
+=====================================
 
 .. default-domain:: mongodb
 

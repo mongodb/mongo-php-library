@@ -1,6 +1,6 @@
-=================
-getDeletedCount()
-=================
+========================================
+MongoDB\\DeleteResult::getDeletedCount()
+========================================
 
 .. default-domain:: mongodb
 

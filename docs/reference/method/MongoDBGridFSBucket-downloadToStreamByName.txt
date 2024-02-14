@@ -1,6 +1,6 @@
-========================
-downloadToStreamByName()
-========================
+=================================================
+MongoDB\\GridFS\\Bucket::downloadToStreamByName()
+=================================================
 
 .. default-domain:: mongodb
 

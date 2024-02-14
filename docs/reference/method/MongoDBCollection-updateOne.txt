@@ -1,6 +1,6 @@
-===========
-updateOne()
-===========
+================================
+MongoDB\\Collection::updateOne()
+================================
 
 .. default-domain:: mongodb
 

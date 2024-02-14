@@ -1,6 +1,6 @@
-=========
-current()
-=========
+================================
+MongoDB\\ChangeStream::current()
+================================
 
 .. default-domain:: mongodb
 

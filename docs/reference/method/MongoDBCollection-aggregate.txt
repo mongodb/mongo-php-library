@@ -1,6 +1,6 @@
-===========
-aggregate()
-===========
+================================
+MongoDB\\Collection::aggregate()
+================================
 
 .. default-domain:: mongodb
 

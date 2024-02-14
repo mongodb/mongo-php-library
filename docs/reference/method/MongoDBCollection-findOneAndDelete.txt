@@ -1,6 +1,6 @@
-==================
-findOneAndDelete()
-==================
+=======================================
+MongoDB\\Collection::findOneAndDelete()
+=======================================
 
 .. default-domain:: mongodb
 

@@ -7,12 +7,12 @@ Enumeration Classes
 .. toctree::
    :titlesonly:
 
-   /reference/class/MongoDBModelCollectionInfo
-   /reference/class/MongoDBModelCollectionInfoIterator
-   /reference/class/MongoDBModelDatabaseInfo
-   /reference/class/MongoDBModelDatabaseInfoIterator
-   /reference/class/MongoDBModelIndexInfo
-   /reference/class/MongoDBModelIndexInfoIterator
+   CollectionInfo Class </reference/class/MongoDBModelCollectionInfo>
+   CollectionInfoIterator Class </reference/class/MongoDBModelCollectionInfoIterator>
+   DatabaseInfo Class </reference/class/MongoDBModelDatabaseInfo>
+   DatabaseInfoIterator Class </reference/class/MongoDBModelDatabaseInfoIterator>
+   IndexInfo Class </reference/class/MongoDBModelIndexInfo>
+   IndexInfoIterator Class </reference/class/MongoDBModelIndexInfoIterator>
 
 - :ref:`CollectionInfo <php-model-collection-info>`
 - :ref:`CollectionInfoIterator <php-model-collection-info-iterator>`

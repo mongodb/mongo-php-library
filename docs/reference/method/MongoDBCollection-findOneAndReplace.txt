@@ -1,6 +1,6 @@
-===================
-findOneAndReplace()
-===================
+========================================
+MongoDB\\Collection::findOneAndReplace()
+========================================
 
 .. default-domain:: mongodb
 

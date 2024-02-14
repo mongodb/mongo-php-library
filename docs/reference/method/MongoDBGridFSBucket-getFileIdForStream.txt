@@ -1,6 +1,6 @@
-====================
-getFileIdForStream()
-====================
+=============================================
+MongoDB\\GridFS\\Bucket::getFileIdForStream()
+=============================================
 
 .. default-domain:: mongodb
 

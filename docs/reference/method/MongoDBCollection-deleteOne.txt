@@ -1,6 +1,6 @@
-===========
-deleteOne()
-===========
+================================
+MongoDB\\Collection::deleteOne()
+================================
 
 .. default-domain:: mongodb
 

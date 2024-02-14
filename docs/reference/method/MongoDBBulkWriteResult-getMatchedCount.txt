@@ -1,6 +1,6 @@
-=================
-getMatchedCount()
-=================
+===========================================
+MongoDB\\BulkWriteResult::getMatchedCount()
+===========================================
 
 .. default-domain:: mongodb
 

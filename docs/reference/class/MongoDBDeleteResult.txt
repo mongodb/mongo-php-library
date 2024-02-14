@@ -21,8 +21,8 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBDeleteResult-getDeletedCount
-   /reference/method/MongoDBDeleteResult-isAcknowledged
+   getDeletedCount() </reference/method/MongoDBDeleteResult-getDeletedCount>
+   isAcknowledged() </reference/method/MongoDBDeleteResult-isAcknowledged>
 
 - :phpmethod:`MongoDB\\DeleteResult::getDeletedCount()`
 - :phpmethod:`MongoDB\\DeleteResult::isAcknowledged()`

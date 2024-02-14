@@ -1,6 +1,6 @@
-=============
-getIterator()
-=============
+=======================================
+MongoDB\\MapReduceResult::getIterator()
+=======================================
 
 .. default-domain:: mongodb
 

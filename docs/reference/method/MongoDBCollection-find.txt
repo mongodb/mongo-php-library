@@ -1,6 +1,6 @@
-======
-find()
-======
+===========================
+MongoDB\\Collection::find()
+===========================
 
 .. default-domain:: mongodb
 

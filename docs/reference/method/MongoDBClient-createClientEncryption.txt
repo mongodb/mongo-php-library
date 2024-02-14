@@ -1,6 +1,6 @@
-========================
-createClientEncryption()
-========================
+=========================================
+MongoDB\\Client::createClientEncryption()
+=========================================
 
 .. default-domain:: mongodb
 

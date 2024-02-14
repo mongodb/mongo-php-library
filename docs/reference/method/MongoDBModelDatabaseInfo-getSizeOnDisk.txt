@@ -1,6 +1,6 @@
-===============
-getSizeOnDisk()
-===============
+=============================================
+MongoDB\\Model\\DatabaseInfo::getSizeOnDisk()
+=============================================
 
 .. default-domain:: mongodb
 

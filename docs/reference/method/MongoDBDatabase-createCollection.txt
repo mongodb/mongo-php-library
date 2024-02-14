@@ -1,6 +1,6 @@
-==================
-createCollection()
-==================
+=====================================
+MongoDB\\Database::createCollection()
+=====================================
 
 .. default-domain:: mongodb
 

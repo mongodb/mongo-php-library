@@ -1,6 +1,6 @@
-================
-isAcknowledged()
-================
+===========================================
+MongoDB\\InsertManyResult::isAcknowledged()
+===========================================
 
 .. default-domain:: mongodb
 

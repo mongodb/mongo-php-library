@@ -1,6 +1,6 @@
-==========
-distinct()
-==========
+===============================
+MongoDB\\Collection::distinct()
+===============================
 
 .. default-domain:: mongodb
 

@@ -1,6 +1,6 @@
-=================
-getDatabaseName()
-=================
+====================================
+MongoDB\\Database::getDatabaseName()
+====================================
 
 .. default-domain:: mongodb
 

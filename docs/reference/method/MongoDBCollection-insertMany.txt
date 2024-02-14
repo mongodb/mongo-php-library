@@ -1,6 +1,6 @@
-============
-insertMany()
-============
+=================================
+MongoDB\\Collection::insertMany()
+=================================
 
 .. default-domain:: mongodb
 

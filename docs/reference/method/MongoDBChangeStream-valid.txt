@@ -1,6 +1,6 @@
-=======
-valid()
-=======
+==============================
+MongoDB\\ChangeStream::valid()
+==============================
 
 .. default-domain:: mongodb
 

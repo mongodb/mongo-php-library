@@ -1,6 +1,6 @@
-==================
-openUploadStream()
-==================
+===========================================
+MongoDB\\GridFS\\Bucket::openUploadStream()
+===========================================
 
 .. default-domain:: mongodb
 

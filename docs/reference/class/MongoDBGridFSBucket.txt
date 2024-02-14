@@ -34,30 +34,30 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBGridFSBucket__construct
-   /reference/method/MongoDBGridFSBucket-delete
-   /reference/method/MongoDBGridFSBucket-downloadToStream
-   /reference/method/MongoDBGridFSBucket-downloadToStreamByName
-   /reference/method/MongoDBGridFSBucket-drop
-   /reference/method/MongoDBGridFSBucket-find
-   /reference/method/MongoDBGridFSBucket-findOne
-   /reference/method/MongoDBGridFSBucket-getBucketName
-   /reference/method/MongoDBGridFSBucket-getChunksCollection
-   /reference/method/MongoDBGridFSBucket-getChunkSizeBytes
-   /reference/method/MongoDBGridFSBucket-getDatabaseName
-   /reference/method/MongoDBGridFSBucket-getFileDocumentForStream
-   /reference/method/MongoDBGridFSBucket-getFileIdForStream
-   /reference/method/MongoDBGridFSBucket-getFilesCollection
-   /reference/method/MongoDBGridFSBucket-getReadConcern
-   /reference/method/MongoDBGridFSBucket-getReadPreference
-   /reference/method/MongoDBGridFSBucket-getTypeMap
-   /reference/method/MongoDBGridFSBucket-getWriteConcern
-   /reference/method/MongoDBGridFSBucket-openDownloadStream
-   /reference/method/MongoDBGridFSBucket-openDownloadStreamByName
-   /reference/method/MongoDBGridFSBucket-openUploadStream
-   /reference/method/MongoDBGridFSBucket-registerGlobalStreamWrapperAlias
-   /reference/method/MongoDBGridFSBucket-rename
-   /reference/method/MongoDBGridFSBucket-uploadFromStream
+   __construct() </reference/method/MongoDBGridFSBucket__construct>
+   delete() </reference/method/MongoDBGridFSBucket-delete>
+   downloadToStream() </reference/method/MongoDBGridFSBucket-downloadToStream>
+   downloadToStreamByName() </reference/method/MongoDBGridFSBucket-downloadToStreamByName>
+   drop() </reference/method/MongoDBGridFSBucket-drop>
+   find() </reference/method/MongoDBGridFSBucket-find>
+   findOne() </reference/method/MongoDBGridFSBucket-findOne>
+   getBucketName() </reference/method/MongoDBGridFSBucket-getBucketName>
+   getChunksCollection() </reference/method/MongoDBGridFSBucket-getChunksCollection>
+   getChunkSizeBytes() </reference/method/MongoDBGridFSBucket-getChunkSizeBytes>
+   getDatabaseName() </reference/method/MongoDBGridFSBucket-getDatabaseName>
+   getFileDocumentForStream() </reference/method/MongoDBGridFSBucket-getFileDocumentForStream>
+   getFileIdForStream() </reference/method/MongoDBGridFSBucket-getFileIdForStream>
+   getFilesCollection() </reference/method/MongoDBGridFSBucket-getFilesCollection>
+   getReadConcern() </reference/method/MongoDBGridFSBucket-getReadConcern>
+   getReadPreference() </reference/method/MongoDBGridFSBucket-getReadPreference>
+   getTypeMap() </reference/method/MongoDBGridFSBucket-getTypeMap>
+   getWriteConcern() </reference/method/MongoDBGridFSBucket-getWriteConcern>
+   openDownloadStream() </reference/method/MongoDBGridFSBucket-openDownloadStream>
+   openDownloadStreamByName() </reference/method/MongoDBGridFSBucket-openDownloadStreamByName>
+   openUploadStream() </reference/method/MongoDBGridFSBucket-openUploadStream>
+   registerGlobalStreamWrapperAlias() </reference/method/MongoDBGridFSBucket-registerGlobalStreamWrapperAlias>
+   rename() </reference/method/MongoDBGridFSBucket-rename>
+   uploadFromStream() </reference/method/MongoDBGridFSBucket-uploadFromStream>
 
 - :phpmethod:`MongoDB\\GridFS\\Bucket::__construct()`
 - :phpmethod:`MongoDB\\GridFS\\Bucket::delete()`

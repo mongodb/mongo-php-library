@@ -1,6 +1,6 @@
-=======
-isTtl()
-=======
+==================================
+MongoDB\\Model\\IndexInfo::isTtl()
+==================================
 
 .. default-domain:: mongodb
 

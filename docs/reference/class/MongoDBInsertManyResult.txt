@@ -20,9 +20,9 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBInsertManyResult-getInsertedCount
-   /reference/method/MongoDBInsertManyResult-getInsertedIds
-   /reference/method/MongoDBInsertManyResult-isAcknowledged
+   getInsertedCount() </reference/method/MongoDBInsertManyResult-getInsertedCount>
+   getInsertedIds() </reference/method/MongoDBInsertManyResult-getInsertedIds>
+   isAcknowledged() </reference/method/MongoDBInsertManyResult-isAcknowledged>
 
 - :phpmethod:`MongoDB\\InsertManyResult::getInsertedCount()`
 - :phpmethod:`MongoDB\\InsertManyResult::getInsertedIds()`

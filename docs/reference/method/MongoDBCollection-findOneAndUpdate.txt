@@ -1,6 +1,6 @@
-==================
-findOneAndUpdate()
-==================
+=======================================
+MongoDB\\Collection::findOneAndUpdate()
+=======================================
 
 .. default-domain:: mongodb
 

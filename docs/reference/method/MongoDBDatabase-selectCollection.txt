@@ -1,6 +1,6 @@
-==================
-selectCollection()
-==================
+=====================================
+MongoDB\\Database::selectCollection()
+=====================================
 
 .. default-domain:: mongodb
 

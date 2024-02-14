@@ -1,6 +1,6 @@
-=============
-dropIndexes()
-=============
+==================================
+MongoDB\\Collection::dropIndexes()
+==================================
 
 .. default-domain:: mongodb
 

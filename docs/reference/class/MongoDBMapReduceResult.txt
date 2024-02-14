@@ -25,10 +25,10 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBMapReduceResult-getCounts
-   /reference/method/MongoDBMapReduceResult-getExecutionTimeMS
-   /reference/method/MongoDBMapReduceResult-getIterator
-   /reference/method/MongoDBMapReduceResult-getTiming
+   getCounts() </reference/method/MongoDBMapReduceResult-getCounts>
+   getExecutionTimeMS() </reference/method/MongoDBMapReduceResult-getExecutionTimeMS>
+   getIterator() </reference/method/MongoDBMapReduceResult-getIterator>
+   getTiming() </reference/method/MongoDBMapReduceResult-getTiming>
 
 - :phpmethod:`MongoDB\\MapReduceResult::getCounts()`
 - :phpmethod:`MongoDB\\MapReduceResult::getExecutionTimeMS()`

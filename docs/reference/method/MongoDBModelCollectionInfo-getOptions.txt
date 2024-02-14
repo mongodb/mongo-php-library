@@ -1,6 +1,6 @@
-============
-getOptions()
-============
+============================================
+MongoDB\\Model\\CollectionInfo::getOptions()
+============================================
 
 .. default-domain:: mongodb
 

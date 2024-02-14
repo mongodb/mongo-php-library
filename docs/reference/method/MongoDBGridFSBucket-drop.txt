@@ -1,6 +1,6 @@
-======
-drop()
-======
+===============================
+MongoDB\\GridFS\\Bucket::drop()
+===============================
 
 .. default-domain:: mongodb
 

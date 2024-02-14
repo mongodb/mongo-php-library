@@ -1,6 +1,6 @@
-======
-drop()
-======
+=========================
+MongoDB\\Database::drop()
+=========================
 
 .. default-domain:: mongodb
 

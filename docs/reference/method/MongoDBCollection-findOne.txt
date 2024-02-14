@@ -1,6 +1,6 @@
-=========
-findOne()
-=========
+==============================
+MongoDB\\Collection::findOne()
+==============================
 
 .. default-domain:: mongodb
 

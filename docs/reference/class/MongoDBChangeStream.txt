@@ -27,13 +27,13 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBChangeStream-current
-   /reference/method/MongoDBChangeStream-getCursorId
-   /reference/method/MongoDBChangeStream-getResumeToken
-   /reference/method/MongoDBChangeStream-key
-   /reference/method/MongoDBChangeStream-next
-   /reference/method/MongoDBChangeStream-rewind
-   /reference/method/MongoDBChangeStream-valid
+   current() </reference/method/MongoDBChangeStream-current>
+   getCursorId() </reference/method/MongoDBChangeStream-getCursorId>
+   getResumeToken() </reference/method/MongoDBChangeStream-getResumeToken>
+   key() </reference/method/MongoDBChangeStream-key>
+   next() </reference/method/MongoDBChangeStream-next>
+   rewind() </reference/method/MongoDBChangeStream-rewind>
+   valid() </reference/method/MongoDBChangeStream-valid>
 
 - :phpmethod:`MongoDB\\ChangeStream::current()`
 - :phpmethod:`MongoDB\\ChangeStream::getCursorId()`

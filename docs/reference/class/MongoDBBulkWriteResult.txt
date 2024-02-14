@@ -20,14 +20,14 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBBulkWriteResult-getDeletedCount
-   /reference/method/MongoDBBulkWriteResult-getInsertedCount
-   /reference/method/MongoDBBulkWriteResult-getInsertedIds
-   /reference/method/MongoDBBulkWriteResult-getMatchedCount
-   /reference/method/MongoDBBulkWriteResult-getModifiedCount
-   /reference/method/MongoDBBulkWriteResult-getUpsertedCount
-   /reference/method/MongoDBBulkWriteResult-getUpsertedIds
-   /reference/method/MongoDBBulkWriteResult-isAcknowledged
+   getDeletedCount() </reference/method/MongoDBBulkWriteResult-getDeletedCount>
+   getInsertedCount() </reference/method/MongoDBBulkWriteResult-getInsertedCount>
+   getInsertedIds() </reference/method/MongoDBBulkWriteResult-getInsertedIds>
+   getMatchedCount() </reference/method/MongoDBBulkWriteResult-getMatchedCount>
+   getModifiedCount() </reference/method/MongoDBBulkWriteResult-getModifiedCount>
+   getUpsertedCount() </reference/method/MongoDBBulkWriteResult-getUpsertedCount>
+   getUpsertedIds() </reference/method/MongoDBBulkWriteResult-getUpsertedIds>
+   isAcknowledged() </reference/method/MongoDBBulkWriteResult-isAcknowledged>
 
 - :phpmethod:`MongoDB\\BulkWriteResult::getDeletedCount()`
 - :phpmethod:`MongoDB\\BulkWriteResult::getInsertedCount()`

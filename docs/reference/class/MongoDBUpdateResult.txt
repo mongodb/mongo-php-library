@@ -22,11 +22,11 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBUpdateResult-getMatchedCount
-   /reference/method/MongoDBUpdateResult-getModifiedCount
-   /reference/method/MongoDBUpdateResult-getUpsertedCount
-   /reference/method/MongoDBUpdateResult-getUpsertedId
-   /reference/method/MongoDBUpdateResult-isAcknowledged
+   getMatchedCount() </reference/method/MongoDBUpdateResult-getMatchedCount>
+   getModifiedCount() </reference/method/MongoDBUpdateResult-getModifiedCount>
+   getUpsertedCount() </reference/method/MongoDBUpdateResult-getUpsertedCount>
+   getUpsertedId() </reference/method/MongoDBUpdateResult-getUpsertedId>
+   isAcknowledged() </reference/method/MongoDBUpdateResult-isAcknowledged>
 
 - :phpmethod:`MongoDB\\UpdateResult::getMatchedCount()`
 - :phpmethod:`MongoDB\\UpdateResult::getModifiedCount()`

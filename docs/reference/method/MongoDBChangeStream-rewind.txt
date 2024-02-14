@@ -1,6 +1,6 @@
-========
-rewind()
-========
+===============================
+MongoDB\\ChangeStream::rewind()
+===============================
 
 .. default-domain:: mongodb
 

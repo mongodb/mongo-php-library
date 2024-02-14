@@ -1,6 +1,6 @@
-===========
-getCounts()
-===========
+=====================================
+MongoDB\\MapReduceResult::getCounts()
+=====================================
 
 .. default-domain:: mongodb
 

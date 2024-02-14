@@ -58,49 +58,49 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBCollection__construct
-   /reference/method/MongoDBCollection-aggregate
-   /reference/method/MongoDBCollection-bulkWrite
-   /reference/method/MongoDBCollection-count
-   /reference/method/MongoDBCollection-countDocuments
-   /reference/method/MongoDBCollection-createIndex
-   /reference/method/MongoDBCollection-createIndexes
-   /reference/method/MongoDBCollection-createSearchIndex
-   /reference/method/MongoDBCollection-createSearchIndexes
-   /reference/method/MongoDBCollection-deleteMany
-   /reference/method/MongoDBCollection-deleteOne
-   /reference/method/MongoDBCollection-distinct
-   /reference/method/MongoDBCollection-drop
-   /reference/method/MongoDBCollection-dropIndex
-   /reference/method/MongoDBCollection-dropIndexes
-   /reference/method/MongoDBCollection-dropSearchIndex
-   /reference/method/MongoDBCollection-estimatedDocumentCount
-   /reference/method/MongoDBCollection-explain
-   /reference/method/MongoDBCollection-find
-   /reference/method/MongoDBCollection-findOne
-   /reference/method/MongoDBCollection-findOneAndDelete
-   /reference/method/MongoDBCollection-findOneAndReplace
-   /reference/method/MongoDBCollection-findOneAndUpdate
-   /reference/method/MongoDBCollection-getCollectionName
-   /reference/method/MongoDBCollection-getDatabaseName
-   /reference/method/MongoDBCollection-getManager
-   /reference/method/MongoDBCollection-getNamespace
-   /reference/method/MongoDBCollection-getReadConcern
-   /reference/method/MongoDBCollection-getReadPreference
-   /reference/method/MongoDBCollection-getTypeMap
-   /reference/method/MongoDBCollection-getWriteConcern
-   /reference/method/MongoDBCollection-insertMany
-   /reference/method/MongoDBCollection-insertOne
-   /reference/method/MongoDBCollection-listIndexes
-   /reference/method/MongoDBCollection-listSearchIndexes
-   /reference/method/MongoDBCollection-mapReduce
-   /reference/method/MongoDBCollection-rename
-   /reference/method/MongoDBCollection-replaceOne
-   /reference/method/MongoDBCollection-updateMany
-   /reference/method/MongoDBCollection-updateOne
-   /reference/method/MongoDBCollection-updateSearchIndex
-   /reference/method/MongoDBCollection-watch
-   /reference/method/MongoDBCollection-withOptions
+   __construct() </reference/method/MongoDBCollection__construct>
+   aggregate() </reference/method/MongoDBCollection-aggregate>
+   bulkWrite() </reference/method/MongoDBCollection-bulkWrite>
+   count() </reference/method/MongoDBCollection-count>
+   countDocuments() </reference/method/MongoDBCollection-countDocuments>
+   createIndex() </reference/method/MongoDBCollection-createIndex>
+   createIndexes() </reference/method/MongoDBCollection-createIndexes>
+   createSearchIndex() </reference/method/MongoDBCollection-createSearchIndex>
+   createSearchIndexes() </reference/method/MongoDBCollection-createSearchIndexes>
+   deleteMany() </reference/method/MongoDBCollection-deleteMany>
+   deleteOne() </reference/method/MongoDBCollection-deleteOne>
+   distinct() </reference/method/MongoDBCollection-distinct>
+   drop() </reference/method/MongoDBCollection-drop>
+   dropIndex() </reference/method/MongoDBCollection-dropIndex>
+   dropIndexes() </reference/method/MongoDBCollection-dropIndexes>
+   dropSearchIndex() </reference/method/MongoDBCollection-dropSearchIndex>
+   estimatedDocumentCount() </reference/method/MongoDBCollection-estimatedDocumentCount>
+   explain() </reference/method/MongoDBCollection-explain>
+   find() </reference/method/MongoDBCollection-find>
+   findOne() </reference/method/MongoDBCollection-findOne>
+   findOneAndDelete() </reference/method/MongoDBCollection-findOneAndDelete>
+   findOneAndReplace() </reference/method/MongoDBCollection-findOneAndReplace>
+   findOneAndUpdate() </reference/method/MongoDBCollection-findOneAndUpdate>
+   getCollectionName() </reference/method/MongoDBCollection-getCollectionName>
+   getDatabaseName() </reference/method/MongoDBCollection-getDatabaseName>
+   getManager() </reference/method/MongoDBCollection-getManager>
+   getNamespace() </reference/method/MongoDBCollection-getNamespace>
+   getReadConcern() </reference/method/MongoDBCollection-getReadConcern>
+   getReadPreference() </reference/method/MongoDBCollection-getReadPreference>
+   getTypeMap() </reference/method/MongoDBCollection-getTypeMap>
+   getWriteConcern() </reference/method/MongoDBCollection-getWriteConcern>
+   insertMany() </reference/method/MongoDBCollection-insertMany>
+   insertOne() </reference/method/MongoDBCollection-insertOne>
+   listIndexes() </reference/method/MongoDBCollection-listIndexes>
+   listSearchIndexes() </reference/method/MongoDBCollection-listSearchIndexes>
+   mapReduce() </reference/method/MongoDBCollection-mapReduce>
+   rename() </reference/method/MongoDBCollection-rename>
+   replaceOne() </reference/method/MongoDBCollection-replaceOne>
+   updateMany() </reference/method/MongoDBCollection-updateMany>
+   updateOne() </reference/method/MongoDBCollection-updateOne>
+   updateSearchIndex() </reference/method/MongoDBCollection-updateSearchIndex>
+   watch() </reference/method/MongoDBCollection-watch>
+   withOptions() </reference/method/MongoDBCollection-withOptions>
 
 - :phpmethod:`MongoDB\\Collection::__construct()`
 - :phpmethod:`MongoDB\\Collection::aggregate()`

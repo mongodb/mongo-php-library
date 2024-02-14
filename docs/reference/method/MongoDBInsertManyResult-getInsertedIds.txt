@@ -1,6 +1,6 @@
-================
-getInsertedIds()
-================
+===========================================
+MongoDB\\InsertManyResult::getInsertedIds()
+===========================================
 
 .. default-domain:: mongodb
 

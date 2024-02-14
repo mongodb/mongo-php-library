@@ -1,6 +1,6 @@
-==================
-downloadToStream()
-==================
+===========================================
+MongoDB\\GridFS\\Bucket::downloadToStream()
+===========================================
 
 .. default-domain:: mongodb
 

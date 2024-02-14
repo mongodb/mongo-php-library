@@ -1,6 +1,6 @@
-==============
-getNamespace()
-==============
+===================================
+MongoDB\\Collection::getNamespace()
+===================================
 
 .. default-domain:: mongodb
 

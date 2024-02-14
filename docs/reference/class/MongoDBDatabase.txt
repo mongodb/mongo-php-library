@@ -43,28 +43,28 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBDatabase__construct
-   /reference/method/MongoDBDatabase__get
-   /reference/method/MongoDBDatabase-aggregate
-   /reference/method/MongoDBDatabase-command
-   /reference/method/MongoDBDatabase-createCollection
-   /reference/method/MongoDBDatabase-createEncryptedCollection
-   /reference/method/MongoDBDatabase-drop
-   /reference/method/MongoDBDatabase-dropCollection
-   /reference/method/MongoDBDatabase-getDatabaseName
-   /reference/method/MongoDBDatabase-getManager
-   /reference/method/MongoDBDatabase-getReadConcern
-   /reference/method/MongoDBDatabase-getReadPreference
-   /reference/method/MongoDBDatabase-getTypeMap
-   /reference/method/MongoDBDatabase-getWriteConcern
-   /reference/method/MongoDBDatabase-listCollectionNames
-   /reference/method/MongoDBDatabase-listCollections
-   /reference/method/MongoDBDatabase-modifyCollection
-   /reference/method/MongoDBDatabase-renameCollection
-   /reference/method/MongoDBDatabase-selectCollection
-   /reference/method/MongoDBDatabase-selectGridFSBucket
-   /reference/method/MongoDBDatabase-watch
-   /reference/method/MongoDBDatabase-withOptions
+   __construct() </reference/method/MongoDBDatabase__construct>
+   __get() </reference/method/MongoDBDatabase__get>
+   aggregate() </reference/method/MongoDBDatabase-aggregate>
+   command() </reference/method/MongoDBDatabase-command>
+   createCollection() </reference/method/MongoDBDatabase-createCollection>
+   createEncryptedCollection() </reference/method/MongoDBDatabase-createEncryptedCollection>
+   drop() </reference/method/MongoDBDatabase-drop>
+   dropCollection() </reference/method/MongoDBDatabase-dropCollection>
+   getDatabaseName() </reference/method/MongoDBDatabase-getDatabaseName>
+   getManager() </reference/method/MongoDBDatabase-getManager>
+   getReadConcern() </reference/method/MongoDBDatabase-getReadConcern>
+   getReadPreference() </reference/method/MongoDBDatabase-getReadPreference>
+   getTypeMap() </reference/method/MongoDBDatabase-getTypeMap>
+   getWriteConcern() </reference/method/MongoDBDatabase-getWriteConcern>
+   listCollectionNames() </reference/method/MongoDBDatabase-listCollectionNames>
+   listCollections() </reference/method/MongoDBDatabase-listCollections>
+   modifyCollection() </reference/method/MongoDBDatabase-modifyCollection>
+   renameCollection() </reference/method/MongoDBDatabase-renameCollection>
+   selectCollection() </reference/method/MongoDBDatabase-selectCollection>
+   selectGridFSBucket() </reference/method/MongoDBDatabase-selectGridFSBucket>
+   watch() </reference/method/MongoDBDatabase-watch>
+   withOptions() </reference/method/MongoDBDatabase-withOptions>
 
 - :phpmethod:`MongoDB\\Database::__construct()`
 - :phpmethod:`MongoDB\\Database::__get()`

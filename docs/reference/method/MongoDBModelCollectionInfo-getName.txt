@@ -1,6 +1,6 @@
-=========
-getName()
-=========
+=========================================
+MongoDB\\Model\\CollectionInfo::getName()
+=========================================
 
 .. default-domain:: mongodb
 

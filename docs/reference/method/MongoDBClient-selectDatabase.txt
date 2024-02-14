@@ -1,6 +1,6 @@
-================
-selectDatabase()
-================
+=================================
+MongoDB\\Client::selectDatabase()
+=================================
 
 .. default-domain:: mongodb
 

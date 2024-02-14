@@ -1,6 +1,6 @@
-========
-rename()
-========
+=================================
+MongoDB\\GridFS\\Bucket::rename()
+=================================
 
 .. default-domain:: mongodb
 

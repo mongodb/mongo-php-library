@@ -1,6 +1,6 @@
-=================
-listCollections()
-=================
+====================================
+MongoDB\\Database::listCollections()
+====================================
 
 .. default-domain:: mongodb
 

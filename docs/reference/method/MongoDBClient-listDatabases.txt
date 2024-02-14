@@ -1,6 +1,6 @@
-===============
-listDatabases()
-===============
+================================
+MongoDB\\Client::listDatabases()
+================================
 
 .. default-domain:: mongodb
 

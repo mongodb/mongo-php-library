@@ -1,6 +1,6 @@
-============
-deleteMany()
-============
+=================================
+MongoDB\\Collection::deleteMany()
+=================================
 
 .. default-domain:: mongodb
 

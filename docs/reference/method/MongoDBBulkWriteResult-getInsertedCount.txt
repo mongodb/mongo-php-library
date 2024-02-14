@@ -1,6 +1,6 @@
-==================
-getInsertedCount()
-==================
+============================================
+MongoDB\\BulkWriteResult::getInsertedCount()
+============================================
 
 .. default-domain:: mongodb
 

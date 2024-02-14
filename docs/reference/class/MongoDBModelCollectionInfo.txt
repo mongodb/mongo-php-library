@@ -32,14 +32,14 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBModelCollectionInfo-getCappedMax
-   /reference/method/MongoDBModelCollectionInfo-getCappedSize
-   /reference/method/MongoDBModelCollectionInfo-getIdIndex
-   /reference/method/MongoDBModelCollectionInfo-getInfo
-   /reference/method/MongoDBModelCollectionInfo-getName
-   /reference/method/MongoDBModelCollectionInfo-getOptions
-   /reference/method/MongoDBModelCollectionInfo-getType
-   /reference/method/MongoDBModelCollectionInfo-isCapped
+   getCappedMax() </reference/method/MongoDBModelCollectionInfo-getCappedMax>
+   getCappedSize() </reference/method/MongoDBModelCollectionInfo-getCappedSize>
+   getIdIndex() </reference/method/MongoDBModelCollectionInfo-getIdIndex>
+   getInfo() </reference/method/MongoDBModelCollectionInfo-getInfo>
+   getName() </reference/method/MongoDBModelCollectionInfo-getName>
+   getOptions() </reference/method/MongoDBModelCollectionInfo-getOptions>
+   getType() </reference/method/MongoDBModelCollectionInfo-getType>
+   isCapped() </reference/method/MongoDBModelCollectionInfo-isCapped>
 
 - :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedMax()`
 - :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedSize()`

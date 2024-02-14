@@ -30,16 +30,16 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBModelIndexInfo-getKey
-   /reference/method/MongoDBModelIndexInfo-getName
-   /reference/method/MongoDBModelIndexInfo-getNamespace
-   /reference/method/MongoDBModelIndexInfo-getVersion
-   /reference/method/MongoDBModelIndexInfo-is2dSphere
-   /reference/method/MongoDBModelIndexInfo-isGeoHaystack
-   /reference/method/MongoDBModelIndexInfo-isSparse
-   /reference/method/MongoDBModelIndexInfo-isText
-   /reference/method/MongoDBModelIndexInfo-isTtl
-   /reference/method/MongoDBModelIndexInfo-isUnique
+   getKey() </reference/method/MongoDBModelIndexInfo-getKey>
+   getName() </reference/method/MongoDBModelIndexInfo-getName>
+   getNamespace() </reference/method/MongoDBModelIndexInfo-getNamespace>
+   getVersion() </reference/method/MongoDBModelIndexInfo-getVersion>
+   is2dSphere() </reference/method/MongoDBModelIndexInfo-is2dSphere>
+   isGeoHaystack() </reference/method/MongoDBModelIndexInfo-isGeoHaystack>
+   isSparse() </reference/method/MongoDBModelIndexInfo-isSparse>
+   isText() </reference/method/MongoDBModelIndexInfo-isText>
+   isTtl() </reference/method/MongoDBModelIndexInfo-isTtl>
+   isUnique() </reference/method/MongoDBModelIndexInfo-isUnique>
 
 - :phpmethod:`MongoDB\\Model\\IndexInfo::getKey()`
 - :phpmethod:`MongoDB\\Model\\IndexInfo::getName()`

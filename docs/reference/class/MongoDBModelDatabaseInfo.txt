@@ -32,9 +32,9 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBModelDatabaseInfo-getName
-   /reference/method/MongoDBModelDatabaseInfo-getSizeOnDisk
-   /reference/method/MongoDBModelDatabaseInfo-isEmpty
+   getName() </reference/method/MongoDBModelDatabaseInfo-getName>
+   getSizeOnDisk() </reference/method/MongoDBModelDatabaseInfo-getSizeOnDisk>
+   isEmpty() </reference/method/MongoDBModelDatabaseInfo-isEmpty>
 
 - :phpmethod:`MongoDB\\Model\\DatabaseInfo::getName()`
 - :phpmethod:`MongoDB\\Model\\DatabaseInfo::getSizeOnDisk()`

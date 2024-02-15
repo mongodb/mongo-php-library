@@ -7,13 +7,13 @@ Result Classes
 .. toctree::
    :titlesonly:
 
-   /reference/class/MongoDBBulkWriteResult
-   /reference/class/MongoDBDeleteResult
-   /reference/class/MongoDBInsertManyResult
-   /reference/class/MongoDInsertOneResult
-   /reference/class/MongoDBUpdateResult
-   /reference/class/MongoDBChangeStream
-   /reference/class/MongoDBMapReduceResult
+   BulkWriteResult Class </reference/class/MongoDBBulkWriteResult>
+   DeleteResult Class </reference/class/MongoDBDeleteResult>
+   InsertManyResult Class </reference/class/MongoDBInsertManyResult>
+   InsertOneResult Class </reference/class/MongoDInsertOneResult>
+   UpdateResult Class </reference/class/MongoDBUpdateResult>
+   ChangeStream Class </reference/class/MongoDBChangeStream>
+   MapReduceResult Class </reference/class/MongoDBMapReduceResult>
    CollectionInfo Class </reference/class/MongoDBModelCollectionInfo>
    CollectionInfoIterator Class </reference/class/MongoDBModelCollectionInfoIterator>
    DatabaseInfo Class </reference/class/MongoDBModelDatabaseInfo>

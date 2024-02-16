@@ -73,6 +73,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         'retryable-writes/retryable writes handshake failures: collection.findOneAndUpdate succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.bulkWrite succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.bulkWrite succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        // Skips dating back to legacy transaction tests
+        'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
+        'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on DRIVERS-2104',
+        'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
         // PHPC does not implement CMAP
         'valid-pass/assertNumberConnectionsCheckedOut: basic assertion succeeds' => 'PHPC does not implement CMAP',
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
@@ -89,6 +93,14 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-commandCursor: createCommandCursor\'s cursor can be closed and will perform a killCursors operation' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
         // libmongoc always adds readConcern to aggregate command
         'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
+    ];
+
+    /**
+     * Any tests that rely on session pinning (including targetedFailPoint) must
+     * be skipped since libmongoc does not pin on load-balanced toplogies. */
+    private static array $incompleteLoadBalancerTests = [
+        'transactions/mongos-recovery-token: commitTransaction explicit retries include recoveryToken' => 'libmongoc omits recoveryToken for load-balanced topology (CDRIVER-4718)',
+        'transactions/pin-mongos: multiple commits' => 'libmongoc does not pin for load-balanced topology',
     ];
 
     private static UnifiedTestRunner $runner;
@@ -108,6 +120,10 @@ class UnifiedSpecTest extends FunctionalTestCase
 
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
+        }
+
+        if ($this->isLoadBalanced() && isset(self::$incompleteLoadBalancerTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteLoadBalancerTests[$this->dataDescription()]);
         }
     }
 
@@ -233,6 +249,17 @@ class UnifiedSpecTest extends FunctionalTestCase
     public function provideTransactionsTests()
     {
         return $this->provideTests(__DIR__ . '/transactions/*.json');
+    }
+
+    /** @dataProvider provideTransactionsConvenientApiTests */
+    public function testTransactionsConvenientApi(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideTransactionsConvenientApiTests()
+    {
+        return $this->provideTests(__DIR__ . '/transactions-convenient-api/*.json');
     }
 
     /**

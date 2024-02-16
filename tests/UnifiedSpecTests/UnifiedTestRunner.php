@@ -55,7 +55,9 @@ final class UnifiedTestRunner
     public const MIN_SCHEMA_VERSION = '1.0';
 
     /* Note: This is necessary to support expectedError.errorResponse from 1.12;
-     * however, syntax from 1.9, 1.10, and 1.11 has not been implemented. */
+     * however, syntax from 1.9, 1.10, and 1.11 has not been fully implemented.
+     * Syntax for 1.9 is partially implemented (createEntities operation).
+     */
     public const MAX_SCHEMA_VERSION = '1.12';
 
     private Client $internalClient;

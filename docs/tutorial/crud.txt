@@ -68,7 +68,9 @@ The output would then resemble:
    Inserted 1 document(s)
    int(1)
 
-.. seealso:: :phpmethod:`MongoDB\\Collection::insertOne()`
+.. seealso::
+
+   :phpmethod:`MongoDB\\Collection::insertOne()`
 
 Insert Many Documents
 ~~~~~~~~~~~~~~~~~~~~~
@@ -84,7 +86,9 @@ the inserted documents.
    :start-after: start-crud-include
    :end-before: end-crud-include
 
-.. seealso:: :phpmethod:`MongoDB\\Collection::insertMany()`
+.. seealso::
+
+   :phpmethod:`MongoDB\\Collection::insertMany()`
 
 Query Documents
 ---------------
@@ -153,7 +157,9 @@ The output would then resemble:
    when matching an ``_id`` with an :manual:`ObjectId </reference/object-id/>`
    value, as strings and ObjectIds are not directly comparable.
 
-.. seealso:: :phpmethod:`MongoDB\\Collection::findOne()`
+.. seealso::
+
+   :phpmethod:`MongoDB\\Collection::findOne()`
 
 .. _php-find-many-documents:
 
@@ -190,7 +196,9 @@ The output would resemble:
    07307
    07310
 
-.. seealso:: :phpmethod:`MongoDB\\Collection::find()`
+.. seealso::
+
+   :phpmethod:`MongoDB\\Collection::find()`
 
 .. _php-query-projection:
 
@@ -387,7 +395,9 @@ An equivalent filter could be constructed using the :query:`$regex` operator:
        'state' => 'TX',
    ]
 
-.. seealso:: :manual:`$regex </reference/operator/query/regex>` in the MongoDB manual
+.. seealso::
+
+   :manual:`$regex </reference/operator/query/regex>` in the MongoDB manual
 
 Although MongoDB's regular expression syntax is not exactly the same as PHP's
 :php:`PCRE <manual/en/book.pcre.php>` syntax, :php:`preg_quote() <preg_quote>`
@@ -446,7 +456,9 @@ The output would then resemble:
    PA has 1458 zip codes
    IL has 1237 zip codes
 
-.. seealso:: :phpmethod:`MongoDB\\Collection::aggregate()`
+.. seealso::
+
+   :phpmethod:`MongoDB\\Collection::aggregate()`
 
 Update Documents
 ----------------
@@ -574,7 +586,9 @@ operation therefore resembles:
    Matched 3 document(s)
    Modified 2 document(s)
 
-.. seealso:: :phpmethod:`MongoDB\\Collection::updateMany()`
+.. seealso::
+
+   :phpmethod:`MongoDB\\Collection::updateMany()`
 
 Replace Documents
 ~~~~~~~~~~~~~~~~~
@@ -737,7 +751,9 @@ The output would then resemble:
 
    Deleted 1 document(s)
 
-.. seealso:: :phpmethod:`MongoDB\\Collection::deleteOne()`
+.. seealso::
+
+   :phpmethod:`MongoDB\\Collection::deleteOne()`
 
 Delete Many Documents
 ~~~~~~~~~~~~~~~~~~~~~
@@ -773,4 +789,6 @@ The output would then resemble:
 
    Deleted 2 document(s)
 
-.. seealso:: :phpmethod:`MongoDB\\Collection::deleteMany()`
+.. seealso::
+
+   :phpmethod:`MongoDB\\Collection::deleteMany()`

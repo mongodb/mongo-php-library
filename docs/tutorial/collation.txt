@@ -16,7 +16,7 @@ Overview
 --------
 
 MongoDB 3.4 introduced support for :manual:`collations
-</manual/reference/collation/>`, which provide a set of rules to comply with the
+</reference/collation/>`, which provide a set of rules to comply with the
 conventions of a particular language when comparing strings.
 
 For example, in Canadian French, the last accent in a given word determines the

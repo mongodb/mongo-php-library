@@ -14,7 +14,7 @@ Overview
 --------
 
 MongoDB 3.4 introduced support for a :manual:`Decimal128 BSON type
-</manual/release-notes/3.4/#decimal-type>`, which is a 128-bit decimal-based
+</release-notes/3.4/#decimal-type>`, which is a 128-bit decimal-based
 floating-point value capable of emulating decimal rounding with exact precision.
 This functionality is intended for applications that handle :manual:`monetary
 data </tutorial/model-monetary-data>`, such as financial and tax computations.

@@ -7,15 +7,11 @@ on:
       - "v*.*"
       - "master"
       - "feature/*"
-    paths-ignore:
-      - "docs/**"
   push:
     branches:
       - "v*.*"
       - "master"
       - "feature/*"
-    paths-ignore:
-      - "docs/**"
 
 env:
   PHP_VERSION: "8.2"

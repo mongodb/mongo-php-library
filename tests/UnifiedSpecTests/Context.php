@@ -58,6 +58,8 @@ final class Context
 
     private string $multiMongosUri;
 
+    private ?object $advanceClusterTime = null;
+
     public function __construct(Client $internalClient, string $uri)
     {
         $this->entityMap = new EntityMap();
@@ -148,6 +150,17 @@ final class Context
     public function setActiveClient(?string $clientId = null): void
     {
         $this->activeClient = $clientId;
+    }
+
+    /**
+     * Set a cluster time to use for advancing newly created session entities.
+     *
+     * This is used to ensure causal consistency with initialData collections
+     * in sharded environments (see: DRIVERS-2816).
+     */
+    public function setAdvanceClusterTime(?object $clusterTime): void
+    {
+        $this->advanceClusterTime = $clusterTime;
     }
 
     public function isInLoop(): bool
@@ -463,7 +476,13 @@ final class Context
             $options = self::prepareSessionOptions((array) $o->sessionOptions);
         }
 
-        $this->entityMap->set($id, $client->startSession($options), $clientId);
+        $session = $client->startSession($options);
+
+        if ($this->advanceClusterTime !== null) {
+            $session->advanceClusterTime($this->advanceClusterTime);
+        }
+
+        $this->entityMap->set($id, $session, $clientId);
     }
 
     private function createBucket(string $id, stdClass $o): void

@@ -13,7 +13,7 @@ content: |
 ref: note-atlas-search-requirement
 content: |
   This command can only be run on a deployment hosted on
-  :manual:`MongoDB Atlas </atlas>` and requires an Atlas cluster tier of at
+  `MongoDB Atlas <https://www.mongodb.com/docs/atlas/>`__ and requires an Atlas cluster tier of at
   least M10. A
   `Local Atlas Deployment <https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-deploy-local/#use-atlas-search-with-a-local-atlas-deployment>`__
   can also be used for development.

@@ -39,22 +39,22 @@ class CollectionData
         $this->documents = $o->documents;
     }
 
-    public function prepareInitialData(Client $client): void
+    public function prepareInitialData(Client $client, ?Session $session = null): void
     {
         $database = $client->selectDatabase(
             $this->databaseName,
             ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)],
         );
 
-        $database->dropCollection($this->collectionName);
+        $database->dropCollection($this->collectionName, ['session' => $session]);
 
         if (empty($this->documents)) {
-            $database->createCollection($this->collectionName);
+            $database->createCollection($this->collectionName, ['session' => $session]);
 
             return;
         }
 
-        $database->selectCollection($this->collectionName)->insertMany($this->documents);
+        $database->selectCollection($this->collectionName)->insertMany($this->documents, ['session' => $session]);
     }
 
     public function assertOutcome(Client $client): void

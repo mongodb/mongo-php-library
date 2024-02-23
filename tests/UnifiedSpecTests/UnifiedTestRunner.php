@@ -183,11 +183,13 @@ final class UnifiedTestRunner
             $this->checkRunOnRequirements($test->runOnRequirements);
         }
 
-        if (isset($initialData)) {
-            $this->prepareInitialData($initialData);
-        }
+        assertIsArray($test->operations);
 
         $context = $this->createContext();
+
+        if (isset($initialData)) {
+            $this->prepareInitialData($initialData, $context, $this->isAdvanceClusterTimeNeeded($test->operations));
+        }
 
         /* If an EntityMap observer has been configured, assign the Context's
          * EntityMap to a class property so it can later be accessed from run(),
@@ -200,7 +202,6 @@ final class UnifiedTestRunner
             $context->createEntities($createEntities);
         }
 
-        assertIsArray($test->operations);
         $this->preventStaleDbVersionError($test->operations, $context);
 
         $context->startEventObservers();
@@ -423,15 +424,46 @@ final class UnifiedTestRunner
         }
     }
 
-    private function prepareInitialData(array $initialData): void
+    private function prepareInitialData(array $initialData, Context $context, bool $isAdvanceClusterTimeNeeded): void
     {
         assertNotEmpty($initialData);
         assertContainsOnly('object', $initialData);
 
+        /* In order to avoid MigrationConflict errors on sharded clusters, use the cluster time obtained from creating
+         * collections to advance session entities. This is necessary because initialData uses an internal MongoClient,
+         * which will not share/gossip its cluster time via the test entities. */
+        if ($isAdvanceClusterTimeNeeded) {
+            $session = $this->internalClient->startSession();
+        }
+
         foreach ($initialData as $data) {
             $collectionData = new CollectionData($data);
-            $collectionData->prepareInitialData($this->internalClient);
+            $collectionData->prepareInitialData($this->internalClient, $session ?? null);
         }
+
+        if (isset($session)) {
+            $context->setAdvanceClusterTime($session->getClusterTime());
+        }
+    }
+
+    /**
+     * Work around potential MigrationConflict errors on sharded clusters.
+     */
+    private function isAdvanceClusterTimeNeeded(array $operations): bool
+    {
+        if (! in_array($this->getPrimaryServer()->getType(), [Server::TYPE_MONGOS, Server::TYPE_LOAD_BALANCER], true)) {
+            return false;
+        }
+
+        foreach ($operations as $operation) {
+            switch ($operation->name) {
+                case 'startTransaction':
+                case 'withTransaction':
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     /**

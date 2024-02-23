@@ -6,6 +6,7 @@ use ArrayIterator;
 use MongoDB\Client;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MultipleIterator;

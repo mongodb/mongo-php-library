@@ -171,14 +171,12 @@ functions:
           ./run-mongohouse-image.sh
 
   "create serverless instance":
-    - command: shell.exec
+    - command: subprocess.exec
       params:
         working_dir: "src"
-        script: |
-          ${PREPARE_SHELL}
-
-          bash ${DRIVERS_TOOLS}/.evergreen/serverless/setup-secrets.sh
-          bash ${DRIVERS_TOOLS}/.evergreen/serverless/create-instance.sh
+        binary: bash
+        args:
+          - ${DRIVERS_TOOLS}/.evergreen/serverless/create-instance.sh
     - command: expansions.update
       params:
         file: src/serverless-expansion.yml
@@ -190,17 +188,19 @@ functions:
         script: |
           ${PREPARE_SHELL}
 
-          bash ${DRIVERS_TOOLS}/.evergreen/serverless/setup-secrets.sh serverless_next
+          VAULT_NAME=serverless_next \
           bash ${DRIVERS_TOOLS}/.evergreen/serverless/create-instance.sh
     - command: expansions.update
       params:
         file: src/serverless-expansion.yml
 
   "delete serverless instance":
-    - command: shell.exec
+    - command: subprocess.exec
       params:
-        script: |
-          bash ${DRIVERS_TOOLS}/.evergreen/serverless/delete-instance.sh
+        working_dir: "src"
+        binary: bash
+        args:
+          - ${DRIVERS_TOOLS}/.evergreen/serverless/delete-instance.sh
 
   "run tests":
     - command: shell.exec
@@ -274,12 +274,15 @@ functions:
           export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
           export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
           export MONGODB_IS_SERVERLESS=on
-          export MONGODB_USERNAME=${SERVERLESS_ATLAS_USER}
-          export MONGODB_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
+          export MONGODB_URI="${SERVERLESS_URI}"
           export PATH="${PHP_PATH}/bin:$PATH"
 
+          . ${DRIVERS_TOOLS}/.evergreen/serverless/secrets-export.sh
+
+          export MONGODB_USERNAME=$SERVERLESS_ATLAS_USER
+          export MONGODB_PASSWORD=$SERVERLESS_ATLAS_PASSWORD
+
           CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
-          MONGODB_URI="${SERVERLESS_URI}" \
           TESTS="serverless" \
           ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 

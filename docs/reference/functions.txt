@@ -13,6 +13,10 @@ Functions
 .. toctree::
    :titlesonly:
 
-   /reference/function/add_logger
-   /reference/function/remove_logger
-   /reference/function/with_transaction
+   add_logger() </reference/function/add_logger>
+   remove_logger() </reference/function/remove_logger>
+   with_transaction() </reference/function/with_transaction>
+
+- :phpmethod:`MongoDB\\add_logger()`
+- :phpmethod:`MongoDB\\remove_logger()`
+- :phpmethod:`MongoDB\\with_transaction()`

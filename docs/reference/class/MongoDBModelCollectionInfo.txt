@@ -1,0 +1,49 @@
+====================================
+MongoDB\\Model\\CollectionInfo Class
+====================================
+
+Definition
+----------
+
+.. phpclass:: MongoDB\\Model\\CollectionInfo
+
+   This class models information about a collection. Instances of this class are
+   returned by traversing a :phpclass:`MongoDB\\Model\\CollectionInfoIterator`,
+   which is returned by :phpmethod:`MongoDB\\Database::listCollections()`.
+
+.. versionchanged:: 1.4
+
+   This class implements PHP's :php:`ArrayAccess <arrayaccess>` interface. This
+   provides a mechanism for accessing index fields for which there exists no
+   helper method. :php:`isset() <isset>` may be used to check for the existence
+   of a field before accessing it with ``[]``.
+
+   .. note::
+
+      The :phpclass:`MongoDB\\Model\\CollectionInfo` class is immutable. Attempting
+      to modify it via the :php:`ArrayAccess <arrayaccess>` interface will
+      result in a :phpclass:`MongoDB\\Exception\\BadMethodCallException`.
+
+Methods
+-------
+
+.. toctree::
+   :titlesonly:
+
+   getCappedMax() </reference/method/MongoDBModelCollectionInfo-getCappedMax>
+   getCappedSize() </reference/method/MongoDBModelCollectionInfo-getCappedSize>
+   getIdIndex() </reference/method/MongoDBModelCollectionInfo-getIdIndex>
+   getInfo() </reference/method/MongoDBModelCollectionInfo-getInfo>
+   getName() </reference/method/MongoDBModelCollectionInfo-getName>
+   getOptions() </reference/method/MongoDBModelCollectionInfo-getOptions>
+   getType() </reference/method/MongoDBModelCollectionInfo-getType>
+   isCapped() </reference/method/MongoDBModelCollectionInfo-isCapped>
+
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedMax()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedSize()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getIdIndex()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getInfo()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getName()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getOptions()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::getType()`
+- :phpmethod:`MongoDB\\Model\\CollectionInfo::isCapped()`

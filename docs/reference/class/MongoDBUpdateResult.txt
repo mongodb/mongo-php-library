@@ -1,0 +1,33 @@
+===========================
+MongoDB\\UpdateResult Class
+===========================
+
+Definition
+----------
+
+.. phpclass:: MongoDB\\UpdateResult
+
+   This class contains information about an executed update or replace
+   operation. It encapsulates a :php:`MongoDB\\Driver\\WriteResult
+   <class.mongodb-driver-writeresult>` object and is returned from
+   :phpmethod:`MongoDB\\Collection::replaceOne()`,
+   :phpmethod:`MongoDB\\Collection::updateMany()`, or
+   :phpmethod:`MongoDB\\Collection::updateOne()`.
+
+Methods
+-------
+
+.. toctree::
+   :titlesonly:
+
+   getMatchedCount() </reference/method/MongoDBUpdateResult-getMatchedCount>
+   getModifiedCount() </reference/method/MongoDBUpdateResult-getModifiedCount>
+   getUpsertedCount() </reference/method/MongoDBUpdateResult-getUpsertedCount>
+   getUpsertedId() </reference/method/MongoDBUpdateResult-getUpsertedId>
+   isAcknowledged() </reference/method/MongoDBUpdateResult-isAcknowledged>
+
+- :phpmethod:`MongoDB\\UpdateResult::getMatchedCount()`
+- :phpmethod:`MongoDB\\UpdateResult::getModifiedCount()`
+- :phpmethod:`MongoDB\\UpdateResult::getUpsertedCount()`
+- :phpmethod:`MongoDB\\UpdateResult::getUpsertedId()`
+- :phpmethod:`MongoDB\\UpdateResult::isAcknowledged()`

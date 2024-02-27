@@ -28,18 +28,34 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBClient__construct
-   /reference/method/MongoDBClient__get
-   /reference/method/MongoDBClient-createClientEncryption
-   /reference/method/MongoDBClient-dropDatabase
-   /reference/method/MongoDBClient-getManager
-   /reference/method/MongoDBClient-getReadConcern
-   /reference/method/MongoDBClient-getReadPreference
-   /reference/method/MongoDBClient-getTypeMap
-   /reference/method/MongoDBClient-getWriteConcern
-   /reference/method/MongoDBClient-listDatabaseNames
-   /reference/method/MongoDBClient-listDatabases
-   /reference/method/MongoDBClient-selectCollection
-   /reference/method/MongoDBClient-selectDatabase
-   /reference/method/MongoDBClient-startSession
-   /reference/method/MongoDBClient-watch
+   __construct() </reference/method/MongoDBClient__construct>
+   __get() </reference/method/MongoDBClient__get>
+   createClientEncryption() </reference/method/MongoDBClient-createClientEncryption>
+   dropDatabase() </reference/method/MongoDBClient-dropDatabase>
+   getManager() </reference/method/MongoDBClient-getManager>
+   getReadConcern() </reference/method/MongoDBClient-getReadConcern>
+   getReadPreference() </reference/method/MongoDBClient-getReadPreference>
+   getTypeMap() </reference/method/MongoDBClient-getTypeMap>
+   getWriteConcern() </reference/method/MongoDBClient-getWriteConcern>
+   listDatabaseNames() </reference/method/MongoDBClient-listDatabaseNames>
+   listDatabases() </reference/method/MongoDBClient-listDatabases>
+   selectCollection() </reference/method/MongoDBClient-selectCollection>
+   selectDatabase() </reference/method/MongoDBClient-selectDatabase>
+   startSession() </reference/method/MongoDBClient-startSession>
+   watch() </reference/method/MongoDBClient-watch>
+
+- :phpmethod:`MongoDB\\Client::__construct()`
+- :phpmethod:`MongoDB\\Client::__get()`
+- :phpmethod:`MongoDB\\Client::createClientEncryption()`
+- :phpmethod:`MongoDB\\Client::dropDatabase()`
+- :phpmethod:`MongoDB\\Client::getManager()`
+- :phpmethod:`MongoDB\\Client::getReadConcern()`
+- :phpmethod:`MongoDB\\Client::getReadPreference()`
+- :phpmethod:`MongoDB\\Client::getTypeMap()`
+- :phpmethod:`MongoDB\\Client::getWriteConcern()`
+- :phpmethod:`MongoDB\\Client::listDatabaseNames()`
+- :phpmethod:`MongoDB\\Client::listDatabases()`
+- :phpmethod:`MongoDB\\Client::selectCollection()`
+- :phpmethod:`MongoDB\\Client::selectDatabase()`
+- :phpmethod:`MongoDB\\Client::startSession()`
+- :phpmethod:`MongoDB\\Client::watch()`

@@ -13,4 +13,6 @@ Functions
 .. toctree::
    :titlesonly:
 
-   /reference/function/with_transaction
+   with_transaction() </reference/function/with_transaction>
+
+- :phpmethod:`MongoDB\\with_transaction()`

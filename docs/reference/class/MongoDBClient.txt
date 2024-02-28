@@ -13,13 +13,13 @@ MongoDB\\Client Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\Client
+.. phpclass:: MongoDB\Client
 
    This class serves as an entry point for the |php-library|. It is the
    preferred class for connecting to a MongoDB server or cluster of servers and
    acts as a gateway for accessing individual databases and collections.
-   :phpclass:`MongoDB\\Client` is analogous to the driver's
-   :php:`MongoDB\\Driver\\Manager <mongodb-driver-manager>` class, which it
+   :phpclass:`MongoDB\Client` is analogous to the driver's
+   :php:`MongoDB\Driver\Manager <mongodb-driver-manager>` class, which it
    `composes <https://en.wikipedia.org/wiki/Object_composition>`_.
 
 Methods
@@ -44,18 +44,18 @@ Methods
    startSession() </reference/method/MongoDBClient-startSession>
    watch() </reference/method/MongoDBClient-watch>
 
-- :phpmethod:`MongoDB\\Client::__construct()`
-- :phpmethod:`MongoDB\\Client::__get()`
-- :phpmethod:`MongoDB\\Client::createClientEncryption()`
-- :phpmethod:`MongoDB\\Client::dropDatabase()`
-- :phpmethod:`MongoDB\\Client::getManager()`
-- :phpmethod:`MongoDB\\Client::getReadConcern()`
-- :phpmethod:`MongoDB\\Client::getReadPreference()`
-- :phpmethod:`MongoDB\\Client::getTypeMap()`
-- :phpmethod:`MongoDB\\Client::getWriteConcern()`
-- :phpmethod:`MongoDB\\Client::listDatabaseNames()`
-- :phpmethod:`MongoDB\\Client::listDatabases()`
-- :phpmethod:`MongoDB\\Client::selectCollection()`
-- :phpmethod:`MongoDB\\Client::selectDatabase()`
-- :phpmethod:`MongoDB\\Client::startSession()`
-- :phpmethod:`MongoDB\\Client::watch()`
+- :phpmethod:`MongoDB\Client::__construct()`
+- :phpmethod:`MongoDB\Client::__get()`
+- :phpmethod:`MongoDB\Client::createClientEncryption()`
+- :phpmethod:`MongoDB\Client::dropDatabase()`
+- :phpmethod:`MongoDB\Client::getManager()`
+- :phpmethod:`MongoDB\Client::getReadConcern()`
+- :phpmethod:`MongoDB\Client::getReadPreference()`
+- :phpmethod:`MongoDB\Client::getTypeMap()`
+- :phpmethod:`MongoDB\Client::getWriteConcern()`
+- :phpmethod:`MongoDB\Client::listDatabaseNames()`
+- :phpmethod:`MongoDB\Client::listDatabases()`
+- :phpmethod:`MongoDB\Client::selectCollection()`
+- :phpmethod:`MongoDB\Client::selectDatabase()`
+- :phpmethod:`MongoDB\Client::startSession()`
+- :phpmethod:`MongoDB\Client::watch()`

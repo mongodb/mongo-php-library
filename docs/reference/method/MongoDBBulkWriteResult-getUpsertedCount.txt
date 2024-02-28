@@ -13,7 +13,7 @@ MongoDB\\BulkWriteResult::getUpsertedCount()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\BulkWriteResult::getUpsertedCount()
+.. phpmethod:: MongoDB\BulkWriteResult::getUpsertedCount()
 
    Return the total number of documents that were upserted by all update and
    replace operations in the bulk write.
@@ -38,5 +38,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\WriteResult::getUpsertedCount()
+- :php:`MongoDB\Driver\\WriteResult::getUpsertedCount()
   <manual/en/mongodb-driver-writeresult.getupsertedcount.php>`

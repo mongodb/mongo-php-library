@@ -5,12 +5,11 @@ MongoDB\\BulkWriteResult Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\BulkWriteResult
+.. phpclass:: MongoDB\BulkWriteResult
 
    This class contains information about an executed bulk write operation. It
-   encapsulates a :php:`MongoDB\\Driver\\WriteResult
-   <class.mongodb-driver-writeresult>` object and is returned from
-   :phpmethod:`MongoDB\\Collection::bulkWrite()`.
+   encapsulates a :php:`MongoDB\Driver\WriteResult <class.mongodb-driver-writeresult>`
+   object and is returned from :phpmethod:`MongoDB\Collection::bulkWrite()`.
 
 Methods
 -------
@@ -27,11 +26,11 @@ Methods
    getUpsertedIds() </reference/method/MongoDBBulkWriteResult-getUpsertedIds>
    isAcknowledged() </reference/method/MongoDBBulkWriteResult-isAcknowledged>
 
-- :phpmethod:`MongoDB\\BulkWriteResult::getDeletedCount()`
-- :phpmethod:`MongoDB\\BulkWriteResult::getInsertedCount()`
-- :phpmethod:`MongoDB\\BulkWriteResult::getInsertedIds()`
-- :phpmethod:`MongoDB\\BulkWriteResult::getMatchedCount()`
-- :phpmethod:`MongoDB\\BulkWriteResult::getModifiedCount()`
-- :phpmethod:`MongoDB\\BulkWriteResult::getUpsertedCount()`
-- :phpmethod:`MongoDB\\BulkWriteResult::getUpsertedIds()`
-- :phpmethod:`MongoDB\\BulkWriteResult::isAcknowledged()`
+- :phpmethod:`MongoDB\BulkWriteResult::getDeletedCount()`
+- :phpmethod:`MongoDB\BulkWriteResult::getInsertedCount()`
+- :phpmethod:`MongoDB\BulkWriteResult::getInsertedIds()`
+- :phpmethod:`MongoDB\BulkWriteResult::getMatchedCount()`
+- :phpmethod:`MongoDB\BulkWriteResult::getModifiedCount()`
+- :phpmethod:`MongoDB\BulkWriteResult::getUpsertedCount()`
+- :phpmethod:`MongoDB\BulkWriteResult::getUpsertedIds()`
+- :phpmethod:`MongoDB\BulkWriteResult::isAcknowledged()`

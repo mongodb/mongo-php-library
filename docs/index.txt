@@ -12,7 +12,7 @@ The ``mongodb`` extension provides a limited API to connect to the database and
 execute generic commands, queries, and write operations. In contrast, the
 |php-library| provides a full-featured API and models client, database, and
 collection objects. Each of those classes provide various helper methods for
-performing operations in context. For example, :phpclass:`MongoDB\\Collection`
+performing operations in context. For example, :phpclass:`MongoDB\Collection`
 implements methods for executing CRUD operations and managing indexes on the
 collection, among other things.
 

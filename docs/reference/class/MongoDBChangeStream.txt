@@ -7,13 +7,13 @@ MongoDB\\ChangeStream Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\ChangeStream
+.. phpclass:: MongoDB\ChangeStream
 
    This class extends PHP's :php:`Iterator <manual/en/class.iterator.php>`
    interface. An instance of this class is returned by
-   :phpmethod:`MongoDB\\Client::watch()`,
-   :phpmethod:`MongoDB\\Database::watch()`, and
-   :phpmethod:`MongoDB\\Collection::watch()`.
+   :phpmethod:`MongoDB\Client::watch()`,
+   :phpmethod:`MongoDB\Database::watch()`, and
+   :phpmethod:`MongoDB\Collection::watch()`.
 
    This class allows for iteration of events in a change stream. It also allows
    iteration to automatically resume after certain errors, such as a replica set
@@ -33,10 +33,10 @@ Methods
    rewind() </reference/method/MongoDBChangeStream-rewind>
    valid() </reference/method/MongoDBChangeStream-valid>
 
-- :phpmethod:`MongoDB\\ChangeStream::current()`
-- :phpmethod:`MongoDB\\ChangeStream::getCursorId()`
-- :phpmethod:`MongoDB\\ChangeStream::getResumeToken()`
-- :phpmethod:`MongoDB\\ChangeStream::key()`
-- :phpmethod:`MongoDB\\ChangeStream::next()`
-- :phpmethod:`MongoDB\\ChangeStream::rewind()`
-- :phpmethod:`MongoDB\\ChangeStream::valid()`
+- :phpmethod:`MongoDB\ChangeStream::current()`
+- :phpmethod:`MongoDB\ChangeStream::getCursorId()`
+- :phpmethod:`MongoDB\ChangeStream::getResumeToken()`
+- :phpmethod:`MongoDB\ChangeStream::key()`
+- :phpmethod:`MongoDB\ChangeStream::next()`
+- :phpmethod:`MongoDB\ChangeStream::rewind()`
+- :phpmethod:`MongoDB\ChangeStream::valid()`

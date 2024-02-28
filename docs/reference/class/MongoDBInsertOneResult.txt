@@ -5,12 +5,11 @@ MongoDB\\InsertOneResult Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\InsertOneResult
+.. phpclass:: MongoDB\InsertOneResult
 
    This class contains information about an executed insert operation. It
-   encapsulates a :php:`MongoDB\\Driver\\WriteResult
-   <class.mongodb-driver-writeresult>` object and is returned from
-   :phpmethod:`MongoDB\\Collection::insertOne()`.
+   encapsulates a :php:`MongoDB\Driver\WriteResult <class.mongodb-driver-writeresult>`
+   object and is returned from :phpmethod:`MongoDB\Collection::insertOne()`.
 
 Methods
 -------
@@ -22,6 +21,6 @@ Methods
    getInsertedId() </reference/method/MongoDBInsertOneResult-getInsertedId>
    isAcknowledged() </reference/method/MongoDBInsertOneResult-isAcknowledged>
 
-- :phpmethod:`MongoDB\\InsertOneResult::getInsertedCount()`
-- :phpmethod:`MongoDB\\InsertOneResult::getInsertedId()`
-- :phpmethod:`MongoDB\\InsertOneResult::isAcknowledged()`
+- :phpmethod:`MongoDB\InsertOneResult::getInsertedCount()`
+- :phpmethod:`MongoDB\InsertOneResult::getInsertedId()`
+- :phpmethod:`MongoDB\InsertOneResult::isAcknowledged()`

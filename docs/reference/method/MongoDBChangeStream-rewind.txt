@@ -13,7 +13,7 @@ MongoDB\\ChangeStream::rewind()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\ChangeStream::rewind()
+.. phpmethod:: MongoDB\ChangeStream::rewind()
 
    Rewinds the change stream and attempts to load the first event.
 
@@ -27,18 +27,18 @@ Definition
 
       Rewinding the change stream does not guarantee that there will be a
       current event to access. You should still call
-      :phpmethod:`MongoDB\\ChangeStream::valid()` to check for a current event
+      :phpmethod:`MongoDB\ChangeStream::valid()` to check for a current event
       at each step of iteration. After initially rewinding the change stream,
-      :phpmethod:`MongoDB\\ChangeStream::next()` should be used to iterate
+      :phpmethod:`MongoDB\ChangeStream::next()` should be used to iterate
       further.
 
 Errors/Exceptions
 -----------------
 
-:php:`MongoDB\\Driver\\Exception\\LogicException
+:php:`MongoDB\Driver\\Exception\\LogicException
 <mongodb-driver-exception-logicexception>` if this method is called after a call
-to :phpmethod:`MongoDB\\ChangeStream::next()` (i.e. the underlying
-:php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` has already been
+to :phpmethod:`MongoDB\ChangeStream::next()` (i.e. the underlying
+:php:`MongoDB\Driver\\Cursor <class.mongodb-driver-cursor>` has already been
 advanced).
 
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
@@ -46,9 +46,9 @@ advanced).
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Client::watch()`
-- :phpmethod:`MongoDB\\Collection::watch()`
-- :phpmethod:`MongoDB\\Database::watch()`
+- :phpmethod:`MongoDB\Client::watch()`
+- :phpmethod:`MongoDB\Collection::watch()`
+- :phpmethod:`MongoDB\Database::watch()`
 - :php:`Iterator::rewind() <iterator.rewind>`
 - :ref:`Tailable Cursor Iteration <php-tailable-cursor>`
 - :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

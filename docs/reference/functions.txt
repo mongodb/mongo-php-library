@@ -15,4 +15,4 @@ Functions
 
    with_transaction() </reference/function/with_transaction>
 
-- :phpmethod:`MongoDB\\with_transaction()`
+- :phpmethod:`MongoDB\with_transaction()`

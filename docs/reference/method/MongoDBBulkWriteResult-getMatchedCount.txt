@@ -13,7 +13,7 @@ MongoDB\\BulkWriteResult::getMatchedCount()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\BulkWriteResult::getMatchedCount()
+.. phpmethod:: MongoDB\BulkWriteResult::getMatchedCount()
 
    Return the total number of documents that were matched by all update and
    replace operations in the bulk write.
@@ -30,7 +30,7 @@ Definition
       (e.g. setting the value of a field to its current value), the matched
       count may be greater than the value returned by
       :phpmethod:`getModifiedCount()
-      <MongoDB\\BulkWriteResult::getModifiedCount()>`.
+      <MongoDB\BulkWriteResult::getModifiedCount()>`.
 
 Return Values
 -------------
@@ -46,6 +46,6 @@ Errors/Exceptions
 See Also
 --------
 
-- :phpmethod:`MongoDB\\BulkWriteResult::getModifiedCount()`
-- :php:`MongoDB\\Driver\\WriteResult::getMatchedCount()
+- :phpmethod:`MongoDB\BulkWriteResult::getModifiedCount()`
+- :php:`MongoDB\Driver\\WriteResult::getMatchedCount()
   <manual/en/mongodb-driver-writeresult.getmatchedcount.php>`

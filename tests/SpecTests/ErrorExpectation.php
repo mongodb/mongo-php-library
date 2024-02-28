@@ -84,35 +84,6 @@ final class ErrorExpectation
         return $o;
     }
 
-    public static function fromRetryableWrites(stdClass $outcome)
-    {
-        $o = new self();
-
-        if (isset($outcome->error)) {
-            $o->isExpected = $outcome->error;
-        }
-
-        /* outcome.result will only contain error label assertions if an error
-         * is expected (i.e. outcome.error is true). */
-        if ($o->isExpected && isset($outcome->result->errorLabelsContain)) {
-            if (! self::isArrayOfStrings($outcome->result->errorLabelsContain)) {
-                throw InvalidArgumentException::invalidType('errorLabelsContain', $outcome->result->errorLabelsContain, 'string[]');
-            }
-
-            $o->includedLabels = $outcome->result->errorLabelsContain;
-        }
-
-        if ($o->isExpected && isset($outcome->result->errorLabelsOmit)) {
-            if (! self::isArrayOfStrings($outcome->result->errorLabelsOmit)) {
-                throw InvalidArgumentException::invalidType('errorLabelsOmit', $outcome->result->errorLabelsOmit, 'string[]');
-            }
-
-            $o->excludedLabels = $outcome->result->errorLabelsOmit;
-        }
-
-        return $o;
-    }
-
     /** @throws InvalidArgumentException */
     public static function fromTransactions(stdClass $operation)
     {

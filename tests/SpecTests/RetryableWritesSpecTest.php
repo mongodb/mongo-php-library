@@ -7,11 +7,6 @@ use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
-use stdClass;
-
-use function basename;
-use function file_get_contents;
-use function glob;
 
 /**
  * Retryable writes spec tests.
@@ -23,61 +18,6 @@ class RetryableWritesSpecTest extends FunctionalTestCase
 {
     public const NOT_PRIMARY = 10107;
     public const SHUTDOWN_IN_PROGRESS = 91;
-
-    /**
-     * Execute an individual test case from the specification.
-     *
-     * @dataProvider provideTests
-     * @param stdClass $test  Individual "tests[]" document
-     * @param array    $runOn Top-level "runOn" array with server requirements
-     * @param array    $data  Top-level "data" array to initialize collection
-     */
-    public function testRetryableWrites(stdClass $test, ?array $runOn, array $data): void
-    {
-        if (isset($runOn)) {
-            $this->checkServerRequirements($runOn);
-        }
-
-        // Serverless uses a load balancer fronting a single proxy (PHPLIB-757)
-        $useMultipleMongoses = $this->isMongos() || ($this->isLoadBalanced() && ! $this->isServerless())
-            ? ($test->useMultipleMongoses ?? false)
-            : false;
-
-        $context = Context::fromRetryableWrites($test, $this->getDatabaseName(), $this->getCollectionName(), $useMultipleMongoses);
-        $this->setContext($context);
-
-        $this->dropTestAndOutcomeCollections();
-        $this->insertDataFixtures($data);
-
-        if (isset($test->failPoint)) {
-            $this->configureFailPoint($test->failPoint);
-        }
-
-        Operation::fromRetryableWrites($test->operation, $test->outcome)->assert($this, $context);
-
-        if (isset($test->outcome->collection->data)) {
-            $this->assertOutcomeCollectionData($test->outcome->collection->data);
-        }
-    }
-
-    public function provideTests()
-    {
-        $testArgs = [];
-
-        foreach (glob(__DIR__ . '/retryable-writes/*.json') as $filename) {
-            $json = $this->decodeJson(file_get_contents($filename));
-            $group = basename($filename, '.json');
-            $runOn = $json->runOn ?? null;
-            $data = $json->data ?? [];
-
-            foreach ($json->tests as $test) {
-                $name = $group . ': ' . $test->description;
-                $testArgs[$name] = [$test, $runOn, $data];
-            }
-        }
-
-        return $testArgs;
-    }
 
     /**
      * Prose test 3: when encountering a NoWritesPerformed error after an error with a RetryableWriteError label

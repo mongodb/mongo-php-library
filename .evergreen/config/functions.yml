@@ -274,7 +274,6 @@ functions:
           export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
           export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
           export MONGODB_IS_SERVERLESS=on
-          export MONGODB_URI="${SERVERLESS_URI}"
           export PATH="${PHP_PATH}/bin:$PATH"
 
           . ${DRIVERS_TOOLS}/.evergreen/serverless/secrets-export.sh
@@ -283,6 +282,7 @@ functions:
           export MONGODB_PASSWORD=$SERVERLESS_ATLAS_PASSWORD
 
           CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
+          MONGODB_URI="${SERVERLESS_URI}" \
           TESTS="serverless" \
           ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 

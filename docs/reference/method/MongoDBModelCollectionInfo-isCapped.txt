@@ -15,7 +15,7 @@ MongoDB\\Model\\CollectionInfo::isCapped()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\CollectionInfo::isCapped()
+.. phpmethod:: MongoDB\Model\CollectionInfo::isCapped()
 
    Return whether the collection is a :manual:`capped collection
    </core/capped-collections>`.
@@ -30,7 +30,7 @@ Return Values
 A boolean indicating whether the collection is a capped collection.
 
 This method is deprecated in favor of using
-:phpmethod:`MongoDB\\Model\\CollectionInfo::getOptions()` and accessing the
+:phpmethod:`MongoDB\Model\CollectionInfo::getOptions()` and accessing the
 ``capped`` key.
 
 Examples
@@ -59,8 +59,8 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedMax()`
-- :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedSize()`
+- :phpmethod:`MongoDB\Model\CollectionInfo::getCappedMax()`
+- :phpmethod:`MongoDB\Model\CollectionInfo::getCappedSize()`
 - :manual:`Capped Collections </core/capped-collections>` in the MongoDB manual
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual

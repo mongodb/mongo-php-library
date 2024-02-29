@@ -5,7 +5,7 @@ MongoDB\\Model\\CollectionInfoIterator Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\Model\\CollectionInfoIterator
+.. phpclass:: MongoDB\Model\CollectionInfoIterator
 
    This interface extends PHP's :php:`Iterator <manual/en/class.iterator.php>`
    interface. An instance of this interface is returned by
@@ -17,4 +17,4 @@ Methods
 This interface adds no new methods to :php:`Iterator
 <manual/en/class.iterator.php>`, but specifies that :php:`current()
 <manual/en/iterator.current.php>` will return an instance of
-:phpclass:`MongoDB\Model\\CollectionInfo`.
+:phpclass:`MongoDB\Model\CollectionInfo`.

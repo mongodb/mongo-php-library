@@ -15,11 +15,11 @@ MongoDB\\Model\\CollectionInfo::getCappedSize()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\CollectionInfo::getCappedSize()
+.. phpmethod:: MongoDB\Model\CollectionInfo::getCappedSize()
 
    Return the size limit for the capped collection in bytes. This correlates
    with the ``size`` option for
-   :phpmethod:`MongoDB\\Database::createCollection()`.
+   :phpmethod:`MongoDB\Database::createCollection()`.
 
    .. code-block:: php
 
@@ -32,7 +32,7 @@ The size limit for the capped collection in bytes. If the collection is not
 capped, ``null`` will be returned.
 
 This method is deprecated in favor of using
-:phpmethod:`MongoDB\\Model\\CollectionInfo::getOptions()` and accessing the
+:phpmethod:`MongoDB\Model\CollectionInfo::getOptions()` and accessing the
 ``size`` key.
 
 Examples
@@ -61,9 +61,9 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Model\\CollectionInfo::getCappedMax()`
-- :phpmethod:`MongoDB\\Model\\CollectionInfo::isCapped()`
-- :phpmethod:`MongoDB\\Database::createCollection()`
+- :phpmethod:`MongoDB\Model\CollectionInfo::getCappedMax()`
+- :phpmethod:`MongoDB\Model\CollectionInfo::isCapped()`
+- :phpmethod:`MongoDB\Database::createCollection()`
 - :manual:`Capped Collections </core/capped-collections>` in the MongoDB manual
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual

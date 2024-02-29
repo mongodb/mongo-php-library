@@ -13,7 +13,7 @@ MongoDB\\Collection::dropIndex()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::dropIndex()
+.. phpmethod:: MongoDB\Collection::dropIndex()
 
    Drop an index from the collection.
 
@@ -27,10 +27,10 @@ Definition
 Parameters
 ----------
 
-``$indexName`` : string| :phpclass:`MongoDB\\Model\\IndexInfo`
+``$indexName`` : string| :phpclass:`MongoDB\Model\IndexInfo`
   The name or model object of the index to drop. View the existing indexes on
   the collection using the :phpmethod:`listIndexes()
-  <MongoDB\\Collection::listIndexes>` method.
+  <MongoDB\Collection::listIndexes>` method.
 
 ``$options`` : array
   An array specifying the desired options.
@@ -58,7 +58,7 @@ Parameters
          .. versionadded:: 1.3
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -70,7 +70,7 @@ Parameters
          This will be used for the returned command result document.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
          .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
@@ -122,7 +122,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::dropIndexes()`
+- :phpmethod:`MongoDB\Collection::dropIndexes()`
 - :doc:`/tutorial/indexes`
 - :manual:`dropIndexes </reference/command/dropIndexes>` command reference in
   the MongoDB manual

@@ -38,5 +38,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\Driver\\WriteResult::getUpsertedCount()
+- :php:`MongoDB\Driver\WriteResult::getUpsertedCount()
   <manual/en/mongodb-driver-writeresult.getupsertedcount.php>`

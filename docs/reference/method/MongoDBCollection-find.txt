@@ -13,7 +13,7 @@ MongoDB\\Collection::find()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::find()
+.. phpmethod:: MongoDB\Collection::find()
 
    Finds documents matching the query.
 
@@ -156,7 +156,7 @@ Parameters
 
             { ts: { $gte: <timestamp> } }
 
-         The :php:`MongoDB\\BSON\\Timestamp <class.mongodb-bson-timestamp>`
+         The :php:`MongoDB\BSON\Timestamp <class.mongodb-bson-timestamp>`
          class reference describes how to represent MongoDB's BSON timestamp
          type with PHP.
 
@@ -171,13 +171,13 @@ Parameters
          the MongoDB manual.
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
          .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/collection-option-readPreference.rst
 
      * - returnKey
@@ -187,7 +187,7 @@ Parameters
          .. versionadded:: 1.2
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -222,7 +222,7 @@ Parameters
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
+A :php:`MongoDB\Driver\Cursor <class.mongodb-driver-cursor>` object.
 
 Errors/Exceptions
 -----------------
@@ -357,6 +357,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::findOne()`
+- :phpmethod:`MongoDB\Collection::findOne()`
 - :manual:`find </reference/command/find>` command reference in the MongoDB
   manual

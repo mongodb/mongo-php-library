@@ -13,7 +13,7 @@ MongoDB\\Database::command()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::command()
+.. phpmethod:: MongoDB\Database::command()
 
    Execute a :manual:`command </reference/command>` on the database. This is
    generally used to execute commands that do not have a corresponding helper
@@ -44,11 +44,11 @@ Parameters
        - Description
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/database-option-readPreference.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -60,7 +60,7 @@ Parameters
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
+A :php:`MongoDB\Driver\Cursor <class.mongodb-driver-cursor>` object.
 
 Errors/Exceptions
 -----------------
@@ -102,7 +102,7 @@ Some database commands return a cursor with multiple results. The following
 example executes :manual:`listCollections </reference/command/listCollections>`,
 which returns a cursor containing a result document for each collection in the
 ``test`` database. Note that this example is illustrative; applications would
-generally use :phpmethod:`MongoDB\\Database::listCollections()` in practice.
+generally use :phpmethod:`MongoDB\Database::listCollections()` in practice.
 
 .. code-block:: php
 
@@ -168,6 +168,6 @@ See Also
 
 - :doc:`/tutorial/commands`
 - :manual:`Database Commands </reference/command>` in the MongoDB manual
-- :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>`
-- :php:`MongoDB\\Driver\\Manager::executeCommand()
+- :php:`MongoDB\Driver\Cursor <class.mongodb-driver-cursor>`
+- :php:`MongoDB\Driver\Manager::executeCommand()
   <manual/en/mongodb-driver-manager.executecommand.php>`

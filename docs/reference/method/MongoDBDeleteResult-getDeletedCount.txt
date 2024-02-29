@@ -13,7 +13,7 @@ MongoDB\\DeleteResult::getDeletedCount()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\DeleteResult::getDeletedCount()
+.. phpmethod:: MongoDB\DeleteResult::getDeletedCount()
 
    Return the number of documents that were deleted.
 
@@ -36,5 +36,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\WriteResult::getDeletedCount()
+- :php:`MongoDB\Driver\WriteResult::getDeletedCount()
   <manual/en/mongodb-driver-writeresult.getdeletedcount.php>`

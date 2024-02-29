@@ -13,7 +13,7 @@ MongoDB\\Database::getDatabaseName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::getDatabaseName()
+.. phpmethod:: MongoDB\Database::getDatabaseName()
 
    Returns the name of this database.
 

@@ -13,7 +13,7 @@ MongoDB\\Database::selectGridFSBucket()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::selectGridFSBucket()
+.. phpmethod:: MongoDB\Database::selectGridFSBucket()
 
    Selects a GridFS bucket within the database.
 
@@ -53,12 +53,12 @@ Parameters
          .. versionadded: 1.4
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - The default read concern to use for bucket operations. Defaults to the
          database's read concern.
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - The default read preference to use for bucket operations. Defaults to
          the database's read concern.
 
@@ -68,14 +68,14 @@ Parameters
          database's type map.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - The default write concern to use for bucket operations. Defaults to the
          database's write concern.
 
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\GridFS\\Bucket` object.
+A :phpclass:`MongoDB\GridFS\Bucket` object.
 
 Errors/Exceptions
 -----------------
@@ -86,7 +86,7 @@ Behavior
 --------
 
 The selected bucket inherits options such as read preference and type
-mapping from the :phpclass:`Database <MongoDB\\Database>` object. Options may be
+mapping from the :phpclass:`Database <MongoDB\Database>` object. Options may be
 overridden via the ``$options`` parameter.
 
 Example
@@ -120,4 +120,4 @@ database with a custom read preference:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\GridFS\\Bucket::__construct()`
+- :phpmethod:`MongoDB\GridFS\Bucket::__construct()`

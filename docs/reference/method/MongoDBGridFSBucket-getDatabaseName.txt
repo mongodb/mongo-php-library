@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::getDatabaseName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getDatabaseName()
+.. phpmethod:: MongoDB\GridFS\Bucket::getDatabaseName()
 
    Returns the name of the database containing this bucket.
 

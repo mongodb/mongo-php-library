@@ -13,7 +13,7 @@ MongoDB\\Database::selectCollection()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::selectCollection()
+.. phpmethod:: MongoDB\Database::selectCollection()
 
    Selects a collection within the database.
 
@@ -42,12 +42,12 @@ Parameters
        - Description
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - The default read concern to use for collection operations. Defaults to
          the database's read concern.
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - The default read preference to use for collection operations. Defaults
          to the database's read preference.
 
@@ -57,14 +57,14 @@ Parameters
          database's type map.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - The default write concern to use for collection operations. Defaults to
          the database's write concern.
 
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\Collection` object.
+A :phpclass:`MongoDB\Collection` object.
 
 Errors/Exceptions
 -----------------
@@ -75,7 +75,7 @@ Behavior
 --------
 
 The selected collection inherits options such as read preference and type
-mapping from the :phpclass:`Database <MongoDB\\Database>` object. Options may be
+mapping from the :phpclass:`Database <MongoDB\Database>` object. Options may be
 overridden via the ``$options`` parameter.
 
 Example
@@ -110,6 +110,6 @@ database with a custom read preference:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::__get()`
-- :phpmethod:`MongoDB\\Client::selectCollection()`
-- :phpmethod:`MongoDB\\Collection::__construct()`
+- :phpmethod:`MongoDB\Database::__get()`
+- :phpmethod:`MongoDB\Client::selectCollection()`
+- :phpmethod:`MongoDB\Collection::__construct()`

@@ -1,9 +1,9 @@
 ref: bulkwriteexception-result
 content: |
-  If a :php:`MongoDB\Driver\\Exception\\BulkWriteException
+  If a :php:`MongoDB\Driver\Exception\BulkWriteException
   <mongodb-driver-exception-bulkwriteexception>` is thrown, users should call
   :php:`getWriteResult() <mongodb-driver-writeexception.getwriteresult>` and
-  inspect the returned :php:`MongoDB\Driver\\WriteResult
+  inspect the returned :php:`MongoDB\Driver\WriteResult
   <mongodb-driver-writeresult>` object to determine the nature of the error.
 
   For example, a write operation may have been successfully applied to the

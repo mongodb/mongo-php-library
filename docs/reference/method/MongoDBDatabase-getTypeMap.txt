@@ -15,7 +15,7 @@ MongoDB\\Database::getTypeMap()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::getTypeMap()
+.. phpmethod:: MongoDB\Database::getTypeMap()
 
    Returns the type map for this database.
 
@@ -62,6 +62,6 @@ See Also
 --------
 
 - :doc:`/reference/bson`
-- :phpmethod:`MongoDB\\Client::getTypeMap()`
-- :phpmethod:`MongoDB\\Collection::getTypeMap()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getTypeMap()`
+- :phpmethod:`MongoDB\Client::getTypeMap()`
+- :phpmethod:`MongoDB\Collection::getTypeMap()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getTypeMap()`

@@ -13,7 +13,7 @@ MongoDB\\Collection::findOneAndReplace()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::findOneAndReplace()
+.. phpmethod:: MongoDB\Collection::findOneAndReplace()
 
    Finds a single document matching the query and replaces it.
 
@@ -97,7 +97,7 @@ Parameters
          - ``MongoDB\Operation\FindOneAndReplace::RETURN_DOCUMENT_AFTER``
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -119,7 +119,7 @@ Parameters
          new document when no match is found.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
          .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
@@ -242,7 +242,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::findOneAndDelete()`
-- :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
+- :phpmethod:`MongoDB\Collection::findOneAndDelete()`
+- :phpmethod:`MongoDB\Collection::findOneAndUpdate()`
 - :manual:`findAndModify </reference/command/findAndModify>` command reference
   in the MongoDB manual

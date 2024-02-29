@@ -15,7 +15,7 @@ MongoDB\\Database::renameCollection()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::renameCollection()
+.. phpmethod:: MongoDB\Database::renameCollection()
 
    Rename a collection within the current database.
 
@@ -68,7 +68,7 @@ Parameters
          collection. The default value is ``false``.
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
      * - typeMap
@@ -78,7 +78,7 @@ Parameters
          This will be used for the returned command result document.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/database-option-writeConcern.rst
 
 Return Values
@@ -126,6 +126,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::rename()`
+- :phpmethod:`MongoDB\Collection::rename()`
 - :manual:`renameCollection </reference/command/renameCollection>` command reference in the MongoDB
   manual

@@ -38,5 +38,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\Driver\\WriteResult::getDeletedCount()
+- :php:`MongoDB\Driver\WriteResult::getDeletedCount()
   <manual/en/mongodb-driver-writeresult.getdeletedcount.php>`

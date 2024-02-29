@@ -30,17 +30,17 @@ Definition
 Parameters
 ----------
 
-``$session`` : :php:`MongoDB\Driver\\Session <mongodb-driver-session>`
+``$session`` : :php:`MongoDB\Driver\Session <mongodb-driver-session>`
   A client session used to execute the transaction.
 
 ``$callback`` : :php:`callable <language.types.callable>`
   A callback that will be run inside the transaction. The callback must accept a
-  :php:`MongoDB\Driver\\Session <mongodb-driver-session>` object as its first
+  :php:`MongoDB\Driver\Session <mongodb-driver-session>` object as its first
   argument.
 
 ``$transactionOptions`` : array
   Transaction options, which will be passed to
-  :php:`MongoDB\Driver\\Session::startTransaction <mongodb-driver-session.starttransaction>`.
+  :php:`MongoDB\Driver\Session::startTransaction <mongodb-driver-session.starttransaction>`.
   See the extension documentation for a list of supported options.
 
 Behavior
@@ -50,7 +50,7 @@ This function is responsible for starting a transaction, invoking a callback,
 and committing a transaction. It also applies logic to retry this process after
 certain errors within a preset time limit. The callback is expected to execute
 one or more operations within the transactionby passing the callback's
-:php:`MongoDB\Driver\\Session <mongodb-driver-session>` argument as an option to
+:php:`MongoDB\Driver\Session <mongodb-driver-session>` argument as an option to
 those operations; however, that is not enforced.
 
 .. note::
@@ -89,7 +89,7 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\Driver\\Session::startTransaction <mongodb-driver-session.starttransaction>`
-- :php:`MongoDB\Driver\\Session::commitTransaction <mongodb-driver-session.committransaction>`
+- :php:`MongoDB\Driver\Session::startTransaction <mongodb-driver-session.starttransaction>`
+- :php:`MongoDB\Driver\Session::commitTransaction <mongodb-driver-session.committransaction>`
 - :manual:`Transactions: Drivers API </core/transactions-in-applications>` documentation in the MongoDB manual
 - `Convenient API for Transactions <https://github.com/mongodb/specifications/blob/master/source/transactions-convenient-api/transactions-convenient-api.rst>`_ specification

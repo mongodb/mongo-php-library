@@ -10,10 +10,10 @@ Exception Classes
    :depth: 1
    :class: singlecol
 
-MongoDB\Exception\\BadMethodCallException
+MongoDB\\Exception\\BadMethodCallException
 ------------------------------------------
 
-.. phpclass:: MongoDB\Exception\\BadMethodCallException
+.. phpclass:: MongoDB\Exception\BadMethodCallException
 
    This exception is thrown when an unsupported method is invoked on an object.
 
@@ -26,14 +26,14 @@ MongoDB\Exception\\BadMethodCallException
 
    This class extends PHP's :php:`BadMethodCallException
    <badmethodcallexception>` class and implements the library's
-   :phpclass:`Exception <MongoDB\Exception\\Exception>` interface.
+   :phpclass:`Exception <MongoDB\Exception\Exception>` interface.
 
 ----
 
 MongoDB\\Exception\\CreateEncryptedCollectionException
 ------------------------------------------------------
 
-.. phpclass:: MongoDB\Exception\\CreateEncryptedCollectionException
+.. phpclass:: MongoDB\Exception\CreateEncryptedCollectionException
 
    Thrown by :phpmethod:`MongoDB\Database::createEncryptedCollection()` if any
    error is encountered while creating data keys or creating the collection. The
@@ -41,28 +41,28 @@ MongoDB\\Exception\\CreateEncryptedCollectionException
    via the ``getPrevious()`` and ``getEncryptedFields()`` methods, respectively.
 
    This class extends the library's :phpclass:`RuntimeException
-   <MongoDB\\Exception\\RuntimeException>` class.
+   <MongoDB\Exception\RuntimeException>` class.
 
 ----
 
 MongoDB\\Exception\\InvalidArgumentException
 --------------------------------------------
 
-.. phpclass:: MongoDB\Exception\\InvalidArgumentException
+.. phpclass:: MongoDB\Exception\InvalidArgumentException
 
    Thrown for errors related to the parsing of parameters or options within the
    library.
 
    This class extends the driver's :php:`InvalidArgumentException
    <mongodb-driver-exception-invalidargumentexception>` class and implements the
-   library's :phpclass:`Exception <MongoDB\Exception\\Exception>` interface.
+   library's :phpclass:`Exception <MongoDB\Exception\Exception>` interface.
 
 ----
 
 MongoDB\\Exception\\UnexpectedValueException
 --------------------------------------------
 
-.. phpclass:: MongoDB\Exception\\UnexpectedValueException
+.. phpclass:: MongoDB\Exception\UnexpectedValueException
 
    This exception is thrown when a command response from the server is
    malformed or not what the library expected. This exception means that an
@@ -72,26 +72,26 @@ MongoDB\\Exception\\UnexpectedValueException
 
    This class extends the driver's :php:`UnexpectedValueException
    <mongodb-driver-exception-unexpectedvalueexception>` class and implements the
-   library's :phpclass:`Exception <MongoDB\Exception\\Exception>` interface.
+   library's :phpclass:`Exception <MongoDB\Exception\Exception>` interface.
 
 ----
 
 MongoDB\\Exception\\UnsupportedException
 ----------------------------------------
 
-.. phpclass:: MongoDB\Exception\\UnsupportedException
+.. phpclass:: MongoDB\Exception\UnsupportedException
 
    This exception is thrown if an option is used and not supported by the
    selected server. It is used sparingly in cases where silently ignoring the
    unsupported option might otherwise lead to unexpected behavior.
 
    This class extends the library's :phpclass:`RuntimeException
-   <MongoDB\Exception\\RuntimeException>` class.
+   <MongoDB\Exception\RuntimeException>` class.
 
    .. note::
 
       Unlike :phpclass:`InvalidArgumentException
-      <MongoDB\Exception\\InvalidArgumentException>`, which may be thrown when
+      <MongoDB\Exception\InvalidArgumentException>`, which may be thrown when
       an operation's parameters and options are parsed during construction, the
       selected server is not known until an operation is executed.
 
@@ -100,7 +100,7 @@ MongoDB\\Exception\\UnsupportedException
 MongoDB\\GridFS\\Exception\\CorruptFileException
 ------------------------------------------------
 
-.. phpclass:: MongoDB\GridFS\\Exception\\CorruptFileException
+.. phpclass:: MongoDB\GridFS\Exception\CorruptFileException
 
    This exception is thrown if a GridFS file's metadata or chunk documents
    contain unexpected or invalid data.
@@ -111,27 +111,27 @@ MongoDB\\GridFS\\Exception\\CorruptFileException
    sequence or its binary data's length out of range.
 
    This class extends the library's :phpclass:`RuntimeException
-   <MongoDB\Exception\\RuntimeException>` class.
+   <MongoDB\Exception\RuntimeException>` class.
 
 ----
 
 MongoDB\\GridFS\\Exception\\FileNotFoundException
 -------------------------------------------------
 
-.. phpclass:: MongoDB\GridFS\\Exception\\FileNotFoundException
+.. phpclass:: MongoDB\GridFS\Exception\FileNotFoundException
 
    This exception is thrown if no GridFS file was found for the selection
    criteria (e.g. ``id``, ``filename``).
 
    This class extends the library's :phpclass:`RuntimeException
-   <MongoDB\Exception\\RuntimeException>` class.
+   <MongoDB\Exception\RuntimeException>` class.
 
 ----
 
 MongoDB\\Exception\\Exception
 -----------------------------
 
-.. phpclass:: MongoDB\Exception\\Exception
+.. phpclass:: MongoDB\Exception\Exception
 
    This interface extends the driver's :php:`Exception
    <mongodb-driver-exception-exception>` interface and is implemented by all
@@ -142,7 +142,7 @@ MongoDB\\Exception\\Exception
 MongoDB\\Exception\\RuntimeException
 ------------------------------------
 
-.. phpclass:: MongoDB\Exception\\RuntimeException
+.. phpclass:: MongoDB\Exception\RuntimeException
 
    This class extends the driver's :php:`RuntimeException
    <mongodb-driver-exception-runtimeexception>` class, which in turn extends

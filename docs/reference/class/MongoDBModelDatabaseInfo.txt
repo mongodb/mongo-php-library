@@ -5,10 +5,10 @@ MongoDB\\Model\\DatabaseInfo Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\Model\\DatabaseInfo
+.. phpclass:: MongoDB\Model\DatabaseInfo
 
    This class models information about a database. Instances of this class are
-   returned by traversing a :phpclass:`MongoDB\Model\\DatabaseInfoIterator`,
+   returned by traversing a :phpclass:`MongoDB\Model\DatabaseInfoIterator`,
    which is returned by :phpmethod:`MongoDB\Client::listDatabases()`.
 
 .. versionchanged:: 1.4
@@ -20,9 +20,9 @@ Definition
 
    .. note::
 
-      The :phpclass:`MongoDB\Model\\DatabaseInfo` class is immutable. Attempting
+      The :phpclass:`MongoDB\Model\DatabaseInfo` class is immutable. Attempting
       to modify it via the :php:`ArrayAccess <arrayaccess>` interface will
-      result in a :phpclass:`MongoDB\Exception\\BadMethodCallException`.
+      result in a :phpclass:`MongoDB\Exception\BadMethodCallException`.
 
 Methods
 -------
@@ -34,6 +34,6 @@ Methods
    getSizeOnDisk() </reference/method/MongoDBModelDatabaseInfo-getSizeOnDisk>
    isEmpty() </reference/method/MongoDBModelDatabaseInfo-isEmpty>
 
-- :phpmethod:`MongoDB\Model\\DatabaseInfo::getName()`
-- :phpmethod:`MongoDB\Model\\DatabaseInfo::getSizeOnDisk()`
-- :phpmethod:`MongoDB\Model\\DatabaseInfo::isEmpty()`
+- :phpmethod:`MongoDB\Model\DatabaseInfo::getName()`
+- :phpmethod:`MongoDB\Model\DatabaseInfo::getSizeOnDisk()`
+- :phpmethod:`MongoDB\Model\DatabaseInfo::isEmpty()`

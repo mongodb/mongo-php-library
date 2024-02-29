@@ -15,12 +15,12 @@ MongoDB\\Database::aggregate()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::aggregate()
+.. phpmethod:: MongoDB\Database::aggregate()
 
    Runs a specified :manual:`admin/diagnostic pipeline
    </reference/operator/aggregation-pipeline/#db-aggregate-stages>` which does
    not require an underlying collection. For aggregations on collection data,
-   see :phpmethod:`MongoDB\\Collection::aggregate()`.
+   see :phpmethod:`MongoDB\Collection::aggregate()`.
 
    .. code-block:: php
 
@@ -105,15 +105,15 @@ Parameters
        - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/database-option-readConcern.rst
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/database-option-readPreference.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
      * - typeMap
@@ -121,13 +121,13 @@ Parameters
        - .. include:: /includes/extracts/database-option-typeMap.rst
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/database-option-writeConcern.rst
 
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` or
+A :php:`MongoDB\Driver\Cursor <class.mongodb-driver-cursor>` or
 :php:`ArrayIterator <arrayiterator>` object. In both cases, the return value
 will be :php:`Traversable <traversable>`.
 
@@ -164,7 +164,7 @@ running command operations.
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::aggregate()`
+- :phpmethod:`MongoDB\Collection::aggregate()`
 - :manual:`aggregate </reference/command/aggregate>` command reference in the
   MongoDB manual
 - :manual:`Aggregation Pipeline </core/aggregation-pipeline>` documentation in

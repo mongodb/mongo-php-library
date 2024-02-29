@@ -46,5 +46,5 @@ See Also
 --------
 
 - :phpmethod:`MongoDB\BulkWriteResult::getMatchedCount()`
-- :php:`MongoDB\Driver\\WriteResult::getModifiedCount()
+- :php:`MongoDB\Driver\WriteResult::getModifiedCount()
   <manual/en/mongodb-driver-writeresult.getmodifiedcount.php>`

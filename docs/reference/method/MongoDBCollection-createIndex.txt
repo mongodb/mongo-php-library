@@ -13,7 +13,7 @@ MongoDB\\Collection::createIndex()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::createIndex()
+.. phpmethod:: MongoDB\Collection::createIndex()
 
    Create an index for the collection.
 
@@ -117,13 +117,13 @@ Parameters
          .. versionadded:: 1.3
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
          .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
@@ -200,7 +200,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndexes()`
+- :phpmethod:`MongoDB\Collection::createIndexes()`
 - :doc:`/tutorial/indexes`
 - :manual:`createIndexes </reference/command/createIndexes>` command reference
   in the MongoDB manual

@@ -24,7 +24,7 @@ Definition
 Return Values
 -------------
 
-A :php:`MongoDB\Driver\\CursorId <class.mongodb-driver-cursorid>` object.
+A :php:`MongoDB\Driver\CursorId <class.mongodb-driver-cursorid>` object.
 
 Examples
 --------
@@ -58,5 +58,5 @@ See Also
 - :phpmethod:`MongoDB\Client::watch()`
 - :phpmethod:`MongoDB\Collection::watch()`
 - :phpmethod:`MongoDB\Database::watch()`
-- :php:`MongoDB\Driver\\CursorId <class.mongodb-driver-cursorid>`
-- :php:`MongoDB\Driver\\Cursor::getId() <manual/en/mongodb-driver-cursor.getid.php>`
+- :php:`MongoDB\Driver\CursorId <class.mongodb-driver-cursorid>`
+- :php:`MongoDB\Driver\Cursor::getId() <manual/en/mongodb-driver-cursor.getid.php>`

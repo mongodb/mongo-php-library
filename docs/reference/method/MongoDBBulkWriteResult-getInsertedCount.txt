@@ -38,5 +38,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\Driver\\WriteResult::getInsertedCount()
+- :php:`MongoDB\Driver\WriteResult::getInsertedCount()
   <manual/en/mongodb-driver-writeresult.getinsertedcount.php>`

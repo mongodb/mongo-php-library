@@ -5,10 +5,10 @@ MongoDB\\Model\\IndexInfo Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\Model\\IndexInfo
+.. phpclass:: MongoDB\Model\IndexInfo
 
    This class models information about an index. Instances of this class are
-   returned by traversing a :phpclass:`MongoDB\Model\\IndexInfoIterator`,
+   returned by traversing a :phpclass:`MongoDB\Model\IndexInfoIterator`,
    which is returned by :phpmethod:`MongoDB\Collection::listIndexes()`.
 
    This class implements PHP's :php:`ArrayAccess <arrayaccess>` interface. This
@@ -18,9 +18,9 @@ Definition
 
    .. note::
 
-      The :phpclass:`MongoDB\Model\\IndexInfo` class is immutable. Attempting
+      The :phpclass:`MongoDB\Model\IndexInfo` class is immutable. Attempting
       to modify it via the :php:`ArrayAccess <arrayaccess>` interface will
-      result in a :phpclass:`MongoDB\Exception\\BadMethodCallException`.
+      result in a :phpclass:`MongoDB\Exception\BadMethodCallException`.
 
 Methods
 -------
@@ -39,13 +39,13 @@ Methods
    isTtl() </reference/method/MongoDBModelIndexInfo-isTtl>
    isUnique() </reference/method/MongoDBModelIndexInfo-isUnique>
 
-- :phpmethod:`MongoDB\Model\\IndexInfo::getKey()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::getName()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::getNamespace()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::getVersion()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::is2dSphere()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::isGeoHaystack()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::isSparse()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::isText()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::isTtl()`
-- :phpmethod:`MongoDB\Model\\IndexInfo::isUnique()`
+- :phpmethod:`MongoDB\Model\IndexInfo::getKey()`
+- :phpmethod:`MongoDB\Model\IndexInfo::getName()`
+- :phpmethod:`MongoDB\Model\IndexInfo::getNamespace()`
+- :phpmethod:`MongoDB\Model\IndexInfo::getVersion()`
+- :phpmethod:`MongoDB\Model\IndexInfo::is2dSphere()`
+- :phpmethod:`MongoDB\Model\IndexInfo::isGeoHaystack()`
+- :phpmethod:`MongoDB\Model\IndexInfo::isSparse()`
+- :phpmethod:`MongoDB\Model\IndexInfo::isText()`
+- :phpmethod:`MongoDB\Model\IndexInfo::isTtl()`
+- :phpmethod:`MongoDB\Model\IndexInfo::isUnique()`

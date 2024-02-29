@@ -13,7 +13,7 @@ MongoDB\\Collection::findOne()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::findOne()
+.. phpmethod:: MongoDB\Collection::findOne()
 
    Finds a single document matching the query.
 
@@ -113,7 +113,7 @@ Parameters
 
             { ts: { $gte: <timestamp> } }
 
-         The :php:`MongoDB\\BSON\\Timestamp <class.mongodb-bson-timestamp>`
+         The :php:`MongoDB\BSON\Timestamp <class.mongodb-bson-timestamp>`
          class reference describes how to represent MongoDB's BSON timestamp
          type with PHP.
 
@@ -128,13 +128,13 @@ Parameters
          the MongoDB manual.
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
          .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/collection-option-readPreference.rst
 
      * - returnKey
@@ -144,7 +144,7 @@ Parameters
          .. versionadded:: 1.2
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -199,7 +199,7 @@ In the following example, documents in the ``restaurants`` collection use an
 :manual:`ObjectId </reference/object-id/>` for their identifier (the default)
 and documents in the ``zips`` collection use a string. Since ObjectId is a
 special BSON type, the query criteria for selecting a restaurant must use the
-:php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>` class.
+:php:`MongoDB\BSON\ObjectId <class.mongodb-bson-objectid>` class.
 
 .. code-block:: php
 
@@ -267,6 +267,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::find()`
+- :phpmethod:`MongoDB\Collection::find()`
 - :manual:`find </reference/command/find>` command reference in the MongoDB
   manual

@@ -14,14 +14,14 @@ Overview
 --------
 
 The |php-library| provides helper methods across the :phpclass:`Client
-<MongoDB\\Client>`, :phpclass:`Database <MongoDB\\Database>`, and
-:phpclass:`Collection <MongoDB\\Collection>` classes for common
+<MongoDB\Client>`, :phpclass:`Database <MongoDB\Database>`, and
+:phpclass:`Collection <MongoDB\Collection>` classes for common
 :manual:`database commands </reference/command>`. In addition, the
-:phpmethod:`MongoDB\\Database::command()` method may be used to run database
+:phpmethod:`MongoDB\Database::command()` method may be used to run database
 commands that do not have a helper method.
 
-The :phpmethod:`MongoDB\\Database::command()` method always returns a
-:php:`MongoDB\\Driver\\Cursor <mongodb-driver-cursor>` object, since it must
+The :phpmethod:`MongoDB\Database::command()` method always returns a
+:php:`MongoDB\Driver\Cursor <mongodb-driver-cursor>` object, since it must
 support execution of commands that return single result documents *and* multiple
 results via a command cursor.
 
@@ -63,7 +63,7 @@ example executes :manual:`listCollections </reference/command/listCollections>`,
 which returns a cursor containing a result document for each collection in the
 ``test`` database, and iterates through the results using a ``foreach`` loop.
 Note that this example is illustrative; applications would generally use
-:phpmethod:`MongoDB\\Database::listCollections()` in practice.
+:phpmethod:`MongoDB\Database::listCollections()` in practice.
 
 .. code-block:: php
 
@@ -103,8 +103,8 @@ Specifying a Custom Read Preference
 Write commands, such as :manual:`createUser </reference/command/createUser>`,
 can only be executed on a writable server (e.g. :term:`primary` replica set
 member). Command helper methods in the |php-library|, such as
-:phpmethod:`MongoDB\\Database::drop()`, know to apply their own :term:`read
-preference` if necessary. However, the :phpmethod:`MongoDB\\Database::command()`
+:phpmethod:`MongoDB\Database::drop()`, know to apply their own :term:`read
+preference` if necessary. However, the :phpmethod:`MongoDB\Database::command()`
 method is a generic method and defaults to the read preference of the Database
 object on which it is invoked. When necessary, the ``readPreference`` option may
 be used to override the default read preference.

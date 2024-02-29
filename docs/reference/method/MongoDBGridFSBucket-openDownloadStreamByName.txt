@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::openDownloadStreamByName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::openDownloadStreamByName()
+.. phpmethod:: MongoDB\GridFS\Bucket::openDownloadStreamByName()
 
    Selects a GridFS file by its ``filename`` and opens it as a readable stream.
 
@@ -94,6 +94,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStream()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStreamByName()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::downloadToStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::downloadToStreamByName()`
+- :phpmethod:`MongoDB\GridFS\Bucket::openDownloadStream()`

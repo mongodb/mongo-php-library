@@ -13,7 +13,7 @@ MongoDB\\Collection::getDatabaseName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::getDatabaseName()
+.. phpmethod:: MongoDB\Collection::getDatabaseName()
 
    Returns the name of the database containing this collection.
 
@@ -49,6 +49,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::getCollectionName()`
-- :phpmethod:`MongoDB\\Collection::getNamespace()`
+- :phpmethod:`MongoDB\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\Collection::getNamespace()`
 

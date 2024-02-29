@@ -35,10 +35,10 @@ Definition
 Errors/Exceptions
 -----------------
 
-:php:`MongoDB\Driver\\Exception\\LogicException
+:php:`MongoDB\Driver\Exception\LogicException
 <mongodb-driver-exception-logicexception>` if this method is called after a call
 to :phpmethod:`MongoDB\ChangeStream::next()` (i.e. the underlying
-:php:`MongoDB\Driver\\Cursor <class.mongodb-driver-cursor>` has already been
+:php:`MongoDB\Driver\Cursor <class.mongodb-driver-cursor>` has already been
 advanced).
 
 .. include:: /includes/extracts/error-driver-runtimeexception.rst

@@ -122,19 +122,6 @@ final class ResultExpectation
         return new self($assertionType, $expectedValue);
     }
 
-    public static function fromRetryableWrites(stdClass $outcome, $defaultAssertionType)
-    {
-        if (property_exists($outcome, 'result') && ! self::isErrorResult($outcome->result)) {
-            $assertionType = $outcome->result === null ? self::ASSERT_NULL : $defaultAssertionType;
-            $expectedValue = $outcome->result;
-        } else {
-            $assertionType = self::ASSERT_NOTHING;
-            $expectedValue = null;
-        }
-
-        return new self($assertionType, $expectedValue);
-    }
-
     public static function fromTransactions(stdClass $operation, $defaultAssertionType)
     {
         if (property_exists($operation, 'result') && ! self::isErrorResult($operation->result)) {

@@ -13,7 +13,7 @@ MongoDB\\Collection::updateMany()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::updateMany()
+.. phpmethod:: MongoDB\Collection::updateMany()
 
    Update all documents that match the filter criteria.
 
@@ -88,7 +88,7 @@ Parameters
          .. versionadded:: 1.13
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -100,7 +100,7 @@ Parameters
          new document when no match is found.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
          .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
@@ -108,8 +108,8 @@ Parameters
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\UpdateResult` object, which encapsulates a
-:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
+A :phpclass:`MongoDB\UpdateResult` object, which encapsulates a
+:php:`MongoDB\Driver\WriteResult <class.mongodb-driver-writeresult>` object.
 
 Errors/Exceptions
 -----------------
@@ -155,9 +155,9 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::replaceOne()`
-- :phpmethod:`MongoDB\\Collection::updateOne()`
-- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :phpmethod:`MongoDB\Collection::replaceOne()`
+- :phpmethod:`MongoDB\Collection::updateOne()`
+- :phpmethod:`MongoDB\Collection::bulkWrite()`
 - :doc:`/tutorial/crud`
 - :manual:`update </reference/command/update>` command reference in the MongoDB
   manual

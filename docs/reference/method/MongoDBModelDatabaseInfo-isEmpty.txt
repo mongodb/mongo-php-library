@@ -13,7 +13,7 @@ MongoDB\\Model\\DatabaseInfo::isEmpty()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\DatabaseInfo::isEmpty()
+.. phpmethod:: MongoDB\Model\DatabaseInfo::isEmpty()
 
    Return whether the database has any data.
 

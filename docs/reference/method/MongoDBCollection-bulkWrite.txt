@@ -13,7 +13,7 @@ MongoDB\\Collection::bulkWrite()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::bulkWrite()
+.. phpmethod:: MongoDB\Collection::bulkWrite()
 
    Executes multiple write operations.
 
@@ -29,13 +29,13 @@ Parameters
 
 ``$operations`` : array
   An array containing the write operations to perform.
-  :phpmethod:`MongoDB\\Collection::bulkWrite()` supports
-  :phpmethod:`deleteMany() <MongoDB\\Collection::deleteMany>`,
-  :phpmethod:`deleteOne() <MongoDB\\Collection::deleteOne>`,
-  :phpmethod:`insertOne() <MongoDB\\Collection::insertOne>`,
-  :phpmethod:`replaceOne() <MongoDB\\Collection::replaceOne>`,
-  :phpmethod:`updateMany() <MongoDB\\Collection::updateMany>`, and
-  :phpmethod:`updateOne() <MongoDB\\Collection::updateOne>` operations in the
+  :phpmethod:`MongoDB\Collection::bulkWrite()` supports
+  :phpmethod:`deleteMany() <MongoDB\Collection::deleteMany>`,
+  :phpmethod:`deleteOne() <MongoDB\Collection::deleteOne>`,
+  :phpmethod:`insertOne() <MongoDB\Collection::insertOne>`,
+  :phpmethod:`replaceOne() <MongoDB\Collection::replaceOne>`,
+  :phpmethod:`updateMany() <MongoDB\Collection::updateMany>`, and
+  :phpmethod:`updateOne() <MongoDB\Collection::updateOne>` operations in the
   following array structure:
 
   .. code-block:: php
@@ -51,7 +51,7 @@ Parameters
 
   Arguments correspond to the respective operation methods. However, the
   ``writeConcern`` option is specified as a top-level option to
-  :phpmethod:`MongoDB\\Collection::bulkWrite()` instead of each individual
+  :phpmethod:`MongoDB\Collection::bulkWrite()` instead of each individual
   operation.
 
 ``$options`` : array
@@ -95,13 +95,13 @@ Parameters
          The default is ``true``.
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
          .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
@@ -109,8 +109,8 @@ Parameters
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\BulkWriteResult` object, which encapsulates a
-:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
+A :phpclass:`MongoDB\BulkWriteResult` object, which encapsulates a
+:php:`MongoDB\Driver\WriteResult <class.mongodb-driver-writeresult>` object.
 
 Errors/Exceptions
 -----------------
@@ -131,11 +131,11 @@ Behavior
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::deleteMany()`
-- :phpmethod:`MongoDB\\Collection::deleteOne()`
-- :phpmethod:`MongoDB\\Collection::insertMany()`
-- :phpmethod:`MongoDB\\Collection::insertOne()`
-- :phpmethod:`MongoDB\\Collection::replaceOne()`
-- :phpmethod:`MongoDB\\Collection::updateMany()`
-- :phpmethod:`MongoDB\\Collection::updateOne()`
+- :phpmethod:`MongoDB\Collection::deleteMany()`
+- :phpmethod:`MongoDB\Collection::deleteOne()`
+- :phpmethod:`MongoDB\Collection::insertMany()`
+- :phpmethod:`MongoDB\Collection::insertOne()`
+- :phpmethod:`MongoDB\Collection::replaceOne()`
+- :phpmethod:`MongoDB\Collection::updateMany()`
+- :phpmethod:`MongoDB\Collection::updateOne()`
 - :doc:`/tutorial/crud`

@@ -13,7 +13,7 @@ MongoDB\\MapReduceResult::getCounts()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\MapReduceResult::getCounts()
+.. phpmethod:: MongoDB\MapReduceResult::getCounts()
 
    Returns count statistics for the map-reduce operation.
 
@@ -63,6 +63,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::mapReduce()`
+- :phpmethod:`MongoDB\Collection::mapReduce()`
 - :manual:`mapReduce </reference/command/mapReduce>` command reference in the
   MongoDB manual

@@ -13,7 +13,7 @@ MongoDB\\Client::listDatabases()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::listDatabases()
+.. phpmethod:: MongoDB\Client::listDatabases()
 
    Returns information for all databases on the server.
 
@@ -67,7 +67,7 @@ Parameters
        - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -77,8 +77,8 @@ Parameters
 Return Values
 -------------
 
-A traversable :phpclass:`MongoDB\\Model\\DatabaseInfoIterator`, which contains
-a :phpclass:`MongoDB\\Model\\DatabaseInfo` object for each database on the
+A traversable :phpclass:`MongoDB\Model\DatabaseInfoIterator`, which contains
+a :phpclass:`MongoDB\Model\DatabaseInfo` object for each database on the
 server.
 
 Errors/Exceptions
@@ -127,7 +127,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Client::listDatabaseNames()`
+- :phpmethod:`MongoDB\Client::listDatabaseNames()`
 - :manual:`listDatabases </reference/command/listDatabases>` command reference
   in the MongoDB manual
 - `Enumerating Databases

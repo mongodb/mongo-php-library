@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::openUploadStream()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::openUploadStream()
+.. phpmethod:: MongoDB\GridFS\Bucket::openUploadStream()
 
    Opens a writable stream for a new GridFS file.
 
@@ -44,7 +44,7 @@ Parameters
      * - _id
        - mixed
        - Value to use as the file document identifier. Defaults to a new
-         :php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>` object.
+         :php:`MongoDB\BSON\ObjectId <class.mongodb-bson-objectid>` object.
 
      * - chunkSizeBytes
        - integer
@@ -100,4 +100,4 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\GridFS\\Bucket::uploadFromStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::uploadFromStream()`

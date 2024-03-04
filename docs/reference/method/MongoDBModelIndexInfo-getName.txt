@@ -13,10 +13,10 @@ MongoDB\\Model\\IndexInfo::getName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\IndexInfo::getName()
+.. phpmethod:: MongoDB\Model\IndexInfo::getName()
 
    Return the index name. This correlates with the return value of
-   :phpmethod:`MongoDB\\Collection::createIndex()`. An index name may be derived
+   :phpmethod:`MongoDB\Collection::createIndex()`. An index name may be derived
    from the ``$key`` parameter or explicitly specified via the ``name`` option.
 
    .. code-block:: php
@@ -50,6 +50,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
 - :manual:`listIndexes </reference/command/listIndexes>` command reference in
   the MongoDB manual

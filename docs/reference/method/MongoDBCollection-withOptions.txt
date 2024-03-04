@@ -13,7 +13,7 @@ MongoDB\\Collection::withOptions()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::withOptions()
+.. phpmethod:: MongoDB\Collection::withOptions()
 
    Returns a clone of the Collection object, but with different options.
 
@@ -36,12 +36,12 @@ Parameters
        - Description
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - The default read concern to use for collection operations. Defaults to
          the original collection's read concern.
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - The default read preference to use for collection operations. Defaults
          to the original collection's read preference.
 
@@ -53,14 +53,14 @@ Parameters
          to PHP values. Defaults to the original collection's type map.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - The default write concern to use for collection operations. Defaults to
          the original collection's write concern.
 
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\Collection` object.
+A :phpclass:`MongoDB\Collection` object.
 
 Errors/Exceptions
 -----------------
@@ -86,4 +86,4 @@ preference:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::__construct()`
+- :phpmethod:`MongoDB\Collection::__construct()`

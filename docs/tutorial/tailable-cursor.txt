@@ -17,7 +17,7 @@ Overview
 
 When the driver executes a query or command (e.g.
 :manual:`aggregate </reference/command/aggregate>`), results from the operation
-are returned via a :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>`
+are returned via a :php:`MongoDB\Driver\Cursor <class.mongodb-driver-cursor>`
 object. The Cursor class implements PHP's :php:`Iterator <iterator>`
 interface, which allows it to be iterated with ``foreach`` and interface with
 any PHP functions that work with :php:`iterables <types.iterable>`. Similar to
@@ -108,7 +108,7 @@ Iterating a Tailable Cursor
 
 In order to demonstrate a tailable cursor in action, we'll need two scripts: a
 "producer" and a "consumer". The producer script will create a new capped
-collection using :phpmethod:`MongoDB\\Database::createCollection()` and proceed
+collection using :phpmethod:`MongoDB\Database::createCollection()` and proceed
 to insert a new document into that collection each second.
 
 .. code-block:: php
@@ -131,7 +131,7 @@ to insert a new document into that collection each second.
 
 With the producer script still running, we will now execute a consumer script to
 read the inserted documents using a tailable cursor, indicated by the
-``cursorType`` option to :phpmethod:`MongoDB\\Collection::find()`. We'll start
+``cursorType`` option to :phpmethod:`MongoDB\Collection::find()`. We'll start
 by using ``foreach`` to illustrate its shortcomings:
 
 .. code-block:: php
@@ -187,4 +187,4 @@ to check if there is actually data available to read at each step.
 Since we've elected to use a ``TAILABLE_AWAIT`` cursor, the server will delay
 its response to the driver for a set amount of time. In this example, we've
 requested that the server block for approximately 100 milliseconds by specifying
-the ``maxAwaitTimeMS`` option to :phpmethod:`MongoDB\\Collection::find()`.
+the ``maxAwaitTimeMS`` option to :phpmethod:`MongoDB\Collection::find()`.

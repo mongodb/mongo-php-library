@@ -13,7 +13,7 @@ MongoDB\\Collection::listIndexes()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::listIndexes()
+.. phpmethod:: MongoDB\Collection::listIndexes()
 
    Returns information for all indexes for this collection.
 
@@ -48,7 +48,7 @@ Parameters
        - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -56,8 +56,8 @@ Parameters
 Return Values
 -------------
 
-A traversable :phpclass:`MongoDB\\Model\\IndexInfoIterator`, which contains a
-:phpclass:`MongoDB\\Model\\IndexInfo` object for each index for the collection.
+A traversable :phpclass:`MongoDB\Model\IndexInfoIterator`, which contains a
+:phpclass:`MongoDB\Model\IndexInfo` object for each index for the collection.
 
 Errors/Exceptions
 -----------------

@@ -23,7 +23,7 @@ Creating an Encryption Key
    such as AWS KMS are also an option. This master key is used to encrypt data
    keys that are stored locally. It is important that you keep this key secure.
 
-To create an encryption key, create a :php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+To create an encryption key, create a :php:`MongoDB\Driver\ClientEncryption <class.mongodb-driver-clientencryption>`
 instance with encryption options and create a new data key. The method will
 return the key ID which can be used to reference the key later. You can also
 pass multiple alternate names for this key and reference the key by these names

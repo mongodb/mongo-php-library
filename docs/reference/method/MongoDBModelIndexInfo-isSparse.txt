@@ -13,11 +13,11 @@ MongoDB\\Model\\IndexInfo::isSparse()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\IndexInfo::isSparse()
+.. phpmethod:: MongoDB\Model\IndexInfo::isSparse()
 
    Return whether the index is a :manual:`sparse index </core/index-sparse>`.
    This correlates with the ``sparse`` option for
-   :phpmethod:`MongoDB\\Collection::createIndex()`.
+   :phpmethod:`MongoDB\Collection::createIndex()`.
 
    .. code-block:: php
 
@@ -50,7 +50,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
 - :manual:`listIndexes </reference/command/listIndexes>` command reference in
   the MongoDB manual
 - :manual:`Sparse Indexes </core/index-sparse>` in the MongoDB manual

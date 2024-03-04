@@ -13,7 +13,7 @@ MongoDB\\Model\\DatabaseInfo::getSizeOnDisk()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\DatabaseInfo::getSizeOnDisk()
+.. phpmethod:: MongoDB\Model\DatabaseInfo::getSizeOnDisk()
 
    Return the total size of the database file on disk in bytes.
 

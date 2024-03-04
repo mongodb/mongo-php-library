@@ -13,7 +13,7 @@ MongoDB\\MapReduceResult::getExecutionTimeMS()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\MapReduceResult::getExecutionTimeMS()
+.. phpmethod:: MongoDB\MapReduceResult::getExecutionTimeMS()
 
    Returns the execution time in milliseconds of the map-reduce operation.
 
@@ -55,6 +55,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::mapReduce()`
+- :phpmethod:`MongoDB\Collection::mapReduce()`
 - :manual:`mapReduce </reference/command/mapReduce>` command reference in the
   MongoDB manual

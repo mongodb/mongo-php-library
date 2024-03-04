@@ -13,7 +13,7 @@ MongoDB\\Collection::distinct()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::distinct()
+.. phpmethod:: MongoDB\Collection::distinct()
 
    Finds the distinct values for a specified field across the collection.
 
@@ -63,17 +63,17 @@ Parameters
        - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
          .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/collection-option-readPreference.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3

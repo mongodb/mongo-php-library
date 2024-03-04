@@ -13,7 +13,7 @@ MongoDB\\Model\\IndexInfo::getNamespace()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\IndexInfo::getNamespace()
+.. phpmethod:: MongoDB\Model\IndexInfo::getNamespace()
 
    Return the index namespace, which is the namespace of the collection
    containing the index.
@@ -49,7 +49,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndex()`
-- :phpmethod:`MongoDB\\Collection::getNamespace()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::getNamespace()`
 - :manual:`listIndexes </reference/command/listIndexes>` command reference in
   the MongoDB manual

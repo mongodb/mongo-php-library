@@ -15,7 +15,7 @@ MongoDB\\GridFS\\Bucket::getTypeMap()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getTypeMap()
+.. phpmethod:: MongoDB\GridFS\Bucket::getTypeMap()
 
    Returns the type map for this GridFS bucket.
 
@@ -63,6 +63,6 @@ See Also
 --------
 
 - :doc:`/reference/bson`
-- :phpmethod:`MongoDB\\Client::getTypeMap()`
-- :phpmethod:`MongoDB\\Collection::getTypeMap()`
-- :phpmethod:`MongoDB\\Database::getTypeMap()`
+- :phpmethod:`MongoDB\Client::getTypeMap()`
+- :phpmethod:`MongoDB\Collection::getTypeMap()`
+- :phpmethod:`MongoDB\Database::getTypeMap()`

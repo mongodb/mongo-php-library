@@ -13,10 +13,10 @@ MongoDB\\Model\\CollectionInfo::getOptions()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\CollectionInfo::getOptions()
+.. phpmethod:: MongoDB\Model\CollectionInfo::getOptions()
 
    Return the collection options. This correlates with the options for
-   :phpmethod:`MongoDB\\Database::createCollection()`, but may include
+   :phpmethod:`MongoDB\Database::createCollection()`, but may include
    additional fields set by the server.
 
    .. code-block:: php
@@ -60,6 +60,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::createCollection()`
+- :phpmethod:`MongoDB\Database::createCollection()`
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual

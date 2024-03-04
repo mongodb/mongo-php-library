@@ -13,7 +13,7 @@ MongoDB\\Database::__get()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::__get()
+.. phpmethod:: MongoDB\Database::__get()
 
    Select a collection within the database.
 
@@ -30,14 +30,14 @@ Parameters
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\Collection` object.
+A :phpclass:`MongoDB\Collection` object.
 
 Behavior
 --------
 
 The selected collection inherits options such as read preference and type
-mapping from the :phpclass:`Database <MongoDB\\Database>` object. If you wish to
-override any options, use the :phpmethod:`MongoDB\\Database::selectCollection()`
+mapping from the :phpclass:`Database <MongoDB\Database>` object. If you wish to
+override any options, use the :phpmethod:`MongoDB\Database::selectCollection()`
 method.
 
 .. note::
@@ -45,7 +45,7 @@ method.
    To select collections whose names contain special characters, such as
    ``.``, use complex syntax, as in ``$database->{'that.database'}``.
 
-   Alternatively, :phpmethod:`MongoDB\\Database::selectCollection()` supports
+   Alternatively, :phpmethod:`MongoDB\Database::selectCollection()` supports
    selecting collections whose names contain special characters.
 
 Examples
@@ -66,6 +66,6 @@ collections from the ``test`` database:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::selectCollection()`
-- :phpmethod:`MongoDB\\Client::selectCollection()`
+- :phpmethod:`MongoDB\Database::selectCollection()`
+- :phpmethod:`MongoDB\Client::selectCollection()`
 - :php:`Property Overloading <oop5.overloading>` in the PHP Manual

@@ -15,7 +15,7 @@ MongoDB\\Collection::watch()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::watch()
+.. phpmethod:: MongoDB\Collection::watch()
 
    Executes a :manual:`change stream </changeStreams>` operation on the
    collection. The change stream can be watched for collection-level changes.
@@ -77,11 +77,11 @@ Parameters
        - .. include:: /includes/extracts/watch-option-maxAwaitTimeMS.rst
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/collection-option-readPreference.rst
 
          This is used for both the initial change stream aggregation and for
@@ -92,7 +92,7 @@ Parameters
        - .. include:: /includes/extracts/watch-option-resumeAfter.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
      * - showExpandedEvents
@@ -104,7 +104,7 @@ Parameters
        - .. include:: /includes/extracts/watch-option-startAfter.rst
 
      * - startAtOperationTime
-       - :php:`MongoDB\\BSON\\TimestampInterface <class.mongodb-bson-timestampinterface>`
+       - :php:`MongoDB\BSON\TimestampInterface <class.mongodb-bson-timestampinterface>`
        - .. include:: /includes/extracts/watch-option-startAtOperationTime.rst
 
      * - typeMap
@@ -114,7 +114,7 @@ Parameters
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\ChangeStream` object, which allows for iteration of
+A :phpclass:`MongoDB\ChangeStream` object, which allows for iteration of
 events in the change stream via the :php:`Iterator <class.iterator>` interface.
 
 Errors/Exceptions
@@ -193,8 +193,8 @@ script was iterating the change stream, the output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Client::watch()`
-- :phpmethod:`MongoDB\\Database::watch()`
+- :phpmethod:`MongoDB\Client::watch()`
+- :phpmethod:`MongoDB\Database::watch()`
 - :manual:`Aggregation Pipeline </core/aggregation-pipeline>` documentation in
   the MongoDB Manual
 - :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

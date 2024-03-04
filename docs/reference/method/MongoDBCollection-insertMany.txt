@@ -13,7 +13,7 @@ MongoDB\\Collection::insertMany()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::insertMany()
+.. phpmethod:: MongoDB\Collection::insertMany()
 
    Insert multiple documents.
 
@@ -65,13 +65,13 @@ Parameters
          The default is ``true``.
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
          .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
@@ -79,8 +79,8 @@ Parameters
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\InsertManyResult` object, which encapsulates a
-:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
+A :phpclass:`MongoDB\InsertManyResult` object, which encapsulates a
+:php:`MongoDB\Driver\WriteResult <class.mongodb-driver-writeresult>` object.
 
 Errors/Exceptions
 -----------------
@@ -149,8 +149,8 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::insertOne()`
-- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :phpmethod:`MongoDB\Collection::insertOne()`
+- :phpmethod:`MongoDB\Collection::bulkWrite()`
 - :doc:`/tutorial/crud`
 - :manual:`insert </reference/command/insert>` command reference in the MongoDB
   manual

@@ -15,7 +15,7 @@ MongoDB\\Collection::count()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::count()
+.. phpmethod:: MongoDB\Collection::count()
 
    Count the number of documents that match the filter criteria.
 
@@ -74,17 +74,17 @@ Parameters
        - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
          .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/collection-option-readPreference.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -117,7 +117,7 @@ is provided, the ``count`` command provides an estimate using collection
 metadata. Even when provided with a query filter the ``count`` command can
 return inaccurate results with a sharded cluster if orphaned documents exist or
 if a chunk migration is in progress. The
-:phpmethod:`MongoDB\\Collection::countDocuments()` method avoids these sharded
+:phpmethod:`MongoDB\Collection::countDocuments()` method avoids these sharded
 cluster problems entirely.
 
 .. include:: /includes/extracts/note-bson-comparison.rst
@@ -127,5 +127,5 @@ See Also
 
 - :manual:`count </reference/command/count>` command reference in the MongoDB
   manual
-- :phpmethod:`MongoDB\\Collection::countDocuments()`
-- :phpmethod:`MongoDB\\Collection::estimatedDocumentCount()`
+- :phpmethod:`MongoDB\Collection::countDocuments()`
+- :phpmethod:`MongoDB\Collection::estimatedDocumentCount()`

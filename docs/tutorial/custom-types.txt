@@ -6,7 +6,7 @@ Custom Data-Types
 
 .. note::
 
-   This tutorial explains implementing custom data types using the :php:`MongoDB\\BSON\\Persistable <class.mongodb-bson-persistable>`
+   This tutorial explains implementing custom data types using the :php:`MongoDB\BSON\Persistable <class.mongodb-bson-persistable>`
    interface found in the MongoDB extension. Consider using a codec instead to decouple the MongoDB persistence logic
    from your business logic. See the :ref:`codec tutorial <php-codec-handling-data-types>` for an example.
 

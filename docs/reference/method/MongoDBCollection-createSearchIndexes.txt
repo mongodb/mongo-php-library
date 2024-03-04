@@ -15,7 +15,7 @@ MongoDB\\Collection::createSearchIndexes()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::createSearchIndexes()
+.. phpmethod:: MongoDB\Collection::createSearchIndexes()
 
    Create one or more Atlas Search indexes for the collection.
 
@@ -114,10 +114,10 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::dropSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::listSearchIndexes()`
-- :phpmethod:`MongoDB\\Collection::updateSearchIndex()`
+- :phpmethod:`MongoDB\Collection::createSearchIndex()`
+- :phpmethod:`MongoDB\Collection::dropSearchIndex()`
+- :phpmethod:`MongoDB\Collection::listSearchIndexes()`
+- :phpmethod:`MongoDB\Collection::updateSearchIndex()`
 - :manual:`createSearchIndexes </reference/command/createSearchIndexes>` command
   reference in the MongoDB manual
 - `Atlas Search <https://www.mongodb.com/docs/atlas/atlas-search/>`__ documentation in the MongoDB Manual

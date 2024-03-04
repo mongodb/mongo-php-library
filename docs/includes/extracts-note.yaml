@@ -22,7 +22,7 @@ ref: note-atlas-search-async
 content: |
   Atlas Search indexes are managed asynchronously. After creating or updating an
   index, you can periodically execute
-  :phpmethod:`MongoDB\\Collection::listSearchIndexes()` and check the
+  :phpmethod:`MongoDB\Collection::listSearchIndexes()` and check the
   ``queryable`` :manual:`output field  </reference/operator/aggregation/listSearchIndexes/#output>`
   to determine whether it is ready to be used.
 ...

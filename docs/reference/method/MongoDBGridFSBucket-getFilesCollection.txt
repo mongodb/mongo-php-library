@@ -15,7 +15,7 @@ MongoDB\\GridFS\\Bucket::getFilesCollection()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getFilesCollection()
+.. phpmethod:: MongoDB\GridFS\Bucket::getFilesCollection()
 
    Returns the files collection used by the bucket.
 
@@ -26,7 +26,7 @@ Definition
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\Collection` object for the files collection.
+A :phpclass:`MongoDB\Collection` object for the files collection.
 
 Examples
 --------

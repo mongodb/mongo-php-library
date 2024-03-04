@@ -15,7 +15,7 @@ MongoDB\\Client::getReadConcern()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::getReadConcern()
+.. phpmethod:: MongoDB\Client::getReadConcern()
 
    Returns the read concern for this client.
 
@@ -26,7 +26,7 @@ Definition
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>` object.
+A :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>` object.
 
 Example
 -------
@@ -54,7 +54,7 @@ See Also
 --------
 
 - :manual:`Read Concern </reference/read-concern>` in the MongoDB manual
-- :php:`MongoDB\\Driver\\ReadConcern::isDefault() <mongodb-driver-readconcern.isdefault>`
-- :phpmethod:`MongoDB\\Collection::getReadConcern()`
-- :phpmethod:`MongoDB\\Database::getReadConcern()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getReadConcern()`
+- :php:`MongoDB\Driver\ReadConcern::isDefault() <mongodb-driver-readconcern.isdefault>`
+- :phpmethod:`MongoDB\Collection::getReadConcern()`
+- :phpmethod:`MongoDB\Database::getReadConcern()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getReadConcern()`

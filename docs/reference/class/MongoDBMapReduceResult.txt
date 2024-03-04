@@ -7,11 +7,11 @@ MongoDB\\MapReduceResult Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\MapReduceResult
+.. phpclass:: MongoDB\MapReduceResult
 
    This class extends PHP's :php:`IteratorAggregate <iteratoraggregate>`
    interface. An instance of this class is returned by
-   :phpmethod:`MongoDB\\Collection::mapReduce()`.
+   :phpmethod:`MongoDB\Collection::mapReduce()`.
 
    This class allows for iteration of map-reduce results irrespective of the
    output method (e.g. inline, collection). It also provides access to command
@@ -28,7 +28,7 @@ Methods
    getIterator() </reference/method/MongoDBMapReduceResult-getIterator>
    getTiming() </reference/method/MongoDBMapReduceResult-getTiming>
 
-- :phpmethod:`MongoDB\\MapReduceResult::getCounts()`
-- :phpmethod:`MongoDB\\MapReduceResult::getExecutionTimeMS()`
-- :phpmethod:`MongoDB\\MapReduceResult::getIterator()`
-- :phpmethod:`MongoDB\\MapReduceResult::getTiming()`
+- :phpmethod:`MongoDB\MapReduceResult::getCounts()`
+- :phpmethod:`MongoDB\MapReduceResult::getExecutionTimeMS()`
+- :phpmethod:`MongoDB\MapReduceResult::getIterator()`
+- :phpmethod:`MongoDB\MapReduceResult::getTiming()`

@@ -15,7 +15,7 @@ Declaring an API Version
 
 To declare an API version, pass a ``serverApi`` driver option when creating your
 client. The value is a
-:php:`MongoDB\\Driver\\ServerApi <class.mongodb-driver-serverapi>` instance that
+:php:`MongoDB\Driver\ServerApi <class.mongodb-driver-serverapi>` instance that
 contains API version information. This feature is introduced in MongoDB 5.0,
 which will initially support only API version "1". Additional versions may be
 introduced in future versions of the server.
@@ -46,7 +46,7 @@ By default, declaring an API version guarantees behavior for commands that are
 part of the stable API, but does not forbid using commands that are not part
 of the API version. To only allow commands and options that are part of the
 stable API, specify the ``strict`` option when creating the
-:php:`MongoDB\\Driver\\ServerApi <class.mongodb-driver-serverapi>` instance:
+:php:`MongoDB\Driver\ServerApi <class.mongodb-driver-serverapi>` instance:
 
 .. code-block:: php
 
@@ -85,9 +85,9 @@ testing to ensure a smooth transition to a future API version.
 Usage with the Command Helper
 -----------------------------
 
-When using the :phpmethod:`MongoDB\\Database::command()` method to run arbitrary
+When using the :phpmethod:`MongoDB\Database::command()` method to run arbitrary
 commands, the API version declared to the client is automatically appended to
 the command document. Setting any of the ``apiVersion``, ``apiStrict``, or
 ``apiDeprecationErrors`` command options in the command document and calling
-:phpmethod:`MongoDB\\Database::command()` from a client with a declared API
+:phpmethod:`MongoDB\Database::command()` from a client with a declared API
 version is not supported and will lead to undefined behavior.

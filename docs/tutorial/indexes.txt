@@ -11,7 +11,7 @@ appropriate index exists for a query, MongoDB can use the index to limit the
 number of documents it must inspect.
 
 The PHP driver supports managing indexes through the
-:phpclass:`MongoDB\\Collection` class, which implements MongoDB's
+:phpclass:`MongoDB\Collection` class, which implements MongoDB's
 cross-driver `Index Management
 <https://github.com/mongodb/specifications/blob/master/source/index-management.rst>`_
 and `Enumerating Indexes
@@ -26,12 +26,12 @@ MongoDB.
 Create Indexes
 --------------
 
-Create indexes with the :phpmethod:`MongoDB\\Collection::createIndex()` or
-:phpmethod:`MongoDB\\Collection::createIndexes()` methods. Refer to the method
+Create indexes with the :phpmethod:`MongoDB\Collection::createIndex()` or
+:phpmethod:`MongoDB\Collection::createIndexes()` methods. Refer to the method
 reference for more details about each method.
 
 The following example creates an ascending index on the ``state`` field using
-the :phpmethod:`createIndex() <MongoDB\\Collection::createIndex()>` method:
+the :phpmethod:`createIndex() <MongoDB\Collection::createIndex()>` method:
 
 .. code-block:: php
 
@@ -54,10 +54,10 @@ similar to:
 List Indexes
 ------------
 
-The :phpmethod:`MongoDB\\Collection::listIndexes()` method provides information
+The :phpmethod:`MongoDB\Collection::listIndexes()` method provides information
 about the indexes in a collection. The
-:phpmethod:`MongoDB\\Collection::listIndexes()` method returns an iterator of
-:phpclass:`MongoDB\\Model\\IndexInfo` objects, which you can use to view
+:phpmethod:`MongoDB\Collection::listIndexes()` method returns an iterator of
+:phpclass:`MongoDB\Model\IndexInfo` objects, which you can use to view
 information about each index. Refer to the method reference for more details.
 
 The following example lists all indexes in the ``zips`` collection in the
@@ -107,8 +107,8 @@ The output would resemble:
 Drop Indexes
 ------------
 
-The :phpmethod:`MongoDB\\Collection::dropIndex()` method lets you drop a single
-index while :phpmethod:`MongoDB\\Collection::dropIndexes()` drops all of the
+The :phpmethod:`MongoDB\Collection::dropIndex()` method lets you drop a single
+index while :phpmethod:`MongoDB\Collection::dropIndexes()` drops all of the
 indexes on a collection. Refer to the method reference for more details about
 each method.
 

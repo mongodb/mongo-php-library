@@ -13,7 +13,7 @@ MongoDB\\Model\\DatabaseInfo::getName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\DatabaseInfo::getName()
+.. phpmethod:: MongoDB\Model\DatabaseInfo::getName()
 
    Return the database name.
 
@@ -46,6 +46,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::getDatabaseName()`
+- :phpmethod:`MongoDB\Database::getDatabaseName()`
 - :manual:`listDatabases </reference/command/listDatabases>` command reference
   in the MongoDB manual

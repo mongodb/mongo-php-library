@@ -13,7 +13,7 @@ MongoDB\\UpdateResult::getUpsertedCount()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\UpdateResult::getUpsertedCount()
+.. phpmethod:: MongoDB\UpdateResult::getUpsertedCount()
 
    Return the number of documents that were upserted.
 
@@ -38,5 +38,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\WriteResult::getUpsertedCount()
+- :php:`MongoDB\Driver\WriteResult::getUpsertedCount()
   <manual/en/mongodb-driver-writeresult.getupsertedcount.php>`

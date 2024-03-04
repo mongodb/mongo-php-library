@@ -13,7 +13,7 @@ MongoDB\\InsertOneResult::getInsertedCount()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\InsertOneResult::getInsertedCount()
+.. phpmethod:: MongoDB\InsertOneResult::getInsertedCount()
 
    Return the number of documents that were inserted.
 
@@ -37,5 +37,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\WriteResult::getInsertedCount()
+- :php:`MongoDB\Driver\WriteResult::getInsertedCount()
   <manual/en/mongodb-driver-writeresult.getinsertedcount.php>`

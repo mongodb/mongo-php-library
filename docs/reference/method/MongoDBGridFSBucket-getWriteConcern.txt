@@ -15,7 +15,7 @@ MongoDB\\GridFS\\Bucket::getWriteConcern()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getWriteConcern()
+.. phpmethod:: MongoDB\GridFS\Bucket::getWriteConcern()
 
    Returns the write concern for this GridFS bucket.
 
@@ -26,7 +26,7 @@ Definition
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+A :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
 object.
 
 Example
@@ -58,7 +58,7 @@ See Also
 --------
 
 - :manual:`Write Concern </reference/read-concern>` in the MongoDB manual
-- :php:`MongoDB\\Driver\\WriteConcern::isDefault() <mongodb-driver-writeconcern.isdefault>`
-- :phpmethod:`MongoDB\\Client::getWriteConcern()`
-- :phpmethod:`MongoDB\\Collection::getWriteConcern()`
-- :phpmethod:`MongoDB\\Database::getWriteConcern()`
+- :php:`MongoDB\Driver\WriteConcern::isDefault() <mongodb-driver-writeconcern.isdefault>`
+- :phpmethod:`MongoDB\Client::getWriteConcern()`
+- :phpmethod:`MongoDB\Collection::getWriteConcern()`
+- :phpmethod:`MongoDB\Database::getWriteConcern()`

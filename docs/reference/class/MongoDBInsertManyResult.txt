@@ -5,12 +5,11 @@ MongoDB\\InsertManyResult Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\InsertManyResult
+.. phpclass:: MongoDB\InsertManyResult
 
    This class contains information about an executed bulk insert operation. It
-   encapsulates a :php:`MongoDB\\Driver\\WriteResult
-   <class.mongodb-driver-writeresult>` object and is returned from
-   :phpmethod:`MongoDB\\Collection::insertMany()`.
+   encapsulates a :php:`MongoDB\Driver\WriteResult <class.mongodb-driver-writeresult>`
+   object and is returned from :phpmethod:`MongoDB\Collection::insertMany()`.
 
 Methods
 -------
@@ -22,6 +21,6 @@ Methods
    getInsertedIds() </reference/method/MongoDBInsertManyResult-getInsertedIds>
    isAcknowledged() </reference/method/MongoDBInsertManyResult-isAcknowledged>
 
-- :phpmethod:`MongoDB\\InsertManyResult::getInsertedCount()`
-- :phpmethod:`MongoDB\\InsertManyResult::getInsertedIds()`
-- :phpmethod:`MongoDB\\InsertManyResult::isAcknowledged()`
+- :phpmethod:`MongoDB\InsertManyResult::getInsertedCount()`
+- :phpmethod:`MongoDB\InsertManyResult::getInsertedIds()`
+- :phpmethod:`MongoDB\InsertManyResult::isAcknowledged()`

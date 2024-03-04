@@ -15,7 +15,7 @@ MongoDB\\Model\\CollectionInfo::getType()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\CollectionInfo::getType()
+.. phpmethod:: MongoDB\Model\CollectionInfo::getType()
 
    Return the collection type.
 
@@ -49,6 +49,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::createCollection()`
+- :phpmethod:`MongoDB\Database::createCollection()`
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual

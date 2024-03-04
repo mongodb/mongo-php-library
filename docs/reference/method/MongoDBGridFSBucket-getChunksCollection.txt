@@ -15,7 +15,7 @@ MongoDB\\GridFS\\Bucket::getChunksCollection()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getChunksCollection()
+.. phpmethod:: MongoDB\GridFS\Bucket::getChunksCollection()
 
    Returns the chunks collection used by the bucket.
 
@@ -26,7 +26,7 @@ Definition
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\Collection` object for the chunks collection.
+A :phpclass:`MongoDB\Collection` object for the chunks collection.
 
 Examples
 --------

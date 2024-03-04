@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::getBucketName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getBucketName()
+.. phpmethod:: MongoDB\GridFS\Bucket::getBucketName()
 
    Returns the name of this bucket.
 

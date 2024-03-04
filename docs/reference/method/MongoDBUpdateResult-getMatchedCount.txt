@@ -29,7 +29,7 @@ Definition
       (e.g. setting the value of a field to its current value), the matched
       count may be greater than the value returned by
       :phpmethod:`getModifiedCount()
-      <MongoDB\\UpdateResult::getModifiedCount()>`.
+      <MongoDB\UpdateResult::getModifiedCount()>`.
 
 Return Values
 -------------

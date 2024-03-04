@@ -29,7 +29,7 @@ Definition
 Parameters
 ----------
 
-``$explainable`` : :phpclass:`MongoDB\Operation\\Explainable`
+``$explainable`` : :phpclass:`MongoDB\Operation\Explainable`
   The command to explain.
 
 ``$options`` : array

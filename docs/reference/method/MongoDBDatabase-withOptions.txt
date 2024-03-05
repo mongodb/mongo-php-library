@@ -13,7 +13,7 @@ MongoDB\\Database::withOptions()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::withOptions()
+.. phpmethod:: MongoDB\Database::withOptions()
 
    Returns a clone of the Database object, but with different options.
 
@@ -36,12 +36,12 @@ Parameters
        - Description
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - The default read concern to use for database operations. Defaults to
          the original database's read concern.
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - The default read preference to use for database operations. Defaults to
          the original database's read preference.
 
@@ -53,14 +53,14 @@ Parameters
          to PHP values. Defaults to the original database's type map.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - The default write concern to use for database operations. Defaults to
          the original database's write concern.
 
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\Database` object.
+A :phpclass:`MongoDB\Database` object.
 
 Errors/Exceptions
 -----------------
@@ -86,4 +86,4 @@ preference:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::__construct()`
+- :phpmethod:`MongoDB\Database::__construct()`

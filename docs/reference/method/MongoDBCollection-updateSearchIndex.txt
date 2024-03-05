@@ -15,7 +15,7 @@ MongoDB\\Collection::updateSearchIndex()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::updateSearchIndex()
+.. phpmethod:: MongoDB\Collection::updateSearchIndex()
 
    Update an Atlas Search index for the collection.
 
@@ -71,10 +71,10 @@ Behavior
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::createSearchIndexes()`
-- :phpmethod:`MongoDB\\Collection::dropSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::listSearchIndexes()`
+- :phpmethod:`MongoDB\Collection::createSearchIndex()`
+- :phpmethod:`MongoDB\Collection::createSearchIndexes()`
+- :phpmethod:`MongoDB\Collection::dropSearchIndex()`
+- :phpmethod:`MongoDB\Collection::listSearchIndexes()`
 - :manual:`updateSearchIndex </reference/command/updateSearchIndex>` command
   reference in the MongoDB manual
 - `Atlas Search <https://www.mongodb.com/docs/atlas/atlas-search/>`__ documentation in the MongoDB Manual

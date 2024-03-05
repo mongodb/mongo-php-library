@@ -18,7 +18,7 @@ MongoDB\\Model\\IndexInfo::isGeoHaystack()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\IndexInfo::isGeoHaystack()
+.. phpmethod:: MongoDB\Model\IndexInfo::isGeoHaystack()
 
    Return whether the index is a :manual:`geoHaystack </core/geohaystack>`
    index.
@@ -58,7 +58,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndex()`
-- :phpmethod:`MongoDB\\Collection::listIndexes()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::listIndexes()`
 - :manual:`geoHaystack Indexes </core/geohaystack>` reference in the MongoDB
   manual

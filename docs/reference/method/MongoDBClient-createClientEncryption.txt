@@ -13,9 +13,9 @@ MongoDB\\Client::createClientEncryption()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::createClientEncryption()
+.. phpmethod:: MongoDB\Client::createClientEncryption()
 
-   Returns a :php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+   Returns a :php:`MongoDB\Driver\ClientEncryption <class.mongodb-driver-clientencryption>`
    object for manual encryption and decryption of values.
 
    .. code-block:: php
@@ -27,18 +27,18 @@ Parameters
 
 ``$options`` : array
   An array specifying the desired options. Refer to the
-  :php:`MongoDB\\Driver\\Manager::createClientEncryption() <manual/en/mongodb-driver-manager.createclientencryption.php>`
+  :php:`MongoDB\Driver\Manager::createClientEncryption() <manual/en/mongodb-driver-manager.createclientencryption.php>`
   extension documentation for a list of supported options.
 
-  If a :phpclass:`MongoDB\\Client` is provided for the ``keyVaultClient``
+  If a :phpclass:`MongoDB\Client` is provided for the ``keyVaultClient``
   option, it will be unwrapped into a
-  :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` for the
+  :php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>` for the
   extension.
 
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+A :php:`MongoDB\Driver\ClientEncryption <class.mongodb-driver-clientencryption>`
 instance which can be used to encrypt and decrypt values.
 
 Errors/Exceptions
@@ -50,5 +50,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\Manager::createClientEncryption()
+- :php:`MongoDB\Driver\Manager::createClientEncryption()
   <manual/en/mongodb-driver-manager.createclientencryption.php>`

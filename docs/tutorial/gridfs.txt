@@ -13,7 +13,7 @@ GridFS
 :manual:`GridFS </core/gridfs>` is a specification for storing and retrieving
 files in MongoDB. GridFS uses two collections to store files. One collection
 stores the file chunks (e.g. ``fs.chunks``), and the other stores file metadata
-(e.g. ``fs.files``). The :phpclass:`MongoDB\\GridFS\\Bucket` class provides an
+(e.g. ``fs.files``). The :phpclass:`MongoDB\GridFS\Bucket` class provides an
 interface around these collections for working with the files as PHP
 :php:`Streams <stream>`.
 
@@ -21,9 +21,9 @@ Creating a GridFS Bucket
 ------------------------
 
 You can construct a GridFS bucket using the PHP extension's
-:php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` class, or select
-a bucket from the |php-library|'s :phpclass:`MongoDB\\Database` class via the
-:phpmethod:`selectGridFSBucket() <MongoDB\\Database::selectGridFSBucket()>`
+:php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>` class, or select
+a bucket from the |php-library|'s :phpclass:`MongoDB\Database` class via the
+:phpmethod:`selectGridFSBucket() <MongoDB\Database::selectGridFSBucket()>`
 method.
 
 The bucket can be constructed with various options:
@@ -35,7 +35,7 @@ The bucket can be constructed with various options:
   needed. The default size is ``261120`` (i.e. 255 KiB).
 - ``readConcern``, ``readPreference`` and ``writeConcern`` options can be used
   to specify defaults for read and write operations, much like the
-  :phpclass:`MongoDB\\GridFS\\Collection` options.
+  :phpclass:`MongoDB\GridFS\Collection` options.
 
 Uploading Files with Writable Streams
 -------------------------------------
@@ -112,9 +112,9 @@ number. Revision numbers are used to distinguish between files sharing the same
 ``filename`` metadata field, ordered by date of upload (i.e. the ``uploadDate``
 metadata field). The ``revision`` option accepted by
 :phpmethod:`openDownloadStreamByName()
-<MongoDB\\GridFS\\Bucket::openDownloadStreamByName()>` and
+<MongoDB\GridFS\Bucket::openDownloadStreamByName()>` and
 :phpmethod:`downloadToStreamByName()
-<MongoDB\\GridFS\\Bucket::downloadToStreamByName()>` can be positive or negative.
+<MongoDB\GridFS\Bucket::downloadToStreamByName()>` can be positive or negative.
 
 A positive ``revision`` number may be used to select files in order of the
 oldest upload date. A revision of ``0`` would denote the file with the oldest
@@ -157,7 +157,7 @@ You can delete a GridFS file by its ``_id``.
 Finding File Metadata
 ---------------------
 
-The :phpmethod:`find() <MongoDB\\GridFS\\Bucket::find()>` method allows you to
+The :phpmethod:`find() <MongoDB\GridFS\Bucket::find()>` method allows you to
 retrieve documents from the GridFS files collection, which contain metadata
 about the GridFS files.
 
@@ -173,7 +173,7 @@ Accessing File Metadata for an Existing Stream
 ----------------------------------------------
 
 The :phpmethod:`getFileDocumentForStream()
-<MongoDB\\GridFS\\Bucket::getFileDocumentForStream()>` method may be used to get
+<MongoDB\GridFS\Bucket::getFileDocumentForStream()>` method may be used to get
 the file document for an existing readable or writable GridFS stream.
 
 .. code-block:: php
@@ -193,16 +193,16 @@ the file document for an existing readable or writable GridFS stream.
    Since the file document for a writable stream is not committed to MongoDB
    until the stream is closed,
    :phpmethod:`getFileDocumentForStream()
-   <MongoDB\\GridFS\\Bucket::getFileDocumentForStream()>` can only return an
+   <MongoDB\GridFS\Bucket::getFileDocumentForStream()>` can only return an
    in-memory document, which will be missing some fields (e.g. ``length``,
    ``md5``).
 
 The :phpmethod:`getFileIdForStream()
-<MongoDB\\GridFS\\Bucket::getFileIdForStream()>` method may be used to get the
+<MongoDB\GridFS\Bucket::getFileIdForStream()>` method may be used to get the
 ``_id`` for an existing readable or writable GridFS stream. This is a
 convenience for accessing the ``_id`` property of the object returned by
 :phpmethod:`getFileDocumentForStream()
-<MongoDB\\GridFS\\Bucket::getFileDocumentForStream()>`.
+<MongoDB\GridFS\Bucket::getFileDocumentForStream()>`.
 
 .. code-block:: php
 

@@ -13,29 +13,28 @@ MongoDB\\Collection Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\Collection
+.. phpclass:: MongoDB\Collection
 
    Provides methods for common operations on collections and documents,
    including CRUD operations and index management.
 
    You can construct collections directly using the driver's
-   :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` class or
-   select a collection from the library's :phpclass:`MongoDB\\Client` or
-   :phpclass:`MongoDB\\Database` classes. A collection may also be cloned from
-   an existing :phpclass:`MongoDB\\Collection` object via the
-   :phpmethod:`withOptions() <MongoDB\\Collection::withOptions()>` method.
+   :php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>` class or
+   select a collection from the library's :phpclass:`MongoDB\Client` or
+   :phpclass:`MongoDB\Database` classes. A collection may also be cloned from
+   an existing :phpclass:`MongoDB\Collection` object via the
+   :phpmethod:`withOptions() <MongoDB\Collection::withOptions()>` method.
 
-   :phpclass:`MongoDB\\Collection` supports the :php:`readConcern
+   :phpclass:`MongoDB\Collection` supports the :php:`readConcern
    <mongodb-driver-readconcern>`, :php:`readPreference
    <mongodb-driver-readpreference>`, :php:`typeMap
    <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`,
    and :php:`writeConcern <mongodb-driver-writeconcern>` options. If you omit an
    option, the collection inherits the value from the :php:`Manager
-   <mongodb-driver-manager>` constructor argument or the :phpclass:`Client
-   <MongoDB\\Client>` or :phpclass:`Database <MongoDB\\Database>` object used to
-   select the collection.
+   <mongodb-driver-manager>` constructor argument or the :phpclass:`Client <MongoDB\Client>`
+   or :phpclass:`Database <MongoDB\Database>` object used to select the collection.
 
-   Operations within the :phpclass:`MongoDB\\Collection` class inherit the
+   Operations within the :phpclass:`MongoDB\Collection` class inherit the
    collection's options.
 
 Type Map Limitations
@@ -45,11 +44,11 @@ The :manual:`aggregate </reference/command/aggregate>` (when not using a
 cursor), :manual:`distinct </reference/command/distinct>`, and
 :manual:`findAndModify </reference/command/findAndModify>` helpers do not
 support a ``typeMap`` option due to a driver limitation. The
-:phpmethod:`aggregate() <MongoDB\\Collection::aggregate()>`,
-:phpmethod:`distinct() <MongoDB\\Collection::distinct()>`,
-:phpmethod:`findOneAndReplace() <MongoDB\\Collection::findOneAndReplace()>`,
-:phpmethod:`findOneAndUpdate() <MongoDB\\Collection::findOneAndUpdate()>`, and
-:phpmethod:`findOneAndDelete() <MongoDB\\Collection::findOneAndDelete()>`
+:phpmethod:`aggregate() <MongoDB\Collection::aggregate()>`,
+:phpmethod:`distinct() <MongoDB\Collection::distinct()>`,
+:phpmethod:`findOneAndReplace() <MongoDB\Collection::findOneAndReplace()>`,
+:phpmethod:`findOneAndUpdate() <MongoDB\Collection::findOneAndUpdate()>`, and
+:phpmethod:`findOneAndDelete() <MongoDB\Collection::findOneAndDelete()>`
 methods return BSON documents as ``stdClass`` objects and BSON arrays as arrays.
 
 Methods
@@ -102,46 +101,47 @@ Methods
    watch() </reference/method/MongoDBCollection-watch>
    withOptions() </reference/method/MongoDBCollection-withOptions>
 
-- :phpmethod:`MongoDB\\Collection::__construct()`
-- :phpmethod:`MongoDB\\Collection::aggregate()`
-- :phpmethod:`MongoDB\\Collection::bulkWrite()`
-- :phpmethod:`MongoDB\\Collection::count()`
-- :phpmethod:`MongoDB\\Collection::countDocuments()`
-- :phpmethod:`MongoDB\\Collection::createIndex()`
-- :phpmethod:`MongoDB\\Collection::createIndexes()`
-- :phpmethod:`MongoDB\\Collection::createSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::createSearchIndexes()`
-- :phpmethod:`MongoDB\\Collection::deleteMany()`
-- :phpmethod:`MongoDB\\Collection::deleteOne()`
-- :phpmethod:`MongoDB\\Collection::distinct()`
-- :phpmethod:`MongoDB\\Collection::drop()`
-- :phpmethod:`MongoDB\\Collection::dropIndex()`
-- :phpmethod:`MongoDB\\Collection::dropIndexes()`
-- :phpmethod:`MongoDB\\Collection::dropSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::estimatedDocumentCount()`
-- :phpmethod:`MongoDB\\Collection::explain()`
-- :phpmethod:`MongoDB\\Collection::find()`
-- :phpmethod:`MongoDB\\Collection::findOne()`
-- :phpmethod:`MongoDB\\Collection::findOneAndDelete()`
-- :phpmethod:`MongoDB\\Collection::findOneAndReplace()`
-- :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
-- :phpmethod:`MongoDB\\Collection::getCollectionName()`
-- :phpmethod:`MongoDB\\Collection::getDatabaseName()`
-- :phpmethod:`MongoDB\\Collection::getManager()`
-- :phpmethod:`MongoDB\\Collection::getNamespace()`
-- :phpmethod:`MongoDB\\Collection::getReadConcern()`
-- :phpmethod:`MongoDB\\Collection::getReadPreference()`
-- :phpmethod:`MongoDB\\Collection::getTypeMap()`
-- :phpmethod:`MongoDB\\Collection::getWriteConcern()`
-- :phpmethod:`MongoDB\\Collection::insertMany()`
-- :phpmethod:`MongoDB\\Collection::insertOne()`
-- :phpmethod:`MongoDB\\Collection::listIndexes()`
-- :phpmethod:`MongoDB\\Collection::listSearchIndexes()`
-- :phpmethod:`MongoDB\\Collection::mapReduce()`
-- :phpmethod:`MongoDB\\Collection::rename()`
-- :phpmethod:`MongoDB\\Collection::replaceOne()`
-- :phpmethod:`MongoDB\\Collection::updateMany()`
-- :phpmethod:`MongoDB\\Collection::updateOne()`
-- :phpmethod:`MongoDB\\Collection::updateSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::watch()`
-- :phpmethod:`MongoDB\\Collection::withOptions()`
+- :phpmethod:`MongoDB\Collection::__construct()`
+- :phpmethod:`MongoDB\Collection::aggregate()`
+- :phpmethod:`MongoDB\Collection::bulkWrite()`
+- :phpmethod:`MongoDB\Collection::count()`
+- :phpmethod:`MongoDB\Collection::countDocuments()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::createIndexes()`
+- :phpmethod:`MongoDB\Collection::createSearchIndex()`
+- :phpmethod:`MongoDB\Collection::createSearchIndexes()`
+- :phpmethod:`MongoDB\Collection::deleteMany()`
+- :phpmethod:`MongoDB\Collection::deleteOne()`
+- :phpmethod:`MongoDB\Collection::distinct()`
+- :phpmethod:`MongoDB\Collection::drop()`
+- :phpmethod:`MongoDB\Collection::dropIndex()`
+- :phpmethod:`MongoDB\Collection::dropIndexes()`
+- :phpmethod:`MongoDB\Collection::dropSearchIndex()`
+- :phpmethod:`MongoDB\Collection::estimatedDocumentCount()`
+- :phpmethod:`MongoDB\Collection::explain()`
+- :phpmethod:`MongoDB\Collection::find()`
+- :phpmethod:`MongoDB\Collection::findOne()`
+- :phpmethod:`MongoDB\Collection::findOneAndDelete()`
+- :phpmethod:`MongoDB\Collection::findOneAndReplace()`
+- :phpmethod:`MongoDB\Collection::findOneAndUpdate()`
+- :phpmethod:`MongoDB\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\Collection::getDatabaseName()`
+- :phpmethod:`MongoDB\Collection::getManager()`
+- :phpmethod:`MongoDB\Collection::getNamespace()`
+- :phpmethod:`MongoDB\Collection::getReadConcern()`
+- :phpmethod:`MongoDB\Collection::getReadPreference()`
+- :phpmethod:`MongoDB\Collection::getTypeMap()`
+- :phpmethod:`MongoDB\Collection::getWriteConcern()`
+- :phpmethod:`MongoDB\Collection::insertMany()`
+- :phpmethod:`MongoDB\Collection::insertOne()`
+- :phpmethod:`MongoDB\Collection::listIndexes()`
+- :phpmethod:`MongoDB\Collection::listSearchIndexes()`
+- :phpmethod:`MongoDB\Collection::mapReduce()`
+- :phpmethod:`MongoDB\Collection::rename()`
+- :phpmethod:`MongoDB\Collection::replaceOne()`
+- :phpmethod:`MongoDB\Collection::updateMany()`
+- :phpmethod:`MongoDB\Collection::updateOne()`
+- :phpmethod:`MongoDB\Collection::updateSearchIndex()`
+- :phpmethod:`MongoDB\Collection::watch()`
+- :phpmethod:`MongoDB\Collection::withOptions()`
+

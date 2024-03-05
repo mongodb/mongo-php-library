@@ -15,7 +15,7 @@ MongoDB\\Collection::explain()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::explain()
+.. phpmethod:: MongoDB\Collection::explain()
 
    Explain the given command.
 
@@ -29,7 +29,7 @@ Definition
 Parameters
 ----------
 
-``$explainable`` : :phpclass:`MongoDB\\Operation\\Explainable`
+``$explainable`` : :phpclass:`MongoDB\Operation\Explainable`
   The command to explain.
 
 ``$options`` : array
@@ -54,7 +54,7 @@ Parameters
          .. versionadded:: 1.13
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/collection-option-readPreference.rst
 
      * - typeMap

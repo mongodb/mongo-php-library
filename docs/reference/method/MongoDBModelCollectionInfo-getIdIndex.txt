@@ -15,7 +15,7 @@ MongoDB\\Model\\CollectionInfo::getIdIndex()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\CollectionInfo::getIdIndex()
+.. phpmethod:: MongoDB\Model\CollectionInfo::getIdIndex()
 
    Returns information about the ``_id`` field index.
 
@@ -70,6 +70,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::createCollection()`
+- :phpmethod:`MongoDB\Database::createCollection()`
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual

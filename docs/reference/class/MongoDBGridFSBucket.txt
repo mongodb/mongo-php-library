@@ -13,19 +13,19 @@ MongoDB\\GridFS\\Bucket Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\GridFS\\Bucket
+.. phpclass:: MongoDB\GridFS\Bucket
 
    :manual:`GridFS </core/gridfs>` is a specification for storing and retrieving
    files in MongoDB. GridFS uses two collections to store files. One collection
    stores the file chunks (e.g. ``fs.chunks``), and the other stores file
-   metadata (e.g. ``fs.files``). The :phpclass:`MongoDB\\GridFS\\Bucket` class
+   metadata (e.g. ``fs.files``). The :phpclass:`MongoDB\GridFS\Bucket` class
    provides an interface around these collections for working with the files as
    PHP :php:`Streams <stream>`.
 
    You can construct a GridFS bucket using the driver's
    :php:`Manager <class.mongodb-driver-manager>` class, or select a bucket from
-   the library's :phpclass:`MongoDB\\Database` class via the
-   :phpmethod:`selectGridFSBucket() <MongoDB\\Database::selectGridFSBucket()>`
+   the library's :phpclass:`MongoDB\Database` class via the
+   :phpmethod:`selectGridFSBucket() <MongoDB\Database::selectGridFSBucket()>`
    method.
 
 Methods
@@ -59,26 +59,26 @@ Methods
    rename() </reference/method/MongoDBGridFSBucket-rename>
    uploadFromStream() </reference/method/MongoDBGridFSBucket-uploadFromStream>
 
-- :phpmethod:`MongoDB\\GridFS\\Bucket::__construct()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::delete()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStream()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::drop()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::find()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::findOne()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getBucketName()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getChunksCollection()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getChunkSizeBytes()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getDatabaseName()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getFileDocumentForStream()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getFileIdForStream()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getFilesCollection()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getReadConcern()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getReadPreference()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getTypeMap()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getWriteConcern()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStream()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStreamByName()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::openUploadStream()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::registerGlobalStreamWrapperAlias()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::rename()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::uploadFromStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::__construct()`
+- :phpmethod:`MongoDB\GridFS\Bucket::delete()`
+- :phpmethod:`MongoDB\GridFS\Bucket::downloadToStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::drop()`
+- :phpmethod:`MongoDB\GridFS\Bucket::find()`
+- :phpmethod:`MongoDB\GridFS\Bucket::findOne()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getBucketName()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getChunksCollection()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getChunkSizeBytes()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getDatabaseName()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getFileDocumentForStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getFileIdForStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getFilesCollection()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getReadConcern()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getReadPreference()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getTypeMap()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getWriteConcern()`
+- :phpmethod:`MongoDB\GridFS\Bucket::openDownloadStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::openDownloadStreamByName()`
+- :phpmethod:`MongoDB\GridFS\Bucket::openUploadStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::registerGlobalStreamWrapperAlias()`
+- :phpmethod:`MongoDB\GridFS\Bucket::rename()`
+- :phpmethod:`MongoDB\GridFS\Bucket::uploadFromStream()`

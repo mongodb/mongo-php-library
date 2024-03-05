@@ -13,11 +13,11 @@ MongoDB\\Client::__get()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::__get()
+.. phpmethod:: MongoDB\Client::__get()
 
    Selects a database on the server. This :php:`magic method <oop5.magic>` is
    an alias for the :phpmethod:`selectDatabase()
-   <MongoDB\\Client::selectDatabase()>` method.
+   <MongoDB\Client::selectDatabase()>` method.
 
    .. code-block:: php
 
@@ -32,21 +32,21 @@ Parameters
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\Database` object.
+A :phpclass:`MongoDB\Database` object.
 
 Behavior
 --------
 
 The selected database inherits options such as read preference and type mapping
-from the :phpclass:`Client <MongoDB\\Client>` object. If you wish to override
-any options, use the :phpmethod:`MongoDB\\Client::selectDatabase()` method.
+from the :phpclass:`Client <MongoDB\Client>` object. If you wish to override
+any options, use the :phpmethod:`MongoDB\Client::selectDatabase()` method.
 
 .. note::
 
    To select databases whose names contain special characters, such as
    ``-``, use complex syntax, as in ``$client->{'that-database'}``.
 
-   Alternatively, :phpmethod:`MongoDB\\Client::selectDatabase()` supports
+   Alternatively, :phpmethod:`MongoDB\Client::selectDatabase()` supports
    selecting databases whose names contain special characters.
 
 Examples
@@ -66,6 +66,6 @@ The following example selects the ``test`` and ``another-app`` databases:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Client::selectDatabase()`
-- :phpmethod:`MongoDB\\Database::__construct()`
+- :phpmethod:`MongoDB\Client::selectDatabase()`
+- :phpmethod:`MongoDB\Database::__construct()`
 - :php:`Property Overloading <oop5.overloading>` in the PHP Manual

@@ -15,7 +15,7 @@ MongoDB\\Collection::estimatedDocumentCount()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::estimatedDocumentCount()
+.. phpmethod:: MongoDB\Collection::estimatedDocumentCount()
 
    Gets an estimated number of documents in the collection using collection metadata.
 
@@ -50,17 +50,17 @@ Parameters
        - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
          .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/collection-option-readPreference.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
 Return Values
@@ -97,4 +97,4 @@ See Also
 
 - :manual:`count </reference/command/count>` command reference in the MongoDB
   manual
-- :phpmethod:`MongoDB\\Collection::countDocuments()`
+- :phpmethod:`MongoDB\Collection::countDocuments()`

@@ -91,7 +91,7 @@ Creating an Encryption Key
    and thus it is very important that you keep this key secure.
 
 To create an encryption key, create a
-:php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+:php:`MongoDB\Driver\ClientEncryption <class.mongodb-driver-clientencryption>`
 instance with encryption options and use the
 :php:`createDataKey() <manual/en/mongodb-driver-clientencryption.createdatakey.php>`
 method. The method will return the key ID which can be used to reference the key
@@ -157,7 +157,7 @@ specifying the ``autoEncryption``
 :php:`driver option <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`.
 The following examples demonstrate how to setup automatic client-side field
 level encryption and use a
-:php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+:php:`MongoDB\Driver\ClientEncryption <class.mongodb-driver-clientencryption>`
 object to create a new encryption key.
 
 
@@ -209,7 +209,7 @@ Explicit Encryption
 
 Explicit encryption is a MongoDB community feature and does not use
 crypt_shared_ or mongocryptd_. Explicit encryption is provided by the
-:php:`MongoDB\\Driver\\ClientEncryption <mongodb-driver-clientencryption>` class.
+:php:`MongoDB\Driver\ClientEncryption <mongodb-driver-clientencryption>` class.
 
 .. literalinclude:: /examples/encryption/csfle-explicit_encryption.php
    :language: php

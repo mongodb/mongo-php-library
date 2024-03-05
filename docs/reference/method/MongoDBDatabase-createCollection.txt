@@ -13,7 +13,7 @@ MongoDB\\Database::createCollection()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::createCollection()
+.. phpmethod:: MongoDB\Database::createCollection()
 
    Explicitly creates a collection.
 
@@ -27,7 +27,7 @@ Definition
    MongoDB creates collections implicitly when you first reference the
    collection in a command, such as when inserting a document into a new
    collection. You may also explicitly create a collection with specific options
-   using the :phpmethod:`MongoDB\\Database::createCollection()` method, or using
+   using the :phpmethod:`MongoDB\Database::createCollection()` method, or using
    :manual:`db.createCollection() </reference/method/db.createCollection>` in
    the MongoDB shell.
 
@@ -195,7 +195,7 @@ Parameters
          .. versionadded:: 1.13
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
          .. versionadded:: 1.3
@@ -322,7 +322,7 @@ Parameters
             .. versionadded:: 1.13
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/database-option-writeConcern.rst
 
 Return Values

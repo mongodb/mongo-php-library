@@ -5,11 +5,11 @@ MongoDB\\Model\\IndexInfoIterator Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\Model\\IndexInfoIterator
+.. phpclass:: MongoDB\Model\IndexInfoIterator
 
    This interface extends PHP's :php:`Iterator <manual/en/class.iterator.php>`
    interface. An instance of this interface is returned by
-   :phpmethod:`MongoDB\\Collection::listIndexes()`.
+   :phpmethod:`MongoDB\Collection::listIndexes()`.
 
 Methods
 -------
@@ -17,4 +17,4 @@ Methods
 This interface adds no new methods to :php:`Iterator
 <manual/en/class.iterator.php>`, but specifies that :php:`current()
 <manual/en/iterator.current.php>` will return an instance of
-:phpclass:`MongoDB\\Model\\IndexInfo`.
+:phpclass:`MongoDB\Model\IndexInfo`.

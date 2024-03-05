@@ -13,7 +13,7 @@ MongoDB\\MapReduceResult::getTiming()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\MapReduceResult::getTiming()
+.. phpmethod:: MongoDB\MapReduceResult::getTiming()
 
    Returns timing statistics for the map-reduce operation.
 
@@ -22,7 +22,7 @@ Definition
       function getTiming(): array
 
    Timing statistics will only be available if the ``verbose`` option was
-   specified for :phpmethod:`MongoDB\\Collection::mapReduce()`.
+   specified for :phpmethod:`MongoDB\Collection::mapReduce()`.
 
 Return Values
 -------------
@@ -34,7 +34,7 @@ Examples
 --------
 
 This example specifies the ``verbose`` option for
-:phpmethod:`MongoDB\\Collection::mapReduce()` and reports the timing statistics
+:phpmethod:`MongoDB\Collection::mapReduce()` and reports the timing statistics
 for a map-reduce operation.
 
 .. code-block:: php
@@ -71,6 +71,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::mapReduce()`
+- :phpmethod:`MongoDB\Collection::mapReduce()`
 - :manual:`mapReduce </reference/command/mapReduce>` command reference in the
   MongoDB manual

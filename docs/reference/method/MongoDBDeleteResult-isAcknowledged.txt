@@ -13,7 +13,7 @@ MongoDB\\DeleteResult::isAcknowledged()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\DeleteResult::isAcknowledged()
+.. phpmethod:: MongoDB\DeleteResult::isAcknowledged()
 
    Return whether the write was acknowledged.
 
@@ -29,6 +29,6 @@ A boolean indicating whether the write was acknowledged.
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\WriteResult::isAcknowledged()
+- :php:`MongoDB\Driver\WriteResult::isAcknowledged()
   <manual/en/mongodb-driver-writeresult.isacknowledged.php>`
 - :manual:`Write Concern </reference/write-concern>` in the MongoDB manual

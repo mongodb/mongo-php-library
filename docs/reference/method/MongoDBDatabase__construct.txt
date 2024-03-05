@@ -13,9 +13,9 @@ MongoDB\\Database::__construct()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::__construct()
+.. phpmethod:: MongoDB\Database::__construct()
 
-   Constructs a new :phpclass:`Database <MongoDB\\Database>` instance.
+   Constructs a new :phpclass:`Database <MongoDB\Database>` instance.
 
    .. code-block:: php
 
@@ -28,7 +28,7 @@ Definition
 Parameters
 ----------
 
-``$manager`` : :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
+``$manager`` : :php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>`
   The :php:`Manager <mongodb-driver-manager>` instance from the driver. The
   manager maintains connections between the driver and your MongoDB instances.
 
@@ -47,12 +47,12 @@ Parameters
        - Description
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - The default read concern to use for database operations. Defaults to
          the manager's read concern.
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - The default read preference to use for database operations. Defaults to
          the manager's read preference.
 
@@ -72,7 +72,7 @@ Parameters
             ]
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - The default write concern to use for database operations. Defaults to
          the manager's write concern.
 
@@ -85,13 +85,13 @@ Behavior
 --------
 
 If you construct a Database explicitly, the Database inherits any options from
-the :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` object. If
-you select the Database from a :phpclass:`Client <MongoDB\\Client>` object, the
+the :php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>` object. If
+you select the Database from a :phpclass:`Client <MongoDB\Client>` object, the
 Database inherits its options from that object.
 
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::withOptions()`
-- :phpmethod:`MongoDB\\Client::selectDatabase()`
-- :phpmethod:`MongoDB\\Client::__get()`
+- :phpmethod:`MongoDB\Database::withOptions()`
+- :phpmethod:`MongoDB\Client::selectDatabase()`
+- :phpmethod:`MongoDB\Client::__get()`

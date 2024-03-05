@@ -15,7 +15,7 @@ MongoDB\\GridFS\\Bucket::getChunkSizeBytes()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getChunkSizeBytes()
+.. phpmethod:: MongoDB\GridFS\Bucket::getChunkSizeBytes()
 
    Returns the chunk size of this bucket in bytes.
 

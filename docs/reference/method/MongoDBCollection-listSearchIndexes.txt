@@ -15,7 +15,7 @@ MongoDB\\Collection::listSearchIndexes()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::listSearchIndexes()
+.. phpmethod:: MongoDB\Collection::listSearchIndexes()
 
    Gets index information for one or more search indexes in the collection.
 
@@ -72,17 +72,17 @@ Parameters
          will be returned.
 
      * - readConcern
-       - :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
+       - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - .. include:: /includes/extracts/collection-option-readConcern.rst
 
          .. include:: /includes/extracts/common-option-readConcern-transaction.rst
 
      * - readPreference
-       - :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+       - :php:`MongoDB\Driver\ReadPreference <class.mongodb-driver-readpreference>`
        - .. include:: /includes/extracts/collection-option-readPreference.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
      * - typeMap
@@ -107,10 +107,10 @@ Errors/Exceptions
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::createSearchIndexes()`
-- :phpmethod:`MongoDB\\Collection::dropSearchIndex()`
-- :phpmethod:`MongoDB\\Collection::updateSearchIndex()`
+- :phpmethod:`MongoDB\Collection::createSearchIndex()`
+- :phpmethod:`MongoDB\Collection::createSearchIndexes()`
+- :phpmethod:`MongoDB\Collection::dropSearchIndex()`
+- :phpmethod:`MongoDB\Collection::updateSearchIndex()`
 - :manual:`$listSearchIndexes </reference/operator/aggregation/listSearchIndexes>`
   aggregation pipeline stage reference in the MongoDB manual
 - `Atlas Search <https://www.mongodb.com/docs/atlas/atlas-search/>`__ documentation in the MongoDB Manual

@@ -15,7 +15,7 @@ MongoDB\\Client::startSession()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::startSession()
+.. phpmethod:: MongoDB\Client::startSession()
 
    Start a new client session for use with this client.
 
@@ -28,7 +28,7 @@ Parameters
 
 ``$options`` : array
   An array specifying the desired options. Refer to the
-  :php:`MongoDB\\Driver\\Manager::startSession() <mongodb-driver-manager.startsession>`
+  :php:`MongoDB\Driver\Manager::startSession() <mongodb-driver-manager.startsession>`
   extension documentation for a list of supported options.
 
 Return Values
@@ -83,6 +83,6 @@ The output would then resemble:
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\Manager::startSession()
+- :php:`MongoDB\Driver\Manager::startSession()
   <manual/en/mongodb-driver-manager.startsession.php>`
 - :ref:`Causal Consistency <causal-consistency>` in the MongoDB manual

@@ -15,7 +15,7 @@ MongoDB\\Client::addSubscriber()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::addSubscriber()
+.. phpmethod:: MongoDB\Client::addSubscriber()
 
     Registers a monitoring event subscriber with this Client. The subscriber
     will be notified of all events for this Client.
@@ -27,7 +27,7 @@ Definition
 Parameters
 ----------
 
-``$subscriber`` : :php:`MongoDB\\Driver\\Monitoring\\Subscriber <class.mongodb-driver-monitoring-subscriber>`
+``$subscriber`` : :php:`MongoDB\Driver\Monitoring\Subscriber <class.mongodb-driver-monitoring-subscriber>`
   A monitoring event subscriber to register with this Client.
 
 Errors/Exceptions
@@ -35,10 +35,10 @@ Errors/Exceptions
 
 .. include:: /includes/extracts/error-invalidargumentexception.rst
 
-:php:`MongoDB\\Driver\\Exception\\InvalidArgumentException <mongodb-driver-exception-invalidargumentexception>`
-if subscriber is a :php:`MongoDB\\Driver\\Monitoring\\LogSubscriber <class.mongodb-driver-monitoring-logsubscriber>`,
+:php:`MongoDB\Driver\Exception\InvalidArgumentException <mongodb-driver-exception-invalidargumentexception>`
+if subscriber is a :php:`MongoDB\Driver\Monitoring\LogSubscriber <class.mongodb-driver-monitoring-logsubscriber>`,
 since loggers can only be registered globally with
-:php:`MongoDB\\Driver\\Monitoring\\addSubscriber <function.mongodb.driver.monitoring.addsubscriber>`.
+:php:`MongoDB\Driver\Monitoring\addSubscriber <function.mongodb.driver.monitoring.addsubscriber>`.
 
 Behavior
 --------
@@ -50,7 +50,7 @@ notified once of each event for this Client.
 Example
 -------
 
-Create a :phpclass:`MongoDB\\Driver\\Monitoring\\CommandSubscriber` that
+Create a :phpclass:`MongoDB\Driver\Monitoring\CommandSubscriber` that
 logs all events:
 
 .. code-block:: php
@@ -129,7 +129,7 @@ The above code will write the following to stderr output:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Client::removeSubscriber()`
+- :phpmethod:`MongoDB\Client::removeSubscriber()`
 - :php:`Application Performance Monitoring (APM) <manual/en/mongodb.tutorial.apm>`
-- :php:`MongoDB\\Driver\\Manager::addSubscriber() <manual/en/mongodb-driver-manager.addsubscriber>`
+- :php:`MongoDB\Driver\Manager::addSubscriber() <manual/en/mongodb-driver-manager.addsubscriber>`
 - :php:`MongoDB\Driver\Monitoring\CommandSubscriber <manual/en/class.mongodb-driver-monitoring-commandsubscriber>`

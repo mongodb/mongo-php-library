@@ -15,7 +15,7 @@ MongoDB\\Model\\IndexInfo::isText()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\IndexInfo::isText()
+.. phpmethod:: MongoDB\Model\IndexInfo::isText()
 
    Return whether the index is a :manual:`text </core/index-text>` index.
 
@@ -54,7 +54,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndex()`
-- :phpmethod:`MongoDB\\Collection::listIndexes()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::listIndexes()`
 - :manual:`Text Indexes </core/index-text>` reference in the MongoDB
   manual

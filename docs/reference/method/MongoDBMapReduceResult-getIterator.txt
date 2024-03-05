@@ -13,7 +13,7 @@ MongoDB\\MapReduceResult::getIterator()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\MapReduceResult::getIterator()
+.. phpmethod:: MongoDB\MapReduceResult::getIterator()
 
    Returns a :php:`Traversable <traversable>`, which may be used to iterate
    through the results of the map-reduce operation.
@@ -81,5 +81,5 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::mapReduce()`
+- :phpmethod:`MongoDB\Collection::mapReduce()`
 - :php:`IteratorAggregate::getIterator() <manual/en/iteratoraggregate.getiterator.php>`

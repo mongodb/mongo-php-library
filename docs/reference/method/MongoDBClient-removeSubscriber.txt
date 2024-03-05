@@ -15,7 +15,7 @@ MongoDB\\Client::removeSubscriber()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::removeSubscriber()
+.. phpmethod:: MongoDB\Client::removeSubscriber()
 
     Unregisters a monitoring event subscriber with this Client.
 
@@ -26,7 +26,7 @@ Definition
 Parameters
 ----------
 
-``$subscriber`` : :php:`MongoDB\\Driver\\Monitoring\\Subscriber <class.mongodb-driver-monitoring-subscriber>`
+``$subscriber`` : :php:`MongoDB\Driver\Monitoring\Subscriber <class.mongodb-driver-monitoring-subscriber>`
   A monitoring event subscriber to unregister with this Client.
 
 Errors/Exceptions
@@ -42,7 +42,7 @@ If ``$subscriber`` is not registered with this Client, this function is a no-op.
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Client::addSubscriber()`
+- :phpmethod:`MongoDB\Client::addSubscriber()`
 - :php:`Application Performance Monitoring (APM) <manual/en/mongodb.tutorial.apm>`
-- :php:`MongoDB\\Driver\\Manager::removeSubscriber() <manual/en/mongodb-driver-manager.addsubscriber>`
+- :php:`MongoDB\Driver\Manager::removeSubscriber() <manual/en/mongodb-driver-manager.addsubscriber>`
 - :php:`MongoDB\Driver\Monitoring\CommandSubscriber <manual/en/class.mongodb-driver-monitoring-commandsubscriber>`

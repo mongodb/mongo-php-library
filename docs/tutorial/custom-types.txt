@@ -6,7 +6,7 @@ Custom Data-Types
 
 .. note::
 
-   This tutorial explains implementing custom data types using the :php:`MongoDB\\BSON\\Persistable <class.mongodb-bson-persistable>`
+   This tutorial explains implementing custom data types using the :php:`MongoDB\BSON\Persistable <class.mongodb-bson-persistable>`
    interface found in the MongoDB extension. Consider using a codec instead to decouple the MongoDB persistence logic
    from your business logic. See the :ref:`codec tutorial <php-codec-handling-data-types>` for an example.
 
@@ -21,7 +21,7 @@ communicates to the server, and deserializes BSON back into PHP variables when
 it receives data from the server.
 
 It is possible to influence the behavior by implementing the
-:php:`MongoDB\\BSON\\Persistable <class.mongodb-bson-persistable>` interface.
+:php:`MongoDB\BSON\Persistable <class.mongodb-bson-persistable>` interface.
 If a class implements this interface, then upon serialization the
 :php:`bsonSerialize <mongodb-bson-serializable.bsonserialize>` method is
 called. This method is responsible for returning an array or stdClass object
@@ -29,7 +29,7 @@ to convert to BSON and store in the database. That data will later be used to
 reconstruct the object upon reading from the database.
 
 As an example we present the ``LocalDateTime`` class. This class wraps around
-the :php:`MongoDB\\BSON\\UTCDateTime <class.mongodb-bson-utcdatetime>` data
+the :php:`MongoDB\BSON\UTCDateTime <class.mongodb-bson-utcdatetime>` data
 type and a time zone.
 
 .. code-block:: php
@@ -51,7 +51,7 @@ type and a time zone.
         }
     ?>
 
-As it implements the :php:`MongoDB\\BSON\\Persistable
+As it implements the :php:`MongoDB\BSON\Persistable
 <class.mongodb-bson-persistable>` interface, the
 class is required to implement the :php:`bsonSerialize
 <mongodb-bson-serializable.bsonserialize>` and :php:`bsonUnserialize
@@ -59,7 +59,7 @@ class is required to implement the :php:`bsonSerialize
 :php:`bsonSerialize <mongodb-bson-serializable.bsonserialize>` method, we
 return an array with the two values that we need to persist: the point in time
 in milliseconds since the Epoch, represented by a
-:php:`MongoDB\\BSON\\UTCDateTime <class.mongodb-bson-utcdatetime>` object, and
+:php:`MongoDB\BSON\UTCDateTime <class.mongodb-bson-utcdatetime>` object, and
 a string containing the Olson time zone identifier:
 
 .. code-block:: php
@@ -81,7 +81,7 @@ stored object.
 
 When the document is read from the database, the driver detects whether a
 ``__pclass`` field is present and then executes
-:php:`MongoDB\\BSON\\Persistable::bsonUnserialize
+:php:`MongoDB\BSON\Persistable::bsonUnserialize
 <mongodb-bson-unserializable.bsonunserialize>` method which is
 responsible for restoring the object's original state.
 
@@ -108,25 +108,25 @@ properties.
     ?>
 
 You may have noticed that the class also implements the
-:php:`MongoDB\\BSON\\UTCDateTimeInterface
+:php:`MongoDB\BSON\UTCDateTimeInterface
 <class.mongodb-bson-utcdatetimeinterface>` interface. This interface defines
-the two non-constructor methods of the :php:`MongoDB\\BSON\\UTCDateTime
+the two non-constructor methods of the :php:`MongoDB\BSON\UTCDateTime
 <class.mongodb-bson-utcdatetime>` class.
 
 It is recommended that wrappers around existing BSON classes implement their
-respective interface (i.e. :php:`MongoDB\\BSON\\UTCDateTimeInterface
+respective interface (i.e. :php:`MongoDB\BSON\UTCDateTimeInterface
 <class.mongodb-bson-utcdatetimeinterface>`) so that the wrapper objects can be
 used in the same context as their original unwrapped version. It is also
 recommended that you always type-hint against the interface (i.e.
-:php:`MongoDB\\BSON\\UTCDateTimeInterface
+:php:`MongoDB\BSON\UTCDateTimeInterface
 <class.mongodb-bson-utcdatetimeinterface>`) and never against the concrete
-class (i.e. :php:`MongoDB\\BSON\\UTCDateTime
+class (i.e. :php:`MongoDB\BSON\UTCDateTime
 <class.mongodb-bson-utcdatetime>`), as this would prevent wrapped objects from
 being accepted into methods.
 
 In our new ``toDateTime`` method we return a :php:`DateTime <class.datetime>`
 object with the local time zone set, instead of the UTC time zone that
-:php:`MongoDB\\BSON\\UTCDateTime <class.mongodb-bson-utcdatetime>` normally uses
+:php:`MongoDB\BSON\UTCDateTime <class.mongodb-bson-utcdatetime>` normally uses
 in its return value.
 
 .. code-block:: php

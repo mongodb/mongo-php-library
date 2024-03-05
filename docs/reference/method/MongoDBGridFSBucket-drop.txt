@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::drop()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::drop()
+.. phpmethod:: MongoDB\GridFS\Bucket::drop()
 
    Drops the files and chunks collections associated with this GridFS bucket.
 

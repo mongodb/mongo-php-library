@@ -15,7 +15,7 @@ MongoDB\\GridFS\\Bucket::registerGlobalStreamWrapperAlias()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::registerGlobalStreamWrapperAlias()
+.. phpmethod:: MongoDB\GridFS\Bucket::registerGlobalStreamWrapperAlias()
 
    Registers an alias for the bucket, which enables files within the bucket to
    be accessed using a basic filename string (e.g.

@@ -22,4 +22,4 @@ Specifying connection options
 
 Connection options can be passed via the ``$uri`` parameter, or through the
 ``$options`` and ``$driverOptions`` parameters. The available options are
-documented in the :phpmethod:`MongoDB\\Client::__construct()` reference.
+documented in the :phpmethod:`MongoDB\Client::__construct()` reference.

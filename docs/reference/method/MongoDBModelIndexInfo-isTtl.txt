@@ -13,11 +13,11 @@ MongoDB\\Model\\IndexInfo::isTtl()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\IndexInfo::isTtl()
+.. phpmethod:: MongoDB\Model\IndexInfo::isTtl()
 
    Return whether the index is a :manual:`TTL index </core/index-ttl>`. This
    correlates with the ``expireAfterSeconds`` option for
-   :phpmethod:`MongoDB\\Collection::createIndex()`.
+   :phpmethod:`MongoDB\Collection::createIndex()`.
 
    .. code-block:: php
 
@@ -50,7 +50,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
 - :manual:`listIndexes </reference/command/listIndexes>` command reference in
   the MongoDB manual
 - :manual:`TTL Indexes </core/index-ttl>` in the MongoDB manual

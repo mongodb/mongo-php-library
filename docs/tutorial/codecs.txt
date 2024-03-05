@@ -42,7 +42,7 @@ The example above selects a collection and instructs it to use the ``PersonCodec
 When inserting data, the ``PersonCodec`` is used to encode the document. When retrieving data, the same ``PersonCodec``
 is used to decode BSON data into a ``Person`` instance. Note that while the ``PersonCodec`` could technically decode any
 BSON document that contains a name field, we wouldn't want to use it for any other documents. Document codecs are meant
-to be used with a :phpclass:`MongoDB\\Collection`, or when decoding embedded documents.
+to be used with a :phpclass:`MongoDB\Collection`, or when decoding embedded documents.
 
 When using a collection with a codec, the codec will only accept and return data of that type for certain operations.
 Insert and replace operations (e.g. ``insertOne``, ```findOneAndReplace``, and some ``bulkWrite`` operations) will

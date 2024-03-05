@@ -5,13 +5,12 @@ MongoDB\\DeleteResult Class
 Definition
 ----------
 
-.. phpclass:: MongoDB\\DeleteResult
+.. phpclass:: MongoDB\DeleteResult
 
    This class contains information about an executed delete operation. It
-   encapsulates a :php:`MongoDB\\Driver\\WriteResult
-   <class.mongodb-driver-writeresult>` object and is returned from
-   :phpmethod:`MongoDB\\Collection::deleteMany()` or
-   :phpmethod:`MongoDB\\Collection::deleteOne()`.
+   encapsulates a :php:`MongoDB\Driver\WriteResult <class.mongodb-driver-writeresult>`
+   object and is returned from :phpmethod:`MongoDB\Collection::deleteMany()` or
+   :phpmethod:`MongoDB\Collection::deleteOne()`.
 
 Methods
 -------
@@ -22,5 +21,5 @@ Methods
    getDeletedCount() </reference/method/MongoDBDeleteResult-getDeletedCount>
    isAcknowledged() </reference/method/MongoDBDeleteResult-isAcknowledged>
 
-- :phpmethod:`MongoDB\\DeleteResult::getDeletedCount()`
-- :phpmethod:`MongoDB\\DeleteResult::isAcknowledged()`
+- :phpmethod:`MongoDB\DeleteResult::getDeletedCount()`
+- :phpmethod:`MongoDB\DeleteResult::isAcknowledged()`

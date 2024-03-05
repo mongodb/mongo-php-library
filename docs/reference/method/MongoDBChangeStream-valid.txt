@@ -13,7 +13,7 @@ MongoDB\\ChangeStream::valid()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\ChangeStream::valid()
+.. phpmethod:: MongoDB\ChangeStream::valid()
 
    Returns whether there is a current event in the change stream.
 
@@ -23,8 +23,8 @@ Definition
 
    When manually iterating the change stream using
    :php:`Iterator </manual/en/class.iterator.php>` methods, this method should
-   be used to determine if :phpmethod:`MongoDB\\ChangeStream::current()` and
-   :phpmethod:`MongoDB\\ChangeStream::key()` can be called.
+   be used to determine if :phpmethod:`MongoDB\ChangeStream::current()` and
+   :phpmethod:`MongoDB\ChangeStream::key()` can be called.
 
 Return Values
 -------------
@@ -34,9 +34,9 @@ A boolean indicating whether there is a current event in the change stream.
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Client::watch()`
-- :phpmethod:`MongoDB\\Collection::watch()`
-- :phpmethod:`MongoDB\\Database::watch()`
+- :phpmethod:`MongoDB\Client::watch()`
+- :phpmethod:`MongoDB\Collection::watch()`
+- :phpmethod:`MongoDB\Database::watch()`
 - :php:`Iterator::valid() <iterator.valid>`
 - :ref:`Tailable Cursor Iteration <php-tailable-cursor>`
 - :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

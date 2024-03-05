@@ -15,7 +15,7 @@ MongoDB\\Database::listCollectionNames()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::listCollectionNames()
+.. phpmethod:: MongoDB\Database::listCollectionNames()
 
    Returns names for all collections in this database.
 
@@ -68,7 +68,7 @@ Parameters
        - .. include:: /includes/extracts/common-option-maxTimeMS.rst
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
 Return Values
@@ -134,7 +134,7 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::listCollections()`
+- :phpmethod:`MongoDB\Database::listCollections()`
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual
 - `Enumerating Collections

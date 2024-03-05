@@ -12,7 +12,7 @@ CRUD Operations
 
 
 CRUD operations *create*, *read*, *update*, and *delete* documents. The
-|php-library|'s :phpclass:`MongoDB\\Collection` class implements MongoDB's
+|php-library|'s :phpclass:`MongoDB\Collection` class implements MongoDB's
 cross-driver `CRUD specification
 <https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst>`_,
 providing access to methods for inserting, finding, updating, and deleting
@@ -29,9 +29,9 @@ Insert Documents
 Insert One Document
 ~~~~~~~~~~~~~~~~~~~
 
-The :phpmethod:`MongoDB\\Collection::insertOne()` method inserts a single
+The :phpmethod:`MongoDB\Collection::insertOne()` method inserts a single
 document into MongoDB and returns an instance of
-:phpclass:`MongoDB\\InsertOneResult`, which you can use to access the ID of the
+:phpclass:`MongoDB\InsertOneResult`, which you can use to access the ID of the
 inserted document.
 
 .. this uses the insertOne example from the method reference:
@@ -70,14 +70,14 @@ The output would then resemble:
 
 .. seealso::
 
-   :phpmethod:`MongoDB\\Collection::insertOne()`
+   :phpmethod:`MongoDB\Collection::insertOne()`
 
 Insert Many Documents
 ~~~~~~~~~~~~~~~~~~~~~
 
-The :phpmethod:`MongoDB\\Collection::insertMany()` method allows you to insert
+The :phpmethod:`MongoDB\Collection::insertMany()` method allows you to insert
 multiple documents in one write operation and returns an instance of
-:phpclass:`MongoDB\\InsertManyResult`, which you can use to access the IDs of
+:phpclass:`MongoDB\InsertManyResult`, which you can use to access the IDs of
 the inserted documents.
 
 .. this uses the insertMany example from the method reference:
@@ -88,14 +88,14 @@ the inserted documents.
 
 .. seealso::
 
-   :phpmethod:`MongoDB\\Collection::insertMany()`
+   :phpmethod:`MongoDB\Collection::insertMany()`
 
 Query Documents
 ---------------
 
-The |php-library| provides the :phpmethod:`MongoDB\\Collection::findOne()` and
-:phpmethod:`MongoDB\\Collection::find()` methods for querying documents and the
-:phpmethod:`MongoDB\\Collection::aggregate()` method for performing
+The |php-library| provides the :phpmethod:`MongoDB\Collection::findOne()` and
+:phpmethod:`MongoDB\Collection::find()` methods for querying documents and the
+:phpmethod:`MongoDB\Collection::aggregate()` method for performing
 :manual:`aggregation operations </core/aggregation-pipeline>`.
 
 .. include:: /includes/extracts/note-bson-comparison.rst
@@ -103,7 +103,7 @@ The |php-library| provides the :phpmethod:`MongoDB\\Collection::findOne()` and
 Find One Document
 ~~~~~~~~~~~~~~~~~
 
-:phpmethod:`MongoDB\\Collection::findOne()` returns the :term:`first document
+:phpmethod:`MongoDB\Collection::findOne()` returns the :term:`first document
 <natural order>` that matches the query or ``null`` if no document matches the
 query.
 
@@ -153,21 +153,21 @@ The output would then resemble:
    ``"94301"``. The same criteria would not have matched a document with an
    integer value of ``94301`` due to MongoDB's :manual:`comparison rules for
    BSON types </reference/bson-type-comparison-order>`. Similarly, users should
-   use a :php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>` object
+   use a :php:`MongoDB\BSON\ObjectId <class.mongodb-bson-objectid>` object
    when matching an ``_id`` with an :manual:`ObjectId </reference/object-id/>`
    value, as strings and ObjectIds are not directly comparable.
 
 .. seealso::
 
-   :phpmethod:`MongoDB\\Collection::findOne()`
+   :phpmethod:`MongoDB\Collection::findOne()`
 
 .. _php-find-many-documents:
 
 Find Many Documents
 ~~~~~~~~~~~~~~~~~~~
 
-:phpmethod:`MongoDB\\Collection::find()` returns a
-:php:`MongoDB\\Driver\\Cursor <mongodb-driver-cursor>` object, which you can
+:phpmethod:`MongoDB\Collection::find()` returns a
+:php:`MongoDB\Driver\Cursor <mongodb-driver-cursor>` object, which you can
 iterate upon to access all matched documents.
 
 The following example lists the documents in the ``zips`` collection with the
@@ -198,7 +198,7 @@ The output would resemble:
 
 .. seealso::
 
-   :phpmethod:`MongoDB\\Collection::find()`
+   :phpmethod:`MongoDB\Collection::find()`
 
 .. _php-query-projection:
 
@@ -355,7 +355,7 @@ Regular Expressions
 ~~~~~~~~~~~~~~~~~~~
 
 Filter criteria may include regular expressions, either by using the
-:php:`MongoDB\\BSON\\Regex <mongodb-bson-regex>` class directory or the
+:php:`MongoDB\BSON\Regex <mongodb-bson-regex>` class directory or the
 :query:`$regex` operator.
 
 The following example lists documents in the ``zips`` collection where the city
@@ -421,10 +421,10 @@ Complex Queries with Aggregation
 
 MongoDB's :manual:`Aggregation Framework </core/aggregation-pipeline>` allows
 you to issue complex queries that filter, transform, and group collection data.
-The |php-library|\'s :phpmethod:`MongoDB\\Collection::aggregate()` method
+The |php-library|\'s :phpmethod:`MongoDB\Collection::aggregate()` method
 returns a :php:`Traversable <traversable>` object, which you can iterate upon to
 access the results of the aggregation operation. Refer to the
-:phpmethod:`MongoDB\\Collection::aggregate()` method's :ref:`behavior
+:phpmethod:`MongoDB\Collection::aggregate()` method's :ref:`behavior
 reference <php-coll-agg-method-behavior>` for more about the method's output.
 
 The following example lists the 5 US states with the most zip codes associated
@@ -458,7 +458,7 @@ The output would then resemble:
 
 .. seealso::
 
-   :phpmethod:`MongoDB\\Collection::aggregate()`
+   :phpmethod:`MongoDB\Collection::aggregate()`
 
 Update Documents
 ----------------
@@ -466,18 +466,18 @@ Update Documents
 Update One Document
 ~~~~~~~~~~~~~~~~~~~
 
-Use the :phpmethod:`MongoDB\\Collection::updateOne()` method to update a single
-document matching a filter. :phpmethod:`MongoDB\\Collection::updateOne()`
-returns a :phpclass:`MongoDB\\UpdateResult` object, which you can use to access
+Use the :phpmethod:`MongoDB\Collection::updateOne()` method to update a single
+document matching a filter. :phpmethod:`MongoDB\Collection::updateOne()`
+returns a :phpclass:`MongoDB\UpdateResult` object, which you can use to access
 statistics about the update operation.
 
 Update methods have two required parameters: the query filter that identifies
 the document or documents to update, and an update document that specifies what
-updates to perform. The :phpmethod:`MongoDB\\Collection::updateOne()` reference
+updates to perform. The :phpmethod:`MongoDB\Collection::updateOne()` reference
 describes each parameter in detail.
 
 The following example inserts two documents into an empty ``users`` collection
-in the ``test`` database using the :phpmethod:`MongoDB\\Collection::insertOne()`
+in the ``test`` database using the :phpmethod:`MongoDB\Collection::insertOne()`
 method, and then updates the documents where the value for the ``state`` field
 is ``"ny"`` to include a ``country`` field set to ``"us"``:
 
@@ -499,7 +499,7 @@ is ``"ny"`` to include a ``country`` field set to ``"us"``:
    printf("Modified %d document(s)\n", $updateResult->getModifiedCount());
 
 Since the update operation uses the
-:phpmethod:`MongoDB\\Collection::updateOne()` method, which updates the first
+:phpmethod:`MongoDB\Collection::updateOne()` method, which updates the first
 document to match the filter criteria, the results would then resemble:
 
 .. code-block:: none
@@ -537,19 +537,19 @@ therefore not be equal, and the output from the operation would resemble:
 
 .. seealso::
 
-   - :phpmethod:`MongoDB\\Collection::updateOne()`
-   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
+   - :phpmethod:`MongoDB\Collection::updateOne()`
+   - :phpmethod:`MongoDB\Collection::findOneAndUpdate()`
 
 Update Many Documents
 ~~~~~~~~~~~~~~~~~~~~~
 
-:phpmethod:`MongoDB\\Collection::updateMany()` updates one or more documents
-matching the filter criteria and returns a :phpclass:`MongoDB\\UpdateResult`
+:phpmethod:`MongoDB\Collection::updateMany()` updates one or more documents
+matching the filter criteria and returns a :phpclass:`MongoDB\UpdateResult`
 object, which you can use to access statistics about the update operation.
 
 Update methods have two required parameters: the query filter that identifies
 the document or documents to update, and an update document that specifies what
-updates to perform. The :phpmethod:`MongoDB\\Collection::updateMany()` reference
+updates to perform. The :phpmethod:`MongoDB\Collection::updateMany()` reference
 describes each parameter in detail.
 
 The following example inserts three documents into an empty ``users`` collection
@@ -588,7 +588,7 @@ operation therefore resembles:
 
 .. seealso::
 
-   :phpmethod:`MongoDB\\Collection::updateMany()`
+   :phpmethod:`MongoDB\Collection::updateMany()`
 
 Replace Documents
 ~~~~~~~~~~~~~~~~~
@@ -598,23 +598,23 @@ a document to include new fields or new field values, a replacement operation
 replaces the entire document with a new document, but retains the original
 document's ``_id`` value.
 
-The :phpmethod:`MongoDB\\Collection::replaceOne()` method replaces a single
+The :phpmethod:`MongoDB\Collection::replaceOne()` method replaces a single
 document that matches the filter criteria and returns an instance of
-:phpclass:`MongoDB\\UpdateResult`, which you can use to access statistics about
+:phpclass:`MongoDB\UpdateResult`, which you can use to access statistics about
 the replacement operation.
 
-:phpmethod:`MongoDB\\Collection::replaceOne()` has two required parameters: the
+:phpmethod:`MongoDB\Collection::replaceOne()` has two required parameters: the
 query filter that identifies the document or documents to replace, and a
 replacement document that will replace the original document in MongoDB. The
-:phpmethod:`MongoDB\\Collection::replaceOne()` reference describes each
+:phpmethod:`MongoDB\Collection::replaceOne()` reference describes each
 parameter in detail.
 
 .. important::
 
    Replacement operations replace all of the fields in a document except the
    ``_id`` value. To avoid accidentally overwriting or deleting desired fields,
-   use the :phpmethod:`MongoDB\\Collection::updateOne()` or
-   :phpmethod:`MongoDB\\Collection::updateMany()` methods to update individual
+   use the :phpmethod:`MongoDB\Collection::updateOne()` or
+   :phpmethod:`MongoDB\Collection::updateMany()` methods to update individual
    fields in a document rather than replacing the entire document.
 
 The following example inserts one document into an empty ``users`` collection in
@@ -645,8 +645,8 @@ The output would then resemble:
 
 .. seealso::
 
-   - :phpmethod:`MongoDB\\Collection::replaceOne()`
-   - :phpmethod:`MongoDB\\Collection::findOneAndReplace()`
+   - :phpmethod:`MongoDB\Collection::replaceOne()`
+   - :phpmethod:`MongoDB\Collection::findOneAndReplace()`
 
 Upsert
 ~~~~~~
@@ -658,9 +658,9 @@ document and inserts it. If there *are* matching documents, then the operation
 modifies or replaces the matching document or documents.
 
 When a document is upserted, the ID is accessible via
-:phpmethod:`MongoDB\\UpdateResult::getUpsertedId()`.
+:phpmethod:`MongoDB\UpdateResult::getUpsertedId()`.
 
-The following example uses :phpmethod:`MongoDB\\Collection::updateOne()` with
+The following example uses :phpmethod:`MongoDB\Collection::updateOne()` with
 the ``upsert`` option set to ``true`` and an empty ``users`` collection in the
 ``test`` database, therefore inserting the document into the database:
 
@@ -715,18 +715,18 @@ Delete Documents
 Delete One Document
 ~~~~~~~~~~~~~~~~~~~
 
-The :phpmethod:`MongoDB\\Collection::deleteOne()` method deletes a single
+The :phpmethod:`MongoDB\Collection::deleteOne()` method deletes a single
 document that matches the filter criteria and returns a
-:phpclass:`MongoDB\\DeleteResult`, which you can use to access statistics about
+:phpclass:`MongoDB\DeleteResult`, which you can use to access statistics about
 the delete operation.
 
 If multiple documents match the filter criteria,
-:phpmethod:`MongoDB\\Collection::deleteOne()` deletes the :term:`first
+:phpmethod:`MongoDB\Collection::deleteOne()` deletes the :term:`first
 <natural order>` matching document.
 
-:phpmethod:`MongoDB\\Collection::deleteOne()` has one required parameter: a
+:phpmethod:`MongoDB\Collection::deleteOne()` has one required parameter: a
 query filter that specifies the document to delete. Refer to the
-:phpmethod:`MongoDB\\Collection::deleteOne()` reference for full method
+:phpmethod:`MongoDB\Collection::deleteOne()` reference for full method
 documentation.
 
 The following operation deletes the first document where the ``state`` field's
@@ -753,18 +753,18 @@ The output would then resemble:
 
 .. seealso::
 
-   :phpmethod:`MongoDB\\Collection::deleteOne()`
+   :phpmethod:`MongoDB\Collection::deleteOne()`
 
 Delete Many Documents
 ~~~~~~~~~~~~~~~~~~~~~
 
-:phpmethod:`MongoDB\\Collection::deleteMany()` deletes all of the documents that
-match the filter criteria and returns a :phpclass:`MongoDB\\DeleteResult`, which
+:phpmethod:`MongoDB\Collection::deleteMany()` deletes all of the documents that
+match the filter criteria and returns a :phpclass:`MongoDB\DeleteResult`, which
 you can use to access statistics about the delete operation.
 
-:phpmethod:`MongoDB\\Collection::deleteMany()` has one required parameter: a
+:phpmethod:`MongoDB\Collection::deleteMany()` has one required parameter: a
 query filter that specifies the document to delete. Refer to the
-:phpmethod:`MongoDB\\Collection::deleteMany()` reference for full method
+:phpmethod:`MongoDB\Collection::deleteMany()` reference for full method
 documentation.
 
 The following operation deletes all of the documents where the ``state`` field's
@@ -791,4 +791,4 @@ The output would then resemble:
 
 .. seealso::
 
-   :phpmethod:`MongoDB\\Collection::deleteMany()`
+   :phpmethod:`MongoDB\Collection::deleteMany()`

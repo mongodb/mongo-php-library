@@ -15,7 +15,7 @@ MongoDB\\Database::createEncryptedCollection()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::createEncryptedCollection()
+.. phpmethod:: MongoDB\Database::createEncryptedCollection()
 
    Explicitly creates an encrypted collection.
 
@@ -31,13 +31,13 @@ Definition
 
    This method will automatically create data keys for any encrypted fields
    where ``keyId`` is ``null``. Data keys will be created using
-   :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`
+   :php:`MongoDB\Driver\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`
    and the provided ``$kmsProvider`` and ``$masterKey`` parameters. A copy of
    the modified ``encryptedFields`` option will be returned in addition to the
    result from creating the collection.
 
    This method does not affect any auto encryption settings on existing
-   :phpclass:`MongoDB\\Client` objects. Users must configure auto encryption
+   :phpclass:`MongoDB\Client` objects. Users must configure auto encryption
    after creating the encrypted collection with ``createEncryptedCollection()``.
 
 Parameters
@@ -46,18 +46,18 @@ Parameters
 ``$collectionName`` : string
   The name of the encrypted collection to create.
 
-``$clientEncryption`` : :php:`MongoDB\\Driver\\ClientEncryption <mongodb-driver-clientencryption>`
+``$clientEncryption`` : :php:`MongoDB\Driver\ClientEncryption <mongodb-driver-clientencryption>`
   The ClientEncryption object used to create data keys.
 
 ``$kmsProvider`` : string
   KMS provider (e.g. "local", "aws") that will be used to encrypt new data keys.
   This corresponds to the ``$kmsProvider`` parameter for
-  :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
+  :php:`MongoDB\Driver\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
 
 ``$masterKey`` : array|null
   KMS-specific key options that will be used to encrypt new data keys. This
   corresponds to the ``masterKey`` option for
-  :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
+  :php:`MongoDB\Driver\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
 
   If ``$kmsProvider`` is "local", this should be ``null``.
 
@@ -65,7 +65,7 @@ Parameters
   An array specifying the desired options.
 
   The ``$options`` parameter supports the same options as
-  :phpmethod:`MongoDB\\Database::createCollection()`. The ``encryptedFields``
+  :phpmethod:`MongoDB\Database::createCollection()`. The ``encryptedFields``
   option is required.
 
 Return Values
@@ -79,7 +79,7 @@ option.
 Errors/Exceptions
 -----------------
 
-:phpclass:`MongoDB\\Exception\\CreateEncryptedCollectionException` if any error
+:phpclass:`MongoDB\Exception\CreateEncryptedCollectionException` if any error
 is encountered creating data keys or the collection. The original exception and
 modified ``encryptedFields`` option can be accessed via the ``getPrevious()``
 and ``getEncryptedFields()`` methods, respectively.
@@ -126,11 +126,11 @@ an encrypted string field.
 If the encrypted collection was successfully created, ``$result`` will contain
 the response document from the ``create`` command and
 ``$encryptedFields['fields'][0]['keyId']`` will contain a
-:php:`MongoDB\\BSON\\Binary <class.mongodb-bson-binary>` object with subtype 4
+:php:`MongoDB\BSON\Binary <class.mongodb-bson-binary>` object with subtype 4
 (i.e. UUID).
 
 The modified ``encryptedFields`` option can then be used to construct a new
-:phpclass:`MongoDB\\Client` with auto encryption enabled.
+:phpclass:`MongoDB\Client` with auto encryption enabled.
 
 .. code-block:: php
 
@@ -155,8 +155,8 @@ The modified ``encryptedFields`` option can then be used to construct a new
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::createCollection()`
-- :phpmethod:`MongoDB\\Client::createClientEncryption()`
-- :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`
+- :phpmethod:`MongoDB\Database::createCollection()`
+- :phpmethod:`MongoDB\Client::createClientEncryption()`
+- :php:`MongoDB\Driver\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`
 - :manual:`create </reference/command/create>` command reference in the MongoDB
   manual

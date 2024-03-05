@@ -55,6 +55,38 @@ class UnifiedSpecTest extends FunctionalTestCase
         'load-balancers/wait queue timeout errors include details about checked out connections: wait queue timeout errors include cursor statistics' => 'PHPC does not implement CMAP',
         'load-balancers/wait queue timeout errors include details about checked out connections: wait queue timeout errors include transaction statistics' => 'PHPC does not implement CMAP',
         // mongoc_cluster_stream_for_server does not retry handshakes (CDRIVER-4532, PHPLIB-1033, PHPLIB-1042)
+        'retryable-reads/retryable reads handshake failures: client.listDatabases succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.listDatabases succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.listDatabaseNames succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.listDatabaseNames succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.createChangeStream succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.aggregate succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.aggregate succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.listCollections succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.listCollections succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.listCollectionNames succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.listCollectionNames succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.createChangeStream succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.aggregate succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.aggregate succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.countDocuments succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.countDocuments succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.estimatedDocumentCount succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.estimatedDocumentCount succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.distinct succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.distinct succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.find succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.find succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.findOne succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.findOne succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.listIndexes succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.listIndexes succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.listIndexNames succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.listIndexNames succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.createChangeStream succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.insertOne succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.insertOne succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.insertMany succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
@@ -205,6 +237,17 @@ class UnifiedSpecTest extends FunctionalTestCase
     public function provideLoadBalancers()
     {
         return $this->provideTests(__DIR__ . '/load-balancers/*.json');
+    }
+
+    /** @dataProvider provideRetryableReadsTests */
+    public function testRetryableReads(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideRetryableReadsTests()
+    {
+        return $this->provideTests(__DIR__ . '/retryable-reads/*.json');
     }
 
     /** @dataProvider provideRetryableWritesTests */

@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::rename()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::rename()
+.. phpmethod:: MongoDB\GridFS\Bucket::rename()
 
    Selects a GridFS file by its ``_id`` and alters its ``filename``.
 

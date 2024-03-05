@@ -13,7 +13,7 @@ MongoDB\\Collection::getCollectionName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::getCollectionName()
+.. phpmethod:: MongoDB\Collection::getCollectionName()
 
    Returns the name of this collection.
 
@@ -49,5 +49,5 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::getDatabaseName()`
-- :phpmethod:`MongoDB\\Collection::getNamespace()`
+- :phpmethod:`MongoDB\Collection::getDatabaseName()`
+- :phpmethod:`MongoDB\Collection::getNamespace()`

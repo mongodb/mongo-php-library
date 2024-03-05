@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::getFileIdForStream()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getFileIdForStream()
+.. phpmethod:: MongoDB\GridFS\Bucket::getFileIdForStream()
 
    Gets the file document's ID of the GridFS file associated with a stream.
 
@@ -69,4 +69,4 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\GridFS\\Bucket::getFileDocumentForStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::getFileDocumentForStream()`

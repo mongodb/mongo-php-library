@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::delete()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::delete()
+.. phpmethod:: MongoDB\GridFS\Bucket::delete()
 
    Delete a file and its chunks from the GridFS bucket.
 

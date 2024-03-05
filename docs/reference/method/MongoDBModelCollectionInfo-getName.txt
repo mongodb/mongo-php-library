@@ -13,7 +13,7 @@ MongoDB\\Model\\CollectionInfo::getName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\CollectionInfo::getName()
+.. phpmethod:: MongoDB\Model\CollectionInfo::getName()
 
    Return the collection name.
 
@@ -47,6 +47,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\Collection::getCollectionName()`
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual

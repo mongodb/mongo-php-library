@@ -13,7 +13,7 @@ MongoDB\\GridFS\\Bucket::downloadToStream()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::downloadToStream()
+.. phpmethod:: MongoDB\GridFS\Bucket::downloadToStream()
 
    Selects a GridFS file by its ``_id`` and copies its contents to a writable
    stream.
@@ -68,6 +68,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStreamByName()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStream()`
-- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStreamByName()`
+- :phpmethod:`MongoDB\GridFS\Bucket::downloadToStreamByName()`
+- :phpmethod:`MongoDB\GridFS\Bucket::openDownloadStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::openDownloadStreamByName()`

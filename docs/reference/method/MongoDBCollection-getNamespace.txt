@@ -13,7 +13,7 @@ MongoDB\\Collection::getNamespace()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::getNamespace()
+.. phpmethod:: MongoDB\Collection::getNamespace()
 
    Returns the :term:`namespace` of the collection. A namespace is the canonical
    name of an index or collection in MongoDB.
@@ -50,5 +50,5 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::getCollectionName()`
-- :phpmethod:`MongoDB\\Collection::getDatabaseName()`
+- :phpmethod:`MongoDB\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\Collection::getDatabaseName()`

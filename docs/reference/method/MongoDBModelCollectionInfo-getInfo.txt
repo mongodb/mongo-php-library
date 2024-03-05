@@ -15,7 +15,7 @@ MongoDB\\Model\\CollectionInfo::getInfo()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\CollectionInfo::getInfo()
+.. phpmethod:: MongoDB\Model\CollectionInfo::getInfo()
 
    Returns additional information about the collection.
 
@@ -56,6 +56,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::createCollection()`
+- :phpmethod:`MongoDB\Database::createCollection()`
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual

@@ -15,7 +15,7 @@ MongoDB\\ChangeStream::getResumeToken()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\ChangeStream::getResumeToken()
+.. phpmethod:: MongoDB\ChangeStream::getResumeToken()
 
    Returns the cached resume token that will be used to resume the change
    stream.
@@ -68,8 +68,8 @@ the ``startAfter`` option.
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Client::watch()`
-- :phpmethod:`MongoDB\\Collection::watch()`
-- :phpmethod:`MongoDB\\Database::watch()`
+- :phpmethod:`MongoDB\Client::watch()`
+- :phpmethod:`MongoDB\Collection::watch()`
+- :phpmethod:`MongoDB\Database::watch()`
 - :manual:`Resume a Change Stream </changeStreams#resume-a-change-stream>`
   documentation in the MongoDB manual

@@ -13,11 +13,11 @@ MongoDB\\Model\\IndexInfo::getKey()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\IndexInfo::getKey()
+.. phpmethod:: MongoDB\Model\IndexInfo::getKey()
 
    Return the index specification (i.e. indexed field(s) and order). This
    correlates with the ``$key`` parameter for
-   :phpmethod:`MongoDB\\Collection::createIndex()`.
+   :phpmethod:`MongoDB\Collection::createIndex()`.
 
    .. code-block:: php
 
@@ -53,6 +53,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
 - :manual:`listIndexes </reference/command/listIndexes>` command reference in
   the MongoDB manual

@@ -15,7 +15,7 @@ MongoDB\\add_logger()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\add_logger()
+.. phpmethod:: MongoDB\add_logger()
 
    Registers a PSR logger to receive log messages from the driver.
 
@@ -58,6 +58,6 @@ Errors/Exceptions
 See Also
 --------
 
-- :phpmethod:`MongoDB\\remove_logger()`
+- :phpmethod:`MongoDB\remove_logger()`
 - `PSR-3: Logger Interface <https://www.php-fig.org/psr/psr-3/>`__
 - `libmongoc: Logging <https://mongoc.org/libmongoc/current/logging.html>`__

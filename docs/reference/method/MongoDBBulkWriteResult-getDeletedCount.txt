@@ -13,7 +13,7 @@ MongoDB\\BulkWriteResult::getDeletedCount()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\BulkWriteResult::getDeletedCount()
+.. phpmethod:: MongoDB\BulkWriteResult::getDeletedCount()
 
    Return the total number of documents that were deleted by all delete
    operations in the bulk write.
@@ -38,5 +38,5 @@ Errors/Exceptions
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\WriteResult::getDeletedCount()
+- :php:`MongoDB\Driver\WriteResult::getDeletedCount()
   <manual/en/mongodb-driver-writeresult.getdeletedcount.php>`

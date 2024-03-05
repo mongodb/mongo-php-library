@@ -15,7 +15,7 @@ MongoDB\\GridFS\\Bucket::getReadConcern()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\\Bucket::getReadConcern()
+.. phpmethod:: MongoDB\GridFS\Bucket::getReadConcern()
 
    Returns the read concern for this GridFS bucket.
 
@@ -26,7 +26,7 @@ Definition
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>` object.
+A :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>` object.
 
 Example
 -------
@@ -55,7 +55,7 @@ See Also
 --------
 
 - :manual:`Read Concern </reference/read-concern>` in the MongoDB manual
-- :php:`MongoDB\\Driver\\ReadConcern::isDefault() <mongodb-driver-readconcern.isdefault>`
-- :phpmethod:`MongoDB\\Client::getReadConcern()`
-- :phpmethod:`MongoDB\\Collection::getReadConcern()`
-- :phpmethod:`MongoDB\\Database::getReadConcern()`
+- :php:`MongoDB\Driver\ReadConcern::isDefault() <mongodb-driver-readconcern.isdefault>`
+- :phpmethod:`MongoDB\Client::getReadConcern()`
+- :phpmethod:`MongoDB\Collection::getReadConcern()`
+- :phpmethod:`MongoDB\Database::getReadConcern()`

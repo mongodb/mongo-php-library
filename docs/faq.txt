@@ -124,7 +124,7 @@ The following are all examples of
     [TLS handshake failed: certificate verify failed (64): IP address mismatch calling hello on 'b.example.com:27017']
 
 These errors typically manifest as a
-:php:`MongoDB\\Driver\\Exception\\ConnectionTimeoutException <mongodb-driver-exception-connectiontimeoutexception>`
+:php:`MongoDB\Driver\Exception\ConnectionTimeoutException <mongodb-driver-exception-connectiontimeoutexception>`
 exception from the driver. The actual exception messages originate from
 libmongoc, which is the underlying library used by the PHP driver. Since these
 messages can take many forms, it's helpful to break down the structure of the

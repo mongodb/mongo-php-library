@@ -13,9 +13,9 @@ MongoDB\\Client::__construct()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::__construct()
+.. phpmethod:: MongoDB\Client::__construct()
 
-   Constructs a new :phpclass:`Client <MongoDB\\Client>` instance.
+   Constructs a new :phpclass:`Client <MongoDB\Client>` instance.
 
    .. code-block:: php
 
@@ -49,7 +49,7 @@ Parameters
   over any analogous options present in the ``$uri`` string and do not need to
   be encoded according to `RFC 3986 <https://www.rfc-editor.org/info/rfc3986>`_.
 
-  Refer to the :php:`MongoDB\\Driver\\Manager::__construct()
+  Refer to the :php:`MongoDB\Driver\Manager::__construct()
   <mongodb-driver-manager.construct>` extension documentation for a list of
   supported options.
 
@@ -75,9 +75,9 @@ Parameters
          :php:`extension documentation <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`
          for a list of supported encryption options.
 
-         If a :phpclass:`MongoDB\\Client` is provided for the ``keyVaultClient``
+         If a :phpclass:`MongoDB\Client` is provided for the ``keyVaultClient``
          option, it will be unwrapped into a
-         :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` for the
+         :php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>` for the
          extension.
 
          .. versionadded:: 1.6
@@ -106,7 +106,7 @@ Parameters
          .. versionadded:: 1.7
 
      * - serverApi
-       - :php:`MongoDB\\Driver\\ServerApi <class.mongodb-driver-serverapi>`
+       - :php:`MongoDB\Driver\ServerApi <class.mongodb-driver-serverapi>`
        - Used to declare an API version on the client. Refer to the
          :manual:`Stable API </reference/stable-api>` page in the Server manual for
          additional information.
@@ -219,10 +219,10 @@ Errors/Exceptions
 Behavior
 --------
 
-A :php:`MongoDB\\Driver\\Manager <mongodb-driver-manager>` is constructed
+A :php:`MongoDB\Driver\Manager <mongodb-driver-manager>` is constructed
 internally. Per the `Server Discovery and Monitoring
 <https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst#single-threaded-client-construction>`_
-specification, :php:`MongoDB\\Driver\\Manager::__construct()
+specification, :php:`MongoDB\Driver\Manager::__construct()
 <mongodb-driver-manager.construct>` performs no I/O. Connections will be
 initialized on demand, when the first operation is executed.
 
@@ -237,7 +237,7 @@ Connecting to a Standalone server
 If you do not specify a ``$uri`` value, the driver connects to a standalone
 :program:`mongod` on ``127.0.0.1`` via port ``27017``. To connect to a different
 server, pass the corresponding connection string as the first parameter when
-creating the :phpclass:`Client <MongoDB\\Client>` instance:
+creating the :phpclass:`Client <MongoDB\Client>` instance:
 
 .. code-block:: php
 
@@ -298,7 +298,7 @@ specified in the constructor's ``$uriOptions`` parameter:
 The driver supports additional :php:`SSL options
 <mongodb-driver-manager.construct#mongodb-driver-manager.construct-driveroptions>`,
 which may be specified in the constructor's ``$driverOptions`` parameter. Those
-options are covered in the :php:`MongoDB\\Driver\\Manager::__construct()
+options are covered in the :php:`MongoDB\Driver\Manager::__construct()
 <mongodb-driver-manager.construct>` documentation.
 
 .. end-connecting-include
@@ -307,8 +307,8 @@ Specifying a Custom Type Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default, the |php-library| deserializes BSON documents and arrays
-as :phpclass:`MongoDB\\Model\\BSONDocument` and
-:phpclass:`MongoDB\\Model\\BSONArray` objects, respectively. The following
+as :phpclass:`MongoDB\Model\BSONDocument` and
+:phpclass:`MongoDB\Model\BSONArray` objects, respectively. The following
 example demonstrates how to have the library unserialize everything as a PHP
 array, as was done in the legacy ``mongo`` extension.
 
@@ -331,7 +331,7 @@ array, as was done in the legacy ``mongo`` extension.
 See Also
 --------
 
-- :php:`MongoDB\\Driver\\Manager::__construct()
+- :php:`MongoDB\Driver\Manager::__construct()
   <mongodb-driver-manager.construct>`
 - :manual:`Connection String URI Format </reference/connection-string>` in the
   MongoDB manual

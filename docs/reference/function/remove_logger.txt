@@ -15,7 +15,7 @@ MongoDB\\remove_logger()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\remove_logger()
+.. phpmethod:: MongoDB\remove_logger()
 
    Unregisters a PSR logger to no longer receive log messages from the driver.
 
@@ -26,7 +26,7 @@ Definition
 Parameters
 ----------
 
-``$logger`` : Psr\\Log\\LoggerInterface
+``$logger`` : Psr\Log\LoggerInterface
   A logger to unregister.
 
   If the logger is not registered, the method will have no effect.
@@ -39,6 +39,6 @@ Errors/Exceptions
 See Also
 --------
 
-- :phpmethod:`MongoDB\\add_logger()`
+- :phpmethod:`MongoDB\add_logger()`
 - `PSR-3: Logger Interface <https://www.php-fig.org/psr/psr-3/>`__
 - `libmongoc: Logging <https://mongoc.org/libmongoc/current/logging.html>`__

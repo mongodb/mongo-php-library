@@ -15,7 +15,7 @@ MongoDB\\Collection::rename()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::rename()
+.. phpmethod:: MongoDB\Collection::rename()
 
    Rename the collection.
 
@@ -64,7 +64,7 @@ Parameters
          .. versionadded:: 1.13
 
      * - session
-       - :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+       - :php:`MongoDB\Driver\Session <class.mongodb-driver-session>`
        - .. include:: /includes/extracts/common-option-session.rst
 
      * - typeMap
@@ -74,7 +74,7 @@ Parameters
          This will be used for the returned command result document.
 
      * - writeConcern
-       - :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+       - :php:`MongoDB\Driver\WriteConcern <class.mongodb-driver-writeconcern>`
        - .. include:: /includes/extracts/collection-option-writeConcern.rst
 
          .. include:: /includes/extracts/common-option-writeConcern-transaction.rst
@@ -124,6 +124,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::renameCollection()`
+- :phpmethod:`MongoDB\Database::renameCollection()`
 - :manual:`renameCollection </reference/command/renameCollection>` command reference in the MongoDB
   manual

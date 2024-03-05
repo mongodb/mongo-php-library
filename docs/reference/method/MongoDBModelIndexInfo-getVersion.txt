@@ -13,7 +13,7 @@ MongoDB\\Model\\IndexInfo::getVersion()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\IndexInfo::getVersion()
+.. phpmethod:: MongoDB\Model\IndexInfo::getVersion()
 
    Return the index version.
 
@@ -48,6 +48,6 @@ The output would then resemble:
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :phpmethod:`MongoDB\Collection::createIndex()`
 - :manual:`listIndexes </reference/command/listIndexes>` command reference in
   the MongoDB manual

@@ -517,7 +517,7 @@ final class Operation
                 assertArrayHasKey('out', $args);
                 assertInstanceOf(Javascript::class, $args['map']);
                 assertInstanceOf(Javascript::class, $args['reduce']);
-                assertIsString($args['out']);
+                assertThat($args['out'], logicalOr(new IsType('string'), new IsType('array'), new IsType('object')));
 
                 return $collection->mapReduce(
                     $args['map'],

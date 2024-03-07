@@ -485,7 +485,11 @@ final class UnifiedTestRunner
             switch ($operation->name) {
                 case 'distinct':
                     $hasDistinct = true;
-                    $collection = $context->getEntityMap()[$operation->object];
+                    /* TODO: If this operation references an entity that would
+                     * be created by a createEntities test runner operation, the
+                     * assertion below will fail; however, there is no need to
+                     * address this until such a transaction test is created. */
+                    $collection = $context->getEntityMap()[$operation->object] ?? null;
                     break;
 
                 case 'startTransaction':

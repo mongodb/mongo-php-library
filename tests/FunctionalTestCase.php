@@ -522,6 +522,16 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
+    protected function isAtlasDataLake(): bool
+    {
+        $buildInfo = $this->getPrimaryServer()->executeCommand(
+            $this->getDatabaseName(),
+            new Command(['buildInfo' => 1]),
+        )->toArray()[0];
+
+        return ! empty($buildInfo->dataLake);
+    }
+
     protected function isEnterprise(): bool
     {
         $buildInfo = $this->getPrimaryServer()->executeCommand(

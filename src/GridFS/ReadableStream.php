@@ -98,7 +98,6 @@ class ReadableStream
      * Return internal properties for debugging purposes.
      *
      * @see https://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
-     * @return array
      */
     public function __debugInfo(): array
     {

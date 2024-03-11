@@ -517,14 +517,14 @@ final class Operation
                 assertArrayHasKey('out', $args);
                 assertInstanceOf(Javascript::class, $args['map']);
                 assertInstanceOf(Javascript::class, $args['reduce']);
-                assertIsString($args['out']);
+                assertThat($args['out'], logicalOr(new IsType('string'), new IsType('array'), new IsType('object')));
 
-                return $collection->mapReduce(
+                return iterator_to_array($collection->mapReduce(
                     $args['map'],
                     $args['reduce'],
                     $args['out'],
                     array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1]),
-                );
+                ));
 
             case 'rename':
                 assertArrayHasKey('to', $args);

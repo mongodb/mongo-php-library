@@ -36,7 +36,6 @@ use function MongoDB\is_document;
  */
 class SearchIndexInput implements Serializable
 {
-    /** @var array */
     private array $index;
 
     /**

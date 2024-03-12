@@ -2,16 +2,11 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
-use function basename;
 use function current;
 use function explode;
-use function file_get_contents;
-use function glob;
 use function parse_url;
 
 /**
@@ -32,101 +27,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Assert that the expected and actual command documents match.
-     *
-     * @param stdClass $expected Expected command document
-     * @param stdClass $actual   Actual command document
-     */
-    public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
-    {
-        foreach ($expected as $key => $value) {
-            if ($value === null) {
-                static::assertObjectNotHasAttribute($key, $actual);
-                unset($expected->{$key});
-            }
-        }
-
-        static::assertDocumentsMatch($expected, $actual);
-    }
-
-    /**
-     * Execute an individual test case from the specification.
-     *
-     * @dataProvider provideTests
-     * @param stdClass $test           Individual "tests[]" document
-     * @param array    $runOn          Top-level "runOn" array with server requirements
-     * @param array    $data           Top-level "data" array to initialize collection
-     * @param string   $databaseName   Name of database under test
-     * @param string   $collectionName Name of collection under test
-     */
-    public function testAtlasDataLake(stdClass $test, ?array $runOn, array $data, ?string $databaseName = null, ?string $collectionName = null): void
-    {
-        if (isset($runOn)) {
-            $this->checkServerRequirements($runOn);
-        }
-
-        if (isset($test->skipReason)) {
-            $this->markTestSkipped($test->skipReason);
-        }
-
-        $databaseName ??= $this->getDatabaseName();
-        $collectionName ??= $this->getCollectionName();
-
-        $context = Context::fromCrud($test, $databaseName, $collectionName);
-        $this->setContext($context);
-
-        /* Note: Atlas Data Lake is read-only, so do not attempt to drop the
-         * collection under test or insert data fixtures. Necesarry data
-         * fixtures are already specified in the mongohoused configuration. */
-
-        if (isset($test->failPoint)) {
-            throw new LogicException('ADL tests are not expected to configure fail points');
-        }
-
-        if (isset($test->expectations)) {
-            $commandExpectations = CommandExpectations::fromCrud($context->getClient(), (array) $test->expectations);
-            $commandExpectations->startMonitoring();
-        }
-
-        foreach ($test->operations as $operation) {
-            Operation::fromCrud($operation)->assert($this, $context);
-        }
-
-        if (isset($commandExpectations)) {
-            $commandExpectations->stopMonitoring();
-            $commandExpectations->assert($this, $context);
-        }
-
-        if (isset($test->outcome->collection->data)) {
-            throw new LogicException('ADL tests are not expected to assert collection data');
-        }
-    }
-
-    public function provideTests()
-    {
-        $testArgs = [];
-
-        foreach (glob(__DIR__ . '/atlas_data_lake/*.json') as $filename) {
-            $json = $this->decodeJson(file_get_contents($filename));
-            $group = basename($filename, '.json');
-            $runOn = $json->runOn ?? null;
-            $data = $json->data ?? [];
-            // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-            $databaseName = $json->database_name ?? null;
-            $collectionName = $json->collection_name ?? null;
-            // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-
-            foreach ($json->tests as $test) {
-                $name = $group . ': ' . $test->description;
-                $testArgs[$name] = [$test, $runOn, $data, $databaseName, $collectionName];
-            }
-        }
-
-        return $testArgs;
-    }
-
-    /**
-     * Prose test 1: Connect without authentication
+     * Prose test 1: killCursors command
      */
     public function testKillCursors(): void
     {
@@ -234,17 +135,5 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
 
         $this->assertInstanceOf(Cursor::class, $cursor);
         $this->assertCommandSucceeded(current($cursor->toArray()));
-    }
-
-    private function isAtlasDataLake(): bool
-    {
-        $cursor = $this->manager->executeCommand(
-            $this->getDatabaseName(),
-            new Command(['buildInfo' => 1]),
-        );
-
-        $document = current($cursor->toArray());
-
-        return ! empty($document->dataLake);
     }
 }

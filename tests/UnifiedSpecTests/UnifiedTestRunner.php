@@ -82,8 +82,11 @@ final class UnifiedTestRunner
 
         /* Atlas prohibits killAllSessions. Inspect the connection string to
          * determine if we should avoid calling killAllSessions(). This does
-         * mean that lingering transactions could block test execution. */
-        if ($this->isServerless() || FunctionalTestCase::isAtlas($internalClientUri)) {
+         * mean that lingering transactions could block test execution.
+         *
+         * Atlas Data Lake also does not support killAllSessions.
+         */
+        if ($this->isServerless() || FunctionalTestCase::isAtlas($internalClientUri) || $this->isAtlasDataLake()) {
             $this->allowKillAllSessions = false;
         }
 
@@ -312,6 +315,14 @@ final class UnifiedTestRunner
             default:
                 throw new UnexpectedValueException('Topology is neither single nor RS nor sharded');
         }
+    }
+
+    private function isAtlasDataLake(): bool
+    {
+        $database = $this->internalClient->selectDatabase('admin');
+        $buildInfo = $database->command(['buildInfo' => 1])->toArray()[0];
+
+        return ! empty($buildInfo->dataLake);
     }
 
     /**

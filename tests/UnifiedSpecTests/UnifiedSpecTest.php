@@ -213,6 +213,24 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
     }
 
+    /**
+     * @dataProvider provideAtlasDataLakeTests
+     * @group atlas-data-lake
+     */
+    public function testAtlasDataLake(UnifiedTestCase $test): void
+    {
+        if (! $this->isAtlasDataLake()) {
+            $this->markTestSkipped('Server is not Atlas Data Lake');
+        }
+
+        self::$runner->run($test);
+    }
+
+    public function provideAtlasDataLakeTests()
+    {
+        return $this->provideTests(__DIR__ . '/atlas-data-lake/*.json');
+    }
+
     /** @dataProvider provideChangeStreamsTests */
     public function testChangeStreams(UnifiedTestCase $test): void
     {

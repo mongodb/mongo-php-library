@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Config;
 
+use MongoDB\CodeGenerator\FluentStageFactoryGenerator;
 use MongoDB\CodeGenerator\OperatorClassGenerator;
 use MongoDB\CodeGenerator\OperatorFactoryGenerator;
 use MongoDB\CodeGenerator\OperatorTestGenerator;
@@ -18,6 +19,7 @@ return [
             OperatorClassGenerator::class,
             OperatorFactoryGenerator::class,
             OperatorTestGenerator::class,
+            FluentStageFactoryGenerator::class,
         ],
     ],
 

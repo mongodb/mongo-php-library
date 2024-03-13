@@ -16,7 +16,6 @@ use function glob;
  * Unified test format spec tests.
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst
- * @group serverless
  */
 class UnifiedSpecTest extends FunctionalTestCase
 {
@@ -231,7 +230,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/atlas-data-lake/*.json');
     }
 
-    /** @dataProvider provideChangeStreamsTests */
+    /**
+     * @dataProvider provideChangeStreamsTests
+     * @group serverless
+     */
     public function testChangeStreams(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -245,6 +247,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideClientSideEncryptionTests
      * @group csfle
+     * @group serverless
      */
     public function testClientSideEncryption(UnifiedTestCase $test): void
     {
@@ -256,7 +259,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/client-side-encryption/*.json');
     }
 
-    /** @dataProvider provideCollectionManagementTests */
+    /**
+     * @dataProvider provideCollectionManagementTests
+     * @group serverless
+     */
     public function testCollectionManagement(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -267,7 +273,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/collection-management/*.json');
     }
 
-    /** @dataProvider provideCommandMonitoringTests */
+    /**
+     * @dataProvider provideCommandMonitoringTests
+     * @group serverless
+     */
     public function testCommandMonitoring(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -278,7 +287,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/command-monitoring/*.json');
     }
 
-    /** @dataProvider provideCrudTests */
+    /**
+     * @dataProvider provideCrudTests
+     * @group serverless
+     */
     public function testCrud(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -289,7 +301,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/crud/*.json');
     }
 
-    /** @dataProvider provideGridFSTests */
+    /**
+     * @dataProvider provideGridFSTests
+     * @group serverless
+     */
     public function testGridFS(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -300,7 +315,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/gridfs/*.json');
     }
 
-    /** @dataProvider provideLoadBalancers */
+    /**
+     * @dataProvider provideLoadBalancers
+     * @group serverless
+     */
     public function testLoadBalancers(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -322,7 +340,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/read-write-concern/*.json');
     }
 
-    /** @dataProvider provideRetryableReadsTests */
+    /**
+     * @dataProvider provideRetryableReadsTests
+     * @group serverless
+     */
     public function testRetryableReads(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -333,7 +354,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/retryable-reads/*.json');
     }
 
-    /** @dataProvider provideRetryableWritesTests */
+    /**
+     * @dataProvider provideRetryableWritesTests
+     * @group serverless
+     */
     public function testRetryableWrites(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -344,7 +368,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/retryable-writes/*.json');
     }
 
-    /** @dataProvider provideRunCommandTests */
+    /**
+     * @dataProvider provideRunCommandTests
+     * @group serverless
+     */
     public function testRunCommand(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -355,7 +382,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/run-command/*.json');
     }
 
-    /** @dataProvider provideSessionsTests */
+    /**
+     * @dataProvider provideSessionsTests
+     * @group serverless
+     */
     public function testSessions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -366,7 +396,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/sessions/*.json');
     }
 
-    /** @dataProvider provideTransactionsTests */
+    /**
+     * @dataProvider provideTransactionsTests
+     * @group serverless
+     */
     public function testTransactions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -390,6 +423,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideVersionedApiTests
+     * @group serverless
      * @group versioned-api
      */
     public function testVersionedApi(UnifiedTestCase $test): void

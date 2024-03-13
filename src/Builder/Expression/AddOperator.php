@@ -36,7 +36,7 @@ class AddOperator implements ResolvesToInt, ResolvesToLong, ResolvesToDouble, Re
     public function __construct(Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int ...$expression)
     {
         if (\count($expression) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
 
         if (! array_is_list($expression)) {

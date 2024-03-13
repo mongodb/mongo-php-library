@@ -36,7 +36,7 @@ class AddFieldsStage implements StageInterface, OperatorInterface
     public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression)
     {
         if (\count($expression) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
 
         foreach($expression as $key => $value) {

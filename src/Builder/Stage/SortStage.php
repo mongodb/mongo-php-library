@@ -37,7 +37,7 @@ class SortStage implements StageInterface, OperatorInterface
     public function __construct(Type|ExpressionInterface|Sort|stdClass|array|bool|float|int|null|string ...$sort)
     {
         if (\count($sort) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $sort, got %d.', 1, \count($sort)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $sort, got %d.', 1, \count($sort)));
         }
 
         foreach($sort as $key => $value) {

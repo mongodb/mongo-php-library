@@ -36,7 +36,7 @@ class MergeObjectsOperator implements ResolvesToObject, OperatorInterface
     public function __construct(Document|Serializable|ResolvesToObject|stdClass|array ...$document)
     {
         if (\count($document) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $document, got %d.', 1, \count($document)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $document, got %d.', 1, \count($document)));
         }
 
         if (! array_is_list($document)) {

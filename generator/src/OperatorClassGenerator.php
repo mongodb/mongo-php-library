@@ -78,9 +78,10 @@ class OperatorClassGenerator extends OperatorGenerator
                 $constuctor->addComment('@param ' . $type->doc . ' ...$' . $argument->name . rtrim(' ' . $argument->description));
 
                 if ($argument->variadicMin > 0) {
+                    $namespace->addUse(InvalidArgumentException::class);
                     $constuctor->addBody(<<<PHP
                     if (\count(\${$argument->name}) < {$argument->variadicMin}) {
-                        throw new \InvalidArgumentException(\sprintf('Expected at least %d values for \${$argument->name}, got %d.', {$argument->variadicMin}, \count(\${$argument->name})));
+                        throw new InvalidArgumentException(\sprintf('Expected at least %d values for \${$argument->name}, got %d.', {$argument->variadicMin}, \count(\${$argument->name})));
                     }
 
                     PHP);

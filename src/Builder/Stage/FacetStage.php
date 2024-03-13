@@ -37,7 +37,7 @@ class FacetStage implements StageInterface, OperatorInterface
     public function __construct(PackedArray|Pipeline|BSONArray|array ...$facet)
     {
         if (\count($facet) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $facet, got %d.', 1, \count($facet)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $facet, got %d.', 1, \count($facet)));
         }
 
         foreach($facet as $key => $value) {

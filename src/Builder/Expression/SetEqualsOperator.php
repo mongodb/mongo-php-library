@@ -35,7 +35,7 @@ class SetEqualsOperator implements ResolvesToBool, OperatorInterface
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$expression)
     {
         if (\count($expression) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
 
         if (! array_is_list($expression)) {

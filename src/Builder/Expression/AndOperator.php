@@ -39,7 +39,7 @@ class AndOperator implements ResolvesToBool, OperatorInterface
         Decimal128|Int64|Type|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ) {
         if (\count($expression) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
 
         if (! array_is_list($expression)) {

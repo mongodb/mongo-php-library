@@ -36,7 +36,7 @@ class AllOperator implements FieldQueryInterface, OperatorInterface
     public function __construct(Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$value)
     {
         if (\count($value) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $value, got %d.', 1, \count($value)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $value, got %d.', 1, \count($value)));
         }
 
         if (! array_is_list($value)) {

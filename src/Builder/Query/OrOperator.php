@@ -34,7 +34,7 @@ class OrOperator implements QueryInterface, OperatorInterface
     public function __construct(QueryInterface|array ...$queries)
     {
         if (\count($queries) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $queries, got %d.', 1, \count($queries)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $queries, got %d.', 1, \count($queries)));
         }
 
         if (! array_is_list($queries)) {

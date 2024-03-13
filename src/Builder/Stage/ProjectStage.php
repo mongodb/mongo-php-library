@@ -36,7 +36,7 @@ class ProjectStage implements StageInterface, OperatorInterface
     public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$specification)
     {
         if (\count($specification) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $specification, got %d.', 1, \count($specification)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $specification, got %d.', 1, \count($specification)));
         }
 
         foreach($specification as $key => $value) {

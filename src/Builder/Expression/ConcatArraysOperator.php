@@ -35,7 +35,7 @@ class ConcatArraysOperator implements ResolvesToArray, OperatorInterface
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$array)
     {
         if (\count($array) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $array, got %d.', 1, \count($array)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $array, got %d.', 1, \count($array)));
         }
 
         if (! array_is_list($array)) {

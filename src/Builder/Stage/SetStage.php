@@ -37,7 +37,7 @@ class SetStage implements StageInterface, OperatorInterface
     public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$field)
     {
         if (\count($field) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $field, got %d.', 1, \count($field)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $field, got %d.', 1, \count($field)));
         }
 
         foreach($field as $key => $value) {

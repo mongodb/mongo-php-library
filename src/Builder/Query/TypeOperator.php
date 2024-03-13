@@ -34,7 +34,7 @@ class TypeOperator implements FieldQueryInterface, OperatorInterface
     public function __construct(int|string ...$type)
     {
         if (\count($type) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $type, got %d.', 1, \count($type)));
+            throw new InvalidArgumentException(\sprintf('Expected at least %d values for $type, got %d.', 1, \count($type)));
         }
 
         if (! array_is_list($type)) {

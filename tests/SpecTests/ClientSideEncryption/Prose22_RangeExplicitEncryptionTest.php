@@ -44,6 +44,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         }
 
         $this->skipIfServerVersion('<', '7.0.0', 'Range explicit encryption tests require MongoDB 7.0 or later');
+        $this->skipIfServerVersion('>=', '8.0.0', 'Range explicit encryption tests require MongoDB 8.0 or earlier');
 
         $client = static::createTestClient();
 

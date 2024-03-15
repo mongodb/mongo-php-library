@@ -92,7 +92,7 @@ $ git push mongodb --tags
 
 ## Branch management
 
-# Creating a maintenance branch and updating master branch alias
+### Creating a maintenance branch and updating master branch alias
 
 After releasing a new major or minor version (e.g. 1.9.0), a maintenance branch
 (e.g. v1.9) should be created. Any development towards a patch release (e.g.

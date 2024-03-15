@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.21.1@8c473e2437be8b6a8fd8f630f0f11a16b114c494">
+<files psalm-version="5.22.2@d768d914152dbbf3486c36398802f74e80cfde48">
   <file src="src/Builder/Encoder/AbstractExpressionEncoder.php">
     <MixedAssignment>
-      <code>$val</code>
-      <code>$val</code>
-      <code>$value[$key]</code>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$value[$key]]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Builder/Encoder/CombinedFieldQueryEncoder.php">
     <MixedAssignment>
-      <code>$filter</code>
-      <code>$filterValue</code>
+      <code><![CDATA[$filter]]></code>
+      <code><![CDATA[$filterValue]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Builder/Encoder/FieldPathEncoder.php">
@@ -20,105 +20,111 @@
   </file>
   <file src="src/Builder/Encoder/OperatorEncoder.php">
     <MixedAssignment>
-      <code>$result</code>
-      <code>$result[]</code>
-      <code>$val</code>
-      <code>$val</code>
-      <code>$val</code>
-      <code>$val</code>
-      <code>$val</code>
+      <code><![CDATA[$result]]></code>
+      <code><![CDATA[$result[]]]></code>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$val]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Builder/Encoder/OutputWindowEncoder.php">
     <MixedArgument>
-      <code>$result</code>
+      <code><![CDATA[$result]]></code>
     </MixedArgument>
+  </file>
+  <file src="src/Builder/Encoder/PipelineEncoder.php">
+    <MixedAssignment>
+      <code><![CDATA[$encoded[]]]></code>
+      <code><![CDATA[$stage]]></code>
+    </MixedAssignment>
   </file>
   <file src="src/Builder/Encoder/QueryEncoder.php">
     <MixedArgument>
       <code><![CDATA[$this->recursiveEncode($value)]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code>$subValue</code>
-      <code>$value</code>
+      <code><![CDATA[$subValue]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Builder/Projection/ElemMatchOperator.php">
     <MixedArgumentTypeCoercion>
-      <code>$query</code>
+      <code><![CDATA[$query]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Builder/Query.php">
     <ArgumentTypeCoercion>
-      <code>$query</code>
+      <code><![CDATA[$query]]></code>
     </ArgumentTypeCoercion>
   </file>
   <file src="src/Builder/Query/ElemMatchOperator.php">
     <MixedArgumentTypeCoercion>
-      <code>$query</code>
+      <code><![CDATA[$query]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Builder/Stage/AddFieldsStage.php">
     <PropertyTypeCoercion>
-      <code>$expression</code>
+      <code><![CDATA[$expression]]></code>
     </PropertyTypeCoercion>
     <TooManyTemplateParams>
-      <code>stdClass</code>
+      <code><![CDATA[stdClass]]></code>
     </TooManyTemplateParams>
   </file>
   <file src="src/Builder/Stage/FacetStage.php">
     <PropertyTypeCoercion>
-      <code>$facet</code>
+      <code><![CDATA[$facet]]></code>
     </PropertyTypeCoercion>
     <TooManyTemplateParams>
-      <code>stdClass</code>
+      <code><![CDATA[stdClass]]></code>
     </TooManyTemplateParams>
   </file>
   <file src="src/Builder/Stage/GeoNearStage.php">
     <MixedArgumentTypeCoercion>
-      <code>$query</code>
+      <code><![CDATA[$query]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Builder/Stage/GraphLookupStage.php">
     <MixedArgumentTypeCoercion>
-      <code>$restrictSearchWithMatch</code>
+      <code><![CDATA[$restrictSearchWithMatch]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Builder/Stage/GroupStage.php">
     <PropertyTypeCoercion>
-      <code>$field</code>
+      <code><![CDATA[$field]]></code>
     </PropertyTypeCoercion>
     <TooManyTemplateParams>
-      <code>stdClass</code>
+      <code><![CDATA[stdClass]]></code>
     </TooManyTemplateParams>
   </file>
   <file src="src/Builder/Stage/MatchStage.php">
     <MixedArgumentTypeCoercion>
-      <code>$query</code>
+      <code><![CDATA[$query]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Builder/Stage/ProjectStage.php">
     <PropertyTypeCoercion>
-      <code>$specification</code>
+      <code><![CDATA[$specification]]></code>
     </PropertyTypeCoercion>
     <TooManyTemplateParams>
-      <code>stdClass</code>
+      <code><![CDATA[stdClass]]></code>
     </TooManyTemplateParams>
   </file>
   <file src="src/Builder/Stage/SetStage.php">
     <PropertyTypeCoercion>
-      <code>$field</code>
+      <code><![CDATA[$field]]></code>
     </PropertyTypeCoercion>
     <TooManyTemplateParams>
-      <code>stdClass</code>
+      <code><![CDATA[stdClass]]></code>
     </TooManyTemplateParams>
   </file>
   <file src="src/Builder/Stage/SortStage.php">
     <PropertyTypeCoercion>
-      <code>$sort</code>
+      <code><![CDATA[$sort]]></code>
     </PropertyTypeCoercion>
     <TooManyTemplateParams>
-      <code>stdClass</code>
+      <code><![CDATA[stdClass]]></code>
     </TooManyTemplateParams>
   </file>
   <file src="src/Builder/Type/OutputWindow.php">
@@ -129,8 +135,8 @@
   </file>
   <file src="src/Builder/Type/QueryObject.php">
     <MixedAssignment>
-      <code>$queries[$fieldPath]</code>
-      <code>$query</code>
+      <code><![CDATA[$queries[$fieldPath]]]></code>
+      <code><![CDATA[$query]]></code>
     </MixedAssignment>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[count($queriesOrArrayOfQueries) === 1 &&

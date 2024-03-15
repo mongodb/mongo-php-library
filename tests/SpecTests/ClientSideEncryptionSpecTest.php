@@ -111,6 +111,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         'fle2v2-Range-Decimal-Update: FLE2 Range Decimal. Update.' => 'Bundled libmongocrypt does not support Decimal128 (PHPC-2207)',
         'timeoutMS: timeoutMS applied to listCollections to get collection schema' => 'Not yet implemented (PHPC-1760)',
         'timeoutMS: remaining timeoutMS applied to find to get keyvault data' => 'Not yet implemented (PHPC-1760)',
+        'namedKMS: Automatically encrypt and decrypt with a named KMS provider' => 'Not yet implemented (PHPLIB-1328)',
     ];
 
     public function setUp(): void

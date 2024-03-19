@@ -40,35 +40,28 @@ jobs:
           - "8.3"
         mongodb-version:
           - "4.4"
-        driver-version:
-          - "${{ env.DRIVER_VERSION }}"
         topology:
           - "server"
         include:
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "6.0"
-            driver-version: "${{ env.DRIVER_VERSION }}"
             topology: "replica_set"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "6.0"
-            driver-version: "${{ env.DRIVER_VERSION }}"
             topology: "sharded_cluster"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "5.0"
-            driver-version: "${{ env.DRIVER_VERSION }}"
             topology: "server"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "4.4"
-            driver-version: "${{ env.DRIVER_VERSION }}"
             topology: "replica_set"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "4.4"
-            driver-version: "${{ env.DRIVER_VERSION }}"
             topology: "sharded_cluster"
 
     steps:
@@ -88,7 +81,7 @@ jobs:
         uses: shivammathur/cache-extensions@v1
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: "mongodb-${{ matrix.driver-version }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           key: "extcache-v1"
 
       - name: Cache extensions
@@ -103,7 +96,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           tools: "pecl"
-          extensions: "mongodb-${{ matrix.driver-version }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           coverage: "none"
           ini-values: "zend.assertions=1"
 

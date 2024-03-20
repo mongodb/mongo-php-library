@@ -1,3 +1,11 @@
+ref: collection-option-codec
+content: |
+  The :doc:`codec </tutorial/codecs>` to use for encoding or decoding documents.
+  This option is mutually exclusive with the ``typeMap`` option.
+
+  Defaults to the collection's codec. Inheritance for a default ``codec`` option
+  takes precedence over that of the ``typeMap`` option.
+---
 ref: collection-option-collation
 source: 
   ref: common-option-collation

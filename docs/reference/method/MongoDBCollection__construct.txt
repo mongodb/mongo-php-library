@@ -49,6 +49,13 @@ Definition
        - Type
        - Description
 
+     * - codec
+       - MongoDB\\Codec\\DocumentCodec
+       - The default :doc:`codec </tutorial/codecs>` to use for collection
+         operations.
+
+         .. versionadded: 1.17
+
      * - readConcern
        - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`
        - The default read concern to use for collection operations. Defaults to

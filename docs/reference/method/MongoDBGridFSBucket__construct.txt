@@ -55,6 +55,13 @@ Parameters
        - integer
        - The chunk size in bytes. Defaults to ``261120`` (i.e. 255 KiB).
 
+     * - codec
+       - MongoDB\\Codec\\DocumentCodec
+       - The default :doc:`codec </tutorial/codecs>` to use for bucket methods
+         that return a file document (e.g. :phpmethod:`MongoDB\GridFS\Bucket::find()`).
+
+         .. versionadded: 1.17
+
      * - disableMD5
        - boolean
        - Whether to disable automatic MD5 generation when storing files.

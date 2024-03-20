@@ -48,6 +48,12 @@ Parameters
        - integer
        - .. include:: /includes/extracts/watch-option-batchSize.rst
 
+     * - codec
+       - MongoDB\\Codec\\DocumentCodec
+       - .. include:: /includes/extracts/collection-option-codec.rst
+
+         .. versionadded: 1.17
+
      * - collation
        - array|object
        - .. include:: /includes/extracts/common-option-collation.rst

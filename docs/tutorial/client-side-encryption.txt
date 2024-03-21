@@ -57,7 +57,7 @@ more than one encryption key or create them dynamically.
 
 .. seealso::
 
-   :manual:`Encryption Key Management </csfle/fundamentals/manage-keys/>` in the MongoDB manual
+   :manual:`Encryption Key Management </core/csfle/fundamentals/manage-keys/>` in the MongoDB manual
 
 
 Automatic Encryption and Decryption

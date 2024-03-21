@@ -17,8 +17,8 @@
 
 namespace MongoDB;
 
+use Composer\InstalledVersions;
 use Iterator;
-use Jean85\PrettyVersions;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -396,9 +396,9 @@ class Client
     {
         if (self::$version === null) {
             try {
-                self::$version = PrettyVersions::getVersion('mongodb/mongodb')->getPrettyVersion();
+                self::$version = InstalledVersions::getPrettyVersion('mongodb/mongodb') ?? 'unknown';
             } catch (Throwable $t) {
-                return 'unknown';
+                self::$version = 'error';
             }
         }
 

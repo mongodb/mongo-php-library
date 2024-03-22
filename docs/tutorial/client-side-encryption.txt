@@ -55,7 +55,9 @@ more than one encryption key or create them dynamically.
    // To store the key ID for later use, you can use serialize or var_export
    $keyId = $clientEncryption->createDataKey('local', ['keyAltNames' => ['my-encryption-key']]);
 
-.. seealso:: :manual:`Encryption Key Management </csfle/fundamentals/manage-keys/>` in the MongoDB manual
+.. seealso::
+
+   :manual:`Encryption Key Management </core/csfle/fundamentals/manage-keys/>` in the MongoDB manual
 
 
 Automatic Encryption and Decryption

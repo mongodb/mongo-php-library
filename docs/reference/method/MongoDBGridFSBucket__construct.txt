@@ -60,7 +60,7 @@ Parameters
        - The default :doc:`codec </tutorial/codecs>` to use for bucket methods
          that return a file document (e.g. :phpmethod:`MongoDB\GridFS\Bucket::find()`).
 
-         .. versionadded: 1.17
+         .. versionadded:: 1.17
 
      * - disableMD5
        - boolean

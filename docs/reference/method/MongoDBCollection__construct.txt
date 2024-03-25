@@ -54,7 +54,7 @@ Definition
        - The default :doc:`codec </tutorial/codecs>` to use for collection
          operations.
 
-         .. versionadded: 1.17
+         .. versionadded:: 1.17
 
      * - readConcern
        - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`

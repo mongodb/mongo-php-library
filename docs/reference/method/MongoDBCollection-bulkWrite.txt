@@ -77,7 +77,7 @@ Parameters
          Bulk writes use the codec for ``insertOne`` and ``replaceOne``
          operations.
 
-         .. versionadded: 1.17
+         .. versionadded:: 1.17
 
      * - comment
        - mixed

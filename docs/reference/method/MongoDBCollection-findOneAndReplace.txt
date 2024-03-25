@@ -54,7 +54,7 @@ Parameters
        - MongoDB\\Codec\\DocumentCodec
        - .. include:: /includes/extracts/collection-option-codec.rst
 
-         .. versionadded: 1.17
+         .. versionadded:: 1.17
 
      * - collation
        - array|object

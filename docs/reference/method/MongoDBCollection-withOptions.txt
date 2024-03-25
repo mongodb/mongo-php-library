@@ -40,7 +40,7 @@ Parameters
        - The default :doc:`codec </tutorial/codecs>` to use for collection
          operations. Defaults to the original collection's codec.
 
-         .. versionadded: 1.17
+         .. versionadded:: 1.17
 
      * - readConcern
        - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`

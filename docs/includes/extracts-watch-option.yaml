@@ -61,7 +61,7 @@ content: |
 
      This is an option of the ``$changeStream`` pipeline stage.
 
-  .. versionadded: 1.13
+  .. versionadded:: 1.13
 ---
 ref: watch-option-maxAwaitTimeMS
 content: |
@@ -121,7 +121,7 @@ content: |
 
      This is an option of the ``$changeStream`` pipeline stage.
 
-  .. versionadded: 1.5
+  .. versionadded:: 1.5
 ---
 ref: watch-option-startAtOperationTime
 content: |

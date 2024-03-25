@@ -15,6 +15,7 @@ use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\TraitType;
 use ReflectionClass;
+use stdClass;
 
 use function array_key_last;
 use function array_map;
@@ -45,10 +46,11 @@ class FluentStageFactoryGenerator extends OperatorGenerator
         $namespace->addUse(self::FACTORY_CLASS);
         $namespace->addUse(StageInterface::class);
         $namespace->addUse(Pipeline::class);
+        $namespace->addUse(stdClass::class);
 
         $trait->addProperty('pipeline')
             ->setType('array')
-            ->setComment('@var list<StageInterface>')
+            ->setComment('@var list<StageInterface|array<string,mixed>|stdClass>')
             ->setValue([]);
         $trait->addMethod('getPipeline')
             ->setReturnType(Pipeline::class)

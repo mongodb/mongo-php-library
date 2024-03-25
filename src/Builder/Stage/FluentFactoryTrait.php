@@ -33,7 +33,7 @@ use stdClass;
 
 trait FluentFactoryTrait
 {
-    /** @var list<StageInterface> */
+    /** @var list<StageInterface|array<string,mixed>|stdClass> */
     public array $pipeline = [];
 
     public function getPipeline(): Pipeline

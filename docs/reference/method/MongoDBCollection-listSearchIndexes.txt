@@ -52,6 +52,12 @@ Parameters
          returning a cursor or failure from ``aggregate`` without doing
          significant server-side work.
 
+     * - codec
+       - MongoDB\\Codec\\DocumentCodec
+       - .. include:: /includes/extracts/collection-option-codec.rst
+
+         .. versionadded:: 1.17
+
      * - collation
        - array|object
        - .. include:: /includes/extracts/common-option-collation.rst

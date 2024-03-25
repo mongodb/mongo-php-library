@@ -52,6 +52,12 @@ Parameters
          the :program:`mongos` if some shards are unavailable instead of
          throwing an error.
 
+     * - codec
+       - MongoDB\\Codec\\DocumentCodec
+       - .. include:: /includes/extracts/collection-option-codec.rst
+
+         .. versionadded:: 1.17
+
      * - collation
        - array|object
        - .. include:: /includes/extracts/collection-option-collation.rst

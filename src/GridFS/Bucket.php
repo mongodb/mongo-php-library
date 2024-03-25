@@ -186,6 +186,11 @@ class Bucket
         $this->typeMap = $options['typeMap'] ?? self::DEFAULT_TYPE_MAP;
         $this->writeConcern = $options['writeConcern'] ?? $this->manager->getWriteConcern();
 
+        /* The codec option is intentionally omitted when constructing the files
+         * and chunks collections so as not to interfere with internal GridFS
+         * operations. Any codec will be manually applied when querying the
+         * files collection (i.e. find, findOne, and getFileDocumentForStream).
+         */
         $collectionOptions = array_intersect_key($options, ['readConcern' => 1, 'readPreference' => 1, 'typeMap' => 1, 'writeConcern' => 1]);
 
         $this->collectionWrapper = new CollectionWrapper($manager, $databaseName, $options['bucketName'], $collectionOptions);

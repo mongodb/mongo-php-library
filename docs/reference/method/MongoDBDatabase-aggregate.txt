@@ -74,6 +74,12 @@ Parameters
          This only applies when using the :ref:`$out <agg-out>` and
          :ref:`$out <agg-merge>` stages.
 
+     * - codec
+       - MongoDB\\Codec\\DocumentCodec
+       - .. include:: /includes/extracts/common-option-codec.rst
+
+         .. versionadded:: 1.17
+
      * - collation
        - array|object
        - .. include:: /includes/extracts/common-option-collation.rst

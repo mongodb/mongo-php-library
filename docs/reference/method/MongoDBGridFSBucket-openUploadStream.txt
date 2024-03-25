@@ -57,7 +57,7 @@ Parameters
 
          Defaults to ``false``.
 
-         .. versionadded: 1.4
+         .. versionadded:: 1.4
 
      * - metadata
        - array|object

@@ -57,7 +57,7 @@ Parameters
 
          Defaults to ``false``.
 
-         .. versionadded: 1.4
+         .. versionadded:: 1.4
 
      * - readConcern
        - :php:`MongoDB\Driver\ReadConcern <class.mongodb-driver-readconcern>`

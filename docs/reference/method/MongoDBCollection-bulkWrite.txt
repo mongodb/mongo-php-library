@@ -74,7 +74,7 @@ Parameters
        - MongoDB\\Codec\\DocumentCodec
        - .. include:: /includes/extracts/collection-option-codec.rst
 
-         The codec will be utilized for ``insertOne`` and ``replaceOne``
+         Bulk writes use the codec for ``insertOne`` and ``replaceOne``
          operations.
 
          .. versionadded: 1.17

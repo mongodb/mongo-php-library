@@ -141,7 +141,17 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} SKIP_LEGACY_SHELL=true MONGODB_VERSION=${MONGODB_VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} \
+          SKIP_LEGACY_SHELL=true \
+          MONGODB_VERSION=${MONGODB_VERSION} \
+          ORCHESTRATION_FILE=${ORCHESTRATION_FILE} \
+          TOPOLOGY=${TOPOLOGY} \
+          AUTH=${AUTH} \
+          SSL=${SSL} \
+          STORAGE_ENGINE=${STORAGE_ENGINE} \
+          LOAD_BALANCER=${LOAD_BALANCER} \
+          REQUIRE_API_VERSION=${REQUIRE_API_VERSION} \
+          bash ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
     # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:
@@ -152,7 +162,7 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          ${DRIVERS_TOOLS}/.evergreen/stop-orchestration.sh
+          bash ${DRIVERS_TOOLS}/.evergreen/stop-orchestration.sh
 
   "bootstrap mongohoused":
     - command: shell.exec
@@ -161,14 +171,14 @@ functions:
           cd ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake
 
           DRIVERS_TOOLS="${DRIVERS_TOOLS}" \
-          ./pull-mongohouse-image.sh
+          bash ./pull-mongohouse-image.sh
     - command: shell.exec
       params:
         script: |
           cd ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake
 
           DRIVERS_TOOLS="${DRIVERS_TOOLS}" \
-          ./run-mongohouse-image.sh
+          bash ./run-mongohouse-image.sh
 
   "create serverless instance":
     - command: subprocess.exec
@@ -235,7 +245,7 @@ functions:
           PHP_VERSION=${PHP_VERSION} \
           SSL=${SSL} \
           TESTS=${TESTS} \
-          ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          bash ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run atlas data lake test":
     - command: shell.exec
@@ -248,7 +258,7 @@ functions:
           
           MONGODB_URI="mongodb://mhuser:pencil@127.0.0.1:27017" \
           TESTS="atlas-data-lake" \
-          ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          bash ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run serverless tests":
     - command: shell.exec
@@ -284,7 +294,7 @@ functions:
           CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
           MONGODB_URI="${SERVERLESS_URI}" \
           TESTS="serverless" \
-          ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          bash ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "cleanup":
     - command: shell.exec
@@ -310,7 +320,7 @@ functions:
           ${PREPARE_SHELL}
           file="${PROJECT_DIRECTORY}/.evergreen/install-dependencies.sh"
           # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
-          [ -f "$file" ] && sh $file || echo "$file not available, skipping"
+          [ -f "$file" ] && bash $file || echo "$file not available, skipping"
 
   "install composer":
     - command: shell.exec
@@ -321,13 +331,14 @@ functions:
           ${PREPARE_SHELL}
           file="${PROJECT_DIRECTORY}/.evergreen/install-composer.sh"
           # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
-          [ -f "$file" ] && DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
+          [ -f "$file" ] && DEPENDENCIES=${DEPENDENCIES} bash $file || echo "$file not available, skipping"
 
   "start load balancer":
     - command: shell.exec
       params:
         script: |
-          MONGODB_URI="${MONGODB_URI}" ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh start
+          MONGODB_URI="${MONGODB_URI}" \
+          bash ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh start
     - command: expansions.update
       params:
         file: lb-expansion.yml
@@ -338,7 +349,7 @@ functions:
         script: |
           # Only run if a load balancer was started
           if [ -n "${SINGLE_MONGOS_LB_URI}" ]; then
-            ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh stop
+            bash ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh stop
           fi
 
   "start kms servers":

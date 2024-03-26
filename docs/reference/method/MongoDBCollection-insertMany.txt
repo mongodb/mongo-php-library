@@ -46,6 +46,12 @@ Parameters
        - If ``true``, allows the write operation to circumvent document level
          validation. Defaults to ``false``.
 
+     * - codec
+       - MongoDB\\Codec\\DocumentCodec
+       - .. include:: /includes/extracts/collection-option-codec.rst
+
+         .. versionadded:: 1.17
+
      * - comment
        - mixed
        - .. include:: /includes/extracts/common-option-comment.rst

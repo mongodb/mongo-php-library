@@ -1,3 +1,8 @@
+ref: common-option-codec
+content: |
+  The :doc:`codec </tutorial/codecs>` to use for encoding or decoding documents.
+  This option is mutually exclusive with the ``typeMap`` option.
+---
 ref: common-option-collation
 content: |
   :manual:`Collation </reference/collation>` allows users to specify

@@ -144,4 +144,3 @@ Methods
 - :phpmethod:`MongoDB\Collection::updateSearchIndex()`
 - :phpmethod:`MongoDB\Collection::watch()`
 - :phpmethod:`MongoDB\Collection::withOptions()`
-

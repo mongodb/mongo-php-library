@@ -61,6 +61,12 @@ Parameters
          Unlike the previous wire protocol version, a batchSize of ``1`` for the
          :dbcommand:`find` command does not close the cursor.
 
+     * - codec
+       - MongoDB\\Codec\\DocumentCodec
+       - .. include:: /includes/extracts/bucket-option-codec.rst
+
+         .. versionadded:: 1.17
+
      * - collation
        - array|object
        - .. include:: /includes/extracts/common-option-collation.rst

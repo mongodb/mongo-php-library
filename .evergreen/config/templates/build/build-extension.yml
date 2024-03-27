@@ -6,9 +6,6 @@ tasks:
         vars:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
-        vars:
-          # TODO: remove this 1.18.0 is released
-          EXTENSION_BRANCH: "master"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-lowest"
     tags: ["build", "php%phpVersion%", "lowest"]
@@ -18,9 +15,7 @@ tasks:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
         vars:
-          # TODO: change to "1.18.0" once 1.18.0 is released
-          # EXTENSION_VERSION: "1.18.0"
-          EXTENSION_BRANCH: "master"
+          EXTENSION_VERSION: "1.18.0"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-next-stable"
     tags: ["build", "php%phpVersion%", "next-stable"]
@@ -30,9 +25,7 @@ tasks:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
         vars:
-          # TODO: change to "v1.18" once 1.18.0 is released
-          # EXTENSION_VERSION: "v1.18"
-          EXTENSION_BRANCH: "master"
+          EXTENSION_BRANCH: "v1.18"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-next-minor"
     tags: ["build", "php%phpVersion%", "next-minor"]

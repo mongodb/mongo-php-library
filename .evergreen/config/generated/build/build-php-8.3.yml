@@ -7,9 +7,6 @@ tasks:
         vars:
           PHP_VERSION: "8.3"
       - func: "compile extension"
-        vars:
-          # TODO: remove this 1.18.0 is released
-          EXTENSION_BRANCH: "master"
       - func: "upload extension"
   - name: "build-php-8.3-lowest"
     tags: ["build", "php8.3", "lowest"]
@@ -19,9 +16,7 @@ tasks:
           PHP_VERSION: "8.3"
       - func: "compile extension"
         vars:
-          # TODO: change to "1.18.0" once 1.18.0 is released
-          # EXTENSION_VERSION: "1.18.0"
-          EXTENSION_BRANCH: "master"
+          EXTENSION_VERSION: "1.18.0"
       - func: "upload extension"
   - name: "build-php-8.3-next-stable"
     tags: ["build", "php8.3", "next-stable"]
@@ -31,9 +26,7 @@ tasks:
           PHP_VERSION: "8.3"
       - func: "compile extension"
         vars:
-          # TODO: change to "v1.18" once 1.18.0 is released
-          # EXTENSION_VERSION: "v1.18"
-          EXTENSION_BRANCH: "master"
+          EXTENSION_BRANCH: "v1.18"
       - func: "upload extension"
   - name: "build-php-8.3-next-minor"
     tags: ["build", "php8.3", "next-minor"]

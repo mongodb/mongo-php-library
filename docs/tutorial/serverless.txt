@@ -1,0 +1,105 @@
+============================================
+Deploy to Serverless AWS Lambda with BrefPHP
+============================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
+
+.. versionadded:: 1.17
+
+Overview
+--------
+
+BrefPHP allows to deploy PHP applications on AWS Lambda.
+
+Codecs are used to decode BSON documents into PHP objects, and encode PHP objects into BSON documents. In contrast to
+other methods (e.g. type maps), codecs allow for greater customization and handling of different data types. They
+separate logic for BSON encoding and decoding from the domain classes, which also enables BSON to be decoded into plain
+old PHP objects.
+
+Setup Bref deployment with mongodb extension
+--------------------------------------------
+
+Follow the Bref setup tutorial to install serverless and configure AWS credentials.
+https://bref.sh/docs/setup
+
+Init a new application
+https://bref.sh/docs/default/getting-started
+
+
+mkdir bref-mongodb-app
+cd bref-mongodb-app
+composer init
+composer require bref/bref bref/extra-php-extensions
+vendor/bin/bref init
+
+Replace the contents of ``index.php`` with the following:
+
+.. literalinclude:: /examples/serverless-bref/index.php
+   :language: php
+
+
+Bref provide a Lambda layer with PHP and some very common extensions. Additional extensions are provided
+by the package [bref/extra-php-extension](https://github.com/brefphp/extra-php-extensions).
+
+```yaml
+plugins:
+    - ./vendor/bref/bref
+    - ./vendor/bref/extra-php-extensions
+
+functions:
+    api:
+        handler: index.php
+        runtime: php-83-fpm
+        layers:
+            - ${bref-extra:mongodb-php-83}
+```
+
+Deploy the application
+
+    serverless deploy
+
+The application will not work unless you provide a working MONGODB_URI variable.
+
+AWS Credentials
+---------------
+
+Atlas supports passwordless authentication with AWS credentials.
+
+Get the role of the deployed AWS Lambda.
+
+Set Up unified AWS Access
+https://www.mongodb.com/docs/atlas/security/set-up-unified-aws-access/
+
+1. Open the lambda function in AWS console
+2. In "Configuration > Permission", copy the "Role name"
+3. Open the Atlas project
+4. Go to "Security > Database Access"
+5. Click "Add a new Database User"
+6. Select Authentication Method: "AWS IAM", type "IAM Role" and paste the role name in "AWS Role ARN".
+7. Add "Built-in Role": "Read and write any database"
+8 Validate by clicking on "Add user".
+
+
+Update the serverless.yml file to pass the environment variable ``MONGODB_URI``
+
+```yaml
+provider:
+    environment:
+        MONGODB_URI: ${env:MONGODB_URI}
+```
+
+The value can be found in "Atlas > Deployment > Database > Connect". Select "3. AWS IAM".
+You can remove the ``<AWS access key>:<AWS secret key>`` part from the URI, the
+AWS SDK embedded in the MongoDB PHP Extension will request the metadata endpoint
+to retrieve the credentials.
+
+```
+MONGODB_URI=mongodb+srv://cluster0.abcdefg.mongodb.net/ serverless deploy
+```
+

@@ -15,28 +15,36 @@ Deploy to Serverless AWS Lambda with BrefPHP
 Overview
 --------
 
-BrefPHP allows to deploy PHP applications on AWS Lambda.
+BrefPHP allows to deploy serverless PHP applications on AWS Lambda.
+In this tutorial, you will deploy a simple PHP application with the MongoDB PHP extension,
+and connect to an Atlas cluster using AWS IAM authentication.
 
-Codecs are used to decode BSON documents into PHP objects, and encode PHP objects into BSON documents. In contrast to
-other methods (e.g. type maps), codecs allow for greater customization and handling of different data types. They
-separate logic for BSON encoding and decoding from the domain classes, which also enables BSON to be decoded into plain
-old PHP objects.
+Pre-requisites
+--------------
+
+Before you begin, you must install BrefPHP on your machine. You can follow the
+`official documentation to setup BrefPHP <https://bref.sh/docs/setup>`_.
 
 Setup Bref deployment with mongodb extension
 --------------------------------------------
 
-Follow the Bref setup tutorial to install serverless and configure AWS credentials.
-https://bref.sh/docs/setup
+Start by creating a new directory for your project and install the required dependencies.
+This project will be a bare minimum PHP web application that connects to a MongoDB cluster,
+no framework is used, but you can adapt the code to your needs.
 
-Init a new application
-https://bref.sh/docs/default/getting-started
+.. code-block:: bash
+    mkdir bref-mongodb-app && cd bref-mongodb-app
+    composer init
+    composer require bref/bref bref/extra-php-extensions
+    vendor/bin/bref init
+
+By default, BrefPHP will create a simple web application that renders a web page.
+To validate the deployment, you can start by deploying the default application.
+
+.. code-block:: bash
+    serverless deploy
 
 
-mkdir bref-mongodb-app
-cd bref-mongodb-app
-composer init
-composer require bref/bref bref/extra-php-extensions
-vendor/bin/bref init
 
 Replace the contents of ``index.php`` with the following:
 
@@ -44,21 +52,22 @@ Replace the contents of ``index.php`` with the following:
    :language: php
 
 
-Bref provide a Lambda layer with PHP and some very common extensions. Additional extensions are provided
-by the package [bref/extra-php-extension](https://github.com/brefphp/extra-php-extensions).
+BrefPHP provides a Lambda layer with PHP and some very common extensions.
+Additional extensions are provided by the package [bref/extra-php-extension](https://github.com/brefphp/extra-php-extensions).
 
-```yaml
-plugins:
-    - ./vendor/bref/bref
-    - ./vendor/bref/extra-php-extensions
+.. code-block:: yaml
 
-functions:
-    api:
-        handler: index.php
-        runtime: php-83-fpm
-        layers:
-            - ${bref-extra:mongodb-php-83}
-```
+    plugins:
+        - ./vendor/bref/bref
+        - ./vendor/bref/extra-php-extensions
+
+    functions:
+        api:
+            handler: index.php
+            runtime: php-83-fpm
+            layers:
+                - ${bref-extra:mongodb-php-83}
+
 
 Deploy the application
 
@@ -88,18 +97,18 @@ https://www.mongodb.com/docs/atlas/security/set-up-unified-aws-access/
 
 Update the serverless.yml file to pass the environment variable ``MONGODB_URI``
 
-```yaml
-provider:
-    environment:
-        MONGODB_URI: ${env:MONGODB_URI}
-```
+.. code-block:: yaml
+
+    provider:
+        environment:
+            MONGODB_URI: ${env:MONGODB_URI}
+
 
 The value can be found in "Atlas > Deployment > Database > Connect". Select "3. AWS IAM".
 You can remove the ``<AWS access key>:<AWS secret key>`` part from the URI, the
 AWS SDK embedded in the MongoDB PHP Extension will request the metadata endpoint
 to retrieve the credentials.
 
-```
-MONGODB_URI=mongodb+srv://cluster0.abcdefg.mongodb.net/ serverless deploy
-```
+.. code-block:: bash
 
+    MONGODB_URI=mongodb+srv://cluster0.abcdefg.mongodb.net/ serverless deploy

@@ -75,6 +75,14 @@
 
         <!-- Disable forbidden annotation sniff as excluding @api from the list doesn't work -->
         <exclude name="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden" />
+
+        <!-- Example file using HTML templating -->
+        <exclude name="Generic.Files.InlineHTML.Found">
+            <exclude-pattern>docs/examples/*/index.php</exclude-pattern>
+        </exclude>
+        <exclude name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountAfterControlStructure">
+            <exclude-pattern>docs/examples/*/index.php</exclude-pattern>
+        </exclude>
     </rule>
 
 

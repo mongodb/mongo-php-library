@@ -1,0 +1,121 @@
+============================================
+Deploy to Serverless AWS Lambda with BrefPHP
+============================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
+
+.. versionadded:: 1.17
+
+Overview
+--------
+
+`Bref <https://bref.sh>` allows to deploy serverless PHP applications on AWS Lambda.
+In this tutorial, you will deploy a simple PHP application with the MongoDB PHP extension,
+and connect to an Atlas cluster using AWS IAM authentication.
+
+Pre-requisites
+--------------
+
+Before you begin, you must install bref on your machine. You can follow the
+`official documentation to setup bref <https://bref.sh/docs/setup>`_.
+
+Install the mongodb extension
+-----------------------------
+
+By default, the bref layer is compiled with PHP and a few extensions. Additional extensions
+are provided in additional layers.
+
+Start by creating a new directory for your project and install the required mongodb
+and bref dependencies. This project will be a bare minimum PHP web application that
+connects to a MongoDB cluster, no framework is used, but you can adapt the code to
+your needs.
+
+.. code-block:: bash
+    mkdir bref-mongodb-app && cd bref-mongodb-app
+    composer init
+    composer require bref/bref bref/extra-php-extensions
+    vendor/bin/bref init
+
+
+A very simple web page have been created. To validate the deployment, you can start
+by deploying this default application.
+
+.. code-block:: bash
+    serverless deploy
+
+BrefPHP provides a Lambda layer with PHP and some very common extensions.
+Additional extensions are provided by the package `bref/extra-php-extension <https://github.com/brefphp/extra-php-extensions>`.
+
+.. code-block:: yaml
+
+    plugins:
+        - ./vendor/bref/bref
+        - ./vendor/bref/extra-php-extensions
+
+    functions:
+        api:
+            handler: index.php
+            runtime: php-83-fpm
+            layers:
+                - ${bref-extra:mongodb-php-83}
+
+
+Let's try to use the MongoDB driver with this simple web page that list planets
+from the `sample dataset <https://www.mongodb.com/docs/atlas/sample-data/>`.
+Replace the contents of ``index.php`` with the following:
+
+.. literalinclude:: /examples/lambda-aws/index.php
+   :language: php
+
+
+Deploy the application
+
+.. code-block:: bash
+    serverless deploy
+
+
+The application will not work unless you provide a working ``MONGODB_URI`` variable.
+
+AWS Credentials
+---------------
+
+Atlas supports passwordless authentication with AWS credentials. In any Lambda function,
+AWS sets environment variables that contains the access token and secret token with
+the role assigned to deployed function.
+
+Set Up `unified AWS Access <https://www.mongodb.com/docs/atlas/security/set-up-unified-aws-access/>`
+
+1. Open the lambda function in the AWS console
+2. In "Configuration > Permission", copy the "Role name"
+3. Open the MongoDB Atlas project
+4. Go to "Security > Database Access"
+5. Click "Add a new Database User"
+6. Select Authentication Method: "AWS IAM", type "IAM Role" and paste the role name in "AWS Role ARN".
+7. Add "Built-in Role": "Read and write any database"
+8. Validate by clicking on "Add user".
+
+Now that the permissions have been configured, the lambda function is allowed to access
+your Atlas cluster. You can configure your application with the Atlas endpoint.
+
+Update the ``serverless.yml`` file to pass the environment variable ``MONGODB_URI``
+
+.. code-block:: yaml
+
+    provider:
+        environment:
+            MONGODB_URI: "mongodb+srv://cluster0.abcdefg.mongodb.net/"
+
+
+The value can be found in "Atlas > Deployment > Database > Connect". Select "3. AWS IAM".
+You can remove the ``<AWS access key>:<AWS secret key>`` part from the URI, the credentials
+will be read from environment variables.
+
+.. code-block:: bash
+
+    serverless deploy

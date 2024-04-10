@@ -16,8 +16,8 @@ Tutorials
    /tutorial/encryption
    /tutorial/gridfs
    /tutorial/indexes
-   /tutorial/lambda-aws
    /tutorial/tailable-cursor
    /tutorial/example-data
+   /tutorial/aws-lambda
    /tutorial/modeling-bson-data
    /tutorial/stable-api

@@ -20,4 +20,3 @@ functions:
             -   httpApi: '*'
         layers:
             - ${bref-extra:mongodb-php-83}
-

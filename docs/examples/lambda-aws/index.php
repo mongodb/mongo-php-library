@@ -6,15 +6,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $uri = getenv('MONGODB_URI') ?: throw new RuntimeException('The MONGODB_URI environment variable is not set');
 $client = new Client($uri);
-$planets = $client
-    ->selectDatabase('sample_guides')
-    ->selectCollection('planets')
+$planets = $client->sample_guides->planets
     ->find(
         [],
-        [
-            'sort' => ['orderFromSun' => 1],
-            'typeMap' => ['root' => 'array'],
-        ],
+        ['sort' => ['orderFromSun' => 1]],
     );
 
 ?>
@@ -26,7 +21,7 @@ $planets = $client
 <body>
     <ul>
         <?php foreach ($planets as $planet) : ?>
-            <li><?= $planet['name'] ?></li>
+            <li><?= $planet->name ?></li>
         <?php endforeach ?>
     </ul>
 </body>

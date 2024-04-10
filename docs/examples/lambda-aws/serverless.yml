@@ -21,8 +21,3 @@ functions:
         layers:
             - ${bref-extra:mongodb-php-83}
 
-# Exclude files from deployment
-package:
-    patterns:
-        - '!node_modules/**'
-        - '!tests/**'

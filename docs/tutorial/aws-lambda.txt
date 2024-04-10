@@ -39,7 +39,7 @@ connects to a MongoDB cluster.
 
     mkdir bref-mongodb-app && cd bref-mongodb-app
     composer init
-    composer require bref/bref bref/extra-php-extensions
+    composer require bref/bref bref/extra-php-extensions mongodb/mongodb
     vendor/bin/bref init
 
 

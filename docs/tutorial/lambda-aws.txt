@@ -49,7 +49,7 @@ by deploying this default application.
 .. code-block:: bash
     serverless deploy
 
-BrefPHP provides a Lambda layer with PHP and some very common extensions.
+Bref provides a Lambda layer with PHP and some very common extensions.
 Additional extensions are provided by the package `bref/extra-php-extension <https://github.com/brefphp/extra-php-extensions>`.
 
 .. code-block:: yaml
@@ -80,7 +80,7 @@ Deploy the application
     serverless deploy
 
 
-The application will not work unless you provide a working ``MONGODB_URI`` variable.
+The application will not work unless you define the ``MONGODB_URI`` environment variable.
 
 AWS Credentials
 ---------------

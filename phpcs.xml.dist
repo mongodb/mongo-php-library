@@ -83,6 +83,9 @@
         <exclude name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountAfterControlStructure">
             <exclude-pattern>docs/examples/*/index.php</exclude-pattern>
         </exclude>
+        <exclude name="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps">
+            <exclude-pattern>docs/examples/*/index.php</exclude-pattern>
+        </exclude>
     </rule>
 
 

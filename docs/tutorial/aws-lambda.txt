@@ -69,7 +69,7 @@ Additional extensions are provided by the package `bref/extra-php-extension <htt
 
 
 Let's try to use the MongoDB driver with this simple web page that list planets
-from the `sample dataset <https://www.mongodb.com/docs/atlas/sample-data/>`_.
+from the :manual:`sample dataset </atlas/sample-data/>`.
 Replace the contents of ``index.php`` with the following:
 
 .. literalinclude:: /examples/aws-lambda/index.php
@@ -92,7 +92,7 @@ Atlas supports passwordless authentication with AWS credentials. In any Lambda f
 AWS sets environment variables that contains the access token and secret token with
 the role assigned to deployed function.
 
-Set up `unified AWS Access <https://www.mongodb.com/docs/atlas/security/set-up-unified-aws-access/>`_
+Set up :manual:`unified AWS Access </atlas/security/set-up-unified-aws-access/>`:
 
 1. Open the Lambda function in the AWS console
 2. In "Configuration > Permission", copy the "Role name"

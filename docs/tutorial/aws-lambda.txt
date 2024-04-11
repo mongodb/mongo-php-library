@@ -93,7 +93,9 @@ Redeploy the application with the new ``index.php``:
    $ serverless deploy
 
 
-The application will not work unless you define the ``MONGODB_URI`` environment variable.
+The application will display an error message because the ```MONGODB_URI```
+environment variable has not yet been set. We'll look at how to set this
+variable in the next section.
 
 AWS Credentials
 ---------------

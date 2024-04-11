@@ -50,8 +50,8 @@ Then initialize the serverless configuration using the ``bref`` command.
 
 
 This series of commands creates a file named ``index.php``. To validate your
-setup, try deploying this default application. This will output an
-URL that renders a webpage with the Bref logo.
+setup, try deploying this default application. This outputs a
+URL that renders a webpage with the Bref logo:
 
 .. code-block:: none
 

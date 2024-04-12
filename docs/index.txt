@@ -4,6 +4,8 @@ MongoDB PHP Library
 
 .. default-domain:: mongodb
 
+Testing the Snooty autobuilder.
+
 The |php-library| provides a high-level abstraction around the lower-level
 `PHP driver <https://php.net/mongodb>`_, also known as the ``mongodb``
 extension.

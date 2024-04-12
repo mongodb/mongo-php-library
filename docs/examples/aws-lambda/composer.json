@@ -1,0 +1,19 @@
+{
+    "name": "mongodb/bref-tutorial",
+    "type": "project",
+    "license": "MIT",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../..",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
+    "require": {
+        "bref/bref": "^2.1",
+        "bref/extra-php-extensions": "^1.4",
+        "mongodb/mongodb": "@dev"
+    }
+}

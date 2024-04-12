@@ -85,7 +85,7 @@ will look like this:
 
 
 Let's use the MongoDB driver with a web page that list planets from the Atlas
-:atlas:`sample dataset </sample-data/>`.
+`sample dataset <https://www.mongodb.com/docs/atlas/sample-data/>`__.
 Replace the contents of ``index.php`` with the following:
 
 .. literalinclude:: /examples/aws-lambda/index.php
@@ -114,14 +114,16 @@ the role assigned to deployed function.
 2. In :guilabel:`Configuration > Permission`, copy the "Role name"
 3. Add this role to your Atlas cluster with the built-in Role: "Read and write any database"
 
-To learn how to set up unified AWS access, see :atlas:`Set Up Unified AWS Access
-</security/set-up-unified-aws-access/>` in the MongoDB Atlas documentation.
+To learn how to set up unified AWS access, see `Set Up Unified AWS Access
+<https://www.mongodb.com/docs/atlas/security/set-up-unified-aws-access/>`__
+in the MongoDB Atlas documentation.
 
 Now that the permissions have been configured, the Lambda function is allowed to access
 your Atlas cluster. You can configure your application with the Atlas endpoint.
 
 Access to Atlas clusters is also restricted by IP address. Since the range of IP that comes
-from AWS is very wide, you can :atlas:`allow access from everywhere </security/ip-access-list/>`__.
+from AWS is very wide, you can `allow access from everywhere
+<https://www.mongodb.com/docs/atlas/security/ip-access-list/>`__.
 
 .. note::
 

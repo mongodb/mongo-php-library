@@ -41,14 +41,14 @@ changes in this maintenance branch. This is important because we will later
 merge the ensuing release commits up to master with `--strategy=ours`, which
 will ignore changes from the merged commits.
 
-## Update composer.json and CI matrices
+## Update extension requirement
+
+In `composer.json`, ensure that the version of `ext-mongodb` is correct for
+the library version being released.
+
+## Update CI matrices
 
 This is especially important before releasing a new minor version.
-
-Ensure that the extension requirement and branch alias in `composer.json` are
-correct for the library version being released. For example, the 1.15.0 release
-of the library should depend on version `^1.15.0` of the extension and master
-branch alias should be `1.15.x-dev`.
 
 If this is the first release of a minor version for the library, it is likely
 following an extension release. The `vars` for calling `compile extension` from
@@ -90,13 +90,14 @@ After releasing a new major or minor version (e.g. 1.9.0), a maintenance branch
 1.9.1) would then be done within that branch and any development for the next
 major or minor release can continue in master.
 
-After creating a maintenance branch, the `extra.branch-alias.dev-master` field
-in the master branch's `composer.json` file should be updated. For example,
-after branching v1.9, `composer.json` in the master branch may still read:
+When work begins on a major new version, create a maintenance branch for the
+last minor version and update the `extra.branch-alias.dev-master` field
+in the master branch's `composer.json` file. For example, after branching v1.99,
+`composer.json` in the master branch may still read:
 
 ```
 "branch-alias": {
-    "dev-master": "1.9.x-dev"
+    "dev-master": "1.x-dev"
 }
 ```
 
@@ -104,7 +105,7 @@ The above would be changed to:
 
 ```
 "branch-alias": {
-    "dev-master": "1.10.x-dev"
+    "dev-master": "2.x-dev"
 }
 ```
 
@@ -122,24 +123,6 @@ branch should be created for future patch releases:
 ```console
 $ git checkout -b vX.Y
 $ git push mongodb vX.Y
-```
-
-Update the master branch alias in `composer.json`:
-
-```diff
- "extra": {
-   "branch-alias": {
--    "dev-master": "1.15.x-dev"
-+    "dev-master": "1.16.x-dev"
-   }
- },
-```
-
-Commit and push this change:
-
-```console
-$ git commit -m "Master is now X.Y-dev" composer.json
-$ git push mongodb
 ```
 
 ### After releasing a patch version

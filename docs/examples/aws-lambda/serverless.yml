@@ -1,0 +1,22 @@
+service: app
+
+provider:
+    name: aws
+    region: us-east-1
+    environment:
+        MONGODB_URI: ${env:MONGODB_URI}
+
+plugins:
+    - ./vendor/bref/bref
+    - ./vendor/bref/extra-php-extensions
+
+functions:
+    api:
+        handler: index.php
+        description: ''
+        runtime: php-83-fpm
+        timeout: 28 # in seconds (API Gateway has a timeout of 29 seconds)
+        events:
+            -   httpApi: '*'
+        layers:
+            - ${bref-extra:mongodb-php-83}

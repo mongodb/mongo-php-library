@@ -1,0 +1,151 @@
+==============================
+Deploy to AWS Lambda with Bref
+==============================
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
+
+Overview
+--------
+
+`Bref <https://bref.sh>`__ lets you deploy serverless PHP applications on AWS Lambda.
+In this tutorial, you will deploy a simple PHP application with the MongoDB PHP extension,
+and connect to an Atlas cluster using AWS IAM authentication.
+
+Prerequisites
+--------------
+
+To deploy to AWS Lambda by using Bref, you must have the following components set up:
+
+- AWS account with access keys
+- Serverless Framework
+
+To learn how to set these up, follow the `Setup tutorial <https://bref.sh/docs/setup>`__
+in the Bref official documentation.
+
+Install the MongoDB extension
+-----------------------------
+
+Bref uses Lambda layers to provide the PHP runtime. The ``bref`` layer is compiled
+with PHP and a few extensions. Other extensions, like ``mongodb``, are available
+in additional layers.
+
+Start by creating a new directory for your project and install the required MongoDB
+and Bref dependencies.
+
+.. code-block:: none
+
+   $ mkdir bref-mongodb-app && cd bref-mongodb-app
+   $ composer init
+   $ composer require bref/bref bref/extra-php-extensions mongodb/mongodb
+
+Then initialize the serverless configuration using the ``bref`` command.
+
+.. code-block:: none
+
+   $ vendor/bin/bref init
+
+
+After this series of commands, you should have this files:
+
+- ``composer.json`` for PHP dependencies installed in the ``vendor`` directory
+- ``index.php`` a sample webpage
+- ``serverless.yml`` for the configuration of the deployment
+
+To validate your setup, try deploying this default application. This outputs
+a URL that renders a webpage with the Bref logo:
+
+.. code-block:: none
+
+   $ serverless deploy
+
+
+Now that you have initialized the project, you will add the ``mongodb`` extension.
+Locate the "Serverless config" name in the list of extensions provided by
+`bref/extra-php-extension <https://github.com/brefphp/extra-php-extensions>`__.
+Add it to the ``layers`` of the function in ``serverless.yaml``, this file
+will look like this:
+
+.. code-block:: yaml
+
+   plugins:
+       - ./vendor/bref/bref
+       - ./vendor/bref/extra-php-extensions
+
+   functions:
+       api:
+           handler: index.php
+           runtime: php-83-fpm
+           layers:
+               - ${bref-extra:mongodb-php-83}
+
+
+
+Let's use the MongoDB driver with a web page that list planets from the Atlas
+`sample dataset <https://www.mongodb.com/docs/atlas/sample-data/>`__.
+Replace the contents of ``index.php`` with the following:
+
+.. literalinclude:: /examples/aws-lambda/index.php
+   :language: php
+
+
+Redeploy the application with the new ``index.php``:
+
+.. code-block:: none
+
+   $ serverless deploy
+
+
+The application will display an error message because the ``MONGODB_URI``
+environment variable has not yet been set. We'll look at how to set this
+variable in the next section.
+
+AWS Credentials
+---------------
+
+Atlas supports passwordless authentication with AWS credentials. In any Lambda function,
+AWS sets environment variables that contains the access token and secret token with
+the role assigned to deployed function.
+
+1. Open the Lambda function in the AWS console
+2. In :guilabel:`Configuration > Permission`, copy the :guilabel:`Role name`
+3. Add this role to your Atlas cluster with the built-in Role: "Read and write any database"
+
+To learn how to set up unified AWS access, see `Set Up Unified AWS Access
+<https://www.mongodb.com/docs/atlas/security/set-up-unified-aws-access/>`__
+in the MongoDB Atlas documentation.
+
+Now that the permissions have been configured, the Lambda function is allowed to access
+your Atlas cluster. You can configure your application with the Atlas endpoint.
+
+Access to Atlas clusters is also restricted by IP address. Since the range of IP that comes
+from AWS is very wide, you can `allow access from everywhere
+<https://www.mongodb.com/docs/atlas/security/ip-access-list/>`__.
+
+.. note::
+
+   Using VPC Peering is recommended in order to isolate your Atlas cluster from Internet.
+   This requires the Lambda function to be deployed in this AWS VPC.
+
+Find the connection URI in the Atlas UI :guilabel:`Atlas > Deployment > Database > Connect`.
+Select :guilabel:`3. AWS IAM`.
+Remove the ``<AWS access key>:<AWS secret key>`` part from the URI, the credentials
+will be read from environment variables.
+
+Update the ``serverless.yml`` file to pass the environment variable ``MONGODB_URI``.
+
+.. code-block:: yaml
+
+   provider:
+       environment:
+           MONGODB_URI: "mongodb+srv://cluster0.example.mongodb.net/?authSource=%24external&authMechanism=MONGODB-AWS&retryWrites=true&w=majority"
+
+Finally, deploy with the new configuration. After deployment completes, you can
+access the function URL and see the list of planets from your Atlas cluster.
+
+.. code-block:: none
+
+   $ serverless deploy

@@ -99,7 +99,7 @@ Redeploy the application with the new ``index.php``:
    $ serverless deploy
 
 
-The application will display an error message because the ```MONGODB_URI```
+The application will display an error message because the ``MONGODB_URI``
 environment variable has not yet been set. We'll look at how to set this
 variable in the next section.
 
@@ -111,7 +111,7 @@ AWS sets environment variables that contains the access token and secret token w
 the role assigned to deployed function.
 
 1. Open the Lambda function in the AWS console
-2. In :guilabel:`Configuration > Permission`, copy the "Role name"
+2. In :guilabel:`Configuration > Permission`, copy the :guilabel:`Role name`
 3. Add this role to your Atlas cluster with the built-in Role: "Read and write any database"
 
 To learn how to set up unified AWS access, see `Set Up Unified AWS Access

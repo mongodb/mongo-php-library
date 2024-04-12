@@ -23,7 +23,7 @@ To deploy to AWS Lambda by using Bref, you must have the following components se
 - AWS account with access keys
 - Serverless Framework
 
-To learn how to set these up, follow the `Setup tutorial<https://bref.sh/docs/setup>`__
+To learn how to set these up, follow the `Setup tutorial <https://bref.sh/docs/setup>`__
 in the Bref official documentation.
 
 Install the MongoDB extension
@@ -49,9 +49,14 @@ Then initialize the serverless configuration using the ``bref`` command.
    $ vendor/bin/bref init
 
 
-This series of commands creates a file named ``index.php``. To validate your
-setup, try deploying this default application. This outputs a
-URL that renders a webpage with the Bref logo:
+After this series of commands, you should have this files:
+
+- ``composer.json`` for PHP dependencies installed in the ``vendor`` directory
+- ``index.php`` a sample webpage
+- ``serverless.yml`` for the configuration of the deployment
+
+To validate your setup, try deploying this default application. This outputs
+a URL that renders a webpage with the Bref logo:
 
 .. code-block:: none
 
@@ -78,8 +83,9 @@ will look like this:
                - ${bref-extra:mongodb-php-83}
 
 
+
 Let's use the MongoDB driver with a web page that list planets from the Atlas
-`sample dataset <https://www.mongodb.com/docs/atlas/sample-data/>`__.
+:atlas:`sample dataset </sample-data/>`.
 Replace the contents of ``index.php`` with the following:
 
 .. literalinclude:: /examples/aws-lambda/index.php
@@ -108,15 +114,14 @@ the role assigned to deployed function.
 2. In :guilabel:`Configuration > Permission`, copy the "Role name"
 3. Add this role to your Atlas cluster with the built-in Role: "Read and write any database"
 
-To learn how to set up unified AWS access, see `Set Up Unified AWS Access
-<https://www.mongodb.com/docs/atlas/security/set-up-unified-aws-access/>`__ in the
-MongoDB Atlas documentation.
+To learn how to set up unified AWS access, see :atlas:`Set Up Unified AWS Access
+</security/set-up-unified-aws-access/>` in the MongoDB Atlas documentation.
 
 Now that the permissions have been configured, the Lambda function is allowed to access
 your Atlas cluster. You can configure your application with the Atlas endpoint.
 
 Access to Atlas clusters is also restricted by IP address. Since the range of IP that comes
-from AWS is very wide, you can `allow access from everywhere <https://www.mongodb.com/docs/atlas/security/ip-access-list/>`__.
+from AWS is very wide, you can :atlas:`allow access from everywhere </security/ip-access-list/>`__.
 
 .. note::
 
@@ -136,8 +141,8 @@ Update the ``serverless.yml`` file to pass the environment variable ``MONGODB_UR
        environment:
            MONGODB_URI: "mongodb+srv://cluster0.example.mongodb.net/?authSource=%24external&authMechanism=MONGODB-AWS&retryWrites=true&w=majority"
 
-Finally, deploy with the new configuration. After deployment completes, you can access the function URL
-and see the list of planets from your Atlas cluster.
+Finally, deploy with the new configuration. After deployment completes, you can
+access the function URL and see the list of planets from your Atlas cluster.
 
 .. code-block:: none
 

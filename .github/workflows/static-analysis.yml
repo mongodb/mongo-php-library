@@ -58,7 +58,13 @@ jobs:
           composer-options: "--no-suggest"
 
       - name: "Run Psalm"
-        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc)"
+        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc) --report=psalm.sarif"
 
       - name: "Run Rector"
         run: "vendor/bin/rector --ansi --dry-run"
+
+      - name: "Upload Psalm report"
+        uses: actions/upload-artifact@v4
+        with:
+          name: psalm.sarif
+          path: psalm.sarif

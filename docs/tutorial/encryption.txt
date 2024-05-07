@@ -19,16 +19,15 @@ To get started using in-use encryption in your project, the
 to be compiled with `libmongocrypt <https://github.com/mongodb/libmongocrypt>`_
 (enabled by default).
 
-Additionally, either `crypt_shared`_ or `mongocryptd`_ are required in order to
+Additionally, either ``crypt_shared`` or ``mongocryptd`` are required in order to
 use *automatic* client-side encryption. Neither is required for *explicit*
 encryption.
-
 
 crypt_shared
 ~~~~~~~~~~~~
 
 The :manual:`Automatic Encryption Shared Library </core/queryable-encryption/reference/shared-library/>`
-(crypt_shared) provides the same functionality as mongocryptd_, but does not
+(crypt_shared) provides the same functionality as ``mongocryptd``, but does not
 require you to spawn another process to perform automatic encryption.
 
 By default, the PHP driver attempts to load crypt_shared from the system path(s)
@@ -42,7 +41,6 @@ fail if it cannot be loaded.
 
 For detailed installation instructions see the MongoDB documentation for the
 :manual:`Automatic Encryption Shared Library </core/queryable-encryption/reference/shared-library/>`.
-
 
 mongocryptd
 ~~~~~~~~~~~
@@ -74,7 +72,6 @@ the spawning behavior via various auto encryption
 mongocryptd is only responsible for supporting automatic client-side encryption
 and does not itself perform any encryption or decryption.
 
-
 Managing Encryption Keys
 ------------------------
 
@@ -104,7 +101,6 @@ encryption key (e.g. user-specific encryption keys) or create them dynamically.
 
 .. literalinclude:: /examples/encryption/create_data_key.php
    :language: php
-
 
 .. _alt_name:
 
@@ -208,7 +204,7 @@ Explicit Encryption
 ~~~~~~~~~~~~~~~~~~~
 
 Explicit encryption is a MongoDB community feature and does not use
-crypt_shared_ or mongocryptd_. Explicit encryption is provided by the
+``crypt_shared`` or ``mongocryptd``. Explicit encryption is provided by the
 :php:`MongoDB\Driver\ClientEncryption <mongodb-driver-clientencryption>` class.
 
 .. literalinclude:: /examples/encryption/csfle-explicit_encryption.php

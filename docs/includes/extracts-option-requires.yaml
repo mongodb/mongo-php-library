@@ -6,43 +6,43 @@ content: |
 ---
 ref: option-requires-4.2
 source:
-  ref: option-requires-version
   file: extracts-option-requires.yaml
+  ref: option-requires-version
 replacement:
   version: "4.2"
 ---
 ref: option-requires-4.4
 source:
-  ref: option-requires-version
   file: extracts-option-requires.yaml
+  ref: option-requires-version
 replacement:
   version: "4.4"
 ---
 ref: option-requires-5.0
 source:
-  ref: option-requires-version
   file: extracts-option-requires.yaml
+  ref: option-requires-version
 replacement:
   version: "5.0"
 ---
 ref: option-requires-5.3
 source:
-  ref: option-requires-version
   file: extracts-option-requires.yaml
+  ref: option-requires-version
 replacement:
   version: "5.3"
 ---
 ref: option-requires-6.0
 source:
-  ref: option-requires-version
   file: extracts-option-requires.yaml
+  ref: option-requires-version
 replacement:
   version: "6.0"
 ---
 ref: option-requires-7.0
 source:
-  ref: option-requires-version
   file: extracts-option-requires.yaml
+  ref: option-requires-version
 replacement:
   version: "7.0"
 ...

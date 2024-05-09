@@ -35,7 +35,7 @@ The bucket can be constructed with various options:
   needed. The default size is ``261120`` (i.e. 255 KiB).
 - ``readConcern``, ``readPreference`` and ``writeConcern`` options can be used
   to specify defaults for read and write operations, much like the
-  :phpclass:`MongoDB\GridFS\Collection` options.
+  :phpclass:`MongoDB\Collection` options.
 
 Uploading Files with Writable Streams
 -------------------------------------

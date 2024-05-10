@@ -17,8 +17,8 @@ Definition
 
 .. phpmethod:: MongoDB\Client::addSubscriber()
 
-    Registers a monitoring event subscriber with this Client. The subscriber
-    will be notified of all events for this Client.
+   Registers a monitoring event subscriber with this Client. The subscriber
+   will be notified of all events for this Client.
 
    .. code-block:: php
 
@@ -50,7 +50,7 @@ notified once of each event for this Client.
 Example
 -------
 
-Create a :phpclass:`MongoDB\Driver\Monitoring\CommandSubscriber` that
+Create a :php:`MongoDB\Driver\Monitoring\CommandSubscriber` that
 logs all events:
 
 .. code-block:: php

@@ -19,45 +19,43 @@ To get started using in-use encryption in your project, the
 to be compiled with `libmongocrypt <https://github.com/mongodb/libmongocrypt>`_
 (enabled by default).
 
-Additionally, either `crypt_shared`_ or `mongocryptd`_ are required in order to
+Additionally, either ``crypt_shared`` or ``mongocryptd`` are required in order to
 use *automatic* client-side encryption. Neither is required for *explicit*
 encryption.
 
-
-crypt_shared
-~~~~~~~~~~~~
+``crypt_shared``
+~~~~~~~~~~~~~~~~
 
 The :manual:`Automatic Encryption Shared Library </core/queryable-encryption/reference/shared-library/>`
-(crypt_shared) provides the same functionality as mongocryptd_, but does not
+(``crypt_shared``) provides the same functionality as ``mongocryptd``, but does not
 require you to spawn another process to perform automatic encryption.
 
-By default, the PHP driver attempts to load crypt_shared from the system path(s)
-and uses it automatically if found. To load crypt_shared from another location,
+By default, the PHP driver attempts to load ``crypt_shared`` from the system path(s)
+and uses it automatically if found. To load ``crypt_shared`` from another location,
 use the ``cryptSharedLibPath`` auto encryption
 :php:`driver option <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`
-when constructing a client. If the driver cannot load crypt_shared it will
-attempt to fallback to using mongocryptd by default. The
-``cryptSharedLibRequired`` option may be used to always require crypt_shared and
+when constructing a client. If the driver cannot load ``crypt_shared`` it will
+attempt to fallback to using ``mongocryptd`` by default. The
+``cryptSharedLibRequired`` option may be used to always require ``crypt_shared`` and
 fail if it cannot be loaded.
 
 For detailed installation instructions see the MongoDB documentation for the
 :manual:`Automatic Encryption Shared Library </core/queryable-encryption/reference/shared-library/>`.
 
+``mongocryptd``
+~~~~~~~~~~~~~~~
 
-mongocryptd
-~~~~~~~~~~~
-
-The mongocryptd binary is an alternative requirement for automatic client-side
+The ``mongocryptd`` binary is an alternative requirement for automatic client-side
 encryption and is included as a component in the
 :manual:`MongoDB Enterprise Server package </administration/install-enterprise/>`.
 For detailed installation instructions see the
 :manual:`MongoDB documentation on mongocryptd </core/csfle/reference/mongocryptd/>`.
 
-mongocryptd performs the following:
+``mongocryptd`` performs the following:
 
 - Parses the automatic encryption rules specified in the client configuration.
   If the ``schemaMap`` auto encryption driver option contains invalid syntax,
-  mongocryptd returns an error.
+  ``mongocryptd`` returns an error.
 
 - Uses the specified automatic encryption rules to mark fields in read and write
   operations for encryption.
@@ -67,13 +65,12 @@ mongocryptd performs the following:
   see :manual:`Supported Operations for Automatic Encryption </core/csfle/reference/supported-operations/>`.
 
 A client configured with auto encryption will automatically spawn the
-mongocryptd process from the application's ``PATH``. Applications can control
+``mongocryptd`` process from the application's ``PATH``. Applications can control
 the spawning behavior via various auto encryption
 :php:`driver options <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`.
 
-mongocryptd is only responsible for supporting automatic client-side encryption
+``mongocryptd`` is only responsible for supporting automatic client-side encryption
 and does not itself perform any encryption or decryption.
-
 
 Managing Encryption Keys
 ------------------------
@@ -104,7 +101,6 @@ encryption key (e.g. user-specific encryption keys) or create them dynamically.
 
 .. literalinclude:: /examples/encryption/create_data_key.php
    :language: php
-
 
 .. _alt_name:
 
@@ -208,7 +204,7 @@ Explicit Encryption
 ~~~~~~~~~~~~~~~~~~~
 
 Explicit encryption is a MongoDB community feature and does not use
-crypt_shared_ or mongocryptd_. Explicit encryption is provided by the
+``crypt_shared`` or ``mongocryptd``. Explicit encryption is provided by the
 :php:`MongoDB\Driver\ClientEncryption <mongodb-driver-clientencryption>` class.
 
 .. literalinclude:: /examples/encryption/csfle-explicit_encryption.php

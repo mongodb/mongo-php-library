@@ -17,7 +17,7 @@ Definition
 
 .. phpmethod:: MongoDB\Client::removeSubscriber()
 
-    Unregisters a monitoring event subscriber with this Client.
+   Unregisters a monitoring event subscriber with this Client.
 
    .. code-block:: php
 

@@ -45,6 +45,7 @@ use function is_object;
 use function is_string;
 use function MongoDB\BSON\fromPHP;
 use function MongoDB\BSON\toPHP;
+use function str_ends_with;
 use function substr;
 
 /**
@@ -497,7 +498,7 @@ function create_field_path_type_map(array $typeMap, string $fieldPath): array
     /* Special case if we want to convert an array, in which case we need to
      * ensure that the field containing the array is exposed as an array,
      * instead of the type given in the type map's array key. */
-    if (substr($fieldPath, -2, 2) === '.$') {
+    if (str_ends_with($fieldPath, '.$')) {
         $typeMap['fieldPaths'][substr($fieldPath, 0, -2)] = 'array';
     }
 

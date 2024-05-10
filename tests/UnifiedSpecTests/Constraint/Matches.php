@@ -37,7 +37,7 @@ use function PHPUnit\Framework\logicalAnd;
 use function PHPUnit\Framework\logicalOr;
 use function range;
 use function sprintf;
-use function strpos;
+use function str_starts_with;
 use function strrchr;
 
 /**
@@ -373,7 +373,7 @@ class Matches extends Constraint
     {
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
         foreach ($document as $key => $_) {
-            if (strpos((string) $key, '$$') === 0) {
+            if (str_starts_with((string) $key, '$$')) {
                 return $key;
             }
         }
@@ -394,7 +394,7 @@ class Matches extends Constraint
 
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
         foreach ($document as $key => $_) {
-            return strpos((string) $key, '$$') === 0;
+            return str_starts_with((string) $key, '$$');
         }
 
         throw new LogicException('should not reach this point');

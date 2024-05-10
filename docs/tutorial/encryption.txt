@@ -23,7 +23,6 @@ Additionally, either ``crypt_shared`` or ``mongocryptd`` are required in order t
 use *automatic* client-side encryption. Neither is required for *explicit*
 encryption.
 
-
 ``crypt_shared``
 ~~~~~~~~~~~~~~~~
 
@@ -42,7 +41,6 @@ fail if it cannot be loaded.
 
 For detailed installation instructions see the MongoDB documentation for the
 :manual:`Automatic Encryption Shared Library </core/queryable-encryption/reference/shared-library/>`.
-
 
 ``mongocryptd``
 ~~~~~~~~~~~~~~~
@@ -74,7 +72,6 @@ the spawning behavior via various auto encryption
 ``mongocryptd`` is only responsible for supporting automatic client-side encryption
 and does not itself perform any encryption or decryption.
 
-
 Managing Encryption Keys
 ------------------------
 
@@ -104,7 +101,6 @@ encryption key (e.g. user-specific encryption keys) or create them dynamically.
 
 .. literalinclude:: /examples/encryption/create_data_key.php
    :language: php
-
 
 .. _alt_name:
 

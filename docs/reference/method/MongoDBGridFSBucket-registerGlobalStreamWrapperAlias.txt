@@ -19,7 +19,7 @@ Definition
 
    Registers an alias for the bucket, which enables files within the bucket to
    be accessed using a basic filename string (e.g.
-   `gridfs://<bucket-alias>/<filename>`).
+   ``gridfs://<bucket-alias>/<filename>``).
 
    .. code-block:: php
 
@@ -58,7 +58,7 @@ revision is read (revision ``-1``).
 In write mode, the stream context can contain the option ``gridfs['chunkSizeBytes']``.
 If omitted, the defaults are inherited from the ``Bucket`` instance option.
 
-The functions `rename` and `unlink` will rename or remove all revisions of a
+The functions ``rename`` and ``unlink`` will rename or remove all revisions of a
 filename. If the filename does not exist, these functions throw a ``FileNotFoundException``.
 
 Example

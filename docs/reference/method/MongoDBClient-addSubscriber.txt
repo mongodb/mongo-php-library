@@ -50,8 +50,8 @@ notified once of each event for this Client.
 Example
 -------
 
-Create a :php:`MongoDB\Driver\Monitoring\CommandSubscriber` that
-logs all events:
+Create a :php:`MongoDB\Driver\Monitoring\CommandSubscriber <manual/en/class.mongodb-driver-monitoring-commandsubscriber>`
+that logs all events:
 
 .. code-block:: php
 

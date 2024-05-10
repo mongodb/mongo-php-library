@@ -35,6 +35,7 @@ use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotFalse;
 use function preg_replace;
 use function sprintf;
+use function str_starts_with;
 use function strlen;
 use function strpos;
 use function substr_replace;
@@ -528,7 +529,7 @@ final class UnifiedTestRunner
             // We assume the internal client URI has multiple mongos hosts
             $multiMongosUri = $this->internalClientUri;
 
-            if (strpos($multiMongosUri, 'mongodb+srv://') === 0) {
+            if (str_starts_with($multiMongosUri, 'mongodb+srv://')) {
                 /* TODO: If an SRV URI is provided, we can consider connecting and
                  * checking the topology for multiple mongoses and then selecting a
                  * single mongos to reconstruct a single mongos URI; however, that

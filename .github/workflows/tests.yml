@@ -36,6 +36,7 @@ jobs:
           - "8.1"
           - "8.2"
           - "8.3"
+          - "8.4"
         mongodb-version:
           - "4.4"
         topology:
@@ -104,7 +105,10 @@ jobs:
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@3.0.0"
         with:
-          composer-options: "--no-suggest"
+          # Revert when psalm supports PHP 8.4
+          # composer-options: "--no-suggest"
+          composer-options: "--no-suggest ${{ matrix.php-version == '8.4' && '--ignore-platform-req=php+' || '' }}"
+
 
       - name: "Run PHPUnit"
         run: "vendor/bin/simple-phpunit -v"

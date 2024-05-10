@@ -182,7 +182,7 @@ class Distinct implements Executable, Explainable
             'key' => $this->fieldName,
         ];
 
-        if (! empty($this->filter)) {
+        if ($this->filter !== []) {
             $cmd['query'] = (object) $this->filter;
         }
 

@@ -27,6 +27,7 @@ use function var_dump;
  * @see https://jira.mongodb.org/browse/DRIVERS-356
  * @see https://jira.mongodb.org/browse/DRIVERS-488
  * @see https://jira.mongodb.org/browse/DRIVERS-547
+ * @see https://jira.mongodb.org/browse/DRIVERS-2838
  */
 class DocumentationExamplesTest extends FunctionalTestCase
 {
@@ -727,6 +728,71 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
             $this->assertObjectNotHasAttribute('size', $document);
             $this->assertCount(1, $document->instock);
+        }
+    }
+
+    public function testAggregationProjectionExample_1(): void
+    {
+        $this->skipIfServerVersion('<', '4.4.0', '$project syntax for find and findAndModify is not supported');
+
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        $db->inventory->insertMany([
+            [
+                'item' => 'journal',
+                'status' => 'A',
+                'size' => ['h' => 14, 'w' => 21, 'uom' => 'cm'],
+            ],
+            [
+                'item' => 'notebook',
+                'status' => 'A',
+                'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
+            ],
+            [
+                'item' => 'paper',
+                'status' => 'D',
+                'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
+            ],
+        ]);
+
+        // Start Aggregation Projection Example 1
+        $cursor = $db->inventory->find([], [
+            'projection' => [
+                '_id' => 0,
+                'item' => 1,
+                'status' => [
+                    '$switch' => [
+                        'branches' => [
+                            ['case' => ['$eq' => ['$status', 'A']], 'then' => 'Available'],
+                            ['case' => ['$eq' => ['$status', 'D']], 'then' => 'Discontinued'],
+                        ],
+                        'default' => 'No status found',
+                    ],
+                ],
+                'area' => [
+                    '$concat' => [
+                        ['$toString' => ['$multiply' => ['$size.h', '$size.w']]],
+                        ' ',
+                        '$size.uom',
+                    ],
+                ],
+                'reportNumber' => ['$literal' => 1],
+            ],
+        ]);
+        // End Aggregation Projection Example 1
+
+        $documents = $cursor->toArray();
+        $this->assertCount(3, $documents);
+        foreach ($documents as $document) {
+            foreach (['item', 'status', 'area', 'reportNumber'] as $field) {
+                $this->assertObjectHasAttribute($field, $document);
+            }
+
+            $this->assertObjectNotHasAttribute('_id', $document);
+            $this->assertIsString($document->status);
+            $this->assertIsString($document->area);
+            $this->assertSame(1, $document->reportNumber);
         }
     }
 

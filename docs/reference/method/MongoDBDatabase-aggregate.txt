@@ -163,7 +163,7 @@ running command operations.
    $cursor = $database->aggregate(
        [
            ['$currentOp' => []],
-           ['$match' => ['op' => 'command'],
+           ['$match' => ['op' => 'command']],
        ]
    );
 

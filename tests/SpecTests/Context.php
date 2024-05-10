@@ -185,21 +185,6 @@ final class Context
         return $o;
     }
 
-    public static function fromRetryableWrites(stdClass $test, $databaseName, $collectionName, $useMultipleMongoses)
-    {
-        $o = new self($databaseName, $collectionName);
-
-        $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
-
-        if (isset($test->outcome->collection->name)) {
-            $o->outcomeCollectionName = $test->outcome->collection->name;
-        }
-
-        $o->client = self::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
-
-        return $o;
-    }
-
     public static function fromTransactions(stdClass $test, $databaseName, $collectionName, $useMultipleMongoses)
     {
         $o = new self($databaseName, $collectionName);

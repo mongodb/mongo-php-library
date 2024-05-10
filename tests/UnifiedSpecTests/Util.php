@@ -52,6 +52,7 @@ final class Util
             'assertSessionPinned' => ['session'],
             'assertSessionTransactionState' => ['session', 'state'],
             'assertSessionUnpinned' => ['session'],
+            'createEntities' => ['entities'],
             'failPoint' => ['client', 'failPoint'],
             'targetedFailPoint' => ['session', 'failPoint'],
             'loop' => ['operations', 'storeErrorsAsEntity', 'storeFailuresAsEntity', 'storeSuccessesAsEntity', 'storeIterationsAsEntity'],

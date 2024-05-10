@@ -410,11 +410,6 @@ final class Operation
                 );
 
             case 'distinct':
-                if (isset($args['session']) && $args['session']->isInTransaction()) {
-                    // Transaction, but sharded cluster?
-                    $collection->distinct('foo');
-                }
-
                 assertArrayHasKey('fieldName', $args);
                 assertArrayHasKey('filter', $args);
                 assertIsString($args['fieldName']);
@@ -522,14 +517,14 @@ final class Operation
                 assertArrayHasKey('out', $args);
                 assertInstanceOf(Javascript::class, $args['map']);
                 assertInstanceOf(Javascript::class, $args['reduce']);
-                assertIsString($args['out']);
+                assertThat($args['out'], logicalOr(new IsType('string'), new IsType('array'), new IsType('object')));
 
-                return $collection->mapReduce(
+                return iterator_to_array($collection->mapReduce(
                     $args['map'],
                     $args['reduce'],
                     $args['out'],
                     array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1]),
-                );
+                ));
 
             case 'rename':
                 assertArrayHasKey('to', $args);
@@ -893,6 +888,15 @@ final class Operation
                 assertArrayHasKey('session', $args);
                 assertInstanceOf(Session::class, $args['session']);
                 assertNull($args['session']->getServer());
+                break;
+            case 'createEntities':
+                assertArrayHasKey('entities', $args);
+                assertIsArray($args['entities']);
+                $this->context->createEntities($args['entities']);
+                /* Ensure EventObserver and EventCollector for any new clients
+                 * are subscribed. This is a NOP for existing clients. */
+                $this->context->startEventObservers();
+                $this->context->startEventCollectors();
                 break;
             case 'failPoint':
                 assertArrayHasKey('client', $args);

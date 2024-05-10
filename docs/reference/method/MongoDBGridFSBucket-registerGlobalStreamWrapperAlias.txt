@@ -1,0 +1,139 @@
+===========================================================
+MongoDB\\GridFS\\Bucket::registerGlobalStreamWrapperAlias()
+===========================================================
+
+.. versionadded:: 1.18
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\GridFS\Bucket::registerGlobalStreamWrapperAlias()
+
+   Registers an alias for the bucket, which enables files within the bucket to
+   be accessed using a basic filename string (e.g.
+   `gridfs://<bucket-alias>/<filename>`).
+
+   .. code-block:: php
+
+      function registerGlobalStreamWrapperAlias(string $alias): void
+
+Parameters
+----------
+
+``$alias`` : array
+  A non-empty string used to identify the GridFS bucket when accessing files
+  using the ``gridfs://`` stream wrapper.
+
+Behavior
+--------
+
+After registering an alias for the bucket, the most recent revision of a file
+can be accessed using a filename string in the form ``gridfs://<bucket-alias>/<filename>``.
+
+Supported stream functions:
+
+- :php:`copy() <copy>`
+- :php:`file_exists() <file_exists>`
+- :php:`file_get_contents() <file_get_contents>`
+- :php:`file_put_contents() <file_put_contents>`
+- :php:`filemtime() <filemtime>`
+- :php:`filesize() <filesize>`
+- :php:`file() <file>`
+- :php:`fopen() <fopen>` with "r", "rb", "w", and "wb" modes
+- :php:`rename() <rename>`
+- :php:`unlink() <unlink>`
+
+In read mode, the stream context can contain the option ``gridfs['revision']``
+to specify the revision number of the file to read. If omitted, the most recent
+revision is read (revision ``-1``).
+
+In write mode, the stream context can contain the option ``gridfs['chunkSizeBytes']``.
+If omitted, the defaults are inherited from the ``Bucket`` instance option.
+
+The functions `rename` and `unlink` will rename or remove all revisions of a
+filename. If the filename does not exist, these functions throw a ``FileNotFoundException``.
+
+Example
+-------
+
+Read and write to a GridFS bucket using the ``gridfs://`` stream wrapper
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example demonstrates how to register an alias for a GridFS bucket
+and use the functions ``file_exists()``, ``file_get_contents()``, and
+``file_put_contents()`` to read and write to the bucket.
+
+Each call to these functions makes a request to the server.
+
+.. code-block:: php
+
+   <?php
+
+   $database = (new MongoDB\Client)->selectDatabase('test');
+   $bucket = $database->selectGridFSBucket();
+
+   $bucket->registerGlobalStreamWrapperAlias('mybucket');
+
+   var_dump(file_exists('gridfs://mybucket/hello.txt'));
+
+   file_put_contents('gridfs://mybucket/hello.txt', 'Hello, GridFS!');
+
+   var_dump(file_exists('gridfs://mybucket/hello.txt'));
+
+   echo file_get_contents('gridfs://mybucket/hello.txt');
+
+   unlink('gridfs://mybucket/hello.txt');
+
+The output would then resemble:
+
+.. code-block:: none
+
+   bool(false)
+   bool(true)
+   Hello, GridFS!
+
+Read a specific revision of a file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Using a stream context, you can specify the revision number of the file to
+read. If omitted, the most recent revision is read.
+
+.. code-block:: php
+
+   <?php
+
+   $database = (new MongoDB\Client)->selectDatabase('test');
+   $bucket = $database->selectGridFSBucket();
+
+   $bucket->registerGlobalStreamWrapperAlias('mybucket');
+
+   // Creating revision 0
+   $handle = fopen('gridfs://mybucket/hello.txt', 'w');
+   fwrite($handle, 'Hello, GridFS! (v0)');
+   fclose($handle);
+
+   // Creating revision 1
+   $handle = fopen('gridfs://mybucket/hello.txt', 'w');
+   fwrite($handle, 'Hello, GridFS! (v1)');
+   fclose($handle);
+
+   // Read revision 0
+   $context = stream_context_create([
+        'gridfs' => ['revision' => 0],
+   ]);
+   $handle = fopen('gridfs://mybucket/hello.txt', 'r', false, $context);
+   echo fread($handle, 1024);
+
+The output would then resemble:
+
+.. code-block:: none
+
+   Hello, GridFS! (v0)

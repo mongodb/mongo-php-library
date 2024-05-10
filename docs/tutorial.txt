@@ -18,5 +18,6 @@ Tutorials
    /tutorial/indexes
    /tutorial/tailable-cursor
    /tutorial/example-data
+   /tutorial/aws-lambda
    /tutorial/modeling-bson-data
    /tutorial/stable-api

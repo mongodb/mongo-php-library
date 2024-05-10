@@ -4,7 +4,9 @@ namespace MongoDB\Tests;
 
 use MongoDB\Client;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Session;
 use MongoDB\Model\DatabaseInfo;
 use MongoDB\Model\DatabaseInfoIterator;
@@ -118,5 +120,21 @@ class ClientFunctionalTest extends FunctionalTestCase
     public function testStartSession(): void
     {
         $this->assertInstanceOf(Session::class, $this->client->startSession());
+    }
+
+    public function testAddAndRemoveSubscriber(): void
+    {
+        $client = static::createTestClient();
+
+        $addedSubscriber = $this->createMock(CommandSubscriber::class);
+        $addedSubscriber->expects($this->once())->method('commandStarted');
+        $client->addSubscriber($addedSubscriber);
+
+        $removedSubscriber = $this->createMock(CommandSubscriber::class);
+        $removedSubscriber->expects($this->never())->method('commandStarted');
+        $client->addSubscriber($removedSubscriber);
+        $client->removeSubscriber($removedSubscriber);
+
+        $client->getManager()->executeCommand('admin', new Command(['ping' => 1]));
     }
 }

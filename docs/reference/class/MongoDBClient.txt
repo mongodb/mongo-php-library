@@ -30,6 +30,7 @@ Methods
 
    __construct() </reference/method/MongoDBClient__construct>
    __get() </reference/method/MongoDBClient__get>
+   addSubscriber() </reference/method/MongoDBClient-addSubscriber>
    createClientEncryption() </reference/method/MongoDBClient-createClientEncryption>
    dropDatabase() </reference/method/MongoDBClient-dropDatabase>
    getManager() </reference/method/MongoDBClient-getManager>
@@ -39,6 +40,7 @@ Methods
    getWriteConcern() </reference/method/MongoDBClient-getWriteConcern>
    listDatabaseNames() </reference/method/MongoDBClient-listDatabaseNames>
    listDatabases() </reference/method/MongoDBClient-listDatabases>
+   removeSubscriber() </reference/method/MongoDBClient-removeSubscriber>
    selectCollection() </reference/method/MongoDBClient-selectCollection>
    selectDatabase() </reference/method/MongoDBClient-selectDatabase>
    startSession() </reference/method/MongoDBClient-startSession>
@@ -46,6 +48,7 @@ Methods
 
 - :phpmethod:`MongoDB\Client::__construct()`
 - :phpmethod:`MongoDB\Client::__get()`
+- :phpmethod:`MongoDB\Client::addSubscriber()`
 - :phpmethod:`MongoDB\Client::createClientEncryption()`
 - :phpmethod:`MongoDB\Client::dropDatabase()`
 - :phpmethod:`MongoDB\Client::getManager()`
@@ -55,6 +58,7 @@ Methods
 - :phpmethod:`MongoDB\Client::getWriteConcern()`
 - :phpmethod:`MongoDB\Client::listDatabaseNames()`
 - :phpmethod:`MongoDB\Client::listDatabases()`
+- :phpmethod:`MongoDB\Client::removeSubscriber()`
 - :phpmethod:`MongoDB\Client::selectCollection()`
 - :phpmethod:`MongoDB\Client::selectDatabase()`
 - :phpmethod:`MongoDB\Client::startSession()`

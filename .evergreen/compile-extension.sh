@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -o errexit  # Exit the script with error if any of the commands fail
 
 PATH="$PHP_PATH/bin:$PATH"

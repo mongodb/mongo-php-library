@@ -1,6 +1,7 @@
 name: "Tests"
 
 on:
+  merge_group:
   pull_request:
     branches:
       - "v*.*"
@@ -15,6 +16,9 @@ on:
       - "feature/*"
     paths-ignore:
       - "docs/**"
+
+env:
+  DRIVER_VERSION: "stable"
 
 jobs:
   phpunit:
@@ -34,35 +38,28 @@ jobs:
           - "8.3"
         mongodb-version:
           - "4.4"
-        driver-version:
-          - "stable"
         topology:
           - "server"
         include:
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "6.0"
-            driver-version: "stable"
             topology: "replica_set"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "6.0"
-            driver-version: "stable"
             topology: "sharded_cluster"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "5.0"
-            driver-version: "stable"
             topology: "server"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "4.4"
-            driver-version: "stable"
             topology: "replica_set"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "4.4"
-            driver-version: "stable"
             topology: "sharded_cluster"
 
     steps:
@@ -82,11 +79,11 @@ jobs:
         uses: shivammathur/cache-extensions@v1
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: "mongodb-${{ matrix.driver-version }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           key: "extcache-v1"
 
       - name: Cache extensions
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.extcache.outputs.dir }}
           key: ${{ steps.extcache.outputs.key }}
@@ -97,7 +94,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           tools: "pecl"
-          extensions: "mongodb-${{ matrix.driver-version }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           coverage: "none"
           ini-values: "zend.assertions=1"
 
@@ -105,7 +102,7 @@ jobs:
         run: "php --ri mongodb"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@2.2.0"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           composer-options: "--no-suggest"
 

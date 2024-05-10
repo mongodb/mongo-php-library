@@ -51,33 +51,24 @@ of the library should depend on version `^1.15.0` of the extension and master
 branch alias should be `1.15.x-dev`.
 
 If this is the first release of a minor version for the library, it is likely
-following an extension release. In that case, the `driver-versions` matrix in
-the Evergreen configuration should be updated:
+following an extension release. The `vars` for calling `compile extension` from
+`build-extension.yml` in the Evergreen configuration must be updated:
 
-```diff
- - id: "oldest-supported"
--  display_name: "PHPC 1.15-dev"
-+  display_name: "PHPC 1.15.0"
-   variables:
--    EXTENSION_BRANCH: "master"
-+    EXTENSION_VERSION: "1.15.0"
- - id: "latest-stable"
--  display_name: "PHPC 1.15-dev"
-+  display_name: "PHPC 1.15.x"
-   variables:
--    EXTENSION_BRANCH: "master"
-+    EXTENSION_VERSION: "stable"
- - id: "latest-dev"
--  display_name: "PHPC 1.15-dev"
-+  display_name: "PHPC 1.16-dev"
-   variables:
-     EXTENSION_BRANCH: "master"
-```
+ * The `stable` task should specify no vars.
+ * The `lowest` task should specify `EXTENSION_VERSION` with the version that
+   was just released.
+ * The `next-stable` task should specify `EXTENSION_BRANCH` with the branch that
+   was just created.
+ * The `next-minor` task should specify `EXTENSION_BRANCH: master`.
 
-Commit and push any changes:
+The `DRIVER_VERSION` environment variable for any GitHub Actions should also be
+set to `stable`.
+
+After regenerating the Evergreen configuration, stage any modified files,
+commit, and push:
 
 ```console
-$ git commit -m "Update composer.json and CI matrices for X.Y.Z" composer.json .evergreen/config.yml
+$ git commit -m "Update composer.json and CI matrices for X.Y.Z"
 $ git push mongodb
 ```
 
@@ -92,7 +83,7 @@ $ git push mongodb --tags
 
 ## Branch management
 
-# Creating a maintenance branch and updating master branch alias
+### Creating a maintenance branch and updating master branch alias
 
 After releasing a new major or minor version (e.g. 1.9.0), a maintenance branch
 (e.g. v1.9) should be created. Any development towards a patch release (e.g.

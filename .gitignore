@@ -19,4 +19,7 @@ psalm.xml
 .phpbench/
 phpbench.json
 
+# bref
+.serverless/
+
 mongocryptd.pid

@@ -55,6 +55,7 @@ Methods
    openDownloadStream() </reference/method/MongoDBGridFSBucket-openDownloadStream>
    openDownloadStreamByName() </reference/method/MongoDBGridFSBucket-openDownloadStreamByName>
    openUploadStream() </reference/method/MongoDBGridFSBucket-openUploadStream>
+   registerGlobalStreamWrapperAlias() </reference/method/MongoDBGridFSBucket-registerGlobalStreamWrapperAlias>
    rename() </reference/method/MongoDBGridFSBucket-rename>
    uploadFromStream() </reference/method/MongoDBGridFSBucket-uploadFromStream>
 
@@ -78,5 +79,6 @@ Methods
 - :phpmethod:`MongoDB\GridFS\Bucket::openDownloadStream()`
 - :phpmethod:`MongoDB\GridFS\Bucket::openDownloadStreamByName()`
 - :phpmethod:`MongoDB\GridFS\Bucket::openUploadStream()`
+- :phpmethod:`MongoDB\GridFS\Bucket::registerGlobalStreamWrapperAlias()`
 - :phpmethod:`MongoDB\GridFS\Bucket::rename()`
 - :phpmethod:`MongoDB\GridFS\Bucket::uploadFromStream()`

@@ -1,0 +1,40 @@
+# This file is generated automatically - please edit the "templates/build/build-extension.yml" template file instead.
+tasks:
+  - name: "build-php-8.3"
+    tags: ["build", "php8.3", "stable"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "8.3"
+      - func: "compile extension"
+      - func: "upload extension"
+  - name: "build-php-8.3-lowest"
+    tags: ["build", "php8.3", "lowest"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "8.3"
+      - func: "compile extension"
+        vars:
+          EXTENSION_VERSION: "1.18.0"
+      - func: "upload extension"
+  - name: "build-php-8.3-next-stable"
+    tags: ["build", "php8.3", "next-stable"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "8.3"
+      - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "v1.18"
+      - func: "upload extension"
+  - name: "build-php-8.3-next-minor"
+    tags: ["build", "php8.3", "next-minor"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "8.3"
+      - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "master"
+      - func: "upload extension"

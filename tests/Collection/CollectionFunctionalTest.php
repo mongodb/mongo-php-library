@@ -132,11 +132,19 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function testCreateIndexSplitsCommandOptions(): void
     {
+        $this->skipIfServerVersion('<', '4.4', 'commitQuorum and comment options are not supported');
+
+        if ($this->isStandalone()) {
+            $this->markTestSkipped('commitQuorum is not supported');
+        }
+
         (new CommandObserver())->observe(
             function (): void {
                 $this->collection->createIndex(
                     ['x' => 1],
                     [
+                        'comment' => 'foo',
+                        'commitQuorum' => 'majority',
                         'maxTimeMS' => 10000,
                         'session' => $this->manager->startSession(),
                         'sparse' => true,
@@ -147,6 +155,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
             },
             function (array $event): void {
                 $command = $event['started']->getCommand();
+                $this->assertObjectHasAttribute('comment', $command);
+                $this->assertObjectHasAttribute('commitQuorum', $command);
                 $this->assertObjectHasAttribute('lsid', $command);
                 $this->assertObjectHasAttribute('maxTimeMS', $command);
                 $this->assertObjectHasAttribute('writeConcern', $command);

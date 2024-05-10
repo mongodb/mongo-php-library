@@ -16,7 +16,6 @@ use function glob;
  * Unified test format spec tests.
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst
- * @group serverless
  */
 class UnifiedSpecTest extends FunctionalTestCase
 {
@@ -54,7 +53,93 @@ class UnifiedSpecTest extends FunctionalTestCase
         'load-balancers/transactions are correctly pinned to connections for load-balanced clusters: a connection can be shared by a transaction and a cursor' => 'PHPC does not implement CMAP',
         'load-balancers/wait queue timeout errors include details about checked out connections: wait queue timeout errors include cursor statistics' => 'PHPC does not implement CMAP',
         'load-balancers/wait queue timeout errors include details about checked out connections: wait queue timeout errors include transaction statistics' => 'PHPC does not implement CMAP',
+        // listDatabaseObjects is not implemented
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after InterruptedAtShutdown' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after InterruptedDueToReplStateChange' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after NotWritablePrimary' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after NotPrimaryNoSecondaryOk' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after NotPrimaryOrSecondary' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after PrimarySteppedDown' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after ShutdownInProgress' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after HostNotFound' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after HostUnreachable' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after NetworkTimeout' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects succeeds after SocketException' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects fails after two NotWritablePrimary errors' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects-serverErrors: ListDatabaseObjects fails after NotWritablePrimary when retryReads is false' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects: ListDatabaseObjects succeeds on first attempt' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects: ListDatabaseObjects succeeds on second attempt' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects: ListDatabaseObjects fails on first attempt' => 'listDatabaseObjects is not implemented',
+        'retryable-reads/listDatabaseObjects: ListDatabaseObjects fails on second attempt' => 'listDatabaseObjects is not implemented',
+        // listCollectionObjects is not implemented
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after InterruptedAtShutdown' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after InterruptedDueToReplStateChange' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after NotWritablePrimary' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after NotPrimaryNoSecondaryOk' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after NotPrimaryOrSecondary' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after PrimarySteppedDown' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after ShutdownInProgress' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after HostNotFound' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after HostUnreachable' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after NetworkTimeout' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects succeeds after SocketException' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects fails after two NotWritablePrimary errors' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects-serverErrors: ListCollectionObjects fails after NotWritablePrimary when retryReads is false' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects: ListCollectionObjects succeeds on first attempt' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects: ListCollectionObjects succeeds on second attempt' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects: ListCollectionObjects fails on first attempt' => 'listCollectionObjects is not implemented',
+        'retryable-reads/listCollectionObjects: ListCollectionObjects fails on second attempt' => 'listCollectionObjects is not implemented',
+        // listIndexNames is not implemented
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after InterruptedAtShutdown' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after InterruptedDueToReplStateChange' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after NotWritablePrimary' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after NotPrimaryNoSecondaryOk' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after NotPrimaryOrSecondary' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after PrimarySteppedDown' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after ShutdownInProgress' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after HostNotFound' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after HostUnreachable' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after NetworkTimeout' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames succeeds after SocketException' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames fails after two NotWritablePrimary errors' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames-serverErrors: ListIndexNames fails after NotWritablePrimary when retryReads is false' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames: ListIndexNames succeeds on first attempt' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames: ListIndexNames succeeds on second attempt' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames: ListIndexNames fails on first attempt' => 'listIndexNames is not implemented',
+        'retryable-reads/listIndexNames: ListIndexNames fails on second attempt' => 'listIndexNames is not implemented',
         // mongoc_cluster_stream_for_server does not retry handshakes (CDRIVER-4532, PHPLIB-1033, PHPLIB-1042)
+        'retryable-reads/retryable reads handshake failures: client.listDatabases succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.listDatabases succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.listDatabaseNames succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.listDatabaseNames succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.createChangeStream succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: client.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.aggregate succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.aggregate succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.listCollections succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.listCollections succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.listCollectionNames succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.listCollectionNames succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.createChangeStream succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: database.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.aggregate succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.aggregate succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.countDocuments succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.countDocuments succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.estimatedDocumentCount succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.estimatedDocumentCount succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.distinct succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.distinct succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.find succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.find succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.findOne succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.findOne succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.listIndexes succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.listIndexes succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.listIndexNames succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.listIndexNames succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.createChangeStream succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
+        'retryable-reads/retryable reads handshake failures: collection.createChangeStream succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.insertOne succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.insertOne succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.insertMany succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
@@ -73,6 +158,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         'retryable-writes/retryable writes handshake failures: collection.findOneAndUpdate succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.bulkWrite succeeds after retryable handshake network error' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures: collection.bulkWrite succeeds after retryable handshake server error (ShutdownInProgress)' => 'Handshakes are not retried (CDRIVER-4532)',
+        // Skips dating back to legacy transaction tests
+        'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
+        'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on DRIVERS-2104',
+        'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
         // PHPC does not implement CMAP
         'valid-pass/assertNumberConnectionsCheckedOut: basic assertion succeeds' => 'PHPC does not implement CMAP',
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
@@ -83,8 +172,20 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/createEntities-operation: createEntities operation' => 'CSOT is not yet implemented (PHPC-1760)',
         'valid-pass/entity-cursor-iterateOnce: iterateOnce' => 'CSOT is not yet implemented (PHPC-1760)',
         'valid-pass/matches-lte-operator: special lte matching operator' => 'CSOT is not yet implemented (PHPC-1760)',
+        // commandCursor API is not yet implemented (PHPLIB-1077)
+        'valid-pass/entity-commandCursor: runCursorCommand creates and exhausts cursor by running getMores' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'valid-pass/entity-commandCursor: createCommandCursor creates a cursor and stores it as an entity that can be iterated one document at a time' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'valid-pass/entity-commandCursor: createCommandCursor\'s cursor can be closed and will perform a killCursors operation' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
         // libmongoc always adds readConcern to aggregate command
         'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
+    ];
+
+    /**
+     * Any tests that rely on session pinning (including targetedFailPoint) must
+     * be skipped since libmongoc does not pin on load-balanced toplogies. */
+    private static array $incompleteLoadBalancerTests = [
+        'transactions/mongos-recovery-token: commitTransaction explicit retries include recoveryToken' => 'libmongoc omits recoveryToken for load-balanced topology (CDRIVER-4718)',
+        'transactions/pin-mongos: multiple commits' => 'libmongoc does not pin for load-balanced topology',
     ];
 
     private static UnifiedTestRunner $runner;
@@ -105,9 +206,34 @@ class UnifiedSpecTest extends FunctionalTestCase
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
+
+        if ($this->isLoadBalanced() && isset(self::$incompleteLoadBalancerTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteLoadBalancerTests[$this->dataDescription()]);
+        }
     }
 
-    /** @dataProvider provideChangeStreamsTests */
+    /**
+     * @dataProvider provideAtlasDataLakeTests
+     * @group atlas-data-lake
+     */
+    public function testAtlasDataLake(UnifiedTestCase $test): void
+    {
+        if (! $this->isAtlasDataLake()) {
+            $this->markTestSkipped('Server is not Atlas Data Lake');
+        }
+
+        self::$runner->run($test);
+    }
+
+    public function provideAtlasDataLakeTests()
+    {
+        return $this->provideTests(__DIR__ . '/atlas-data-lake/*.json');
+    }
+
+    /**
+     * @dataProvider provideChangeStreamsTests
+     * @group serverless
+     */
     public function testChangeStreams(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -121,6 +247,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideClientSideEncryptionTests
      * @group csfle
+     * @group serverless
      */
     public function testClientSideEncryption(UnifiedTestCase $test): void
     {
@@ -132,7 +259,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/client-side-encryption/*.json');
     }
 
-    /** @dataProvider provideCollectionManagementTests */
+    /**
+     * @dataProvider provideCollectionManagementTests
+     * @group serverless
+     */
     public function testCollectionManagement(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -143,7 +273,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/collection-management/*.json');
     }
 
-    /** @dataProvider provideCommandMonitoringTests */
+    /**
+     * @dataProvider provideCommandMonitoringTests
+     * @group serverless
+     */
     public function testCommandMonitoring(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -154,7 +287,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/command-monitoring/*.json');
     }
 
-    /** @dataProvider provideCrudTests */
+    /**
+     * @dataProvider provideCrudTests
+     * @group serverless
+     */
     public function testCrud(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -165,7 +301,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/crud/*.json');
     }
 
-    /** @dataProvider provideGridFSTests */
+    /**
+     * @dataProvider provideGridFSTests
+     * @group serverless
+     */
     public function testGridFS(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -176,7 +315,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/gridfs/*.json');
     }
 
-    /** @dataProvider provideLoadBalancers */
+    /**
+     * @dataProvider provideLoadBalancers
+     * @group serverless
+     */
     public function testLoadBalancers(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -187,7 +329,35 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/load-balancers/*.json');
     }
 
-    /** @dataProvider provideRetryableWritesTests */
+    /** @dataProvider provideReadWriteConcernTests */
+    public function testReadWriteConcern(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideReadWriteConcernTests()
+    {
+        return $this->provideTests(__DIR__ . '/read-write-concern/*.json');
+    }
+
+    /**
+     * @dataProvider provideRetryableReadsTests
+     * @group serverless
+     */
+    public function testRetryableReads(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideRetryableReadsTests()
+    {
+        return $this->provideTests(__DIR__ . '/retryable-reads/*.json');
+    }
+
+    /**
+     * @dataProvider provideRetryableWritesTests
+     * @group serverless
+     */
     public function testRetryableWrites(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -198,7 +368,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/retryable-writes/*.json');
     }
 
-    /** @dataProvider provideRunCommandTests */
+    /**
+     * @dataProvider provideRunCommandTests
+     * @group serverless
+     */
     public function testRunCommand(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -209,7 +382,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/run-command/*.json');
     }
 
-    /** @dataProvider provideSessionsTests */
+    /**
+     * @dataProvider provideSessionsTests
+     * @group serverless
+     */
     public function testSessions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -220,7 +396,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/sessions/*.json');
     }
 
-    /** @dataProvider provideTransactionsTests */
+    /**
+     * @dataProvider provideTransactionsTests
+     * @group serverless
+     */
     public function testTransactions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -231,8 +410,20 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/transactions/*.json');
     }
 
+    /** @dataProvider provideTransactionsConvenientApiTests */
+    public function testTransactionsConvenientApi(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideTransactionsConvenientApiTests()
+    {
+        return $this->provideTests(__DIR__ . '/transactions-convenient-api/*.json');
+    }
+
     /**
      * @dataProvider provideVersionedApiTests
+     * @group serverless
      * @group versioned-api
      */
     public function testVersionedApi(UnifiedTestCase $test): void

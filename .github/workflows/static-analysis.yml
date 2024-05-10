@@ -1,6 +1,7 @@
 name: "Static Analysis"
 
 on:
+  merge_group:
   pull_request:
     branches:
       - "v*.*"
@@ -30,11 +31,11 @@ jobs:
         uses: shivammathur/cache-extensions@v1
         with:
           php-version: ${{ env.PHP_VERSION }}
-          extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           key: "extcache-v1"
 
       - name: Cache extensions
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.extcache.outputs.dir }}
           key: ${{ steps.extcache.outputs.key }}
@@ -44,7 +45,7 @@ jobs:
         uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
-          extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           php-version: "${{ env.PHP_VERSION }}"
           tools: "cs2pr"
 
@@ -52,12 +53,18 @@ jobs:
         run: "php --ri mongodb"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@2.2.0"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           composer-options: "--no-suggest"
 
       - name: "Run Psalm"
-        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc)"
+        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc) --report=psalm.sarif"
 
       - name: "Run Rector"
         run: "vendor/bin/rector --ansi --dry-run"
+
+      - name: "Upload Psalm report"
+        uses: actions/upload-artifact@v4
+        with:
+          name: psalm.sarif
+          path: psalm.sarif

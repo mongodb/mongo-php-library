@@ -17,12 +17,13 @@
 
 namespace MongoDB;
 
+use Composer\InstalledVersions;
 use Iterator;
-use Jean85\PrettyVersions;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\Monitoring\Subscriber;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Session;
@@ -164,6 +165,16 @@ class Client
     }
 
     /**
+     * Registers a monitoring event subscriber with this Client's Manager
+     *
+     * @see Manager::addSubscriber()
+     */
+    final public function addSubscriber(Subscriber $subscriber): void
+    {
+        $this->manager->addSubscriber($subscriber);
+    }
+
+    /**
      * Returns a ClientEncryption instance for explicit encryption and decryption
      *
      * @param array $options Encryption options
@@ -297,6 +308,16 @@ class Client
     }
 
     /**
+     * Unregisters a monitoring event subscriber with this Client's Manager
+     *
+     * @see Manager::removeSubscriber()
+     */
+    final public function removeSubscriber(Subscriber $subscriber): void
+    {
+        $this->manager->removeSubscriber($subscriber);
+    }
+
+    /**
      * Select a collection.
      *
      * @see Collection::__construct() for supported options
@@ -375,9 +396,9 @@ class Client
     {
         if (self::$version === null) {
             try {
-                self::$version = PrettyVersions::getVersion('mongodb/mongodb')->getPrettyVersion();
+                self::$version = InstalledVersions::getPrettyVersion('mongodb/mongodb') ?? 'unknown';
             } catch (Throwable $t) {
-                return 'unknown';
+                self::$version = 'error';
             }
         }
 

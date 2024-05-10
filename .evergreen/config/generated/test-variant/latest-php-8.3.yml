@@ -1,0 +1,86 @@
+# This file is generated automatically - please edit the "templates/test-variant/latest.yml" template file instead.
+buildvariants:
+  - name: test-debian11-php-8.3-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.3"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.3"
+      PHP_VERSION: "8.3"
+      VARIANT: debian11 # Referenced by ADL build script for downloading MQLRun
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.3"
+    tasks:
+      - ".standalone .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".sharded .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".loadbalanced .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - "test_serverless_task_group"
+      - "test_serverless_proxy_task_group"
+      - "test-atlas-data-lake"
+
+  - name: test-debian92-php-8.3-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 9.2, PHP 8.3"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      FETCH_BUILD_TASK: "build-php-8.3"
+      PHP_VERSION: "8.3"
+    depends_on:
+      - variant: "build-debian92"
+        name: "build-php-8.3"
+    tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+
+  # Test with upcoming PHPC versions
+  - name: test-debian11-php-8.3-phpc-next-stable
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.3, PHPC next-stable"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.3-next-stable"
+      PHP_VERSION: "8.3"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.3-next-stable"
+    tasks:
+      - ".replicaset .local .7.0 !.csfle"
+
+  - name: test-debian11-php-8.3-phpc-next-minor
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.3, PHPC next-minor"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.3-next-minor"
+      PHP_VERSION: "8.3"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.3-next-minor"
+    tasks:
+      - ".replicaset .local .7.0 !.csfle"
+
+  # Test Atlas and CSFLE on RHEL 8
+  - name: test-rhel80-php-8.3-atlas
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: RHEL 8.0, PHP 8.3"
+    run_on: rhel80-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-rhel80"
+      FETCH_BUILD_TASK: "build-php-8.3"
+      PHP_VERSION: "8.3"
+    depends_on:
+      - variant: "build-rhel80"
+        name: "build-php-8.3"
+    tasks:
+      - "test_atlas_task_group"
+      - ".csfle"
+

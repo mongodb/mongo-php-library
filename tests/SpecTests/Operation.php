@@ -150,16 +150,6 @@ final class Operation
         return $o;
     }
 
-    public static function fromRetryableWrites(stdClass $operation, stdClass $outcome)
-    {
-        $o = new self($operation);
-
-        $o->errorExpectation = ErrorExpectation::fromRetryableWrites($outcome);
-        $o->resultExpectation = ResultExpectation::fromRetryableWrites($outcome, $o->getResultAssertionType());
-
-        return $o;
-    }
-
     public static function fromTransactions(stdClass $operation)
     {
         $o = new self($operation);

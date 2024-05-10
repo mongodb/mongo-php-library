@@ -16,7 +16,7 @@ tasks:
           PHP_VERSION: "7.4"
       - func: "compile extension"
         vars:
-         EXTENSION_VERSION: "1.17.0"
+          EXTENSION_VERSION: "1.18.0"
       - func: "upload extension"
   - name: "build-php-7.4-next-stable"
     tags: ["build", "php7.4", "next-stable"]
@@ -26,7 +26,7 @@ tasks:
           PHP_VERSION: "7.4"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v1.17"
+          EXTENSION_BRANCH: "v1.18"
       - func: "upload extension"
   - name: "build-php-7.4-next-minor"
     tags: ["build", "php7.4", "next-minor"]

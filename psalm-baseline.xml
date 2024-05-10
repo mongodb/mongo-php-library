@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.20.0@3f284e96c9d9be6fe6b15c79416e1d1903dcfef4">
+<files psalm-version="5.18.0@b113f3ed0259fd6e212d87c3df80eec95a6abf19">
   <file src="docs/examples/encryption/csfle-explicit_encryption.php">
     <MixedArgument>
       <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
     </MixedArgument>
   </file>
-  <file src="examples/atlas-search.php">
+  <file src="examples/atlas_search.php">
     <MixedArgument>
       <code><![CDATA[$document['name']]]></code>
       <code><![CDATA[$index->name]]></code>
@@ -50,9 +50,6 @@
     <DeprecatedConstant>
       <code>self::CURSOR_NOT_FOUND</code>
     </DeprecatedConstant>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $this->resumeCallable]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/Client.php">
     <MixedArgument>
@@ -84,6 +81,14 @@
       <code><![CDATA[$options['revision']]]></code>
       <code><![CDATA[$options['revision']]]></code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code>$context</code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="src/GridFS/CollectionWrapper.php">
+    <MixedAssignment>
+      <code>$ids[]</code>
+    </MixedAssignment>
   </file>
   <file src="src/GridFS/ReadableStream.php">
     <MixedArgument>
@@ -92,20 +97,22 @@
     </MixedArgument>
   </file>
   <file src="src/GridFS/StreamWrapper.php">
-    <MixedArgument>
-      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
-      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
-      <code><![CDATA[$context[$this->protocol]['file']]]></code>
-      <code><![CDATA[$context[$this->protocol]['filename']]]></code>
-      <code><![CDATA[$context[$this->protocol]['options']]]></code>
-    </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
-      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
-      <code><![CDATA[$context[$this->protocol]['file']]]></code>
-      <code><![CDATA[$context[$this->protocol]['filename']]]></code>
-      <code><![CDATA[$context[$this->protocol]['options']]]></code>
-    </MixedArrayAccess>
+    <InvalidDocblock>
+      <code>private function getContext(string $path, string $mode): array</code>
+    </InvalidDocblock>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$this->getContext($path, $mode)]]></code>
+      <code><![CDATA[$this->getContext($path, $mode)]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code>$context</code>
+      <code>$count</code>
+      <code>$count</code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code>deleteFileAndChunksByFilename</code>
+      <code>updateFilenameForFilename</code>
+    </MixedMethodCall>
   </file>
   <file src="src/Model/BSONArray.php">
     <MixedAssignment>
@@ -324,9 +331,6 @@
     <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($this->filter)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/Operation/CreateCollection.php">
     <MixedArgument>
@@ -401,9 +405,6 @@
     <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($this->filter)]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/Operation/DropCollection.php">
     <MixedArgument>

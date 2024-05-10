@@ -55,7 +55,9 @@ final class UnifiedTestRunner
     public const MIN_SCHEMA_VERSION = '1.0';
 
     /* Note: This is necessary to support expectedError.errorResponse from 1.12;
-     * however, syntax from 1.9, 1.10, and 1.11 has not been implemented. */
+     * however, syntax from 1.9, 1.10, and 1.11 has not been fully implemented.
+     * Syntax for 1.9 is partially implemented (createEntities operation).
+     */
     public const MAX_SCHEMA_VERSION = '1.12';
 
     private Client $internalClient;
@@ -80,8 +82,11 @@ final class UnifiedTestRunner
 
         /* Atlas prohibits killAllSessions. Inspect the connection string to
          * determine if we should avoid calling killAllSessions(). This does
-         * mean that lingering transactions could block test execution. */
-        if ($this->isServerless() || FunctionalTestCase::isAtlas($internalClientUri)) {
+         * mean that lingering transactions could block test execution.
+         *
+         * Atlas Data Lake also does not support killAllSessions.
+         */
+        if ($this->isServerless() || FunctionalTestCase::isAtlas($internalClientUri) || $this->isAtlasDataLake()) {
             $this->allowKillAllSessions = false;
         }
 
@@ -312,6 +317,14 @@ final class UnifiedTestRunner
         }
     }
 
+    private function isAtlasDataLake(): bool
+    {
+        $database = $this->internalClient->selectDatabase('admin');
+        $buildInfo = $database->command(['buildInfo' => 1])->toArray()[0];
+
+        return ! empty($buildInfo->dataLake);
+    }
+
     /**
      * Return whether the connection is authenticated.
      *
@@ -483,7 +496,11 @@ final class UnifiedTestRunner
             switch ($operation->name) {
                 case 'distinct':
                     $hasDistinct = true;
-                    $collection = $context->getEntityMap()[$operation->object];
+                    /* TODO: If this operation references an entity that would
+                     * be created by a createEntities test runner operation, the
+                     * assertion below will fail; however, there is no need to
+                     * address this until such a transaction test is created. */
+                    $collection = $context->getEntityMap()[$operation->object] ?? null;
                     break;
 
                 case 'startTransaction':

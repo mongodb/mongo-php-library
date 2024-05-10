@@ -322,11 +322,11 @@ class Collection
      */
     public function createIndex($key, array $options = [])
     {
-        $commandOptionKeys = ['commitQuorum' => 1, 'maxTimeMS' => 1, 'session' => 1, 'writeConcern' => 1];
-        $indexOptions = array_diff_key($options, $commandOptionKeys);
-        $commandOptions = array_intersect_key($options, $commandOptionKeys);
+        $operationOptionKeys = ['comment' => 1, 'commitQuorum' => 1, 'maxTimeMS' => 1, 'session' => 1, 'writeConcern' => 1];
+        $indexOptions = array_diff_key($options, $operationOptionKeys);
+        $operationOptions = array_intersect_key($options, $operationOptionKeys);
 
-        return current($this->createIndexes([['key' => $key] + $indexOptions], $commandOptions));
+        return current($this->createIndexes([['key' => $key] + $indexOptions], $operationOptions));
     }
 
     /**

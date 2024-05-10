@@ -3,12 +3,14 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\ObjectId;
 use MongoDB\Collection;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Bucket;
+use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\GridFS\Exception\StreamException;
@@ -18,11 +20,13 @@ use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Codec\TestFileCodec;
 use MongoDB\Tests\Fixtures\Document\TestFile;
+use ReflectionMethod;
 use stdClass;
 
 use function array_merge;
 use function call_user_func;
 use function current;
+use function escapeshellarg;
 use function exec;
 use function fclose;
 use function fopen;
@@ -39,7 +43,7 @@ use function strlen;
 use function strncasecmp;
 use function substr;
 
-use const PHP_EOL;
+use const PHP_BINARY;
 use const PHP_OS;
 
 /**
@@ -853,21 +857,120 @@ class BucketFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply to Windows');
         }
 
-        $path = __DIR__ . '/../../vendor/autoload.php';
-        $command = <<<CMD
-php -r "require '$path'; \\\$stream = (new MongoDB\Client)->test->selectGridFSBucket()->openUploadStream('filename', ['disableMD5' => true]);" 2>&1
-CMD;
+        $code = <<<'PHP'
+            require '%s';
+            require '%s';
+            $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
+            $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
+            $gridfs = $database->selectGridFSBucket();
+            $stream = $gridfs->openUploadStream('hello.txt', ['disableMD5' => true]);
+            fwrite($stream, 'Hello MongoDB!');
+            PHP;
 
         @exec(
-            $command,
+            implode(' ', [
+                PHP_BINARY,
+                '-r',
+                escapeshellarg(
+                    sprintf(
+                        $code,
+                        __DIR__ . '/../../vendor/autoload.php',
+                        // Include the PHPUnit autoload file to ensure PHPUnit classes can be loaded
+                        __DIR__ . '/../../vendor/bin/.phpunit/phpunit/vendor/autoload.php',
+                    ),
+                ),
+                '2>&1',
+            ]),
             $output,
             $return,
         );
 
+        $this->assertSame([], $output);
         $this->assertSame(0, $return);
-        $output = implode(PHP_EOL, $output);
 
-        $this->assertSame('', $output);
+        $fileDocument = $this->filesCollection->findOne(['filename' => 'hello.txt']);
+
+        $this->assertNotNull($fileDocument);
+        $this->assertSame(14, $fileDocument->length);
+    }
+
+    public function testDanglingOpenWritableStreamWithGlobalStreamWrapperAlias(): void
+    {
+        if (! strncasecmp(PHP_OS, 'WIN', 3)) {
+            $this->markTestSkipped('Test does not apply to Windows');
+        }
+
+        $code = <<<'PHP'
+            require '%s';
+            require '%s';
+            $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
+            $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
+            $database->selectGridFSBucket()->registerGlobalStreamWrapperAlias('alias');
+            $stream = fopen('gridfs://alias/hello.txt', 'w');
+            fwrite($stream, 'Hello MongoDB!');
+            PHP;
+
+        @exec(
+            implode(' ', [
+                PHP_BINARY,
+                '-r',
+                escapeshellarg(
+                    sprintf(
+                        $code,
+                        __DIR__ . '/../../vendor/autoload.php',
+                        // Include the PHPUnit autoload file to ensure PHPUnit classes can be loaded
+                        __DIR__ . '/../../vendor/bin/.phpunit/phpunit/vendor/autoload.php',
+                    ),
+                ),
+                '2>&1',
+            ]),
+            $output,
+            $return,
+        );
+
+        $this->assertSame([], $output);
+        $this->assertSame(0, $return);
+
+        $fileDocument = $this->filesCollection->findOne(['filename' => 'hello.txt']);
+
+        $this->assertNotNull($fileDocument);
+        $this->assertSame(14, $fileDocument->length);
+    }
+
+    public function testResolveStreamContextForRead(): void
+    {
+        $stream = $this->bucket->openUploadStream('filename');
+        fwrite($stream, 'foobar');
+        fclose($stream);
+
+        $method = new ReflectionMethod($this->bucket, 'resolveStreamContext');
+        $method->setAccessible(true);
+
+        $context = $method->invokeArgs($this->bucket, ['gridfs://bucket/filename', 'rb', []]);
+
+        $this->assertIsArray($context);
+        $this->assertArrayHasKey('collectionWrapper', $context);
+        $this->assertInstanceOf(CollectionWrapper::class, $context['collectionWrapper']);
+        $this->assertArrayHasKey('file', $context);
+        $this->assertIsObject($context['file']);
+        $this->assertInstanceOf(ObjectId::class, $context['file']->_id);
+        $this->assertSame('filename', $context['file']->filename);
+    }
+
+    public function testResolveStreamContextForWrite(): void
+    {
+        $method = new ReflectionMethod($this->bucket, 'resolveStreamContext');
+        $method->setAccessible(true);
+
+        $context = $method->invokeArgs($this->bucket, ['gridfs://bucket/filename', 'wb', []]);
+
+        $this->assertIsArray($context);
+        $this->assertArrayHasKey('collectionWrapper', $context);
+        $this->assertInstanceOf(CollectionWrapper::class, $context['collectionWrapper']);
+        $this->assertArrayHasKey('filename', $context);
+        $this->assertSame('filename', $context['filename']);
+        $this->assertArrayHasKey('options', $context);
+        $this->assertSame(['chunkSizeBytes' => 261120, 'disableMD5' => false], $context['options']);
     }
 
     /**

@@ -1,6 +1,7 @@
 name: "Coding Standards"
 
 on:
+  merge_group:
   pull_request:
     branches:
       - "v*.*"
@@ -34,7 +35,7 @@ jobs:
           key: "extcache-v1"
 
       - name: Cache extensions
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.extcache.outputs.dir }}
           key: ${{ steps.extcache.outputs.key }}
@@ -52,7 +53,7 @@ jobs:
         run: "php --ri mongodb"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@2.2.0"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           composer-options: "--no-suggest"
 

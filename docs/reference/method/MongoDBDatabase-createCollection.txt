@@ -296,7 +296,7 @@ Parameters
          rules or expressions. You can specify the expressions using the same
          operators as MongoDB's
          :manual:`query operators </reference/operator/query>` with the
-         exception of :query:`$geoNear`, :query:`$near`, :query:`$nearSphere`,
+         exception of :query:`$near`, :query:`$nearSphere`,
          :query:`$text`, and :query:`$where`.
 
          .. note::

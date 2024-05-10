@@ -30,12 +30,12 @@ Parameters
 ``$operations`` : array
   An array containing the write operations to perform.
   :phpmethod:`MongoDB\Collection::bulkWrite()` supports
-  :phpmethod:`deleteMany() <MongoDB\Collection::deleteMany>`,
-  :phpmethod:`deleteOne() <MongoDB\Collection::deleteOne>`,
-  :phpmethod:`insertOne() <MongoDB\Collection::insertOne>`,
-  :phpmethod:`replaceOne() <MongoDB\Collection::replaceOne>`,
-  :phpmethod:`updateMany() <MongoDB\Collection::updateMany>`, and
-  :phpmethod:`updateOne() <MongoDB\Collection::updateOne>` operations in the
+  :phpmethod:`MongoDB\Collection::deleteMany()`,
+  :phpmethod:`MongoDB\Collection::deleteOne()`,
+  :phpmethod:`MongoDB\Collection::insertOne()`,
+  :phpmethod:`MongoDB\Collection::replaceOne()`,
+  :phpmethod:`MongoDB\Collection::updateMany()`, and
+  :phpmethod:`MongoDB\Collection::updateOne()` operations in the
   following array structure:
 
   .. code-block:: php

@@ -28,7 +28,7 @@ Parameters
 ``$indexName`` : string| :phpclass:`MongoDB\Model\IndexInfo`
   The name or model object of the index to drop. View the existing indexes on
   the collection using the :phpmethod:`listIndexes()
-  <MongoDB\Collection::listIndexes>` method.
+  <MongoDB\Collection::listIndexes()>` method.
 
 ``$options`` : array
   An array specifying the desired options.

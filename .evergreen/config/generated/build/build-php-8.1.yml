@@ -16,7 +16,7 @@ tasks:
           PHP_VERSION: "8.1"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "1.18.0"
+          EXTENSION_VERSION: "1.19.0"
       - func: "upload extension"
   - name: "build-php-8.1-next-stable"
     tags: ["build", "php8.1", "next-stable"]
@@ -26,7 +26,7 @@ tasks:
           PHP_VERSION: "8.1"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v1.18"
+          EXTENSION_BRANCH: "v1.19"
       - func: "upload extension"
   - name: "build-php-8.1-next-minor"
     tags: ["build", "php8.1", "next-minor"]

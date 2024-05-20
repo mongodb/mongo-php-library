@@ -55,11 +55,16 @@ final class UnifiedTestRunner
 
     public const MIN_SCHEMA_VERSION = '1.0';
 
-    /* Note: This is necessary to support expectedError.errorResponse from 1.12;
-     * however, syntax from 1.9, 1.10, and 1.11 has not been fully implemented.
-     * Syntax for 1.9 is partially implemented (createEntities operation).
+    /**
+     * Support for the following schema versions is incomplete:
+     *
+     *   - 1.9: Only createEntities operation is implemented
+     *   - 1.10: Not implemented
+     *   - 1.11: Not implemented, but CMAP is not applicable
+     *   - 1.13: Not implemented
+     *   - 1.14: Not implemented
      */
-    public const MAX_SCHEMA_VERSION = '1.12';
+    public const MAX_SCHEMA_VERSION = '1.15';
 
     private Client $internalClient;
 

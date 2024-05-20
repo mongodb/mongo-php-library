@@ -275,7 +275,7 @@ final class EventObserver implements CommandSubscriber
 
     private function assertCommandSucceededEvent(CommandSucceededEvent $actual, stdClass $expected, string $message): void
     {
-        Util::assertHasOnlyKeys($expected, ['reply', 'commandName', 'hasServiceId', 'hasServerConnectionId']);
+        Util::assertHasOnlyKeys($expected, ['reply', 'commandName', 'databaseName', 'hasServiceId', 'hasServerConnectionId']);
 
         if (isset($expected->reply)) {
             assertIsObject($expected->reply);
@@ -286,6 +286,11 @@ final class EventObserver implements CommandSubscriber
         if (isset($expected->commandName)) {
             assertIsString($expected->commandName);
             assertSame($actual->getCommandName(), $expected->commandName, $message . ': commandName matches');
+        }
+
+        if (isset($expected->databaseName)) {
+            assertIsString($expected->databaseName);
+            assertSame($actual->getDatabaseName(), $expected->databaseName, $message . ': databaseName matches');
         }
 
         if (isset($expected->hasServiceId)) {
@@ -301,11 +306,16 @@ final class EventObserver implements CommandSubscriber
 
     private function assertCommandFailedEvent(CommandFailedEvent $actual, stdClass $expected, string $message): void
     {
-        Util::assertHasOnlyKeys($expected, ['commandName', 'hasServiceId', 'hasServerConnectionId']);
+        Util::assertHasOnlyKeys($expected, ['commandName', 'databaseName', 'hasServiceId', 'hasServerConnectionId']);
 
         if (isset($expected->commandName)) {
             assertIsString($expected->commandName);
             assertSame($actual->getCommandName(), $expected->commandName, $message . ': commandName matches');
+        }
+
+        if (isset($expected->databaseName)) {
+            assertIsString($expected->databaseName);
+            assertSame($actual->getDatabaseName(), $expected->databaseName, $message . ': databaseName matches');
         }
 
         if (isset($expected->hasServiceId)) {

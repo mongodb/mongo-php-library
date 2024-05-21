@@ -1,0 +1,51 @@
+name: Setup
+description: Sets up the build environment
+inputs:
+  php-version:
+    description: "PHP version to install"
+    required: true
+  driver-version:
+    description: "MongoDB extension version to install"
+    required: true
+  php-ini-values:
+    description: "INI values to pass along to setup-php action"
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Setup cache environment
+      id: extcache
+      uses: shivammathur/cache-extensions@v1
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: "mongodb-${{ env.DRIVER_VERSION }}"
+        key: "extcache-v1"
+
+    - name: Cache extensions
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.extcache.outputs.dir }}
+        key: ${{ steps.extcache.outputs.key }}
+        restore-keys: ${{ steps.extcache.outputs.key }}
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        extensions: "mongodb-${{ inputs.driver-version }}"
+        php-version: "${{ inputs.php-version }}"
+        tools: cs2pr
+        ini-values: "${{ inputs.php-ini-values }}"
+
+    - name: Show driver information
+      run: "php --ri mongodb"
+      shell: bash
+
+    - name: Install dependencies with Composer
+      uses: ramsey/composer-install@3.0.0
+      with:
+        # Revert when psalm supports PHP 8.4
+        # composer-options: "--no-suggest"
+        composer-options: "--no-suggest ${{ inputs.php-version == '8.4' && '--ignore-platform-req=php+' || '' }}"

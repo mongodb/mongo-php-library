@@ -75,40 +75,12 @@ jobs:
           version: ${{ matrix.mongodb-version }}
           topology: ${{ matrix.topology }}
 
-      - name: Setup cache environment
-        id: extcache
-        uses: shivammathur/cache-extensions@v1
+      - name: "Setup"
+        uses: "./.github/actions/setup"
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
-          key: "extcache-v1"
-
-      - name: Cache extensions
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.extcache.outputs.dir }}
-          key: ${{ steps.extcache.outputs.key }}
-          restore-keys: ${{ steps.extcache.outputs.key }}
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          php-version: "${{ matrix.php-version }}"
-          tools: "pecl"
-          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
-          coverage: "none"
-          ini-values: "zend.assertions=1"
-
-      - name: "Show driver information"
-        run: "php --ri mongodb"
-
-      - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@3.0.0"
-        with:
-          # Revert when psalm supports PHP 8.4
-          # composer-options: "--no-suggest"
-          composer-options: "--no-suggest ${{ matrix.php-version == '8.4' && '--ignore-platform-req=php+' || '' }}"
-
+          driver-version: ${{ env.DRIVER_VERSION }}
+          php-ini-values: "zend.assertions=1"
 
       - name: "Run PHPUnit"
         run: "vendor/bin/simple-phpunit -v"

@@ -37,7 +37,7 @@ jobs:
       - name: "Run Psalm"
         run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc) --report=psalm.sarif"
 
-      - name: "Upload sarif report"
+      - name: "Upload SARIF report"
         uses: "github/codeql-action/upload-sarif@v3"
         with:
           sarif_file: psalm.sarif

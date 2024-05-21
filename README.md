@@ -44,6 +44,26 @@ that the `mongodb` extension be installed:
 Additional installation instructions for the extension may be found in its
 [PHP.net documentation](https://php.net/manual/en/mongodb.installation.php).
 
+## Release Integrity
+
+Releases are created automatically and the resulting release tag is signed using
+the [PHP team's GPG key](https://pgp.mongodb.com/php-driver.asc). To verify the
+tag signature, download the key and import it using `gpg`:
+
+```shell
+gpg --import php-driver.asc
+```
+
+Then, in a local clone, verify the signature of a given tag (e.g. `1.19.0`):
+
+```shell
+git show --show-signature 1.19.0
+```
+
+> [!NOTE]
+> Composer does not support verifying signatures as part of its installation
+> process.
+
 ## Reporting Issues
 
 Issues pertaining to the library should be reported in the

@@ -80,24 +80,21 @@ jobs:
           git config user.name "${GIT_AUTHOR_NAME}"
           git config user.email "${GIT_AUTHOR_EMAIL}"
 
-      # Create a draft release with a changelog
-      # TODO: Consider using the API to generate changelog
-      - name: "Create draft release with generated changelog"
-        run: gh release create ${{ inputs.version }} --target ${{ github.ref_name }} --generate-notes --draft
-
-      - name: "Read changelog from draft release"
-        run: gh release view ${{ inputs.version }} --json body --template '{{ .body }}' >> changelog
-
-      - name: "Prepare tag message"
+      # Create a draft release with release message filled in
+      - name: "Prepare release message"
         run: |
-          echo -e "Release ${PACKAGE_VERSION}\n" > tag-message
-          cat changelog >> tag-message
+          cat > release-message <<'EOL'
+          ${{ format(env.default-release-message, inputs.version, inputs.jira-version-number) }}
+          EOL
+
+      - name: "Create draft release"
+        run: echo "RELEASE_URL=$(gh release create ${{ inputs.version }} --target ${{ github.ref_name }} --title "${{ inputs.version }}" --notes-file release-message --draft)" >> "$GITHUB_ENV"
 
       # This step creates the signed release tag
       - name: "Create release tag"
         uses: mongodb-labs/drivers-github-tools/garasign/git-sign@main
         with:
-          command: "git tag -F tag-message -s --local-user=${{ vars.GPG_KEY_ID }} ${{ inputs.version }}"
+          command: "git tag -m 'Release ${{ inputs.version }}' -s --local-user=${{ vars.GPG_KEY_ID }} ${{ inputs.version }}"
           garasign_username: ${{ secrets.GRS_CONFIG_USER1_USERNAME }}
           garasign_password: ${{ secrets.GRS_CONFIG_USER1_PASSWORD }}
           artifactory_username: ${{ secrets.ARTIFACTORY_USER }}
@@ -119,10 +116,6 @@ jobs:
           ${{ format(env.default-release-message, inputs.version, inputs.jira-version-number) }}
           EOL
           cat changelog >> release-message
-
-      # Update release with correct release information
-      - name: "Update release information"
-        run: echo "RELEASE_URL=$(gh release edit ${{ inputs.version }} --title "${{ inputs.version }}" --notes-file release-message)" >> "$GITHUB_ENV"
 
       # Pushing the release tag starts build processes that then produce artifacts for the release
       - name: "Push release tag"

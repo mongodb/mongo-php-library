@@ -107,9 +107,9 @@ Parameters
 
      * - serverApi
        - :php:`MongoDB\Driver\ServerApi <class.mongodb-driver-serverapi>`
-       - Used to declare an API version on the client. Refer to
-         :manual:`Stable API tutorial </tutorial/stable-api>` for additional
-         information.
+       - Used to declare an API version on the client. Refer to the
+         :manual:`Stable API </reference/stable-api>` page in the Server manual for
+         additional information.
 
          .. versionadded:: 1.9
 

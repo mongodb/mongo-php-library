@@ -110,13 +110,6 @@ jobs:
       - name: "Push changes from release branch"
         run: git push
 
-      - name: "Prepare release message"
-        run: |
-          cat > release-message <<'EOL'
-          ${{ format(env.default-release-message, inputs.version, inputs.jira-version-number) }}
-          EOL
-          cat changelog >> release-message
-
       # Pushing the release tag starts build processes that then produce artifacts for the release
       - name: "Push release tag"
         run: git push origin ${{ inputs.version }}

@@ -161,7 +161,7 @@
         <exclude-pattern>/examples</exclude-pattern>
     </rule>
     <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
-        <exclude-pattern>/tests/SpecTests/ClientSideEncryption/Prose*</exclude-pattern>
+        <exclude-pattern>/tests/SpecTests/*/Prose*</exclude-pattern>
     </rule>
 
     <!-- **************************************** -->

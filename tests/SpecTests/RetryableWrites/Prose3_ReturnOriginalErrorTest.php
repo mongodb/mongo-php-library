@@ -1,27 +1,25 @@
 <?php
 
-namespace MongoDB\Tests\SpecTests;
+namespace MongoDB\Tests\SpecTests\RetryableWrites;
 
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
+use MongoDB\Tests\SpecTests\FunctionalTestCase;
 
 /**
- * Retryable writes spec tests.
+ * Prose test 3: Return Original Error
  *
- * @see https://github.com/mongodb/specifications/tree/master/source/retryable-writes
+ * @see https://github.com/mongodb/specifications/blob/master/source/retryable-writes/tests/README.md
  * @group serverless
  */
-class RetryableWritesSpecTest extends FunctionalTestCase
+class Prose3_ReturnOriginalErrorTest extends FunctionalTestCase
 {
-    public const NOT_PRIMARY = 10107;
+    public const NOT_WRITABLE_PRIMARY = 10107;
     public const SHUTDOWN_IN_PROGRESS = 91;
 
-    /**
-     * Prose test 3: when encountering a NoWritesPerformed error after an error with a RetryableWriteError label
-     */
     public function testNoWritesPerformedErrorReturnsOriginalError(): void
     {
         if (! $this->isReplicaSet()) {
@@ -46,9 +44,9 @@ class RetryableWritesSpecTest extends FunctionalTestCase
         ]);
 
         $subscriber = new class ($this) implements CommandSubscriber {
-            private RetryableWritesSpecTest $testCase;
+            private FunctionalTestCase $testCase;
 
-            public function __construct(RetryableWritesSpecTest $testCase)
+            public function __construct(FunctionalTestCase $testCase)
             {
                 $this->testCase = $testCase;
             }
@@ -65,7 +63,7 @@ class RetryableWritesSpecTest extends FunctionalTestCase
                         'configureFailPoint' => 'failCommand',
                         'mode' => ['times' => 1],
                         'data' => [
-                            'errorCode' => RetryableWritesSpecTest::NOT_PRIMARY,
+                            'errorCode' => Prose3_ReturnOriginalErrorTest::NOT_WRITABLE_PRIMARY,
                             'errorLabels' => ['RetryableWriteError', 'NoWritesPerformed'],
                             'failCommands' => ['insert'],
                         ],
@@ -78,7 +76,7 @@ class RetryableWritesSpecTest extends FunctionalTestCase
             }
         };
 
-        $client->getManager()->addSubscriber($subscriber);
+        $client->addSubscriber($subscriber);
 
         // Step 4: Run insertOne
         try {
@@ -91,11 +89,8 @@ class RetryableWritesSpecTest extends FunctionalTestCase
             $this->assertSame(self::SHUTDOWN_IN_PROGRESS, $writeConcernError->getCode());
         }
 
-        // Step 5: Disable the fail point
-        $client->getManager()->removeSubscriber($subscriber);
-        $this->configureFailPoint([
-            'configureFailPoint' => 'failCommand',
-            'mode' => 'off',
-        ]);
+        $client->removeSubscriber($subscriber);
+
+        // Step 5: The fail point will be disabled during tearDown()
     }
 }

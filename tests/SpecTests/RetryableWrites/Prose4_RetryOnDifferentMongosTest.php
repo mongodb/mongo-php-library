@@ -44,6 +44,7 @@ class Prose4_RetryOnDifferentMongosTest extends FunctionalTestCase
          */
         $servers = $client->getManager()->getServers();
         assert(count($servers) === 2);
+        $this->assertNotEquals($servers[0], $servers[1]);
 
         // Step 2: Configure the following fail point on each mongos
         foreach ($servers as $server) {

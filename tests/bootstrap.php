@@ -1,6 +1,7 @@
 <?php
 
 use MongoDB\Tests\Comparator\Int64Comparator;
+use MongoDB\Tests\Comparator\ServerComparator;
 use MongoDB\Tests\TestCase;
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 
@@ -8,6 +9,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // Register custom comparators
 ComparatorFactory::getInstance()->register(new Int64Comparator());
+ComparatorFactory::getInstance()->register(new ServerComparator());
 
 /* Ugly workaround for event system changes in PHPUnit
  * PHPUnit 10 introduces a new event system, and at the same time removes the

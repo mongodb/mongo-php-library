@@ -18,7 +18,7 @@ Definition
    Provides methods for common operations on collections and documents,
    including CRUD operations and index management.
 
-   You can construct collections directly using the driver's
+   You can construct collections directly using the extension's
    :php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>` class or
    select a collection from the library's :phpclass:`MongoDB\Client` or
    :phpclass:`MongoDB\Database` classes. A collection may also be cloned from

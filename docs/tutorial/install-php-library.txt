@@ -11,9 +11,8 @@ Install the |php-library|
    :class: singlecol
 
 The |php-library| is a high-level abstraction for the
-`PHP driver <https://php.net/mongodb>`_ (i.e. ``mongodb`` extension). This page
-will briefly explain how to install both the ``mongodb`` extension and the
-|php-library|.
+:php:`mongodb extension <mongodb>`. This page will briefly explain how to
+install both the ``mongodb`` extension and the |php-library|.
 
 Installing the Extension
 ------------------------

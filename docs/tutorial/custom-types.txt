@@ -16,7 +16,7 @@ if you want to store date/time information retaining the time zone
 information that PHP's :php:`DateTimeImmutable <class.datetimeimmutable>`
 class stores with a point in time.
 
-The driver serializes PHP variables, including objects, into BSON when it
+The extension serializes PHP variables, including objects, into BSON when it
 communicates to the server, and deserializes BSON back into PHP variables when
 it receives data from the server.
 
@@ -74,12 +74,12 @@ a string containing the Olson time zone identifier:
         }
     ?>
 
-The driver will additionally add a ``__pclass`` field to the document, and
+The extension will additionally add a ``__pclass`` field to the document, and
 store that in the database, too. This field contains the PHP class name so that
-upon deserialization the driver knows which class to use for recreating the
+upon deserialization the extension knows which class to use for recreating the
 stored object.
 
-When the document is read from the database, the driver detects whether a
+When the document is read from the database, the extension detects whether a
 ``__pclass`` field is present and then executes
 :php:`MongoDB\BSON\Persistable::bsonUnserialize
 <mongodb-bson-unserializable.bsonunserialize>` method which is

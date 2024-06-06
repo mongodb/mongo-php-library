@@ -28,7 +28,7 @@ Classes
 
    This class extends PHP's :php:`ArrayObject <arrayobject>` class. It also
    implements PHP's :php:`JsonSerializable <jsonserializable>` interface and the
-   driver's :php:`MongoDB\BSON\Serializable <mongodb-bson-serializable>` and
+   extension's :php:`MongoDB\BSON\Serializable <mongodb-bson-serializable>` and
    :php:`MongoDB\BSON\Unserializable <mongodb-bson-unserializable>`
    interfaces.
 
@@ -41,7 +41,7 @@ Classes
 
    This class extends PHP's :php:`ArrayObject <arrayobject>` class. It also
    implements PHP's :php:`JsonSerializable <jsonserializable>` interface and the
-   driver's :php:`MongoDB\BSON\Serializable <mongodb-bson-serializable>` and
+   extension's :php:`MongoDB\BSON\Serializable <mongodb-bson-serializable>` and
    :php:`MongoDB\BSON\Unserializable <mongodb-bson-unserializable>`
    interfaces.
 

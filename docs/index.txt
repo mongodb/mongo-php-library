@@ -5,8 +5,7 @@ MongoDB PHP Library
 .. default-domain:: mongodb
 
 The |php-library| provides a high-level abstraction around the lower-level
-`PHP driver <https://php.net/mongodb>`_, also known as the ``mongodb``
-extension.
+:php:`mongodb extension <mongodb>`.
 
 The ``mongodb`` extension provides a limited API to connect to the database and
 execute generic commands, queries, and write operations. In contrast, the

@@ -10,12 +10,12 @@ ref: error-driver-invalidargumentexception
 content: |
   :php:`MongoDB\Driver\Exception\InvalidArgumentException
   <mongodb-driver-exception-invalidargumentexception>` for errors related to the
-  parsing of parameters or options at the driver level.
+  parsing of parameters or options at the extension level.
 ---
 ref: error-driver-runtimeexception
 content: |
   :php:`MongoDB\Driver\Exception\RuntimeException
-  <mongodb-driver-exception-runtimeexception>` for other errors at the driver
+  <mongodb-driver-exception-runtimeexception>` for other errors at the extension
   level (e.g. connection errors).
 ---
 ref: error-badmethodcallexception-write-result

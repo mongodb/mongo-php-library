@@ -17,7 +17,7 @@ Definition
 
 .. phpmethod:: MongoDB\add_logger()
 
-   Registers a PSR logger to receive log messages from the driver.
+   Registers a PSR logger to receive log messages from the extension.
 
    .. code-block:: php
 
@@ -36,8 +36,8 @@ Behavior
 
 This function allows the application to register one or more
 `Psr\\Log\\LoggerInterface <https://www.php-fig.org/psr/psr-3/#3-psrlogloggerinterface>`__
-objects to receive log messages from libmongoc and the driver. Each registered
-logger will receive messages for *all* clients.
+objects to receive log messages from libmongoc and the extension. Each
+registered logger will receive messages for *all* clients.
 
 Messages originating from the extension will have their log level translated to
 an equivalent `PSR log level <https://www.php-fig.org/psr/psr-3/#5-psrlogloglevel>`__.

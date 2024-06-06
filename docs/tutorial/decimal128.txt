@@ -19,9 +19,8 @@ floating-point value capable of emulating decimal rounding with exact precision.
 This functionality is intended for applications that handle :manual:`monetary
 data </tutorial/model-monetary-data>`, such as financial and tax computations.
 
-The :php:`MongoDB\BSON\Decimal128 <mongodb-bson-decimal128>` class, which was
-introduced in :php:`PHP driver <mongodb>` 1.2.0, may be used to work with this
-type in PHP.
+The :php:`MongoDB\BSON\Decimal128 <mongodb-bson-decimal128>` class may be used
+to work with this type in PHP.
 
 Working with Decimal128 Values
 ------------------------------
@@ -70,7 +69,7 @@ The output would then resemble:
 Mathematical Operations with BCMath
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :php:`PHP driver <mongodb>` does not provide any functionality for working
+The :php:`extension <mongodb>` does not provide any functionality for working
 with ``Decimal128`` values; however, the string representation of a
 :php:`MongoDB\BSON\Decimal128 <mongodb-bson-decimal128>` object may be used
 with PHP's :php:`BCMath <bcmath>` extension.

@@ -18,7 +18,7 @@ Definition
    Provides methods for common operations on a database, such as executing
    database commands and managing collections.
 
-   You can construct a database directly using the driver's
+   You can construct a database directly using the extension's
    :php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>` class or
    select a database from the library's :phpclass:`MongoDB\Client` class. A
    database may also be cloned from an existing :phpclass:`MongoDB\Database`

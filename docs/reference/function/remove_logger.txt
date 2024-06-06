@@ -17,7 +17,8 @@ Definition
 
 .. phpmethod:: MongoDB\remove_logger()
 
-   Unregisters a PSR logger to no longer receive log messages from the driver.
+   Unregisters a PSR logger to no longer receive log messages from the
+   extension.
 
    .. code-block:: php
 

@@ -53,16 +53,16 @@ are aliases of one another).
 Persistable Classes
 -------------------
 
-The driver's :php:`persistence specification <mongodb.persistence>` outlines how
-classes implementing its :php:`MongoDB\BSON\Persistable
+The extension's :php:`persistence specification <mongodb.persistence>` outlines
+how classes implementing its :php:`MongoDB\BSON\Persistable
 <mongodb-bson-persistable>` interface are serialized to and deserialized from
 BSON. The :php:`Persistable <mongodb-bson-persistable>` interface is analogous
 to PHP's :php:`Serializable interface <class.serializable>`.
 
-The driver automatically handles serialization and deserialization for classes
-implementing the :php:`Persistable <mongodb-bson-persistable>` interface without
-requiring the use of the ``typeMap`` option. This is done by encoding the name
-of the PHP class in a special property within the BSON document.
+The extension automatically handles serialization and deserialization for
+classes implementing the :php:`Persistable <mongodb-bson-persistable>` interface
+without requiring the use of the ``typeMap`` option. This is done by encoding
+the name of the PHP class in a special property within the BSON document.
 
 .. note::
 

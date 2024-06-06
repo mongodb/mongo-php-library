@@ -22,7 +22,7 @@ Definition
    provides an interface around these collections for working with the files as
    PHP :php:`Streams <stream>`.
 
-   You can construct a GridFS bucket using the driver's
+   You can construct a GridFS bucket using the extension's
    :php:`Manager <class.mongodb-driver-manager>` class, or select a bucket from
    the library's :phpclass:`MongoDB\Database` class via the
    :phpmethod:`selectGridFSBucket() <MongoDB\Database::selectGridFSBucket()>`

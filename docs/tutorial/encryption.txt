@@ -15,9 +15,9 @@ Dependencies
 ------------
 
 To get started using in-use encryption in your project, the
-`PHP driver <https://php.net/mongodb>`_ (i.e. ``mongodb`` extension) will need
-to be compiled with `libmongocrypt <https://github.com/mongodb/libmongocrypt>`_
-(enabled by default).
+:php:`extension <mongodb>` will need to be compiled with
+`libmongocrypt <https://github.com/mongodb/libmongocrypt>`_ (enabled by
+default).
 
 Additionally, either ``crypt_shared`` or ``mongocryptd`` are required in order to
 use *automatic* client-side encryption. Neither is required for *explicit*
@@ -31,14 +31,14 @@ The :manual:`Automatic Encryption Shared Library </core/queryable-encryption/ref
 (``crypt_shared``) provides the same functionality as ``mongocryptd``, but does not
 require you to spawn another process to perform automatic encryption.
 
-By default, the PHP driver attempts to load ``crypt_shared`` from the system path(s)
-and uses it automatically if found. To load ``crypt_shared`` from another location,
-use the ``cryptSharedLibPath`` auto encryption
+By default, the extension attempts to load ``crypt_shared`` from the system
+path(s) and uses it automatically if found. To load ``crypt_shared`` from
+another location, use the ``cryptSharedLibPath`` auto encryption
 :php:`driver option <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`
-when constructing a client. If the driver cannot load ``crypt_shared`` it will
-attempt to fallback to using ``mongocryptd`` by default. The
-``cryptSharedLibRequired`` option may be used to always require ``crypt_shared`` and
-fail if it cannot be loaded.
+when constructing a client. If the extension cannot load ``crypt_shared`` it
+will attempt to fallback to using ``mongocryptd`` by default. The
+``cryptSharedLibRequired`` option may be used to always require ``crypt_shared``
+and fail if it cannot be loaded.
 
 For detailed installation instructions see the MongoDB documentation for the
 :manual:`Automatic Encryption Shared Library </core/queryable-encryption/reference/shared-library/>`.

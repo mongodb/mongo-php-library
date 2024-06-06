@@ -53,7 +53,7 @@ MongoDB\\Exception\\InvalidArgumentException
    Thrown for errors related to the parsing of parameters or options within the
    library.
 
-   This class extends the driver's :php:`InvalidArgumentException
+   This class extends the extension's :php:`InvalidArgumentException
    <mongodb-driver-exception-invalidargumentexception>` class and implements the
    library's :phpclass:`Exception <MongoDB\Exception\Exception>` interface.
 
@@ -67,10 +67,9 @@ MongoDB\\Exception\\UnexpectedValueException
    This exception is thrown when a command response from the server is
    malformed or not what the library expected. This exception means that an
    assertion in some operation, which abstracts a database command, has failed.
-   It may indicate a corrupted BSON response or bug in the server, driver, or
-   library.
+   It may indicate a corrupted BSON response or bug in the server or driver.
 
-   This class extends the driver's :php:`UnexpectedValueException
+   This class extends the extension's :php:`UnexpectedValueException
    <mongodb-driver-exception-unexpectedvalueexception>` class and implements the
    library's :phpclass:`Exception <MongoDB\Exception\Exception>` interface.
 
@@ -133,7 +132,7 @@ MongoDB\\Exception\\Exception
 
 .. phpclass:: MongoDB\Exception\Exception
 
-   This interface extends the driver's :php:`Exception
+   This interface extends the extension's :php:`Exception
    <mongodb-driver-exception-exception>` interface and is implemented by all
    exception classes within the library.
 
@@ -144,6 +143,6 @@ MongoDB\\Exception\\RuntimeException
 
 .. phpclass:: MongoDB\Exception\RuntimeException
 
-   This class extends the driver's :php:`RuntimeException
+   This class extends the extension's :php:`RuntimeException
    <mongodb-driver-exception-runtimeexception>` class, which in turn extends
    PHP's :php:`RuntimeException <runtimeexception>` class.

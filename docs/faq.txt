@@ -125,15 +125,15 @@ The following are all examples of
 
 These errors typically manifest as a
 :php:`MongoDB\Driver\Exception\ConnectionTimeoutException <mongodb-driver-exception-connectiontimeoutexception>`
-exception from the driver. The actual exception messages originate from
-libmongoc, which is the underlying library used by the PHP driver. Since these
-messages can take many forms, it's helpful to break down the structure of the
-message so you can better diagnose errors in your application.
+exception from the extension. The actual exception messages originate from
+libmongoc, which is the underlying system library used by the extension. Since
+these messages can take many forms, it's helpful to break down the structure of
+the message so you can better diagnose errors in your application.
 
 Messages will typically start with "No suitable servers found". The next part of
-the message indicates *how* server selection failed. By default, the PHP driver
+the message indicates *how* server selection failed. By default, the extension
 avoids a server selection loop and instead makes a single attempt (according to
-the ``serverSelectionTryOnce`` connection string option). If the driver is
+the ``serverSelectionTryOnce`` connection string option). If the extension is
 configured to utilize a loop, a message like "serverSelectionTimeoutMS expired"
 will tell us that we exhausted its time limit.
 

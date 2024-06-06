@@ -29,8 +29,8 @@ Parameters
 ----------
 
 ``$manager`` : :php:`MongoDB\Driver\Manager <class.mongodb-driver-manager>`
-  The :php:`Manager <mongodb-driver-manager>` instance from the driver. The
-  manager maintains connections between the driver and your MongoDB instances.
+  The :php:`Manager <mongodb-driver-manager>` instance from the extension. The
+  manager maintains connections between the driver and MongoDB.
 
 ``$databaseName`` : string
   The name of the database.

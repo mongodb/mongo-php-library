@@ -91,7 +91,7 @@ The output might resemble the following:
    will return a single result document with the essential ingredients for
    constructing the cursor (i.e. the cursor's ID, namespace, and an optional
    first batch of results). If the :php:`MongoDB\Driver\Manager::executeCommand()
-   <mongodb-driver-manager.executecommand>` method in the PHP driver detects
+   <mongodb-driver-manager.executecommand>` method in the extension detects
    such a response, it will construct an iterable command cursor and return it
    instead of the raw result document. If necessary, raw result documents can
    still be observed using `command monitoring

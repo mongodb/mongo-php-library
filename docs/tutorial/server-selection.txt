@@ -15,8 +15,8 @@ Server Selection and Monitoring
 
 Before any operation can be executed, the |php-library| must first select a
 server from the topology (e.g. replica set, sharded cluster). Selecting a server
-requires an accurate view of the topology, so the driver (i.e. ``mongodb``
-extension) regularly monitors the servers to which it is connected.
+requires an accurate view of the topology, so the extension regularly monitors
+the servers to which it is connected.
 
 In most other drivers, server discovery and monitoring is handled by a
 background thread; however, the PHP driver is single-threaded and must therefore
@@ -30,9 +30,9 @@ Consider the following example application:
 
    /**
     * When constructing a Client, the library creates a MongoDB\Driver\Manager
-    * object from the driver. In turn, the driver will either create a libmongoc
-    * client object (and persist it according to the constructor parameters) or
-    * re-use a previously persisted client.
+    * object from the extension. In turn, the extension will either create a
+    * libmongoc client object (and persist it according to the constructor
+    * parameters) or re-use a previously persisted client.
     *
     * Assuming a new libmongoc client was created, the host name(s) in the
     * connection string must be resolved via DNS. Likewise, if the connection

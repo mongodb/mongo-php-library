@@ -15,7 +15,7 @@ on:
   workflow_call:
     inputs:
       ref:
-        description: "The git reference to check"
+        description: "The git ref to check"
         type: string
         required: true
 

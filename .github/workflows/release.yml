@@ -162,6 +162,7 @@ jobs:
           ref: refs/tags/${{ inputs.version }}
           token: ${{ env.GH_TOKEN }}
 
+      # Sets the S3_ASSETS environment variable used later
       - name: "Set up drivers-github-tools"
         uses: mongodb-labs/drivers-github-tools/setup@v2
         with:

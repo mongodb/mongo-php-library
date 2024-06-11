@@ -12,8 +12,12 @@ on:
       - "v*.*"
       - "master"
       - "feature/*"
-    tags:
-      - "*"
+  workflow_call:
+    inputs:
+      ref:
+        description: "The git ref to check"
+        type: string
+        required: true
 
 env:
   PHP_VERSION: "8.2"
@@ -27,6 +31,8 @@ jobs:
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4"
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
 
       - name: "Setup"
         uses: "./.github/actions/setup"
@@ -41,20 +47,3 @@ jobs:
         uses: "github/codeql-action/upload-sarif@v3"
         with:
           sarif_file: psalm.sarif
-
-  rector:
-    name: "Rector"
-    runs-on: "ubuntu-22.04"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
-
-      - name: "Setup"
-        uses: "./.github/actions/setup"
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          driver-version: ${{ env.DRIVER_VERSION }}
-
-      - name: "Run Rector"
-        run: "vendor/bin/rector --ansi --dry-run"

@@ -47,3 +47,4 @@ jobs:
         uses: "github/codeql-action/upload-sarif@v3"
         with:
           sarif_file: psalm.sarif
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}

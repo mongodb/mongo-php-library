@@ -166,7 +166,7 @@ jobs:
       - name: "Generate SARIF report from code scanning alerts"
         uses: mongodb-labs/drivers-github-tools/code-scanning-export@v2
         with:
-          ref: ${{ inputs.version }}
+          ref: refs/tags/${{ inputs.version }}
           output-file: ${{ env.S3_ASSETS }}/code-scanning-alerts.json
 
       - name: "Generate compliance report"

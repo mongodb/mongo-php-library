@@ -26,7 +26,7 @@ use function version_compare;
 /**
  * Prose test 22: Range Explicit Encryption
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#range-explicit-encryption
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#22-range-explicit-encryption
  * @group csfle
  * @group serverless
  */
@@ -49,8 +49,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             $this->markTestSkipped('Range explicit encryption tests require replica sets');
         }
 
-        $this->skipIfServerVersion('<', '7.0.0', 'Range explicit encryption tests require MongoDB 7.0 or later');
-        $this->skipIfServerVersion('>=', '8.0.0', 'Range explicit encryption tests require MongoDB 8.0 or earlier');
+        $this->skipIfServerVersion('<', '8.0.0', 'Range explicit encryption tests require MongoDB 8.0 or later');
 
         $client = static::createTestClient();
 
@@ -98,7 +97,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts,
         ];
@@ -123,7 +122,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         $this->encryptedClient = null;
     }
 
-    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup-rangeopts */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#test-setup-rangeopts */
     public static function provideTypeAndRangeOpts(): Generator
     {
         // TODO: skip DecimalNoPrecision test on mongos
@@ -186,7 +185,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     }
 
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-1-can-decrypt-a-payload
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-1-can-decrypt-a-payload
      * @dataProvider provideTypeAndRangeOpts
      */
     public function testCase1_CanDecryptAPayload(string $type, array $rangeOpts): void
@@ -195,7 +194,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts,
         ];
@@ -220,7 +219,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     }
 
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-2-can-find-encrypted-range-and-return-the-maximum
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-2-can-find-encrypted-range-and-return-the-maximum
      * @dataProvider provideTypeAndRangeOpts
      */
     public function testCase2_CanFindEncryptedRangeAndReturnTheMaximum(string $type, array $rangeOpts): void
@@ -229,8 +228,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
-            'queryType' => ClientEncryption::QUERY_TYPE_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
+            'queryType' => ClientEncryption::QUERY_TYPE_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts,
         ];
@@ -258,7 +257,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     }
 
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-3-can-find-encrypted-range-and-return-the-minimum
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-3-can-find-encrypted-range-and-return-the-minimum
      * @dataProvider provideTypeAndRangeOpts
      */
     public function testCase3_CanFindEncryptedRangeAndReturnTheMinimum(string $type, array $rangeOpts): void
@@ -267,8 +266,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
-            'queryType' => ClientEncryption::QUERY_TYPE_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
+            'queryType' => ClientEncryption::QUERY_TYPE_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts,
         ];
@@ -295,7 +294,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     }
 
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-4-can-find-encrypted-range-with-an-open-range-query
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-4-can-find-encrypted-range-with-an-open-range-query
      * @dataProvider provideTypeAndRangeOpts
      */
     public function testCase4_CanFindEncryptedRangeWithAnOpenRangeQuery(string $type, array $rangeOpts): void
@@ -304,8 +303,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
-            'queryType' => ClientEncryption::QUERY_TYPE_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
+            'queryType' => ClientEncryption::QUERY_TYPE_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts,
         ];
@@ -323,7 +322,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     }
 
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-5-can-run-an-aggregation-expression-inside-expr
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-5-can-run-an-aggregation-expression-inside-expr
      * @dataProvider provideTypeAndRangeOpts
      */
     public function testCase5_CanRunAnAggregationExpressionInsideExpr(string $type, array $rangeOpts): void
@@ -332,8 +331,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
-            'queryType' => ClientEncryption::QUERY_TYPE_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
+            'queryType' => ClientEncryption::QUERY_TYPE_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts,
         ];
@@ -356,7 +355,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     }
 
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-6-encrypting-a-document-greater-than-the-maximum-errors
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-6-encrypting-a-document-greater-than-the-maximum-errors
      * @dataProvider provideTypeAndRangeOpts
      */
     public function testCase6_EncryptingADocumentGreaterThanTheMaximumErrors(string $type, array $rangeOpts): void
@@ -369,7 +368,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts,
         ];
@@ -382,7 +381,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     }
 
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-7-encrypting-a-value-of-a-different-type-errors
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-7-encrypting-a-value-of-a-different-type-errors
      * @dataProvider provideTypeAndRangeOpts
      */
     public function testCase7_EncryptingAValueOfADifferentTypeErrors(string $type, array $rangeOpts): void
@@ -397,7 +396,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts,
         ];
@@ -410,7 +409,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     }
 
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-8-setting-precision-errors-if-the-type-is-not-double-or-decimal128
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-8-setting-precision-errors-if-the-type-is-not-double-or-decimal128
      * @dataProvider provideTypeAndRangeOpts
      */
     public function testCase8_SettingPrecisionErrorsIfTheTypeIsNotDoubleOrDecimal128(string $type, array $rangeOpts): void
@@ -423,7 +422,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $encryptOpts = [
             'keyId' => $this->key1Id,
-            'algorithm' => ClientEncryption::ALGORITHM_RANGE_PREVIEW,
+            'algorithm' => ClientEncryption::ALGORITHM_RANGE,
             'contentionFactor' => 0,
             'rangeOpts' => $rangeOpts + ['precision' => 2],
         ];

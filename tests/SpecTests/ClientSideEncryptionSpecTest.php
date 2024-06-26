@@ -38,9 +38,12 @@ use function glob;
 use function in_array;
 use function iterator_to_array;
 use function json_decode;
+use function phpversion;
 use function sprintf;
 use function str_repeat;
+use function str_starts_with;
 use function substr;
+use function version_compare;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -112,6 +115,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         'timeoutMS: timeoutMS applied to listCollections to get collection schema' => 'Not yet implemented (PHPC-1760)',
         'timeoutMS: remaining timeoutMS applied to find to get keyvault data' => 'Not yet implemented (PHPC-1760)',
         'namedKMS: Automatically encrypt and decrypt with a named KMS provider' => 'Not yet implemented (PHPLIB-1328)',
+        'fle2v2-Compact: Compact works' => 'Failing due to bug in libmongocrypt (LIBMONGOCRYPT-699)',
     ];
 
     public function setUp(): void
@@ -161,6 +165,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
+        }
+
+        if (str_starts_with($this->dataDescription(), 'fle2v2-Range-') && version_compare(phpversion('mongodb'), '1.20.0dev', '>=')) {
+            $this->markTestIncomplete('Range protocol V1 is not supported by ext-mongodb 1.20+');
         }
 
         if (isset($runOn)) {

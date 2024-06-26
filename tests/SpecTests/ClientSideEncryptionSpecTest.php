@@ -115,6 +115,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         'timeoutMS: timeoutMS applied to listCollections to get collection schema' => 'Not yet implemented (PHPC-1760)',
         'timeoutMS: remaining timeoutMS applied to find to get keyvault data' => 'Not yet implemented (PHPC-1760)',
         'namedKMS: Automatically encrypt and decrypt with a named KMS provider' => 'Not yet implemented (PHPLIB-1328)',
+        'fle2v2-Compact: Compact works' => 'Failing due to bug in libmongocrypt (LIBMONGOCRYPT-699)',
     ];
 
     public function setUp(): void

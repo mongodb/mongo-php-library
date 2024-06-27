@@ -1,7 +1,7 @@
 # This file is generated automatically - please edit the "templates/test/csfle.yml" template file instead.
 tasks:
   - name: "test-mongodb-4.4-crypt-shared"
-    tags: ["replicaset", "local", "4.4", "csfle"]
+    tags: ["replicaset", "local", "4.4", "csfle", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:
@@ -14,7 +14,7 @@ tasks:
           TESTS: "csfle"
 
   - name: "test-mongodb-4.4-mongocryptd"
-    tags: ["replicaset", "local", "4.4", "csfle"]
+    tags: ["replicaset", "local", "4.4", "csfle", "pr", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:
@@ -28,7 +28,7 @@ tasks:
           TESTS: "csfle"
 
   - name: "test-mongodb-4.4-no-aws-creds"
-    tags: ["replicaset", "local", "4.4", "csfle"]
+    tags: ["replicaset", "local", "4.4", "csfle", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:

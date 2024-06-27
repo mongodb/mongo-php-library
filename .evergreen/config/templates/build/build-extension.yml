@@ -1,6 +1,6 @@
 tasks:
   - name: "build-php-%phpVersion%"
-    tags: ["build", "php%phpVersion%", "stable"]
+    tags: ["build", "php%phpVersion%", "stable", "pr", "tag"]
     commands:
       - func: "locate PHP binaries"
         vars:
@@ -8,7 +8,7 @@ tasks:
       - func: "compile extension"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-lowest"
-    tags: ["build", "php%phpVersion%", "lowest"]
+    tags: ["build", "php%phpVersion%", "lowest", "pr", "tag"]
     commands:
       - func: "locate PHP binaries"
         vars:
@@ -18,7 +18,7 @@ tasks:
           EXTENSION_VERSION: "1.18.0"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-next-stable"
-    tags: ["build", "php%phpVersion%", "next-stable"]
+    tags: ["build", "php%phpVersion%", "next-stable", "pr", "tag"]
     commands:
       - func: "locate PHP binaries"
         vars:

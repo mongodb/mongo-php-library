@@ -1,6 +1,6 @@
 tasks:
   - name: "test-mongodb-%mongodbVersion%-standalone-noauth-nossl"
-    tags: ["standalone", "local", "%mongodbVersion%"]
+    tags: ["standalone", "local", "%mongodbVersion%", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:
@@ -11,7 +11,7 @@ tasks:
       - func: "run tests"
 
   - name: "test-mongodb-%mongodbVersion%-replicaset-noauth-nossl"
-    tags: ["replicaset", "local", "%mongodbVersion%"]
+    tags: ["replicaset", "local", "%mongodbVersion%", "pr", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:
@@ -22,7 +22,7 @@ tasks:
       - func: "run tests"
 
   - name: "test-mongodb-%mongodbVersion%-sharded-noauth-nossl"
-    tags: ["sharded", "local", "%mongodbVersion%"]
+    tags: ["sharded", "local", "%mongodbVersion%", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:

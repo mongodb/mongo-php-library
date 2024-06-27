@@ -1,6 +1,6 @@
 buildvariants:
   - name: test-debian11-php-%phpVersion%-local
-    tags: ["test", "debian", "x64"]
+    tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
     display_name: "Test: Debian 11, PHP %phpVersion%"
     run_on: debian11-small
     expansions:
@@ -21,7 +21,7 @@ buildvariants:
       - "test-atlas-data-lake"
 
   - name: test-debian92-php-%phpVersion%-local
-    tags: ["test", "debian", "x64"]
+    tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
     display_name: "Test: Debian 9.2, PHP %phpVersion%"
     run_on: debian92-small
     expansions:
@@ -40,7 +40,7 @@ buildvariants:
 
   # Test with upcoming PHPC versions
   - name: test-debian11-php-%phpVersion%-phpc-next-stable
-    tags: ["test", "debian", "x64"]
+    tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
     display_name: "Test: Debian 11, PHP %phpVersion%, PHPC next-stable"
     run_on: debian11-small
     expansions:
@@ -54,7 +54,7 @@ buildvariants:
       - ".replicaset .local .7.0 !.csfle"
 
   - name: test-debian11-php-%phpVersion%-phpc-next-minor
-    tags: ["test", "debian", "x64"]
+    tags: ["test", "debian", "x64", "php%phpVersion%"]
     display_name: "Test: Debian 11, PHP %phpVersion%, PHPC next-minor"
     run_on: debian11-small
     expansions:
@@ -69,7 +69,7 @@ buildvariants:
 
   # Test Atlas and CSFLE on RHEL 8
   - name: test-rhel80-php-%phpVersion%-atlas
-    tags: ["test", "debian", "x64"]
+    tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
     display_name: "Test: RHEL 8.0, PHP %phpVersion%"
     run_on: rhel80-small
     expansions:

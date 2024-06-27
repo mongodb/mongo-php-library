@@ -1,6 +1,6 @@
 tasks:
   - name: "test-mongodb-%mongodbVersion%-crypt-shared"
-    tags: ["replicaset", "local", "%mongodbVersion%", "csfle"]
+    tags: ["replicaset", "local", "%mongodbVersion%", "csfle", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:
@@ -13,7 +13,7 @@ tasks:
           TESTS: "csfle"
 
   - name: "test-mongodb-%mongodbVersion%-mongocryptd"
-    tags: ["replicaset", "local", "%mongodbVersion%", "csfle"]
+    tags: ["replicaset", "local", "%mongodbVersion%", "csfle", "pr", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:
@@ -27,7 +27,7 @@ tasks:
           TESTS: "csfle"
 
   - name: "test-mongodb-%mongodbVersion%-no-aws-creds"
-    tags: ["replicaset", "local", "%mongodbVersion%", "csfle"]
+    tags: ["replicaset", "local", "%mongodbVersion%", "csfle", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:

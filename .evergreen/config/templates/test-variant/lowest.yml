@@ -1,6 +1,6 @@
 buildvariants:
   - name: test-debian92-php-%phpVersion%-local-lowest
-    tags: ["test", "debian", "x64"]
+    tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
     display_name: "Test: Debian 9.2, PHP %phpVersion%, Lowest Dependencies"
     run_on: debian92-small
     expansions:

@@ -29,11 +29,29 @@ post:
   - func: "stop mongo-orchestration"
   - func: "cleanup"
 
-# Define aliases for patch builds and PR builds. These only apply if no aliases are defined in project settings
-github_pr_aliases:
-  # Run tests on debian, only testing local replicasets
-  - variant: "test-.*"
-    task: "test-mongodb-.*-replicaset"
+# These aliases define the default variant/tasks to test for pull requests and merge queue
+github_pr_aliases: &github_pr_aliases
+  # Always test all builds for consistency
+  - variant_tags: ["pr build"]
+    task_tags: ["pr"]
+  # Run all tasks in PR variants for PHP 8.3 (excluding MongoDB latest)
+  - variant_tags: ["pr php8.3"]
+    task_tags: ["!latest"]
+  # Run PR tasks for all PR variants (only MongoDB 7.0)
+  - variant_tags: ["pr"]
+    task_tags: ["pr 7.0"]
+
+commit_queue_aliases: *github_pr_aliases
+
+git_tag_aliases:
+  - git_tag: "^[0-9]+.[0-9]+.[0-9]+"
+    remote_path: ""
+    variant_tags: ["tag"]
+    task_tags: ["tag !latest"]
+
+github_checks_aliases:
+  - variant: ".*"
+    task: ".*"
 
 # Include files that contain various tasks, task groups, and build variant definitions
 include:

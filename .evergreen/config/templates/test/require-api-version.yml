@@ -1,6 +1,6 @@
 tasks:
   - name: "test-mongodb-%mongodbVersion%-requireApiVersion"
-    tags: ["standalone", "local", "%mongodbVersion%", "versioned_api"]
+    tags: ["standalone", "local", "%mongodbVersion%", "versioned_api", "pr", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:

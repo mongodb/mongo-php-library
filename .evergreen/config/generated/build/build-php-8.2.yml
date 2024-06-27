@@ -1,7 +1,7 @@
 # This file is generated automatically - please edit the "templates/build/build-extension.yml" template file instead.
 tasks:
   - name: "build-php-8.2"
-    tags: ["build", "php8.2", "stable"]
+    tags: ["build", "php8.2", "stable", "pr", "tag"]
     commands:
       - func: "locate PHP binaries"
         vars:
@@ -9,7 +9,7 @@ tasks:
       - func: "compile extension"
       - func: "upload extension"
   - name: "build-php-8.2-lowest"
-    tags: ["build", "php8.2", "lowest"]
+    tags: ["build", "php8.2", "lowest", "pr", "tag"]
     commands:
       - func: "locate PHP binaries"
         vars:
@@ -19,7 +19,7 @@ tasks:
           EXTENSION_VERSION: "1.19.0"
       - func: "upload extension"
   - name: "build-php-8.2-next-stable"
-    tags: ["build", "php8.2", "next-stable"]
+    tags: ["build", "php8.2", "next-stable", "pr", "tag"]
     commands:
       - func: "locate PHP binaries"
         vars:

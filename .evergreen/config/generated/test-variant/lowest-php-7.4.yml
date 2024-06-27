@@ -1,7 +1,7 @@
 # This file is generated automatically - please edit the "templates/test-variant/lowest.yml" template file instead.
 buildvariants:
   - name: test-debian92-php-7.4-local-lowest
-    tags: ["test", "debian", "x64"]
+    tags: ["test", "debian", "x64", "php7.4", "pr", "tag"]
     display_name: "Test: Debian 9.2, PHP 7.4, Lowest Dependencies"
     run_on: debian92-small
     expansions:

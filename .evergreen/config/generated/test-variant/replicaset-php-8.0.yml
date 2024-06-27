@@ -1,7 +1,7 @@
 # This file is generated automatically - please edit the "templates/test-variant/replicaset-only.yml" template file instead.
 buildvariants:
   - name: test-debian11-php-8.0-local
-    tags: [ "test", "debian", "x64" ]
+    tags: [ "test", "debian", "x64", "php8.0", "pr", "tag" ]
     display_name: "Test: Debian 11, PHP 8.0"
     run_on: debian11-small
     expansions:

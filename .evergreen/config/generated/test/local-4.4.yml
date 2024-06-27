@@ -1,7 +1,7 @@
 # This file is generated automatically - please edit the "templates/test/local.yml" template file instead.
 tasks:
   - name: "test-mongodb-4.4-standalone-noauth-nossl"
-    tags: ["standalone", "local", "4.4"]
+    tags: ["standalone", "local", "4.4", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:
@@ -12,7 +12,7 @@ tasks:
       - func: "run tests"
 
   - name: "test-mongodb-4.4-replicaset-noauth-nossl"
-    tags: ["replicaset", "local", "4.4"]
+    tags: ["replicaset", "local", "4.4", "pr", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:
@@ -23,7 +23,7 @@ tasks:
       - func: "run tests"
 
   - name: "test-mongodb-4.4-sharded-noauth-nossl"
-    tags: ["sharded", "local", "4.4"]
+    tags: ["sharded", "local", "4.4", "tag"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:

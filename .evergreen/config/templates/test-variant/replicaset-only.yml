@@ -1,6 +1,6 @@
 buildvariants:
   - name: test-debian11-php-%phpVersion%-local
-    tags: [ "test", "debian", "x64" ]
+    tags: [ "test", "debian", "x64", "php%phpVersion%", "pr", "tag" ]
     display_name: "Test: Debian 11, PHP %phpVersion%"
     run_on: debian11-small
     expansions:

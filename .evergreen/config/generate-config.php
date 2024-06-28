@@ -62,6 +62,7 @@ $allFiles[] = generateConfigs('test', 'mongodbVersion', 'csfle.yml', 'csfle-%s',
 // Test variants
 $allFiles[] = generateConfigs('test-variant', 'phpVersion', 'modern-php-full.yml', 'full-php-%s', $modernPhpVersions);
 $allFiles[] = generateConfigs('test-variant', 'phpVersion', 'legacy-php-full.yml', 'full-php-%s', $legacyPhpVersions);
+$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'phpc.yml', 'phpc-php-%s', [$latestPhpVersion]);
 $allFiles[] = generateConfigs('test-variant', 'phpVersion', 'lowest.yml', 'lowest-php-%s', [$lowestPhpVersion]);
 
 echo "Generated config. Use the following list to import files:\n";

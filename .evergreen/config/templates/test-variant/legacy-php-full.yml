@@ -86,4 +86,3 @@ buildvariants:
     tasks:
       - "test_atlas_task_group"
       - ".csfle"
-

@@ -105,4 +105,5 @@ include:
   - filename: .evergreen/config/generated/test-variant/full-php-8.1.yml
   - filename: .evergreen/config/generated/test-variant/full-php-8.0.yml
   - filename: .evergreen/config/generated/test-variant/full-php-7.4.yml
+  - filename: .evergreen/config/generated/test-variant/phpc-php-8.3.yml
   - filename: .evergreen/config/generated/test-variant/lowest-php-7.4.yml

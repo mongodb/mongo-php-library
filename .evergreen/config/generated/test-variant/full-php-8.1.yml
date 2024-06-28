@@ -60,35 +60,6 @@ buildvariants:
       - ".sharded .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
       - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
 
-  # Test with upcoming PHPC versions
-  - name: test-debian12-php-8.1-phpc-next-stable
-    tags: ["test", "debian", "x64", "php8.1", "pr", "tag"]
-    display_name: "Test: Debian 12, PHP 8.1, PHPC next-stable"
-    run_on: debian12-small
-    expansions:
-      FETCH_BUILD_VARIANT: "build-debian12"
-      FETCH_BUILD_TASK: "build-php-8.1-next-stable"
-      PHP_VERSION: "8.1"
-    depends_on:
-      - variant: "build-debian12"
-        name: "build-php-8.1-next-stable"
-    tasks:
-      - ".replicaset .local .7.0 !.csfle"
-
-  - name: test-debian12-php-8.1-phpc-next-minor
-    tags: ["test", "debian", "x64", "php8.1"]
-    display_name: "Test: Debian 12, PHP 8.1, PHPC next-minor"
-    run_on: debian12-small
-    expansions:
-      FETCH_BUILD_VARIANT: "build-debian12"
-      FETCH_BUILD_TASK: "build-php-8.1-next-minor"
-      PHP_VERSION: "8.1"
-    depends_on:
-      - variant: "build-debian12"
-        name: "build-php-8.1-next-minor"
-    tasks:
-      - ".replicaset .local .7.0 !.csfle"
-
   # Test Atlas and CSFLE on RHEL 8
   - name: test-rhel80-php-8.1-atlas
     tags: ["test", "debian", "x64", "php8.1", "pr", "tag"]
@@ -104,4 +75,3 @@ buildvariants:
     tasks:
       - "test_atlas_task_group"
       - ".csfle"
-

@@ -2,13 +2,16 @@
 <?php
 
 // Supported PHP versions. Add new versions to the beginning of the list
-$supportedPhpVersions = [
+$modernPhpVersions = [
     '8.3',
     '8.2',
     '8.1',
-    '8.0',
-    '7.4'
 ];
+$legacyPhpVersions = [
+    '8.0',
+    '7.4',
+];
+$supportedPhpVersions = array_merge($modernPhpVersions, $legacyPhpVersions);
 
 $latestPhpVersion = max($supportedPhpVersions);
 $lowestPhpVersion = min($supportedPhpVersions);
@@ -17,6 +20,7 @@ $lowestPhpVersion = min($supportedPhpVersions);
 $supportedMongoDBVersions = [
     'latest',
     'rapid',
+    '8.0',
     '7.0',
     '6.0',
     '5.0',
@@ -56,8 +60,8 @@ $allFiles[] = generateConfigs('test', 'mongodbVersion', 'require-api-version.yml
 $allFiles[] = generateConfigs('test', 'mongodbVersion', 'csfle.yml', 'csfle-%s', $csfleServerVersions);
 
 // Test variants
-$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'latest.yml', 'latest-php-%s', [$latestPhpVersion]);
-$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'replicaset-only.yml', 'replicaset-php-%s', array_diff($supportedPhpVersions, [$latestPhpVersion]));
+$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'modern-php-full.yml', 'full-php-%s', $modernPhpVersions);
+$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'legacy-php-full.yml', 'full-php-%s', $legacyPhpVersions);
 $allFiles[] = generateConfigs('test-variant', 'phpVersion', 'lowest.yml', 'lowest-php-%s', [$lowestPhpVersion]);
 
 echo "Generated config. Use the following list to import files:\n";

@@ -36,7 +36,7 @@ github_pr_aliases: &github_pr_aliases
     task_tags: ["pr"]
   # Run all tasks in PR variants for PHP 8.3 (excluding MongoDB latest)
   - variant_tags: ["pr php8.3"]
-    task_tags: ["!latest"]
+    task_tags: ["pr !latest"]
   # Run PR tasks for all PR variants (only MongoDB 7.0)
   - variant_tags: ["pr"]
     task_tags: ["pr 7.0"]

@@ -1,4 +1,6 @@
+# TODO PHPLIB-955: This file can be removed when requiring PHP 8.1+
 buildvariants:
+  # Test MongoDB >= 5.0, < 8.0
   - name: test-debian11-php-%phpVersion%-local
     tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
     display_name: "Test: Debian 11, PHP %phpVersion%"
@@ -12,14 +14,16 @@ buildvariants:
       - variant: "build-debian11"
         name: "build-php-%phpVersion%"
     tasks:
-      - ".standalone .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
-      - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
-      - ".sharded .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
-      - ".loadbalanced .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.8.0"
+      - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.8.0"
+      - ".sharded .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.8.0"
+      - ".loadbalanced .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.8.0"
       - "test_serverless_task_group"
       - "test_serverless_proxy_task_group"
       - "test-atlas-data-lake"
 
+  # Test versions < 5.0
   - name: test-debian92-php-%phpVersion%-local
     tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
     display_name: "Test: Debian 9.2, PHP %phpVersion%"
@@ -33,10 +37,10 @@ buildvariants:
         name: "build-php-%phpVersion%"
     tasks:
       # Remember to add new major versions here as they are released
-      - ".standalone .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
-      - ".replicaset .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
-      - ".sharded .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
-      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+      - ".standalone .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
 
   # Test with upcoming PHPC versions
   - name: test-debian11-php-%phpVersion%-phpc-next-stable
@@ -82,4 +86,3 @@ buildvariants:
     tasks:
       - "test_atlas_task_group"
       - ".csfle"
-

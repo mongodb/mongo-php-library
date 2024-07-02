@@ -3,6 +3,12 @@
 #
 buildvariants:
   # Debian
+  - name: build-debian12
+    display_name: "Build: Debian 12"
+    tags: ["build", "debian", "x64"]
+    run_on: debian12-small
+    tasks:
+      - name: "build-php-openssl3"
   - name: build-debian11
     display_name: "Build: Debian 11"
     tags: ["build", "debian", "x64", "pr", "tag"]

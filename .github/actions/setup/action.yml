@@ -19,8 +19,8 @@ runs:
       id: extcache
       uses: shivammathur/cache-extensions@v1
       with:
-        php-version: ${{ env.PHP_VERSION }}
-        extensions: "mongodb-${{ env.DRIVER_VERSION }}"
+        php-version: ${{ inputs.php-version }}
+        extensions: "mongodb-${{ inputs.driver-version }}"
         key: "extcache-v1"
 
     - name: Cache extensions

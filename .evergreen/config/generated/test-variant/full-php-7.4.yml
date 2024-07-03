@@ -43,35 +43,6 @@ buildvariants:
       - ".sharded .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
       - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
 
-  # Test with upcoming PHPC versions
-  - name: test-debian11-php-7.4-phpc-next-stable
-    tags: ["test", "debian", "x64", "php7.4", "pr", "tag"]
-    display_name: "Test: Debian 11, PHP 7.4, PHPC next-stable"
-    run_on: debian11-small
-    expansions:
-      FETCH_BUILD_VARIANT: "build-debian11"
-      FETCH_BUILD_TASK: "build-php-7.4-next-stable"
-      PHP_VERSION: "7.4"
-    depends_on:
-      - variant: "build-debian11"
-        name: "build-php-7.4-next-stable"
-    tasks:
-      - ".replicaset .local .7.0 !.csfle"
-
-  - name: test-debian11-php-7.4-phpc-next-minor
-    tags: ["test", "debian", "x64", "php7.4"]
-    display_name: "Test: Debian 11, PHP 7.4, PHPC next-minor"
-    run_on: debian11-small
-    expansions:
-      FETCH_BUILD_VARIANT: "build-debian11"
-      FETCH_BUILD_TASK: "build-php-7.4-next-minor"
-      PHP_VERSION: "7.4"
-    depends_on:
-      - variant: "build-debian11"
-        name: "build-php-7.4-next-minor"
-    tasks:
-      - ".replicaset .local .7.0 !.csfle"
-
   # Test Atlas and CSFLE on RHEL 8
   - name: test-rhel80-php-7.4-atlas
     tags: ["test", "debian", "x64", "php7.4", "pr", "tag"]

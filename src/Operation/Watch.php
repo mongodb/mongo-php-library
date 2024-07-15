@@ -47,7 +47,6 @@ use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
 use function MongoDB\is_document;
 use function MongoDB\select_server;
-use function MongoDB\server_supports_feature;
 
 /**
  * Operation for creating a change stream with the aggregate command.
@@ -68,8 +67,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     public const FULL_DOCUMENT_BEFORE_CHANGE_OFF = 'off';
     public const FULL_DOCUMENT_BEFORE_CHANGE_WHEN_AVAILABLE = 'whenAvailable';
     public const FULL_DOCUMENT_BEFORE_CHANGE_REQUIRED = 'required';
-
-    private const WIRE_VERSION_FOR_START_AT_OPERATION_TIME = 7;
 
     private Aggregate $aggregate;
 
@@ -467,10 +464,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         if ($this->postBatchResumeToken !== null) {
-            return false;
-        }
-
-        if (! server_supports_feature($server, self::WIRE_VERSION_FOR_START_AT_OPERATION_TIME)) {
             return false;
         }
 

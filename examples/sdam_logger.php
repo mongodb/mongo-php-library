@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples;
 
+use MongoDB\BSON\Document;
 use MongoDB\Client;
 use MongoDB\Driver\Monitoring\SDAMSubscriber;
 use MongoDB\Driver\Monitoring\ServerChangedEvent;
@@ -17,8 +18,6 @@ use MongoDB\Driver\Monitoring\TopologyOpeningEvent;
 
 use function get_class;
 use function getenv;
-use function MongoDB\BSON\fromPHP;
-use function MongoDB\BSON\toRelaxedExtendedJSON;
 use function printf;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -26,7 +25,7 @@ require __DIR__ . '/../vendor/autoload.php';
 /** @param array|object $document */
 function toJSON($document): string
 {
-    return toRelaxedExtendedJSON(fromPHP($document));
+    return Document::fromPHP($document)->toRelaxedExtendedJSON();
 }
 
 class SDAMLogger implements SDAMSubscriber

@@ -4,12 +4,11 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use Generator;
 use IteratorAggregate;
+use MongoDB\BSON\Document;
 use stdClass;
 use Traversable;
 
 use function file_get_contents;
-use function MongoDB\BSON\fromJSON;
-use function MongoDB\BSON\toPHP;
 use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
@@ -69,7 +68,7 @@ final class UnifiedTestCase implements IteratorAggregate
     {
         /* Decode the file through the driver's extended JSON parser to ensure
          * proper handling of special types. */
-        $json = toPHP(fromJSON(file_get_contents($filename)));
+        $json = Document::fromJSON(file_get_contents($filename))->toPHP();
 
         yield from static::fromJSON($json);
     }

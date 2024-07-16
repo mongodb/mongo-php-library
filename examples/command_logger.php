@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples\CommandLogger;
 
+use MongoDB\BSON\Document;
 use MongoDB\Client;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
@@ -13,15 +14,13 @@ use function assert;
 use function get_class;
 use function getenv;
 use function is_object;
-use function MongoDB\BSON\fromPHP;
-use function MongoDB\BSON\toRelaxedExtendedJSON;
 use function printf;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 function toJSON(object $document): string
 {
-    return toRelaxedExtendedJSON(fromPHP($document));
+    return Document::fromPHP($document)->toRelaxedExtendedJSON();
 }
 
 class CommandLogger implements CommandSubscriber

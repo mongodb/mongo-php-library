@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples\ChangeStream;
 
+use MongoDB\BSON\Document;
 use MongoDB\Client;
 
 use function assert;
 use function getenv;
 use function is_object;
-use function MongoDB\BSON\fromPHP;
-use function MongoDB\BSON\toRelaxedExtendedJSON;
 use function printf;
 use function time;
 
@@ -17,7 +16,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 function toJSON(object $document): string
 {
-    return toRelaxedExtendedJSON(fromPHP($document));
+    return Document::fromPHP($document)->toRelaxedExtendedJSON();
 }
 
 // Change streams require a replica set or sharded cluster

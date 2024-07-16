@@ -22,8 +22,8 @@ example imports the ``zips.json`` file into a ``test.zips`` collection using the
    $bulk = new MongoDB\Driver\BulkWrite;
 
    foreach ($lines as $line) {
-       $bson = MongoDB\BSON\fromJSON($line);
-       $document = MongoDB\BSON\toPHP($bson);
+       $bson = MongoDB\BSON\Document::fromJSON($line);
+       $document = $bson->toPHP();
        $bulk->insert($document);
    }
 

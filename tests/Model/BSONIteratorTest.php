@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\BSON\Document;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\BSONIterator;
 use MongoDB\Tests\TestCase;
@@ -9,7 +10,6 @@ use MongoDB\Tests\TestCase;
 use function array_map;
 use function implode;
 use function iterator_to_array;
-use function MongoDB\BSON\fromPHP;
 use function substr;
 
 class BSONIteratorTest extends TestCase
@@ -30,7 +30,7 @@ class BSONIteratorTest extends TestCase
             [
                 null,
                 implode(array_map(
-                    'MongoDB\BSON\fromPHP',
+                    fn ($input) => (string) Document::fromPHP($input),
                     [
                         ['_id' => 1, 'x' => ['foo' => 'bar']],
                         ['_id' => 3, 'x' => ['foo' => 'bar']],
@@ -44,7 +44,7 @@ class BSONIteratorTest extends TestCase
             [
                 ['root' => 'array', 'document' => 'array'],
                 implode(array_map(
-                    'MongoDB\BSON\fromPHP',
+                    fn ($input) => (string) Document::fromPHP($input),
                     [
                         ['_id' => 1, 'x' => ['foo' => 'bar']],
                         ['_id' => 3, 'x' => ['foo' => 'bar']],
@@ -58,7 +58,7 @@ class BSONIteratorTest extends TestCase
             [
                 ['root' => 'object', 'document' => 'array'],
                 implode(array_map(
-                    'MongoDB\BSON\fromPHP',
+                    fn ($input) => (string) Document::fromPHP($input),
                     [
                         ['_id' => 1, 'x' => ['foo' => 'bar']],
                         ['_id' => 3, 'x' => ['foo' => 'bar']],
@@ -72,7 +72,7 @@ class BSONIteratorTest extends TestCase
             [
                 ['root' => 'array', 'document' => 'stdClass'],
                 implode(array_map(
-                    'MongoDB\BSON\fromPHP',
+                    fn ($input) => (string) Document::fromPHP($input),
                     [
                         ['_id' => 1, 'x' => ['foo' => 'bar']],
                         ['_id' => 3, 'x' => ['foo' => 'bar']],
@@ -88,7 +88,7 @@ class BSONIteratorTest extends TestCase
 
     public function testCannotReadLengthFromFirstDocument(): void
     {
-        $binaryString = substr(fromPHP([]), 0, 3);
+        $binaryString = substr((string) Document::fromPHP([]), 0, 3);
 
         $bsonIt = new BSONIterator($binaryString);
 
@@ -99,7 +99,7 @@ class BSONIteratorTest extends TestCase
 
     public function testCannotReadLengthFromSubsequentDocument(): void
     {
-        $binaryString = fromPHP([]) . substr(fromPHP([]), 0, 3);
+        $binaryString = (string) Document::fromPHP([]) . substr((string) Document::fromPHP([]), 0, 3);
 
         $bsonIt = new BSONIterator($binaryString);
         $bsonIt->rewind();
@@ -111,7 +111,7 @@ class BSONIteratorTest extends TestCase
 
     public function testCannotReadFirstDocument(): void
     {
-        $binaryString = substr(fromPHP([]), 0, 4);
+        $binaryString = substr((string) Document::fromPHP([]), 0, 4);
 
         $bsonIt = new BSONIterator($binaryString);
 
@@ -122,7 +122,7 @@ class BSONIteratorTest extends TestCase
 
     public function testCannotReadSecondDocument(): void
     {
-        $binaryString = fromPHP([]) . substr(fromPHP([]), 0, 4);
+        $binaryString = (string) Document::fromPHP([]) . substr((string) Document::fromPHP([]), 0, 4);
 
         $bsonIt = new BSONIterator($binaryString);
         $bsonIt->rewind();

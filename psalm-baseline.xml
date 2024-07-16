@@ -135,19 +135,6 @@
       <code>stdClass</code>
     </MoreSpecificReturnType>
   </file>
-  <file src="src/Model/BSONIterator.php">
-    <MixedArgument>
-      <code>$documentLength</code>
-      <code>$documentLength</code>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$this->position]]></code>
-    </MixedAssignment>
-    <MixedOperand>
-      <code>$documentLength</code>
-    </MixedOperand>
-  </file>
   <file src="src/Model/ChangeStreamIterator.php">
     <MixedArgument>
       <code><![CDATA[$reply->cursor->nextBatch]]></code>

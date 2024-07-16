@@ -151,8 +151,8 @@ back to ``LocalDateTime``.
 .. code-block:: php
 
     <?php
-    $bson = MongoDB\BSON\fromPHP(['date' => new LocalDateTime]);
-    $document = MongoDB\BSON\toPHP($bson);
+    $bson = MongoDB\BSON\Document::fromPHP(['date' => new LocalDateTime]);
+    $document = $bson->toPHP();
 
     var_dump($document);
     var_dump($document->date->toDateTime());

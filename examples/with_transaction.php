@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples\WithTransaction;
 
+use MongoDB\BSON\Document;
 use MongoDB\Client;
 use MongoDB\Driver\Session;
 
 use function assert;
 use function getenv;
 use function is_object;
-use function MongoDB\BSON\fromPHP;
-use function MongoDB\BSON\toRelaxedExtendedJSON;
 use function MongoDB\with_transaction;
 use function printf;
 
@@ -18,7 +17,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 function toJSON(object $document): string
 {
-    return toRelaxedExtendedJSON(fromPHP($document));
+    return Document::fromPHP($document)->toRelaxedExtendedJSON();
 }
 
 // Transactions require a replica set (MongoDB >= 4.0) or sharded cluster (MongoDB >= 4.2)

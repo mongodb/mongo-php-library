@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use ArrayIterator;
 use LogicException;
+use MongoDB\BSON\Document;
 use MongoDB\Collection;
 use MongoDB\Driver\Server;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
@@ -14,8 +15,6 @@ use UnexpectedValueException;
 
 use function in_array;
 use function json_encode;
-use function MongoDB\BSON\fromJSON;
-use function MongoDB\BSON\toPHP;
 use function sprintf;
 use function version_compare;
 
@@ -179,7 +178,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      */
     protected function decodeJson(string $json)
     {
-        return toPHP(fromJSON($json));
+        return Document::fromJSON($json)->toPHP();
     }
 
     /**

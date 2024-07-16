@@ -4,6 +4,7 @@ namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\Javascript;
 use MongoDB\BSON\MaxKey;
@@ -21,8 +22,6 @@ use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
 
 use function fopen;
-use function MongoDB\BSON\fromJSON;
-use function MongoDB\BSON\toPHP;
 
 use const PHP_INT_SIZE;
 
@@ -36,9 +35,9 @@ class IsBsonTypeTest extends TestCase
 
     public function provideTypes()
     {
-        $undefined = toPHP(fromJSON('{ "x": {"$undefined": true} }'))->x;
-        $symbol = toPHP(fromJSON('{ "x": {"$symbol": "test"} }'))->x;
-        $dbPointer = toPHP(fromJSON('{ "x": {"$dbPointer": {"$ref": "db.coll", "$id" : { "$oid" : "5a2e78accd485d55b405ac12" }  }} }'))->x;
+        $undefined = Document::fromJSON('{ "x": {"$undefined": true} }')->toPHP()->x;
+        $symbol = Document::fromJSON('{ "x": {"$symbol": "test"} }')->toPHP()->x;
+        $dbPointer = Document::fromJSON('{ "x": {"$dbPointer": {"$ref": "db.coll", "$id" : { "$oid" : "5a2e78accd485d55b405ac12" }  }} }')->toPHP()->x;
         $int64 = new Int64(1);
         $long = PHP_INT_SIZE == 4 ? new Int64('4294967296') : 4_294_967_296;
 

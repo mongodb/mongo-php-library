@@ -52,8 +52,6 @@ use function is_resource;
 use function is_string;
 use function method_exists;
 use function MongoDB\apply_type_map_to_document;
-use function MongoDB\BSON\fromPHP;
-use function MongoDB\BSON\toJSON;
 use function property_exists;
 use function sprintf;
 use function str_contains;
@@ -705,7 +703,7 @@ class Bucket
     private function createPathForFile(object $file): string
     {
         if (is_array($file->_id) || (is_object($file->_id) && ! method_exists($file->_id, '__toString'))) {
-            $id = toJSON(fromPHP(['_id' => $file->_id]));
+            $id = Document::fromPHP(['_id' => $file->_id])->toRelaxedExtendedJSON();
         } else {
             $id = (string) $file->_id;
         }

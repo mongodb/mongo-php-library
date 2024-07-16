@@ -3,6 +3,7 @@
 namespace MongoDB\Tests;
 
 use InvalidArgumentException;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\Codec;
 use MongoDB\Driver\ReadConcern;
@@ -27,8 +28,6 @@ use function is_int;
 use function is_object;
 use function is_string;
 use function iterator_to_array;
-use function MongoDB\BSON\fromPHP;
-use function MongoDB\BSON\toJSON;
 use function preg_match;
 use function preg_replace;
 use function restore_error_handler;
@@ -115,8 +114,8 @@ OUTPUT;
         }
 
         $this->assertEquals(
-            toJSON(fromPHP($normalizedExpectedDocument)),
-            toJSON(fromPHP($normalizedActualDocument)),
+            Document::fromPHP($normalizedExpectedDocument)->toRelaxedExtendedJSON(),
+            Document::fromPHP($normalizedActualDocument)->toRelaxedExtendedJSON(),
         );
     }
 
@@ -132,8 +131,8 @@ OUTPUT;
     public function assertSameDocument($expectedDocument, $actualDocument): void
     {
         $this->assertEquals(
-            toJSON(fromPHP($this->normalizeBSON($expectedDocument))),
-            toJSON(fromPHP($this->normalizeBSON($actualDocument))),
+            Document::fromPHP($this->normalizeBSON($expectedDocument))->toRelaxedExtendedJSON(),
+            Document::fromPHP($this->normalizeBSON($actualDocument))->toRelaxedExtendedJSON(),
         );
     }
 
@@ -147,7 +146,7 @@ OUTPUT;
             throw new InvalidArgumentException('$actualDocuments is not an array or Traversable');
         }
 
-        $normalizeRootDocuments = fn ($document) => toJSON(fromPHP($this->normalizeBSON($document)));
+        $normalizeRootDocuments = fn ($document) => Document::fromPHP($this->normalizeBSON($document))->toRelaxedExtendedJSON();
 
         $this->assertEquals(
             array_map($normalizeRootDocuments, $expectedDocuments),

@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Model;
 
+use Generator;
 use MongoDB\BSON\Document;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\BSONIterator;
@@ -15,8 +16,16 @@ use function substr;
 class BSONIteratorTest extends TestCase
 {
     /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
-    public function testValidValues(?array $typeMap, $binaryString, array $expectedDocuments): void
+    public function testValidValues(?array $typeMap, array $expectedDocuments): void
     {
+        $binaryString = implode(array_map(
+            fn ($input) => (string) Document::fromPHP($input),
+            [
+                ['_id' => 1, 'x' => ['foo' => 'bar']],
+                ['_id' => 3, 'x' => ['foo' => 'bar']],
+            ],
+        ));
+
         $bsonIt = new BSONIterator($binaryString, ['typeMap' => $typeMap]);
 
         $results = iterator_to_array($bsonIt);
@@ -24,64 +33,37 @@ class BSONIteratorTest extends TestCase
         $this->assertEquals($expectedDocuments, $results);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public function provideTypeMapOptionsAndExpectedDocuments(): Generator
     {
-        return [
-            [
-                null,
-                implode(array_map(
-                    fn ($input) => (string) Document::fromPHP($input),
-                    [
-                        ['_id' => 1, 'x' => ['foo' => 'bar']],
-                        ['_id' => 3, 'x' => ['foo' => 'bar']],
-                    ],
-                )),
-                [
-                    (object) ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
-                    (object) ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
-                ],
+        yield 'No type map' => [
+            'typeMap' => null,
+            'expectedDocuments' => [
+                (object) ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
+                (object) ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
             ],
-            [
-                ['root' => 'array', 'document' => 'array'],
-                implode(array_map(
-                    fn ($input) => (string) Document::fromPHP($input),
-                    [
-                        ['_id' => 1, 'x' => ['foo' => 'bar']],
-                        ['_id' => 3, 'x' => ['foo' => 'bar']],
-                    ],
-                )),
-                [
-                    ['_id' => 1, 'x' => ['foo' => 'bar']],
-                    ['_id' => 3, 'x' => ['foo' => 'bar']],
-                ],
+        ];
+
+        yield 'Array type map' => [
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+            'expectedDocuments' => [
+                ['_id' => 1, 'x' => ['foo' => 'bar']],
+                ['_id' => 3, 'x' => ['foo' => 'bar']],
             ],
-            [
-                ['root' => 'object', 'document' => 'array'],
-                implode(array_map(
-                    fn ($input) => (string) Document::fromPHP($input),
-                    [
-                        ['_id' => 1, 'x' => ['foo' => 'bar']],
-                        ['_id' => 3, 'x' => ['foo' => 'bar']],
-                    ],
-                )),
-                [
-                    (object) ['_id' => 1, 'x' => ['foo' => 'bar']],
-                    (object) ['_id' => 3, 'x' => ['foo' => 'bar']],
-                ],
+        ];
+
+        yield 'Root as object' => [
+            'typeMap' => ['root' => 'object', 'document' => 'array'],
+            'expectedDocuments' => [
+                (object) ['_id' => 1, 'x' => ['foo' => 'bar']],
+                (object) ['_id' => 3, 'x' => ['foo' => 'bar']],
             ],
-            [
-                ['root' => 'array', 'document' => 'stdClass'],
-                implode(array_map(
-                    fn ($input) => (string) Document::fromPHP($input),
-                    [
-                        ['_id' => 1, 'x' => ['foo' => 'bar']],
-                        ['_id' => 3, 'x' => ['foo' => 'bar']],
-                    ],
-                )),
-                [
-                    ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
-                    ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
-                ],
+        ];
+
+        yield 'Document as object' => [
+            'typeMap' => ['root' => 'array', 'document' => 'stdClass'],
+            'expectedDocuments' => [
+                ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
+                ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
             ],
         ];
     }

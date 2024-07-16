@@ -12,4 +12,4 @@ buildvariants:
       - variant: "build-debian92"
         name: "build-php-%phpVersion%-lowest"
     tasks:
-      - ".replicaset .local .3.6 !.csfle"
+      - ".replicaset .local .4.0 !.csfle"

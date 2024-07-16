@@ -33,7 +33,6 @@ use function array_map;
 use function assert;
 use function bin2hex;
 use function microtime;
-use function MongoDB\server_supports_feature;
 use function sprintf;
 
 /**
@@ -45,8 +44,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 {
     public const INTERRUPTED = 11601;
     public const NOT_PRIMARY = 10107;
-
-    private static int $wireVersionForStartAtOperationTime = 7;
 
     private array $defaultOptions = ['maxAwaitTimeMS' => 500];
 
@@ -340,10 +337,6 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testResumeBeforeReceivingAnyResultsIncludesStartAtOperationTime(): void
     {
-        if (! $this->isStartAtOperationTimeSupported()) {
-            $this->markTestSkipped('startAtOperationTime is not supported');
-        }
-
         $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken takes precedence over startAtOperationTime');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
@@ -1651,11 +1644,6 @@ class WatchFunctionalTest extends FunctionalTestCase
         );
         $writeResult = $insertOne->execute($this->getPrimaryServer());
         $this->assertEquals(1, $writeResult->getInsertedCount());
-    }
-
-    private function isStartAtOperationTimeSupported()
-    {
-        return server_supports_feature($this->getPrimaryServer(), self::$wireVersionForStartAtOperationTime);
     }
 
     private function advanceCursorUntilValid(Iterator $iterator, $limitOnShardedClusters = 10): void

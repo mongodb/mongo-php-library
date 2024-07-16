@@ -14,10 +14,10 @@ buildvariants:
       - variant: "build-debian12"
         name: "build-php-8.3"
     tasks:
-      - ".standalone .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
-      - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
-      - ".sharded .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
-      - ".loadbalanced .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
       - "test_serverless_task_group"
       - "test_serverless_proxy_task_group"
       - "test-atlas-data-lake"
@@ -36,10 +36,10 @@ buildvariants:
         name: "build-php-8.3"
     tasks:
       # Remember to add new major versions here as they are released
-      - ".standalone .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
-      - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
-      - ".sharded .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
-      - ".loadbalanced .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
 
   # Test versions < 5.0
   - name: test-debian92-php-8.3-local

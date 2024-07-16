@@ -28,7 +28,6 @@ use MongoDB\Exception\UnsupportedException;
 use function current;
 use function is_array;
 use function is_string;
-use function MongoDB\server_supports_feature;
 
 /**
  * Operation for the explain command.
@@ -41,8 +40,6 @@ class Explain implements Executable
     public const VERBOSITY_ALL_PLANS = 'allPlansExecution';
     public const VERBOSITY_EXEC_STATS = 'executionStats';
     public const VERBOSITY_QUERY = 'queryPlanner';
-
-    private const WIRE_VERSION_FOR_AGGREGATE = 7;
 
     private string $databaseName;
 
@@ -106,10 +103,6 @@ class Explain implements Executable
      */
     public function execute(Server $server)
     {
-        if ($this->explainable instanceof Aggregate && ! server_supports_feature($server, self::WIRE_VERSION_FOR_AGGREGATE)) {
-            throw UnsupportedException::explainNotSupported();
-        }
-
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {

@@ -27,7 +27,6 @@ $supportedMongoDBVersions = [
     '4.4',
     '4.2',
     '4.0',
-    '3.6',
 ];
 
 // Server versions

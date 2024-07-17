@@ -47,21 +47,21 @@ $csfleServerVersions = array_filter(
 $allFiles = [];
 
 // Build tasks
-$allFiles[] = generateConfigs('build', 'phpVersion', 'build-extension.yml', 'build-php-%s', $supportedPhpVersions);
+$allFiles[] = generateConfigs('tasks', 'build', 'phpVersion', 'build-extension.yml', $supportedPhpVersions);
 
 // Test tasks
-$allFiles[] = generateConfigs('test', 'mongodbVersion', 'local.yml', 'local-%s', $localServerVersions);
-$allFiles[] = generateConfigs('test', 'mongodbVersion', 'load-balanced.yml', 'load-balanced-%s', $loadBalancedServerVersions);
-$allFiles[] = generateConfigs('test', 'mongodbVersion', 'require-api-version.yml', 'require-api-version-%s', $requireApiServerVersions);
-$allFiles[] = generateConfigs('test', 'mongodbVersion', 'csfle.yml', 'csfle-%s', $csfleServerVersions);
+$allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'local.yml', $localServerVersions);
+$allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'load-balanced.yml', $loadBalancedServerVersions);
+$allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'require-api-version.yml', $requireApiServerVersions);
+$allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'csfle.yml', $csfleServerVersions);
 
 // Test variants
-$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'latest.yml', 'latest-php-%s', [$latestPhpVersion]);
-$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'replicaset-only.yml', 'replicaset-php-%s', array_diff($supportedPhpVersions, [$latestPhpVersion]));
-$allFiles[] = generateConfigs('test-variant', 'phpVersion', 'lowest.yml', 'lowest-php-%s', [$lowestPhpVersion]);
+$allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'latest.yml', [$latestPhpVersion]);
+$allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'replicaset-only.yml', array_diff($supportedPhpVersions, [$latestPhpVersion]));
+$allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'lowest.yml', [$lowestPhpVersion]);
 
 echo "Generated config. Use the following list to import files:\n";
-echo implode("\n", array_map('getImportConfig', array_merge(...$allFiles))) . "\n";
+echo implode("\n", array_map('getImportConfig', $allFiles)) . "\n";
 
 function getImportConfig(string $filename): string
 {
@@ -69,12 +69,12 @@ function getImportConfig(string $filename): string
 }
 
 function generateConfigs(
+    string $type,
     string $directory,
     string $replacementName,
     string $templateFile,
-    string $outputFormat,
     array $versions,
-): array {
+): string {
     $templateRelativePath = 'templates/' . $directory . '/' . $templateFile;
     $template = file_get_contents(__DIR__ . '/' . $templateRelativePath);
     $header = sprintf(
@@ -82,16 +82,21 @@ function generateConfigs(
         $templateRelativePath
     );
 
-    $files = [];
+    $contents = <<<HEADER
+$header
+$type:
+
+HEADER;
 
     foreach ($versions as $version) {
-        $filename = sprintf('/generated/%s/' . $outputFormat . '.yml', $directory, $version);
-        $files[] = '.evergreen/config' . $filename;
-
-        $replacements = ['%' . $replacementName . '%' => $version];
-
-        file_put_contents(__DIR__ . $filename, $header . "\n" . strtr($template, $replacements));
+        $contents .= strtr(
+            $template,
+            ['%' . $replacementName . '%' => $version],
+        );
     }
 
-    return $files;
+    $filename = '/generated/' . $directory . '/' . $templateFile;
+    file_put_contents(__DIR__ . $filename, $contents);
+
+    return '.evergreen/config' . $filename;
 }

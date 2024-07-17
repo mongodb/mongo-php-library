@@ -1,4 +1,3 @@
-tasks:
   - name: "test-mongodb-%mongodbVersion%-standalone-noauth-nossl"
     tags: ["standalone", "local", "%mongodbVersion%", "tag"]
     commands:

@@ -1,5 +1,4 @@
 # TODO PHPLIB-955: This file can be removed when requiring PHP 8.1+
-buildvariants:
   # Test MongoDB >= 5.0, < 8.0
   - name: test-debian11-php-%phpVersion%-local
     tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]

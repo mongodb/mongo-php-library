@@ -1,0 +1,98 @@
+# This file is generated automatically - please edit the "templates/test/load-balanced.yml" template file instead.
+tasks:
+  - name: "test-mongodb-latest-loadbalanced"
+    tags: ["loadbalanced", "local", "latest", "tag"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "latest"
+          LOAD_BALANCER: "true"
+          SSL: "yes"
+      - func: "start load balancer"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+          SSL: "yes"
+  - name: "test-mongodb-rapid-loadbalanced"
+    tags: ["loadbalanced", "local", "rapid", "tag"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "rapid"
+          LOAD_BALANCER: "true"
+          SSL: "yes"
+      - func: "start load balancer"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+          SSL: "yes"
+  - name: "test-mongodb-8.0-loadbalanced"
+    tags: ["loadbalanced", "local", "8.0", "tag"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "8.0"
+          LOAD_BALANCER: "true"
+          SSL: "yes"
+      - func: "start load balancer"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+          SSL: "yes"
+  - name: "test-mongodb-7.0-loadbalanced"
+    tags: ["loadbalanced", "local", "7.0", "tag"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "7.0"
+          LOAD_BALANCER: "true"
+          SSL: "yes"
+      - func: "start load balancer"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+          SSL: "yes"
+  - name: "test-mongodb-6.0-loadbalanced"
+    tags: ["loadbalanced", "local", "6.0", "tag"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "6.0"
+          LOAD_BALANCER: "true"
+          SSL: "yes"
+      - func: "start load balancer"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+          SSL: "yes"
+  - name: "test-mongodb-5.0-loadbalanced"
+    tags: ["loadbalanced", "local", "5.0", "tag"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "5.0"
+          LOAD_BALANCER: "true"
+          SSL: "yes"
+      - func: "start load balancer"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+          SSL: "yes"

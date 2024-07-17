@@ -1,4 +1,3 @@
-tasks:
   - name: "build-php-%phpVersion%"
     tags: ["build", "php%phpVersion%", "stable", "pr", "tag"]
     commands:

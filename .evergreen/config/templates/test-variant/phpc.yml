@@ -1,4 +1,3 @@
-buildvariants:
   # Variants with different PHPC versions
   - name: test-debian12-php-%phpVersion%-phpc-next-stable
     tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]

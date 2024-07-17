@@ -1,0 +1,227 @@
+# This file is generated automatically - please edit the "templates/test-variant/modern-php-full.yml" template file instead.
+buildvariants:
+  # Test MongoDB >= 7.0
+  - name: test-debian12-php-8.3-local
+    tags: ["test", "debian", "x64", "php8.3", "pr", "tag"]
+    display_name: "Test: Debian 12, PHP 8.3"
+    run_on: debian12-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian12"
+      FETCH_BUILD_TASK: "build-php-8.3"
+      PHP_VERSION: "8.3"
+      VARIANT: debian12
+    depends_on:
+      - variant: "build-debian12"
+        name: "build-php-8.3"
+    tasks:
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - "test_serverless_task_group"
+      - "test_serverless_proxy_task_group"
+      - "test-atlas-data-lake"
+
+  # Test MongoDB 5.0 and 6.0
+  - name: test-debian11-php-8.3-local
+    tags: ["test", "debian", "x64", "php8.3", "pr", "tag"]
+    display_name: "Test: Debian 11, PHP 8.3"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.3"
+      PHP_VERSION: "8.3"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.3"
+    tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+
+  # Test versions < 5.0
+  - name: test-debian92-php-8.3-local
+    tags: ["test", "debian", "x64", "php8.3", "pr", "tag"]
+    display_name: "Test: Debian 9.2, PHP 8.3"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      FETCH_BUILD_TASK: "build-php-8.3"
+      PHP_VERSION: "8.3"
+    depends_on:
+      - variant: "build-debian92"
+        name: "build-php-8.3"
+    tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+
+  # Test Atlas and CSFLE on RHEL 8
+  - name: test-rhel80-php-8.3-atlas
+    tags: ["test", "debian", "x64", "php8.3", "pr", "tag"]
+    display_name: "Test: RHEL 8.0, PHP 8.3"
+    run_on: rhel80-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-rhel80"
+      FETCH_BUILD_TASK: "build-php-8.3"
+      PHP_VERSION: "8.3"
+    depends_on:
+      - variant: "build-rhel80"
+        name: "build-php-8.3"
+    tasks:
+      - "test_atlas_task_group"
+      - ".csfle"
+  # Test MongoDB >= 7.0
+  - name: test-debian12-php-8.2-local
+    tags: ["test", "debian", "x64", "php8.2", "pr", "tag"]
+    display_name: "Test: Debian 12, PHP 8.2"
+    run_on: debian12-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian12"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+      VARIANT: debian12
+    depends_on:
+      - variant: "build-debian12"
+        name: "build-php-8.2"
+    tasks:
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - "test_serverless_task_group"
+      - "test_serverless_proxy_task_group"
+      - "test-atlas-data-lake"
+
+  # Test MongoDB 5.0 and 6.0
+  - name: test-debian11-php-8.2-local
+    tags: ["test", "debian", "x64", "php8.2", "pr", "tag"]
+    display_name: "Test: Debian 11, PHP 8.2"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.2"
+    tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+
+  # Test versions < 5.0
+  - name: test-debian92-php-8.2-local
+    tags: ["test", "debian", "x64", "php8.2", "pr", "tag"]
+    display_name: "Test: Debian 9.2, PHP 8.2"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+    depends_on:
+      - variant: "build-debian92"
+        name: "build-php-8.2"
+    tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+
+  # Test Atlas and CSFLE on RHEL 8
+  - name: test-rhel80-php-8.2-atlas
+    tags: ["test", "debian", "x64", "php8.2", "pr", "tag"]
+    display_name: "Test: RHEL 8.0, PHP 8.2"
+    run_on: rhel80-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-rhel80"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+    depends_on:
+      - variant: "build-rhel80"
+        name: "build-php-8.2"
+    tasks:
+      - "test_atlas_task_group"
+      - ".csfle"
+  # Test MongoDB >= 7.0
+  - name: test-debian12-php-8.1-local
+    tags: ["test", "debian", "x64", "php8.1", "pr", "tag"]
+    display_name: "Test: Debian 12, PHP 8.1"
+    run_on: debian12-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian12"
+      FETCH_BUILD_TASK: "build-php-8.1"
+      PHP_VERSION: "8.1"
+      VARIANT: debian12
+    depends_on:
+      - variant: "build-debian12"
+        name: "build-php-8.1"
+    tasks:
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - "test_serverless_task_group"
+      - "test_serverless_proxy_task_group"
+      - "test-atlas-data-lake"
+
+  # Test MongoDB 5.0 and 6.0
+  - name: test-debian11-php-8.1-local
+    tags: ["test", "debian", "x64", "php8.1", "pr", "tag"]
+    display_name: "Test: Debian 11, PHP 8.1"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.1"
+      PHP_VERSION: "8.1"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.1"
+    tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.7.0 !.8.0 !.rapid !.latest"
+
+  # Test versions < 5.0
+  - name: test-debian92-php-8.1-local
+    tags: ["test", "debian", "x64", "php8.1", "pr", "tag"]
+    display_name: "Test: Debian 9.2, PHP 8.1"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      FETCH_BUILD_TASK: "build-php-8.1"
+      PHP_VERSION: "8.1"
+    depends_on:
+      - variant: "build-debian92"
+        name: "build-php-8.1"
+    tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+
+  # Test Atlas and CSFLE on RHEL 8
+  - name: test-rhel80-php-8.1-atlas
+    tags: ["test", "debian", "x64", "php8.1", "pr", "tag"]
+    display_name: "Test: RHEL 8.0, PHP 8.1"
+    run_on: rhel80-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-rhel80"
+      FETCH_BUILD_TASK: "build-php-8.1"
+      PHP_VERSION: "8.1"
+    depends_on:
+      - variant: "build-rhel80"
+        name: "build-php-8.1"
+    tasks:
+      - "test_atlas_task_group"
+      - ".csfle"

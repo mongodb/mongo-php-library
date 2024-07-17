@@ -1,4 +1,3 @@
-buildvariants:
   # Test MongoDB >= 7.0
   - name: test-debian12-php-%phpVersion%-local
     tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]

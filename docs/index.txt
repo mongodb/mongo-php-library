@@ -17,8 +17,6 @@ MongoDB PHP Library
    FAQ </faq>
    /whats-new
 
-HELLO TEST
-
 The |php-library| provides a high-level abstraction around the lower-level
 :php:`mongodb extension <mongodb>`.
 

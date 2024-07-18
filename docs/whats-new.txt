@@ -31,3 +31,5 @@ What's New in 1.20
 
    Support for MongoDB Server v3.6 is removed in this release of the
    library.
+
+- Adds support for MongoDB Server v8.0.

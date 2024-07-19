@@ -1,0 +1,35 @@
+.. _php-lib-whats-new:
+
+==========
+What's New
+==========
+
+.. facet::
+   :name: genre
+   :values: reference
+
+.. meta::
+   :keywords: update, new feature, deprecation, upgrade
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Learn about new features, improvements, and fixes introduced in the
+following versions of the {+php-library+}:
+
+* :ref:`Version 1.20 <php-lib-version-1.20>`
+
+.. _php-lib-version-1.20:
+
+What's New in 1.20
+------------------
+
+.. important:: MongoDB Server v3.6 End-of-Life
+
+   Support for MongoDB Server v3.6 is removed in this release of the
+   library.
+
+- Adds support for MongoDB Server v8.0.

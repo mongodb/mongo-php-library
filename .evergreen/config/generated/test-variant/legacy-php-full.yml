@@ -16,10 +16,10 @@ buildvariants:
         name: "build-php-8.0"
     tasks:
       # Remember to add new major versions here as they are released
-      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
-      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
-      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
-      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0 !.rapid !.latest"
       - "test-atlas-data-lake"
 
   # Test versions < 5.0
@@ -72,10 +72,10 @@ buildvariants:
         name: "build-php-7.4"
     tasks:
       # Remember to add new major versions here as they are released
-      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
-      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
-      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
-      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
+      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0 !.rapid !.latest"
       - "test-atlas-data-lake"
 
   # Test versions < 5.0

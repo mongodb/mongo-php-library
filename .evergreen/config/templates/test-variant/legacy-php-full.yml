@@ -18,8 +18,6 @@
       - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
       - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
       - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.8.0"
-      - "test_serverless_task_group"
-      - "test_serverless_proxy_task_group"
       - "test-atlas-data-lake"
 
   # Test versions < 5.0

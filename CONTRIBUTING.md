@@ -172,31 +172,9 @@ New rules can be added to the `rector.php` configuration file.
 
 ## Documentation
 
-Documentation for the library lives in the `docs/` directory and is built with
-tools in the related
-[mongodb/docs-php-library](https://github.com/mongodb/docs-php-library)
-repository. The tools repository is already configured to reference our sources.
-
-That said, any changes to the documentation should be tested locally before
-committing. Follow the following steps to build the docs locally with the tools
-repository:
-
- * Clone the
-   [mongodb/docs-php-library](https://github.com/mongodb/docs-php-library) tools
-   repository.
- * Create and activate Python 2.7 virtual environment if necessary.
-
-   ```console
-   $ virtualenv -p python2.7 venv
-   $ source venv/bin/activate
-   ```
- * Install [giza](https://pypi.python.org/pypi/giza/) according to the instructions
-   in the [mongodb/docs-tools](https://github.com/mongodb/docs-tools) README.
- * Sync your working copy of the documentation to the `source/` directory with
-   `rsync -a --delete /path/to/mongo-php-library/docs/ source/`.
- * Build the documentation with `giza make publish`. You can suppress
-   informational log messages with the `--level warning` option.
- * Generated documentation may be found in the `build/master/html` directory.
+Documentation for the library is maintained by the MongoDB docs team and is kept
+in the [mongodb/docs-php-library](https://github.com/mongodb/docs-php-library)
+repository.
 
 ## Releasing
 

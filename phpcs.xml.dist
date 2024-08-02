@@ -11,7 +11,6 @@
 
     <file>benchmark/src</file>
     <file>src</file>
-    <file>docs/examples</file>
     <file>examples</file>
     <file>tests</file>
     <file>tools</file>
@@ -75,14 +74,6 @@
 
         <!-- Disable forbidden annotation sniff as excluding @api from the list doesn't work -->
         <exclude name="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden" />
-
-        <!-- Example file using HTML templating -->
-        <exclude name="Generic.Files.InlineHTML.Found">
-            <exclude-pattern>docs/examples/*/index.php</exclude-pattern>
-        </exclude>
-        <exclude name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountAfterControlStructure">
-            <exclude-pattern>docs/examples/*/index.php</exclude-pattern>
-        </exclude>
     </rule>
 
 
@@ -162,12 +153,5 @@
     </rule>
     <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
         <exclude-pattern>/tests/SpecTests/*/Prose*</exclude-pattern>
-    </rule>
-
-    <!-- **************************************** -->
-    <!-- Exclude certain rules for codec examples -->
-    <!-- **************************************** -->
-    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
-        <exclude-pattern>/docs/examples/codecs/</exclude-pattern>
     </rule>
 </ruleset>

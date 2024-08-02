@@ -11,7 +11,6 @@
 >
     <projectFiles>
         <directory name="src" />
-        <directory name="docs/examples/encryption" />
         <directory name="examples" />
         <ignoreFiles>
             <directory name="vendor" />
@@ -39,7 +38,6 @@
         <RiskyTruthyFalsyComparison>
             <errorLevel type="suppress">
                 <directory name="examples" />
-                <directory name="docs/examples" />
             </errorLevel>
         </RiskyTruthyFalsyComparison>
     </issueHandlers>

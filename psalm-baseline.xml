@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.18.0@b113f3ed0259fd6e212d87c3df80eec95a6abf19">
-  <file src="docs/examples/encryption/csfle-explicit_encryption.php">
-    <MixedArgument>
-      <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
-    </MixedArgument>
-  </file>
   <file src="examples/atlas_search.php">
     <MixedArgument>
       <code><![CDATA[$document['name']]]></code>

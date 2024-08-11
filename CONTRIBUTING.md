@@ -172,12 +172,10 @@ New rules can be added to the `rector.php` configuration file.
 
 ## Documentation
 
-Documentation for the library lives in the `docs/` directory and is built with
-tools in the related
-[mongodb/docs-php-library](https://github.com/mongodb/docs-php-library)
-repository. The tools repository is already configured to reference our sources.
+Documentation for the library lives in the
+[mongodb/docs-php-library](https://github.com/mongodb/docs-php-library) repository.
 
-That said, any changes to the documentation should be tested locally before
+Any changes to the documentation should be tested locally before
 committing. Follow the following steps to build the docs locally with the tools
 repository:
 

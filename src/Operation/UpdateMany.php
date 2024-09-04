@@ -81,7 +81,7 @@ class UpdateMany implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $filter, $update, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array|object $filter, array|object $update, array $options = [])
     {
         if (! is_array($update) && ! is_object($update)) {
             throw InvalidArgumentException::invalidType('$update', $update, 'array or object');

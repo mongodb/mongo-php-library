@@ -15,7 +15,6 @@ use stdClass;
 use function array_reverse;
 use function count;
 use function current;
-use function get_class;
 use function is_object;
 use function key;
 use function MongoDB\Driver\Monitoring\addSubscriber;
@@ -227,7 +226,7 @@ final class EventObserver implements CommandSubscriber
     {
         assertIsObject($actual);
 
-        switch (get_class($actual)) {
+        switch ($actual::class) {
             case CommandStartedEvent::class:
                 return $this->assertCommandStartedEvent($actual, $expected, $message);
 
@@ -238,7 +237,7 @@ final class EventObserver implements CommandSubscriber
                 return $this->assertCommandFailedEvent($actual, $expected, $message);
 
             default:
-                Assert::fail($message . ': Unsupported event type: ' . get_class($actual));
+                Assert::fail($message . ': Unsupported event type: ' . $actual::class);
         }
     }
 
@@ -329,8 +328,7 @@ final class EventObserver implements CommandSubscriber
         }
     }
 
-    /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private function handleEvent($event): void
+    private function handleEvent(CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event): void
     {
         if (! $this->context->isActiveClient($this->clientId)) {
             return;
@@ -340,7 +338,7 @@ final class EventObserver implements CommandSubscriber
             return;
         }
 
-        if (! isset($this->observeEvents[get_class($event)])) {
+        if (! isset($this->observeEvents[$event::class])) {
             return;
         }
 
@@ -355,8 +353,7 @@ final class EventObserver implements CommandSubscriber
         $this->actualEvents[] = $event;
     }
 
-    /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private function isSensitiveCommand($event): bool
+    private function isSensitiveCommand(CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event): bool
     {
         if (isset(self::$sensitiveCommands[$event->getCommandName()])) {
             return true;

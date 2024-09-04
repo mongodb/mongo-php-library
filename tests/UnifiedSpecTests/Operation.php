@@ -32,7 +32,6 @@ use function array_map;
 use function current;
 use function fopen;
 use function fwrite;
-use function get_class;
 use function hex2bin;
 use function iterator_to_array;
 use function key;
@@ -173,7 +172,7 @@ final class Operation
 
         $this->context->setActiveClient($this->entityMap->getRootClientIdOf($this->object));
 
-        switch (get_class($object)) {
+        switch ($object::class) {
             case Client::class:
                 $result = $this->executeForClient($object);
                 break;
@@ -199,7 +198,7 @@ final class Operation
                 $result = $this->executeForBucket($object);
                 break;
             default:
-                Assert::fail('Unsupported entity type: ' . get_class($object));
+                Assert::fail('Unsupported entity type: ' . $object::class);
         }
 
         return $result;

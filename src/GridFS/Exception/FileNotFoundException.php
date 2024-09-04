@@ -55,7 +55,7 @@ class FileNotFoundException extends RuntimeException
      * @param string $namespace Namespace for the files collection
      * @return self
      */
-    public static function byId($id, string $namespace)
+    public static function byId(mixed $id, string $namespace)
     {
         $json = Document::fromPHP(['_id' => $id])->toRelaxedExtendedJSON();
 

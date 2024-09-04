@@ -50,8 +50,7 @@ class Delete implements Executable, Explainable
 
     private string $collectionName;
 
-    /** @var array|object */
-    private $filter;
+    private array|object $filter;
 
     private int $limit;
 
@@ -93,7 +92,7 @@ class Delete implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $filter, int $limit, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array|object $filter, int $limit, array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);

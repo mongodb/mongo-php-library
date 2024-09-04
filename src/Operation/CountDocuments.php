@@ -43,8 +43,7 @@ class CountDocuments implements Executable
 
     private string $collectionName;
 
-    /** @var array|object */
-    private $filter;
+    private array|object $filter;
 
     private array $aggregateOptions;
 
@@ -87,7 +86,7 @@ class CountDocuments implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array|object $filter, array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);

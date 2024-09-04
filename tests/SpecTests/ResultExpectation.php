@@ -38,8 +38,7 @@ final class ResultExpectation
 
     private int $assertionType = self::ASSERT_NOTHING;
 
-    /** @var mixed */
-    private $expectedValue;
+    private mixed $expectedValue;
 
     /** @var callable */
     private $assertionCallable;
@@ -333,9 +332,8 @@ final class ResultExpectation
      * Determines whether the result is actually an error expectation.
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#test-format
-     * @param mixed $result
      */
-    private static function isErrorResult($result): bool
+    private static function isErrorResult(mixed $result): bool
     {
         if (! is_object($result)) {
             return false;

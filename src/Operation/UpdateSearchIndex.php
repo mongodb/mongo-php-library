@@ -49,7 +49,7 @@ class UpdateSearchIndex implements Executable
      * @param array{comment?: mixed} $options        Command options
      * @throws InvalidArgumentException for parameter parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, string $name, $definition, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, string $name, array|object $definition, array $options = [])
     {
         if ($name === '') {
             throw new InvalidArgumentException('Index name cannot be empty');

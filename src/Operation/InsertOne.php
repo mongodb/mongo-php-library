@@ -42,8 +42,7 @@ class InsertOne implements Executable
 
     private string $collectionName;
 
-    /** @var array|object */
-    private $document;
+    private array|object $document;
 
     private array $options;
 
@@ -72,7 +71,7 @@ class InsertOne implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $document, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array|object $document, array $options = [])
     {
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
@@ -166,11 +165,8 @@ class InsertOne implements Executable
         return $options;
     }
 
-    /**
-     * @param array|object $document
-     * @return array|object
-     */
-    private function validateDocument($document, ?DocumentCodec $codec)
+    /** @return array|object */
+    private function validateDocument(array|object $document, ?DocumentCodec $codec)
     {
         if ($codec) {
             $document = $codec->encode($document);

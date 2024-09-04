@@ -99,7 +99,7 @@ class IndexInput implements Serializable
      *                               which denote order or an index type
      * @throws InvalidArgumentException if $document is not an array or object
      */
-    private function generateIndexName($document): string
+    private function generateIndexName(array|object $document): string
     {
         $document = document_to_array($document);
 

@@ -238,7 +238,7 @@ class Bucket
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function delete($id)
+    public function delete(mixed $id)
     {
         $file = $this->collectionWrapper->findFileById($id);
         $this->collectionWrapper->deleteFileAndChunksById($id);
@@ -259,7 +259,7 @@ class Bucket
      * @throws StreamException if the file could not be uploaded
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function downloadToStream($id, $destination)
+    public function downloadToStream(mixed $id, $destination)
     {
         if (! is_resource($destination) || get_resource_type($destination) != 'stream') {
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
@@ -335,7 +335,7 @@ class Bucket
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function find($filter = [], array $options = [])
+    public function find(array|object $filter = [], array $options = [])
     {
         if ($this->codec && ! array_key_exists('codec', $options)) {
             $options['codec'] = $this->codec;
@@ -356,7 +356,7 @@ class Bucket
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function findOne($filter = [], array $options = [])
+    public function findOne(array|object $filter = [], array $options = [])
     {
         if ($this->codec && ! array_key_exists('codec', $options)) {
             $options['codec'] = $this->codec;
@@ -512,7 +512,7 @@ class Bucket
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function openDownloadStream($id)
+    public function openDownloadStream(mixed $id)
     {
         $file = $this->collectionWrapper->findFileById($id);
 
@@ -632,7 +632,7 @@ class Bucket
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function rename($id, string $newFilename)
+    public function rename(mixed $id, string $newFilename)
     {
         $updateResult = $this->collectionWrapper->updateFilenameForId($id, $newFilename);
 

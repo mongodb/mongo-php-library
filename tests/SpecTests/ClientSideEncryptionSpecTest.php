@@ -1698,7 +1698,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 try {
                     $encryptedClient->selectCollection('db', 'decryption_events')->aggregate([]);
                     $test->fail('Expected exception to be thrown');
-                } catch (ConnectionTimeoutException $e) {
+                } catch (ConnectionTimeoutException) {
                     $test->addToAssertionCount(1);
                 }
 
@@ -1942,7 +1942,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         try {
             $clientEncryption->encrypt($data->value, $encryptionOptions);
             $this->fail('Expected exception to be thrown');
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
         }
 
         return $data->value;

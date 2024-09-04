@@ -64,8 +64,7 @@ class MapReduce implements Executable
 
     private JavascriptInterface $reduce;
 
-    /** @var array|object|string */
-    private $out;
+    private array|object|string $out;
 
     private array $options;
 
@@ -156,7 +155,7 @@ class MapReduce implements Executable
      * @param array               $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, JavascriptInterface $map, JavascriptInterface $reduce, string|array|object $out, array $options = [])
     {
         if (! is_string($out) && ! is_array($out) && ! is_object($out)) {
             throw InvalidArgumentException::invalidType('$out', $out, 'string or array or object');
@@ -306,8 +305,7 @@ class MapReduce implements Executable
         return new MapReduceResult($getIterator, $result);
     }
 
-    /** @param string|array|object $out */
-    private function checkOutDeprecations($out): void
+    private function checkOutDeprecations(string|array|object $out): void
     {
         if (is_string($out)) {
             return;

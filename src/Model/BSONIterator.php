@@ -44,8 +44,7 @@ class BSONIterator implements Iterator
 
     private int $bufferLength;
 
-    /** @var array|object|null */
-    private $current = null;
+    private array|object|null $current = null;
 
     private int $key = 0;
 

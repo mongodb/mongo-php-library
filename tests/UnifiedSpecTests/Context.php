@@ -232,8 +232,7 @@ final class Context
         }
     }
 
-    /** @param string|array $readPreferenceTags */
-    private function convertReadPreferenceTags($readPreferenceTags): array
+    private function convertReadPreferenceTags(string|array $readPreferenceTags): array
     {
         return array_map(
             static function (string $readPreferenceTagSet): array {

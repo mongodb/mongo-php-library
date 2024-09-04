@@ -16,7 +16,6 @@ use stdClass;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
 
 use function array_values;
-use function get_class;
 use function get_debug_type;
 use function is_array;
 use function is_float;
@@ -52,8 +51,7 @@ class DocumentsMatchConstraint extends Constraint
      */
     private bool $sortKeys = false;
 
-    /** @var BSONArray|BSONDocument */
-    private $value;
+    private BSONArray|BSONDocument $value;
 
     private ?ComparisonFailure $lastFailure = null;
 
@@ -62,11 +60,10 @@ class DocumentsMatchConstraint extends Constraint
     /**
      * Creates a new constraint.
      *
-     * @param array|object $value
-     * @param boolean      $ignoreExtraKeysInRoot     If true, ignore extra keys within the root document
-     * @param boolean      $ignoreExtraKeysInEmbedded If true, ignore extra keys within embedded documents
+     * @param boolean $ignoreExtraKeysInRoot     If true, ignore extra keys within the root document
+     * @param boolean $ignoreExtraKeysInEmbedded If true, ignore extra keys within embedded documents
      */
-    public function __construct($value, bool $ignoreExtraKeysInRoot = false, bool $ignoreExtraKeysInEmbedded = false)
+    public function __construct(array|object $value, bool $ignoreExtraKeysInRoot = false, bool $ignoreExtraKeysInEmbedded = false)
     {
         $this->value = $this->prepareBSON($value, true, $this->sortKeys);
         $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
@@ -111,11 +108,8 @@ class DocumentsMatchConstraint extends Constraint
         }
     }
 
-    /**
-     * @param string|string[] $expectedType
-     * @param mixed           $actualValue
-     */
-    private function assertBSONType($expectedType, $actualValue): void
+    /** @param string|string[] $expectedType */
+    private function assertBSONType(string|array $expectedType, mixed $actualValue): void
     {
         assertThat(
             $expectedType,
@@ -133,11 +127,11 @@ class DocumentsMatchConstraint extends Constraint
      */
     private function assertEquals(ArrayObject $expected, ArrayObject $actual, bool $ignoreExtraKeys, string $keyPrefix = ''): void
     {
-        if (get_class($expected) !== get_class($actual)) {
+        if ($expected::class !== $actual::class) {
             throw new RuntimeException(sprintf(
                 '%s is not instance of expected class "%s"',
                 $this->exporter()->shortenedExport($actual),
-                get_class($expected),
+                $expected::class,
             ));
         }
 
@@ -237,7 +231,7 @@ class DocumentsMatchConstraint extends Constraint
 
         try {
             $this->assertEquals($this->value, $other, $this->ignoreExtraKeysInRoot);
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             return false;
         }
 
@@ -261,12 +255,10 @@ class DocumentsMatchConstraint extends Constraint
      * its type and keys. Keys within documents will optionally be sorted. Each
      * value within the array or document will then be prepared recursively.
      *
-     * @param array|object $bson
-     * @param boolean      $isRoot If true, ensure an array value is converted to a document
-     * @return BSONDocument|BSONArray
+     * @param boolean $isRoot If true, ensure an array value is converted to a document
      * @throws InvalidArgumentException if $bson is not an array or object
      */
-    private function prepareBSON($bson, bool $isRoot, bool $sortKeys = false)
+    private function prepareBSON(array|object $bson, bool $isRoot, bool $sortKeys = false): BSONDocument|BSONArray
     {
         if (! is_array($bson) && ! is_object($bson)) {
             throw new InvalidArgumentException('$bson is not an array or object');

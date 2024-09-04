@@ -53,8 +53,7 @@ class Matches extends Constraint
 
     private ?EntityMap $entityMap = null;
 
-    /** @var mixed */
-    private $value;
+    private mixed $value;
 
     private bool $allowExtraRootKeys;
 
@@ -348,7 +347,7 @@ class Matches extends Constraint
 
         try {
             $this->assertMatches($this->value, $other);
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             return false;
         }
 
@@ -408,11 +407,8 @@ class Matches extends Constraint
      * converted to a BSONDocument; otherwise, it will be converted to a
      * BSONArray or BSONDocument based on its keys. Each value within an array
      * or document will then be prepared recursively.
-     *
-     * @param mixed $bson
-     * @return mixed
      */
-    private static function prepare($bson)
+    private static function prepare(mixed $bson): mixed
     {
         if (! is_array($bson) && ! is_object($bson)) {
             return $bson;

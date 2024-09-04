@@ -10,7 +10,6 @@ use MongoDB\Model\BSONArray;
 
 use function array_filter;
 use function array_flip;
-use function get_class;
 use function microtime;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
@@ -103,8 +102,7 @@ final class EventCollector implements CommandSubscriber
         removeSubscriber($this);
     }
 
-    /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private function handleCommandMonitoringEvent($event): void
+    private function handleCommandMonitoringEvent(CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event): void
     {
         assertIsObject($event);
 
@@ -112,7 +110,7 @@ final class EventCollector implements CommandSubscriber
             return;
         }
 
-        if (! isset($this->collectEvents[get_class($event)])) {
+        if (! isset($this->collectEvents[$event::class])) {
             return;
         }
 
@@ -144,8 +142,7 @@ final class EventCollector implements CommandSubscriber
         $this->eventList[] = $log;
     }
 
-    /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private static function getConnectionId($event): string
+    private static function getConnectionId(CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event): string
     {
         $server = $event->getServer();
 
@@ -160,6 +157,6 @@ final class EventCollector implements CommandSubscriber
             $eventNamesByClass = array_flip(array_filter(self::$supportedEvents));
         }
 
-        return $eventNamesByClass[get_class($event)];
+        return $eventNamesByClass[$event::class];
     }
 }

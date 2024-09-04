@@ -48,11 +48,8 @@ class IndexInputTest extends TestCase
         new IndexInput(['key' => ['x' => 1], 'name' => $name]);
     }
 
-    /**
-     * @dataProvider provideExpectedNameAndKey
-     * @param array|object $key
-     */
-    public function testNameGeneration($expectedName, $key): void
+    /** @dataProvider provideExpectedNameAndKey */
+    public function testNameGeneration($expectedName, array|object $key): void
     {
         $this->assertSame($expectedName, (string) new IndexInput(['key' => $key]));
     }

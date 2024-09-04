@@ -16,14 +16,12 @@ use MongoDB\Driver\Monitoring\TopologyChangedEvent;
 use MongoDB\Driver\Monitoring\TopologyClosedEvent;
 use MongoDB\Driver\Monitoring\TopologyOpeningEvent;
 
-use function get_class;
 use function getenv;
 use function printf;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-/** @param array|object $document */
-function toJSON($document): string
+function toJSON(array|object $document): string
 {
     return Document::fromPHP($document)->toRelaxedExtendedJSON();
 }
@@ -67,7 +65,7 @@ class SDAMLogger implements SDAMSubscriber
 
         $error = $event->getError();
 
-        printf("error: %s(%d): %s\n", get_class($error), $error->getCode(), $error->getMessage());
+        printf("error: %s(%d): %s\n", $error::class, $error->getCode(), $error->getMessage());
         echo "\n";
     }
 

@@ -237,7 +237,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function command($command, array $options = [])
+    public function command(array|object $command, array $options = [])
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;

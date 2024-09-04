@@ -27,13 +27,11 @@ class InsertOneResult
 {
     private WriteResult $writeResult;
 
-    /** @var mixed */
-    private $insertedId;
+    private mixed $insertedId;
 
     private bool $isAcknowledged;
 
-    /** @param mixed $insertedId */
-    public function __construct(WriteResult $writeResult, $insertedId)
+    public function __construct(WriteResult $writeResult, mixed $insertedId)
     {
         $this->writeResult = $writeResult;
         $this->insertedId = $insertedId;

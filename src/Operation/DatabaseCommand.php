@@ -61,7 +61,7 @@ class DatabaseCommand implements Executable
      * @param array        $options      Options for command execution
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, $command, array $options = [])
+    public function __construct(string $databaseName, array|object $command, array $options = [])
     {
         if (! is_document($command)) {
             throw InvalidArgumentException::expectedDocumentType('$command', $command);

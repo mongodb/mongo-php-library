@@ -239,7 +239,7 @@ class WritableStream
     {
         try {
             $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);
-        } catch (DriverRuntimeException $e) {
+        } catch (DriverRuntimeException) {
             // We are already handling an error if abort() is called, so suppress this
         }
 

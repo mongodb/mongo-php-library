@@ -152,7 +152,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         try {
             $this->bucket->delete($id);
             $this->fail('FileNotFoundException was not thrown');
-        } catch (FileNotFoundException $e) {
+        } catch (FileNotFoundException) {
         }
 
         $this->assertCollectionCount($this->chunksCollection, 0);

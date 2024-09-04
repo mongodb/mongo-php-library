@@ -24,8 +24,7 @@ final class ServerParameterHelper
         $this->client = $client;
     }
 
-    /** @return mixed */
-    public function __get(string $parameter)
+    public function __get(string $parameter): mixed
     {
         if (! array_key_exists($parameter, $this->parameters)) {
             $this->fetchParameter($parameter);
@@ -68,7 +67,7 @@ final class ServerParameterHelper
 
             $this->parameters = $cursor->toArray()[0];
             $this->allParametersFetched = true;
-        } catch (CommandException $e) {
+        } catch (CommandException) {
             $this->fetchAllParametersFailed = true;
         }
     }

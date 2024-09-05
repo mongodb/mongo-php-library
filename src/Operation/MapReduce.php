@@ -56,17 +56,7 @@ use const E_USER_DEPRECATED;
  */
 class MapReduce implements Executable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private JavascriptInterface $map;
-
-    private JavascriptInterface $reduce;
-
     private array|object|string $out;
-
-    private array $options;
 
     /**
      * Constructs a mapReduce command.
@@ -155,7 +145,7 @@ class MapReduce implements Executable
      * @param array               $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, JavascriptInterface $map, JavascriptInterface $reduce, string|array|object $out, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private JavascriptInterface $map, private JavascriptInterface $reduce, string|array|object $out, private array $options = [])
     {
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
@@ -244,12 +234,7 @@ class MapReduce implements Executable
 
         $this->checkOutDeprecations($out);
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->map = $map;
-        $this->reduce = $reduce;
         $this->out = $out;
-        $this->options = $options;
     }
 
     /**

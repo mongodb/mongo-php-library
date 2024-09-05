@@ -44,12 +44,9 @@ use const E_USER_DEPRECATED;
  */
 class IndexInfo implements ArrayAccess
 {
-    private array $info;
-
     /** @param array $info Index info */
-    public function __construct(array $info)
+    public function __construct(private array $info)
     {
-        $this->info = $info;
     }
 
     /**

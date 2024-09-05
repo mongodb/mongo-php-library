@@ -44,11 +44,8 @@ class Prose3_ReturnOriginalErrorTest extends FunctionalTestCase
         ]);
 
         $subscriber = new class ($this) implements CommandSubscriber {
-            private FunctionalTestCase $testCase;
-
-            public function __construct(FunctionalTestCase $testCase)
+            public function __construct(private FunctionalTestCase $testCase)
             {
-                $this->testCase = $testCase;
             }
 
             public function commandStarted(CommandStartedEvent $event): void

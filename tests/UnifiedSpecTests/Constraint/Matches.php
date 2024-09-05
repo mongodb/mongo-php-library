@@ -51,8 +51,6 @@ class Matches extends Constraint
 {
     use ConstraintTrait;
 
-    private ?EntityMap $entityMap = null;
-
     private mixed $value;
 
     private bool $allowExtraRootKeys;
@@ -63,10 +61,9 @@ class Matches extends Constraint
 
     private Factory $comparatorFactory;
 
-    public function __construct($value, ?EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
+    public function __construct($value, private ?EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
     {
         $this->value = self::prepare($value);
-        $this->entityMap = $entityMap;
         $this->allowExtraRootKeys = $allowExtraRootKeys;
         $this->allowOperators = $allowOperators;
         $this->comparatorFactory = Factory::getInstance();

@@ -49,14 +49,6 @@ class Update implements Executable, Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 8;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array|object $filter;
-
-    private array|object $update;
-
     private array $options;
 
     /**
@@ -107,7 +99,7 @@ class Update implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array|object $filter, array|object $update, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array|object $filter, private array|object $update, array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
@@ -166,10 +158,6 @@ class Update implements Executable, Explainable
             unset($options['writeConcern']);
         }
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->filter = $filter;
-        $this->update = $update;
         $this->options = $options;
     }
 

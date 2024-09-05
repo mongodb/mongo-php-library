@@ -59,12 +59,6 @@ class CreateEncryptedCollection implements Executable
 
     private CreateIndexes $createSafeContentIndex;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array $options;
-
     /**
      * @see CreateCollection::__construct() for supported options
      * @param string $databaseName   Database name
@@ -72,7 +66,7 @@ class CreateEncryptedCollection implements Executable
      * @param array  $options        CreateCollection options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $options)
+    public function __construct(private string $databaseName, private string $collectionName, private array $options)
     {
         if (! isset($options['encryptedFields'])) {
             throw new InvalidArgumentException('"encryptedFields" option is required');
@@ -94,10 +88,6 @@ class CreateEncryptedCollection implements Executable
         ];
 
         $this->createSafeContentIndex = new CreateIndexes($databaseName, $collectionName, [['key' => ['__safeContent__' => 1]]]);
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->options = $options;
     }
 
     /**

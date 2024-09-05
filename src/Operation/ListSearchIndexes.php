@@ -37,8 +37,6 @@ use function is_string;
  */
 class ListSearchIndexes implements Executable
 {
-    private string $databaseName;
-    private string $collectionName;
     private array $listSearchIndexesOptions;
     private array $aggregateOptions;
     private Aggregate $aggregate;
@@ -50,7 +48,7 @@ class ListSearchIndexes implements Executable
      * @param string               $collectionName Collection name
      * @param array{name?: string} $options        Command options
      */
-    public function __construct(string $databaseName, string $collectionName, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, array $options = [])
     {
         if (isset($options['name']) && ! is_string($options['name'])) {
             throw InvalidArgumentException::invalidType('"name" option', $options['name'], 'string');
@@ -60,8 +58,6 @@ class ListSearchIndexes implements Executable
             throw new InvalidArgumentException('"name" option cannot be empty');
         }
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
         $this->listSearchIndexesOptions = array_intersect_key($options, ['name' => 1]);
         $this->aggregateOptions = array_intersect_key($options, ['batchSize' => 1, 'codec' => 1, 'collation' => 1, 'comment' => 1, 'maxTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1, 'typeMap' => 1]);
 

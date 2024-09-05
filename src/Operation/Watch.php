@@ -74,19 +74,13 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
     private array $changeStreamOptions;
 
-    private ?string $collectionName = null;
-
     private string $databaseName;
 
     private int $firstBatchSize = 0;
 
     private bool $hasResumed = false;
 
-    private Manager $manager;
-
     private ?TimestampInterface $operationTime = null;
-
-    private array $pipeline;
 
     private ?object $postBatchResumeToken = null;
 
@@ -193,7 +187,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * @param array       $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(Manager $manager, ?string $databaseName, ?string $collectionName, array $pipeline, array $options = [])
+    public function __construct(private Manager $manager, ?string $databaseName, private ?string $collectionName = null, private array $pipeline, array $options = [])
     {
         if (isset($collectionName) && ! isset($databaseName)) {
             throw new InvalidArgumentException('$collectionName should also be null if $databaseName is null');
@@ -262,10 +256,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             $this->changeStreamOptions['allChangesForCluster'] = true;
         }
 
-        $this->manager = $manager;
         $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->pipeline = $pipeline;
         $this->codec = $options['codec'] ?? null;
 
         $this->aggregate = $this->createAggregate();

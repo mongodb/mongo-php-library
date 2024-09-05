@@ -97,15 +97,11 @@ class EntityMap implements ArrayAccess
         $parent = $parentId === null ? null : $this->map[$parentId];
 
         $this->map[$id] = new class ($id, $value, $parent) {
-            public string $id;
             public mixed $value;
-            public ?self $parent;
 
-            public function __construct(string $id, $value, ?self $parent = null)
+            public function __construct(public string $id, $value, public ?self $parent = null)
             {
-                $this->id = $id;
                 $this->value = $value;
-                $this->parent = $parent;
             }
 
             public function getRoot(): self

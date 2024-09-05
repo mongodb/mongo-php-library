@@ -86,10 +86,6 @@ class Bucket
 
     private CollectionWrapper $collectionWrapper;
 
-    private string $databaseName;
-
-    private Manager $manager;
-
     private string $bucketName;
 
     private bool $disableMD5;
@@ -131,7 +127,7 @@ class Bucket
      * @param array   $options      Bucket options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(Manager $manager, string $databaseName, array $options = [])
+    public function __construct(private Manager $manager, private string $databaseName, array $options = [])
     {
         if (isset($options['disableMD5']) && $options['disableMD5'] === false) {
             @trigger_error('Setting GridFS "disableMD5" option to "false" is deprecated since mongodb/mongodb 1.18 and will not be supported in version 2.0.', E_USER_DEPRECATED);
@@ -183,8 +179,6 @@ class Bucket
             throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
         }
 
-        $this->manager = $manager;
-        $this->databaseName = $databaseName;
         $this->bucketName = $options['bucketName'];
         $this->chunkSizeBytes = $options['chunkSizeBytes'];
         $this->codec = $options['codec'] ?? null;

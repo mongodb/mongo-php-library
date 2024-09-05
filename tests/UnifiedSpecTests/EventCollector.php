@@ -45,15 +45,9 @@ final class EventCollector implements CommandSubscriber
         'CommandFailedEvent' => CommandFailedEvent::class,
     ];
 
-    private string $clientId;
-
-    private Context $context;
-
     private array $collectEvents = [];
 
-    private BSONArray $eventList;
-
-    public function __construct(BSONArray $eventList, array $collectEvents, string $clientId, Context $context)
+    public function __construct(private BSONArray $eventList, array $collectEvents, private string $clientId, private Context $context)
     {
         assertNotEmpty($collectEvents);
 
@@ -68,10 +62,6 @@ final class EventCollector implements CommandSubscriber
                 $this->collectEvents[self::$supportedEvents[$event]] = 1;
             }
         }
-
-        $this->clientId = $clientId;
-        $this->context = $context;
-        $this->eventList = $eventList;
     }
 
     /** @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php */

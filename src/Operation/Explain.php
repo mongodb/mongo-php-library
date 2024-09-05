@@ -41,12 +41,6 @@ class Explain implements Executable
     public const VERBOSITY_EXEC_STATS = 'executionStats';
     public const VERBOSITY_QUERY = 'queryPlanner';
 
-    private string $databaseName;
-
-    private Explainable $explainable;
-
-    private array $options;
-
     /**
      * Constructs an explain command for explainable operations.
      *
@@ -70,7 +64,7 @@ class Explain implements Executable
      * @param array       $options      Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, Explainable $explainable, array $options = [])
+    public function __construct(private string $databaseName, private Explainable $explainable, private array $options = [])
     {
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
             throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);
@@ -87,10 +81,6 @@ class Explain implements Executable
         if (isset($options['verbosity']) && ! is_string($options['verbosity'])) {
             throw InvalidArgumentException::invalidType('"verbosity" option', $options['verbosity'], 'string');
         }
-
-        $this->databaseName = $databaseName;
-        $this->explainable = $explainable;
-        $this->options = $options;
     }
 
     /**

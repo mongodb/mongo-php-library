@@ -94,10 +94,6 @@ final class EventObserver implements CommandSubscriber
 
     private array $actualEvents = [];
 
-    private string $clientId;
-
-    private Context $context;
-
     /**
      * The configureFailPoint command (used by failPoint and targetedFailPoint
      * operations) is always ignored.
@@ -106,9 +102,7 @@ final class EventObserver implements CommandSubscriber
 
     private array $observeEvents = [];
 
-    private bool $observeSensitiveCommands;
-
-    public function __construct(array $observeEvents, array $ignoreCommands, bool $observeSensitiveCommands, string $clientId, Context $context)
+    public function __construct(array $observeEvents, array $ignoreCommands, private bool $observeSensitiveCommands, private string $clientId, private Context $context)
     {
         assertNotEmpty($observeEvents);
 
@@ -131,10 +125,6 @@ final class EventObserver implements CommandSubscriber
             assertIsString($command);
             $this->ignoreCommands[$command] = 1;
         }
-
-        $this->observeSensitiveCommands = $observeSensitiveCommands;
-        $this->clientId = $clientId;
-        $this->context = $context;
     }
 
     /** @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php */

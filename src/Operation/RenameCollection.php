@@ -42,8 +42,6 @@ class RenameCollection implements Executable
 
     private string $toNamespace;
 
-    private array $options;
-
     /**
      * Constructs a renameCollection command.
      *
@@ -70,7 +68,7 @@ class RenameCollection implements Executable
      * @param array  $options            Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $fromDatabaseName, string $fromCollectionName, string $toDatabaseName, string $toCollectionName, array $options = [])
+    public function __construct(string $fromDatabaseName, string $fromCollectionName, string $toDatabaseName, string $toCollectionName, private array $options = [])
     {
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
@@ -94,7 +92,6 @@ class RenameCollection implements Executable
 
         $this->fromNamespace = $fromDatabaseName . '.' . $fromCollectionName;
         $this->toNamespace = $toDatabaseName . '.' . $toCollectionName;
-        $this->options = $options;
     }
 
     /**

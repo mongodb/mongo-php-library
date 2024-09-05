@@ -46,12 +46,6 @@ class CreateCollection implements Executable
     public const USE_POWER_OF_2_SIZES = 1;
     public const NO_PADDING = 2;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array $options = [];
-
     /**
      * Constructs a create command.
      *
@@ -139,7 +133,7 @@ class CreateCollection implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array $options = [])
     {
         if (isset($options['autoIndexId']) && ! is_bool($options['autoIndexId'])) {
             throw InvalidArgumentException::invalidType('"autoIndexId" option', $options['autoIndexId'], 'boolean');
@@ -240,10 +234,6 @@ class CreateCollection implements Executable
         if (isset($options['pipeline']) && ! is_pipeline($options['pipeline'], true /* allowEmpty */)) {
             throw new InvalidArgumentException('"pipeline" option is not a valid aggregation pipeline');
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->options = $options;
     }
 
     /**

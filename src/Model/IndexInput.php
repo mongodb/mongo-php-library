@@ -40,13 +40,11 @@ use function sprintf;
  */
 class IndexInput implements Serializable
 {
-    private array $index;
-
     /**
      * @param array $index Index specification
      * @throws InvalidArgumentException
      */
-    public function __construct(array $index)
+    public function __construct(private array $index)
     {
         if (! isset($index['key'])) {
             throw new InvalidArgumentException('Required "key" document is missing from index specification');
@@ -69,8 +67,6 @@ class IndexInput implements Serializable
         if (! is_string($index['name'])) {
             throw InvalidArgumentException::invalidType('"name" option', $index['name'], 'string');
         }
-
-        $this->index = $index;
     }
 
     /**

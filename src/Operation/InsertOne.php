@@ -38,13 +38,7 @@ use function MongoDB\is_document;
  */
 class InsertOne implements Executable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
     private array|object $document;
-
-    private array $options;
 
     /**
      * Constructs an insert command.
@@ -71,7 +65,7 @@ class InsertOne implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array|object $document, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, array|object $document, private array $options = [])
     {
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
@@ -97,10 +91,7 @@ class InsertOne implements Executable
             unset($options['writeConcern']);
         }
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
         $this->document = $this->validateDocument($document, $options['codec'] ?? null);
-        $this->options = $options;
     }
 
     /**

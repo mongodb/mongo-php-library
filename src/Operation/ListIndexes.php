@@ -41,12 +41,6 @@ class ListIndexes implements Executable
     private const ERROR_CODE_DATABASE_NOT_FOUND = 60;
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array $options;
-
     /**
      * Constructs a listIndexes command.
      *
@@ -66,7 +60,7 @@ class ListIndexes implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array $options = [])
     {
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
@@ -75,10 +69,6 @@ class ListIndexes implements Executable
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->options = $options;
     }
 
     /**

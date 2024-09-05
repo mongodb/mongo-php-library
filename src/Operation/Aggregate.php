@@ -51,14 +51,6 @@ use function MongoDB\is_pipeline;
  */
 class Aggregate implements Executable, Explainable
 {
-    private string $databaseName;
-
-    private ?string $collectionName = null;
-
-    private array $pipeline;
-
-    private array $options;
-
     private bool $isWrite;
 
     /**
@@ -126,7 +118,7 @@ class Aggregate implements Executable, Explainable
      * @param array       $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, ?string $collectionName, array $pipeline, array $options = [])
+    public function __construct(private string $databaseName, private ?string $collectionName = null, private array $pipeline, private array $options = [])
     {
         if (! is_pipeline($pipeline, true /* allowEmpty */)) {
             throw new InvalidArgumentException('$pipeline is not a valid aggregation pipeline');
@@ -217,11 +209,6 @@ class Aggregate implements Executable, Explainable
         } else {
             unset($options['writeConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->pipeline = $pipeline;
-        $this->options = $options;
     }
 
     /**

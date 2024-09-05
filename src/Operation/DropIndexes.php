@@ -37,14 +37,6 @@ use function is_integer;
  */
 class DropIndexes implements Executable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private string $indexName;
-
-    private array $options;
-
     /**
      * Constructs a dropIndexes command.
      *
@@ -70,7 +62,7 @@ class DropIndexes implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, string $indexName, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private string $indexName, private array $options = [])
     {
         if ($indexName === '') {
             throw new InvalidArgumentException('$indexName cannot be empty');
@@ -95,11 +87,6 @@ class DropIndexes implements Executable
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
             unset($options['writeConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->indexName = $indexName;
-        $this->options = $options;
     }
 
     /**

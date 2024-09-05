@@ -61,8 +61,6 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     private bool $isValid = false;
 
-    private ?object $postBatchResumeToken = null;
-
     private array|object|null $resumeToken = null;
 
     private Server $server;
@@ -177,7 +175,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * @internal
      * @psalm-param CursorInterface<int, TValue>&Iterator<int, TValue> $cursor
      */
-    public function __construct(CursorInterface $cursor, int $firstBatchSize, array|object|null $initialResumeToken, ?object $postBatchResumeToken)
+    public function __construct(CursorInterface $cursor, int $firstBatchSize, array|object|null $initialResumeToken, private ?object $postBatchResumeToken = null)
     {
         if (! $cursor instanceof Iterator) {
             throw InvalidArgumentException::invalidType(
@@ -195,7 +193,6 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
         $this->batchSize = $firstBatchSize;
         $this->isRewindNop = ($firstBatchSize === 0);
-        $this->postBatchResumeToken = $postBatchResumeToken;
         $this->resumeToken = $initialResumeToken;
         $this->server = $cursor->getServer();
     }

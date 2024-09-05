@@ -46,16 +46,6 @@ class Delete implements Executable, Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 9;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array|object $filter;
-
-    private int $limit;
-
-    private array $options;
-
     /**
      * Constructs a delete command.
      *
@@ -92,7 +82,7 @@ class Delete implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array|object $filter, int $limit, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array|object $filter, private int $limit, private array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
@@ -125,12 +115,6 @@ class Delete implements Executable, Explainable
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
             unset($options['writeConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->filter = $filter;
-        $this->limit = $limit;
-        $this->options = $options;
     }
 
     /**

@@ -39,12 +39,6 @@ use function MongoDB\is_document;
  */
 class CountDocuments implements Executable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array|object $filter;
-
     private array $aggregateOptions;
 
     private array $countOptions;
@@ -86,7 +80,7 @@ class CountDocuments implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array|object $filter, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array|object $filter, array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
@@ -99,10 +93,6 @@ class CountDocuments implements Executable
         if (isset($options['skip']) && ! is_integer($options['skip'])) {
             throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->filter = $filter;
 
         $this->aggregateOptions = array_intersect_key($options, ['collation' => 1, 'comment' => 1, 'hint' => 1, 'maxTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1]);
         $this->countOptions = array_intersect_key($options, ['limit' => 1, 'skip' => 1]);

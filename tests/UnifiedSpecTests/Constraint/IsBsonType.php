@@ -67,15 +67,11 @@ final class IsBsonType extends Constraint
         'number',
     ];
 
-    private string $type;
-
-    public function __construct(string $type)
+    public function __construct(private string $type)
     {
         if (! in_array($type, self::$types)) {
             throw new RuntimeException(sprintf('Type specified for %s <%s> is not a valid type', self::class, $type));
         }
-
-        $this->type = $type;
     }
 
     public static function any(): LogicalOr

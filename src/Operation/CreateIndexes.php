@@ -45,14 +45,8 @@ class CreateIndexes implements Executable
 {
     private const WIRE_VERSION_FOR_COMMIT_QUORUM = 9;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
     /** @var list<IndexInput> */
     private array $indexes = [];
-
-    private array $options = [];
 
     /**
      * Constructs a createIndexes command.
@@ -80,7 +74,7 @@ class CreateIndexes implements Executable
      * @param array   $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $indexes, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, array $indexes, private array $options = [])
     {
         if (empty($indexes)) {
             throw new InvalidArgumentException('$indexes is empty');
@@ -117,10 +111,6 @@ class CreateIndexes implements Executable
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
             unset($options['writeConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->options = $options;
     }
 
     /**

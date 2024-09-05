@@ -50,9 +50,6 @@ class BSONIterator implements Iterator
 
     private int $position = 0;
 
-    /** @var array{typeMap: array, ...} */
-    private array $options;
-
     /**
      * @see https://php.net/iterator.current
      * @return mixed
@@ -118,7 +115,7 @@ class BSONIterator implements Iterator
      * @param array  $options Iterator options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $data, array $options = [])
+    public function __construct(string $data, private array $options = [])
     {
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
@@ -130,7 +127,6 @@ class BSONIterator implements Iterator
 
         $this->buffer = $data;
         $this->bufferLength = strlen($data);
-        $this->options = $options;
     }
 
     private function advance(): void

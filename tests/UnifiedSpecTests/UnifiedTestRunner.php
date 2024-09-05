@@ -68,8 +68,6 @@ final class UnifiedTestRunner
 
     private Client $internalClient;
 
-    private string $internalClientUri;
-
     private bool $allowKillAllSessions = true;
 
     private ?EntityMap $entityMap = null;
@@ -81,10 +79,9 @@ final class UnifiedTestRunner
 
     private ServerParameterHelper $serverParameterHelper;
 
-    public function __construct(string $internalClientUri)
+    public function __construct(private string $internalClientUri)
     {
         $this->internalClient = FunctionalTestCase::createTestClient($internalClientUri);
-        $this->internalClientUri = $internalClientUri;
 
         /* Atlas prohibits killAllSessions. Inspect the connection string to
          * determine if we should avoid calling killAllSessions(). This does

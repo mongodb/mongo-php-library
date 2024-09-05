@@ -34,11 +34,7 @@ use function MongoDB\is_document;
  */
 class DatabaseCommand implements Executable
 {
-    private string $databaseName;
-
     private Command $command;
-
-    private array $options;
 
     /**
      * Constructs a command.
@@ -61,7 +57,7 @@ class DatabaseCommand implements Executable
      * @param array        $options      Options for command execution
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, array|object $command, array $options = [])
+    public function __construct(private string $databaseName, array|object $command, private array $options = [])
     {
         if (! is_document($command)) {
             throw InvalidArgumentException::expectedDocumentType('$command', $command);
@@ -79,9 +75,7 @@ class DatabaseCommand implements Executable
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        $this->databaseName = $databaseName;
         $this->command = $command instanceof Command ? $command : new Command($command);
-        $this->options = $options;
     }
 
     /**

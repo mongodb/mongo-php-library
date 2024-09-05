@@ -36,14 +36,12 @@ final class ResultExpectation
     public const ASSERT_CALLABLE = 11;
     public const ASSERT_DOCUMENTS_MATCH = 12;
 
-    private int $assertionType = self::ASSERT_NOTHING;
-
     private mixed $expectedValue;
 
     /** @var callable */
     private $assertionCallable;
 
-    private function __construct(int $assertionType, $expectedValue)
+    private function __construct(private int $assertionType, $expectedValue)
     {
         switch ($assertionType) {
             case self::ASSERT_BULKWRITE:
@@ -65,7 +63,6 @@ final class ResultExpectation
                 break;
         }
 
-        $this->assertionType = $assertionType;
         $this->expectedValue = $expectedValue;
     }
 

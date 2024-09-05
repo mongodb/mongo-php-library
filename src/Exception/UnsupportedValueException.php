@@ -24,8 +24,6 @@ use function sprintf;
 
 class UnsupportedValueException extends InvalidArgumentException implements Exception
 {
-    private mixed $value;
-
     /** @return mixed */
     public function getValue()
     {
@@ -42,10 +40,8 @@ class UnsupportedValueException extends InvalidArgumentException implements Exce
         return new self(sprintf('Could not encode value of type "%s".', get_debug_type($value)), $value);
     }
 
-    private function __construct(string $message, mixed $value)
+    private function __construct(string $message, private mixed $value)
     {
         parent::__construct($message);
-
-        $this->value = $value;
     }
 }

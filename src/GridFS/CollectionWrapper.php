@@ -41,11 +41,7 @@ use function sprintf;
  */
 class CollectionWrapper
 {
-    private string $bucketName;
-
     private Collection $chunksCollection;
-
-    private string $databaseName;
 
     private bool $checkedIndexes = false;
 
@@ -61,11 +57,8 @@ class CollectionWrapper
      * @param array   $collectionOptions Collection options
      * @throws InvalidArgumentException
      */
-    public function __construct(Manager $manager, string $databaseName, string $bucketName, array $collectionOptions = [])
+    public function __construct(Manager $manager, private string $databaseName, private string $bucketName, array $collectionOptions = [])
     {
-        $this->databaseName = $databaseName;
-        $this->bucketName = $bucketName;
-
         $this->filesCollection = new Collection($manager, $databaseName, sprintf('%s.files', $bucketName), $collectionOptions);
         $this->chunksCollection = new Collection($manager, $databaseName, sprintf('%s.chunks', $bucketName), $collectionOptions);
     }

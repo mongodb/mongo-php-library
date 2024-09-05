@@ -43,14 +43,6 @@ use function MongoDB\is_document;
  */
 class Count implements Executable, Explainable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array|object $filter;
-
-    private array $options;
-
     /**
      * Constructs a count command.
      *
@@ -86,7 +78,7 @@ class Count implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array|object $filter = [], array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array|object $filter = [], private array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
@@ -127,11 +119,6 @@ class Count implements Executable, Explainable
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
             unset($options['readConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->filter = $filter;
-        $this->options = $options;
     }
 
     /**

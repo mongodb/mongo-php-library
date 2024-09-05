@@ -35,14 +35,6 @@ use function is_array;
  */
 class ModifyCollection implements Executable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array $collectionOptions;
-
-    private array $options;
-
     /**
      * Constructs a collMod command.
      *
@@ -65,7 +57,7 @@ class ModifyCollection implements Executable
      * @param array  $options           Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $collectionOptions, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array $collectionOptions, private array $options = [])
     {
         if (empty($collectionOptions)) {
             throw new InvalidArgumentException('$collectionOptions is empty');
@@ -86,11 +78,6 @@ class ModifyCollection implements Executable
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
             unset($options['writeConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->collectionOptions = $collectionOptions;
-        $this->options = $options;
     }
 
     /**

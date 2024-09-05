@@ -38,10 +38,6 @@ class DocumentsMatchConstraint extends Constraint
 {
     use ConstraintTrait;
 
-    private bool $ignoreExtraKeysInRoot = false;
-
-    private bool $ignoreExtraKeysInEmbedded = false;
-
     /**
      * TODO: This is not currently used, but was preserved from the design of
      * TestCase::assertMatchesDocument(), which would sort keys and then compare
@@ -63,11 +59,9 @@ class DocumentsMatchConstraint extends Constraint
      * @param boolean $ignoreExtraKeysInRoot     If true, ignore extra keys within the root document
      * @param boolean $ignoreExtraKeysInEmbedded If true, ignore extra keys within embedded documents
      */
-    public function __construct(array|object $value, bool $ignoreExtraKeysInRoot = false, bool $ignoreExtraKeysInEmbedded = false)
+    public function __construct(array|object $value, private bool $ignoreExtraKeysInRoot = false, private bool $ignoreExtraKeysInEmbedded = false)
     {
         $this->value = $this->prepareBSON($value, true, $this->sortKeys);
-        $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
-        $this->ignoreExtraKeysInEmbedded = $ignoreExtraKeysInEmbedded;
         $this->comparatorFactory = Factory::getInstance();
     }
 

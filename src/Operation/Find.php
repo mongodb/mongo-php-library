@@ -54,14 +54,6 @@ class Find implements Executable, Explainable
     public const TAILABLE = 2;
     public const TAILABLE_AWAIT = 3;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array|object $filter;
-
-    private array $options;
-
     /**
      * Constructs a find command.
      *
@@ -163,7 +155,7 @@ class Find implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array|object $filter, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array|object $filter, private array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
@@ -302,11 +294,6 @@ class Find implements Executable, Explainable
         if (isset($options['codec']) && isset($options['typeMap'])) {
             throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->filter = $filter;
-        $this->options = $options;
     }
 
     /**

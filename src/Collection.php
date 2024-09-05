@@ -86,12 +86,6 @@ class Collection
 
     private ?DocumentCodec $codec = null;
 
-    private string $collectionName;
-
-    private string $databaseName;
-
-    private Manager $manager;
-
     private ReadConcern $readConcern;
 
     private ReadPreference $readPreference;
@@ -130,7 +124,7 @@ class Collection
      * @param array   $options        Collection options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(Manager $manager, string $databaseName, string $collectionName, array $options = [])
+    public function __construct(private Manager $manager, private string $databaseName, private string $collectionName, array $options = [])
     {
         if (strlen($databaseName) < 1) {
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
@@ -159,10 +153,6 @@ class Collection
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
-
-        $this->manager = $manager;
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
 
         $this->codec = $options['codec'] ?? null;
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();

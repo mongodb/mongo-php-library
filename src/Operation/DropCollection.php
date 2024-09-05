@@ -40,12 +40,6 @@ class DropCollection implements Executable
 {
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private array $options;
-
     /**
      * Constructs a drop command.
      *
@@ -67,7 +61,7 @@ class DropCollection implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array $options = [])
     {
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
@@ -84,10 +78,6 @@ class DropCollection implements Executable
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
             unset($options['writeConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->options = $options;
     }
 
     /**

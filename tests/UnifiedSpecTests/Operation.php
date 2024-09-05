@@ -74,8 +74,6 @@ final class Operation
 
     private array $arguments = [];
 
-    private Context $context;
-
     private EntityMap $entityMap;
 
     private ExpectedError $expectError;
@@ -86,9 +84,8 @@ final class Operation
 
     private ?string $saveResultAsEntity = null;
 
-    public function __construct(stdClass $o, Context $context)
+    public function __construct(stdClass $o, private Context $context)
     {
-        $this->context = $context;
         $this->entityMap = $context->getEntityMap();
 
         assertIsString($o->name);

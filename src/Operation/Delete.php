@@ -113,7 +113,7 @@ class Delete implements Executable, Explainable
         }
 
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+            unset($this->options['writeConcern']);
         }
     }
 

@@ -84,11 +84,11 @@ class InsertOne implements Executable
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
-            unset($options['bypassDocumentValidation']);
+            unset($this->options['bypassDocumentValidation']);
         }
 
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+            unset($this->options['writeConcern']);
         }
 
         $this->document = $this->validateDocument($document, $options['codec'] ?? null);

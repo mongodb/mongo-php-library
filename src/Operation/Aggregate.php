@@ -185,15 +185,15 @@ class Aggregate implements Executable, Explainable
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
-            unset($options['bypassDocumentValidation']);
+            unset($this->options['bypassDocumentValidation']);
         }
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
-            unset($options['readConcern']);
+            unset($this->options['readConcern']);
         }
 
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+            unset($this->options['writeConcern']);
         }
 
         if (isset($options['codec']) && isset($options['typeMap'])) {
@@ -205,9 +205,9 @@ class Aggregate implements Executable, Explainable
         if ($this->isWrite) {
             /* Ignore batchSize for writes, since no documents are returned and
              * a batchSize of zero could prevent the pipeline from executing. */
-            unset($options['batchSize']);
+            unset($this->options['batchSize']);
         } else {
-            unset($options['writeConcern']);
+            unset($this->options['writeConcern']);
         }
     }
 

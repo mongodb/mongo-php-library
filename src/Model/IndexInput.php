@@ -61,11 +61,11 @@ class IndexInput implements Serializable
         }
 
         if (! isset($index['name'])) {
-            $index['name'] = $this->generateIndexName($index['key']);
+            $this->index['name'] = $this->generateIndexName($index['key']);
         }
 
-        if (! is_string($index['name'])) {
-            throw InvalidArgumentException::invalidType('"name" option', $index['name'], 'string');
+        if (! is_string($this->index['name'])) {
+            throw InvalidArgumentException::invalidType('"name" option', $this->index['name'], 'string');
         }
     }
 

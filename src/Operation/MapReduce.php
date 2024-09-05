@@ -208,15 +208,15 @@ class MapReduce implements Executable
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
-            unset($options['bypassDocumentValidation']);
+            unset($this->options['bypassDocumentValidation']);
         }
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
-            unset($options['readConcern']);
+            unset($this->options['readConcern']);
         }
 
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+            unset($this->options['writeConcern']);
         }
 
         // Handle deprecation of CodeWScope

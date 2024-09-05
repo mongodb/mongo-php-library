@@ -85,7 +85,7 @@ class DropIndexes implements Executable
         }
 
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+            unset($this->options['writeConcern']);
         }
     }
 

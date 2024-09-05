@@ -122,7 +122,7 @@ class BSONIterator implements Iterator
         }
 
         if (! isset($options['typeMap'])) {
-            $options['typeMap'] = [];
+            $this->options['typeMap'] = [];
         }
 
         $this->buffer = $data;

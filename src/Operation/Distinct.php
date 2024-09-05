@@ -102,7 +102,7 @@ class Distinct implements Executable, Explainable
         }
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
-            unset($options['readConcern']);
+            unset($this->options['readConcern']);
         }
     }
 

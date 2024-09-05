@@ -83,10 +83,6 @@ class UpdateMany implements Executable, Explainable
      */
     public function __construct(string $databaseName, string $collectionName, array|object $filter, array|object $update, array $options = [])
     {
-        if (! is_array($update) && ! is_object($update)) {
-            throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
-        }
-
         if (! is_first_key_operator($update) && ! is_pipeline($update)) {
             throw new InvalidArgumentException('Expected update operator(s) or non-empty pipeline for $update');
         }

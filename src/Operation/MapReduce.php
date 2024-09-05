@@ -157,10 +157,6 @@ class MapReduce implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, JavascriptInterface $map, JavascriptInterface $reduce, string|array|object $out, array $options = [])
     {
-        if (! is_string($out) && ! is_array($out) && ! is_object($out)) {
-            throw InvalidArgumentException::invalidType('$out', $out, 'string or array or object');
-        }
-
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }

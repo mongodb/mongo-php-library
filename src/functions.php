@@ -153,10 +153,6 @@ function document_to_array(array|object $document): array
         $document = get_object_vars($document);
     }
 
-    if (! is_array($document)) {
-        throw InvalidArgumentException::expectedDocumentType('$document', $document);
-    }
-
     return $document;
 }
 

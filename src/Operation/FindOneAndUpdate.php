@@ -112,10 +112,6 @@ class FindOneAndUpdate implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
-        if (! is_array($update) && ! is_object($update)) {
-            throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
-        }
-
         if (! is_first_key_operator($update) && ! is_pipeline($update)) {
             throw new InvalidArgumentException('Expected update operator(s) or non-empty pipeline for $update');
         }

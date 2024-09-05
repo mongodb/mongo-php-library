@@ -407,10 +407,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      */
     private function resume(array|object|null $resumeToken = null, bool $hasAdvanced = false): ChangeStreamIterator
     {
-        if (isset($resumeToken) && ! is_array($resumeToken) && ! is_object($resumeToken)) {
-            throw InvalidArgumentException::invalidType('$resumeToken', $resumeToken, 'array or object');
-        }
-
         $this->hasResumed = true;
 
         /* Select a new server using the original read preference. While watch

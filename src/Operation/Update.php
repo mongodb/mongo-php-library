@@ -113,10 +113,6 @@ class Update implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
-        if (! is_array($update) && ! is_object($update)) {
-            throw InvalidArgumentException::invalidType('$update', $filter, 'array or object');
-        }
-
         $options += [
             'multi' => false,
             'upsert' => false,

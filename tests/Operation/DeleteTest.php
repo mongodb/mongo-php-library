@@ -17,7 +17,7 @@ class DeleteTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 0);
     }
 

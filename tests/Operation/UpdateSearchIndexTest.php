@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\UpdateSearchIndex;
+use TypeError;
 
 class UpdateSearchIndexTest extends TestCase
 {
@@ -16,8 +17,7 @@ class UpdateSearchIndexTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorIndexDefinitionMustBeADocument($definition): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected $definition to have type "document"');
+        $this->expectException(TypeError::class);
         new UpdateSearchIndex($this->getDatabaseName(), $this->getCollectionName(), 'index name', $definition);
     }
 }

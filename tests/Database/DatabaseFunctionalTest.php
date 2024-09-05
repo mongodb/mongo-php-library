@@ -124,7 +124,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testCommandCommandArgumentTypeCheck($command): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         $this->database->command($command);
     }
 

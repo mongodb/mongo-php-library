@@ -23,8 +23,6 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\UpdateResult;
 
-use function is_array;
-use function is_object;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
 

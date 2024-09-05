@@ -5,13 +5,14 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndDelete;
+use TypeError;
 
 class FindOneAndDeleteTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new FindOneAndDelete($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 

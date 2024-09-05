@@ -9,7 +9,6 @@ namespace MongoDB\Tests\Model;
 
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\LogicException;
-use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\ChangeStreamIterator;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
@@ -52,7 +51,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testInitialResumeTokenArgumentTypeCheck($initialResumeToken): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new ChangeStreamIterator($this->collection->find(), 0, $initialResumeToken, null);
     }
 

@@ -6,20 +6,21 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\ReplaceOne;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use TypeError;
 
 class ReplaceOneTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), $filter, ['y' => 1]);
     }
 
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorReplacementArgumentTypeCheck($replacement): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
     }
 

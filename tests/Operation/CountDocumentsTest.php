@@ -4,13 +4,14 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CountDocuments;
+use TypeError;
 
 class CountDocumentsTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new CountDocuments($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 

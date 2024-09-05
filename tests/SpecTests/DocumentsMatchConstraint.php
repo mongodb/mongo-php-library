@@ -108,8 +108,8 @@ class DocumentsMatchConstraint extends Constraint
         }
     }
 
-    /** @param string|string[] $expectedType */
-    private function assertBSONType(string|array $expectedType, mixed $actualValue): void
+    /** @param string|BSONArray[] $expectedType */
+    private function assertBSONType(string|BSONArray $expectedType, mixed $actualValue): void
     {
         assertThat(
             $expectedType,

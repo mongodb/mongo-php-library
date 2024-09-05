@@ -133,6 +133,11 @@
       <code><![CDATA[stdClass]]></code>
     </MoreSpecificReturnType>
   </file>
+  <file src="src/Model/BSONIterator.php">
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
+    </MixedArgument>
+  </file>
   <file src="src/Model/ChangeStreamIterator.php">
     <MixedArgument>
       <code><![CDATA[$reply->cursor->nextBatch]]></code>

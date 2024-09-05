@@ -342,7 +342,7 @@
   </file>
   <file src="src/Operation/CreateEncryptedCollection.php">
     <MixedArgument>
-      <code><![CDATA[$options['encryptedFields']]]></code>
+      <code><![CDATA[$this->options['encryptedFields']]]></code>
       <code><![CDATA[$this->options['encryptedFields']]]></code>
     </MixedArgument>
   </file>

@@ -68,23 +68,23 @@ class DropIndexes implements Executable
             throw new InvalidArgumentException('$indexName cannot be empty');
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
-        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
+        if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $this->options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
+        if (isset($this->options['writeConcern']) && $this->options['writeConcern']->isDefault()) {
             unset($this->options['writeConcern']);
         }
     }

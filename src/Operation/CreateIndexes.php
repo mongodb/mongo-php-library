@@ -92,23 +92,23 @@ class CreateIndexes implements Executable
             $this->indexes[] = new IndexInput($index);
         }
 
-        if (isset($options['commitQuorum']) && ! is_string($options['commitQuorum']) && ! is_integer($options['commitQuorum'])) {
-            throw InvalidArgumentException::invalidType('"commitQuorum" option', $options['commitQuorum'], ['integer', 'string']);
+        if (isset($this->options['commitQuorum']) && ! is_string($this->options['commitQuorum']) && ! is_integer($this->options['commitQuorum'])) {
+            throw InvalidArgumentException::invalidType('"commitQuorum" option', $this->options['commitQuorum'], ['integer', 'string']);
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
+        if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $this->options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
+        if (isset($this->options['writeConcern']) && $this->options['writeConcern']->isDefault()) {
             unset($this->options['writeConcern']);
         }
     }

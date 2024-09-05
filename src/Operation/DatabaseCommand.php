@@ -63,16 +63,16 @@ class DatabaseCommand implements Executable
             throw InvalidArgumentException::expectedDocumentType('$command', $command);
         }
 
-        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);
+        if (isset($this->options['readPreference']) && ! $this->options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $this->options['readPreference'], ReadPreference::class);
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
         $this->command = $command instanceof Command ? $command : new Command($command);

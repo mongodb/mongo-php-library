@@ -62,12 +62,12 @@ class ListIndexes implements Executable
      */
     public function __construct(private string $databaseName, private string $collectionName, private array $options = [])
     {
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
     }
 

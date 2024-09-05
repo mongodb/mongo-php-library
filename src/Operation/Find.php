@@ -161,137 +161,137 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
-        if (isset($options['allowDiskUse']) && ! is_bool($options['allowDiskUse'])) {
-            throw InvalidArgumentException::invalidType('"allowDiskUse" option', $options['allowDiskUse'], 'boolean');
+        if (isset($this->options['allowDiskUse']) && ! is_bool($this->options['allowDiskUse'])) {
+            throw InvalidArgumentException::invalidType('"allowDiskUse" option', $this->options['allowDiskUse'], 'boolean');
         }
 
-        if (isset($options['allowPartialResults']) && ! is_bool($options['allowPartialResults'])) {
-            throw InvalidArgumentException::invalidType('"allowPartialResults" option', $options['allowPartialResults'], 'boolean');
+        if (isset($this->options['allowPartialResults']) && ! is_bool($this->options['allowPartialResults'])) {
+            throw InvalidArgumentException::invalidType('"allowPartialResults" option', $this->options['allowPartialResults'], 'boolean');
         }
 
-        if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
-            throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
+        if (isset($this->options['batchSize']) && ! is_integer($this->options['batchSize'])) {
+            throw InvalidArgumentException::invalidType('"batchSize" option', $this->options['batchSize'], 'integer');
         }
 
-        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
-            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        if (isset($this->options['codec']) && ! $this->options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $this->options['codec'], DocumentCodec::class);
         }
 
-        if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
+        if (isset($this->options['collation']) && ! is_document($this->options['collation'])) {
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $this->options['collation']);
         }
 
-        if (isset($options['cursorType'])) {
-            if (! is_integer($options['cursorType'])) {
-                throw InvalidArgumentException::invalidType('"cursorType" option', $options['cursorType'], 'integer');
+        if (isset($this->options['cursorType'])) {
+            if (! is_integer($this->options['cursorType'])) {
+                throw InvalidArgumentException::invalidType('"cursorType" option', $this->options['cursorType'], 'integer');
             }
 
             if (
-                $options['cursorType'] !== self::NON_TAILABLE &&
-                $options['cursorType'] !== self::TAILABLE &&
-                $options['cursorType'] !== self::TAILABLE_AWAIT
+                $this->options['cursorType'] !== self::NON_TAILABLE &&
+                $this->options['cursorType'] !== self::TAILABLE &&
+                $this->options['cursorType'] !== self::TAILABLE_AWAIT
             ) {
-                throw new InvalidArgumentException('Invalid value for "cursorType" option: ' . $options['cursorType']);
+                throw new InvalidArgumentException('Invalid value for "cursorType" option: ' . $this->options['cursorType']);
             }
         }
 
-        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
-            throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
+        if (isset($this->options['hint']) && ! is_string($this->options['hint']) && ! is_array($this->options['hint']) && ! is_object($this->options['hint'])) {
+            throw InvalidArgumentException::invalidType('"hint" option', $this->options['hint'], 'string or array or object');
         }
 
-        if (isset($options['limit']) && ! is_integer($options['limit'])) {
-            throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
+        if (isset($this->options['limit']) && ! is_integer($this->options['limit'])) {
+            throw InvalidArgumentException::invalidType('"limit" option', $this->options['limit'], 'integer');
         }
 
-        if (isset($options['max']) && ! is_document($options['max'])) {
-            throw InvalidArgumentException::expectedDocumentType('"max" option', $options['max']);
+        if (isset($this->options['max']) && ! is_document($this->options['max'])) {
+            throw InvalidArgumentException::expectedDocumentType('"max" option', $this->options['max']);
         }
 
-        if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $options['maxAwaitTimeMS'], 'integer');
+        if (isset($this->options['maxAwaitTimeMS']) && ! is_integer($this->options['maxAwaitTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $this->options['maxAwaitTimeMS'], 'integer');
         }
 
-        if (isset($options['maxScan']) && ! is_integer($options['maxScan'])) {
-            throw InvalidArgumentException::invalidType('"maxScan" option', $options['maxScan'], 'integer');
+        if (isset($this->options['maxScan']) && ! is_integer($this->options['maxScan'])) {
+            throw InvalidArgumentException::invalidType('"maxScan" option', $this->options['maxScan'], 'integer');
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['min']) && ! is_document($options['min'])) {
-            throw InvalidArgumentException::expectedDocumentType('"min" option', $options['min']);
+        if (isset($this->options['min']) && ! is_document($this->options['min'])) {
+            throw InvalidArgumentException::expectedDocumentType('"min" option', $this->options['min']);
         }
 
-        if (isset($options['modifiers']) && ! is_document($options['modifiers'])) {
-            throw InvalidArgumentException::expectedDocumentType('"modifiers" option', $options['modifiers']);
+        if (isset($this->options['modifiers']) && ! is_document($this->options['modifiers'])) {
+            throw InvalidArgumentException::expectedDocumentType('"modifiers" option', $this->options['modifiers']);
         }
 
-        if (isset($options['noCursorTimeout']) && ! is_bool($options['noCursorTimeout'])) {
-            throw InvalidArgumentException::invalidType('"noCursorTimeout" option', $options['noCursorTimeout'], 'boolean');
+        if (isset($this->options['noCursorTimeout']) && ! is_bool($this->options['noCursorTimeout'])) {
+            throw InvalidArgumentException::invalidType('"noCursorTimeout" option', $this->options['noCursorTimeout'], 'boolean');
         }
 
-        if (isset($options['oplogReplay']) && ! is_bool($options['oplogReplay'])) {
-            throw InvalidArgumentException::invalidType('"oplogReplay" option', $options['oplogReplay'], 'boolean');
+        if (isset($this->options['oplogReplay']) && ! is_bool($this->options['oplogReplay'])) {
+            throw InvalidArgumentException::invalidType('"oplogReplay" option', $this->options['oplogReplay'], 'boolean');
         }
 
-        if (isset($options['projection']) && ! is_document($options['projection'])) {
-            throw InvalidArgumentException::expectedDocumentType('"projection" option', $options['projection']);
+        if (isset($this->options['projection']) && ! is_document($this->options['projection'])) {
+            throw InvalidArgumentException::expectedDocumentType('"projection" option', $this->options['projection']);
         }
 
-        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], ReadConcern::class);
+        if (isset($this->options['readConcern']) && ! $this->options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $this->options['readConcern'], ReadConcern::class);
         }
 
-        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);
+        if (isset($this->options['readPreference']) && ! $this->options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $this->options['readPreference'], ReadPreference::class);
         }
 
-        if (isset($options['returnKey']) && ! is_bool($options['returnKey'])) {
-            throw InvalidArgumentException::invalidType('"returnKey" option', $options['returnKey'], 'boolean');
+        if (isset($this->options['returnKey']) && ! is_bool($this->options['returnKey'])) {
+            throw InvalidArgumentException::invalidType('"returnKey" option', $this->options['returnKey'], 'boolean');
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['showRecordId']) && ! is_bool($options['showRecordId'])) {
-            throw InvalidArgumentException::invalidType('"showRecordId" option', $options['showRecordId'], 'boolean');
+        if (isset($this->options['showRecordId']) && ! is_bool($this->options['showRecordId'])) {
+            throw InvalidArgumentException::invalidType('"showRecordId" option', $this->options['showRecordId'], 'boolean');
         }
 
-        if (isset($options['skip']) && ! is_integer($options['skip'])) {
-            throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
+        if (isset($this->options['skip']) && ! is_integer($this->options['skip'])) {
+            throw InvalidArgumentException::invalidType('"skip" option', $this->options['skip'], 'integer');
         }
 
-        if (isset($options['snapshot']) && ! is_bool($options['snapshot'])) {
-            throw InvalidArgumentException::invalidType('"snapshot" option', $options['snapshot'], 'boolean');
+        if (isset($this->options['snapshot']) && ! is_bool($this->options['snapshot'])) {
+            throw InvalidArgumentException::invalidType('"snapshot" option', $this->options['snapshot'], 'boolean');
         }
 
-        if (isset($options['sort']) && ! is_document($options['sort'])) {
-            throw InvalidArgumentException::expectedDocumentType('"sort" option', $options['sort']);
+        if (isset($this->options['sort']) && ! is_document($this->options['sort'])) {
+            throw InvalidArgumentException::expectedDocumentType('"sort" option', $this->options['sort']);
         }
 
-        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
-        if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
+        if (isset($this->options['let']) && ! is_document($this->options['let'])) {
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $this->options['let']);
         }
 
-        if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
+        if (isset($this->options['readConcern']) && $this->options['readConcern']->isDefault()) {
             unset($this->options['readConcern']);
         }
 
-        if (isset($options['snapshot'])) {
+        if (isset($this->options['snapshot'])) {
             trigger_error('The "snapshot" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
         }
 
-        if (isset($options['maxScan'])) {
+        if (isset($this->options['maxScan'])) {
             trigger_error('The "maxScan" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
         }
 
-        if (isset($options['codec']) && isset($options['typeMap'])) {
+        if (isset($this->options['codec']) && isset($this->options['typeMap'])) {
             throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
         }
     }

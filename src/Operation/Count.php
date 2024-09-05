@@ -84,39 +84,39 @@ class Count implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
-        if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
+        if (isset($this->options['collation']) && ! is_document($this->options['collation'])) {
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $this->options['collation']);
         }
 
-        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
-            throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
+        if (isset($this->options['hint']) && ! is_string($this->options['hint']) && ! is_array($this->options['hint']) && ! is_object($this->options['hint'])) {
+            throw InvalidArgumentException::invalidType('"hint" option', $this->options['hint'], 'string or array or object');
         }
 
-        if (isset($options['limit']) && ! is_integer($options['limit'])) {
-            throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
+        if (isset($this->options['limit']) && ! is_integer($this->options['limit'])) {
+            throw InvalidArgumentException::invalidType('"limit" option', $this->options['limit'], 'integer');
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], ReadConcern::class);
+        if (isset($this->options['readConcern']) && ! $this->options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $this->options['readConcern'], ReadConcern::class);
         }
 
-        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);
+        if (isset($this->options['readPreference']) && ! $this->options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $this->options['readPreference'], ReadPreference::class);
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['skip']) && ! is_integer($options['skip'])) {
-            throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
+        if (isset($this->options['skip']) && ! is_integer($this->options['skip'])) {
+            throw InvalidArgumentException::invalidType('"skip" option', $this->options['skip'], 'integer');
         }
 
-        if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
+        if (isset($this->options['readConcern']) && $this->options['readConcern']->isDefault()) {
             unset($this->options['readConcern']);
         }
     }

@@ -68,18 +68,18 @@ class CreateEncryptedCollection implements Executable
      */
     public function __construct(private string $databaseName, private string $collectionName, private array $options)
     {
-        if (! isset($options['encryptedFields'])) {
+        if (! isset($this->options['encryptedFields'])) {
             throw new InvalidArgumentException('"encryptedFields" option is required');
         }
 
-        if (! is_document($options['encryptedFields'])) {
-            throw InvalidArgumentException::expectedDocumentType('"encryptedFields" option', $options['encryptedFields']);
+        if (! is_document($this->options['encryptedFields'])) {
+            throw InvalidArgumentException::expectedDocumentType('"encryptedFields" option', $this->options['encryptedFields']);
         }
 
-        $this->createCollection = new CreateCollection($databaseName, $collectionName, $options);
+        $this->createCollection = new CreateCollection($databaseName, $collectionName, $this->options);
 
         /** @psalm-var array{ecocCollection?: ?string, escCollection?: ?string} */
-        $encryptedFields = document_to_array($options['encryptedFields']);
+        $encryptedFields = document_to_array($this->options['encryptedFields']);
         $enxcolOptions = ['clusteredIndex' => ['key' => ['_id' => 1], 'unique' => true]];
 
         $this->createMetadataCollections = [

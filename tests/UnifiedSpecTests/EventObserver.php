@@ -212,23 +212,16 @@ final class EventObserver implements CommandSubscriber
         }
     }
 
-    private function assertEvent($actual, stdClass $expected, string $message)
+    private function assertEvent($actual, stdClass $expected, string $message): void
     {
         assertIsObject($actual);
 
-        switch ($actual::class) {
-            case CommandStartedEvent::class:
-                return $this->assertCommandStartedEvent($actual, $expected, $message);
-
-            case CommandSucceededEvent::class:
-                return $this->assertCommandSucceededEvent($actual, $expected, $message);
-
-            case CommandFailedEvent::class:
-                return $this->assertCommandFailedEvent($actual, $expected, $message);
-
-            default:
-                Assert::fail($message . ': Unsupported event type: ' . $actual::class);
-        }
+        match ($actual::class) {
+            CommandStartedEvent::class => $this->assertCommandStartedEvent($actual, $expected, $message),
+            CommandSucceededEvent::class => $this->assertCommandSucceededEvent($actual, $expected, $message),
+            CommandFailedEvent::class => $this->assertCommandFailedEvent($actual, $expected, $message),
+            default => Assert::fail($message . ': Unsupported event type: ' . $actual::class)
+        };
     }
 
     private function assertCommandStartedEvent(CommandStartedEvent $actual, stdClass $expected, string $message): void

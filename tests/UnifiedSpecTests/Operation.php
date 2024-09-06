@@ -537,7 +537,7 @@ final class Operation
                 );
 
             case 'createSearchIndex':
-                assertArrayHasKey('models', $args);
+                assertArrayHasKey('model', $args);
                 assertIsObject($args['model']);
                 assertObjectHasAttribute('definition', $args['model']);
                 assertInstanceOf(stdClass::class, $args['model']->definition);

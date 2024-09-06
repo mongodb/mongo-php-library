@@ -7,7 +7,7 @@
       - func: "compile extension"
         # TODO: remove once 1.20.0 is released
         vars:
-          EXTENSION_BRANCH: "master"
+          EXTENSION_BRANCH: "v1.20"
       - func: "upload extension"
   # TODO: re-enable once 1.20.0 is released
 #  - name: "build-php-%phpVersion%-lowest"

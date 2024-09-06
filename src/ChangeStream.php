@@ -19,6 +19,7 @@ namespace MongoDB;
 
 use Iterator;
 use MongoDB\BSON\Document;
+use MongoDB\BSON\Int64;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
@@ -32,6 +33,10 @@ use ReturnTypeWillChange;
 use function assert;
 use function call_user_func;
 use function in_array;
+use function sprintf;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * Iterator for a change stream.
@@ -105,10 +110,23 @@ class ChangeStream implements Iterator
         return $this->codec->decode($value);
     }
 
-    /** @return CursorId */
-    public function getCursorId()
+    /** @return CursorId|Int64 */
+    #[ReturnTypeWillChange]
+    public function getCursorId(bool $asInt64 = false)
     {
-        return $this->iterator->getInnerIterator()->getId();
+        if (! $asInt64) {
+            @trigger_error(
+                sprintf(
+                    'The method "%s" will no longer return a "%s" instance in the future. Pass "true" as argument to change to the new behavior and receive a "%s" instance instead.',
+                    __METHOD__,
+                    CursorId::class,
+                    Int64::class,
+                ),
+                E_USER_DEPRECATED,
+            );
+        }
+
+        return $this->iterator->getInnerIterator()->getId($asInt64);
     }
 
     /**

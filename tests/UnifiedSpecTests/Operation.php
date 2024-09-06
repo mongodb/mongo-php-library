@@ -545,7 +545,7 @@ final class Operation
                 /* Note: tests specify options within "model". A top-level
                  * "options" key (CreateSearchIndexOptions) is not used. */
                 $definition = $args['model']->definition;
-                $options = array_diff_key($args['model'], ['definition' => 1]);
+                $options = array_diff_key((array) $args['model'], ['definition' => 1]);
 
                 return $collection->createSearchIndex($definition, $options);
 

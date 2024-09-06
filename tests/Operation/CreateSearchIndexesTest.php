@@ -30,6 +30,14 @@ class CreateSearchIndexesTest extends TestCase
         new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [['name' => $name, 'definition' => ['mappings' => ['dynamic' => true]]]], []);
     }
 
+    /** @dataProvider provideInvalidStringValues */
+    public function testConstructorIndexTypeMustBeAString($type): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected "type" option to have type "string"');
+        new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [['type' => $type, 'definition' => ['mappings' => ['dynamic' => true]]]], []);
+    }
+
     public function testConstructorIndexDefinitionMustBeDefined(): void
     {
         $this->expectException(InvalidArgumentException::class);

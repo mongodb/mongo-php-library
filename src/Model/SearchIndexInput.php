@@ -39,7 +39,7 @@ class SearchIndexInput implements Serializable
     private array $index;
 
     /**
-     * @param array{name?: string, definition: array|object} $index Search index specification
+     * @param array{definition: array|object, name?: string, type?: string} $index Search index specification
      * @throws InvalidArgumentException
      */
     public function __construct(array $index)
@@ -55,6 +55,10 @@ class SearchIndexInput implements Serializable
         // Name is optional, but must be a non-empty string if provided
         if (isset($index['name']) && ! is_string($index['name'])) {
             throw InvalidArgumentException::invalidType('"name" option', $index['name'], 'string');
+        }
+
+        if (isset($index['type']) && ! is_string($index['type'])) {
+            throw InvalidArgumentException::invalidType('"type" option', $index['type'], 'string');
         }
 
         $this->index = $index;

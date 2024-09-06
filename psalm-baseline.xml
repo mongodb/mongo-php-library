@@ -57,11 +57,6 @@
       <code><![CDATA[$mergedDriver['platform']]]></code>
     </MixedAssignment>
   </file>
-  <file src="src/Collection.php">
-    <MixedArgumentTypeCoercion>
-      <code><![CDATA[$options]]></code>
-    </MixedArgumentTypeCoercion>
-  </file>
   <file src="src/Command/ListCollections.php">
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>

@@ -11,6 +11,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Tests\SpecTests\DocumentsMatchConstraint;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use ReflectionClass;
 use stdClass;
@@ -96,27 +97,7 @@ OUTPUT;
      */
     public function assertMatchesDocument($expectedDocument, $actualDocument): void
     {
-        $normalizedExpectedDocument = $this->normalizeBSON($expectedDocument);
-        $normalizedActualDocument = $this->normalizeBSON($actualDocument);
-
-        $extraKeys = [];
-
-        /* Avoid unsetting fields while we're iterating on the ArrayObject to
-         * work around https://bugs.php.net/bug.php?id=70246 */
-        foreach ($normalizedActualDocument as $key => $value) {
-            if (! $normalizedExpectedDocument->offsetExists($key)) {
-                $extraKeys[] = $key;
-            }
-        }
-
-        foreach ($extraKeys as $key) {
-            $normalizedActualDocument->offsetUnset($key);
-        }
-
-        $this->assertEquals(
-            Document::fromPHP($normalizedExpectedDocument)->toRelaxedExtendedJSON(),
-            Document::fromPHP($normalizedActualDocument)->toRelaxedExtendedJSON(),
-        );
+        (new DocumentsMatchConstraint($expectedDocument, true, true))->evaluate($actualDocument);
     }
 
     /**

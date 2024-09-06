@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\LogicException;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\ChangeStreamIterator;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
@@ -51,7 +53,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testInitialResumeTokenArgumentTypeCheck($initialResumeToken): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException($initialResumeToken instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new ChangeStreamIterator($this->collection->find(), 0, $initialResumeToken, null);
     }
 

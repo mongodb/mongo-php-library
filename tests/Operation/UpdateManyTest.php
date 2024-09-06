@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\UpdateMany;
 use TypeError;
@@ -11,14 +12,14 @@ class UpdateManyTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 

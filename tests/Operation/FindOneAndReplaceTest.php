@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndReplace;
@@ -12,14 +13,14 @@ class FindOneAndReplaceTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
     }
 
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorReplacementArgumentTypeCheck($replacement): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException($replacement instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 

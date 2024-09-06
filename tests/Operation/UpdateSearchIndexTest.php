@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\UpdateSearchIndex;
 use TypeError;
@@ -17,7 +18,7 @@ class UpdateSearchIndexTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorIndexDefinitionMustBeADocument($definition): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException($definition instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new UpdateSearchIndex($this->getDatabaseName(), $this->getCollectionName(), 'index name', $definition);
     }
 }

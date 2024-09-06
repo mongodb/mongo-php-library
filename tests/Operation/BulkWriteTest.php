@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\BulkWrite;
@@ -288,7 +289,7 @@ class BulkWriteTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testUpdateManyUpdateArgumentTypeCheck($update): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_MANY => [['x' => 1], $update]],
         ]);
@@ -380,7 +381,7 @@ class BulkWriteTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testUpdateOneUpdateArgumentTypeCheck($update): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_ONE => [['x' => 1], $update]],
         ]);

@@ -4,6 +4,7 @@ namespace MongoDB\Tests;
 
 use InvalidArgumentException;
 use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\Codec;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -224,7 +225,7 @@ OUTPUT;
      */
     protected function getInvalidDocumentValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true], $includeNull ? [null] : []);
+        return array_merge([123, 3.14, 'foo', true, PackedArray::fromPHP([])], $includeNull ? [null] : []);
     }
 
     protected function getInvalidDocumentCodecValues(): array

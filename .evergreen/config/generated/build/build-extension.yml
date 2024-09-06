@@ -9,7 +9,7 @@ tasks:
       - func: "compile extension"
         # TODO: remove once 1.20.0 is released
         vars:
-          EXTENSION_BRANCH: "master"
+          EXTENSION_BRANCH: "v1.20"
       - func: "upload extension"
   # TODO: re-enable once 1.20.0 is released
 #  - name: "build-php-8.3-lowest"
@@ -51,7 +51,7 @@ tasks:
       - func: "compile extension"
         # TODO: remove once 1.20.0 is released
         vars:
-          EXTENSION_BRANCH: "master"
+          EXTENSION_BRANCH: "v1.20"
       - func: "upload extension"
   # TODO: re-enable once 1.20.0 is released
 #  - name: "build-php-8.2-lowest"
@@ -93,7 +93,7 @@ tasks:
       - func: "compile extension"
         # TODO: remove once 1.20.0 is released
         vars:
-          EXTENSION_BRANCH: "master"
+          EXTENSION_BRANCH: "v1.20"
       - func: "upload extension"
   # TODO: re-enable once 1.20.0 is released
 #  - name: "build-php-8.1-lowest"
@@ -135,7 +135,7 @@ tasks:
       - func: "compile extension"
         # TODO: remove once 1.20.0 is released
         vars:
-          EXTENSION_BRANCH: "master"
+          EXTENSION_BRANCH: "v1.20"
       - func: "upload extension"
   # TODO: re-enable once 1.20.0 is released
 #  - name: "build-php-8.0-lowest"
@@ -177,7 +177,7 @@ tasks:
       - func: "compile extension"
         # TODO: remove once 1.20.0 is released
         vars:
-          EXTENSION_BRANCH: "master"
+          EXTENSION_BRANCH: "v1.20"
       - func: "upload extension"
   # TODO: re-enable once 1.20.0 is released
 #  - name: "build-php-7.4-lowest"

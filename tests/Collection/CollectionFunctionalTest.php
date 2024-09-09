@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Collection;
 
 use Closure;
 use MongoDB\BSON\Javascript;
+use MongoDB\Codec\Encoder;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
@@ -66,6 +67,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function provideInvalidConstructorOptions(): array
     {
         return $this->createOptionDataProvider([
+            'builderEncoder' => $this->getInvalidObjectValues(),
             'codec' => $this->getInvalidDocumentCodecValues(),
             'readConcern' => $this->getInvalidReadConcernValues(),
             'readPreference' => $this->getInvalidReadPreferenceValues(),
@@ -396,6 +398,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function testWithOptionsPassesOptions(): void
     {
         $collectionOptions = [
+            'builderEncoder' => $builderEncoder = $this->createMock(Encoder::class),
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array'],
@@ -405,6 +408,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $clone = $this->collection->withOptions($collectionOptions);
         $debug = $clone->__debugInfo();
 
+        $this->assertSame($builderEncoder, $debug['builderEncoder']);
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);

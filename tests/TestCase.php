@@ -18,7 +18,6 @@ use stdClass;
 use Traversable;
 
 use function array_map;
-use function array_merge;
 use function array_values;
 use function call_user_func;
 use function get_debug_type;
@@ -209,7 +208,7 @@ OUTPUT;
      */
     protected function getInvalidArrayValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, new stdClass()], $includeNull ? [null] : []);
+        return [123, 3.14, 'foo', true, new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     /**
@@ -217,7 +216,7 @@ OUTPUT;
      */
     protected function getInvalidBooleanValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', [], new stdClass()], $includeNull ? [null] : []);
+        return [123, 3.14, 'foo', [], new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     /**
@@ -225,7 +224,12 @@ OUTPUT;
      */
     protected function getInvalidDocumentValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, PackedArray::fromPHP([])], $includeNull ? [null] : []);
+        return [123, 3.14, 'foo', true, PackedArray::fromPHP([]), ...($includeNull ? [null] : [])];
+    }
+
+    protected function getInvalidObjectValues(bool $includeNull = false): array
+    {
+        return [123, 3.14, 'foo', true, [], new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     protected function getInvalidDocumentCodecValues(): array
@@ -246,7 +250,7 @@ OUTPUT;
      */
     protected function getInvalidIntegerValues(bool $includeNull = false): array
     {
-        return array_merge([3.14, 'foo', true, [], new stdClass()], $includeNull ? [null] : []);
+        return [3.14, 'foo', true, [], new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     /**
@@ -254,19 +258,17 @@ OUTPUT;
      */
     protected function getInvalidReadConcernValues(bool $includeNull = false): array
     {
-        return array_merge(
-            [
-                123,
-                3.14,
-                'foo',
-                true,
-                [],
-                new stdClass(),
-                new ReadPreference(ReadPreference::PRIMARY),
-                new WriteConcern(1),
-            ],
-            $includeNull ? ['null' => null] : [],
-        );
+        return [
+            123,
+            3.14,
+            'foo',
+            true,
+            [],
+            new stdClass(),
+            new ReadPreference(ReadPreference::PRIMARY),
+            new WriteConcern(1),
+            ...($includeNull ? ['null' => null] : []),
+        ];
     }
 
     /**
@@ -274,19 +276,17 @@ OUTPUT;
      */
     protected function getInvalidReadPreferenceValues(bool $includeNull = false): array
     {
-        return array_merge(
-            [
-                123,
-                3.14,
-                'foo',
-                true,
-                [],
-                new stdClass(),
-                new ReadConcern(),
-                new WriteConcern(1),
-            ],
-            $includeNull ? ['null' => null] : [],
-        );
+        return [
+            123,
+            3.14,
+            'foo',
+            true,
+            [],
+            new stdClass(),
+            new ReadConcern(),
+            new WriteConcern(1),
+            ...($includeNull ? ['null' => null] : []),
+        ];
     }
 
     /**
@@ -294,20 +294,18 @@ OUTPUT;
      */
     protected function getInvalidSessionValues(bool $includeNull = false): array
     {
-        return array_merge(
-            [
-                123,
-                3.14,
-                'foo',
-                true,
-                [],
-                new stdClass(),
-                new ReadConcern(),
-                new ReadPreference(ReadPreference::PRIMARY),
-                new WriteConcern(1),
-            ],
-            $includeNull ? ['null' => null] : [],
-        );
+        return [
+            123,
+            3.14,
+            'foo',
+            true,
+            [],
+            new stdClass(),
+            new ReadConcern(),
+            new ReadPreference(ReadPreference::PRIMARY),
+            new WriteConcern(1),
+            ...($includeNull ? ['null' => null] : []),
+        ];
     }
 
     /**
@@ -315,7 +313,7 @@ OUTPUT;
      */
     protected function getInvalidStringValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, true, [], new stdClass()], $includeNull ? [null] : []);
+        return [123, 3.14, true, [], new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     /**
@@ -323,19 +321,17 @@ OUTPUT;
      */
     protected function getInvalidWriteConcernValues(bool $includeNull = false): array
     {
-        return array_merge(
-            [
-                123,
-                3.14,
-                'foo',
-                true,
-                [],
-                new stdClass(),
-                new ReadConcern(),
-                new ReadPreference(ReadPreference::PRIMARY),
-            ],
-            $includeNull ? ['null' => null] : [],
-        );
+        return [
+            123,
+            3.14,
+            'foo',
+            true,
+            [],
+            new stdClass(),
+            new ReadConcern(),
+            new ReadPreference(ReadPreference::PRIMARY),
+            ...($includeNull ? ['null' => null] : []),
+        ];
     }
 
     /**

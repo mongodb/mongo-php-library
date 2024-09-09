@@ -19,18 +19,6 @@ use MongoDB\Builder\Type\ExpressionInterface;
 final class Variable
 {
     /**
-     * A variable that returns the current datetime value.
-     * NOW returns the same value for all members of the deployment and remains the same throughout all stages of the
-     * aggregation pipeline.
-     *
-     * New in MongoDB 4.2.
-     */
-    public static function now(): ResolvesToDate
-    {
-        return new Expression\Variable('NOW');
-    }
-
-    /**
      * A variable that returns the current timestamp value.
      * CLUSTER_TIME is only available on replica sets and sharded clusters.
      * CLUSTER_TIME returns the same value for all members of the deployment and remains the same throughout all stages
@@ -44,15 +32,6 @@ final class Variable
     }
 
     /**
-     * References the root document, i.e. the top-level document, currently being processed in the aggregation pipeline
-     * stage.
-     */
-    public static function root(): ResolvesToObject
-    {
-        return new Expression\Variable('ROOT');
-    }
-
-    /**
      * References the start of the field path being processed in the aggregation pipeline stage.
      * Unless documented otherwise, all stages start with CURRENT the same as ROOT.
      * CURRENT is modifiable. However, since $<field> is equivalent to $$CURRENT.<field>, rebinding
@@ -61,18 +40,6 @@ final class Variable
     public static function current(string $fieldPath = ''): ResolvesToAny
     {
         return new Expression\Variable('CURRENT' . ($fieldPath ? '.' . $fieldPath : ''));
-    }
-
-    /**
-     * A variable which evaluates to the missing value. Allows for the conditional exclusion of fields. In a $project,
-     * a field set to the variable REMOVE is excluded from the output.
-     * Can be used with $cond operator for conditionally exclude fields.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#std-label-remove-example
-     */
-    public static function remove(): ResolvesToAny
-    {
-        return new Expression\Variable('REMOVE');
     }
 
     /**
@@ -92,6 +59,32 @@ final class Variable
     /**
      * One of the allowed results of a $redact expression.
      *
+     * $redact returns or keeps all fields at this current document/embedded document level, without further inspection
+     * of the fields at this level. This applies even if the included field contains embedded documents that may have
+     * different access levels.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#mongodb-pipeline-pipe.-redact
+     */
+    public static function keep(): ExpressionInterface
+    {
+        return new Expression\Variable('KEEP');
+    }
+
+    /**
+     * A variable that returns the current datetime value.
+     * NOW returns the same value for all members of the deployment and remains the same throughout all stages of the
+     * aggregation pipeline.
+     *
+     * New in MongoDB 4.2.
+     */
+    public static function now(): ResolvesToDate
+    {
+        return new Expression\Variable('NOW');
+    }
+
+    /**
+     * One of the allowed results of a $redact expression.
+     *
      * $redact excludes all fields at this current document/embedded document level, without further inspection of any
      * of the excluded fields. This applies even if the excluded field contains embedded documents that may have
      * different access levels.
@@ -104,17 +97,24 @@ final class Variable
     }
 
     /**
-     * One of the allowed results of a $redact expression.
+     * A variable which evaluates to the missing value. Allows for the conditional exclusion of fields. In a $project,
+     * a field set to the variable REMOVE is excluded from the output.
+     * Can be used with $cond operator for conditionally exclude fields.
      *
-     * $redact returns or keeps all fields at this current document/embedded document level, without further inspection
-     * of the fields at this level. This applies even if the included field contains embedded documents that may have
-     * different access levels.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#mongodb-pipeline-pipe.-redact
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#std-label-remove-example
      */
-    public static function keep(): ExpressionInterface
+    public static function remove(): ResolvesToAny
     {
-        return new Expression\Variable('KEEP');
+        return new Expression\Variable('REMOVE');
+    }
+
+    /**
+     * References the root document, i.e. the top-level document, currently being processed in the aggregation pipeline
+     * stage.
+     */
+    public static function root(): ResolvesToObject
+    {
+        return new Expression\Variable('ROOT');
     }
 
     /**

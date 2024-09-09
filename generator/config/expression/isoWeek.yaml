@@ -1,0 +1,38 @@
+# $schema: ../schema.json
+name: $isoWeek
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/'
+type:
+    - resolvesToInt
+encode: object
+description: |
+    Returns the week number in ISO 8601 format, ranging from 1 to 53. Week numbers start at 1 with the week (Monday through Sunday) that contains the year's first Thursday.
+arguments:
+    -
+        name: date
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/#example'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    city: '$city'
+                    weekNumber:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $isoWeek: '$date'
+                        $isoWeek:
+                            date: '$date'

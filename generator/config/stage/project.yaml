@@ -1,0 +1,124 @@
+# $schema: ../schema.json
+name: $project
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/'
+type:
+    - stage
+encode: single
+description: |
+    Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
+arguments:
+    -
+        name: specification
+        type:
+            - expression
+        variadic: object
+tests:
+    -
+        name: 'Include Specific Fields in Output Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-in-output-documents'
+        pipeline:
+            -
+                $project:
+                    title: 1
+                    author: 1
+    -
+        name: 'Suppress id Field in the Output Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#suppress-_id-field-in-the-output-documents'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    title: 1
+                    author: 1
+    -
+        name: 'Exclude Fields from Output Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-output-documents'
+        pipeline:
+            -
+                $project:
+                    lastModified: 0
+    -
+        name: 'Exclude Fields from Embedded Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-embedded-documents'
+        pipeline:
+            -
+                $project:
+                    author.first: 0
+                    lastModified: 0
+            -
+                $project:
+                    author:
+                        first: 0
+                    lastModified: 0
+    -
+        name: 'Conditionally Exclude Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#conditionally-exclude-fields'
+        pipeline:
+            -
+                $project:
+                    title: 1
+                    author.first: 1
+                    author.last: 1
+                    author.middle:
+                        $cond:
+                            if:
+                                $eq:
+                                    - ''
+                                    - '$author.middle'
+                            then: '$$REMOVE'
+                            else: '$author.middle'
+    -
+        name: 'Include Specific Fields from Embedded Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-from-embedded-documents'
+        pipeline:
+            -
+                $project:
+                    stop.title: 1
+            -
+                $project:
+                    stop:
+                        title: 1
+    -
+        name: 'Include Computed Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-computed-fields'
+        pipeline:
+            -
+                $project:
+                    title: 1
+                    isbn:
+                        prefix:
+                            $substr:
+                                - '$isbn'
+                                - 0
+                                - 3
+                        group:
+                            $substr:
+                                - '$isbn'
+                                - 3
+                                - 2
+                        publisher:
+                            $substr:
+                                - '$isbn'
+                                - 5
+                                - 4
+                        title:
+                            $substr:
+                                - '$isbn'
+                                - 9
+                                - 3
+                        checkDigit:
+                            $substr:
+                                - '$isbn'
+                                - 12
+                                - 1
+                    lastName: '$author.last'
+                    copiesSold: '$copies'
+    -
+        name: 'Project New Array Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#project-new-array-fields'
+        pipeline:
+            -
+                $project:
+                    myArray:
+                        - '$x'
+                        - '$y'

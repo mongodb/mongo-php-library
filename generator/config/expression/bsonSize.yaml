@@ -1,0 +1,48 @@
+# $schema: ../schema.json
+name: $bsonSize
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the size in bytes of a given document (i.e. BSON type Object) when encoded as BSON.
+arguments:
+    -
+        name: object
+        type:
+            - resolvesToObject
+            - resolvesToNull
+tests:
+    -
+        name: 'Return Sizes of Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-sizes-of-documents'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    object_size:
+                        $bsonSize: '$$ROOT'
+    -
+        name: 'Return Combined Size of All Documents in a Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-combined-size-of-all-documents-in-a-collection'
+        pipeline:
+            -
+                $group:
+                    _id: ~
+                    combined_object_size:
+                        $sum:
+                            $bsonSize: '$$ROOT'
+    -
+        name: 'Return Document with Largest Specified Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-document-with-largest-specified-field'
+        pipeline:
+            -
+                $project:
+                    name: '$name'
+                    task_object_size:
+                        $bsonSize: '$current_task'
+            -
+                $sort:
+                    task_object_size: -1
+            -
+                $limit: 1

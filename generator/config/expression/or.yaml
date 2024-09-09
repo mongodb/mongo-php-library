@@ -1,0 +1,33 @@
+# $schema: ../schema.json
+name: $or
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/'
+type:
+    - resolvesToBool
+encode: single
+description: |
+    Returns true when any of its expressions evaluates to true. Accepts any number of argument expressions.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+            - resolvesToBool
+        variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    result:
+                        $or:
+                            -
+                                $gt:
+                                    - '$qty'
+                                    - 250
+                            -
+                                $lt:
+                                    - '$qty'
+                                    - 200

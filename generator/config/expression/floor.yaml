@@ -1,0 +1,23 @@
+# $schema: ../schema.json
+name: $floor
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the largest integer less than or equal to the specified number.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/#example'
+        pipeline:
+            -
+                $project:
+                    value: 1
+                    floorValue:
+                        $floor: '$value'

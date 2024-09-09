@@ -1,0 +1,55 @@
+# $schema: ../schema.json
+name: $push
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns an array of values that result from applying an expression to each document.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/#use-in--group-stage'
+        pipeline:
+            -
+                $sort:
+                    date: 1
+                    item: 1
+            -
+                $group:
+                    _id:
+                        day:
+                            # Example uses the short form, the builder always generates the verbose form
+                            # $dayOfYear: '$date'
+                            $dayOfYear:
+                                date: '$date'
+                        year:
+                            # Example uses the short form, the builder always generates the verbose form
+                            # $year: '$date'
+                            $year:
+                                date: '$date'
+                    itemsSold:
+                        $push:
+                            item: '$item'
+                            quantity: '$quantity'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        quantitiesForState:
+                            $push: '$quantity'
+                            window:
+                                documents: ['unbounded', 'current']

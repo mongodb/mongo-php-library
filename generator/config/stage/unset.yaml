@@ -1,0 +1,42 @@
+# $schema: ../schema.json
+name: $unset
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/'
+type:
+    - stage
+encode: single
+description: |
+    Removes or excludes fields from documents.
+    Alias for $project stage that removes or excludes fields.
+arguments:
+    -
+        name: field
+        type:
+            - fieldPath
+        variadic: array
+tests:
+    -
+        name: 'Remove a Single Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-a-single-field'
+        pipeline:
+            -
+                # The example in the docs uses the short syntax whereas
+                # the aggregation builder always uses the equivalent array syntax.
+                # $unset: 'copies'
+                $unset: ['copies']
+    -
+        name: 'Remove Top-Level Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-top-level-fields'
+        pipeline:
+            -
+                $unset:
+                    - 'isbn'
+                    - 'copies'
+    -
+        name: 'Remove Embedded Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-embedded-fields'
+        pipeline:
+            -
+                $unset:
+                    - 'isbn'
+                    - 'author.first'
+                    - 'copies.warehouse'

@@ -1,0 +1,39 @@
+# $schema: ../schema.json
+name: $tsIncrement
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/'
+type:
+    - resolvesToLong
+encode: single
+description: |
+    Returns the incrementing ordinal from a timestamp as a long.
+    New in MongoDB 5.1.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToTimestamp
+tests:
+    -
+        name: 'Obtain the Incrementing Ordinal from a Timestamp Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/#obtain-the-incrementing-ordinal-from-a-timestamp-field'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    saleTimestamp: 1
+                    saleIncrement:
+                        $tsIncrement: '$saleTimestamp'
+    -
+        name: 'Use $tsSecond in a Change Stream Cursor to Monitor Collection Changes'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#use--tssecond-in-a-change-stream-cursor-to-monitor-collection-changes'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $eq:
+                            -
+                                $mod:
+                                    -
+                                        $tsIncrement: '$clusterTime'
+                                    - 2
+                            - 0

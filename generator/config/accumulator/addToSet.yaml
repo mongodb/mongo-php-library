@@ -1,0 +1,47 @@
+# $schema: ../schema.json
+name: $addToSet
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns an array of unique expression values for each group. Order of the array elements is undefined.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--group-stage'
+        pipeline:
+            - $group:
+                _id:
+                    day:
+                        $dayOfYear:
+                            date: '$date'
+                    year:
+                        $year:
+                            date: '$date'
+                itemsSold:
+                    $addToSet: '$item'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        cakeTypesForState:
+                            $addToSet: '$type'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

@@ -1,0 +1,48 @@
+# $schema: ../schema.json
+name: $indexOfArray
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/'
+type:
+    - resolvesToInt
+encode: array
+description: |
+    Searches an array for an occurrence of a specified value and returns the array index of the first occurrence. Array indexes start at zero.
+arguments:
+    -
+        name: array
+        type:
+            - resolvesToArray
+        description: |
+            Can be any valid expression as long as it resolves to an array.
+            If the array expression resolves to a value of null or refers to a field that is missing, $indexOfArray returns null.
+            If the array expression does not resolve to an array or null nor refers to a missing field, $indexOfArray returns an error.
+    -
+        name: search
+        type:
+            - expression
+    -
+        name: start
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
+            If unspecified, the starting index position for the search is the beginning of the string.
+    -
+        name: end
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
+            If unspecified, the ending index position for the search is the end of the string.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/#example'
+        pipeline:
+            -
+                $project:
+                    index:
+                        $indexOfArray:
+                            - '$items'
+                            - 2

@@ -1,0 +1,39 @@
+# $schema: ../schema.json
+name: $meta
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/'
+type:
+    - resolvesToAny
+encode: single
+description: |
+    Access available per-document metadata related to the aggregation operation.
+arguments:
+    -
+        name: keyword
+        type:
+            - string
+tests:
+    -
+        name: 'textScore'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---textscore-'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'cake'
+            -
+                $group:
+                    _id:
+                        $meta: 'textScore'
+                    count:
+                        $sum: 1
+    -
+        name: 'indexKey'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---indexkey-'
+        pipeline:
+            -
+                $match:
+                    type: 'apparel'
+            -
+                $addFields:
+                    idxKey:
+                        $meta: 'indexKey'

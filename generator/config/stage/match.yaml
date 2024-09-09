@@ -1,0 +1,40 @@
+# $schema: ../schema.json
+name: $match
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/'
+type:
+    - stage
+encode: single
+description: |
+    Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard MongoDB queries. For each input document, outputs either one document (a match) or zero documents (no match).
+arguments:
+    -
+        name: query
+        type:
+            - query
+tests:
+    -
+        name: 'Equality Match'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#equality-match'
+        pipeline:
+            -
+                $match:
+                    author: 'dave'
+    -
+        name: 'Perform a Count'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#perform-a-count'
+        pipeline:
+            -
+                $match:
+                    $or:
+                        -
+                            score:
+                                $gt: 70
+                                $lt: 90
+                        -
+                            views:
+                                $gte: 1000
+            -
+                $group:
+                    _id: ~
+                    count:
+                        $sum: 1

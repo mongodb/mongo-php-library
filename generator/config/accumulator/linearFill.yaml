@@ -1,0 +1,40 @@
+# $schema: ../schema.json
+name: $linearFill
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/'
+type:
+    - window
+encode: single
+description: |
+    Fills null and missing fields in a window using linear interpolation based on surrounding field values.
+    Available in the $setWindowFields stage.
+    New in MongoDB 5.3.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Fill Missing Values with Linear Interpolation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#fill-missing-values-with-linear-interpolation'
+        pipeline:
+            -
+                $setWindowFields:
+                    sortBy:
+                        time: 1
+                    output:
+                        price:
+                            $linearFill: '$price'
+    -
+        name: 'Use Multiple Fill Methods in a Single Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#use-multiple-fill-methods-in-a-single-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    sortBy:
+                        time: 1
+                    output:
+                        linearFillPrice:
+                            $linearFill: '$price'
+                        locfPrice:
+                            $locf: '$price'

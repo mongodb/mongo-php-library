@@ -4,6 +4,7 @@ tests export-ignore
 benchmark export-ignore
 docs export-ignore
 examples export-ignore
+generator export-ignore
 mongo-orchestration export-ignore
 stubs export-ignore
 tools export-ignore
@@ -17,3 +18,9 @@ psalm-baseline.xml export-ignore
 
 # Prevent generated build files from showing diffs in pull requests
 .evergreen/config/generated/** linguist-generated=true
+/src/Builder/Accumulator/*.php linguist-generated=true
+/src/Builder/Expression/*.php linguist-generated=true
+/src/Builder/Query/*.php linguist-generated=true
+/src/Builder/Projection/*.php linguist-generated=true
+/src/Builder/Stage/*.php linguist-generated=true
+/tests/Builder/*/Pipelines.php linguist-generated=true

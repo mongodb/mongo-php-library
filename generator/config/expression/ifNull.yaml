@@ -1,0 +1,38 @@
+# $schema: ../schema.json
+name: $ifNull
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/'
+type:
+    - resolvesToAny
+encode: single
+description: |
+    Returns either the non-null result of the first expression or the result of the second expression if the first expression results in a null result. Null result encompasses instances of undefined values or missing fields. Accepts two expressions as arguments. The result of the second expression can be null.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+        variadic: array
+tests:
+    -
+        name: 'Single Input Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#single-input-expression'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    description:
+                        $ifNull:
+                            - '$description'
+                            - 'Unspecified'
+    -
+        name: 'Multiple Input Expressions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#multiple-input-expressions'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    value:
+                        $ifNull:
+                            - '$description'
+                            - '$quantity'
+                            - 'Unspecified'

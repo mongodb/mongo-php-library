@@ -1,0 +1,43 @@
+# $schema: ../schema.json
+name: $replaceOne
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/'
+type:
+    - resolvesToString
+encode: object
+description: |
+    Replaces the first instance of a matched string in a given input.
+    New in MongoDB 4.4.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToString
+            - resolvesToNull
+        description: |
+            The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
+    -
+        name: find
+        type:
+            - resolvesToString
+            - resolvesToNull
+        description: |
+            The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
+    -
+        name: replacement
+        type:
+            - resolvesToString
+            - resolvesToNull
+        description: |
+            The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/#example'
+        pipeline:
+            -
+                $project:
+                    item:
+                        $replaceOne:
+                            input: '$item'
+                            find: 'blue paint'
+                            replacement: 'red paint'

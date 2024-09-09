@@ -1,0 +1,26 @@
+# $schema: ../schema.json
+name: $sampleRate
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/'
+type:
+    - query
+encode: single
+description: |
+    Randomly select documents at a given rate. Although the exact number of documents selected varies on each run, the quantity chosen approximates the sample rate expressed as a percentage of the total number of documents.
+arguments:
+    -
+        name: rate
+        type:
+            - resolvesToDouble
+        description: |
+            The selection process uses a uniform random distribution. The sample rate is a floating point number between 0 and 1, inclusive, which represents the probability that a given document will be selected as it passes through the pipeline.
+            For example, a sample rate of 0.33 selects roughly one document in three.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/#examples'
+        pipeline:
+            -
+                $match:
+                    $sampleRate: 0.33
+            -
+                $count: 'numMatches'

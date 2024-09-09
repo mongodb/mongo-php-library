@@ -1,0 +1,56 @@
+# $schema: ../schema.json
+name: $densify
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/'
+type:
+    - stage
+encode: object
+description: |
+    Creates new documents in a sequence of documents where certain values in a field are missing.
+arguments:
+    -
+        name: field
+        type:
+            - string # field name
+        description: |
+            The field to densify. The values of the specified field must either be all numeric values or all dates.
+            Documents that do not contain the specified field continue through the pipeline unmodified.
+            To specify a <field> in an embedded document or in an array, use dot notation.
+    -
+        name: partitionByFields
+        type:
+            - array # of string
+        optional: true
+        description: |
+            The field(s) that will be used as the partition keys.
+    -
+        name: range
+        type:
+            - object # Range
+        description: |
+            Specification for range based densification.
+tests:
+    -
+        name: 'Densify Time Series Data'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densify-time-series-data'
+        pipeline:
+            -
+                $densify:
+                    field: 'timestamp'
+                    range:
+                        step: 1
+                        unit: 'hour'
+                        bounds:
+                            - !bson_utcdatetime '2021-05-18T00:00:00.000Z'
+                            - !bson_utcdatetime '2021-05-18T08:00:00.000Z'
+    -
+        name: 'Densifiction with Partitions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densifiction-with-partitions'
+        pipeline:
+            -
+                $densify:
+                    field: 'altitude'
+                    partitionByFields:
+                        - 'variety'
+                    range:
+                        bounds: 'full'
+                        step: 200

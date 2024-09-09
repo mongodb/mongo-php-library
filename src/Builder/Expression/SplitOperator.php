@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * THIS FILE IS AUTO-GENERATED. ANY CHANGES WILL BE LOST!
+ */
+
+declare(strict_types=1);
+
+namespace MongoDB\Builder\Expression;
+
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\OperatorInterface;
+
+/**
+ * Splits a string into substrings based on a delimiter. Returns an array of substrings. If the delimiter is not found within the string, returns an array containing the original string.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/
+ */
+class SplitOperator implements ResolvesToArray, OperatorInterface
+{
+    public const ENCODE = Encode::Array;
+
+    /** @var ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string. */
+    public readonly ResolvesToString|string $string;
+
+    /** @var ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string. */
+    public readonly ResolvesToString|string $delimiter;
+
+    /**
+     * @param ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
+     * @param ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
+     */
+    public function __construct(ResolvesToString|string $string, ResolvesToString|string $delimiter)
+    {
+        $this->string = $string;
+        $this->delimiter = $delimiter;
+    }
+
+    public function getOperator(): string
+    {
+        return '$split';
+    }
+}

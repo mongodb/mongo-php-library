@@ -1,0 +1,114 @@
+# $schema: ../schema.json
+name: $dateFromParts
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/'
+type:
+    - resolvesToDate
+encode: object
+description: |
+    Constructs a BSON Date object given the date's constituent parts.
+arguments:
+    -
+        name: year
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Calendar year. Can be any expression that evaluates to a number.
+    -
+        name: isoWeekYear
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            ISO Week Date Year. Can be any expression that evaluates to a number.
+    -
+        name: month
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Month. Defaults to 1.
+    -
+        name: isoWeek
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Week of year. Defaults to 1.
+    -
+        name: day
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Day of month. Defaults to 1.
+    -
+        name: isoDayOfWeek
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Day of week (Monday 1 - Sunday 7). Defaults to 1.
+    -
+        name: hour
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Hour. Defaults to 0.
+    -
+        name: minute
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Minute. Defaults to 0.
+    -
+        name: second
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Second. Defaults to 0.
+    -
+        name: millisecond
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            Millisecond. Defaults to 0.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/#example'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateFromParts:
+                            year: 2017
+                            month: 2
+                            day: 8
+                            hour: 12
+                    date_iso:
+                        $dateFromParts:
+                            isoWeekYear: 2017
+                            isoWeek: 6
+                            isoDayOfWeek: 3
+                            hour: 12
+                    date_timezone:
+                        $dateFromParts:
+                            year: 2016
+                            month: 12
+                            day: 31
+                            hour: 23
+                            minute: 46
+                            second: 12
+                            timezone: 'America/New_York'

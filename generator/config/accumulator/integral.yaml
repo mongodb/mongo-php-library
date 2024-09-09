@@ -1,0 +1,43 @@
+# $schema: ../schema.json
+name: $integral
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/'
+type:
+    - window
+encode: object
+description: |
+    Returns the approximation of the area under a curve.
+    New in MongoDB 5.0.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToNumber
+            - resolvesToDate
+    -
+        name: unit
+        type:
+            - timeUnit
+        optional: true
+        description: |
+            A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+            If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/#example'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$powerMeterID'
+                    sortBy:
+                        timeStamp: 1
+                    output:
+                        powerMeterKilowattHours:
+                            $integral:
+                                input: '$kilowatts'
+                                unit: 'hour'
+                            window:
+                                range:
+                                    - 'unbounded'
+                                    - 'current'
+                                unit: 'hour'

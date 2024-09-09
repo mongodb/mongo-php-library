@@ -1,0 +1,180 @@
+# $schema: ../schema.json
+name: $merge
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/'
+type:
+    - stage
+encode: object
+description: |
+    Writes the resulting documents of the aggregation pipeline to a collection. The stage can incorporate (insert new documents, merge documents, replace documents, keep existing documents, fail the operation, process documents with a custom update pipeline) the results into an output collection. To use the $merge stage, it must be the last stage in the pipeline.
+    New in MongoDB 4.2.
+arguments:
+    -
+        name: into
+        type:
+            - string
+            - object # OutCollection
+        description: |
+            The output collection.
+    -
+        name: 'on'
+        type:
+            - string
+            - array # of string
+        optional: true
+        description: |
+            Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
+    -
+        name: let
+        type:
+            - object
+        optional: true
+        description: |
+            Specifies variables for use in the whenMatched pipeline.
+    -
+        name: whenMatched
+        type:
+            - string # WhenMatched
+            - pipeline
+        optional: true
+        description: |
+            The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
+    -
+        name: whenNotMatched
+        type:
+            - string # WhenNotMatched
+        optional: true
+        description: |
+            The behavior of $merge if a result document does not match an existing document in the out collection.
+tests:
+    -
+        name: 'On-Demand Materialized View Initial Creation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#on-demand-materialized-view--initial-creation'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        fiscal_year: '$fiscal_year'
+                        dept: '$dept'
+                    salaries:
+                        $sum: '$salary'
+            -
+                $merge:
+                    into:
+                        db: 'reporting'
+                        coll: 'budgets'
+                    on: '_id'
+                    whenMatched: 'replace'
+                    whenNotMatched: 'insert'
+    -
+        name: 'On-Demand Materialized View Update Replace Data'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#on-demand-materialized-view--update-replace-data'
+        pipeline:
+            -
+                $match:
+                    fiscal_year:
+                        $gte: 2019
+            -
+                $group:
+                    _id:
+                        fiscal_year: '$fiscal_year'
+                        dept: '$dept'
+                    salaries:
+                        $sum: '$salary'
+            -
+                $merge:
+                    into:
+                        db: 'reporting'
+                        coll: 'budgets'
+                    on: '_id'
+                    whenMatched: 'replace'
+                    whenNotMatched: 'insert'
+    -
+        name: 'Only Insert New Data'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#only-insert-new-data'
+        pipeline:
+            -
+                $match:
+                    fiscal_year: 2019
+            -
+                $group:
+                    _id:
+                        fiscal_year: '$fiscal_year'
+                        dept: '$dept'
+                    employees:
+                        $push: '$employee'
+            -
+                $project:
+                    _id: 0
+                    dept: '$_id.dept'
+                    fiscal_year: '$_id.fiscal_year'
+                    employees: 1
+            -
+                $merge:
+                    into:
+                        db: 'reporting'
+                        coll: 'orgArchive'
+                    on:
+                        - 'dept'
+                        - 'fiscal_year'
+                    whenMatched: 'fail'
+    -
+        name: 'Merge Results from Multiple Collections'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#merge-results-from-multiple-collections'
+        pipeline:
+            -
+                $group:
+                    _id: '$quarter'
+                    purchased:
+                        $sum: '$qty'
+            -
+                $merge:
+                    into: 'quarterlyreport'
+                    on: '_id'
+                    whenMatched: 'merge'
+                    whenNotMatched: 'insert'
+    -
+        name: 'Use the Pipeline to Customize the Merge'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#use-the-pipeline-to-customize-the-merge'
+        pipeline:
+            -
+                $match:
+                    date:
+                        $gte: !bson_utcdatetime '2019-05-07'
+                        $lt: !bson_utcdatetime '2019-05-08'
+            -
+                $project:
+                    _id:
+                        $dateToString:
+                            format: '%Y-%m'
+                            date: '$date'
+                    thumbsup: 1
+                    thumbsdown: 1
+            -
+                $merge:
+                    into: 'monthlytotals'
+                    on: '_id'
+                    whenMatched:
+                        -
+                            $addFields:
+                                thumbsup:
+                                    $add:
+                                        - '$thumbsup'
+                                        - '$$new.thumbsup'
+                                thumbsdown:
+                                    $add:
+                                        - '$thumbsdown'
+                                        - '$$new.thumbsdown'
+                    whenNotMatched: 'insert'
+    -
+        name: 'Use Variables to Customize the Merge'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#use-variables-to-customize-the-merge'
+        pipeline:
+            -
+                $merge:
+                    into: 'cakeSales'
+                    let:
+                        year: '2020'
+                    whenMatched:
+                        -
+                            $addFields:
+                                salesYear: '$$year'

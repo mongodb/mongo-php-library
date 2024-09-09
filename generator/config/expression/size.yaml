@@ -1,0 +1,33 @@
+# $schema: ../schema.json
+name: $size
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the number of elements in the array. Accepts a single expression as argument.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+        description: |
+            The argument for $size can be any expression as long as it resolves to an array.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    numberOfColors:
+                        $cond:
+                            if:
+                                # Example uses the short form, the builder always generates the verbose form
+                                # $isArray: '$colors'
+                                $isArray:
+                                    - '$colors'
+                            then:
+                                $size: '$colors'
+                            else: 'NA'

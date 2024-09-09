@@ -1,0 +1,64 @@
+# $schema: ../schema.json
+name: $addFields
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/'
+type:
+    - stage
+encode: single
+description: |
+    Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+        variadic: object
+        description: |
+            Specify the name of each field to add and set its value to an aggregation expression or an empty object.
+tests:
+    -
+        name: 'Using Two $addFields Stages'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#using-two--addfields-stages'
+        pipeline:
+            -
+                $addFields:
+                    totalHomework:
+                        # The example renders a single value, but the builder generates an array for consistency
+                        # $sum: '$homework'
+                        $sum: ['$homework']
+                    totalQuiz:
+                        # $sum: '$quiz'
+                        $sum: ['$quiz']
+            -
+                $addFields:
+                    totalScore:
+                        $add:
+                            - '$totalHomework'
+                            - '$totalQuiz'
+                            - '$extraCredit'
+    -
+        name: 'Adding Fields to an Embedded Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#adding-fields-to-an-embedded-document'
+        pipeline:
+            -
+                $addFields:
+                    specs.fuel_type: 'unleaded'
+    -
+        name: 'Overwriting an existing field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#overwriting-an-existing-field'
+        pipeline:
+            -
+                $addFields:
+                    cats: 20
+    -
+        name: 'Add Element to an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#add-element-to-an-array'
+        pipeline:
+            -
+                $match:
+                    _id: 1
+            -
+                $addFields:
+                    homework:
+                        $concatArrays:
+                            - '$homework'
+                            - [7]

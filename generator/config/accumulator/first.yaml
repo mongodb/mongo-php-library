@@ -1,0 +1,45 @@
+# $schema: ../schema.json
+name: $first
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns the result of an expression for the first document in a group or window.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--group-stage'
+        pipeline:
+            -
+                $sort:
+                    item: 1
+                    date: 1
+            -
+                $group:
+                    _id: '$item'
+                    firstSale:
+                        $first: '$date'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        firstOrderTypeForState:
+                            $first: '$type'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

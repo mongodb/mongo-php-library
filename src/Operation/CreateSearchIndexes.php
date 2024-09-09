@@ -39,10 +39,7 @@ use function sprintf;
  */
 class CreateSearchIndexes implements Executable
 {
-    private string $databaseName;
-    private string $collectionName;
     private array $indexes = [];
-    private array $options;
 
     /**
      * Constructs a createSearchIndexes command.
@@ -53,7 +50,7 @@ class CreateSearchIndexes implements Executable
      * @param array{comment?: mixed} $options        Command options
      * @throws InvalidArgumentException for parameter parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $indexes, array $options)
+    public function __construct(private string $databaseName, private string $collectionName, array $indexes, private array $options)
     {
         if (! array_is_list($indexes)) {
             throw new InvalidArgumentException('$indexes is not a list');
@@ -66,10 +63,6 @@ class CreateSearchIndexes implements Executable
 
             $this->indexes[] = new SearchIndexInput($index);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->options = $options;
     }
 
     /**

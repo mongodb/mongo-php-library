@@ -1,0 +1,65 @@
+# $schema: ../schema.json
+name: $shift
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/'
+type:
+    - window
+encode: object
+description: |
+    Returns the value from an expression applied to a document in a specified position relative to the current document in the $setWindowFields stage partition.
+    New in MongoDB 5.0.
+arguments:
+    -
+        name: output
+        type:
+            - expression
+        description: |
+            Specifies an expression to evaluate and return in the output.
+    -
+        name: by
+        type:
+            - int
+        description: |
+            Specifies an integer with a numeric document position relative to the current document in the output.
+            For example:
+            1 specifies the document position after the current document.
+            -1 specifies the document position before the current document.
+            -2 specifies the document position that is two positions before the current document.
+    -
+        name: default
+        type:
+            - expression
+        description: |
+            Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
+            The default expression must evaluate to a constant value.
+            If you do not specify a default expression, $shift returns null for documents whose positions are outside of the implicit $setWindowFields stage window.
+tests:
+    -
+        name: 'Shift Using a Positive Integer'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-positive-integer'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        quantity: -1
+                    output:
+                        shiftQuantityForState:
+                            $shift:
+                                output: '$quantity'
+                                by: 1
+                                default: 'Not available'
+    -
+        name: 'Shift Using a Negative Integer'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-negative-integer'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        quantity: -1
+                    output:
+                        shiftQuantityForState:
+                            $shift:
+                                output: '$quantity'
+                                by: -1
+                                default: 'Not available'

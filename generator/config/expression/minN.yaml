@@ -1,0 +1,32 @@
+# $schema: ../schema.json
+name: $minN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Returns the n smallest values in an array. Distinct from the $minN accumulator.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to the array from which to return the maximal n elements.
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/#example'
+        pipeline:
+            -
+                $addFields:
+                    minScores:
+                        $minN:
+                            n: 2
+                            input: '$score'

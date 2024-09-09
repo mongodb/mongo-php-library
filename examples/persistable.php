@@ -19,15 +19,12 @@ class PersistableEntry implements Persistable
 {
     private ObjectId $id;
 
-    public string $name;
-
     /** @var array<PersistableEmail> */
     public array $emails = [];
 
-    public function __construct(string $name)
+    public function __construct(public string $name)
     {
         $this->id = new ObjectId();
-        $this->name = $name;
     }
 
     public function getId(): ObjectId
@@ -64,14 +61,8 @@ class PersistableEntry implements Persistable
 
 class PersistableEmail implements Persistable
 {
-    public string $type;
-
-    public string $address;
-
-    public function __construct(string $type, string $address)
+    public function __construct(public string $type, public string $address)
     {
-        $this->type = $type;
-        $this->address = $address;
     }
 
     public function bsonSerialize(): stdClass

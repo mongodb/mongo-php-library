@@ -1,0 +1,33 @@
+# $schema: ../schema.json
+name: $arrayElemAt
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/'
+type:
+    - resolvesToAny
+encode: array
+description: |
+    Returns the element at the specified array index.
+arguments:
+    -
+        name: array
+        type:
+            - resolvesToArray
+    -
+        name: idx
+        type:
+            - resolvesToInt
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/#example'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    first:
+                        $arrayElemAt:
+                            - '$favorites'
+                            - 0
+                    last:
+                        $arrayElemAt:
+                            - '$favorites'
+                            - -1

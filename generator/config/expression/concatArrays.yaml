@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $concatArrays
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/'
+type:
+    - resolvesToArray
+encode: single
+description: |
+    Concatenates arrays to return the concatenated array.
+arguments:
+    -
+        name: array
+        type:
+            - resolvesToArray
+        variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/#example'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $concatArrays:
+                            - '$instock'
+                            - '$ordered'

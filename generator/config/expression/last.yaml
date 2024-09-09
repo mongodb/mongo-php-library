@@ -1,0 +1,21 @@
+# $schema: ../schema.json
+name: $last
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/'
+type:
+    - resolvesToAny
+encode: single
+description: |
+    Returns the result of an expression for the last document in an array.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+tests:
+    -
+        name: 'Use in $addFields Stage'
+        pipeline:
+            -
+                $addFields:
+                    lastItem:
+                        $last: '$items'

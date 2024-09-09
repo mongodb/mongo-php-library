@@ -1,0 +1,59 @@
+# $schema: ../schema.json
+name: $substrCP
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/'
+type:
+    - resolvesToString
+encode: array
+description: |
+    Returns the substring of a string. Starts with the character at the specified UTF-8 code point (CP) index (zero-based) in the string and continues for the number of code points specified.
+arguments:
+    -
+        name: string
+        type:
+            - resolvesToString
+    -
+        name: start
+        type:
+            - resolvesToInt
+        description: |
+            If start is a negative number, $substr returns an empty string "".
+    -
+        name: length
+        type:
+            - resolvesToInt
+        description: |
+            If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
+tests:
+    -
+        name: 'Single-Byte Character Set'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/#single-byte-character-set'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    yearSubstring:
+                        $substrCP:
+                            - '$quarter'
+                            - 0
+                            - 2
+                    quarterSubtring:
+                        $substrCP:
+                            - '$quarter'
+                            - 2
+                            -
+                                $subtract:
+                                    -
+                                        $strLenCP: '$quarter'
+                                    - 2
+    -
+        name: 'Single-Byte and Multibyte Character Set'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/#single-byte-and-multibyte-character-set'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    menuCode:
+                        $substrCP:
+                            - '$name'
+                            - 0
+                            - 3

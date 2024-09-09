@@ -1,0 +1,22 @@
+# $schema: ../schema.json
+name: $ne
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/ne/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches all values that are not equal to a specified value.
+arguments:
+    -
+        name: value
+        type:
+            - any
+tests:
+    -
+        name: 'Match Document Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/ne/#match-document-fields'
+        pipeline:
+            -
+                $match:
+                    quantity:
+                        $ne: 20

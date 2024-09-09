@@ -5,9 +5,9 @@ namespace MongoDB\Tests;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use TypeError;
 
 use function MongoDB\apply_type_map_to_document;
 use function MongoDB\create_field_path_type_map;
@@ -115,8 +115,7 @@ class FunctionsTest extends TestCase
     /** @dataProvider provideInvalidDocumentValuesForChecks */
     public function testDocumentToArrayArgumentTypeCheck($document): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected $document to have type "document" (array or object)');
+        $this->expectException(TypeError::class);
         document_to_array($document);
     }
 
@@ -154,7 +153,7 @@ class FunctionsTest extends TestCase
     /** @dataProvider provideInvalidDocumentValuesForChecks */
     public function testIsFirstKeyOperatorArgumentTypeCheck($document): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         is_first_key_operator($document);
     }
 

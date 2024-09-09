@@ -1,0 +1,35 @@
+# $schema: ../schema.json
+name: $setDifference
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/'
+type:
+    - resolvesToArray
+encode: array
+description: |
+    Returns a set with elements that appear in the first set but not in the second set; i.e. performs a relative complement of the second set relative to the first. Accepts exactly two argument expressions.
+arguments:
+    -
+        name: expression1
+        type:
+            - resolvesToArray
+        description: |
+            The arguments can be any valid expression as long as they each resolve to an array.
+    -
+        name: expression2
+        type:
+            - resolvesToArray
+        description: |
+            The arguments can be any valid expression as long as they each resolve to an array.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/#example'
+        pipeline:
+            -
+                $project:
+                    flowerFieldA: 1
+                    flowerFieldB: 1
+                    inBOnly:
+                        $setDifference:
+                            - '$flowerFieldB'
+                            - '$flowerFieldA'
+                    _id: 0

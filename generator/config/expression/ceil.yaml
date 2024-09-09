@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $ceil
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the smallest integer greater than or equal to the specified number.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+        description: |
+            If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/#example'
+        pipeline:
+            -
+                $project:
+                    value: 1
+                    ceilingValue:
+                        $ceil: '$value'

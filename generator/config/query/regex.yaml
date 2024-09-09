@@ -1,0 +1,33 @@
+# $schema: ../schema.json
+name: $regex
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/regex/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Selects documents where values match a specified regular expression.
+arguments:
+    -
+        name: regex
+        type:
+            - regex
+
+tests:
+    -
+        name: 'Perform a LIKE Match'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-a-like-match'
+        pipeline:
+            -
+                $match:
+                    sku:
+                        $regex:
+                            !bson_regex '789$'
+    -
+        name: 'Perform Case-Insensitive Regular Expression Match'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-case-insensitive-regular-expression-match'
+        pipeline:
+            -
+                $match:
+                    sku:
+                        $regex:
+                            !bson_regex ['^ABC', 'i']

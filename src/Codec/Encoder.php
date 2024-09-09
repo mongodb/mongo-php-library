@@ -28,22 +28,20 @@ interface Encoder
     /**
      * Checks if the encoder supports a given value.
      *
-     * @param mixed $value
      * @psalm-assert-if-true NativeType $value
      */
-    public function canEncode($value): bool;
+    public function canEncode(mixed $value): bool;
 
     /**
      * Encodes a given value. If the encoder does not support the value, it
      * should throw an exception.
      *
-     * @param mixed $value
      * @psalm-param NativeType $value
      * @return mixed
      * @psalm-return BSONType
      * @throws UnsupportedValueException if the encoder does not support the value
      */
-    public function encode($value);
+    public function encode(mixed $value);
 
     /**
      * Encodes a given value if supported, otherwise returns the value as-is.
@@ -51,9 +49,8 @@ interface Encoder
      * The EncodeIfSupported trait provides a default implementation of this
      * method.
      *
-     * @param mixed $value
      * @return mixed
      * @psalm-return ($value is NativeType ? BSONType : $value)
      */
-    public function encodeIfSupported($value);
+    public function encodeIfSupported(mixed $value);
 }

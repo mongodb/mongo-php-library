@@ -215,7 +215,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
                 $attempts++;
                 $primary->executeCommand('admin', new Command(['replSetStepDown' => 5, 'force' => true]));
                 $success = true;
-            } catch (DriverException $e) {
+            } catch (DriverException) {
                 if ($attempts == 10) {
                     $this->fail(sprintf('Could not successfully execute replSetStepDown within %d attempts', $attempts));
                 }
@@ -289,7 +289,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
             $this->insertDocuments(1);
 
             return;
-        } catch (DriverException $e) {
+        } catch (DriverException) {
             $this->client->getManager()->selectServer();
 
             return;

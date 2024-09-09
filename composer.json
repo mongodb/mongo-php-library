@@ -10,7 +10,7 @@
         { "name": "Jérôme Tamarelle", "email": "jerome.tamarelle@mongodb.com" }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "ext-hash": "*",
         "ext-json": "*",
         "ext-mongodb": "^1.20.0",
@@ -25,6 +25,9 @@
         "squizlabs/php_codesniffer": "^3.7",
         "symfony/phpunit-bridge": "^5.2",
         "vimeo/psalm": "^5.13"
+    },
+    "replace": {
+        "mongodb/builder": "*"
     },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" },

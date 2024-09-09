@@ -1,0 +1,44 @@
+# $schema: ../schema.json
+name: $setIntersection
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/'
+type:
+    - resolvesToArray
+encode: single
+description: |
+    Returns a set with elements that appear in all of the input sets. Accepts any number of argument expressions.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+        variadic: array
+tests:
+    -
+        name: 'Elements Array Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/#elements-array-example'
+        pipeline:
+            -
+                $project:
+                    flowerFieldA: 1
+                    flowerFieldB: 1
+                    commonToBoth:
+                        $setIntersection:
+                            - '$flowerFieldA'
+                            - '$flowerFieldB'
+                    _id: 0
+    -
+        name: 'Retrieve Documents for Roles Granted to the Current User'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/#retrieve-documents-for-roles-granted-to-the-current-user'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $not:
+                            # the example doesn't use an array inside $not, but the documentation say it is necessary
+                            -
+                                $eq:
+                                    -
+                                        $setIntersection:
+                                            - '$allowedRoles'
+                                            - '$$USER_ROLES.role'
+                                    - []

@@ -397,7 +397,7 @@ class Client
         if (self::$version === null) {
             try {
                 self::$version = InstalledVersions::getPrettyVersion('mongodb/mongodb') ?? 'unknown';
-            } catch (Throwable $t) {
+            } catch (Throwable) {
                 self::$version = 'error';
             }
         }

@@ -30,10 +30,6 @@ final class Context
 
     private ?Client $client = null;
 
-    public ?string $collectionName = null;
-
-    public string $databaseName;
-
     public array $defaultWriteOptions = [];
 
     public array $outcomeReadOptions = [];
@@ -54,10 +50,8 @@ final class Context
 
     private ?Client $encryptedClient = null;
 
-    private function __construct(string $databaseName, ?string $collectionName)
+    private function __construct(public string $databaseName, public ?string $collectionName = null)
     {
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
         $this->outcomeCollectionName = $collectionName;
         $this->internalClient = FunctionalTestCase::createTestClient();
     }

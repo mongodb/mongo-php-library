@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $maxDistance
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/maxDistance/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Specifies a maximum distance to limit the results of $near and $nearSphere queries. The 2dsphere and 2d indexes support $maxDistance.
+arguments:
+    -
+        name: value
+        type:
+            - number

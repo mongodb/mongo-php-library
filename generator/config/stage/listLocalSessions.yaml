@@ -1,0 +1,47 @@
+# $schema: ../schema.json
+name: $listLocalSessions
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/'
+type:
+    - stage
+encode: object
+description: |
+    Lists all active sessions recently in use on the currently connected mongos or mongod instance. These sessions may have not yet propagated to the system.sessions collection.
+arguments:
+    -
+        name: users
+        type:
+            - array
+        optional: true
+        description: |
+            Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
+    -
+        name: allUsers
+        type:
+            - bool
+        optional: true
+        description: |
+            Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
+tests:
+    -
+        name: 'List All Local Sessions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/#list-all-local-sessions'
+        pipeline:
+            -
+                $listLocalSessions:
+                    allUsers: true
+    -
+        name: 'List All Local Sessions for the Specified Users'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/#list-all-local-sessions-for-the-specified-users'
+        pipeline:
+            -
+                $listLocalSessions:
+                    users:
+                        -
+                            user: 'myAppReader'
+                            db: 'test'
+    -
+        name: 'List All Local Sessions for the Current User'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/#list-all-local-sessions-for-the-current-user'
+        pipeline:
+            -
+                $listLocalSessions: {}

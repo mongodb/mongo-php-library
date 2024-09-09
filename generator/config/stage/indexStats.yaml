@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $indexStats
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/'
+type:
+    - stage
+encode: object
+description: |
+    Returns statistics regarding the use of each index for the collection.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/#example'
+        pipeline:
+            -
+                $indexStats: {}

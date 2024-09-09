@@ -1,0 +1,23 @@
+# $schema: ../schema.json
+name: $strLenCP
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the number of UTF-8 code points in a string.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToString
+tests:
+    -
+        name: 'Single-Byte and Multibyte Character Set'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/#single-byte-and-multibyte-character-set'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    length:
+                        $strLenCP: '$name'

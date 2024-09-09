@@ -1,0 +1,59 @@
+# $schema: ../schema.json
+name: $currentOp
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/'
+type:
+    - stage
+encode: object
+description: |
+    Returns information on active and/or dormant operations for the MongoDB deployment. To run, use the db.aggregate() method.
+arguments:
+    -
+        name: allUsers
+        type:
+            - bool
+        optional: true
+    -
+        name: idleConnections
+        type:
+            - bool
+        optional: true
+    -
+        name: idleCursors
+        type:
+            - bool
+        optional: true
+    -
+        name: idleSessions
+        type:
+            - bool
+        optional: true
+    -
+        name: localOps
+        type:
+            - bool
+        optional: true
+tests:
+    -
+        name: 'Inactive Sessions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#inactive-sessions'
+        pipeline:
+            -
+                $currentOp:
+                    allUsers: true
+                    idleSessions: true
+            -
+                $match:
+                    active: false
+                    transaction:
+                        $exists: true
+    -
+        name: 'Sampled Queries'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#sampled-queries'
+        pipeline:
+            -
+                $currentOp:
+                    allUsers: true
+                    localOps: true
+            -
+                $match:
+                    desc: 'query analyzer'

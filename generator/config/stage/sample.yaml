@@ -1,0 +1,23 @@
+# $schema: ../schema.json
+name: $sample
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/'
+type:
+    - stage
+encode: object
+description: |
+    Randomly selects the specified number of documents from its input.
+arguments:
+    -
+        name: size
+        type:
+            - int
+        description: |
+            The number of documents to randomly select.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/#example'
+        pipeline:
+            -
+                $sample:
+                    size: 3

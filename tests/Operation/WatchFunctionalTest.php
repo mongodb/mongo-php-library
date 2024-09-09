@@ -1135,9 +1135,9 @@ class WatchFunctionalTest extends FunctionalTestCase
         try {
             $this->advanceCursorUntilValid($changeStream);
             $this->fail('Exception for missing resume token was not thrown');
-        } catch (ResumeTokenException $e) {
+        } catch (ResumeTokenException) {
             /* On server versions < 4.1.8, a client-side error is thrown. */
-        } catch (ServerException $e) {
+        } catch (ServerException) {
             /* On server versions >= 4.1.8, the error is thrown server-side. */
         }
 
@@ -1147,7 +1147,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         try {
             $changeStream->next();
             $this->fail('Exception for missing resume token was not thrown');
-        } catch (ResumeTokenException | ServerException $e) {
+        } catch (ResumeTokenException | ServerException) {
         }
 
         $this->assertFalse($changeStream->valid());
@@ -1365,7 +1365,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         try {
             $secondary = $this->manager->selectServer($readPreference);
-        } catch (ConnectionTimeoutException $e) {
+        } catch (ConnectionTimeoutException) {
             $this->markTestSkipped('Secondary is not available');
         }
 

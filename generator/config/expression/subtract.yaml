@@ -1,0 +1,60 @@
+# $schema: ../schema.json
+name: $subtract
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/'
+type:
+    - resolvesToInt
+    - resolvesToLong
+    - resolvesToDouble
+    - resolvesToDecimal
+    - resolvesToDate
+encode: array
+description: |
+    Returns the result of subtracting the second value from the first. If the two values are numbers, return the difference. If the two values are dates, return the difference in milliseconds. If the two values are a date and a number in milliseconds, return the resulting date. Accepts two argument expressions. If the two values are a date and a number, specify the date argument first as it is not meaningful to subtract a date from a number.
+arguments:
+    -
+        name: expression1
+        type:
+            - resolvesToNumber
+            - resolvesToDate
+    -
+        name: expression2
+        type:
+            - resolvesToNumber
+            - resolvesToDate
+tests:
+    -
+        name: 'Subtract Numbers'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-numbers'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    total:
+                        $subtract:
+                            -
+                                $add:
+                                    - '$price'
+                                    - '$fee'
+                            - '$discount'
+    -
+        name: 'Subtract Two Dates'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-two-dates'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    dateDifference:
+                        $subtract:
+                            - '$$NOW'
+                            - '$date'
+    -
+        name: 'Subtract Milliseconds from a Date'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-milliseconds-from-a-date'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    dateDifference:
+                        $subtract:
+                            - '$date'
+                            - 300000

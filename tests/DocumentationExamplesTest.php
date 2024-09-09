@@ -1501,7 +1501,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         try {
             $this->runTransactionWithRetry3([$this, 'updateEmployeeInfo3'], $client, $session);
-        } catch (\MongoDB\Driver\Exception\Exception $error) {
+        } catch (\MongoDB\Driver\Exception\Exception) {
             // Do something with error
         }
     }
@@ -1547,7 +1547,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
              * around this, we run a query on a secondary and rely on an
              * exception to let us know that no secondary is available. */
             $items->countDocuments([], ['readPreference' => new ReadPreference(ReadPreference::SECONDARY)]);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->markTestSkipped('Secondary is not available');
         }
 

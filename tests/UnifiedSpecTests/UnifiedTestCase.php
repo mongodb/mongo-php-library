@@ -24,23 +24,8 @@ use function PHPUnit\Framework\assertIsString;
  */
 final class UnifiedTestCase implements IteratorAggregate
 {
-    private stdClass $test;
-
-    private string $schemaVersion;
-
-    private ?array $runOnRequirements = null;
-
-    private ?array $createEntities = null;
-
-    private ?array $initialData = null;
-
-    private function __construct(stdClass $test, string $schemaVersion, ?array $runOnRequirements = null, ?array $createEntities = null, ?array $initialData = null)
+    private function __construct(private stdClass $test, private string $schemaVersion, private ?array $runOnRequirements = null, private ?array $createEntities = null, private ?array $initialData = null)
     {
-        $this->test = $test;
-        $this->schemaVersion = $schemaVersion;
-        $this->runOnRequirements = $runOnRequirements;
-        $this->createEntities = $createEntities;
-        $this->initialData = $initialData;
     }
 
     /**

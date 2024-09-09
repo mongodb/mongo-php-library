@@ -53,10 +53,6 @@ class BulkWrite implements Executable
     public const UPDATE_MANY = 'updateMany';
     public const UPDATE_ONE  = 'updateOne';
 
-    private string $databaseName;
-
-    private string $collectionName;
-
     /** @var array[] */
     private array $operations;
 
@@ -129,7 +125,7 @@ class BulkWrite implements Executable
      * @param array   $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $operations, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, array $operations, array $options = [])
     {
         if (empty($operations)) {
             throw new InvalidArgumentException('$operations is empty');
@@ -173,8 +169,6 @@ class BulkWrite implements Executable
             unset($options['writeConcern']);
         }
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
         $this->operations = $this->validateOperations($operations, $options['codec'] ?? null);
         $this->options = $options;
     }

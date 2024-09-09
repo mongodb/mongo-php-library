@@ -2,17 +2,19 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use TypeError;
 
 class InsertOneTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorDocumentArgumentTypeCheck($document): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($document instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
     }
 

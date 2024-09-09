@@ -1,0 +1,201 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Operator",
+    "definitions": {
+        "Operator": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "$comment": "The name of the operator. Must start with a $",
+                    "type": "string",
+                    "pattern": "^\\$[a-z0-9][a-zA-Z0-9]*$"
+                },
+                "link": {
+                    "$comment": "The link to the operator's documentation on MongoDB's website.",
+                    "type": "string",
+                    "format": "uri",
+                    "pattern": "^https://"
+                },
+                "type": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "accumulator",
+                            "stage",
+                            "query",
+                            "fieldQuery",
+                            "filter",
+                            "window",
+                            "geometry",
+                            "switchBranch",
+                            "resolvesToAny",
+                            "resolvesToNumber",
+                            "resolvesToDouble",
+                            "resolvesToString",
+                            "resolvesToObject",
+                            "resolvesToArray",
+                            "resolvesToBinData",
+                            "resolvesToObjectId",
+                            "resolvesToBool",
+                            "resolvesToDate",
+                            "resolvesToNull",
+                            "resolvesToRegex",
+                            "resolvesToJavascript",
+                            "resolvesToInt",
+                            "resolvesToTimestamp",
+                            "resolvesToLong",
+                            "resolvesToDecimal"
+                        ]
+                    }
+                },
+                "encode": {
+                    "$comment": "Specifies how operator parameters are encoded.",
+                    "$comment": "array: parameters are encoded as an array of values in the order they are defined by the spec",
+                    "$comment": "object: parameters are encoded as an object with keys matching the parameter names",
+                    "$comment": "single: get the single parameter value",
+                    "$comment": "group: specific for $group stage",
+                    "type": "string",
+                    "enum": [
+                        "array",
+                        "object",
+                        "flat_object",
+                        "dollar_object",
+                        "single",
+                        "group"
+                    ]
+                },
+                "description": {
+                    "$comment": "The description of the argument from MongoDB's documentation.",
+                    "type": "string"
+                },
+                "arguments": {
+                    "$comment": "An optional list of arguments for the operator.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Argument"
+                    }
+                },
+                "tests": {
+                    "$comment": "An optional list of examples for the operator.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Test"
+                    }
+                }
+            },
+            "required": [
+                "description",
+                "encode",
+                "link",
+                "name",
+                "type"
+            ],
+            "title": "Operator"
+        },
+        "Argument": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "pattern": "^(_?[a-z][a-zA-Z0-9]*|N)$"
+                },
+                "type": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "accumulator",
+                            "query",
+                            "fieldQuery",
+                            "pipeline",
+                            "window",
+                            "expression",
+                            "geometry",
+                            "fieldPath",
+                            "timeUnit",
+                            "sortSpec",
+                            "any",
+                            "resolvesToNumber", "numberFieldPath", "number",
+                            "resolvesToDouble", "doubleFieldPath", "double",
+                            "resolvesToString", "stringFieldPath", "string",
+                            "resolvesToObject", "objectFieldPath", "object",
+                            "resolvesToArray", "arrayFieldPath", "array",
+                            "resolvesToBinData", "binDataFieldPath", "binData",
+                            "resolvesToObjectId", "objectIdFieldPath", "objectId",
+                            "resolvesToBool", "boolFieldPath", "bool",
+                            "resolvesToDate", "dateFieldPath", "date",
+                            "resolvesToNull", "nullFieldPath", "null",
+                            "resolvesToRegex", "regexFieldPath", "regex",
+                            "resolvesToJavascript", "javascriptFieldPath", "javascript",
+                            "resolvesToInt", "intFieldPath", "int",
+                            "resolvesToTimestamp", "timestampFieldPath", "timestamp",
+                            "resolvesToLong", "longFieldPath", "long",
+                            "resolvesToDecimal", "decimalFieldPath", "decimal"
+                        ]
+                    }
+                },
+                "description": {
+                    "$comment": "The description of the argument from MongoDB's documentation.",
+                    "type": "string"
+                },
+                "optional": {
+                    "$comment": "Whether the argument is optional or not.",
+                    "type": "boolean"
+                },
+                "valueMin": {
+                    "$comment": "The minimum value for a numeric argument.",
+                    "type": "number"
+                },
+                "valueMax": {
+                    "$comment": "The minimum value for a numeric argument.",
+                    "type": "number"
+                },
+                "variadic": {
+                    "$comment": "Whether the argument is variadic or not.",
+                    "type": "string",
+                    "enum": [
+                        "array",
+                        "object"
+                    ]
+                },
+                "variadicMin": {
+                    "$comment": "The minimum number of arguments for a variadic parameter.",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "default": {
+                    "$comment": "The default value for the argument.",
+                    "type": ["array", "boolean", "number", "string"]
+                }
+            },
+            "required": [
+                "name",
+                "type"
+            ],
+            "title": "Argument"
+        },
+        "Test": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string",
+                    "format": "uri",
+                    "pattern": "^https://"
+                },
+                "pipeline": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                }
+            }
+        }
+    }
+}

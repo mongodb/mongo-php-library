@@ -213,10 +213,9 @@ final class Operation
     /**
      * Executes the operation with a given context.
      *
-     * @return mixed
      * @throws LogicException if the operation is unsupported
      */
-    private function execute(FunctionalTestCase $test, Context $context)
+    private function execute(FunctionalTestCase $test, Context $context): mixed
     {
         switch ($this->object) {
             case self::OBJECT_CLIENT:
@@ -266,10 +265,9 @@ final class Operation
     /**
      * Executes the client operation and return its result.
      *
-     * @return mixed
      * @throws LogicException if the collection operation is unsupported
      */
-    private function executeForClient(Client $client, Context $context)
+    private function executeForClient(Client $client, Context $context): mixed
     {
         $args = $context->prepareOptions($this->arguments);
         $context->replaceArgumentSessionPlaceholder($args);
@@ -295,10 +293,9 @@ final class Operation
     /**
      * Executes the collection operation and return its result.
      *
-     * @return mixed
      * @throws LogicException if the collection operation is unsupported
      */
-    private function executeForCollection(Collection $collection, Context $context)
+    private function executeForCollection(Collection $collection, Context $context): mixed
     {
         $args = $context->prepareOptions($this->arguments);
         $context->replaceArgumentSessionPlaceholder($args);
@@ -435,10 +432,9 @@ final class Operation
     /**
      * Executes the database operation and return its result.
      *
-     * @return mixed
      * @throws LogicException if the database operation is unsupported
      */
-    private function executeForDatabase(Database $database, Context $context)
+    private function executeForDatabase(Database $database, Context $context): mixed
     {
         $args = $context->prepareOptions($this->arguments);
         $context->replaceArgumentSessionPlaceholder($args);
@@ -488,10 +484,9 @@ final class Operation
     /**
      * Executes the GridFS bucket operation and return its result.
      *
-     * @return mixed
      * @throws LogicException if the database operation is unsupported
      */
-    private function executeForGridFSBucket(Bucket $bucket, Context $context)
+    private function executeForGridFSBucket(Bucket $bucket, Context $context): mixed
     {
         $args = $context->prepareOptions($this->arguments);
         $context->replaceArgumentSessionPlaceholder($args);
@@ -529,10 +524,9 @@ final class Operation
     /**
      * Executes the session operation and return its result.
      *
-     * @return mixed
      * @throws LogicException if the session operation is unsupported
      */
-    private function executeForSession(Session $session, FunctionalTestCase $test, Context $context)
+    private function executeForSession(Session $session, FunctionalTestCase $test, Context $context): mixed
     {
         switch ($this->name) {
             case 'abortTransaction':

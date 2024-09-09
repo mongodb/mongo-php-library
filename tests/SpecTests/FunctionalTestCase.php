@@ -84,11 +84,8 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * Asserts that two given documents match.
      *
      * Extra keys in the actual value's document(s) will be ignored.
-     *
-     * @param array|object $expectedDocument
-     * @param array|object $actualDocument
      */
-    public static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
+    public static function assertDocumentsMatch(array|object $expectedDocument, array|object $actualDocument, string $message = ''): void
     {
         $constraint = new DocumentsMatchConstraint($expectedDocument, true, true);
 
@@ -173,10 +170,8 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      *
      * This decodes the file through the driver's extended JSON parser to ensure
      * proper handling of special types.
-     *
-     * @return array|object
      */
-    protected function decodeJson(string $json)
+    protected function decodeJson(string $json): array|object
     {
         return Document::fromJSON($json)->toPHP();
     }

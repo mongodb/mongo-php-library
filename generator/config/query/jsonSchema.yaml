@@ -1,0 +1,39 @@
+# $schema: ../schema.json
+name: $jsonSchema
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/'
+type:
+    - query
+encode: single
+description: |
+    Validate documents against the given JSON Schema.
+arguments:
+    -
+        name: schema
+        type:
+            - object
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#syntax'
+        pipeline:
+            -
+                $match:
+                    $jsonSchema:
+                        required:
+                            - 'name'
+                            - 'major'
+                            - 'gpa'
+                            - 'address'
+                        properties:
+                            name:
+                                bsonType: 'string'
+                                description: 'must be a string and is required'
+                            address:
+                                bsonType: 'object'
+                                required:
+                                    - 'zipcode'
+                                properties:
+                                    street:
+                                        bsonType: 'string'
+                                    zipcode:
+                                        bsonType: 'string'

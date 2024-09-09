@@ -1,0 +1,37 @@
+# $schema: ../schema.json
+name: $count
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/'
+type:
+    - accumulator
+    - window
+encode: object
+description: |
+    Returns the number of documents in the group or window.
+    Distinct from the $count pipeline stage.
+    New in MongoDB 5.0.
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--group-stage'
+        pipeline:
+            -
+                $group:
+                    _id: '$state'
+                    countNumberOfDocumentsForState:
+                        $count: {}
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        countNumberOfDocumentsForState:
+                            $count: {}
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

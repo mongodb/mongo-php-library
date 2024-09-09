@@ -1,0 +1,43 @@
+# $schema: ../schema.json
+name: $substr
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substr/'
+type:
+    - resolvesToString
+encode: array
+description: |
+    Deprecated. Use $substrBytes or $substrCP.
+arguments:
+    -
+        name: string
+        type:
+            - resolvesToString
+    -
+        name: start
+        type:
+            - resolvesToInt
+        description: |
+            If start is a negative number, $substr returns an empty string "".
+    -
+        name: length
+        type:
+            - resolvesToInt
+        description: |
+            If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substr/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    yearSubstring:
+                        $substr:
+                            - '$quarter'
+                            - 0
+                            - 2
+                    quarterSubtring:
+                        $substr:
+                            - '$quarter'
+                            - 2
+                            - -1

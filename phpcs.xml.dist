@@ -12,12 +12,17 @@
     <file>benchmark/src</file>
     <file>src</file>
     <file>examples</file>
+    <file>generator/src</file>
+    <file>generator/config</file>
     <file>tests</file>
     <file>tools</file>
     <file>rector.php</file>
 
+    <!-- Ignore auto-generated code -->
+    <exclude-pattern>src/Builder/(Accumulator|Expression|Query|Projection|Stage)/*\.php</exclude-pattern>
+
     <!-- Target minimum supported PHP version -->
-    <config name="php_version" value="70400"/>
+    <config name="php_version" value="80100"/>
 
     <!-- ****************************************** -->
     <!-- Import rules from doctrine/coding-standard -->
@@ -40,6 +45,7 @@
         <!-- **************************************** -->
         <exclude name="Generic.Formatting.MultipleStatementAlignment" />
         <exclude name="Squiz.Commenting.FunctionComment.ThrowsNoFullStop" />
+        <exclude name="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat.DisallowedShortNullable" />
 
         <!-- Keep long typehints (for now) -->
         <exclude name="PSR12.Keywords.ShortFormTypeKeywords" />

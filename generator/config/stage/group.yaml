@@ -1,0 +1,122 @@
+# $schema: ../schema.json
+name: $group
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/'
+type:
+    - stage
+encode: group
+description: |
+    Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group. Consumes all input documents and outputs one document per each distinct group. The output documents only contain the identifier field and, if specified, accumulated fields.
+arguments:
+    -
+        name: _id
+        type:
+            - expression
+        description: |
+            The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
+    -
+        name: field
+        type:
+            - accumulator
+        variadic: object
+        variadicMin: 0
+        description: |
+            Computed using the accumulator operators.
+tests:
+    -
+        name: 'Count the Number of Documents in a Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#count-the-number-of-documents-in-a-collection'
+        pipeline:
+            -
+                $group:
+                    _id: ~
+                    count:
+                        $count: {}
+    -
+        name: 'Retrieve Distinct Values'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#retrieve-distinct-values'
+        pipeline:
+            -
+                $group:
+                    _id: '$item'
+    -
+        name: 'Group by Item Having'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-by-item-having'
+        pipeline:
+            -
+                $group:
+                    _id: '$item'
+                    totalSaleAmount:
+                        $sum:
+                            $multiply:
+                                - '$price'
+                                - '$quantity'
+            -
+                $match:
+                    totalSaleAmount:
+                        $gte: 100
+    -
+        name: 'Calculate Count Sum and Average'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#calculate-count--sum--and-average'
+        pipeline:
+            -
+                $match:
+                    date:
+                        $gte: !bson_utcdatetime '2014-01-01'
+                        $lt: !bson_utcdatetime '2015-01-01'
+            -
+                $group:
+                    _id:
+                        $dateToString:
+                            format: '%Y-%m-%d'
+                            date: '$date'
+                    totalSaleAmount:
+                        $sum:
+                            $multiply:
+                                - '$price'
+                                - '$quantity'
+                    averageQuantity:
+                        $avg: '$quantity'
+                    count:
+                        $sum: 1
+            -
+                $sort:
+                    totalSaleAmount: -1
+    -
+        name: 'Group by null'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-by-null'
+        pipeline:
+            -
+                $group:
+                    _id: ~
+                    totalSaleAmount:
+                        $sum:
+                            $multiply:
+                                - '$price'
+                                - '$quantity'
+                    averageQuantity:
+                        $avg: '$quantity'
+                    count:
+                        $sum: 1
+    -
+        name: 'Pivot Data'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#pivot-data'
+        pipeline:
+            -
+                $group:
+                    _id: '$author'
+                    books:
+                        $push: '$title'
+    -
+        name: 'Group Documents by author'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-documents-by-author'
+        pipeline:
+            -
+                $group:
+                    _id: '$author'
+                    books:
+                        $push: '$$ROOT'
+            -
+                $addFields:
+                    totalCopies:
+                        # $sum: '$books.copies'
+                        $sum: ['$books.copies']

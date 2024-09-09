@@ -1,0 +1,74 @@
+# $schema: ../schema.json
+name: $replaceWith
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/'
+type:
+    - stage
+encode: single
+description: |
+    Replaces a document with the specified embedded document. The operation replaces all existing fields in the input document, including the _id field. Specify a document embedded in the input document to promote the embedded document to the top level.
+    Alias for $replaceRoot.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToObject
+tests:
+    -
+        name: 'an Embedded Document Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-an-embedded-document-field'
+        pipeline:
+            -
+                $replaceWith:
+                    $mergeObjects:
+                        -
+                            dogs: 0
+                            cats: 0
+                            birds: 0
+                            fish: 0
+                        - '$pets'
+    -
+        name: 'a Document Nested in an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-document-nested-in-an-array'
+        pipeline:
+            -
+                # The builder uses the verbose form of the $unwind operator
+                # $unwind: '$grades'
+                $unwind:
+                    path: '$grades'
+            -
+                $match:
+                    grades.grade:
+                        $gte: 90
+            -
+                $replaceWith: '$grades'
+    -
+        name: 'a Newly Created Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-newly-created-document'
+        pipeline:
+            -
+                $match:
+                    status: 'C'
+            -
+                $replaceWith:
+                    _id: '$_id'
+                    item: '$item'
+                    amount:
+                        $multiply:
+                            - '$price'
+                            - '$quantity'
+                    status: 'Complete'
+                    asofDate: '$$NOW'
+    -
+        name: 'a New Document Created from $$ROOT and a Default Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-new-document-created-from---root-and-a-default-document'
+        pipeline:
+            -
+                $replaceWith:
+                    $mergeObjects:
+                        -
+                            _id: ''
+                            name: ''
+                            email: ''
+                            cell: ''
+                            home: ''
+                        - '$$ROOT'

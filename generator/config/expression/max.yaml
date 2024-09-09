@@ -1,0 +1,35 @@
+# $schema: ../schema.json
+name: $max
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/'
+type:
+    - resolvesToAny
+encode: single
+description: |
+    Returns the maximum value that results from applying an expression to each document.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+        variadic: array
+tests:
+    -
+        name: 'Use in $project Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/#use-in--project-stage'
+        pipeline:
+            -
+                $project:
+                    quizMax:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $max: '$quizzes'
+                        $max:
+                            - '$quizzes'
+                    labMax:
+                        # $max: '$labs'
+                        $max:
+                            - '$labs'
+                    examMax:
+                        $max:
+                            - '$final'
+                            - '$midterm'

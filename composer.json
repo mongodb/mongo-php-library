@@ -26,6 +26,9 @@
         "symfony/phpunit-bridge": "^5.2",
         "vimeo/psalm": "^5.13"
     },
+    "replace": {
+        "mongodb/builder": "*"
+    },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" },
         "files": [ "src/functions.php" ]

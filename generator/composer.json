@@ -1,0 +1,32 @@
+{
+    "name": "mongodb/code-generator",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../",
+            "symlink": true
+        }
+    ],
+    "replace": {
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*"
+    },
+    "require": {
+        "mongodb/mongodb": "@dev",
+        "nette/php-generator": "^4.1.5",
+        "nikic/php-parser": "^5",
+        "symfony/console": "^7",
+        "symfony/finder": "^7",
+        "symfony/yaml": "^7"
+    },
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "MongoDB\\CodeGenerator\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

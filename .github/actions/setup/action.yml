@@ -11,6 +11,9 @@ inputs:
     description: "INI values to pass along to setup-php action"
     required: false
     default: ""
+  working-directory:
+    description: "The directory where composer.json is located, if it is not in the repository root."
+    required: false
 
 runs:
   using: composite
@@ -49,3 +52,4 @@ runs:
         # Revert when psalm supports PHP 8.4
         # composer-options: "--no-suggest"
         composer-options: "--no-suggest ${{ inputs.php-version == '8.4' && '--ignore-platform-req=php+' || '' }}"
+        working-directory: "${{ inputs.working-directory }}"

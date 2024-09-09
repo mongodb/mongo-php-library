@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $gte
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Returns true if the first value is greater than or equal to the second.
+arguments:
+    -
+        name: expression1
+        type:
+            - expression
+    -
+        name: expression2
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    qty: 1
+                    qtyGte250:
+                        $gte:
+                            - '$qty'
+                            - 250
+                    _id: 0

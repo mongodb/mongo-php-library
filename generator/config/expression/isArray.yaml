@@ -1,0 +1,36 @@
+# $schema: ../schema.json
+name: $isArray
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Determines if the operand is an array. Returns a boolean.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/#example'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $cond:
+                            if:
+                                $and:
+                                    # Example uses the short form, the builder always generates the verbose form
+                                    -
+                                        $isArray:
+                                            - '$instock'
+                                    -
+                                        $isArray:
+                                            - '$ordered'
+                            then:
+                                $concatArrays:
+                                    - '$instock'
+                                    - '$ordered'
+                            else: 'One or more fields is not an array.'

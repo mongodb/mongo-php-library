@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $toHashedIndexKey
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toHashedIndexKey/'
+type:
+  - resolvesToLong
+encode: single
+description: |
+  Computes and returns the hash value of the input expression using the same hash function that MongoDB uses to create a hashed index. A hash function maps a key or string to a fixed-size numeric value.
+arguments:
+  -
+    name: value
+    type:
+      - expression
+    description: |
+      key or string to hash
+tests:
+  -
+    name: 'Example'
+    link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toHashedIndexKey/#example'
+    pipeline:
+      -
+        $documents:
+          -
+            val: 'string to hash'
+      -
+        $addFields:
+          hashedVal:
+            $toHashedIndexKey: '$val'

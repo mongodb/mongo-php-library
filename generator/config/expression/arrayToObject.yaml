@@ -1,0 +1,50 @@
+# $schema: ../schema.json
+name: $arrayToObject
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/'
+type:
+    - resolvesToObject
+encode: array
+description: |
+    Converts an array of key value pairs to a document.
+arguments:
+    -
+        name: array
+        type:
+            - resolvesToArray
+tests:
+    -
+        name: '$arrayToObject Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/#-arraytoobject--example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    dimensions:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $arrayToObject: '$dimensions'
+                        $arrayToObject:
+                            - '$dimensions'
+    -
+        name: '$objectToArray and $arrayToObject Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/#-objecttoarray----arraytoobject-example'
+        pipeline:
+            -
+                $addFields:
+                    instock:
+                        $objectToArray: '$instock'
+            -
+                $addFields:
+                    instock:
+                        $concatArrays:
+                            - '$instock'
+                            -
+                                -
+                                    k: 'total'
+                                    v:
+                                        $sum:
+                                            - '$instock.v'
+            -
+                $addFields:
+                    instock:
+                        $arrayToObject:
+                            - '$instock'

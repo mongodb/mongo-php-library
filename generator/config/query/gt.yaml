@@ -1,0 +1,22 @@
+# $schema: ../schema.json
+name: $gt
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/gt/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches values that are greater than a specified value.
+arguments:
+    -
+        name: value
+        type:
+            - any
+tests:
+    -
+        name: 'Match Document Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/gt/#match-document-fields'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $gt: 20

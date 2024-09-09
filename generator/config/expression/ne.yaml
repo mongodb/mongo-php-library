@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $ne
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Returns true if the values are not equivalent.
+arguments:
+    -
+        name: expression1
+        type:
+            - expression
+    -
+        name: expression2
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    qty: 1
+                    qtyNe250:
+                        $ne:
+                            - '$qty'
+                            - 250
+                    _id: 0

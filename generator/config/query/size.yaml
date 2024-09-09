@@ -1,0 +1,22 @@
+# $schema: ../schema.json
+name: $size
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/size/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Selects documents if the array field is a specified size.
+arguments:
+    -
+        name: value
+        type:
+            - int
+tests:
+    -
+        name: 'Query an Array by Array Length'
+        link: 'https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length'
+        pipeline:
+            -
+                $match:
+                    tags:
+                        $size: 3

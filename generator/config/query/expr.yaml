@@ -1,0 +1,47 @@
+# $schema: ../schema.json
+name: $expr
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/'
+type:
+    - query
+encode: single
+description: |
+    Allows use of aggregation expressions within the query language.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Compare Two Fields from A Single Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/#compare-two-fields-from-a-single-document'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $gt:
+                            - '$spent'
+                            - '$budget'
+    -
+        name: 'Using $expr With Conditional Statements'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/#using--expr-with-conditional-statements'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $lt:
+                            -
+                                $cond:
+                                    if:
+                                        $gte:
+                                            - '$qty'
+                                            - 100
+                                    then:
+                                        $multiply:
+                                            - '$price'
+                                            - 0.5
+                                    else:
+                                        $multiply:
+                                            - '$price'
+                                            - 0.75
+                            - 5

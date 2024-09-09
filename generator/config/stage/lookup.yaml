@@ -1,0 +1,165 @@
+# $schema: ../schema.json
+name: $lookup
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/'
+type:
+    - stage
+encode: object
+description: |
+    Performs a left outer join to another collection in the same database to filter in documents from the "joined" collection for processing.
+arguments:
+    -
+        name: from
+        type:
+            - string
+        optional: true
+        description: |
+            Specifies the collection in the same database to perform the join with.
+            from is optional, you can use a $documents stage in a $lookup stage instead. For an example, see Use a $documents Stage in a $lookup Stage.
+            Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
+    -
+        name: localField
+        type:
+            - string
+        optional: true
+        description: |
+            Specifies the field from the documents input to the $lookup stage. $lookup performs an equality match on the localField to the foreignField from the documents of the from collection. If an input document does not contain the localField, the $lookup treats the field as having a value of null for matching purposes.
+    -
+        name: foreignField
+        type:
+            - string
+        optional: true
+        description: |
+            Specifies the field from the documents in the from collection. $lookup performs an equality match on the foreignField to the localField from the input documents. If a document in the from collection does not contain the foreignField, the $lookup treats the value as null for matching purposes.
+    -
+        name: let
+        type:
+            - object # of expression
+        optional: true
+        description: |
+            Specifies variables to use in the pipeline stages. Use the variable expressions to access the fields from the joined collection's documents that are input to the pipeline.
+    -
+        name: pipeline
+        type:
+            - pipeline
+        optional: true
+        description: |
+            Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].
+            The pipeline cannot include the $out stage or the $merge stage. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
+            The pipeline cannot directly access the joined document fields. Instead, define variables for the joined document fields using the let option and then reference the variables in the pipeline stages.
+    -
+        name: as
+        type:
+            - string
+        description: |
+            Specifies the name of the new array field to add to the input documents. The new array field contains the matching documents from the from collection. If the specified name already exists in the input document, the existing field is overwritten.
+tests:
+    -
+        name: 'Perform a Single Equality Join with $lookup'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-a-single-equality-join-with--lookup'
+        pipeline:
+            -
+                $lookup:
+                    from: 'inventory'
+                    localField: 'item'
+                    foreignField: 'sku'
+                    as: 'inventory_docs'
+    -
+        name: 'Use $lookup with an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with-an-array'
+        pipeline:
+            -
+                $lookup:
+                    from: 'members'
+                    localField: 'enrollmentlist'
+                    foreignField: 'name'
+                    as: 'enrollee_info'
+    -
+        name: 'Use $lookup with $mergeObjects'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with--mergeobjects'
+        pipeline:
+            -
+                $lookup:
+                    from: 'items'
+                    localField: 'item'
+                    foreignField: 'item'
+                    as: 'fromItems'
+            -
+                $replaceRoot:
+                    newRoot:
+                        $mergeObjects:
+                            -
+                                $arrayElemAt:
+                                    - '$fromItems'
+                                    - 0
+                            - '$$ROOT'
+            -
+                $project:
+                    fromItems: 0
+    -
+        name: 'Perform Multiple Joins and a Correlated Subquery with $lookup'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-multiple-joins-and-a-correlated-subquery-with--lookup'
+        pipeline:
+            -
+                $lookup:
+                    from: 'warehouses'
+                    let:
+                        order_item: '$item'
+                        order_qty: '$ordered'
+                    pipeline:
+                        -
+                            $match:
+                                $expr:
+                                    $and:
+                                        -
+                                            $eq:
+                                                - '$stock_item'
+                                                - '$$order_item'
+                                        -
+                                            $gte:
+                                                - '$instock'
+                                                - '$$order_qty'
+                        -
+                            $project:
+                                stock_item: 0
+                                _id: 0
+                    as: 'stockdata'
+    -
+        name: 'Perform an Uncorrelated Subquery with $lookup'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-an-uncorrelated-subquery-with--lookup'
+        pipeline:
+            -
+                $lookup:
+                    from: 'holidays'
+                    pipeline:
+                        -
+                            $match:
+                                year: 2018
+                        -
+                            $project:
+                                _id: 0
+                                date:
+                                    name: '$name'
+                                    date: '$date'
+                        -
+                            $replaceRoot:
+                                newRoot: '$date'
+                    as: 'holidays'
+    -
+        name: 'Perform a Concise Correlated Subquery with $lookup'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-a-concise-correlated-subquery-with--lookup'
+        pipeline:
+            -
+                $lookup:
+                    from: 'restaurants'
+                    localField: 'restaurant_name'
+                    foreignField: 'name'
+                    let:
+                        orders_drink: '$drink'
+                    pipeline:
+                        -
+                            $match:
+                                $expr:
+                                    $in:
+                                        - '$$orders_drink'
+                                        - '$beverages'
+                    as: 'matches'

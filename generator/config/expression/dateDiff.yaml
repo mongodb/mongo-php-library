@@ -1,0 +1,114 @@
+# $schema: ../schema.json
+name: $dateDiff
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/'
+type:
+    - resolvesToInt
+encode: object
+description: |
+    Returns the difference between two dates.
+arguments:
+    -
+        name: startDate
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The start of the time period. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: endDate
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The end of the time period. The endDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: unit
+        type:
+            - timeUnit
+        description: |
+            The time measurement unit between the startDate and endDate
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+    -
+        name: startOfWeek
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            Used when the unit is equal to week. Defaults to Sunday. The startOfWeek parameter is an expression that resolves to a case insensitive string
+tests:
+    -
+        name: 'Elapsed Time'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/#elapsed-time'
+        pipeline:
+            -
+                $group:
+                    _id: ~
+                    averageTime:
+                        $avg:
+                            $dateDiff:
+                                startDate: '$purchased'
+                                endDate: '$delivered'
+                                unit: 'day'
+            -
+                $project:
+                    _id: 0
+                    numDays:
+                        $trunc:
+                            - '$averageTime'
+                            - 1
+    -
+        name: 'Result Precision'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/#result-precision'
+        pipeline:
+            -
+                $project:
+                    Start: '$start'
+                    End: '$end'
+                    years:
+                        $dateDiff:
+                            startDate: '$start'
+                            endDate: '$end'
+                            unit: 'year'
+                    months:
+                        $dateDiff:
+                            startDate: '$start'
+                            endDate: '$end'
+                            unit: 'month'
+                    days:
+                        $dateDiff:
+                            startDate: '$start'
+                            endDate: '$end'
+                            unit: 'day'
+                    _id: 0
+    -
+        name: 'Weeks Per Month'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/#weeks-per-month'
+        pipeline:
+            -
+                $project:
+                    wks_default:
+                        $dateDiff:
+                            startDate: '$start'
+                            endDate: '$end'
+                            unit: 'week'
+                    wks_monday:
+                        $dateDiff:
+                            startDate: '$start'
+                            endDate: '$end'
+                            unit: 'week'
+                            startOfWeek: 'Monday'
+                    wks_friday:
+                        $dateDiff:
+                            startDate: '$start'
+                            endDate: '$end'
+                            unit: 'week'
+                            startOfWeek: 'fri'
+                    _id: 0

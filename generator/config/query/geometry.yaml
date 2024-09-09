@@ -1,0 +1,22 @@
+# $schema: ../schema.json
+name: $geometry
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geometry/'
+type:
+    - geometry
+encode: object
+description: |
+    Specifies a geometry in GeoJSON format to geospatial query operators.
+arguments:
+    -
+        name: type
+        type:
+            - string
+    -
+        name: coordinates
+        type:
+            - array
+    -
+        name: crs
+        type:
+            - object
+        optional: true

@@ -1,0 +1,22 @@
+# $schema: ../schema.json
+name: $lt
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/lt/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches values that are less than a specified value.
+arguments:
+    -
+        name: value
+        type:
+            - any
+tests:
+    -
+        name: 'Match Document Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/lt/#match-document-fields'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $lt: 20

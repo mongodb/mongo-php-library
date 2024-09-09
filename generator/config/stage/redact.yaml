@@ -1,0 +1,52 @@
+# $schema: ../schema.json
+name: $redact
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/'
+type:
+    - stage
+encode: single
+description: |
+    Reshapes each document in the stream by restricting the content for each document based on information stored in the documents themselves. Incorporates the functionality of $project and $match. Can be used to implement field level redaction. For each input document, outputs either one or zero documents.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Evaluate Access at Every Document Level'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#evaluate-access-at-every-document-level'
+        pipeline:
+            -
+                $match:
+                    year: 2014
+            -
+                $redact:
+                    $cond:
+                        if:
+                            $gt:
+                                -
+                                    $size:
+                                        $setIntersection:
+                                            - '$tags'
+                                            -
+                                                - 'STLW'
+                                                - 'G'
+                                - 0
+                        then: '$$DESCEND'
+                        else: '$$PRUNE'
+    -
+        name: 'Exclude All Fields at a Given Level'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#exclude-all-fields-at-a-given-level'
+        pipeline:
+            -
+                $match:
+                    status: 'A'
+            -
+                $redact:
+                    $cond:
+                        if:
+                            $eq:
+                                - '$level'
+                                - 5
+                        then: '$$PRUNE'
+                        else: '$$DESCEND'

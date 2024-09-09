@@ -1,0 +1,69 @@
+# $schema: ../schema.json
+name: $getField
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/'
+type:
+    - resolvesToAny
+encode: object
+description: |
+    Returns the value of a specified field from a document. You can use $getField to retrieve the value of fields with names that contain periods (.) or start with dollar signs ($).
+    New in MongoDB 5.0.
+arguments:
+    -
+        name: field
+        type:
+            - resolvesToString
+        description: |
+            Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
+            If field begins with a dollar sign ($), place the field name inside of a $literal expression to return its value.
+    -
+        name: input
+        type:
+            - expression
+        optional: true
+        description: |
+            Default: $$CURRENT
+            A valid expression that contains the field for which you want to return a value. input must resolve to an object, missing, null, or undefined. If omitted, defaults to the document currently being processed in the pipeline ($$CURRENT).
+tests:
+    -
+        name: 'Query Fields that Contain Periods'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-contain-periods--.-'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $gt:
+                            -
+                                # Example uses the short form, the builder always generates the verbose form
+                                # $getField: 'price.usd'
+                                $getField:
+                                    field: 'price.usd'
+                            - 200
+    -
+        name: 'Query Fields that Start with a Dollar Sign'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-start-with-a-dollar-sign----'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $gt:
+                            -
+                                $getField:
+                                    # Example uses the short form, the builder always generates the verbose form
+                                    # $literal: '$price'
+                                    field:
+                                        $literal: '$price'
+                            - 200
+    -
+        name: 'Query a Field in a Sub-document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-a-field-in-a-sub-document'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $lte:
+                            -
+                                $getField:
+                                    field:
+                                        $literal: '$small'
+                                    input: '$quantity'
+                            - 20

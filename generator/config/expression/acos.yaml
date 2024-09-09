@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $acos
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/'
+type:
+    - resolvesToDouble
+    - resolvesToDecimal
+encode: single
+description: |
+    Returns the inverse cosine (arc cosine) of a value in radians.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+        description: |
+            $acos takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
+            $acos returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
+            By default $acos returns values as a double. $acos can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/#example'
+        pipeline:
+            -
+                $addFields:
+                    angle_a:
+                        $radiansToDegrees:
+                            $acos:
+                                $divide:
+                                    - '$side_b'
+                                    - '$hypotenuse'

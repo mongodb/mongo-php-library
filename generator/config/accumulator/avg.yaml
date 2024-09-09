@@ -1,0 +1,45 @@
+# $schema: ../schema.json
+name: $avg
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns an average of numerical values. Ignores non-numeric values.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--group-stage'
+        pipeline:
+            - $group:
+                    _id: '$item'
+                    avgAmount:
+                        $avg:
+                            $multiply:
+                                - '$price'
+                                - '$quantity'
+                    avgQuantity:
+                        $avg: '$quantity'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        averageQuantityForState:
+                            $avg: '$quantity'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

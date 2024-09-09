@@ -1,0 +1,47 @@
+# $schema: ../schema.json
+name: $or
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/or/'
+type:
+    - query
+encode: single
+description: |
+    Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
+arguments:
+    -
+        name: queries
+        type:
+            - query
+        variadic: array
+        variadicMin: 1
+tests:
+    -
+        name: '$or Clauses'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/or/#-or-clauses-and-indexes'
+        pipeline:
+            -
+                $match:
+                    $or:
+                        -
+                            quantity:
+                                $lt: 20
+                        -
+                            price: 10
+
+    -
+        name: 'Error Handling'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/or/#error-handling'
+        pipeline:
+            -
+                $match:
+                    $or:
+                        -
+                            x:
+                                $eq: 0
+                        -
+                            $expr:
+                                $eq:
+                                    -
+                                        $divide:
+                                            - 1
+                                            - '$x'
+                                    - 3

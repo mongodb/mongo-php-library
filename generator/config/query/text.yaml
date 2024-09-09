@@ -1,0 +1,114 @@
+# $schema: ../schema.json
+name: $text
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/text/'
+type:
+    - query
+encode: dollar_object
+description: |
+    Performs text search.
+arguments:
+    -
+        name: search
+        type:
+            - string
+        description: |
+            A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase.
+    -
+        name: language
+        type:
+            - string
+        optional: true
+        description: |
+            The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer. If not specified, the search uses the default language of the index.
+            If you specify a default_language value of none, then the text index parses through each word in the field, including stop words, and ignores suffix stemming.
+    -
+        name: caseSensitive
+        type:
+            - bool
+        optional: true
+        description: |
+            A boolean flag to enable or disable case sensitive search. Defaults to false; i.e. the search defers to the case insensitivity of the text index.
+    -
+        name: diacriticSensitive
+        type:
+            - bool
+        optional: true
+        description: |
+            A boolean flag to enable or disable diacritic sensitive search against version 3 text indexes. Defaults to false; i.e. the search defers to the diacritic insensitivity of the text index.
+            Text searches against earlier versions of the text index are inherently diacritic sensitive and cannot be diacritic insensitive. As such, the $diacriticSensitive option has no effect with earlier versions of the text index.
+tests:
+    -
+        name: 'Search for a Single Word'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'coffee'
+    -
+        name: 'Match Any of the Search Terms'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'bake coffee cake'
+    -
+        name: 'Search a Different Language'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-a-different-language'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'leche'
+                        $language: 'es'
+    -
+        name: 'Case and Diacritic Insensitive Search'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/text/#case-and-diacritic-insensitive-search'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'сы́рники CAFÉS'
+    -
+        name: 'Perform Case Sensitive Search'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'Coffee'
+                        $caseSensitive: true
+            -
+                $match:
+                    $text:
+                        $search: '\"Café Con Leche\"'
+                        $caseSensitive: true
+    -
+        name: 'Diacritic Sensitive Search'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'CAFÉ'
+                        $diacriticSensitive: true
+    -
+        name: 'Text Search Score Examples'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search'
+        pipeline:
+            -
+                $match:
+                    $text:
+                        $search: 'CAFÉ'
+                        $diacriticSensitive: true
+            -
+                $project:
+                    score:
+                        $meta: 'textScore'
+            -
+                $sort:
+                    score:
+                        $meta: 'textScore'
+            -
+                $limit: 5

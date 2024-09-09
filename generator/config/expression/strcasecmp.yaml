@@ -1,0 +1,29 @@
+# $schema: ../schema.json
+name: $strcasecmp
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/'
+type:
+    - resolvesToInt
+encode: array
+description: |
+    Performs case-insensitive string comparison and returns: 0 if two strings are equivalent, 1 if the first string is greater than the second, and -1 if the first string is less than the second.
+arguments:
+    -
+        name: expression1
+        type:
+            - resolvesToString
+    -
+        name: expression2
+        type:
+            - resolvesToString
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    comparisonResult:
+                        $strcasecmp:
+                            - '$quarter'
+                            - '13q4'

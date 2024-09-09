@@ -1,0 +1,101 @@
+# $schema: ../schema.json
+name: $bucket
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/'
+type:
+    - stage
+encode: object
+description: |
+    Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
+arguments:
+    -
+        name: groupBy
+        type:
+            - expression # mainly fieldPath
+        description: |
+            An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
+            Unless $bucket includes a default specification, each input document must resolve the groupBy field path or expression to a value that falls within one of the ranges specified by the boundaries.
+    -
+        name: boundaries
+        type:
+            - array # of expression
+        description: |
+            An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
+            The specified values must be in ascending order and all of the same type. The exception is if the values are of mixed numeric types, such as:
+    -
+        name: default
+        type:
+            - expression
+        optional: true
+        description: |
+            A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does not fall into a bucket specified by boundaries.
+            If unspecified, each input document must resolve the groupBy expression to a value within one of the bucket ranges specified by boundaries or the operation throws an error.
+            The default value must be less than the lowest boundaries value, or greater than or equal to the highest boundaries value.
+            The default value can be of a different type than the entries in boundaries.
+    -
+        name: output
+        type:
+            - object # of Accumulator
+        optional: true
+        description: |
+            A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
+            If you do not specify an output document, the operation returns a count field containing the number of documents in each bucket.
+            If you specify an output document, only the fields specified in the document are returned; i.e. the count field is not returned unless it is explicitly included in the output document.
+tests:
+    -
+        name: 'Bucket by Year and Filter by Bucket Results'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/#bucket-by-year-and-filter-by-bucket-results'
+        pipeline:
+            -
+                $bucket:
+                    groupBy: '$year_born'
+                    boundaries: [1840, 1850, 1860, 1870, 1880]
+                    default: 'Other'
+                    output:
+                        count:
+                            $sum: 1
+                        artists:
+                            $push:
+                                name:
+                                    $concat:
+                                        - '$first_name'
+                                        - ' '
+                                        - '$last_name'
+                                year_born: '$year_born'
+            -
+                $match:
+                    count:
+                        $gt: 3
+    -
+        name: 'Use $bucket with $facet to Bucket by Multiple Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/#use--bucket-with--facet-to-bucket-by-multiple-fields'
+        pipeline:
+            -
+                $facet:
+                    price:
+                        -
+                            $bucket:
+                                groupBy: '$price'
+                                boundaries: [0, 200, 400]
+                                default: 'Other'
+                                output:
+                                    count:
+                                        $sum: 1
+                                    artwork:
+                                        $push:
+                                            title: '$title'
+                                            price: '$price'
+                                    averagePrice:
+                                        $avg: '$price'
+                    year:
+                        -
+                            $bucket:
+                                groupBy: '$year'
+                                boundaries: [1890, 1910, 1920, 1940]
+                                default: 'Unknown'
+                                output:
+                                    count:
+                                        $sum: 1
+                                    artwork:
+                                        $push:
+                                            title: '$title'
+                                            year: '$year'

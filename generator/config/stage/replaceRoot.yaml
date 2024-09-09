@@ -1,0 +1,71 @@
+# $schema: ../schema.json
+name: $replaceRoot
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/'
+type:
+    - stage
+encode: object
+description: |
+    Replaces a document with the specified embedded document. The operation replaces all existing fields in the input document, including the _id field. Specify a document embedded in the input document to promote the embedded document to the top level.
+arguments:
+    -
+        name: newRoot
+        type:
+            - resolvesToObject
+tests:
+    -
+        name: 'with an Embedded Document Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-an-embedded-document-field'
+        pipeline:
+            -
+                $replaceRoot:
+                    newRoot:
+                        $mergeObjects:
+                            -
+                                dogs: 0
+                                cats: 0
+                                birds: 0
+                                fish: 0
+                            - '$pets'
+    -
+        name: 'with a Document Nested in an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-document-nested-in-an-array'
+        pipeline:
+            -
+                # The builder uses the verbose form of the $unwind operator
+                # $unwind: '$grades'
+                $unwind:
+                    path: '$grades'
+            -
+                $match:
+                    grades.grade:
+                        $gte: 90
+            -
+                $replaceRoot:
+                    newRoot: '$grades'
+    -
+        name: 'with a newly created document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-newly-created-document'
+        pipeline:
+            -
+                $replaceRoot:
+                    newRoot:
+                        full_name:
+                            $concat:
+                                - '$first_name'
+                                - ' '
+                                - '$last_name'
+    -
+        name: 'with a New Document Created from $$ROOT and a Default Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-new-document-created-from---root-and-a-default-document'
+        pipeline:
+            -
+                $replaceRoot:
+                    newRoot:
+                        $mergeObjects:
+                            -
+                                _id: ''
+                                name: ''
+                                email: ''
+                                cell: ''
+                                home: ''
+                            - '$$ROOT'

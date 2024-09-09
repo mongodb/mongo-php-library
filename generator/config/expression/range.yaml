@@ -1,0 +1,42 @@
+# $schema: ../schema.json
+name: $range
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/range/'
+type:
+    - resolvesToArray # of int
+encode: array
+description: |
+    Outputs an array containing a sequence of integers according to user-defined inputs.
+arguments:
+    -
+        name: start
+        type:
+            - resolvesToInt
+        description: |
+            An integer that specifies the start of the sequence. Can be any valid expression that resolves to an integer.
+    -
+        name: end
+        type:
+            - resolvesToInt
+        description: |
+            An integer that specifies the exclusive upper limit of the sequence. Can be any valid expression that resolves to an integer.
+    -
+        name: step
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            An integer that specifies the increment value. Can be any valid expression that resolves to a non-zero integer. Defaults to 1.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/range/#example'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    city: 1
+                    Rest stops:
+                        $range:
+                            - 0
+                            - '$distance'
+                            - 25

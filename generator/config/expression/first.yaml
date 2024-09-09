@@ -1,0 +1,21 @@
+# $schema: ../schema.json
+name: $first
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/'
+type:
+    - resolvesToAny
+encode: single
+description: |
+    Returns the result of an expression for the first document in an array.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+tests:
+    -
+        name: 'Use in $addFields Stage'
+        pipeline:
+            -
+                $addFields:
+                    firstItem:
+                        $first: '$items'

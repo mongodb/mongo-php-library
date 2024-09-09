@@ -1,0 +1,48 @@
+# $schema: ../schema.json
+name: $rand
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/'
+type:
+    - resolvesToDouble
+encode: object
+description: |
+    Returns a random float between 0 and 1
+tests:
+    -
+        name: 'Generate Random Data Points'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#generate-random-data-points'
+        pipeline:
+            -
+                $set:
+                    amount:
+                        $multiply:
+                            -
+                                $rand: {}
+                            - 100
+            -
+                $set:
+                    amount:
+                        $floor: '$amount'
+            -
+                # Example uses the short form, the builder always generates the verbose form
+                # $merge: 'donors'
+                $merge:
+                    into: 'donors'
+    -
+        name: 'Select Random Items From a Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#select-random-items-from-a-collection'
+        pipeline:
+            -
+                $match:
+                    district: 3
+            -
+                $match:
+                    $expr:
+                        $lt:
+                            - 0.5
+                            -
+                                $rand: {}
+            -
+                $project:
+                    _id: 0
+                    name: 1
+                    registered: 1

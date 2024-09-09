@@ -34,6 +34,7 @@ use MongoDB\Operation\WithTransaction;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
+use stdClass;
 
 use function array_is_list;
 use function array_key_first;
@@ -66,6 +67,22 @@ function add_logger(LoggerInterface $logger): void
 function remove_logger(LoggerInterface $logger): void
 {
     PsrLogAdapter::removeLogger($logger);
+}
+
+/**
+ * Create a new stdClass instance with the provided properties.
+ * Use named arguments to specify the property names.
+ *     object( property1: value1, property2: value2 )
+ *
+ * If property names contain a dot or a dollar characters, use array unpacking syntax.
+ *     object( ...[ 'author.name' => 1, 'array.$' => 1 ] )
+ *
+ * @psalm-suppress MoreSpecificReturnType
+ * @psalm-suppress LessSpecificReturnStatement
+ */
+function object(mixed ...$values): stdClass
+{
+    return (object) $values;
 }
 
 /**

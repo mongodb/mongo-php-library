@@ -32,8 +32,6 @@ use MongoDB\Model\CollectionInfoIterator;
  */
 class ListCollections implements Executable
 {
-    private string $databaseName;
-
     private ListCollectionsCommand $listCollections;
 
     /**
@@ -61,9 +59,8 @@ class ListCollections implements Executable
      * @param array  $options      Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, array $options = [])
+    public function __construct(private string $databaseName, array $options = [])
     {
-        $this->databaseName = $databaseName;
         $this->listCollections = new ListCollectionsCommand($databaseName, ['nameOnly' => false] + $options);
     }
 

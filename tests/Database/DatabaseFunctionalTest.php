@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Database;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
@@ -124,7 +125,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testCommandCommandArgumentTypeCheck($command): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($command instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         $this->database->command($command);
     }
 

@@ -2,16 +2,18 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Count;
+use TypeError;
 
 class CountTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Count($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 

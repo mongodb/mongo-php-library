@@ -13,7 +13,6 @@ use PHPUnit\Framework\Assert;
 use stdClass;
 use Throwable;
 
-use function get_class;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertCount;
@@ -128,7 +127,7 @@ final class ExpectedError
     public function assert(?Throwable $e = null): void
     {
         if (! $this->isError && $e !== null) {
-            Assert::fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString()));
+            Assert::fail(sprintf("Operation threw unexpected %s: %s\n%s", $e::class, $e->getMessage(), $e->getTraceAsString()));
         }
 
         if (! $this->isError) {

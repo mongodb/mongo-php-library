@@ -2,15 +2,17 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\DatabaseCommand;
+use TypeError;
 
 class DatabaseCommandTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorCommandArgumentTypeCheck($command): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($command instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new DatabaseCommand($this->getDatabaseName(), $command);
     }
 

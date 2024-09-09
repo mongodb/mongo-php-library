@@ -48,11 +48,7 @@ final class Context
     /** @var array<string, EventObserver> */
     private array $eventObserversByClient = [];
 
-    private Client $internalClient;
-
     private bool $inLoop = false;
-
-    private string $uri;
 
     private string $singleMongosUri;
 
@@ -60,11 +56,9 @@ final class Context
 
     private ?object $advanceClusterTime = null;
 
-    public function __construct(Client $internalClient, string $uri)
+    public function __construct(private Client $internalClient, private string $uri)
     {
         $this->entityMap = new EntityMap();
-        $this->internalClient = $internalClient;
-        $this->uri = $uri;
 
         /* TODO: Consider leaving these unset, although that might require
          * redundant topology/serverless checks in Context::createClient(). */
@@ -232,8 +226,7 @@ final class Context
         }
     }
 
-    /** @param string|array $readPreferenceTags */
-    private function convertReadPreferenceTags($readPreferenceTags): array
+    private function convertReadPreferenceTags(string|array $readPreferenceTags): array
     {
         return array_map(
             static function (string $readPreferenceTagSet): array {

@@ -12,7 +12,6 @@ use MongoDB\Tests\TestCase;
 use stdClass;
 use Throwable;
 
-use function get_class;
 use function is_array;
 use function is_string;
 use function sprintf;
@@ -105,7 +104,7 @@ final class ErrorExpectation
     {
         if (! $this->isExpected) {
             if ($actual !== null) {
-                $test->fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($actual), $actual->getMessage(), $actual->getTraceAsString()));
+                $test->fail(sprintf("Operation threw unexpected %s: %s\n%s", $actual::class, $actual->getMessage(), $actual->getTraceAsString()));
             }
 
             $test->addToAssertionCount(1);

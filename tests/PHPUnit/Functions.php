@@ -83,14 +83,11 @@ if (! function_exists('PHPUnit\Framework\assertArrayHasKey')) {
      *
      * @see Assert::assertArrayHasKey
      *
-     * @param int|string        $key
-     * @param array|ArrayAccess $array
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertArrayHasKey($key, $array, string $message = ''): void
+    function assertArrayHasKey(int|string $key, array|ArrayAccess $array, string $message = ''): void
     {
         Assert::assertArrayHasKey(...func_get_args());
     }
@@ -102,14 +99,11 @@ if (! function_exists('PHPUnit\Framework\assertArrayNotHasKey')) {
      *
      * @see Assert::assertArrayNotHasKey
      *
-     * @param int|string        $key
-     * @param array|ArrayAccess $array
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertArrayNotHasKey($key, $array, string $message = ''): void
+    function assertArrayNotHasKey(int|string $key, array|ArrayAccess $array, string $message = ''): void
     {
         Assert::assertArrayNotHasKey(...func_get_args());
     }
@@ -212,13 +206,11 @@ if (! function_exists('PHPUnit\Framework\assertCount')) {
      *
      * @see Assert::assertCount
      *
-     * @param Countable|iterable $haystack
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertCount(int $expectedCount, $haystack, string $message = ''): void
+    function assertCount(int $expectedCount, Countable|iterable $haystack, string $message = ''): void
     {
         Assert::assertCount(...func_get_args());
     }
@@ -230,13 +222,11 @@ if (! function_exists('PHPUnit\Framework\assertNotCount')) {
      *
      * @see Assert::assertNotCount
      *
-     * @param Countable|iterable $haystack
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertNotCount(int $expectedCount, $haystack, string $message = ''): void
+    function assertNotCount(int $expectedCount, Countable|iterable $haystack, string $message = ''): void
     {
         Assert::assertNotCount(...func_get_args());
     }
@@ -1834,14 +1824,11 @@ if (! function_exists('PHPUnit\Framework\assertSameSize')) {
      *
      * @see Assert::assertSameSize
      *
-     * @param Countable|iterable $expected
-     * @param Countable|iterable $actual
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertSameSize($expected, $actual, string $message = ''): void
+    function assertSameSize(Countable|iterable $expected, Countable|iterable $actual, string $message = ''): void
     {
         Assert::assertSameSize(...func_get_args());
     }
@@ -1854,14 +1841,11 @@ if (! function_exists('PHPUnit\Framework\assertNotSameSize')) {
      *
      * @see Assert::assertNotSameSize
      *
-     * @param Countable|iterable $expected
-     * @param Countable|iterable $actual
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertNotSameSize($expected, $actual, string $message = ''): void
+    function assertNotSameSize(Countable|iterable $expected, Countable|iterable $actual, string $message = ''): void
     {
         Assert::assertNotSameSize(...func_get_args());
     }
@@ -2077,13 +2061,11 @@ if (! function_exists('PHPUnit\Framework\assertXmlStringEqualsXmlFile')) {
      *
      * @see Assert::assertXmlStringEqualsXmlFile
      *
-     * @param DOMDocument|string $actualXml
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws XmlException
      */
-    function assertXmlStringEqualsXmlFile(string $expectedFile, $actualXml, string $message = ''): void
+    function assertXmlStringEqualsXmlFile(string $expectedFile, DOMDocument|string $actualXml, string $message = ''): void
     {
         Assert::assertXmlStringEqualsXmlFile(...func_get_args());
     }
@@ -2095,13 +2077,11 @@ if (! function_exists('PHPUnit\Framework\assertXmlStringNotEqualsXmlFile')) {
      *
      * @see Assert::assertXmlStringNotEqualsXmlFile
      *
-     * @param DOMDocument|string $actualXml
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws XmlException
      */
-    function assertXmlStringNotEqualsXmlFile(string $expectedFile, $actualXml, string $message = ''): void
+    function assertXmlStringNotEqualsXmlFile(string $expectedFile, DOMDocument|string $actualXml, string $message = ''): void
     {
         Assert::assertXmlStringNotEqualsXmlFile(...func_get_args());
     }
@@ -2113,14 +2093,11 @@ if (! function_exists('PHPUnit\Framework\assertXmlStringEqualsXmlString')) {
      *
      * @see Assert::assertXmlStringEqualsXmlString
      *
-     * @param DOMDocument|string $expectedXml
-     * @param DOMDocument|string $actualXml
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws XmlException
      */
-    function assertXmlStringEqualsXmlString($expectedXml, $actualXml, string $message = ''): void
+    function assertXmlStringEqualsXmlString(DOMDocument|string $expectedXml, DOMDocument|string $actualXml, string $message = ''): void
     {
         Assert::assertXmlStringEqualsXmlString(...func_get_args());
     }
@@ -2132,14 +2109,11 @@ if (! function_exists('PHPUnit\Framework\assertXmlStringNotEqualsXmlString')) {
      *
      * @see Assert::assertXmlStringNotEqualsXmlString
      *
-     * @param DOMDocument|string $expectedXml
-     * @param DOMDocument|string $actualXml
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws XmlException
      */
-    function assertXmlStringNotEqualsXmlString($expectedXml, $actualXml, string $message = ''): void
+    function assertXmlStringNotEqualsXmlString(DOMDocument|string $expectedXml, DOMDocument|string $actualXml, string $message = ''): void
     {
         Assert::assertXmlStringNotEqualsXmlString(...func_get_args());
     }

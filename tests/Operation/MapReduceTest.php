@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\BSON\Document;
@@ -9,6 +11,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\MapReduce;
 use stdClass;
+use TypeError;
 
 class MapReduceTest extends TestCase
 {
@@ -18,7 +21,7 @@ class MapReduceTest extends TestCase
         $map = new Javascript('function() { emit(this.x, this.y); }');
         $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out);
     }
 

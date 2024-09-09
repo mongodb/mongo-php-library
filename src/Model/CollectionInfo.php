@@ -36,12 +36,9 @@ use function array_key_exists;
  */
 class CollectionInfo implements ArrayAccess
 {
-    private array $info;
-
     /** @param array $info Collection info */
-    public function __construct(array $info)
+    public function __construct(private array $info)
     {
-        $this->info = $info;
     }
 
     /**
@@ -147,12 +144,11 @@ class CollectionInfo implements ArrayAccess
      * Check whether a field exists in the collection information.
      *
      * @see https://php.net/arrayaccess.offsetexists
-     * @param mixed $offset
      * @return boolean
      * @psalm-param array-key $offset
      */
     #[ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset)
     {
         return array_key_exists($offset, $this->info);
     }
@@ -161,12 +157,11 @@ class CollectionInfo implements ArrayAccess
      * Return the field's value from the collection information.
      *
      * @see https://php.net/arrayaccess.offsetget
-     * @param mixed $offset
      * @return mixed
      * @psalm-param array-key $offset
      */
     #[ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset)
     {
         return $this->info[$offset];
     }
@@ -175,13 +170,11 @@ class CollectionInfo implements ArrayAccess
      * Not supported.
      *
      * @see https://php.net/arrayaccess.offsetset
-     * @param mixed $offset
-     * @param mixed $value
      * @throws BadMethodCallException
      * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
     }
@@ -190,12 +183,11 @@ class CollectionInfo implements ArrayAccess
      * Not supported.
      *
      * @see https://php.net/arrayaccess.offsetunset
-     * @param mixed $offset
      * @throws BadMethodCallException
      * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
     }

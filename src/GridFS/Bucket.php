@@ -86,10 +86,6 @@ class Bucket
 
     private CollectionWrapper $collectionWrapper;
 
-    private string $databaseName;
-
-    private Manager $manager;
-
     private string $bucketName;
 
     private bool $disableMD5;
@@ -131,7 +127,7 @@ class Bucket
      * @param array   $options      Bucket options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(Manager $manager, string $databaseName, array $options = [])
+    public function __construct(private Manager $manager, private string $databaseName, array $options = [])
     {
         if (isset($options['disableMD5']) && $options['disableMD5'] === false) {
             @trigger_error('Setting GridFS "disableMD5" option to "false" is deprecated since mongodb/mongodb 1.18 and will not be supported in version 2.0.', E_USER_DEPRECATED);
@@ -183,8 +179,6 @@ class Bucket
             throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
         }
 
-        $this->manager = $manager;
-        $this->databaseName = $databaseName;
         $this->bucketName = $options['bucketName'];
         $this->chunkSizeBytes = $options['chunkSizeBytes'];
         $this->codec = $options['codec'] ?? null;
@@ -238,7 +232,7 @@ class Bucket
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function delete($id)
+    public function delete(mixed $id)
     {
         $file = $this->collectionWrapper->findFileById($id);
         $this->collectionWrapper->deleteFileAndChunksById($id);
@@ -259,7 +253,7 @@ class Bucket
      * @throws StreamException if the file could not be uploaded
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function downloadToStream($id, $destination)
+    public function downloadToStream(mixed $id, $destination)
     {
         if (! is_resource($destination) || get_resource_type($destination) != 'stream') {
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
@@ -335,7 +329,7 @@ class Bucket
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function find($filter = [], array $options = [])
+    public function find(array|object $filter = [], array $options = [])
     {
         if ($this->codec && ! array_key_exists('codec', $options)) {
             $options['codec'] = $this->codec;
@@ -356,7 +350,7 @@ class Bucket
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function findOne($filter = [], array $options = [])
+    public function findOne(array|object $filter = [], array $options = [])
     {
         if ($this->codec && ! array_key_exists('codec', $options)) {
             $options['codec'] = $this->codec;
@@ -512,7 +506,7 @@ class Bucket
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function openDownloadStream($id)
+    public function openDownloadStream(mixed $id)
     {
         $file = $this->collectionWrapper->findFileById($id);
 
@@ -632,7 +626,7 @@ class Bucket
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function rename($id, string $newFilename)
+    public function rename(mixed $id, string $newFilename)
     {
         $updateResult = $this->collectionWrapper->updateFilenameForId($id, $newFilename);
 

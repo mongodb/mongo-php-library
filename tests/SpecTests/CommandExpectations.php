@@ -37,12 +37,8 @@ class CommandExpectations implements CommandSubscriber
     /** @var list<string> */
     private array $ignoredCommandNames = [];
 
-    private Client $observedClient;
-
-    private function __construct(Client $observedClient, array $events)
+    private function __construct(private Client $observedClient, array $events)
     {
-        $this->observedClient = $observedClient;
-
         foreach ($events as $event) {
             switch (key((array) $event)) {
                 case 'command_failed_event':

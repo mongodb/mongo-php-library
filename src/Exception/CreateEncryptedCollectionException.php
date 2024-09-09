@@ -19,7 +19,6 @@ namespace MongoDB\Exception;
 
 use Throwable;
 
-use function get_class;
 use function sprintf;
 
 /**
@@ -28,13 +27,9 @@ use function sprintf;
  */
 final class CreateEncryptedCollectionException extends RuntimeException
 {
-    private array $encryptedFields;
-
-    public function __construct(Throwable $previous, array $encryptedFields)
+    public function __construct(Throwable $previous, private array $encryptedFields)
     {
-        parent::__construct(sprintf('Creating encrypted collection failed due to previous %s: %s', get_class($previous), $previous->getMessage()), 0, $previous);
-
-        $this->encryptedFields = $encryptedFields;
+        parent::__construct(sprintf('Creating encrypted collection failed due to previous %s: %s', $previous::class, $previous->getMessage()), 0, $previous);
     }
 
     /**

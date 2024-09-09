@@ -28,7 +28,7 @@ class ResumeTokenException extends RuntimeException
      * @param mixed $value Actual value (used to derive the type)
      * @return self
      */
-    public static function invalidType($value)
+    public static function invalidType(mixed $value)
     {
         return new self(sprintf('Expected resume token to have type "array or object" but found "%s"', get_debug_type($value)));
     }

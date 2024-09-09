@@ -37,10 +37,6 @@ use function is_integer;
  */
 class EstimatedDocumentCount implements Executable, Explainable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
     private array $options;
 
     /**
@@ -67,11 +63,8 @@ class EstimatedDocumentCount implements Executable, Explainable
      * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, array $options = [])
     {
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }

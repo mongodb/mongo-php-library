@@ -86,12 +86,6 @@ class Collection
 
     private ?DocumentCodec $codec = null;
 
-    private string $collectionName;
-
-    private string $databaseName;
-
-    private Manager $manager;
-
     private ReadConcern $readConcern;
 
     private ReadPreference $readPreference;
@@ -130,7 +124,7 @@ class Collection
      * @param array   $options        Collection options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(Manager $manager, string $databaseName, string $collectionName, array $options = [])
+    public function __construct(private Manager $manager, private string $databaseName, private string $collectionName, array $options = [])
     {
         if (strlen($databaseName) < 1) {
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
@@ -159,10 +153,6 @@ class Collection
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
-
-        $this->manager = $manager;
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
 
         $this->codec = $options['codec'] ?? null;
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
@@ -277,7 +267,7 @@ class Collection
      *
      * @deprecated 1.4
      */
-    public function count($filter = [], array $options = [])
+    public function count(array|object $filter = [], array $options = [])
     {
         $options = $this->inheritReadOptions($options);
 
@@ -298,7 +288,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function countDocuments($filter = [], array $options = [])
+    public function countDocuments(array|object $filter = [], array $options = [])
     {
         $options = $this->inheritReadOptions($options);
 
@@ -320,7 +310,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function createIndex($key, array $options = [])
+    public function createIndex(array|object $key, array $options = [])
     {
         $operationOptionKeys = ['comment' => 1, 'commitQuorum' => 1, 'maxTimeMS' => 1, 'session' => 1, 'writeConcern' => 1];
         $indexOptions = array_diff_key($options, $operationOptionKeys);
@@ -378,7 +368,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function createSearchIndex($definition, array $options = []): string
+    public function createSearchIndex(array|object $definition, array $options = []): string
     {
         $index = ['definition' => $definition];
         if (isset($options['name'])) {
@@ -435,7 +425,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function deleteMany($filter, array $options = [])
+    public function deleteMany(array|object $filter, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
 
@@ -456,7 +446,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function deleteOne($filter, array $options = [])
+    public function deleteOne(array|object $filter, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
 
@@ -478,7 +468,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function distinct(string $fieldName, $filter = [], array $options = [])
+    public function distinct(string $fieldName, array|object $filter = [], array $options = [])
     {
         $options = $this->inheritReadOptions($options);
         $options = $this->inheritTypeMap($options);
@@ -528,7 +518,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function dropIndex($indexName, array $options = [])
+    public function dropIndex(string|IndexInfo $indexName, array $options = [])
     {
         $indexName = (string) $indexName;
 
@@ -636,7 +626,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function find($filter = [], array $options = [])
+    public function find(array|object $filter = [], array $options = [])
     {
         $options = $this->inheritReadOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
@@ -658,7 +648,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function findOne($filter = [], array $options = [])
+    public function findOne(array|object $filter = [], array $options = [])
     {
         $options = $this->inheritReadOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
@@ -683,7 +673,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function findOneAndDelete($filter, array $options = [])
+    public function findOneAndDelete(array|object $filter, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
@@ -713,7 +703,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function findOneAndReplace($filter, $replacement, array $options = [])
+    public function findOneAndReplace(array|object $filter, array|object $replacement, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
@@ -743,7 +733,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function findOneAndUpdate($filter, $update, array $options = [])
+    public function findOneAndUpdate(array|object $filter, array|object $update, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
@@ -868,7 +858,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function insertOne($document, array $options = [])
+    public function insertOne(array|object $document, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodec($options);
@@ -926,7 +916,7 @@ class Collection
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      * @throws UnexpectedValueException if the command response was malformed
      */
-    public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
+    public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, string|array|object $out, array $options = [])
     {
         $hasOutputCollection = ! is_mapreduce_output_inline($out);
 
@@ -991,7 +981,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function replaceOne($filter, $replacement, array $options = [])
+    public function replaceOne(array|object $filter, array|object $replacement, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodec($options);
@@ -1014,7 +1004,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function updateMany($filter, $update, array $options = [])
+    public function updateMany(array|object $filter, array|object $update, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
 
@@ -1036,7 +1026,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function updateOne($filter, $update, array $options = [])
+    public function updateOne(array|object $filter, array|object $update, array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
 
@@ -1056,7 +1046,7 @@ class Collection
      * @throws InvalidArgumentException for parameter parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function updateSearchIndex(string $name, $definition, array $options = []): void
+    public function updateSearchIndex(string $name, array|object $definition, array $options = []): void
     {
         $operation = new UpdateSearchIndex($this->databaseName, $this->collectionName, $name, $definition, $options);
         $server = select_server_for_write($this->manager, $options);

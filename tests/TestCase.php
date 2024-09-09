@@ -91,11 +91,8 @@ OUTPUT;
      *
      * Only fields in the expected document will be checked. The actual document
      * may contain additional fields.
-     *
-     * @param array|object $expectedDocument
-     * @param array|object $actualDocument
      */
-    public function assertMatchesDocument($expectedDocument, $actualDocument): void
+    public function assertMatchesDocument(array|object $expectedDocument, array|object $actualDocument): void
     {
         (new DocumentsMatchConstraint($expectedDocument, true, true))->evaluate($actualDocument);
     }
@@ -105,11 +102,8 @@ OUTPUT;
      *
      * The actual document will be compared directly with the expected document
      * and may not contain extra fields.
-     *
-     * @param array|object $expectedDocument
-     * @param array|object $actualDocument
      */
-    public function assertSameDocument($expectedDocument, $actualDocument): void
+    public function assertSameDocument(array|object $expectedDocument, array|object $actualDocument): void
     {
         $this->assertEquals(
             Document::fromPHP($this->normalizeBSON($expectedDocument))->toRelaxedExtendedJSON(),
@@ -369,11 +363,9 @@ OUTPUT;
      * its type and keys. Document fields will be sorted alphabetically. Each
      * value within the array or document will then be normalized recursively.
      *
-     * @param array|object $bson
-     * @return BSONDocument|BSONArray
      * @throws InvalidArgumentException if $bson is not an array or object
      */
-    private function normalizeBSON($bson)
+    private function normalizeBSON(array|object $bson): BSONDocument|BSONArray
     {
         if (! is_array($bson) && ! is_object($bson)) {
             throw new InvalidArgumentException('$bson is not an array or object');

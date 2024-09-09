@@ -38,10 +38,6 @@ use function MongoDB\is_document;
  */
 class ListCollections implements Executable
 {
-    private string $databaseName;
-
-    private array $options;
-
     /**
      * Constructs a listCollections command.
      *
@@ -71,7 +67,7 @@ class ListCollections implements Executable
      * @param array  $options      Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, array $options = [])
+    public function __construct(private string $databaseName, private array $options = [])
     {
         if (isset($options['authorizedCollections']) && ! is_bool($options['authorizedCollections'])) {
             throw InvalidArgumentException::invalidType('"authorizedCollections" option', $options['authorizedCollections'], 'boolean');
@@ -92,9 +88,6 @@ class ListCollections implements Executable
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
         }
-
-        $this->databaseName = $databaseName;
-        $this->options = $options;
     }
 
     /**

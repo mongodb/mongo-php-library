@@ -533,19 +533,25 @@ final class Operation
                 );
 
             case 'createSearchIndex':
-                $options = [];
-                if (isset($args['model']->name)) {
-                    assertIsString($args['model']->name);
-                    $options['name'] = $args['model']->name;
-                }
-
+                assertArrayHasKey('model', $args);
+                assertIsObject($args['model']);
+                assertObjectHasAttribute('definition', $args['model']);
                 assertInstanceOf(stdClass::class, $args['model']->definition);
 
-                return $collection->createSearchIndex($args['model']->definition, $options);
+                /* Note: tests specify options within "model". A top-level
+                 * "options" key (CreateSearchIndexOptions) is not used. */
+                $definition = $args['model']->definition;
+                $options = array_diff_key((array) $args['model'], ['definition' => 1]);
+
+                return $collection->createSearchIndex($definition, $options);
 
             case 'createSearchIndexes':
+                assertArrayHasKey('models', $args);
+                assertIsArray($args['models']);
+
                 $indexes = array_map(function ($index) {
                     $index = (array) $index;
+                    assertArrayHasKey('definition', $index);
                     assertInstanceOf(stdClass::class, $index['definition']);
 
                     return $index;

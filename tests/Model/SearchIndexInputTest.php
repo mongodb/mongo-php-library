@@ -32,6 +32,14 @@ class SearchIndexInputTest extends TestCase
         new SearchIndexInput(['definition' => ['mapping' => ['dynamic' => true]], 'name' => $name]);
     }
 
+    /** @dataProvider provideInvalidStringValues */
+    public function testConstructorShouldRequireTypeToBeString($type): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected "type" option to have type "string"');
+        new SearchIndexInput(['definition' => ['mapping' => ['dynamic' => true]], 'type' => $type]);
+    }
+
     public function testBsonSerialization(): void
     {
         $expected = (object) [

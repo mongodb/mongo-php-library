@@ -15,6 +15,7 @@ phpunit.evergreen.xml export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml.dist export-ignore
 psalm-baseline.xml export-ignore
+rector.php export-ignore
 
 # Prevent generated build files from showing diffs in pull requests
 .evergreen/config/generated/** linguist-generated=true

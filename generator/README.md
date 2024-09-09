@@ -1,7 +1,7 @@
 # Code Generator for MongoDB PHP Library
 
 This subproject is used to generate the code that is committed to the repository.
-The `generator` directory is not included in `mongodb/builder` package and is not installed by Composer. 
+The `generator` directory is not included in `mongodb/mongodb` package and is not installed by Composer.
 
 ## Contributing
 

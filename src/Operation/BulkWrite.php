@@ -17,8 +17,10 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Builder\BuilderEncoder;
 use MongoDB\BulkWriteResult;
 use MongoDB\Codec\DocumentCodec;
+use MongoDB\Codec\Encoder;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
@@ -94,6 +96,9 @@ class BulkWrite implements Executable
      *
      * Supported options for the bulk write operation:
      *
+     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *    aggregation builders. If not given, the default encoder will be used.
+     *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation. The default is false.
      *
@@ -136,6 +141,10 @@ class BulkWrite implements Executable
         }
 
         $options += ['ordered' => true];
+
+        if (isset($options['builderEncoder']) && ! $options['builderEncoder'] instanceof Encoder) {
+            throw InvalidArgumentException::invalidType('"builderEncoder" option', $options['builderEncoder'], Encoder::class);
+        }
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
@@ -188,6 +197,8 @@ class BulkWrite implements Executable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
+        $builderEncoder = $operation['builderEncoder'] ?? new BuilderEncoder();
+
         $bulk = new Bulk($this->createBulkWriteOptions());
         $insertedIds = [];
 
@@ -198,6 +209,7 @@ class BulkWrite implements Executable
             switch ($type) {
                 case self::DELETE_MANY:
                 case self::DELETE_ONE:
+                    $args[0] = $builderEncoder->encodeIfSupported($args[0]);
                     $bulk->delete($args[0], $args[1]);
                     break;
 
@@ -208,6 +220,8 @@ class BulkWrite implements Executable
                 case self::UPDATE_MANY:
                 case self::UPDATE_ONE:
                 case self::REPLACE_ONE:
+                    $args[0] = $builderEncoder->encodeIfSupported($args[0]);
+                    $args[1] = $builderEncoder->encodeIfSupported($args[1]);
                     $bulk->update($args[0], $args[1], $args[2]);
                     break;
             }

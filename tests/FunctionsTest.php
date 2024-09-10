@@ -4,6 +4,8 @@ namespace MongoDB\Tests;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
+use MongoDB\Builder\Stage\LimitStage;
+use MongoDB\Builder\Stage\MatchStage;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
@@ -12,6 +14,7 @@ use TypeError;
 use function MongoDB\apply_type_map_to_document;
 use function MongoDB\create_field_path_type_map;
 use function MongoDB\document_to_array;
+use function MongoDB\is_builder_pipeline;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\is_mapreduce_output_inline;
@@ -309,6 +312,22 @@ class FunctionsTest extends TestCase
             'Update document' => [false, ['$set' => ['foo' => 'bar']]],
             'Replacement document with DBRef' => [false, ['x' => ['$ref' => 'foo', '$id' => 'bar']]],
         ];
+    }
+
+    /** @dataProvider provideStagePipelines */
+    public function testIsBuilderPipeline($expected, $pipeline): void
+    {
+        $this->assertSame($expected, is_builder_pipeline($pipeline));
+    }
+
+    public function provideStagePipelines(): iterable
+    {
+        yield 'empty array' => [false, []];
+        yield 'array of arrays' => [false, [['$match' => ['x' => 1]]]];
+        yield 'map of stages' => [false, [1 => new MatchStage([])]];
+        yield 'stages' => [true, [new MatchStage([]), new LimitStage(1)]];
+        yield 'stages and operators' => [true, [new MatchStage([]), ['$limit' => 1]]];
+        yield 'stages and invalid' => [false, [new MatchStage([]), ['foo' => 'bar']]];
     }
 
     /** @dataProvider provideWriteConcerns */

@@ -23,6 +23,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\JavascriptInterface;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\BuilderEncoder;
+use MongoDB\Builder\Pipeline;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Codec\Encoder;
 use MongoDB\Driver\CursorInterface;
@@ -223,6 +224,12 @@ class Collection
      */
     public function aggregate(array $pipeline, array $options = [])
     {
+        if (is_builder_pipeline($pipeline)) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
+
+        $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
+
         $hasWriteStage = is_last_pipeline_operator_write($pipeline);
 
         $options = $this->inheritReadPreference($options);
@@ -1098,6 +1105,11 @@ class Collection
      */
     public function watch(array $pipeline = [], array $options = [])
     {
+        if (is_builder_pipeline($pipeline)) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
+
+        $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
         $options = $this->inheritReadOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
 

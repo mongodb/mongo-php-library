@@ -21,6 +21,7 @@ use Exception;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
+use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
@@ -325,6 +326,38 @@ function is_pipeline(array|object $pipeline, bool $allowEmpty = false): bool
     }
 
     return true;
+}
+
+/**
+ * Returns whether the argument is a list that contains at least one
+ * {@see StageInterface} object.
+ *
+ * @internal
+ */
+function is_builder_pipeline(array $pipeline): bool
+{
+    if (! $pipeline) {
+        return false;
+    }
+
+    if (! array_is_list($pipeline)) {
+        return false;
+    }
+
+    $result = false;
+    foreach ($pipeline as $stage) {
+        if (! is_array($stage) && ! is_object($stage)) {
+            return false;
+        }
+
+        if ($stage instanceof StageInterface) {
+            $result = true;
+        } elseif (! is_first_key_operator($stage)) {
+            return false;
+        }
+    }
+
+    return $result;
 }
 
 /**

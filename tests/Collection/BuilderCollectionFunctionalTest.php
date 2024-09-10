@@ -2,9 +2,12 @@
 
 namespace MongoDB\Tests\Collection;
 
+use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+
+use function iterator_to_array;
 
 class BuilderCollectionFunctionalTest extends FunctionalTestCase
 {
@@ -17,7 +20,18 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
 
     public function testAggregate(): void
     {
-        $this->markTestSkipped('Not supported yet');
+        $this->collection->insertMany([['x' => 10], ['x' => 10], ['x' => 10]]);
+        $pipeline = new Pipeline(
+            Stage::bucketAuto(
+                groupBy: Expression::intFieldPath('x'),
+                buckets: 2,
+            ),
+        );
+        // Extract the list of stages for arg type restriction
+        $pipeline = iterator_to_array($pipeline);
+
+        $results = $this->collection->aggregate($pipeline)->toArray();
+        $this->assertCount(2, $results);
     }
 
     public function testBulkWriteDeleteMany(): void
@@ -245,6 +259,24 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
 
     public function testWatch(): void
     {
-        $this->markTestSkipped('Not supported yet');
+        $this->skipIfChangeStreamIsNotSupported();
+
+        if ($this->isShardedCluster()) {
+            $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
+        }
+
+        $pipeline = new Pipeline(
+            Stage::match(operationType: Query::eq('insert')),
+        );
+        // Extract the list of stages for arg type restriction
+        $pipeline = iterator_to_array($pipeline);
+
+        $changeStream = $this->collection->watch($pipeline);
+        $changeStream->rewind();
+        $this->assertNull($changeStream->current());
+        $this->collection->insertOne(['x' => 3]);
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+        $this->assertEquals('insert', $changeStream->current()->operationType);
     }
 }

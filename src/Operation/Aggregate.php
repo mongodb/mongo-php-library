@@ -118,7 +118,7 @@ class Aggregate implements Executable, Explainable
      * @param array       $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(private string $databaseName, private ?string $collectionName = null, private array $pipeline, private array $options = [])
+    public function __construct(private string $databaseName, private ?string $collectionName, private array $pipeline, private array $options = [])
     {
         if (! is_pipeline($pipeline, true /* allowEmpty */)) {
             throw new InvalidArgumentException('$pipeline is not a valid aggregation pipeline');

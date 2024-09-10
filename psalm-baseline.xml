@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="examples/atlas_search.php">
     <MixedArgument>
       <code><![CDATA[$document['name']]]></code>
@@ -195,6 +195,9 @@
     <MixedAssignment>
       <code><![CDATA[$mergedDriver['platform']]]></code>
     </MixedAssignment>
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[$driverOptions['builderEncoder'] ?? new BuilderEncoder()]]></code>
+    </MixedPropertyTypeCoercion>
   </file>
   <file src="src/Codec/EncodeIfSupported.php">
     <ArgumentTypeCoercion>
@@ -216,6 +219,11 @@
       <code><![CDATA[$value]]></code>
     </MixedArgumentTypeCoercion>
   </file>
+  <file src="src/Collection.php">
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[$options['builderEncoder'] ?? new BuilderEncoder()]]></code>
+    </MixedPropertyTypeCoercion>
+  </file>
   <file src="src/Command/ListCollections.php">
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
@@ -227,6 +235,11 @@
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
+  </file>
+  <file src="src/Database.php">
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[$options['builderEncoder'] ?? new BuilderEncoder()]]></code>
+    </MixedPropertyTypeCoercion>
   </file>
   <file src="src/GridFS/Bucket.php">
     <MixedArgument>

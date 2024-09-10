@@ -18,6 +18,10 @@
 namespace MongoDB;
 
 use Iterator;
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
+use MongoDB\Builder\BuilderEncoder;
+use MongoDB\Codec\Encoder;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -45,6 +49,7 @@ use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\Watch;
+use stdClass;
 use Throwable;
 use Traversable;
 
@@ -61,6 +66,9 @@ class Database
 
     private const WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE = 8;
 
+    /** @psalm-var Encoder<array|stdClass|Document|PackedArray, mixed> */
+    private readonly Encoder $builderEncoder;
+
     private ReadConcern $readConcern;
 
     private ReadPreference $readPreference;
@@ -76,6 +84,9 @@ class Database
      * as a gateway for accessing collections.
      *
      * Supported options:
+     *
+     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *    aggregation builders. If not given, the default encoder will be used.
      *
      *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
      *    use for database operations and selected collections. Defaults to the
@@ -102,6 +113,10 @@ class Database
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
         }
 
+        if (isset($options['builderEncoder']) && ! $options['builderEncoder'] instanceof Encoder) {
+            throw InvalidArgumentException::invalidType('"builderEncoder" option', $options['builderEncoder'], Encoder::class);
+        }
+
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
             throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], ReadConcern::class);
         }
@@ -118,6 +133,7 @@ class Database
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
+        $this->builderEncoder = $options['builderEncoder'] ?? new BuilderEncoder();
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
         $this->typeMap = $options['typeMap'] ?? self::DEFAULT_TYPE_MAP;
@@ -133,6 +149,7 @@ class Database
     public function __debugInfo()
     {
         return [
+            'builderEncoder' => $this->builderEncoder,
             'databaseName' => $this->databaseName,
             'manager' => $this->manager,
             'readConcern' => $this->readConcern,
@@ -553,6 +570,7 @@ class Database
     public function selectCollection(string $collectionName, array $options = [])
     {
         $options += [
+            'builderEncoder' => $this->builderEncoder,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
             'typeMap' => $this->typeMap,

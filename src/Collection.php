@@ -19,8 +19,12 @@ namespace MongoDB;
 
 use Countable;
 use Iterator;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\JavascriptInterface;
+use MongoDB\BSON\PackedArray;
+use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Codec\DocumentCodec;
+use MongoDB\Codec\Encoder;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
@@ -66,6 +70,7 @@ use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use MongoDB\Operation\UpdateSearchIndex;
 use MongoDB\Operation\Watch;
+use stdClass;
 
 use function array_diff_key;
 use function array_intersect_key;
@@ -84,6 +89,9 @@ class Collection
 
     private const WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE = 8;
 
+    /** @psalm-var Encoder<array|stdClass|Document|PackedArray, mixed> */
+    private readonly Encoder $builderEncoder;
+
     private ?DocumentCodec $codec = null;
 
     private ReadConcern $readConcern;
@@ -101,6 +109,9 @@ class Collection
      * CRUD (i.e. create, read, update, and delete) and index management.
      *
      * Supported options:
+     *
+     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *    aggregation builders. If not given, the default encoder will be used.
      *
      *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
      *    from BSON to PHP objects.
@@ -134,6 +145,10 @@ class Collection
             throw new InvalidArgumentException('$collectionName is invalid: ' . $collectionName);
         }
 
+        if (isset($options['builderEncoder']) && ! $options['builderEncoder'] instanceof Encoder) {
+            throw InvalidArgumentException::invalidType('"builderEncoder" option', $options['builderEncoder'], Encoder::class);
+        }
+
         if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
             throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
         }
@@ -154,6 +169,7 @@ class Collection
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
+        $this->builderEncoder = $options['builderEncoder'] ?? new BuilderEncoder();
         $this->codec = $options['codec'] ?? null;
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
@@ -170,6 +186,7 @@ class Collection
     public function __debugInfo()
     {
         return [
+            'builderEncoder' => $this->builderEncoder,
             'codec' => $this->codec,
             'collectionName' => $this->collectionName,
             'databaseName' => $this->databaseName,
@@ -1084,6 +1101,7 @@ class Collection
     public function withOptions(array $options = [])
     {
         $options += [
+            'builderEncoder' => $this->builderEncoder,
             'codec' => $this->codec,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,

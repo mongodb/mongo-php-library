@@ -223,6 +223,11 @@
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$options['builderEncoder'] ?? new BuilderEncoder()]]></code>
     </MixedPropertyTypeCoercion>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$pipeline]]></code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/Command/ListCollections.php">
     <MixedAssignment>
@@ -417,8 +422,9 @@
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
@@ -448,6 +454,7 @@
       <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]['limit']]]></code>
       <code><![CDATA[$args[2]]]></code>
       <code><![CDATA[$args[2]]]></code>
@@ -458,6 +465,10 @@
       <code><![CDATA[$args[2]['multi']]]></code>
       <code><![CDATA[$args[2]['multi']]]></code>
       <code><![CDATA[$operations[$i][$type][0]]]></code>
+      <code><![CDATA[$operations[$i][$type][0]]]></code>
+      <code><![CDATA[$operations[$i][$type][0]]]></code>
+      <code><![CDATA[$operations[$i][$type][0]]]></code>
+      <code><![CDATA[$operations[$i][$type][1]]]></code>
       <code><![CDATA[$operations[$i][$type][1]]]></code>
       <code><![CDATA[$operations[$i][$type][1]]]></code>
       <code><![CDATA[$operations[$i][$type][2]]]></code>
@@ -466,9 +477,14 @@
     <MixedAssignment>
       <code><![CDATA[$args]]></code>
       <code><![CDATA[$args]]></code>
+      <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[2]]]></code>
       <code><![CDATA[$args[2]]]></code>
       <code><![CDATA[$insertedIds[$i]]]></code>
+      <code><![CDATA[$operations[$i][$type][0]]]></code>
+      <code><![CDATA[$operations[$i][$type][0]]]></code>
+      <code><![CDATA[$operations[$i][$type][0]]]></code>
+      <code><![CDATA[$operations[$i][$type][1]]]></code>
       <code><![CDATA[$operations[$i][$type][1]]]></code>
       <code><![CDATA[$operations[$i][$type][2]]]></code>
       <code><![CDATA[$operations[$i][$type][2]]]></code>

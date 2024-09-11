@@ -1133,9 +1133,7 @@ class Collection
 
     private function inheritBuilderEncoder(array $options): array
     {
-        $options['builderEncoder'] = $this->builderEncoder;
-
-        return $options;
+        return ['builderEncoder' => $this->builderEncoder] + $options;
     }
 
     private function inheritCodec(array $options): array

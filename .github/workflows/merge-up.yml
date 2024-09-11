@@ -28,5 +28,5 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
           branchNamePattern: 'v<major>.<minor>'
-          fallbackBranch: 'master'
+          devBranchNamePattern: 'v<major>.x'
           enableAutoMerge: true

@@ -1110,6 +1110,7 @@ class Collection
         }
 
         $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
+
         $options = $this->inheritReadOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
 

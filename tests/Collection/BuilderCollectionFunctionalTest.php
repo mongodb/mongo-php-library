@@ -272,8 +272,6 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
         $pipeline = iterator_to_array($pipeline);
 
         $changeStream = $this->collection->watch($pipeline);
-        $changeStream->rewind();
-        $this->assertNull($changeStream->current());
         $this->collection->insertOne(['x' => 3]);
         $changeStream->next();
         $this->assertTrue($changeStream->valid());

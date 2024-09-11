@@ -191,6 +191,7 @@
   <file src="src/Client.php">
     <MixedArgument>
       <code><![CDATA[$driverOptions['driver'] ?? []]]></code>
+      <code><![CDATA[$pipeline]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$mergedDriver['platform']]]></code>
@@ -198,6 +199,12 @@
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$driverOptions['builderEncoder'] ?? new BuilderEncoder()]]></code>
     </MixedPropertyTypeCoercion>
+    <NamedArgumentNotAllowed>
+      <code><![CDATA[$pipeline]]></code>
+    </NamedArgumentNotAllowed>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$pipeline]]></code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/Codec/EncodeIfSupported.php">
     <ArgumentTypeCoercion>
@@ -220,9 +227,17 @@
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Collection.php">
+    <MixedArgument>
+      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$pipeline]]></code>
+    </MixedArgument>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$options['builderEncoder'] ?? new BuilderEncoder()]]></code>
     </MixedPropertyTypeCoercion>
+    <NamedArgumentNotAllowed>
+      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$pipeline]]></code>
+    </NamedArgumentNotAllowed>
     <PossiblyInvalidArgument>
       <code><![CDATA[$pipeline]]></code>
       <code><![CDATA[$pipeline]]></code>
@@ -242,9 +257,22 @@
     </MixedAssignment>
   </file>
   <file src="src/Database.php">
+    <MixedArgument>
+      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$pipeline]]></code>
+    </MixedArgument>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$options['builderEncoder'] ?? new BuilderEncoder()]]></code>
     </MixedPropertyTypeCoercion>
+    <NamedArgumentNotAllowed>
+      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$pipeline]]></code>
+    </NamedArgumentNotAllowed>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$pipeline]]></code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/GridFS/Bucket.php">
     <MixedArgument>

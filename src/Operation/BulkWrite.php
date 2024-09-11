@@ -17,8 +17,10 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Builder\BuilderEncoder;
 use MongoDB\BulkWriteResult;
 use MongoDB\Codec\DocumentCodec;
+use MongoDB\Codec\Encoder;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
@@ -94,6 +96,9 @@ class BulkWrite implements Executable
      *
      * Supported options for the bulk write operation:
      *
+     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *    aggregation builders. If not given, the default encoder will be used.
+     *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation. The default is false.
      *
@@ -137,6 +142,10 @@ class BulkWrite implements Executable
 
         $options += ['ordered' => true];
 
+        if (isset($options['builderEncoder']) && ! $options['builderEncoder'] instanceof Encoder) {
+            throw InvalidArgumentException::invalidType('"builderEncoder" option', $options['builderEncoder'], Encoder::class);
+        }
+
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
@@ -169,7 +178,7 @@ class BulkWrite implements Executable
             unset($options['writeConcern']);
         }
 
-        $this->operations = $this->validateOperations($operations, $options['codec'] ?? null);
+        $this->operations = $this->validateOperations($operations, $options['codec'] ?? null, $options['builderEncoder'] ?? new BuilderEncoder());
         $this->options = $options;
     }
 
@@ -264,7 +273,7 @@ class BulkWrite implements Executable
      * @param array[] $operations
      * @return array[]
      */
-    private function validateOperations(array $operations, ?DocumentCodec $codec): array
+    private function validateOperations(array $operations, ?DocumentCodec $codec, Encoder $builderEncoder): array
     {
         foreach ($operations as $i => $operation) {
             if (! is_array($operation)) {
@@ -298,6 +307,8 @@ class BulkWrite implements Executable
 
                 case self::DELETE_MANY:
                 case self::DELETE_ONE:
+                    $operations[$i][$type][0] = $builderEncoder->encodeIfSupported($args[0]);
+
                     if (! isset($args[1])) {
                         $args[1] = [];
                     }
@@ -317,6 +328,8 @@ class BulkWrite implements Executable
                     break;
 
                 case self::REPLACE_ONE:
+                    $operations[$i][$type][0] = $builderEncoder->encodeIfSupported($args[0]);
+
                     if (! isset($args[1]) && ! array_key_exists(1, $args)) {
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
@@ -367,9 +380,13 @@ class BulkWrite implements Executable
 
                 case self::UPDATE_MANY:
                 case self::UPDATE_ONE:
+                    $operations[$i][$type][0] = $builderEncoder->encodeIfSupported($args[0]);
+
                     if (! isset($args[1]) && ! array_key_exists(1, $args)) {
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
+
+                    $operations[$i][$type][1] = $args[1] = $builderEncoder->encodeIfSupported($args[1]);
 
                     if ((! is_document($args[1]) || ! is_first_key_operator($args[1])) && ! is_pipeline($args[1])) {
                         throw new InvalidArgumentException(sprintf('Expected update operator(s) or non-empty pipeline for $operations[%d]["%s"][1]', $i, $type));

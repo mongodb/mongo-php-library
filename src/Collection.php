@@ -262,6 +262,7 @@ class Collection
      */
     public function bulkWrite(array $operations, array $options = [])
     {
+        $options = $this->inheritBuilderEncoder($options);
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodec($options);
 
@@ -286,6 +287,7 @@ class Collection
      */
     public function count(array|object $filter = [], array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritReadOptions($options);
 
         $operation = new Count($this->databaseName, $this->collectionName, $filter, $options);
@@ -307,6 +309,7 @@ class Collection
      */
     public function countDocuments(array|object $filter = [], array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritReadOptions($options);
 
         $operation = new CountDocuments($this->databaseName, $this->collectionName, $filter, $options);
@@ -444,6 +447,7 @@ class Collection
      */
     public function deleteMany(array|object $filter, array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritWriteOptions($options);
 
         $operation = new DeleteMany($this->databaseName, $this->collectionName, $filter, $options);
@@ -465,6 +469,7 @@ class Collection
      */
     public function deleteOne(array|object $filter, array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritWriteOptions($options);
 
         $operation = new DeleteOne($this->databaseName, $this->collectionName, $filter, $options);
@@ -487,6 +492,7 @@ class Collection
      */
     public function distinct(string $fieldName, array|object $filter = [], array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritReadOptions($options);
         $options = $this->inheritTypeMap($options);
 
@@ -645,6 +651,7 @@ class Collection
      */
     public function find(array|object $filter = [], array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritReadOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
 
@@ -667,6 +674,7 @@ class Collection
      */
     public function findOne(array|object $filter = [], array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritReadOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
 
@@ -692,6 +700,7 @@ class Collection
      */
     public function findOneAndDelete(array|object $filter, array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
 
@@ -722,6 +731,7 @@ class Collection
      */
     public function findOneAndReplace(array|object $filter, array|object $replacement, array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
 
@@ -752,6 +762,7 @@ class Collection
      */
     public function findOneAndUpdate(array|object $filter, array|object $update, array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
 
@@ -1000,6 +1011,7 @@ class Collection
      */
     public function replaceOne(array|object $filter, array|object $replacement, array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodec($options);
 
@@ -1023,6 +1035,8 @@ class Collection
      */
     public function updateMany(array|object $filter, array|object $update, array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
+        $update = $this->builderEncoder->encodeIfSupported($update);
         $options = $this->inheritWriteOptions($options);
 
         $operation = new UpdateMany($this->databaseName, $this->collectionName, $filter, $update, $options);
@@ -1045,6 +1059,8 @@ class Collection
      */
     public function updateOne(array|object $filter, array|object $update, array $options = [])
     {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
+        $update = $this->builderEncoder->encodeIfSupported($update);
         $options = $this->inheritWriteOptions($options);
 
         $operation = new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
@@ -1110,6 +1126,11 @@ class Collection
         ];
 
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
+    }
+
+    private function inheritBuilderEncoder(array $options): array
+    {
+        return ['builderEncoder' => $this->builderEncoder] + $options;
     }
 
     private function inheritCodec(array $options): array

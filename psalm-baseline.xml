@@ -890,6 +890,7 @@
     <MixedAssignment>
       <code><![CDATA[$element[$key]]]></code>
       <code><![CDATA[$stage]]></code>
+      <code><![CDATA[$stage]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath]]]></code>
       <code><![CDATA[$typeMap['fieldPaths'][$fieldPath]]]></code>

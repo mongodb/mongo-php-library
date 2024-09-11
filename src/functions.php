@@ -336,28 +336,17 @@ function is_pipeline(array|object $pipeline, bool $allowEmpty = false): bool
  */
 function is_builder_pipeline(array $pipeline): bool
 {
-    if (! $pipeline) {
+    if (! $pipeline || ! array_is_list($pipeline)) {
         return false;
     }
 
-    if (! array_is_list($pipeline)) {
-        return false;
-    }
-
-    $result = false;
     foreach ($pipeline as $stage) {
-        if (! is_array($stage) && ! is_object($stage)) {
-            return false;
-        }
-
-        if ($stage instanceof StageInterface) {
-            $result = true;
-        } elseif (! is_first_key_operator($stage)) {
-            return false;
+        if (is_object($stage) && $stage instanceof StageInterface) {
+            return true;
         }
     }
 
-    return $result;
+    return false;
 }
 
 /**

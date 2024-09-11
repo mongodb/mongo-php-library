@@ -327,7 +327,6 @@ class FunctionsTest extends TestCase
         yield 'map of stages' => [false, [1 => new MatchStage([])]];
         yield 'stages' => [true, [new MatchStage([]), new LimitStage(1)]];
         yield 'stages and operators' => [true, [new MatchStage([]), ['$limit' => 1]]];
-        yield 'stages and invalid' => [false, [new MatchStage([]), ['foo' => 'bar']]];
     }
 
     /** @dataProvider provideWriteConcerns */

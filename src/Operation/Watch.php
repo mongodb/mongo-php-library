@@ -187,7 +187,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * @param array       $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(private Manager $manager, ?string $databaseName, private ?string $collectionName = null, private array $pipeline, array $options = [])
+    public function __construct(private Manager $manager, ?string $databaseName, private ?string $collectionName, private array $pipeline, array $options = [])
     {
         if (isset($collectionName) && ! isset($databaseName)) {
             throw new InvalidArgumentException('$collectionName should also be null if $databaseName is null');

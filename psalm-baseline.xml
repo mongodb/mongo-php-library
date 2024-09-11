@@ -223,11 +223,6 @@
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$options['builderEncoder'] ?? new BuilderEncoder()]]></code>
     </MixedPropertyTypeCoercion>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$pipeline]]></code>
-      <code><![CDATA[$pipeline]]></code>
-      <code><![CDATA[$pipeline]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/Command/ListCollections.php">
     <MixedAssignment>

@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\Collection;
 
-use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
@@ -18,15 +17,7 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
 
     public function testAggregate(): void
     {
-        $this->collection->insertMany([['x' => 10], ['x' => 10], ['x' => 10]]);
-        $pipeline = new Pipeline(
-            Stage::bucketAuto(
-                groupBy: Expression::intFieldPath('x'),
-                buckets: 2,
-            ),
-        );
-        $results = $this->collection->aggregate($pipeline)->toArray();
-        $this->assertCount(2, $results);
+        $this->markTestSkipped('Not supported yet');
     }
 
     public function testBulkWriteDeleteMany(): void
@@ -254,21 +245,6 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
 
     public function testWatch(): void
     {
-        $this->skipIfChangeStreamIsNotSupported();
-
-        if ($this->isShardedCluster()) {
-            $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
-        }
-
-        $pipeline = new Pipeline(
-            Stage::match(operationType: Query::eq('insert')),
-        );
-        $changeStream = $this->collection->watch($pipeline);
-        $changeStream->rewind();
-        $this->assertNull($changeStream->current());
-        $this->collection->insertOne(['x' => 3]);
-        $changeStream->next();
-        $this->assertTrue($changeStream->valid());
-        $this->assertEquals('insert', $changeStream->current()->operationType);
+        $this->markTestSkipped('Not supported yet');
     }
 }

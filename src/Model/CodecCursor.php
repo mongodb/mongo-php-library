@@ -71,7 +71,10 @@ class CodecCursor implements CursorInterface, Iterator
         return new self($cursor, $codec);
     }
 
-    /** @return CursorId|Int64 */
+    /**
+     * @return CursorId|Int64
+     * @psalm-return ($asInt64 is true ? Int64 : CursorId)
+     */
     #[ReturnTypeWillChange]
     public function getId(bool $asInt64 = false)
     {

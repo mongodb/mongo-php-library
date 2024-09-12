@@ -106,7 +106,10 @@ class ChangeStream implements Iterator
         return $this->codec->decode($value);
     }
 
-    /** @return CursorId|Int64 */
+    /**
+     * @return CursorId|Int64
+     * @psalm-return ($asInt64 is true ? Int64 : CursorId)
+     */
     #[ReturnTypeWillChange]
     public function getCursorId(bool $asInt64 = false)
     {

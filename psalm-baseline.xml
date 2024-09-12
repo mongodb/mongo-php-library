@@ -322,9 +322,6 @@
     </PossiblyNullArgument>
   </file>
   <file src="src/Model/CodecCursor.php">
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[CursorId|Int64]]></code>
-    </ImplementedReturnTypeMismatch>
     <TooManyArguments>
       <code><![CDATA[getId]]></code>
     </TooManyArguments>

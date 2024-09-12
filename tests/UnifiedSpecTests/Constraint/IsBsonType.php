@@ -90,77 +90,32 @@ final class IsBsonType extends Constraint
 
     private function doMatches($other): bool
     {
-        switch ($this->type) {
-            case 'double':
-                return is_float($other);
-
-            case 'string':
-                return is_string($other);
-
-            case 'object':
-                return self::isObject($other);
-
-            case 'array':
-                return self::isArray($other);
-
-            case 'binData':
-                return $other instanceof BinaryInterface;
-
-            case 'undefined':
-                return $other instanceof Undefined;
-
-            case 'objectId':
-                return $other instanceof ObjectIdInterface;
-
-            case 'bool':
-                return is_bool($other);
-
-            case 'date':
-                return $other instanceof UTCDateTimeInterface;
-
-            case 'null':
-                return $other === null;
-
-            case 'regex':
-                return $other instanceof RegexInterface;
-
-            case 'dbPointer':
-                return $other instanceof DBPointer;
-
-            case 'javascript':
-                return $other instanceof JavascriptInterface && $other->getScope() === null;
-
-            case 'symbol':
-                return $other instanceof Symbol;
-
-            case 'javascriptWithScope':
-                return $other instanceof JavascriptInterface && $other->getScope() !== null;
-
-            case 'int':
-                return is_int($other);
-
-            case 'timestamp':
-                return $other instanceof TimestampInterface;
-
-            case 'long':
-                return is_int($other) || $other instanceof Int64;
-
-            case 'decimal':
-                return $other instanceof Decimal128Interface;
-
-            case 'minKey':
-                return $other instanceof MinKeyInterface;
-
-            case 'maxKey':
-                return $other instanceof MaxKeyInterface;
-
-            case 'number':
-                return is_int($other) || $other instanceof Int64 || is_float($other) || $other instanceof Decimal128Interface;
-
-            default:
-                // This should already have been caught in the constructor
-                throw new LogicException('Unsupported type: ' . $this->type);
-        }
+        return match ($this->type) {
+            'double' => is_float($other),
+            'string' => is_string($other),
+            'object' => self::isObject($other),
+            'array' => self::isArray($other),
+            'binData' => $other instanceof BinaryInterface,
+            'undefined' => $other instanceof Undefined,
+            'objectId' => $other instanceof ObjectIdInterface,
+            'bool' => is_bool($other),
+            'date' => $other instanceof UTCDateTimeInterface,
+            'null' => $other === null,
+            'regex' => $other instanceof RegexInterface,
+            'dbPointer' => $other instanceof DBPointer,
+            'javascript' => $other instanceof JavascriptInterface && $other->getScope() === null,
+            'symbol' => $other instanceof Symbol,
+            'javascriptWithScope' => $other instanceof JavascriptInterface && $other->getScope() !== null,
+            'int' => is_int($other),
+            'timestamp' => $other instanceof TimestampInterface,
+            'long' => is_int($other) || $other instanceof Int64,
+            'decimal' => $other instanceof Decimal128Interface,
+            'minKey' => $other instanceof MinKeyInterface,
+            'maxKey' => $other instanceof MaxKeyInterface,
+            'number' => is_int($other) || $other instanceof Int64 || is_float($other) || $other instanceof Decimal128Interface,
+            // This should already have been caught in the constructor
+            default => throw new LogicException('Unsupported type: ' . $this->type),
+        };
     }
 
     private function doToString(): string

@@ -38,27 +38,14 @@ class OperatorEncoder extends AbstractExpressionEncoder
             throw UnsupportedValueException::invalidEncodableValue($value);
         }
 
-        switch ($value::ENCODE) {
-            case Encode::Single:
-                return $this->encodeAsSingle($value);
-
-            case Encode::Array:
-                return $this->encodeAsArray($value);
-
-            case Encode::Object:
-            case Encode::FlatObject:
-                return $this->encodeAsObject($value);
-
-            case Encode::DollarObject:
-                return $this->encodeAsDollarObject($value);
-
-            case Encode::Group:
-                assert($value instanceof GroupStage);
-
-                return $this->encodeAsGroup($value);
-        }
-
-        throw new LogicException(sprintf('Class "%s" does not have a valid ENCODE constant.', $value::class));
+        return match ($value::ENCODE) {
+            Encode::Single => $this->encodeAsSingle($value),
+            Encode::Array => $this->encodeAsArray($value),
+            Encode::Object, Encode::FlatObject => $this->encodeAsObject($value),
+            Encode::DollarObject => $this->encodeAsDollarObject($value),
+            Encode::Group => $this->encodeAsGroup($value),
+            default => throw new LogicException(sprintf('Class "%s" does not have a valid ENCODE constant.', $value::class)),
+        };
     }
 
     /**
@@ -111,8 +98,10 @@ class OperatorEncoder extends AbstractExpressionEncoder
     /**
      * $group stage have a specific encoding because the _id argument is required and others are variadic
      */
-    private function encodeAsGroup(GroupStage $value): stdClass
+    private function encodeAsGroup(OperatorInterface $value): stdClass
     {
+        assert($value instanceof GroupStage);
+
         $result = new stdClass();
         $result->_id = $this->recursiveEncode($value->_id);
 

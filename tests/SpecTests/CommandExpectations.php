@@ -40,25 +40,15 @@ class CommandExpectations implements CommandSubscriber
     private function __construct(private Client $observedClient, array $events)
     {
         foreach ($events as $event) {
-            switch (key((array) $event)) {
-                case 'command_failed_event':
-                    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-                    $this->expectedEvents[] = [$event->command_failed_event, CommandFailedEvent::class];
-                    break;
-
-                case 'command_started_event':
-                    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-                    $this->expectedEvents[] = [$event->command_started_event, CommandStartedEvent::class];
-                    break;
-
-                case 'command_succeeded_event':
-                    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-                    $this->expectedEvents[] = [$event->command_succeeded_event, CommandSucceededEvent::class];
-                    break;
-
-                default:
-                    throw new LogicException('Unsupported event type: ' . key($event));
-            }
+            $this->expectedEvents[] = match (key((array) $event)) {
+                // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+                'command_failed_event' => [$event->command_failed_event, CommandFailedEvent::class],
+                // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+                'command_started_event' => [$event->command_started_event, CommandStartedEvent::class],
+                // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+                'command_succeeded_event' => [$event->command_succeeded_event, CommandSucceededEvent::class],
+                default => throw new LogicException('Unsupported event type: ' . key($event)),
+            };
         }
     }
 

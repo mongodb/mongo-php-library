@@ -22,6 +22,7 @@ use Iterator;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\BuilderEncoder;
+use MongoDB\Builder\Pipeline;
 use MongoDB\Codec\Encoder;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
@@ -391,6 +392,12 @@ class Client
      */
     public function watch(array $pipeline = [], array $options = [])
     {
+        if (is_builder_pipeline($pipeline)) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
+
+        $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
+
         if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
             $options['readPreference'] = $this->readPreference;
         }

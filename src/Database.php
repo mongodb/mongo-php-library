@@ -21,6 +21,7 @@ use Iterator;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\BuilderEncoder;
+use MongoDB\Builder\Pipeline;
 use MongoDB\Codec\Encoder;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
@@ -202,6 +203,12 @@ class Database
      */
     public function aggregate(array $pipeline, array $options = [])
     {
+        if (is_builder_pipeline($pipeline)) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
+
+        $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
+
         $hasWriteStage = is_last_pipeline_operator_write($pipeline);
 
         if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
@@ -611,6 +618,12 @@ class Database
      */
     public function watch(array $pipeline = [], array $options = [])
     {
+        if (is_builder_pipeline($pipeline)) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
+
+        $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
+
         if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
             $options['readPreference'] = $this->readPreference;
         }

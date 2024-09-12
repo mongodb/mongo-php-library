@@ -36,7 +36,7 @@ use function array_key_exists;
  * @see https://mongodb.com/docs/manual/reference/system-collections/
  * @template-extends IteratorIterator<int, array, Traversable<int, array>>
  */
-class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIterator
+final class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIterator
 {
     /** @param Traversable<int, array> $iterator */
     public function __construct(Traversable $iterator, private ?string $ns = null)

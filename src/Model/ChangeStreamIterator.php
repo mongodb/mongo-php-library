@@ -51,7 +51,7 @@ use function MongoDB\is_document;
  * @template TValue of array|object
  * @template-extends IteratorIterator<int, TValue, CursorInterface<int, TValue>&Iterator<int, TValue>>
  */
-class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
+final class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {
     private int $batchPosition = 0;
 

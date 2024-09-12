@@ -42,7 +42,7 @@ use function substr;
  *
  * @internal
  */
-class WritableStream
+final class WritableStream
 {
     private const DEFAULT_CHUNK_SIZE_BYTES = 261120;
 

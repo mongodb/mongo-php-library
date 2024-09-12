@@ -34,7 +34,7 @@ use function call_user_func;
  * @template TCallbackValue
  * @template-implements Iterator<TKey, TCallbackValue>
  */
-class CallbackIterator implements Iterator
+final class CallbackIterator implements Iterator
 {
     /** @var callable(TValue, TKey): TCallbackValue */
     private $callback;

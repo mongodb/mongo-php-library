@@ -24,6 +24,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CollectionInfo;
 use MongoDB\Model\CollectionInfoCommandIterator;
+use MongoDB\Model\CollectionInfoIterator;
 
 /**
  * Operation for the listCollections command.
@@ -72,7 +73,7 @@ final class ListCollections implements Executable
      * @return Iterator<int, CollectionInfo>
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): CollectionInfoIterator
     {
         return new CollectionInfoCommandIterator($this->listCollections->execute($server), $this->databaseName);
     }

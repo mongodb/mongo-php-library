@@ -160,7 +160,7 @@ final class CreateEncryptedCollection implements Executable
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      * @throws UnsupportedException if the server does not support Queryable Encryption
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         if (! server_supports_feature($server, self::WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2)) {
             throw new UnsupportedException('Driver support of Queryable Encryption is incompatible with server. Upgrade server to use Queryable Encryption.');

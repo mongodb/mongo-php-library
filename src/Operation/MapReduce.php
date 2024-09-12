@@ -241,12 +241,11 @@ final class MapReduce implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return MapReduceResult
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): MapReduceResult
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction) {

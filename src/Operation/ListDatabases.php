@@ -24,6 +24,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\DatabaseInfo;
+use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Model\DatabaseInfoLegacyIterator;
 
 /**
@@ -73,7 +74,7 @@ final class ListDatabases implements Executable
      * @throws UnexpectedValueException if the command response was malformed
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): DatabaseInfoIterator
     {
         return new DatabaseInfoLegacyIterator($this->listDatabases->execute($server));
     }

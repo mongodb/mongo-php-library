@@ -29,7 +29,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\UnexpectedValueException;
-use ReturnTypeWillChange;
 
 use function assert;
 use function count;
@@ -66,11 +65,9 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
 
     /**
      * @see https://php.net/iteratoriterator.current
-     * @return array|object|null
      * @psalm-return TValue|null
      */
-    #[ReturnTypeWillChange]
-    public function current()
+    public function current(): array|object|null
     {
         return $this->valid() ? parent::current() : null;
     }
@@ -97,10 +94,8 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
      * Null may be returned if no change documents have been iterated and the
      * server did not include a postBatchResumeToken in its aggregate or getMore
      * command response.
-     *
-     * @return array|object|null
      */
-    public function getResumeToken()
+    public function getResumeToken(): array|object|null
     {
         return $this->resumeToken;
     }
@@ -113,12 +108,8 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
         return $this->server;
     }
 
-    /**
-     * @see https://php.net/iteratoriterator.key
-     * @return int|null
-     */
-    #[ReturnTypeWillChange]
-    public function key()
+    /** @see https://php.net/iteratoriterator.key */
+    public function key(): ?int
     {
         return $this->valid() ? parent::key() : null;
     }
@@ -228,11 +219,10 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
      * Extracts the resume token (i.e. "_id" field) from a change document.
      *
      * @param array|object $document Change document
-     * @return array|object
      * @throws InvalidArgumentException
      * @throws ResumeTokenException if the resume token is not found or invalid
      */
-    private function extractResumeToken(array|object $document)
+    private function extractResumeToken(array|object $document): array|object
     {
         if (! is_document($document)) {
             throw InvalidArgumentException::expectedDocumentType('$document', $document);

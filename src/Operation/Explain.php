@@ -87,11 +87,10 @@ final class Explain implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return array|object
      * @throws UnsupportedException if the server does not support explaining the operation
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 

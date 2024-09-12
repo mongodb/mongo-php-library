@@ -17,7 +17,6 @@
 
 namespace MongoDB\Operation;
 
-use Iterator;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
@@ -215,12 +214,11 @@ final class Aggregate implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return CursorInterface&Iterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): CursorInterface
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction) {
@@ -255,9 +253,8 @@ final class Aggregate implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = $this->createCommandDocument();
 

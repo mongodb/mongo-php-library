@@ -23,10 +23,9 @@ class UnsupportedException extends RuntimeException
      * Thrown when the commitQuorum option for createIndexes is not supported
      * by a server.
      *
-     * @return self
      * @internal
      */
-    public static function commitQuorumNotSupported()
+    public static function commitQuorumNotSupported(): self
     {
         return new self('The "commitQuorum" option is not supported by the server executing this operation');
     }
@@ -34,10 +33,9 @@ class UnsupportedException extends RuntimeException
     /**
      * Thrown when a command's hint option is not supported by a server.
      *
-     * @return self
      * @internal
      */
-    public static function hintNotSupported()
+    public static function hintNotSupported(): self
     {
         return new self('Hint is not supported by the server executing this operation');
     }
@@ -45,10 +43,9 @@ class UnsupportedException extends RuntimeException
     /**
      * Thrown when a readConcern is used with a read operation in a transaction.
      *
-     * @return self
      * @internal
      */
-    public static function readConcernNotSupportedInTransaction()
+    public static function readConcernNotSupportedInTransaction(): self
     {
         return new self('The "readConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.');
     }
@@ -56,10 +53,9 @@ class UnsupportedException extends RuntimeException
     /**
      * Thrown when a writeConcern is used with a write operation in a transaction.
      *
-     * @return self
      * @internal
      */
-    public static function writeConcernNotSupportedInTransaction()
+    public static function writeConcernNotSupportedInTransaction(): self
     {
         return new self('The "writeConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.');
     }

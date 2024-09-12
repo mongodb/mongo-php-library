@@ -27,7 +27,6 @@ use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Model\ChangeStreamIterator;
-use ReturnTypeWillChange;
 
 use function assert;
 use function call_user_func;
@@ -108,20 +107,14 @@ class ChangeStream implements Iterator
      * Null may be returned if no change documents have been iterated and the
      * server did not include a postBatchResumeToken in its aggregate or getMore
      * command response.
-     *
-     * @return array|object|null
      */
-    public function getResumeToken()
+    public function getResumeToken(): array|object|null
     {
         return $this->iterator->getResumeToken();
     }
 
-    /**
-     * @see https://php.net/iterator.key
-     * @return int|null
-     */
-    #[ReturnTypeWillChange]
-    public function key()
+    /** @see https://php.net/iterator.key */
+    public function key(): ?int
     {
         if ($this->valid()) {
             return $this->key;
@@ -132,11 +125,9 @@ class ChangeStream implements Iterator
 
     /**
      * @see https://php.net/iterator.next
-     * @return void
      * @throws ResumeTokenException
      */
-    #[ReturnTypeWillChange]
-    public function next()
+    public function next(): void
     {
         try {
             $this->iterator->next();
@@ -148,11 +139,9 @@ class ChangeStream implements Iterator
 
     /**
      * @see https://php.net/iterator.rewind
-     * @return void
      * @throws ResumeTokenException
      */
-    #[ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void
     {
         try {
             $this->iterator->rewind();
@@ -165,12 +154,8 @@ class ChangeStream implements Iterator
         }
     }
 
-    /**
-     * @see https://php.net/iterator.valid
-     * @return boolean
-     */
-    #[ReturnTypeWillChange]
-    public function valid()
+    /** @see https://php.net/iterator.valid */
+    public function valid(): bool
     {
         return $this->iterator->valid();
     }

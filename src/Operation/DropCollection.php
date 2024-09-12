@@ -88,7 +88,7 @@ final class DropCollection implements Executable
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {

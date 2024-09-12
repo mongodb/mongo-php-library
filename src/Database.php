@@ -24,7 +24,7 @@ use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Codec\Encoder;
 use MongoDB\Driver\ClientEncryption;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -38,6 +38,7 @@ use MongoDB\GridFS\Bucket;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\CollectionInfo;
+use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateEncryptedCollection;
@@ -52,7 +53,6 @@ use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\Watch;
 use stdClass;
 use Throwable;
-use Traversable;
 
 use function is_array;
 use function strlen;
@@ -145,9 +145,8 @@ class Database
      * Return internal properties for debugging purposes.
      *
      * @see https://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
-     * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'builderEncoder' => $this->builderEncoder,
@@ -170,19 +169,16 @@ class Database
      * @see https://php.net/oop5.overloading#object.get
      * @see https://php.net/types.string#language.types.string.parsing.complex
      * @param string $collectionName Name of the collection to select
-     * @return Collection
      */
-    public function __get(string $collectionName)
+    public function __get(string $collectionName): Collection
     {
         return $this->selectCollection($collectionName);
     }
 
     /**
      * Return the database name.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->databaseName;
     }
@@ -195,13 +191,12 @@ class Database
      * @see Aggregate::__construct() for supported options
      * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
-     * @return Traversable
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function aggregate(array $pipeline, array $options = [])
+    public function aggregate(array $pipeline, array $options = []): CursorInterface
     {
         if (is_builder_pipeline($pipeline)) {
             $pipeline = new Pipeline(...$pipeline);
@@ -251,11 +246,10 @@ class Database
      * @see DatabaseCommand::__construct() for supported options
      * @param array|object $command Command document
      * @param array        $options Options for command execution
-     * @return Cursor
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function command(array|object $command, array $options = [])
+    public function command(array|object $command, array $options = []): CursorInterface
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
@@ -282,7 +276,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function createCollection(string $collectionName, array $options = [])
+    public function createCollection(string $collectionName, array $options = []): array|object
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
@@ -358,7 +352,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function drop(array $options = [])
+    public function drop(array $options = []): array|object
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
@@ -386,7 +380,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function dropCollection(string $collectionName, array $options = [])
+    public function dropCollection(string $collectionName, array $options = []): array|object
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
@@ -412,20 +406,16 @@ class Database
 
     /**
      * Returns the database name.
-     *
-     * @return string
      */
-    public function getDatabaseName()
+    public function getDatabaseName(): string
     {
         return $this->databaseName;
     }
 
     /**
      * Return the Manager.
-     *
-     * @return Manager
      */
-    public function getManager()
+    public function getManager(): Manager
     {
         return $this->manager;
     }
@@ -434,29 +424,24 @@ class Database
      * Return the read concern for this database.
      *
      * @see https://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
-     * @return ReadConcern
      */
-    public function getReadConcern()
+    public function getReadConcern(): ReadConcern
     {
         return $this->readConcern;
     }
 
     /**
      * Return the read preference for this database.
-     *
-     * @return ReadPreference
      */
-    public function getReadPreference()
+    public function getReadPreference(): ReadPreference
     {
         return $this->readPreference;
     }
 
     /**
      * Return the type map for this database.
-     *
-     * @return array
      */
-    public function getTypeMap()
+    public function getTypeMap(): array
     {
         return $this->typeMap;
     }
@@ -465,9 +450,8 @@ class Database
      * Return the write concern for this database.
      *
      * @see https://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
-     * @return WriteConcern
      */
-    public function getWriteConcern()
+    public function getWriteConcern(): WriteConcern
     {
         return $this->writeConcern;
     }
@@ -495,7 +479,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function listCollections(array $options = [])
+    public function listCollections(array $options = []): CollectionInfoIterator
     {
         $operation = new ListCollections($this->databaseName, $options);
         $server = select_server($this->manager, $options);
@@ -510,11 +494,10 @@ class Database
      * @param string $collectionName    Collection or view to modify
      * @param array  $collectionOptions Collection or view options to assign
      * @param array  $options           Command options
-     * @return array|object
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function modifyCollection(string $collectionName, array $collectionOptions, array $options = [])
+    public function modifyCollection(string $collectionName, array $collectionOptions, array $options = []): array|object
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
@@ -544,7 +527,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = [])
+    public function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = []): array|object
     {
         if (! isset($toDatabaseName)) {
             $toDatabaseName = $this->databaseName;
@@ -571,10 +554,9 @@ class Database
      * @see Collection::__construct() for supported options
      * @param string $collectionName Name of the collection to select
      * @param array  $options        Collection constructor options
-     * @return Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function selectCollection(string $collectionName, array $options = [])
+    public function selectCollection(string $collectionName, array $options = []): Collection
     {
         $options += [
             'builderEncoder' => $this->builderEncoder,
@@ -592,10 +574,9 @@ class Database
      *
      * @see Bucket::__construct() for supported options
      * @param array $options Bucket constructor options
-     * @return Bucket
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function selectGridFSBucket(array $options = [])
+    public function selectGridFSBucket(array $options = []): Bucket
     {
         $options += [
             'readConcern' => $this->readConcern,
@@ -613,10 +594,9 @@ class Database
      * @see Watch::__construct() for supported options
      * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
-     * @return ChangeStream
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function watch(array $pipeline = [], array $options = [])
+    public function watch(array $pipeline = [], array $options = []): ChangeStream
     {
         if (is_builder_pipeline($pipeline)) {
             $pipeline = new Pipeline(...$pipeline);
@@ -648,10 +628,9 @@ class Database
      *
      * @see Database::__construct() for supported options
      * @param array $options Database constructor options
-     * @return Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function withOptions(array $options = [])
+    public function withOptions(array $options = []): Database
     {
         $options += [
             'readConcern' => $this->readConcern,

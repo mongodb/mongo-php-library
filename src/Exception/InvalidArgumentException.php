@@ -53,10 +53,9 @@ class InvalidArgumentException extends DriverInvalidArgumentException implements
      * @param string              $name         Name of the argument or option
      * @param mixed               $value        Actual value (used to derive the type)
      * @param string|list<string> $expectedType Expected type as a string or an array containing one or more strings
-     * @return self
      * @internal
      */
-    public static function invalidType(string $name, mixed $value, string|array $expectedType)
+    public static function invalidType(string $name, mixed $value, string|array $expectedType): self
     {
         if (is_array($expectedType)) {
             $expectedType = self::expectedTypesToString($expectedType);

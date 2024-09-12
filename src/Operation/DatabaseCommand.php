@@ -82,9 +82,8 @@ final class DatabaseCommand implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return Cursor
      */
-    public function execute(Server $server)
+    public function execute(Server $server): Cursor
     {
         $cursor = $server->executeCommand($this->databaseName, $this->command, $this->createOptions());
 

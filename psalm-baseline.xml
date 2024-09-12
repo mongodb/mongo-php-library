@@ -185,6 +185,12 @@
     </DeprecatedConstant>
   </file>
   <file src="src/Client.php">
+    <DeprecatedInterface>
+      <code><![CDATA[DatabaseInfoIterator]]></code>
+    </DeprecatedInterface>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[Iterator<int, DatabaseInfo>]]></code>
+    </MismatchingDocblockReturnType>
     <MixedArgument>
       <code><![CDATA[$driverOptions['driver'] ?? []]]></code>
       <code><![CDATA[$pipeline]]></code>
@@ -192,6 +198,9 @@
     <MixedAssignment>
       <code><![CDATA[$mergedDriver['platform']]]></code>
     </MixedAssignment>
+    <MixedInferredReturnType>
+      <code><![CDATA[Iterator<int, DatabaseInfo>]]></code>
+    </MixedInferredReturnType>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$driverOptions['builderEncoder'] ?? new BuilderEncoder()]]></code>
     </MixedPropertyTypeCoercion>
@@ -223,10 +232,19 @@
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Collection.php">
+    <DeprecatedInterface>
+      <code><![CDATA[IndexInfoIterator]]></code>
+    </DeprecatedInterface>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[Iterator<int, IndexInfo>]]></code>
+    </MismatchingDocblockReturnType>
     <MixedArgument>
       <code><![CDATA[$pipeline]]></code>
       <code><![CDATA[$pipeline]]></code>
     </MixedArgument>
+    <MixedInferredReturnType>
+      <code><![CDATA[Iterator<int, IndexInfo>]]></code>
+    </MixedInferredReturnType>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$options['builderEncoder'] ?? new BuilderEncoder()]]></code>
     </MixedPropertyTypeCoercion>
@@ -253,10 +271,19 @@
     </MixedAssignment>
   </file>
   <file src="src/Database.php">
+    <DeprecatedInterface>
+      <code><![CDATA[CollectionInfoIterator]]></code>
+    </DeprecatedInterface>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[Iterator<int, CollectionInfo>]]></code>
+    </MismatchingDocblockReturnType>
     <MixedArgument>
       <code><![CDATA[$pipeline]]></code>
       <code><![CDATA[$pipeline]]></code>
     </MixedArgument>
+    <MixedInferredReturnType>
+      <code><![CDATA[Iterator<int, CollectionInfo>]]></code>
+    </MixedInferredReturnType>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$options['builderEncoder'] ?? new BuilderEncoder()]]></code>
     </MixedPropertyTypeCoercion>
@@ -320,12 +347,14 @@
     </InvalidParamDefault>
     <LessSpecificReturnStatement>
       <code><![CDATA[(object) $this->getArrayCopy()]]></code>
+      <code><![CDATA[(object) $this->getArrayCopy()]]></code>
     </LessSpecificReturnStatement>
     <MixedAssignment>
       <code><![CDATA[$this[$key]]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MoreSpecificReturnType>
+      <code><![CDATA[stdClass]]></code>
       <code><![CDATA[stdClass]]></code>
     </MoreSpecificReturnType>
   </file>
@@ -774,14 +803,26 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/ListCollections.php">
-    <DeprecatedClass>
-      <code><![CDATA[new CollectionInfoCommandIterator($this->listCollections->execute($server), $this->databaseName)]]></code>
-    </DeprecatedClass>
+    <DeprecatedInterface>
+      <code><![CDATA[CollectionInfoIterator]]></code>
+    </DeprecatedInterface>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[Iterator<int, CollectionInfo>]]></code>
+    </MismatchingDocblockReturnType>
+    <MixedInferredReturnType>
+      <code><![CDATA[Iterator<int, CollectionInfo>]]></code>
+    </MixedInferredReturnType>
   </file>
   <file src="src/Operation/ListDatabases.php">
-    <DeprecatedClass>
-      <code><![CDATA[new DatabaseInfoLegacyIterator($this->listDatabases->execute($server))]]></code>
-    </DeprecatedClass>
+    <DeprecatedInterface>
+      <code><![CDATA[DatabaseInfoIterator]]></code>
+    </DeprecatedInterface>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[Iterator<int, DatabaseInfo>]]></code>
+    </MismatchingDocblockReturnType>
+    <MixedInferredReturnType>
+      <code><![CDATA[Iterator<int, DatabaseInfo>]]></code>
+    </MixedInferredReturnType>
   </file>
   <file src="src/Operation/ListIndexes.php">
     <DeprecatedClass>
@@ -789,10 +830,19 @@
       <code><![CDATA[new IndexInfoIteratorIterator($iterator, $this->databaseName . '.' . $this->collectionName)]]></code>
       <code><![CDATA[new IndexInfoIteratorIterator(new EmptyIterator())]]></code>
     </DeprecatedClass>
+    <DeprecatedInterface>
+      <code><![CDATA[IndexInfoIterator]]></code>
+    </DeprecatedInterface>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[Iterator<int, IndexInfo>]]></code>
+    </MismatchingDocblockReturnType>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
+    <MixedInferredReturnType>
+      <code><![CDATA[Iterator<int, IndexInfo>]]></code>
+    </MixedInferredReturnType>
   </file>
   <file src="src/Operation/MapReduce.php">
     <MixedArgument>

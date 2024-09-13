@@ -25,10 +25,6 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function array_intersect_key;
-use function hash_final;
-use function hash_init;
-use function hash_update;
-use function is_bool;
 use function is_integer;
 use function is_string;
 use function MongoDB\is_document;
@@ -52,8 +48,6 @@ class WritableStream
 
     private int $chunkSize;
 
-    private bool $disableMD5;
-
     private array $file;
 
     private ?HashContext $hashCtx = null;
@@ -76,9 +70,6 @@ class WritableStream
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to
      *    261120 (i.e. 255 KiB).
      *
-     *  * disableMD5 (boolean): When true, no MD5 sum will be generated.
-     *    Defaults to "false".
-     *
      *  * contentType (string): DEPRECATED content type to be stored with the
      *    file. This information should now be added to the metadata.
      *
@@ -95,7 +86,6 @@ class WritableStream
         $options += [
             '_id' => new ObjectId(),
             'chunkSizeBytes' => self::DEFAULT_CHUNK_SIZE_BYTES,
-            'disableMD5' => false,
         ];
 
         if (isset($options['aliases']) && ! is_string_array($options['aliases'])) {
@@ -110,10 +100,6 @@ class WritableStream
             throw new InvalidArgumentException(sprintf('Expected "chunkSizeBytes" option to be >= 1, %d given', $options['chunkSizeBytes']));
         }
 
-        if (! is_bool($options['disableMD5'])) {
-            throw InvalidArgumentException::invalidType('"disableMD5" option', $options['disableMD5'], 'boolean');
-        }
-
         if (isset($options['contentType']) && ! is_string($options['contentType'])) {
             throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }
@@ -123,12 +109,6 @@ class WritableStream
         }
 
         $this->chunkSize = $options['chunkSizeBytes'];
-        $this->disableMD5 = $options['disableMD5'];
-
-        if (! $this->disableMD5) {
-            $this->hashCtx = hash_init('md5');
-        }
-
         $this->file = [
             '_id' => $options['_id'],
             'chunkSize' => $this->chunkSize,
@@ -248,10 +228,6 @@ class WritableStream
         $this->file['length'] = $this->length;
         $this->file['uploadDate'] = new UTCDateTime();
 
-        if (! $this->disableMD5 && $this->hashCtx) {
-            $this->file['md5'] = hash_final($this->hashCtx);
-        }
-
         try {
             $this->collectionWrapper->insertFile($this->file);
         } catch (DriverRuntimeException $e) {
@@ -275,10 +251,6 @@ class WritableStream
             'n' => $this->chunkOffset,
             'data' => new Binary($data),
         ];
-
-        if (! $this->disableMD5 && $this->hashCtx) {
-            hash_update($this->hashCtx, $data);
-        }
 
         try {
             $this->collectionWrapper->insertChunk($chunk);

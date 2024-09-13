@@ -134,8 +134,8 @@ final class Util
             'delete' => ['id'],
             'downloadByName' => ['filename', 'revision'],
             'download' => ['id'],
-            'uploadWithId' => ['id', 'filename', 'source', 'chunkSizeBytes', 'disableMD5', 'contentType', 'metadata'],
-            'upload' => ['filename', 'source', 'chunkSizeBytes', 'disableMD5', 'contentType', 'metadata'],
+            'uploadWithId' => ['id', 'filename', 'source', 'chunkSizeBytes', 'contentType', 'metadata'],
+            'upload' => ['filename', 'source', 'chunkSizeBytes', 'contentType', 'metadata'],
         ],
     ];
 

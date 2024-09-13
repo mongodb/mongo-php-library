@@ -45,7 +45,6 @@ use function fopen;
 use function get_resource_type;
 use function in_array;
 use function is_array;
-use function is_bool;
 use function is_integer;
 use function is_object;
 use function is_resource;
@@ -59,10 +58,7 @@ use function stream_context_create;
 use function stream_copy_to_stream;
 use function stream_get_meta_data;
 use function stream_get_wrappers;
-use function trigger_error;
 use function urlencode;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Bucket provides a public API for interacting with the GridFS files and chunks
@@ -88,8 +84,6 @@ class Bucket
 
     private string $bucketName;
 
-    private bool $disableMD5;
-
     private int $chunkSizeBytes;
 
     private ReadConcern $readConcern;
@@ -111,9 +105,6 @@ class Bucket
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to
      *    261120 (i.e. 255 KiB).
      *
-     *  * disableMD5 (boolean): When true, no MD5 sum will be generated for
-     *    each stored file. Defaults to "false".
-     *
      *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
@@ -129,14 +120,9 @@ class Bucket
      */
     public function __construct(private Manager $manager, private string $databaseName, array $options = [])
     {
-        if (isset($options['disableMD5']) && $options['disableMD5'] === false) {
-            @trigger_error('Setting GridFS "disableMD5" option to "false" is deprecated since mongodb/mongodb 1.18 and will not be supported in version 2.0.', E_USER_DEPRECATED);
-        }
-
         $options += [
             'bucketName' => self::DEFAULT_BUCKET_NAME,
             'chunkSizeBytes' => self::DEFAULT_CHUNK_SIZE_BYTES,
-            'disableMD5' => false,
         ];
 
         if (! is_string($options['bucketName'])) {
@@ -153,10 +139,6 @@ class Bucket
 
         if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
             throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
-        }
-
-        if (! is_bool($options['disableMD5'])) {
-            throw InvalidArgumentException::invalidType('"disableMD5" option', $options['disableMD5'], 'boolean');
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
@@ -182,7 +164,6 @@ class Bucket
         $this->bucketName = $options['bucketName'];
         $this->chunkSizeBytes = $options['chunkSizeBytes'];
         $this->codec = $options['codec'] ?? null;
-        $this->disableMD5 = $options['disableMD5'];
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
         $this->typeMap = $options['typeMap'] ?? self::DEFAULT_TYPE_MAP;
@@ -211,7 +192,6 @@ class Bucket
             'bucketName' => $this->bucketName,
             'codec' => $this->codec,
             'databaseName' => $this->databaseName,
-            'disableMD5' => $this->disableMD5,
             'manager' => $this->manager,
             'chunkSizeBytes' => $this->chunkSizeBytes,
             'readConcern' => $this->readConcern,
@@ -565,9 +545,6 @@ class Bucket
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to the
      *    bucket's chunk size.
      *
-     *  * disableMD5 (boolean): When true, no MD5 sum will be generated for
-     *    the stored file. Defaults to "false".
-     *
      *  * metadata (document): User data for the "metadata" field of the files
      *    collection document.
      *
@@ -579,7 +556,6 @@ class Bucket
     {
         $options += [
             'chunkSizeBytes' => $this->chunkSizeBytes,
-            'disableMD5' => $this->disableMD5,
         ];
 
         $path = $this->createPathForUpload();
@@ -657,9 +633,6 @@ class Bucket
      *
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to the
      *    bucket's chunk size.
-     *
-     *  * disableMD5 (boolean): When true, no MD5 sum will be generated for
-     *    the stored file. Defaults to "false".
      *
      *  * metadata (document): User data for the "metadata" field of the files
      *    collection document.
@@ -792,9 +765,9 @@ class Bucket
      *
      * @see StreamWrapper::setContextResolver()
      *
-     * @param string                                                         $path    The full url provided to fopen(). It contains the filename.
-     *                                                                                gridfs://database_name/collection_name.files/file_name
-     * @param array{revision?: int, chunkSizeBytes?: int, disableMD5?: bool} $context The options provided to fopen()
+     * @param string                                      $path    The full url provided to fopen(). It contains the filename.
+     *                                                             gridfs://database_name/collection_name.files/file_name
+     * @param array{revision?: int, chunkSizeBytes?: int} $context The options provided to fopen()
      *
      * @return array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array}
      *
@@ -825,7 +798,6 @@ class Bucket
                 'filename' => $filename,
                 'options' => $context + [
                     'chunkSizeBytes' => $this->chunkSizeBytes,
-                    'disableMD5' => $this->disableMD5,
                 ],
             ];
         }

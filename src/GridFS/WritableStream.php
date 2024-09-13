@@ -17,7 +17,6 @@
 
 namespace MongoDB\GridFS;
 
-use HashContext;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
@@ -47,8 +46,6 @@ class WritableStream
     private int $chunkSize;
 
     private array $file;
-
-    private ?HashContext $hashCtx = null;
 
     private bool $isClosed = false;
 

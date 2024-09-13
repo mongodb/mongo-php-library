@@ -157,13 +157,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
             },
             function (array $event): void {
                 $command = $event['started']->getCommand();
-                $this->assertObjectHasAttribute('comment', $command);
-                $this->assertObjectHasAttribute('commitQuorum', $command);
-                $this->assertObjectHasAttribute('lsid', $command);
-                $this->assertObjectHasAttribute('maxTimeMS', $command);
-                $this->assertObjectHasAttribute('writeConcern', $command);
-                $this->assertObjectHasAttribute('sparse', $command->indexes[0]);
-                $this->assertObjectHasAttribute('unique', $command->indexes[0]);
+                $this->assertObjectHasProperty('comment', $command);
+                $this->assertObjectHasProperty('commitQuorum', $command);
+                $this->assertObjectHasProperty('lsid', $command);
+                $this->assertObjectHasProperty('maxTimeMS', $command);
+                $this->assertObjectHasProperty('writeConcern', $command);
+                $this->assertObjectHasProperty('sparse', $command->indexes[0]);
+                $this->assertObjectHasProperty('unique', $command->indexes[0]);
             },
         );
     }
@@ -752,8 +752,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 call_user_func($method, $collection, $session);
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
             },
         );
     }

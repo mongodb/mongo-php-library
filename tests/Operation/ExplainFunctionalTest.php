@@ -150,9 +150,9 @@ class ExplainFunctionalTest extends FunctionalTestCase
             },
             function (array $event): void {
                 $command = $event['started']->getCommand();
-                $this->assertObjectNotHasAttribute('maxAwaitTimeMS', $command->explain);
-                $this->assertObjectHasAttribute('tailable', $command->explain);
-                $this->assertObjectHasAttribute('awaitData', $command->explain);
+                $this->assertObjectNotHasProperty('maxAwaitTimeMS', $command->explain);
+                $this->assertObjectHasProperty('tailable', $command->explain);
+                $this->assertObjectHasProperty('awaitData', $command->explain);
             },
         );
     }
@@ -175,8 +175,8 @@ class ExplainFunctionalTest extends FunctionalTestCase
             },
             function (array $event): void {
                 $command = $event['started']->getCommand();
-                $this->assertObjectHasAttribute('sort', $command->explain);
-                $this->assertObjectNotHasAttribute('modifiers', $command->explain);
+                $this->assertObjectHasProperty('sort', $command->explain);
+                $this->assertObjectNotHasProperty('modifiers', $command->explain);
             },
         );
     }
@@ -261,7 +261,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $result = $explainOperation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute(
+                $this->assertObjectHasProperty(
                     'bypassDocumentValidation',
                     $event['started']->getCommand()->explain,
                 );
@@ -288,7 +288,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $result = $explainOperation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute(
+                $this->assertObjectNotHasProperty(
                     'bypassDocumentValidation',
                     $event['started']->getCommand()->explain,
                 );

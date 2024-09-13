@@ -83,7 +83,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = current($cursor->toArray());
 
         $this->assertCommandSucceeded($commandResult);
-        $this->assertObjectHasAttribute('ok', $commandResult);
+        $this->assertObjectHasProperty('ok', $commandResult);
         $this->assertSame(1, (int) $commandResult->ok);
     }
 

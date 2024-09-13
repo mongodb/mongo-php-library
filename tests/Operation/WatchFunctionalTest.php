@@ -307,15 +307,15 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertCount(3, $events);
 
         $this->assertSame('getMore', $events[0]['started']->getCommandName());
-        $this->arrayHasKey('failed', $events[0]);
+        $this->assertArrayHasKey('failed', $events[0]);
 
         $this->assertSame('aggregate', $events[1]['started']->getCommandName());
         $this->assertResumeAfter($postBatchResumeToken, $events[1]['started']->getCommand());
-        $this->arrayHasKey('succeeded', $events[1]);
+        $this->assertArrayHasKey('succeeded', $events[1]);
 
         // Original cursor is freed immediately after the change stream resumes
         $this->assertSame('killCursors', $events[2]['started']->getCommandName());
-        $this->arrayHasKey('succeeded', $events[2]);
+        $this->assertArrayHasKey('succeeded', $events[2]);
 
         $this->assertFalse($changeStream->valid());
     }
@@ -380,15 +380,15 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertCount(3, $events);
 
         $this->assertSame('getMore', $events[0]['started']->getCommandName());
-        $this->arrayHasKey('failed', $events[0]);
+        $this->assertArrayHasKey('failed', $events[0]);
 
         $this->assertSame('aggregate', $events[1]['started']->getCommandName());
         $this->assertStartAtOperationTime($operationTime, $events[1]['started']->getCommand());
-        $this->arrayHasKey('succeeded', $events[1]);
+        $this->assertArrayHasKey('succeeded', $events[1]);
 
         // Original cursor is freed immediately after the change stream resumes
         $this->assertSame('killCursors', $events[2]['started']->getCommandName());
-        $this->arrayHasKey('succeeded', $events[2]);
+        $this->assertArrayHasKey('succeeded', $events[2]);
 
         $this->assertFalse($changeStream->valid());
     }

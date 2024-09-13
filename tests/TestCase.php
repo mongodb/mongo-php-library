@@ -140,22 +140,22 @@ OUTPUT;
         return is_string($dataName) ? $dataName : '';
     }
 
-    final public function provideInvalidArrayValues(): array
+    final public static function provideInvalidArrayValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidArrayValues());
     }
 
-    final public function provideInvalidDocumentValues(): array
+    final public static function provideInvalidDocumentValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidDocumentValues());
     }
 
-    final public function provideInvalidIntegerValues(): array
+    final public static function provideInvalidIntegerValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidIntegerValues());
     }
 
-    final public function provideInvalidStringValues(): array
+    final public static function provideInvalidStringValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidStringValues());
     }

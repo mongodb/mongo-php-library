@@ -214,7 +214,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->downloadToStream('id', $destination);
     }
 
-    public static function provideInvalidStreamValues()
+    public static function provideInvalidStreamValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidStreamValues());
     }
@@ -1029,7 +1029,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     /**
      * Return a list of invalid stream values.
      */
-    private function getInvalidStreamValues(): array
+    private static function getInvalidStreamValues(): array
     {
         return [null, 123, 'foo', [], hash_init('md5')];
     }

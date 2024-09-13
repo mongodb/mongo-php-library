@@ -87,7 +87,7 @@ class MapReduceTest extends TestCase
         ]);
     }
 
-    private function getInvalidJavascriptValues()
+    private static function getInvalidJavascriptValues()
     {
         return [123, 3.14, 'foo', true, [], new stdClass(), new ObjectId()];
     }

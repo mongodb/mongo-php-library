@@ -111,10 +111,10 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function provideFilteredFileIdAndExpectedBytes()
+    public static function provideFilteredFileIdAndExpectedBytes()
     {
         return array_filter(
-            $this->provideFileIdAndExpectedBytes(),
+            self::provideFileIdAndExpectedBytes(),
             fn (array $args) => $args[1] > 0,
         );
     }

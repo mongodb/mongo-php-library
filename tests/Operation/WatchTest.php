@@ -66,7 +66,7 @@ class WatchTest extends FunctionalTestCase
         new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
-    private function getInvalidTimestampValues()
+    private static function getInvalidTimestampValues()
     {
         return [123, 3.14, 'foo', true, [], new stdClass()];
     }

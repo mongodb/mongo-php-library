@@ -20,8 +20,6 @@ use function base64_decode;
 use function file_get_contents;
 use function get_debug_type;
 use function is_int;
-use function phpversion;
-use function version_compare;
 
 /**
  * Prose test 22: Range Explicit Encryption
@@ -40,10 +38,6 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        if (version_compare(phpversion('mongodb'), '1.20.0dev', '>=')) {
-            $this->markTestIncomplete('Range protocol V1 is not supported by ext-mongodb 1.20+');
-        }
 
         if ($this->isStandalone()) {
             $this->markTestSkipped('Range explicit encryption tests require replica sets');

@@ -4266,6 +4266,32 @@ enum Pipelines: string
     ]
     JSON;
 
+    /** Round Average Rating */
+    case RoundRoundAverageRating = <<<'JSON'
+    [
+        {
+            "$project": {
+                "roundedAverageRating": {
+                    "$avg": [
+                        {
+                            "$round": [
+                                {
+                                    "$avg": [
+                                        "$averageRating"
+                                    ]
+                                },
+                                {
+                                    "$numberInt": "2"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+    JSON;
+
     /**
      * Example
      *

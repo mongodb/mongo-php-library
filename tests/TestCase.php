@@ -6,6 +6,8 @@ use InvalidArgumentException;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\Codec;
+use MongoDB\Codec\DecodeIfSupported;
+use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -234,7 +236,34 @@ OUTPUT;
 
     protected static function getInvalidDocumentCodecValues(): array
     {
-        return [123, 3.14, 'foo', true, [], new stdClass(), self::createStub(Codec::class)];
+        $codec = new class implements Codec {
+            use DecodeIfSupported;
+            use EncodeIfSupported;
+
+            public function canDecode(mixed $value): bool
+            {
+                return true;
+            }
+
+            public function decode(mixed $value): mixed
+            {
+                return $value;
+            }
+
+            public function canEncode(mixed $value): bool
+            {
+                return true;
+            }
+
+            public function encode(mixed $value): mixed
+            {
+                return $value;
+            }
+        };
+        // @fixme: createStub can be called statically in PHPUnit 10
+        // $codec = self::createStub(Codec::class);
+
+        return [123, 3.14, 'foo', true, [], new stdClass(), $codec];
     }
 
     /**

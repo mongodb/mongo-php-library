@@ -26,9 +26,7 @@ use MongoDB\Exception\InvalidArgumentException;
 
 use function array_intersect_key;
 use function is_integer;
-use function is_string;
 use function MongoDB\is_document;
-use function MongoDB\is_string_array;
 use function sprintf;
 use function strlen;
 use function substr;
@@ -63,15 +61,8 @@ class WritableStream
      *
      *  * _id (mixed): File document identifier. Defaults to a new ObjectId.
      *
-     *  * aliases (array of strings): DEPRECATED An array of aliases.
-     *    Applications wishing to store aliases should add an aliases field to
-     *    the metadata document instead.
-     *
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to
      *    261120 (i.e. 255 KiB).
-     *
-     *  * contentType (string): DEPRECATED content type to be stored with the
-     *    file. This information should now be added to the metadata.
      *
      *  * metadata (document): User data for the "metadata" field of the files
      *    collection document.
@@ -88,20 +79,12 @@ class WritableStream
             'chunkSizeBytes' => self::DEFAULT_CHUNK_SIZE_BYTES,
         ];
 
-        if (isset($options['aliases']) && ! is_string_array($options['aliases'])) {
-            throw InvalidArgumentException::invalidType('"aliases" option', $options['aliases'], 'array of strings');
-        }
-
         if (! is_integer($options['chunkSizeBytes'])) {
             throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 
         if ($options['chunkSizeBytes'] < 1) {
             throw new InvalidArgumentException(sprintf('Expected "chunkSizeBytes" option to be >= 1, %d given', $options['chunkSizeBytes']));
-        }
-
-        if (isset($options['contentType']) && ! is_string($options['contentType'])) {
-            throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }
 
         if (isset($options['metadata']) && ! is_document($options['metadata'])) {
@@ -115,7 +98,7 @@ class WritableStream
             'filename' => $filename,
             'length' => null,
             'uploadDate' => null,
-        ] + array_intersect_key($options, ['aliases' => 1, 'contentType' => 1, 'metadata' => 1]);
+        ] + array_intersect_key($options, ['metadata' => 1]);
     }
 
     /**

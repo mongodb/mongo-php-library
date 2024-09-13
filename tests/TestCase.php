@@ -205,7 +205,7 @@ OUTPUT;
     {
         $class = new ReflectionClass($this);
 
-        return sprintf('%s.%s', $class->getShortName(), hash('crc32b', $this->getName()));
+        return sprintf('%s.%s', $class->getShortName(), hash('crc32b', $this->name()));
     }
 
     /**

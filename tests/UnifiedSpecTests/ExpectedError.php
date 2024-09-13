@@ -26,7 +26,7 @@ use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotInstanceOf;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertNull;
-use function PHPUnit\Framework\assertObjectHasAttribute;
+use function PHPUnit\Framework\assertObjectHasProperty;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsStringIgnoringCase;
 use function PHPUnit\Framework\assertThat;
@@ -218,13 +218,13 @@ final class ExpectedError
         $result = $e->getResultDocument();
 
         if (isset($result->writeConcernError)) {
-            assertObjectHasAttribute('codeName', $result->writeConcernError);
+            assertObjectHasProperty('codeName', $result->writeConcernError);
             assertSame($this->codeName, $result->writeConcernError->codeName);
 
             return;
         }
 
-        assertObjectHasAttribute('codeName', $result);
+        assertObjectHasProperty('codeName', $result);
         assertSame($this->codeName, $result->codeName);
     }
 }

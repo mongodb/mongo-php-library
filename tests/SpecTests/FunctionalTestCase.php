@@ -104,7 +104,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     {
         foreach ($expected as $key => $value) {
             if ($value === null) {
-                static::assertObjectNotHasAttribute($key, $actual);
+                static::assertObjectNotHasProperty($key, $actual);
                 unset($expected->{$key});
             }
         }

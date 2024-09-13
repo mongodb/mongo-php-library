@@ -591,7 +591,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'size', 'instock'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
         }
 
@@ -606,11 +606,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
             foreach (['size', 'instock'] as $field) {
-                $this->assertObjectNotHasAttribute($field, $document);
+                $this->assertObjectNotHasProperty($field, $document);
             }
         }
 
@@ -625,11 +625,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['item', 'status'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
             foreach (['_id', 'size', 'instock'] as $field) {
-                $this->assertObjectNotHasAttribute($field, $document);
+                $this->assertObjectNotHasProperty($field, $document);
             }
         }
 
@@ -644,11 +644,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'size'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
             foreach (['status', 'instock'] as $field) {
-                $this->assertObjectNotHasAttribute($field, $document);
+                $this->assertObjectNotHasProperty($field, $document);
             }
         }
 
@@ -663,13 +663,13 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'size'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectNotHasAttribute('instock', $document);
-            $this->assertObjectHasAttribute('uom', $document->size);
-            $this->assertObjectNotHasAttribute('h', $document->size);
-            $this->assertObjectNotHasAttribute('w', $document->size);
+            $this->assertObjectNotHasProperty('instock', $document);
+            $this->assertObjectHasProperty('uom', $document->size);
+            $this->assertObjectNotHasProperty('h', $document->size);
+            $this->assertObjectNotHasProperty('w', $document->size);
         }
 
         // Start Example 48
@@ -683,12 +683,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'size', 'instock'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectHasAttribute('h', $document->size);
-            $this->assertObjectHasAttribute('w', $document->size);
-            $this->assertObjectNotHasAttribute('uom', $document->size);
+            $this->assertObjectHasProperty('h', $document->size);
+            $this->assertObjectHasProperty('w', $document->size);
+            $this->assertObjectNotHasProperty('uom', $document->size);
         }
 
         // Start Example 49
@@ -702,13 +702,13 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'instock'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectNotHasAttribute('size', $document);
+            $this->assertObjectNotHasProperty('size', $document);
             foreach ($document->instock as $instock) {
-                $this->assertObjectHasAttribute('qty', $instock);
-                $this->assertObjectNotHasAttribute('warehouse', $instock);
+                $this->assertObjectHasProperty('qty', $instock);
+                $this->assertObjectNotHasProperty('warehouse', $instock);
             }
         }
 
@@ -723,10 +723,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'instock'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectNotHasAttribute('size', $document);
+            $this->assertObjectNotHasProperty('size', $document);
             $this->assertCount(1, $document->instock);
         }
     }
@@ -786,10 +786,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['item', 'status', 'area', 'reportNumber'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectNotHasAttribute('_id', $document);
+            $this->assertObjectNotHasProperty('_id', $document);
             $this->assertIsString($document->status);
             $this->assertIsString($document->area);
             $this->assertSame(1, $document->reportNumber);

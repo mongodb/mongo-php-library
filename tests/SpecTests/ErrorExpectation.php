@@ -163,13 +163,13 @@ final class ErrorExpectation
         $result = $actual->getResultDocument();
 
         if (isset($result->writeConcernError)) {
-            $test->assertObjectHasAttribute('codeName', $result->writeConcernError);
+            $test->assertObjectHasProperty('codeName', $result->writeConcernError);
             $test->assertSame($this->codeName, $result->writeConcernError->codeName);
 
             return;
         }
 
-        $test->assertObjectHasAttribute('codeName', $result);
+        $test->assertObjectHasProperty('codeName', $result);
         $test->assertSame($this->codeName, $result->codeName);
     }
 

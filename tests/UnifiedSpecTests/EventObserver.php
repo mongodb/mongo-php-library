@@ -27,7 +27,7 @@ use function PHPUnit\Framework\assertIsBool;
 use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
-use function PHPUnit\Framework\assertObjectHasAttribute;
+use function PHPUnit\Framework\assertObjectHasProperty;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertThat;
 use function sprintf;
@@ -165,7 +165,7 @@ final class EventObserver implements CommandSubscriber
             }
 
             $command = $event->getCommand();
-            assertObjectHasAttribute('lsid', $command);
+            assertObjectHasProperty('lsid', $command);
             $lsids[] = $command->lsid;
 
             if (count($lsids) === 2) {

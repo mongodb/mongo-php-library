@@ -39,22 +39,22 @@ class WatchTest extends FunctionalTestCase
         new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'batchSize' => $this->getInvalidIntegerValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'collation' => $this->getInvalidDocumentValues(),
-            'fullDocument' => $this->getInvalidStringValues(true),
-            'fullDocumentBeforeChange' => $this->getInvalidStringValues(),
-            'maxAwaitTimeMS' => $this->getInvalidIntegerValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(true),
-            'resumeAfter' => $this->getInvalidDocumentValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'startAfter' => $this->getInvalidDocumentValues(),
-            'startAtOperationTime' => $this->getInvalidTimestampValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
+        return self::createOptionDataProvider([
+            'batchSize' => self::getInvalidIntegerValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'collation' => self::getInvalidDocumentValues(),
+            'fullDocument' => self::getInvalidStringValues(true),
+            'fullDocumentBeforeChange' => self::getInvalidStringValues(),
+            'maxAwaitTimeMS' => self::getInvalidIntegerValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(true),
+            'resumeAfter' => self::getInvalidDocumentValues(),
+            'session' => self::getInvalidSessionValues(),
+            'startAfter' => self::getInvalidDocumentValues(),
+            'startAtOperationTime' => self::getInvalidTimestampValues(),
+            'typeMap' => self::getInvalidArrayValues(),
         ]);
     }
 

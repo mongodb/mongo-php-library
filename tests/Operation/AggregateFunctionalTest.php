@@ -271,7 +271,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [

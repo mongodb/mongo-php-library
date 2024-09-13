@@ -77,7 +77,7 @@ abstract class TestCase extends BaseTestCase
 
     public function provideInvalidUpdateValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidUpdateValues());
+        return self::wrapValuesForDataProvider(self::getInvalidUpdateValues());
     }
 
     protected function getInvalidUpdateValues(): array

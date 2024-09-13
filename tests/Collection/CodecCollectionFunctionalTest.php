@@ -151,7 +151,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideFindOneAndModifyOptions(): Generator
+    public static function provideFindOneAndModifyOptions(): Generator
     {
         yield 'Default codec' => [
             'expected' => TestObject::createDecodedForFixture(1),

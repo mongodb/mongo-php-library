@@ -35,7 +35,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideQueryDocuments(): array
+    public static function provideQueryDocuments(): array
     {
         $expected = (object) ['x' => 1];
 
@@ -74,7 +74,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideReplacementDocumentLikePipeline(): array
+    public static function provideReplacementDocumentLikePipeline(): array
     {
         /* Note: this expected value differs from UpdateFunctionalTest because
          * FindAndModify is not affected by libmongoc's pipeline detection for
@@ -251,7 +251,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocument, $document);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocument()
+    public static function provideTypeMapOptionsAndExpectedDocument()
     {
         return [
             [

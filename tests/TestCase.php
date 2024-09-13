@@ -140,22 +140,22 @@ OUTPUT;
 
     public function provideInvalidArrayValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidArrayValues());
+        return self::wrapValuesForDataProvider(self::getInvalidArrayValues());
     }
 
     public function provideInvalidDocumentValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
+        return self::wrapValuesForDataProvider(self::getInvalidDocumentValues());
     }
 
     public function provideInvalidIntegerValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidIntegerValues());
+        return self::wrapValuesForDataProvider(self::getInvalidIntegerValues());
     }
 
     public function provideInvalidStringValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidStringValues());
+        return self::wrapValuesForDataProvider(self::getInvalidStringValues());
     }
 
     protected function assertDeprecated(callable $execution): void
@@ -175,7 +175,7 @@ OUTPUT;
         $this->assertCount(1, $errors);
     }
 
-    protected function createOptionDataProvider(array $options): array
+    protected static function createOptionDataProvider(array $options): array
     {
         $data = [];
 
@@ -206,7 +206,7 @@ OUTPUT;
     /**
      * Return a list of invalid array values.
      */
-    protected function getInvalidArrayValues(bool $includeNull = false): array
+    protected static function getInvalidArrayValues(bool $includeNull = false): array
     {
         return [123, 3.14, 'foo', true, new stdClass(), ...($includeNull ? [null] : [])];
     }
@@ -214,7 +214,7 @@ OUTPUT;
     /**
      * Return a list of invalid boolean values.
      */
-    protected function getInvalidBooleanValues(bool $includeNull = false): array
+    protected static function getInvalidBooleanValues(bool $includeNull = false): array
     {
         return [123, 3.14, 'foo', [], new stdClass(), ...($includeNull ? [null] : [])];
     }
@@ -222,25 +222,25 @@ OUTPUT;
     /**
      * Return a list of invalid document values.
      */
-    protected function getInvalidDocumentValues(bool $includeNull = false): array
+    protected static function getInvalidDocumentValues(bool $includeNull = false): array
     {
         return [123, 3.14, 'foo', true, PackedArray::fromPHP([]), ...($includeNull ? [null] : [])];
     }
 
-    protected function getInvalidObjectValues(bool $includeNull = false): array
+    protected static function getInvalidObjectValues(bool $includeNull = false): array
     {
         return [123, 3.14, 'foo', true, [], new stdClass(), ...($includeNull ? [null] : [])];
     }
 
-    protected function getInvalidDocumentCodecValues(): array
+    protected static function getInvalidDocumentCodecValues(): array
     {
-        return [123, 3.14, 'foo', true, [], new stdClass(), $this->createMock(Codec::class)];
+        return [123, 3.14, 'foo', true, [], new stdClass(), self::createStub(Codec::class)];
     }
 
     /**
      * Return a list of invalid hint values.
      */
-    protected function getInvalidHintValues()
+    protected static function getInvalidHintValues()
     {
         return [123, 3.14, true];
     }
@@ -248,7 +248,7 @@ OUTPUT;
     /**
      * Return a list of invalid integer values.
      */
-    protected function getInvalidIntegerValues(bool $includeNull = false): array
+    protected static function getInvalidIntegerValues(bool $includeNull = false): array
     {
         return [3.14, 'foo', true, [], new stdClass(), ...($includeNull ? [null] : [])];
     }
@@ -256,7 +256,7 @@ OUTPUT;
     /**
      * Return a list of invalid ReadPreference values.
      */
-    protected function getInvalidReadConcernValues(bool $includeNull = false): array
+    protected static function getInvalidReadConcernValues(bool $includeNull = false): array
     {
         return [
             123,
@@ -274,7 +274,7 @@ OUTPUT;
     /**
      * Return a list of invalid ReadPreference values.
      */
-    protected function getInvalidReadPreferenceValues(bool $includeNull = false): array
+    protected static function getInvalidReadPreferenceValues(bool $includeNull = false): array
     {
         return [
             123,
@@ -292,7 +292,7 @@ OUTPUT;
     /**
      * Return a list of invalid Session values.
      */
-    protected function getInvalidSessionValues(bool $includeNull = false): array
+    protected static function getInvalidSessionValues(bool $includeNull = false): array
     {
         return [
             123,
@@ -311,7 +311,7 @@ OUTPUT;
     /**
      * Return a list of invalid string values.
      */
-    protected function getInvalidStringValues(bool $includeNull = false): array
+    protected static function getInvalidStringValues(bool $includeNull = false): array
     {
         return [123, 3.14, true, [], new stdClass(), ...($includeNull ? [null] : [])];
     }
@@ -319,7 +319,7 @@ OUTPUT;
     /**
      * Return a list of invalid WriteConcern values.
      */
-    protected function getInvalidWriteConcernValues(bool $includeNull = false): array
+    protected static function getInvalidWriteConcernValues(bool $includeNull = false): array
     {
         return [
             123,

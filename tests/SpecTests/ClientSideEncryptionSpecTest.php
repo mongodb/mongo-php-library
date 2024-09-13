@@ -215,7 +215,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
     }
 
-    public function provideTests()
+    public static function provideTests()
     {
         $testArgs = [];
 

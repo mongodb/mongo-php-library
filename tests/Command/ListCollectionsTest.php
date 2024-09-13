@@ -15,13 +15,13 @@ class ListCollectionsTest extends TestCase
         new ListCollections($this->getDatabaseName(), $options);
     }
 
-    public function provideInvalidConstructorOptions(): array
+    public static function provideInvalidConstructorOptions(): array
     {
-        return $this->createOptionDataProvider([
-            'authorizedCollections' => $this->getInvalidBooleanValues(),
-            'filter' => $this->getInvalidDocumentValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'session' => $this->getInvalidSessionValues(),
+        return self::createOptionDataProvider([
+            'authorizedCollections' => self::getInvalidBooleanValues(),
+            'filter' => self::getInvalidDocumentValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'session' => self::getInvalidSessionValues(),
         ]);
     }
 }

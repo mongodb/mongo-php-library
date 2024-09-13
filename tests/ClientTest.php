@@ -42,29 +42,29 @@ class ClientTest extends TestCase
         new Client(static::getUri(), [], $driverOptions);
     }
 
-    public function provideInvalidConstructorDriverOptions()
+    public static function provideInvalidConstructorDriverOptions()
     {
         $options = [];
 
-        foreach ($this->getInvalidObjectValues() as $value) {
+        foreach (self::getInvalidObjectValues() as $value) {
             $options[][] = ['builderEncoder' => $value];
         }
 
-        foreach ($this->getInvalidArrayValues(true) as $value) {
+        foreach (self::getInvalidArrayValues(true) as $value) {
             $options[][] = ['typeMap' => $value];
         }
 
         $options[][] = ['autoEncryption' => ['keyVaultClient' => 'foo']];
 
-        foreach ($this->getInvalidStringValues() as $value) {
+        foreach (self::getInvalidStringValues() as $value) {
             $options[][] = ['driver' => ['name' => $value]];
         }
 
-        foreach ($this->getInvalidStringValues() as $value) {
+        foreach (self::getInvalidStringValues() as $value) {
             $options[][] = ['driver' => ['version' => $value]];
         }
 
-        foreach ($this->getInvalidStringValues() as $value) {
+        foreach (self::getInvalidStringValues() as $value) {
             $options[] = [
                 'driverOptions' => ['driver' => ['platform' => $value]],
                 'exception' => DriverInvalidArgumentException::class,

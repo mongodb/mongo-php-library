@@ -56,7 +56,7 @@ class FindFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideModifierDocuments(): array
+    public static function provideModifierDocuments(): array
     {
         $expectedSort = (object) ['x' => 1];
 
@@ -168,7 +168,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $cursor->toArray());
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [

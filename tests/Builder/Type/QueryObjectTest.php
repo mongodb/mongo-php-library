@@ -57,7 +57,7 @@ class QueryObjectTest extends TestCase
         $this->assertCount($expectedCount, $queryObject->queries);
     }
 
-    public function provideQueryObjectValue(): Generator
+    public static function provideQueryObjectValue(): Generator
     {
         yield 'int' => [['foo' => 1]];
         yield 'float' => [['foo' => 1.1]];

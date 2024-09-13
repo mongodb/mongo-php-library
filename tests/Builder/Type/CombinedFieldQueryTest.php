@@ -87,7 +87,7 @@ class CombinedFieldQueryTest extends TestCase
         ]);
     }
 
-    public function provideDuplicateOperator(): Generator
+    public static function provideDuplicateOperator(): Generator
     {
         yield 'array and FieldQuery' => [
             [

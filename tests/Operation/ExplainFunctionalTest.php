@@ -360,7 +360,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    public function provideVerbosityInformation()
+    public static function provideVerbosityInformation()
     {
         return [
             [Explain::VERBOSITY_ALL_PLANS, true, true],

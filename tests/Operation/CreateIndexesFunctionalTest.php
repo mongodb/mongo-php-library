@@ -121,7 +121,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         });
     }
 
-    public function provideKeyCasts(): array
+    public static function provideKeyCasts(): array
     {
         // phpcs:disable SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing
         // phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration

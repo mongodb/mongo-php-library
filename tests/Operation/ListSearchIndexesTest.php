@@ -20,11 +20,11 @@ class ListSearchIndexesTest extends TestCase
         new ListSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions(): array
+    public static function provideInvalidConstructorOptions(): array
     {
         $options = [];
 
-        foreach ($this->getInvalidIntegerValues() as $value) {
+        foreach (self::getInvalidIntegerValues() as $value) {
             $options[][] = ['batchSize' => $value];
         }
 

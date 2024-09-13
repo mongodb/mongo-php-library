@@ -229,9 +229,9 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function provideInvalidBooleanValues()
+    public static function provideInvalidBooleanValues()
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidBooleanValues());
+        return self::wrapValuesForDataProvider(self::getInvalidBooleanValues());
     }
 
     public function testReplaceOneWithCodecRejectsInvalidDocuments(): void
@@ -442,14 +442,14 @@ class BulkWriteTest extends TestCase
         );
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'ordered' => $this->getInvalidBooleanValues(true),
-            'session' => $this->getInvalidSessionValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'ordered' => self::getInvalidBooleanValues(true),
+            'session' => self::getInvalidSessionValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 }

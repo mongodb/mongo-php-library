@@ -71,17 +71,17 @@ class BucketFunctionalTest extends FunctionalTestCase
         new Bucket($this->manager, $this->getDatabaseName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'bucketName' => $this->getInvalidStringValues(true),
-            'chunkSizeBytes' => $this->getInvalidIntegerValues(true),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'disableMD5' => $this->getInvalidBooleanValues(true),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'bucketName' => self::getInvalidStringValues(true),
+            'chunkSizeBytes' => self::getInvalidIntegerValues(true),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'disableMD5' => self::getInvalidBooleanValues(true),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 
@@ -117,7 +117,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertCollectionCount($this->chunksCollection, 0);
     }
 
-    public function provideInputDataAndExpectedChunks()
+    public static function provideInputDataAndExpectedChunks()
     {
         return [
             ['', 0],
@@ -214,9 +214,9 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->downloadToStream('id', $destination);
     }
 
-    public function provideInvalidStreamValues()
+    public static function provideInvalidStreamValues()
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidStreamValues());
+        return self::wrapValuesForDataProvider(self::getInvalidStreamValues());
     }
 
     public function testDownloadToStreamShouldRequireFileToExist(): void
@@ -278,7 +278,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->downloadToStreamByName($filename, $destination, ['revision' => $revision]);
     }
 
-    public function provideNonexistentFilenameAndRevision()
+    public static function provideNonexistentFilenameAndRevision()
     {
         return [
             ['filename', 2],
@@ -552,7 +552,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function provideInvalidGridFSStreamValues()
     {
-        return $this->wrapValuesForDataProvider(array_merge($this->getInvalidStreamValues(), [$this->createStream()]));
+        return self::wrapValuesForDataProvider(array_merge(self::getInvalidStreamValues(), [$this->createStream()]));
     }
 
     public function testGetFileIdForStreamUsesTypeMap(): void

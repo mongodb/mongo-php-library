@@ -37,9 +37,9 @@ class DeleteTest extends TestCase
         new Delete($this->getDatabaseName(), $this->getCollectionName(), [], $limit);
     }
 
-    public function provideInvalidLimitValues()
+    public static function provideInvalidLimitValues()
     {
-        return $this->wrapValuesForDataProvider([-1, 2]);
+        return self::wrapValuesForDataProvider([-1, 2]);
     }
 
     /** @dataProvider provideInvalidConstructorOptions */
@@ -49,14 +49,14 @@ class DeleteTest extends TestCase
         new Delete($this->getDatabaseName(), $this->getCollectionName(), [], 1, $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'collation' => $this->getInvalidDocumentValues(),
-            'hint' => $this->getInvalidHintValues(),
-            'let' => $this->getInvalidDocumentValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'collation' => self::getInvalidDocumentValues(),
+            'hint' => self::getInvalidHintValues(),
+            'let' => self::getInvalidDocumentValues(),
+            'session' => self::getInvalidSessionValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

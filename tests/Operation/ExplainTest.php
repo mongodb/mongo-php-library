@@ -16,13 +16,13 @@ class ExplainTest extends TestCase
         new Explain($this->getDatabaseName(), $explainable, $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'verbosity' => $this->getInvalidStringValues(),
+        return self::createOptionDataProvider([
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'session' => self::getInvalidSessionValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'verbosity' => self::getInvalidStringValues(),
         ]);
     }
 }

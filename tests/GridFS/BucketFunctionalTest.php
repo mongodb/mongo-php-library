@@ -760,7 +760,6 @@ class BucketFunctionalTest extends FunctionalTestCase
             [
                 'projection' => [
                     'length' => 1,
-                    'md5' => 1,
                     '_id' => 0,
                 ],
             ],

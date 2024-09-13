@@ -451,26 +451,13 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
     private static function getCastCallableForType(string $type): callable
     {
-        switch ($type) {
-            case 'DecimalNoPrecision':
-            case 'DecimalPrecision':
-                return fn (int $value) => new Decimal128((string) $value);
-
-            case 'DoubleNoPrecision':
-            case 'DoublePrecision':
-                return fn (int $value) => (double) $value;
-
-            case 'Date':
-                return fn (int $value) => new UTCDateTime($value);
-
-            case 'Int':
-                return fn (int $value) => $value;
-
-            case 'Long':
-                return fn (int $value) => new Int64($value);
-
-            default:
-                throw new LogicException('Unsupported type: ' . $type);
-        }
+        return match ($type) {
+            'DecimalNoPrecision', 'DecimalPrecision' => fn (int $value) => new Decimal128((string) $value),
+            'DoubleNoPrecision', 'DoublePrecision' => fn (int $value) => (double) $value,
+            'Date' => fn (int $value) => new UTCDateTime($value),
+            'Int' => fn (int $value) => $value,
+            'Long' => fn (int $value) => new Int64($value),
+            default => throw new LogicException('Unsupported type: ' . $type),
+        };
     }
 }

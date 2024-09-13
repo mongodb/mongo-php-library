@@ -299,25 +299,16 @@ final class UnifiedTestRunner
      */
     private function getTopology(): string
     {
-        switch ($this->getPrimaryServer()->getType()) {
-            case Server::TYPE_STANDALONE:
-                return RunOnRequirement::TOPOLOGY_SINGLE;
-
-            case Server::TYPE_RS_PRIMARY:
-                return RunOnRequirement::TOPOLOGY_REPLICASET;
-
-            case Server::TYPE_MONGOS:
-                /* Since MongoDB 3.6, all sharded clusters use replica sets. The
-                 * unified test format deprecated use of "sharded-replicaset" in
-                 * tests but we should still identify as such. */
-                return RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET;
-
-            case Server::TYPE_LOAD_BALANCER:
-                return RunOnRequirement::TOPOLOGY_LOAD_BALANCED;
-
-            default:
-                throw new UnexpectedValueException('Topology is neither single nor RS nor sharded');
-        }
+        return match ($this->getPrimaryServer()->getType()) {
+            Server::TYPE_STANDALONE => RunOnRequirement::TOPOLOGY_SINGLE,
+            Server::TYPE_RS_PRIMARY => RunOnRequirement::TOPOLOGY_REPLICASET,
+            /* Since MongoDB 3.6, all sharded clusters use replica sets. The
+             * unified test format deprecated use of "sharded-replicaset" in
+             * tests but we should still identify as such. */
+            Server::TYPE_MONGOS => RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET,
+            Server::TYPE_LOAD_BALANCER => RunOnRequirement::TOPOLOGY_LOAD_BALANCED,
+            default => throw new UnexpectedValueException('Topology is neither single nor RS nor sharded'),
+        };
     }
 
     private function isAtlasDataLake(): bool

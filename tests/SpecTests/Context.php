@@ -358,18 +358,11 @@ final class Context
             return;
         }
 
-        switch ($args['session']) {
-            case 'session0':
-                $args['session'] = $this->session0;
-                break;
-
-            case 'session1':
-                $args['session'] = $this->session1;
-                break;
-
-            default:
-                throw new LogicException('Unsupported session placeholder: ' . $args['session']);
-        }
+        $args['session'] = match ($args['session']) {
+            'session0' => $this->session0,
+            'session1' => $this->session1,
+            default => throw new LogicException('Unsupported session placeholder: ' . $args['session']),
+        };
     }
 
     /**
@@ -386,18 +379,11 @@ final class Context
             return;
         }
 
-        switch ($command->lsid) {
-            case 'session0':
-                $command->lsid = $this->session0Lsid;
-                break;
-
-            case 'session1':
-                $command->lsid = $this->session1Lsid;
-                break;
-
-            default:
-                throw new LogicException('Unsupported session placeholder: ' . $command->lsid);
-        }
+        $command->lsid = match ($command->lsid) {
+            'session0' => $this->session0Lsid,
+            'session1' => $this->session1Lsid,
+            default => throw new LogicException('Unsupported session placeholder: ' . $command->lsid),
+        };
     }
 
     public function selectCollection($databaseName, $collectionName, array $collectionOptions = [], array $databaseOptions = [])

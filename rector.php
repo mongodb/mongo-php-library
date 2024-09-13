@@ -3,7 +3,7 @@
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
-use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
+use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\Set\ValueObject\LevelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -17,13 +17,14 @@ return static function (RectorConfig $rectorConfig): void {
     // Modernize code
     $rectorConfig->sets([LevelSetList::UP_TO_PHP_74]);
 
+    $rectorConfig->rule(ChangeSwitchToMatchRector::class);
+
     // phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
     $rectorConfig->skip([
         // Do not use ternaries extensively
         IfIssetToCoalescingRector::class,
-        // Not necessary in documentation examples
-        JsonThrowOnErrorRector::class => [
-            __DIR__ . '/tests/DocumentationExamplesTest.php',
+        ChangeSwitchToMatchRector::class => [
+            __DIR__ . '/tests/SpecTests/Operation.php',
         ],
     ]);
     // phpcs:enable

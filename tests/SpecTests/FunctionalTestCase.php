@@ -126,18 +126,11 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             $this->assertNotNull($expectedDocument);
             $this->assertNotNull($actualDocument);
 
-            switch ($resultExpectation) {
-                case ResultExpectation::ASSERT_SAME_DOCUMENT:
-                    $this->assertSameDocument($expectedDocument, $actualDocument);
-                    break;
-
-                case ResultExpectation::ASSERT_DOCUMENTS_MATCH:
-                    $this->assertDocumentsMatch($expectedDocument, $actualDocument);
-                    break;
-
-                default:
-                    $this->fail(sprintf('Invalid result expectation "%d" for %s', $resultExpectation, __METHOD__));
-            }
+            match ($resultExpectation) {
+                ResultExpectation::ASSERT_SAME_DOCUMENT => $this->assertSameDocument($expectedDocument, $actualDocument),
+                ResultExpectation::ASSERT_DOCUMENTS_MATCH => $this->assertDocumentsMatch($expectedDocument, $actualDocument),
+                default => $this->fail(sprintf('Invalid result expectation "%d" for %s', $resultExpectation, __METHOD__)),
+            };
         }
     }
 
@@ -284,18 +277,12 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             return true;
         }
 
-        switch ($serverlessMode) {
-            case self::SERVERLESS_ALLOW:
-                return true;
-
-            case self::SERVERLESS_FORBID:
-                return ! static::isServerless();
-
-            case self::SERVERLESS_REQUIRE:
-                return static::isServerless();
-        }
-
-        throw new UnexpectedValueException(sprintf('Invalid serverless requirement "%s" found.', $serverlessMode));
+        return match ($serverlessMode) {
+            self::SERVERLESS_ALLOW => true,
+            self::SERVERLESS_FORBID => ! static::isServerless(),
+            self::SERVERLESS_REQUIRE => static::isServerless(),
+            default => throw new UnexpectedValueException(sprintf('Invalid serverless requirement "%s" found.', $serverlessMode)),
+        };
     }
 
     /**

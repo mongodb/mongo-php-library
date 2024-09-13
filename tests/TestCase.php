@@ -140,22 +140,22 @@ OUTPUT;
         return is_string($dataName) ? $dataName : '';
     }
 
-    public function provideInvalidArrayValues(): array
+    final public function provideInvalidArrayValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidArrayValues());
     }
 
-    public function provideInvalidDocumentValues(): array
+    final public function provideInvalidDocumentValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidDocumentValues());
     }
 
-    public function provideInvalidIntegerValues(): array
+    final public function provideInvalidIntegerValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidIntegerValues());
     }
 
-    public function provideInvalidStringValues(): array
+    final public function provideInvalidStringValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidStringValues());
     }
@@ -269,7 +269,7 @@ OUTPUT;
     /**
      * Return a list of invalid hint values.
      */
-    protected static function getInvalidHintValues()
+    protected static function getInvalidHintValues(): array
     {
         return [123, 3.14, true];
     }
@@ -376,7 +376,7 @@ OUTPUT;
      *
      * @param array $values List of values
      */
-    protected function wrapValuesForDataProvider(array $values): array
+    final protected static function wrapValuesForDataProvider(array $values): array
     {
         return array_map(fn ($value) => [$value], $values);
     }

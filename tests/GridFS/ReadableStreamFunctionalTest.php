@@ -8,6 +8,7 @@ use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\GridFS\ReadableStream;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function array_filter;
 
@@ -50,7 +51,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame($fileDocument, $stream->getFile());
     }
 
-    /** @dataProvider provideInvalidConstructorFileDocuments */
+    #[DataProvider('provideInvalidConstructorFileDocuments')]
     public function testConstructorFileDocumentChecks($file): void
     {
         $this->expectException(CorruptFileException::class);
@@ -76,7 +77,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         return $options;
     }
 
-    /** @dataProvider provideFileIdAndExpectedBytes */
+    #[DataProvider('provideFileIdAndExpectedBytes')]
     public function testReadBytes($fileId, $length, $expectedBytes): void
     {
         $fileDocument = $this->collectionWrapper->findFileById($fileId);
@@ -119,7 +120,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider provideFilteredFileIdAndExpectedBytes */
+    #[DataProvider('provideFilteredFileIdAndExpectedBytes')]
     public function testReadBytesCalledMultipleTimes($fileId, $length, $expectedBytes): void
     {
         $fileDocument = $this->collectionWrapper->findFileById($fileId);
@@ -197,7 +198,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $stream->seek(11);
     }
 
-    /** @dataProvider providePreviousChunkSeekOffsetAndBytes */
+    #[DataProvider('providePreviousChunkSeekOffsetAndBytes')]
     public function testSeekPreviousChunk($offset, $length, $expectedBytes): void
     {
         $fileDocument = $this->collectionWrapper->findFileById('length-10');
@@ -231,7 +232,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideSameChunkSeekOffsetAndBytes */
+    #[DataProvider('provideSameChunkSeekOffsetAndBytes')]
     public function testSeekSameChunk($offset, $length, $expectedBytes): void
     {
         $fileDocument = $this->collectionWrapper->findFileById('length-10');
@@ -263,7 +264,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideSubsequentChunkSeekOffsetAndBytes */
+    #[DataProvider('provideSubsequentChunkSeekOffsetAndBytes')]
     public function testSeekSubsequentChunk($offset, $length, $expectedBytes): void
     {
         $fileDocument = $this->collectionWrapper->findFileById('length-10');

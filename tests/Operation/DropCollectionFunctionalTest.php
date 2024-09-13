@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\Depends;
 
 class DropCollectionFunctionalTest extends FunctionalTestCase
 {
@@ -41,7 +42,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
-    /** @depends testDropExistingCollection */
+    #[Depends('testDropExistingCollection')]
     public function testDropNonexistentCollection(): void
     {
         $this->assertCollectionDoesNotExist($this->getCollectionName());

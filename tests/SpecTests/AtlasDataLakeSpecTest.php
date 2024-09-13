@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\Driver\Cursor;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\Group;
 
 use function current;
 use function explode;
@@ -13,8 +14,8 @@ use function parse_url;
  * Atlas Data Lake spec tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/atlas-data-lake-testing/tests
- * @group atlas-data-lake
  */
+#[Group('atlas-data-lake')]
 class AtlasDataLakeSpecTest extends FunctionalTestCase
 {
     public function setUp(): void

@@ -7,18 +7,19 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Find;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class FindTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Find($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -55,7 +56,26 @@ class FindTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidConstructorCursorTypeOptions */
+    #[DataProvider('provideInvalidConstructorCursorTypeOptions')]
+    public function testSnapshotOptionIsDeprecated(): void
+    {
+        $this->assertDeprecated(function (): void {
+            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => true]);
+        });
+
+        $this->assertDeprecated(function (): void {
+            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => false]);
+        });
+    }
+
+    public function testMaxScanOptionIsDeprecated(): void
+    {
+        $this->assertDeprecated(function (): void {
+            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['maxScan' => 1]);
+        });
+    }
+
+    #[DataProvider('provideInvalidConstructorCursorTypeOptions')]
     public function testConstructorCursorTypeOption($cursorType): void
     {
         $this->expectException(InvalidArgumentException::class);

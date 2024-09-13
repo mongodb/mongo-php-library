@@ -5,10 +5,11 @@ namespace MongoDB\Tests\Operation;
 use Generator;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateEncryptedCollection;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CreateEncryptedCollectionTest extends TestCase
 {
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

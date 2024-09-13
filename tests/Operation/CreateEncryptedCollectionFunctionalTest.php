@@ -10,6 +10,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CreateEncryptedCollection;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function base64_decode;
 use function getenv;
@@ -54,7 +55,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         ]);
     }
 
-    /** @dataProvider provideEncryptedFieldsAndFieldsIsMissing */
+    #[DataProvider('provideEncryptedFieldsAndFieldsIsMissing')]
     public function testCreateDataKeysNopIfFieldsIsMissing($input, array $expectedOutput): void
     {
         $operation = new CreateEncryptedCollection(
@@ -85,7 +86,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideEncryptedFieldsAndFieldsHasInvalidType */
+    #[DataProvider('provideEncryptedFieldsAndFieldsHasInvalidType')]
     public function testCreateDataKeysNopIfFieldsHasInvalidType($input, array $expectedOutput): void
     {
         $operation = new CreateEncryptedCollection(
@@ -116,7 +117,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideEncryptedFieldsElementHasInvalidType */
+    #[DataProvider('provideEncryptedFieldsElementHasInvalidType')]
     public function testCreateDataKeysSkipsNonDocumentFields($input, array $expectedOutput): void
     {
         $operation = new CreateEncryptedCollection(
@@ -171,7 +172,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf(Binary::class, $modifiedEncryptedFields['fields'][0]['keyId'] ?? null);
     }
 
-    /** @dataProvider provideEncryptedFields */
+    #[DataProvider('provideEncryptedFields')]
     public function testEncryptedFieldsDocuments($input): void
     {
         $operation = new CreateEncryptedCollection(

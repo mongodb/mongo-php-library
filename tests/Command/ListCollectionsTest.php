@@ -5,10 +5,11 @@ namespace MongoDB\Tests\Command;
 use MongoDB\Command\ListCollections;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ListCollectionsTest extends TestCase
 {
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

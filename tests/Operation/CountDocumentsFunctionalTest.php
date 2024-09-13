@@ -5,11 +5,12 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Operation\CountDocuments;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class CountDocumentsFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testFilterDocuments($filter, stdClass $expectedMatchStage): void
     {
         (new CommandObserver())->observe(

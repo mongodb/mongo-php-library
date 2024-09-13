@@ -15,6 +15,7 @@ use MongoDB\Model\ChangeStreamIterator;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 use function sprintf;
@@ -31,7 +32,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         $this->collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName(), ['capped' => true, 'size' => 8192]);
     }
 
-    /** @dataProvider provideInvalidIntegerValues */
+    #[DataProvider('provideInvalidIntegerValues')]
     public function testFirstBatchArgumentTypeCheck($firstBatchSize): void
     {
         $this->expectException(TypeError::class);
@@ -50,14 +51,14 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         $this->assertSameDocument((object) ['resumeToken' => 2], $iterator->getResumeToken());
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testInitialResumeTokenArgumentTypeCheck($initialResumeToken): void
     {
         $this->expectException($initialResumeToken instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new ChangeStreamIterator($this->collection->find(), 0, $initialResumeToken, null);
     }
 
-    /** @dataProvider provideInvalidObjectValues */
+    #[DataProvider('provideInvalidObjectValues')]
     public function testPostBatchResumeTokenArgumentTypeCheck($postBatchResumeToken): void
     {
         $this->expectException(TypeError::class);

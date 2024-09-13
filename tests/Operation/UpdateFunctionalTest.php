@@ -11,6 +11,8 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\UpdateResult;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use stdClass;
 
 use function is_array;
@@ -26,7 +28,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testFilterDocuments($filter, stdClass $expectedFilter): void
     {
         (new CommandObserver())->observe(
@@ -46,12 +48,10 @@ class UpdateFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @dataProvider provideUpdateDocuments
-     * @dataProvider provideUpdatePipelines
-     * @dataProvider provideReplacementDocumentLikePipeline
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DataProvider('provideUpdateDocuments')]
+    #[DataProvider('provideUpdatePipelines')]
+    #[DataProvider('provideReplacementDocumentLikePipeline')]
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
         if (is_array($expectedUpdate)) {
@@ -284,7 +284,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesMatchedCount(UpdateResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -292,7 +292,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $result->getMatchedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesModifiedCount(UpdateResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -300,7 +300,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $result->getModifiedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesUpsertedCount(UpdateResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -308,7 +308,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $result->getUpsertedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesUpsertedId(UpdateResult $result): void
     {
         $this->expectException(BadMethodCallException::class);

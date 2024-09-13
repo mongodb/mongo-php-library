@@ -13,6 +13,8 @@ use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use stdClass;
 
 class InsertOneFunctionalTest extends FunctionalTestCase
@@ -26,10 +28,8 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    /**
-     * @dataProvider provideDocumentsWithIds
-     * @dataProvider provideDocumentsWithoutIds
-     */
+    #[DataProvider('provideDocumentsWithIds')]
+    #[DataProvider('provideDocumentsWithoutIds')]
     public function testDocumentEncoding($document, stdClass $expectedDocument): void
     {
         (new CommandObserver())->observe(
@@ -80,7 +80,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideDocumentsWithIds */
+    #[DataProvider('provideDocumentsWithIds')]
     public function testInsertOneWithExistingId($document, stdClass $expectedDocument): void
     {
         $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
@@ -93,7 +93,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments([$expectedDocument], $this->collection->find());
     }
 
-    /** @dataProvider provideDocumentsWithoutIds */
+    #[DataProvider('provideDocumentsWithoutIds')]
     public function testInsertOneWithGeneratedId($document, stdClass $expectedDocument): void
     {
         $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
@@ -180,7 +180,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertOneResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -188,7 +188,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $result->getInsertedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertOneResult $result): void
     {
         $this->assertInstanceOf(ObjectId::class, $result->getInsertedId());

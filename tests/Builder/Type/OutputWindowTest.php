@@ -10,6 +10,7 @@ use MongoDB\Builder\Type\OutputWindow;
 use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class OutputWindowTest extends TestCase
@@ -57,11 +58,8 @@ class OutputWindowTest extends TestCase
         $this->assertEquals((object) ['unit' => TimeUnit::Day], $outputWindow->window);
     }
 
-    /**
-     * @param array<mixed> $documents
-     *
-     * @dataProvider provideInvalidDocuments
-     */
+    /** @param array<mixed> $documents */
+    #[DataProvider('provideInvalidDocuments')]
     public function testRejectInvalidDocuments(array $documents): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -82,11 +80,8 @@ class OutputWindowTest extends TestCase
         yield 'not a list' => [['foo' => 1, 'bar' => 2]];
     }
 
-    /**
-     * @param array<mixed> $range
-     *
-     * @dataProvider provideInvalidRange
-     */
+    /** @param array<mixed> $range */
+    #[DataProvider('provideInvalidRange')]
     public function testRejectInvalidRange(array $range): void
     {
         $this->expectException(InvalidArgumentException::class);

@@ -31,7 +31,7 @@ class CodecCursorFunctionalTest extends FunctionalTestCase
         $codecCursor = CodecCursor::fromCursor($cursor, $this->createMock(DocumentCodec::class));
 
         $this->expectWarning();
-        $this->expectWarningMessage('Discarding type map for MongoDB\Model\CodecCursor::setTypeMap');
+        $this->expectExceptionMessage('Discarding type map for MongoDB\Model\CodecCursor::setTypeMap');
 
         $codecCursor->setTypeMap(['root' => 'array']);
     }

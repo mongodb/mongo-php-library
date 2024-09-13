@@ -5,10 +5,11 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindAndModify;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FindAndModifyTest extends TestCase
 {
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 /**
@@ -32,7 +33,7 @@ class WatchTest extends FunctionalTestCase
         new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), ['foo' => ['$match' => ['x' => 1]]]);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

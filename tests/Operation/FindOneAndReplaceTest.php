@@ -6,34 +6,34 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndReplace;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use TypeError;
 
 class FindOneAndReplaceTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorReplacementArgumentTypeCheck($replacement): void
     {
         $this->expectException($replacement instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @doesNotPerformAssertions
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DoesNotPerformAssertions]
     public function testConstructorReplacementArgument($replacement): void
     {
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /** @dataProvider provideUpdateDocuments */
+    #[DataProvider('provideUpdateDocuments')]
     public function testConstructorReplacementArgumentProhibitsUpdateDocument($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -41,10 +41,8 @@ class FindOneAndReplaceTest extends TestCase
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /**
-     * @dataProvider provideUpdatePipelines
-     * @dataProvider provideEmptyUpdatePipelinesExcludingArray
-     */
+    #[DataProvider('provideUpdatePipelines')]
+    #[DataProvider('provideEmptyUpdatePipelinesExcludingArray')]
     public function testConstructorReplacementArgumentProhibitsUpdatePipeline($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -52,7 +50,7 @@ class FindOneAndReplaceTest extends TestCase
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -68,7 +66,7 @@ class FindOneAndReplaceTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidConstructorReturnDocumentOptions */
+    #[DataProvider('provideInvalidConstructorReturnDocumentOptions')]
     public function testConstructorReturnDocumentOption($returnDocument): void
     {
         $this->expectException(InvalidArgumentException::class);

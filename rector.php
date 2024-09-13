@@ -3,6 +3,7 @@
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
+use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\PHPUnit\PHPUnit100\Rector\Class_\StaticDataProviderClassMethodRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
@@ -27,6 +28,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     // phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
     $rectorConfig->skip([
+        RemoveExtraParametersRector::class,
         // Do not use ternaries extensively
         IfIssetToCoalescingRector::class,
         ChangeSwitchToMatchRector::class => [

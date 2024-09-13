@@ -239,34 +239,7 @@ OUTPUT;
 
     protected static function getInvalidDocumentCodecValues(): array
     {
-        $codec = new class implements Codec {
-            use DecodeIfSupported;
-            use EncodeIfSupported;
-
-            public function canDecode(mixed $value): bool
-            {
-                return true;
-            }
-
-            public function decode(mixed $value): mixed
-            {
-                return $value;
-            }
-
-            public function canEncode(mixed $value): bool
-            {
-                return true;
-            }
-
-            public function encode(mixed $value): mixed
-            {
-                return $value;
-            }
-        };
-        // @fixme: createStub can be called statically in PHPUnit 10
-        // $codec = self::createStub(Codec::class);
-
-        return [123, 3.14, 'foo', true, [], new stdClass(), $codec];
+        return [123, 3.14, 'foo', true, [], new stdClass(), self::createStub(Codec::class)];
     }
 
     /**

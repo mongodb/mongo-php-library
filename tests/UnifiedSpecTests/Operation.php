@@ -51,7 +51,7 @@ use function PHPUnit\Framework\assertNotContains;
 use function PHPUnit\Framework\assertNotEquals;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertNull;
-use function PHPUnit\Framework\assertObjectHasAttribute;
+use function PHPUnit\Framework\assertObjectHasProperty;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertThat;
 use function PHPUnit\Framework\assertTrue;
@@ -535,7 +535,7 @@ final class Operation
             case 'createSearchIndex':
                 assertArrayHasKey('model', $args);
                 assertIsObject($args['model']);
-                assertObjectHasAttribute('definition', $args['model']);
+                assertObjectHasProperty('definition', $args['model']);
                 assertInstanceOf(stdClass::class, $args['model']->definition);
 
                 /* Note: tests specify options within "model". A top-level
@@ -1050,7 +1050,7 @@ final class Operation
     {
         $source = $args['source'] ?? null;
         assertIsObject($source);
-        assertObjectHasAttribute('$$hexBytes', $source);
+        assertObjectHasProperty('$$hexBytes', $source);
         Util::assertHasOnlyKeys($source, ['$$hexBytes']);
         $hexBytes = $source->{'$$hexBytes'};
         assertIsString($hexBytes);

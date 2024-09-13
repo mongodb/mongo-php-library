@@ -340,8 +340,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $this->assertSame(Binary::TYPE_UUID, $dataKeyId->getType());
 
         $this->assertNotNull($insertCommand);
-        $this->assertObjectHasAttribute('writeConcern', $insertCommand);
-        $this->assertObjectHasAttribute('w', $insertCommand->writeConcern);
+        $this->assertObjectHasProperty('writeConcern', $insertCommand);
+        $this->assertObjectHasProperty('w', $insertCommand->writeConcern);
         $this->assertSame(WriteConcern::MAJORITY, $insertCommand->writeConcern->w);
 
         $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $dataKeyId]);
@@ -1559,10 +1559,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $keyId = $clientEncryption->createDataKey('local');
 
                 $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
-                $test->assertObjectNotHasAttribute('keyAltNames', $keyBeforeUpdate);
+                $test->assertObjectNotHasProperty('keyAltNames', $keyBeforeUpdate);
 
                 $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
-                $test->assertObjectHasAttribute('keyAltNames', $keyBeforeUpdate);
+                $test->assertObjectHasProperty('keyAltNames', $keyBeforeUpdate);
                 $test->assertIsArray($keyBeforeUpdate->keyAltNames);
                 $test->assertContains('abc', $keyBeforeUpdate->keyAltNames);
 
@@ -1576,7 +1576,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $originalKeyId = $clientEncryption->getKeyByAltName('def')->_id;
 
                 $originalKeyBeforeUpdate = $clientEncryption->addKeyAltName($originalKeyId, 'def');
-                $test->assertObjectHasAttribute('keyAltNames', $originalKeyBeforeUpdate);
+                $test->assertObjectHasProperty('keyAltNames', $originalKeyBeforeUpdate);
                 $test->assertIsArray($originalKeyBeforeUpdate->keyAltNames);
                 $test->assertContains('def', $originalKeyBeforeUpdate->keyAltNames);
             },
@@ -1832,10 +1832,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $result = $clientEncryption2->rewrapManyDataKey([], $rewrapManyDataKeyOpts);
 
-        $this->assertObjectHasAttribute('bulkWriteResult', $result);
+        $this->assertObjectHasProperty('bulkWriteResult', $result);
         $this->assertIsObject($result->bulkWriteResult);
         // libmongoc uses different field names for its BulkWriteResult
-        $this->assertObjectHasAttribute('nModified', $result->bulkWriteResult);
+        $this->assertObjectHasProperty('nModified', $result->bulkWriteResult);
         $this->assertSame(1, $result->bulkWriteResult->nModified);
 
         $this->assertSame('test', $clientEncryption1->decrypt($ciphertext));

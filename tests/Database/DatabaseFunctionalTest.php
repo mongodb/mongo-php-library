@@ -30,7 +30,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         new Database($this->manager, $databaseName);
     }
 
-    public function provideInvalidDatabaseNames()
+    public static function provideInvalidDatabaseNames()
     {
         return [
             [null, TypeError::class],
@@ -45,13 +45,13 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         new Database($this->manager, $this->getDatabaseName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

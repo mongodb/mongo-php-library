@@ -20,13 +20,13 @@ class DropIndexesTest extends TestCase
         new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), '*', $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'session' => self::getInvalidSessionValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 }

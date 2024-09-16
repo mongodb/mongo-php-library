@@ -28,7 +28,7 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideCommandDocuments(): array
+    public static function provideCommandDocuments(): array
     {
         return [
             'array' => [['ping' => 1]],

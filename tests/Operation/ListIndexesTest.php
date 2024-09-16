@@ -14,11 +14,11 @@ class ListIndexesTest extends TestCase
         new ListIndexes($this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'session' => $this->getInvalidSessionValues(),
+        return self::createOptionDataProvider([
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'session' => self::getInvalidSessionValues(),
         ]);
     }
 }

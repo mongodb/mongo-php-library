@@ -35,7 +35,7 @@ class VariableTest extends TestCase
         $this->assertStringStartsNotWith('$$', $variable->name);
     }
 
-    public function provideVariableBuilders(): Generator
+    public static function provideVariableBuilders(): Generator
     {
         yield 'now' => [fn () => Variable::now()];
         yield 'clusterTime' => [fn () => Variable::clusterTime()];

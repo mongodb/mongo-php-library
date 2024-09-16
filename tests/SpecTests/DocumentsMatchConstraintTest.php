@@ -78,7 +78,7 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(true, $constraint, ['x' => $value], 'Type matches');
     }
 
-    public function provideBSONTypes()
+    public static function provideBSONTypes()
     {
         $undefined = Document::fromJSON('{ "x": {"$undefined": true} }')->toPHP()->x;
         $symbol = Document::fromJSON('{ "x": {"$symbol": "test"} }')->toPHP()->x;
@@ -144,7 +144,7 @@ class DocumentsMatchConstraintTest extends TestCase
         }
     }
 
-    public function errorMessageProvider()
+    public static function errorMessageProvider()
     {
         return [
             'Root type mismatch' => [

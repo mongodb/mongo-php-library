@@ -13,7 +13,7 @@ use MongoDB\Tests\TestCase as BaseTestCase;
  */
 abstract class TestCase extends BaseTestCase
 {
-    public function provideReplacementDocuments(): array
+    public static function provideReplacementDocuments(): array
     {
         return [
             'replacement:array' => [['x' => 1]],
@@ -29,7 +29,7 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    public function provideUpdateDocuments(): array
+    public static function provideUpdateDocuments(): array
     {
         return [
             'update:array' => [['$set' => ['x' => 1]]],
@@ -39,7 +39,7 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    public function provideUpdatePipelines(): array
+    public static function provideUpdatePipelines(): array
     {
         return [
             'pipeline:array' => [[['$set' => ['x' => 1]]]],
@@ -48,7 +48,7 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    public function provideEmptyUpdatePipelines(): array
+    public static function provideEmptyUpdatePipelines(): array
     {
         /* Empty update pipelines are accepted by the update and findAndModify
          * commands (as NOPs); however, they are not supported for updates in
@@ -65,7 +65,7 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    public function provideEmptyUpdatePipelinesExcludingArray(): array
+    public static function provideEmptyUpdatePipelinesExcludingArray(): array
     {
         /* This data provider is used for replace operations, which accept empty
          * arrays as replacement documents for BC. */
@@ -75,12 +75,12 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    public function provideInvalidUpdateValues(): array
+    public static function provideInvalidUpdateValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidUpdateValues());
+        return self::wrapValuesForDataProvider(self::getInvalidUpdateValues());
     }
 
-    protected function getInvalidUpdateValues(): array
+    protected static function getInvalidUpdateValues(): array
     {
         return [123, 3.14, 'foo', true];
     }

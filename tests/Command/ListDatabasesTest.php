@@ -15,14 +15,14 @@ class ListDatabasesTest extends TestCase
         new ListDatabases($options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'authorizedDatabases' => $this->getInvalidBooleanValues(),
-            'filter' => $this->getInvalidDocumentValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'nameOnly' => $this->getInvalidBooleanValues(),
-            'session' => $this->getInvalidSessionValues(),
+        return self::createOptionDataProvider([
+            'authorizedDatabases' => self::getInvalidBooleanValues(),
+            'filter' => self::getInvalidDocumentValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'nameOnly' => self::getInvalidBooleanValues(),
+            'session' => self::getInvalidSessionValues(),
         ]);
     }
 }

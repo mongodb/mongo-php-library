@@ -63,7 +63,7 @@ class PedantryTest extends TestCase
         $this->assertEquals($sortedMethods, $methods);
     }
 
-    public function provideProjectClassNames()
+    public static function provideProjectClassNames()
     {
         $classNames = [];
         $srcDir = realpath(__DIR__ . '/../src/');

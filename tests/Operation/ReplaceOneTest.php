@@ -60,10 +60,10 @@ class ReplaceOneTest extends TestCase
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'codec' => $this->getInvalidDocumentCodecValues(),
+        return self::createOptionDataProvider([
+            'codec' => self::getInvalidDocumentCodecValues(),
         ]);
     }
 

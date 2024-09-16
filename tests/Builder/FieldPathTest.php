@@ -35,7 +35,7 @@ class FieldPathTest extends TestCase
         Expression::{$fieldPathClass}('$foo');
     }
 
-    public function provideFieldPath(): Generator
+    public static function provideFieldPath(): Generator
     {
         yield 'double' => ['doubleFieldPath', Expression\ResolvesToDouble::class];
         yield 'string' => ['stringFieldPath', Expression\ResolvesToString::class];

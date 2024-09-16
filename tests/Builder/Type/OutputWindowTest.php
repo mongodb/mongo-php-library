@@ -73,7 +73,7 @@ class OutputWindowTest extends TestCase
         );
     }
 
-    public function provideInvalidDocuments(): Generator
+    public static function provideInvalidDocuments(): Generator
     {
         yield 'too few' => [[1]];
         yield 'too many' => [[1, 2, 3]];
@@ -98,7 +98,7 @@ class OutputWindowTest extends TestCase
         );
     }
 
-    public function provideInvalidRange(): Generator
+    public static function provideInvalidRange(): Generator
     {
         yield 'too few' => [[1]];
         yield 'too many' => [[1, 2, 3]];

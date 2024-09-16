@@ -228,7 +228,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertEquals($this->sortResults($expectedDocuments), $this->sortResults($results));
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [

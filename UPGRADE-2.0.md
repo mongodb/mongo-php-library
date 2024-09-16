@@ -10,7 +10,7 @@ GridFS
 
    ```php
    $hash = hash_file('sha256', $filename);
-   $bucket->openDownloadStream($fileId, ['metadata' => ['hash' => $hash]]);
+   $bucket->openUploadStream($fileId, ['metadata' => ['hash' => $hash]]);
    ```
 
  * The fields `contentType` and `aliases` are no longer stored in the `files`
@@ -19,10 +19,10 @@ GridFS
 
    **Before:**
    ```php
-   $bucket->openDownloadStream($fileId, ['contentType' => 'image/png']);
+   $bucket->openUploadStream($fileId, ['contentType' => 'image/png']);
    ```
 
    **After:**
    ```php
-   $bucket->openDownloadStream($fileId, ['metadata' => ['contentType' => 'image/png']]);
+   $bucket->openUploadStream($fileId, ['metadata' => ['contentType' => 'image/png']]);
    ```

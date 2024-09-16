@@ -8,15 +8,12 @@ type:
     - resolvesToLong
 encode: array
 description: |
-    Rounds a number to to a whole integer or to a specified decimal place.
+    Rounds a number to a whole integer or to a specified decimal place.
 arguments:
     -
         name: number
         type:
-            - resolvesToInt
-            - resolvesToDouble
-            - resolvesToDecimal
-            - resolvesToLong
+            - resolvesToNumber
         description: |
             Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
             $round returns an error if the expression resolves to a non-numeric data type.
@@ -38,3 +35,16 @@ tests:
                         $round:
                             - '$value'
                             - 1
+    -
+        name: 'Round Average Rating'
+        pipeline:
+            -
+                $project:
+                    roundedAverageRating:
+                        $avg:
+                            -
+                                $round:
+                                    -
+                                        $avg:
+                                            - '$averageRating'
+                                    - 2

@@ -1546,15 +1546,15 @@ trait FactoryTrait
     }
 
     /**
-     * Rounds a number to to a whole integer or to a specified decimal place.
+     * Rounds a number to a whole integer or to a specified decimal place.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/
-     * @param Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
      * $round returns an error if the expression resolves to a non-numeric data type.
      * @param Optional|ResolvesToInt|int $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive.
      */
     public static function round(
-        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $number,
+        Decimal128|Int64|ResolvesToNumber|float|int $number,
         Optional|ResolvesToInt|int $place = Optional::Undefined,
     ): RoundOperator {
         return new RoundOperator($number, $place);

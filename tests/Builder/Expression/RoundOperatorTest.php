@@ -27,4 +27,22 @@ class RoundOperatorTest extends PipelineTestCase
 
         $this->assertSamePipeline(Pipelines::RoundExample, $pipeline);
     }
+
+    public function testRoundAverageRating(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project(
+                roundedAverageRating: Expression::avg(
+                    Expression::round(
+                        Expression::avg(
+                            Expression::doubleFieldPath('averageRating'),
+                        ),
+                        2,
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::RoundRoundAverageRating, $pipeline);
+    }
 }

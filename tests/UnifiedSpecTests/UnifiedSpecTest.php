@@ -187,6 +187,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/db-aggregate-write-readPreference: Database-level aggregate with $out omits read preference for pre-5.0 server' => 'PHPLIB-1458',
         'crud/db-aggregate-write-readPreference: Database-level aggregate with $merge includes read preference for 5.0+ server' => 'PHPLIB-1458',
         'crud/db-aggregate-write-readPreference: Database-level aggregate with $merge omits read preference for pre-5.0 server' => 'PHPLIB-1458',
+        // GridFS deprecated fields are removed
+        'gridfs/gridfs-upload-disableMD5: upload when length is 0 sans MD5' => 'Deprecated fields are removed',
+        'gridfs/gridfs-upload-disableMD5: upload when length is 1 sans MD5' => 'Deprecated fields are removed',
+        'gridfs/gridfs-upload: upload when contentType is provided' => 'Deprecated fields are removed',
     ];
 
     /**

@@ -64,9 +64,9 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         new ChangeStreamIterator($this->collection->find(), 0, null, $postBatchResumeToken);
     }
 
-    public function provideInvalidObjectValues()
+    public static function provideInvalidObjectValues()
     {
-        return $this->wrapValuesForDataProvider([123, 3.14, 'foo', true, []]);
+        return self::wrapValuesForDataProvider([123, 3.14, 'foo', true, []]);
     }
 
     public function testPostBatchResumeTokenIsReturnedForLastElementInFirstBatch(): void

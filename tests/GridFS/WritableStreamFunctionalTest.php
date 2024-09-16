@@ -39,12 +39,12 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         new WritableStream($this->collectionWrapper, 'filename', $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'chunkSizeBytes' => $this->getInvalidIntegerValues(true),
-            'disableMD5' => $this->getInvalidBooleanValues(true),
-            'metadata' => $this->getInvalidDocumentValues(),
+        return self::createOptionDataProvider([
+            'chunkSizeBytes' => self::getInvalidIntegerValues(true),
+            'disableMD5' => self::getInvalidBooleanValues(true),
+            'metadata' => self::getInvalidDocumentValues(),
         ]);
     }
 
@@ -86,7 +86,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         $this->assertSameDocument(['md5' => $expectedMD5], $fileDocument);
     }
 
-    public function provideInputDataAndExpectedMD5()
+    public static function provideInputDataAndExpectedMD5()
     {
         return [
             ['', 'd41d8cd98f00b204e9800998ecf8427e'],

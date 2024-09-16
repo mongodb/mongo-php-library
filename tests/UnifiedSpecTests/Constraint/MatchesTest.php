@@ -182,7 +182,7 @@ class MatchesTest extends FunctionalTestCase
         }
     }
 
-    public function errorMessageProvider()
+    public static function errorMessageProvider()
     {
         return [
             'assertEquals: type check (root-level)' => [
@@ -262,7 +262,7 @@ class MatchesTest extends FunctionalTestCase
         $constraint->evaluate(['x' => 1], '', true);
     }
 
-    public function operatorErrorMessageProvider()
+    public static function operatorErrorMessageProvider()
     {
         return [
             '$$exists type' => [

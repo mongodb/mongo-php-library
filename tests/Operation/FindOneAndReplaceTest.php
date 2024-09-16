@@ -59,12 +59,12 @@ class FindOneAndReplaceTest extends TestCase
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'projection' => $this->getInvalidDocumentValues(),
-            'returnDocument' => $this->getInvalidIntegerValues(true),
+        return self::createOptionDataProvider([
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'projection' => self::getInvalidDocumentValues(),
+            'returnDocument' => self::getInvalidIntegerValues(true),
         ]);
     }
 
@@ -75,9 +75,9 @@ class FindOneAndReplaceTest extends TestCase
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], ['returnDocument' => $returnDocument]);
     }
 
-    public function provideInvalidConstructorReturnDocumentOptions()
+    public static function provideInvalidConstructorReturnDocumentOptions()
     {
-        return $this->wrapValuesForDataProvider([-1, 0, 3]);
+        return self::wrapValuesForDataProvider([-1, 0, 3]);
     }
 
     public function testExplainableCommandDocument(): void

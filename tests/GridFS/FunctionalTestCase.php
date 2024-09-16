@@ -53,7 +53,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      *
      * @return resource
      */
-    protected function createStream(string $data = '')
+    protected static function createStream(string $data = '')
     {
         $stream = fopen('php://temp', 'w+b');
         fwrite($stream, $data);

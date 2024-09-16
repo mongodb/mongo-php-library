@@ -23,12 +23,12 @@ class DatabaseCommandTest extends TestCase
         new DatabaseCommand($this->getDatabaseName(), ['ping' => 1], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
+        return self::createOptionDataProvider([
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'session' => self::getInvalidSessionValues(),
+            'typeMap' => self::getInvalidArrayValues(),
         ]);
     }
 }

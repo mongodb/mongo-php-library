@@ -25,13 +25,13 @@ class InsertOneTest extends TestCase
         new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'session' => self::getInvalidSessionValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

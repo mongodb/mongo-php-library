@@ -32,7 +32,7 @@ class FunctionsTest extends TestCase
         $this->assertEquals($expectedDocument, apply_type_map_to_document($document, $typeMap));
     }
 
-    public function provideDocumentAndTypeMap()
+    public static function provideDocumentAndTypeMap()
     {
         return [
             [
@@ -102,7 +102,7 @@ class FunctionsTest extends TestCase
         $this->assertSame($expectedArray, document_to_array($document));
     }
 
-    public function provideDocumentsAndExpectedArrays(): array
+    public static function provideDocumentsAndExpectedArrays(): array
     {
         return [
             'array' => [['x' => 1], ['x' => 1]],
@@ -122,13 +122,13 @@ class FunctionsTest extends TestCase
         document_to_array($document);
     }
 
-    public function provideInvalidDocumentValuesForChecks(): array
+    public static function provideInvalidDocumentValuesForChecks(): array
     {
         // PackedArray is intentionally left out, as document_to_array is used to convert aggregation pipelines
-        return $this->wrapValuesForDataProvider([123, 3.14, 'foo', true]);
+        return self::wrapValuesForDataProvider([123, 3.14, 'foo', true]);
     }
 
-    public function provideDocumentCasts(): array
+    public static function provideDocumentCasts(): array
     {
         // phpcs:disable SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing
         // phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration
@@ -180,7 +180,7 @@ class FunctionsTest extends TestCase
         $this->assertEquals($expected, create_field_path_type_map($typeMap, $fieldPath));
     }
 
-    public function provideTypeMapValues()
+    public static function provideTypeMapValues()
     {
         return [
             'No root type' => [
@@ -256,7 +256,7 @@ class FunctionsTest extends TestCase
         $this->assertSame($expected, is_pipeline($pipeline, $allowEmpty));
     }
 
-    public function providePipelines(): array
+    public static function providePipelines(): array
     {
         $valid = [
             ['$match' => ['foo' => 'bar']],
@@ -320,7 +320,7 @@ class FunctionsTest extends TestCase
         $this->assertSame($expected, is_builder_pipeline($pipeline));
     }
 
-    public function provideStagePipelines(): iterable
+    public static function provideStagePipelines(): iterable
     {
         yield 'empty array' => [false, []];
         yield 'array of arrays' => [false, [['$match' => ['x' => 1]]]];
@@ -335,7 +335,7 @@ class FunctionsTest extends TestCase
         $this->assertSame($expected, is_write_concern_acknowledged($writeConcern));
     }
 
-    public function provideWriteConcerns(): array
+    public static function provideWriteConcerns(): array
     {
         // Note: WriteConcern constructor prohibits w=-1 or w=0 and journal=true
         return [

@@ -42,11 +42,11 @@ class FindOneAndUpdateTest extends TestCase
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], ['$set' => ['x' => 1]], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'projection' => $this->getInvalidDocumentValues(),
-            'returnDocument' => $this->getInvalidIntegerValues(),
+        return self::createOptionDataProvider([
+            'projection' => self::getInvalidDocumentValues(),
+            'returnDocument' => self::getInvalidIntegerValues(),
         ]);
     }
 
@@ -57,9 +57,9 @@ class FindOneAndUpdateTest extends TestCase
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], [], ['returnDocument' => $returnDocument]);
     }
 
-    public function provideInvalidConstructorReturnDocumentOptions()
+    public static function provideInvalidConstructorReturnDocumentOptions()
     {
-        return $this->wrapValuesForDataProvider([-1, 0, 3]);
+        return self::wrapValuesForDataProvider([-1, 0, 3]);
     }
 
     public function testExplainableCommandDocument(): void

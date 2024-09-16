@@ -87,7 +87,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideDocumentsWithIds(): array
+    public static function provideDocumentsWithIds(): array
     {
         $expectedDocument = (object) ['_id' => 1];
 
@@ -99,7 +99,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function provideDocumentsWithoutIds(): array
+    public static function provideDocumentsWithoutIds(): array
     {
         /* Note: _id placeholders must be replaced with generated ObjectIds. We
          * also clone the value for each data set since tests may need to modify

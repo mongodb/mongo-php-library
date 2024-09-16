@@ -234,9 +234,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideAtlasDataLakeTests()
+    public static function provideAtlasDataLakeTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/atlas-data-lake/*.json');
+        return self::provideTests(__DIR__ . '/atlas-data-lake/*.json');
     }
 
     /**
@@ -248,9 +248,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideChangeStreamsTests()
+    public static function provideChangeStreamsTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/change-streams/*.json');
+        return self::provideTests(__DIR__ . '/change-streams/*.json');
     }
 
     /**
@@ -263,9 +263,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideClientSideEncryptionTests()
+    public static function provideClientSideEncryptionTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/client-side-encryption/*.json');
+        return self::provideTests(__DIR__ . '/client-side-encryption/*.json');
     }
 
     /**
@@ -277,9 +277,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideCollectionManagementTests()
+    public static function provideCollectionManagementTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/collection-management/*.json');
+        return self::provideTests(__DIR__ . '/collection-management/*.json');
     }
 
     /**
@@ -291,9 +291,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideCommandMonitoringTests()
+    public static function provideCommandMonitoringTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/command-monitoring/*.json');
+        return self::provideTests(__DIR__ . '/command-monitoring/*.json');
     }
 
     /**
@@ -305,9 +305,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideCrudTests()
+    public static function provideCrudTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/crud/*.json');
+        return self::provideTests(__DIR__ . '/crud/*.json');
     }
 
     /**
@@ -319,9 +319,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideGridFSTests()
+    public static function provideGridFSTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/gridfs/*.json');
+        return self::provideTests(__DIR__ . '/gridfs/*.json');
     }
 
     /**
@@ -333,9 +333,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideLoadBalancers()
+    public static function provideLoadBalancers(): Generator
     {
-        return $this->provideTests(__DIR__ . '/load-balancers/*.json');
+        return self::provideTests(__DIR__ . '/load-balancers/*.json');
     }
 
     /** @dataProvider provideReadWriteConcernTests */
@@ -344,9 +344,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideReadWriteConcernTests()
+    public static function provideReadWriteConcernTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/read-write-concern/*.json');
+        return self::provideTests(__DIR__ . '/read-write-concern/*.json');
     }
 
     /**
@@ -358,9 +358,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideRetryableReadsTests()
+    public static function provideRetryableReadsTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/retryable-reads/*.json');
+        return self::provideTests(__DIR__ . '/retryable-reads/*.json');
     }
 
     /**
@@ -372,9 +372,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideRetryableWritesTests()
+    public static function provideRetryableWritesTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/retryable-writes/*.json');
+        return self::provideTests(__DIR__ . '/retryable-writes/*.json');
     }
 
     /**
@@ -386,9 +386,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideRunCommandTests()
+    public static function provideRunCommandTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/run-command/*.json');
+        return self::provideTests(__DIR__ . '/run-command/*.json');
     }
 
     /**
@@ -400,9 +400,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideSessionsTests()
+    public static function provideSessionsTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/sessions/*.json');
+        return self::provideTests(__DIR__ . '/sessions/*.json');
     }
 
     /**
@@ -414,9 +414,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideTransactionsTests()
+    public static function provideTransactionsTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/transactions/*.json');
+        return self::provideTests(__DIR__ . '/transactions/*.json');
     }
 
     /** @dataProvider provideTransactionsConvenientApiTests */
@@ -425,9 +425,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideTransactionsConvenientApiTests()
+    public static function provideTransactionsConvenientApiTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/transactions-convenient-api/*.json');
+        return self::provideTests(__DIR__ . '/transactions-convenient-api/*.json');
     }
 
     /**
@@ -440,9 +440,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideVersionedApiTests()
+    public static function provideVersionedApiTests(): Generator
     {
-        return $this->provideTests(__DIR__ . '/versioned-api/*.json');
+        return self::provideTests(__DIR__ . '/versioned-api/*.json');
     }
 
     /** @dataProvider providePassingTests */
@@ -451,9 +451,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function providePassingTests()
+    public static function providePassingTests(): Generator
     {
-        yield from $this->provideTests(__DIR__ . '/valid-pass/*.json');
+        yield from self::provideTests(__DIR__ . '/valid-pass/*.json');
     }
 
     /** @dataProvider provideFailingTests */
@@ -489,9 +489,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         $this->assertTrue($failed, 'Expected test to throw an exception');
     }
 
-    public function provideFailingTests()
+    public static function provideFailingTests(): Generator
     {
-        yield from $this->provideTests(__DIR__ . '/valid-fail/*.json');
+        yield from self::provideTests(__DIR__ . '/valid-fail/*.json');
     }
 
     /** @dataProvider provideIndexManagementTests */
@@ -508,12 +508,12 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner->run($test);
     }
 
-    public function provideIndexManagementTests()
+    public static function provideIndexManagementTests(): Generator
     {
-        yield from $this->provideTests(__DIR__ . '/index-management/*.json');
+        yield from self::provideTests(__DIR__ . '/index-management/*.json');
     }
 
-    private function provideTests(string $pattern): Generator
+    private static function provideTests(string $pattern): Generator
     {
         foreach (glob($pattern) as $filename) {
             $group = basename(dirname($filename));

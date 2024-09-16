@@ -24,10 +24,10 @@ class FindOneAndDeleteTest extends TestCase
         new FindOneAndDelete($this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'projection' => $this->getInvalidDocumentValues(),
+        return self::createOptionDataProvider([
+            'projection' => self::getInvalidDocumentValues(),
         ]);
     }
 

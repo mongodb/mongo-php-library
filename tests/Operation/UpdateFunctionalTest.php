@@ -75,7 +75,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideReplacementDocumentLikePipeline(): array
+    public static function provideReplacementDocumentLikePipeline(): array
     {
         /* Note: libmongoc encodes this replacement document as a BSON array
          * because it resembles an update pipeline (see: CDRIVER-4658). */

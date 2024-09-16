@@ -22,7 +22,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 
-    public function provideFilterDocuments(): array
+    public static function provideFilterDocuments(): array
     {
         $expected = (object) ['x' => 1];
 
@@ -34,7 +34,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         ];
     }
 
-    public function provideReplacementDocuments(): array
+    public static function provideReplacementDocuments(): array
     {
         $expected = (object) ['x' => 1];
         $expectedEmpty = (object) [];
@@ -53,7 +53,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         ];
     }
 
-    public function provideUpdateDocuments(): array
+    public static function provideUpdateDocuments(): array
     {
         $expected = (object) ['$set' => (object) ['x' => 1]];
 
@@ -65,7 +65,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         ];
     }
 
-    public function provideUpdatePipelines(): array
+    public static function provideUpdatePipelines(): array
     {
         $expected = [(object) ['$set' => (object) ['x' => 1]]];
 

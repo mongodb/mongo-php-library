@@ -49,7 +49,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         new Collection($this->manager, $this->getDatabaseName(), $collectionName);
     }
 
-    public function provideInvalidDatabaseAndCollectionNames()
+    public static function provideInvalidDatabaseAndCollectionNames()
     {
         return [
             [null, TypeError::class],
@@ -64,15 +64,15 @@ class CollectionFunctionalTest extends FunctionalTestCase
         new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions(): array
+    public static function provideInvalidConstructorOptions(): array
     {
-        return $this->createOptionDataProvider([
-            'builderEncoder' => $this->getInvalidObjectValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'builderEncoder' => self::getInvalidObjectValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 
@@ -210,7 +210,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $values);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             'No type map' => [
@@ -448,7 +448,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function collectionMethodClosures()
+    public static function collectionMethodClosures()
     {
         return [
             'read-only aggregate' => [
@@ -716,18 +716,18 @@ class CollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function collectionReadMethodClosures(): array
+    public static function collectionReadMethodClosures(): array
     {
         return array_filter(
-            $this->collectionMethodClosures(),
+            self::collectionMethodClosures(),
             fn ($rw) => str_contains($rw[1], 'r'),
         );
     }
 
-    public function collectionWriteMethodClosures(): array
+    public static function collectionWriteMethodClosures(): array
     {
         return array_filter(
-            $this->collectionMethodClosures(),
+            self::collectionMethodClosures(),
             fn ($rw) => str_contains($rw[1], 'w'),
         );
     }

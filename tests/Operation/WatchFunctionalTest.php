@@ -1064,7 +1064,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument($expectedChangeDocument, $changeStream->current());
     }
 
-    public function provideTypeMapOptionsAndExpectedChangeDocument()
+    public static function provideTypeMapOptionsAndExpectedChangeDocument()
     {
         /* Note: the "_id" and "ns" fields are purposefully omitted because the
          * resume token's value cannot be anticipated and the collection name,

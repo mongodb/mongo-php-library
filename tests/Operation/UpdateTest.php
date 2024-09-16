@@ -31,17 +31,17 @@ class UpdateTest extends TestCase
         new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'arrayFilters' => $this->getInvalidArrayValues(),
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'collation' => $this->getInvalidDocumentValues(),
-            'hint' => $this->getInvalidHintValues(),
-            'multi' => $this->getInvalidBooleanValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'upsert' => $this->getInvalidBooleanValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'arrayFilters' => self::getInvalidArrayValues(),
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'collation' => self::getInvalidDocumentValues(),
+            'hint' => self::getInvalidHintValues(),
+            'multi' => self::getInvalidBooleanValues(),
+            'session' => self::getInvalidSessionValues(),
+            'upsert' => self::getInvalidBooleanValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

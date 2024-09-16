@@ -31,7 +31,7 @@ use function current;
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
  */
-class FindOne implements Executable, Explainable
+final class FindOne implements Executable, Explainable
 {
     private Find $find;
 

@@ -35,7 +35,7 @@ use function is_string;
  * @see \MongoDB\Collection::listSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/listSearchIndexes/
  */
-class ListSearchIndexes implements Executable
+final class ListSearchIndexes implements Executable
 {
     private array $listSearchIndexesOptions;
     private array $aggregateOptions;

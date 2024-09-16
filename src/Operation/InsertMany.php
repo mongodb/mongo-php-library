@@ -38,7 +38,7 @@ use function sprintf;
  * @see \MongoDB\Collection::insertMany()
  * @see https://mongodb.com/docs/manual/reference/command/insert/
  */
-class InsertMany implements Executable
+final class InsertMany implements Executable
 {
     /** @var list<object|array> */
     private array $documents;

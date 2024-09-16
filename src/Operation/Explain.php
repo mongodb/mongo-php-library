@@ -35,7 +35,7 @@ use function is_string;
  * @see \MongoDB\Collection::explain()
  * @see https://mongodb.com/docs/manual/reference/command/explain/
  */
-class Explain implements Executable
+final class Explain implements Executable
 {
     public const VERBOSITY_ALL_PLANS = 'allPlansExecution';
     public const VERBOSITY_EXEC_STATS = 'executionStats';

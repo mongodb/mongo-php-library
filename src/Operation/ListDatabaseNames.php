@@ -33,7 +33,7 @@ use function array_column;
  * @see \MongoDB\Client::listDatabaseNames()
  * @see https://mongodb.com/docs/manual/reference/command/listDatabases/#mongodb-dbcommand-dbcmd.listDatabases
  */
-class ListDatabaseNames implements Executable
+final class ListDatabaseNames implements Executable
 {
     private ListDatabasesCommand $listDatabases;
 

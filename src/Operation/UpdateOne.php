@@ -32,7 +32,7 @@ use function MongoDB\is_pipeline;
  * @see \MongoDB\Collection::updateOne()
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */
-class UpdateOne implements Executable, Explainable
+final class UpdateOne implements Executable, Explainable
 {
     private Update $update;
 

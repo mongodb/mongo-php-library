@@ -36,7 +36,7 @@ use function is_array;
  * @see \MongoDB\Database::dropCollection()
  * @see https://mongodb.com/docs/manual/reference/command/drop/
  */
-class DropCollection implements Executable
+final class DropCollection implements Executable
 {
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
 

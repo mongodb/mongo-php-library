@@ -36,7 +36,7 @@ use function is_integer;
  * @see \MongoDB\Collection::listIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/listIndexes/
  */
-class ListIndexes implements Executable
+final class ListIndexes implements Executable
 {
     private const ERROR_CODE_DATABASE_NOT_FOUND = 60;
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;

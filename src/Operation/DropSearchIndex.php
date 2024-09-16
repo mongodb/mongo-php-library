@@ -30,7 +30,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see \MongoDB\Collection::dropSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/dropSearchIndexes/
  */
-class DropSearchIndex implements Executable
+final class DropSearchIndex implements Executable
 {
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
 

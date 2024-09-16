@@ -35,7 +35,7 @@ use function MongoDB\is_pipeline;
  * @see \MongoDB\Collection::findOneAndReplace()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */
-class FindOneAndReplace implements Executable, Explainable
+final class FindOneAndReplace implements Executable, Explainable
 {
     public const RETURN_DOCUMENT_BEFORE = 1;
     public const RETURN_DOCUMENT_AFTER = 2;

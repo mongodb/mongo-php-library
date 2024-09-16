@@ -35,7 +35,7 @@ use function is_integer;
  * @see \MongoDB\Collection::estimatedDocumentCount()
  * @see https://mongodb.com/docs/manual/reference/command/count/
  */
-class EstimatedDocumentCount implements Executable, Explainable
+final class EstimatedDocumentCount implements Executable, Explainable
 {
     private array $options;
 

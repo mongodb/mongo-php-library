@@ -31,7 +31,7 @@ use MongoDB\Model\DatabaseInfoLegacyIterator;
  * @see \MongoDB\Client::listDatabases()
  * @see https://mongodb.com/docs/manual/reference/command/listDatabases/#mongodb-dbcommand-dbcmd.listDatabases`
  */
-class ListDatabases implements Executable
+final class ListDatabases implements Executable
 {
     private ListDatabasesCommand $listDatabases;
 

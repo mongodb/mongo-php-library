@@ -48,7 +48,7 @@ use const E_USER_DEPRECATED;
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
  */
-class Find implements Executable, Explainable
+final class Find implements Executable, Explainable
 {
     public const NON_TAILABLE = 1;
     public const TAILABLE = 2;

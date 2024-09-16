@@ -34,7 +34,7 @@ use function MongoDB\is_pipeline;
  * @see \MongoDB\Collection::findOneAndUpdate()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */
-class FindOneAndUpdate implements Executable, Explainable
+final class FindOneAndUpdate implements Executable, Explainable
 {
     public const RETURN_DOCUMENT_BEFORE = 1;
     public const RETURN_DOCUMENT_AFTER = 2;

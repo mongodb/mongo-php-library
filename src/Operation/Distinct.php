@@ -40,7 +40,7 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::distinct()
  * @see https://mongodb.com/docs/manual/reference/command/distinct/
  */
-class Distinct implements Executable, Explainable
+final class Distinct implements Executable, Explainable
 {
     /**
      * Constructs a distinct command.

@@ -31,7 +31,7 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::updateSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/updateSearchIndexes/
  */
-class UpdateSearchIndex implements Executable
+final class UpdateSearchIndex implements Executable
 {
     private object $definition;
 

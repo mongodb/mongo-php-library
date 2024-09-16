@@ -32,7 +32,7 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Database::command()
  */
-class DatabaseCommand implements Executable
+final class DatabaseCommand implements Executable
 {
     private Command $command;
 

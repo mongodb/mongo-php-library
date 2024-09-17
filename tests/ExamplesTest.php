@@ -5,10 +5,14 @@ namespace MongoDB\Tests;
 use Generator;
 
 use function bin2hex;
+use function error_reporting;
 use function getenv;
 use function putenv;
 use function random_bytes;
 use function sprintf;
+
+use const E_ALL;
+use const E_DEPRECATED;
 
 /** @runTestsInSeparateProcesses */
 final class ExamplesTest extends FunctionalTestCase
@@ -304,7 +308,14 @@ OUTPUT;
 
     private function assertExampleOutput(string $file, string $expectedOutput): void
     {
-        require $file;
+        // Hide deprecation messages
+        $level = error_reporting(E_ALL ^ E_DEPRECATED);
+
+        try {
+            require $file;
+        } finally {
+            error_reporting($level);
+        }
 
         $this->assertStringMatchesFormat($expectedOutput, $this->getActualOutputForAssertion());
     }

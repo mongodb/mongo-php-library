@@ -43,12 +43,10 @@ credentials in the connection string (i.e. `MONGODB_URI`) or set the
 Note that `MONGODB_USERNAME` and `MONGODB_PASSWORD` will override any
 credentials present in the connection string.
 
-By default, the `simple-phpunit` binary chooses the correct PHPUnit version for
-the PHP version you are running. To run tests against a specific PHPUnit
-version, use the `SYMFONY_PHPUNIT_VERSION` environment variable:
+To run tests use the `phpunit` executable installed by Composer:
 
 ```console
-$ SYMFONY_PHPUNIT_VERSION=8.5 vendor/bin/simple-phpunit
+$ vendor/bin/phpunit
 ```
 
 ### Environment Variables

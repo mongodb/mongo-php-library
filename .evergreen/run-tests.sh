@@ -83,30 +83,30 @@ export MONGODB_MULTI_MONGOS_LB_URI="${MONGODB_MULTI_MONGOS_LB_URI}"
 # Run the tests, and store the results in a junit result file
 case "$TESTS" in
    atlas)
-      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group atlas
+      php vendor/bin/phpunit $PHPUNIT_OPTS --group atlas
       ;;
 
    atlas-data-lake)
-      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group atlas-data-lake
+      php vendor/bin/phpunit $PHPUNIT_OPTS --group atlas-data-lake
       ;;
 
    csfle)
-      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group csfle
+      php vendor/bin/phpunit $PHPUNIT_OPTS --group csfle
       ;;
 
    csfle-without-aws-creds)
-      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group csfle-without-aws-creds
+      php vendor/bin/phpunit $PHPUNIT_OPTS --group csfle-without-aws-creds
       ;;
 
    versioned-api)
-      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group versioned-api
+      php vendor/bin/phpunit $PHPUNIT_OPTS --group versioned-api
       ;;
 
    serverless)
-      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group serverless
+      php vendor/bin/phpunit $PHPUNIT_OPTS --group serverless
       ;;
 
    *)
-      php vendor/bin/simple-phpunit $PHPUNIT_OPTS
+      php vendor/bin/phpunit $PHPUNIT_OPTS
       ;;
 esac

@@ -51,7 +51,7 @@
         "fix:cs": "phpcbf",
         "fix:psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
         "fix:rector": "rector process --ansi",
-        "test": "simple-phpunit"
+        "test": "phpunit"
     },
     "extra": {
         "branch-alias": {

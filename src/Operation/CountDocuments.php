@@ -36,6 +36,8 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::countDocuments()
  * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst#countdocuments
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class CountDocuments implements Executable
 {

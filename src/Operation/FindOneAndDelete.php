@@ -29,6 +29,8 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::findOneAndDelete()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class FindOneAndDelete implements Executable, Explainable
 {

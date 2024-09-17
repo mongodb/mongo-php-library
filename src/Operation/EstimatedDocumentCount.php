@@ -34,6 +34,8 @@ use function is_integer;
  *
  * @see \MongoDB\Collection::estimatedDocumentCount()
  * @see https://mongodb.com/docs/manual/reference/command/count/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class EstimatedDocumentCount implements Executable, Explainable
 {

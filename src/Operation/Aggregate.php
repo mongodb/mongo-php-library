@@ -48,6 +48,8 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::aggregate()
  * @see https://mongodb.com/docs/manual/reference/command/aggregate/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class Aggregate implements Executable, Explainable
 {

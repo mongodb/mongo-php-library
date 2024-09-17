@@ -40,6 +40,8 @@ use function sprintf;
  * @see \MongoDB\Collection::createIndex()
  * @see \MongoDB\Collection::createIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/createIndexes/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class CreateIndexes implements Executable
 {

@@ -97,6 +97,8 @@ class DocumentsMatchConstraint extends Constraint
         if (! $success) {
             $this->fail($other, $description, $this->lastFailure);
         }
+
+        return null;
     }
 
     /** @param string|BSONArray[] $expectedType */

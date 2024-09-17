@@ -101,6 +101,8 @@ class Matches extends Constraint
         if (! $success) {
             $this->fail($other, $description, $this->lastFailure);
         }
+
+        return null;
     }
 
     private function assertEquals($expected, $actual, string $keyPath): void

@@ -41,7 +41,7 @@ use function sprintf;
  * @see \MongoDB\Collection::createIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/createIndexes/
  */
-class CreateIndexes implements Executable
+final class CreateIndexes implements Executable
 {
     private const WIRE_VERSION_FOR_COMMIT_QUORUM = 9;
 

@@ -51,7 +51,7 @@ use function MongoDB\server_supports_feature;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */
-class FindAndModify implements Executable, Explainable
+final class FindAndModify implements Executable, Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 9;
 

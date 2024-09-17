@@ -39,7 +39,7 @@ use function sprintf;
  *
  * @internal
  */
-class CollectionWrapper
+final class CollectionWrapper
 {
     private Collection $chunksCollection;
 

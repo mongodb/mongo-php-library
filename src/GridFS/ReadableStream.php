@@ -38,7 +38,7 @@ use function substr;
  *
  * @internal
  */
-class ReadableStream
+final class ReadableStream
 {
     private ?string $buffer = null;
 

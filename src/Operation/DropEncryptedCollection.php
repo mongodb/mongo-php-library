@@ -37,7 +37,7 @@ use function MongoDB\is_document;
  * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#drop-collection-helper
  * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-collections/
  */
-class DropEncryptedCollection implements Executable
+final class DropEncryptedCollection implements Executable
 {
     private DropCollection $dropCollection;
 

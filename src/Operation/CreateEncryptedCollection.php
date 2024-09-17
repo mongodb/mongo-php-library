@@ -48,7 +48,7 @@ use function MongoDB\server_supports_feature;
  * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#create-encrypted-collection-helper
  * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-collections/
  */
-class CreateEncryptedCollection implements Executable
+final class CreateEncryptedCollection implements Executable
 {
     private const WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2 = 21;
 

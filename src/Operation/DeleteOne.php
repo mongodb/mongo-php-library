@@ -29,7 +29,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see \MongoDB\Collection::deleteOne()
  * @see https://mongodb.com/docs/manual/reference/command/delete/
  */
-class DeleteOne implements Executable, Explainable
+final class DeleteOne implements Executable, Explainable
 {
     private Delete $delete;
 

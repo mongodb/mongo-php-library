@@ -46,7 +46,7 @@ use function sprintf;
  *
  * @see \MongoDB\Collection::bulkWrite()
  */
-class BulkWrite implements Executable
+final class BulkWrite implements Executable
 {
     public const DELETE_MANY = 'deleteMany';
     public const DELETE_ONE  = 'deleteOne';

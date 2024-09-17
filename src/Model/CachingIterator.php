@@ -40,7 +40,7 @@ use function reset;
  * @template TValue
  * @template-implements Iterator<TKey, TValue>
  */
-class CachingIterator implements Countable, Iterator
+final class CachingIterator implements Countable, Iterator
 {
     private const FIELD_KEY = 0;
     private const FIELD_VALUE = 1;

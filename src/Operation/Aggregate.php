@@ -49,7 +49,7 @@ use function MongoDB\is_pipeline;
  * @see \MongoDB\Collection::aggregate()
  * @see https://mongodb.com/docs/manual/reference/command/aggregate/
  */
-class Aggregate implements Executable, Explainable
+final class Aggregate implements Executable, Explainable
 {
     private bool $isWrite;
 

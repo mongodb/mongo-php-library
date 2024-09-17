@@ -36,7 +36,7 @@ use function is_bool;
  * @see \MongoDB\Database::renameCollection()
  * @see https://mongodb.com/docs/manual/reference/command/renameCollection/
  */
-class RenameCollection implements Executable
+final class RenameCollection implements Executable
 {
     private string $fromNamespace;
 

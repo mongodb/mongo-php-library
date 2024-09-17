@@ -42,7 +42,7 @@ use function MongoDB\server_supports_feature;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/delete/
  */
-class Delete implements Executable, Explainable
+final class Delete implements Executable, Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 9;
 

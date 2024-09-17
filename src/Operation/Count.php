@@ -41,7 +41,7 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::count()
  * @see https://mongodb.com/docs/manual/reference/command/count/
  */
-class Count implements Executable, Explainable
+final class Count implements Executable, Explainable
 {
     /**
      * Constructs a count command.

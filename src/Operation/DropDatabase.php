@@ -34,7 +34,7 @@ use function is_array;
  * @see \MongoDB\Database::drop()
  * @see https://mongodb.com/docs/manual/reference/command/dropDatabase/
  */
-class DropDatabase implements Executable
+final class DropDatabase implements Executable
 {
     /**
      * Constructs a dropDatabase command.

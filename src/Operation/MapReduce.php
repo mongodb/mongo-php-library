@@ -54,7 +54,7 @@ use const E_USER_DEPRECATED;
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
  * @psalm-import-type MapReduceCallable from MapReduceResult
  */
-class MapReduce implements Executable
+final class MapReduce implements Executable
 {
     private array|object|string $out;
 

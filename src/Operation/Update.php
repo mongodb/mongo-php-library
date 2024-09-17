@@ -45,7 +45,7 @@ use function MongoDB\server_supports_feature;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */
-class Update implements Executable, Explainable
+final class Update implements Executable, Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 8;
 

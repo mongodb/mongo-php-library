@@ -41,7 +41,7 @@ use const E_USER_DEPRECATED;
  * @see \MongoDB\Database::createCollection()
  * @see https://mongodb.com/docs/manual/reference/command/create/
  */
-class CreateCollection implements Executable
+final class CreateCollection implements Executable
 {
     public const USE_POWER_OF_2_SIZES = 1;
     public const NO_PADDING = 2;

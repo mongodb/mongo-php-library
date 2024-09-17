@@ -37,7 +37,7 @@ use function sprintf;
  * @see \MongoDB\Collection::createSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/createSearchIndexes/
  */
-class CreateSearchIndexes implements Executable
+final class CreateSearchIndexes implements Executable
 {
     private array $indexes = [];
 

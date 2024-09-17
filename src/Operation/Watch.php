@@ -57,7 +57,7 @@ use function MongoDB\select_server;
  * @see \MongoDB\Collection::watch()
  * @see https://mongodb.com/docs/manual/changeStreams/
  */
-class Watch implements Executable, /* @internal */ CommandSubscriber
+final class Watch implements Executable, /* @internal */ CommandSubscriber
 {
     public const FULL_DOCUMENT_DEFAULT = 'default';
     public const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';

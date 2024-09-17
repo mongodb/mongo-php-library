@@ -32,7 +32,7 @@ use Traversable;
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
  * @template-extends IteratorIterator<int, array, Traversable<int, array>>
  */
-class CollectionInfoCommandIterator extends IteratorIterator implements CollectionInfoIterator
+final class CollectionInfoCommandIterator extends IteratorIterator implements CollectionInfoIterator
 {
     /** @param Traversable<int, array> $iterator */
     public function __construct(Traversable $iterator, private ?string $databaseName = null)

@@ -34,7 +34,7 @@ use function MongoDB\is_pipeline;
  * @see \MongoDB\Collection::replaceOne()
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */
-class ReplaceOne implements Executable
+final class ReplaceOne implements Executable
 {
     private Update $update;
 

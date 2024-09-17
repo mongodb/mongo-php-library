@@ -32,6 +32,8 @@ use function is_array;
  *
  * @see \MongoDB\Database::modifyCollection()
  * @see https://mongodb.com/docs/manual/reference/command/collMod/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class ModifyCollection implements Executable
 {

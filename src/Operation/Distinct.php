@@ -39,6 +39,8 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::distinct()
  * @see https://mongodb.com/docs/manual/reference/command/distinct/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class Distinct implements Executable, Explainable
 {

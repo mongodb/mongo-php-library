@@ -28,6 +28,8 @@ use MongoDB\Exception\UnsupportedException;
  *
  * @see \MongoDB\Collection::deleteOne()
  * @see https://mongodb.com/docs/manual/reference/command/delete/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class DeleteMany implements Executable, Explainable
 {

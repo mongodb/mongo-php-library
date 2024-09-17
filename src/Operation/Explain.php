@@ -34,6 +34,8 @@ use function is_string;
  *
  * @see \MongoDB\Collection::explain()
  * @see https://mongodb.com/docs/manual/reference/command/explain/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class Explain implements Executable
 {

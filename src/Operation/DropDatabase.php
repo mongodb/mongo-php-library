@@ -33,6 +33,8 @@ use function is_array;
  * @see \MongoDB\Client::dropDatabase()
  * @see \MongoDB\Database::drop()
  * @see https://mongodb.com/docs/manual/reference/command/dropDatabase/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class DropDatabase implements Executable
 {

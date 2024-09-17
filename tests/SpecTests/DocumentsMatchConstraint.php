@@ -13,7 +13,6 @@ use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use stdClass;
-use Symfony\Bridge\PhpUnit\ConstraintTrait;
 
 use function array_values;
 use function get_debug_type;
@@ -36,8 +35,6 @@ use function sprintf;
  */
 class DocumentsMatchConstraint extends Constraint
 {
-    use ConstraintTrait;
-
     /**
      * TODO: This is not currently used, but was preserved from the design of
      * TestCase::assertMatchesDocument(), which would sort keys and then compare
@@ -65,7 +62,7 @@ class DocumentsMatchConstraint extends Constraint
         $this->comparatorFactory = Factory::getInstance();
     }
 
-    private function doEvaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, string $description = '', bool $returnResult = false): ?bool
     {
         /* TODO: If ignoreExtraKeys and sortKeys are both false, then we may be
          * able to skip preparation, convert both documents to extended JSON,
@@ -198,7 +195,7 @@ class DocumentsMatchConstraint extends Constraint
         }
     }
 
-    private function doAdditionalFailureDescription($other)
+    protected function additionalFailureDescription($other): string
     {
         if ($this->lastFailure === null) {
             return '';
@@ -207,12 +204,12 @@ class DocumentsMatchConstraint extends Constraint
         return $this->lastFailure->getMessage();
     }
 
-    private function doFailureDescription($other)
+    protected function failureDescription($other): string
     {
         return 'two BSON objects are equal';
     }
 
-    private function doMatches($other)
+    protected function matches($other): bool
     {
         /* TODO: If ignoreExtraKeys and sortKeys are both false, then we may be
          * able to skip preparation, convert both documents to extended JSON,
@@ -232,7 +229,7 @@ class DocumentsMatchConstraint extends Constraint
         return true;
     }
 
-    private function doToString()
+    public function toString(): string
     {
         return 'matches ' . $this->exporter()->export($this->value);
     }

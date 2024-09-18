@@ -255,7 +255,7 @@ class ChangeStream implements Iterator
          * have been received in the last response. Therefore, we can unset the
          * resumeCallable. This will free any reference to Watch as well as the
          * only reference to any implicit session created therein. */
-        if ((string) $this->getCursorId() === '0') {
+        if ((string) $this->getCursorId(true) === '0') {
             $this->resumeCallable = null;
         }
 

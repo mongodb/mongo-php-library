@@ -688,6 +688,10 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testExistingIndexIsReused(): void
     {
+        // The collections may exist from other tests, ensure they are removed before and after the test
+        $this->dropCollection($this->getDatabaseName(), 'fs.chunks');
+        $this->dropCollection($this->getDatabaseName(), 'fs.files');
+
         $this->filesCollection->createIndex(['filename' => 1.0, 'uploadDate' => 1], ['name' => 'test']);
         $this->chunksCollection->createIndex(['files_id' => 1.0, 'n' => 1], ['name' => 'test', 'unique' => true]);
 

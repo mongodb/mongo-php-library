@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\Collection;
+use MongoDB\Driver\Command;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 
@@ -28,10 +29,28 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         parent::setUp();
 
         $this->bucket = new Bucket($this->manager, $this->getDatabaseName());
-        $this->bucket->drop();
 
-        $this->chunksCollection = $this->createCollection($this->getDatabaseName(), 'fs.chunks');
-        $this->filesCollection = $this->createCollection($this->getDatabaseName(), 'fs.files');
+        $this->chunksCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.chunks');
+        $this->filesCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.files');
+        $this->chunksCollection->deleteMany([]);
+        $this->filesCollection->deleteMany([]);
+    }
+
+    public function tearDown(): void
+    {
+        $this->chunksCollection->deleteMany([]);
+        $this->filesCollection->deleteMany([]);
+
+        parent::tearDown();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        $manager = static::createTestManager();
+        $manager->executeCommand(self::getDatabaseName(), new Command(['drop' => 'fs.chunks']));
+        $manager->executeCommand(self::getDatabaseName(), new Command(['drop' => 'fs.files']));
+
+        parent::tearDownAfterClass();
     }
 
     /**

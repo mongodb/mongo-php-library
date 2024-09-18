@@ -324,7 +324,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         if (
-            $this->shouldCaptureOperationTime($event->getServer()) &&
+            $this->shouldCaptureOperationTime() &&
             isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface
         ) {
             $this->operationTime = $reply->operationTime;
@@ -445,7 +445,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#startatoperationtime
      */
-    private function shouldCaptureOperationTime(Server $server): bool
+    private function shouldCaptureOperationTime(): bool
     {
         if ($this->hasResumed) {
             return false;

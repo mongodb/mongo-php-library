@@ -42,13 +42,19 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         parent::tearDown();
     }
 
-    public static function tearDownAfterClass(): void
+    /**
+     * The bucket's collections are created by the first test that runs and
+     * kept for all subsequent tests. This is done to avoid creating the
+     * collections and their indexes for each test, which would be slow.
+     *
+     * @beforeClass
+     * @afterClass
+     */
+    public static function dropCollectionsBeforeAfterClass(): void
     {
         $manager = static::createTestManager();
         $manager->executeCommand(self::getDatabaseName(), new Command(['drop' => 'fs.chunks']));
         $manager->executeCommand(self::getDatabaseName(), new Command(['drop' => 'fs.files']));
-
-        parent::tearDownAfterClass();
     }
 
     /**

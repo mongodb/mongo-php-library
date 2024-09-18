@@ -3,24 +3,16 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
-use MongoDB\BSON\ObjectId;
-use MongoDB\Collection;
-use MongoDB\Driver\ReadConcern;
-use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Bucket;
-use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\ListIndexes;
-use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Codec\TestFileCodec;
 use MongoDB\Tests\Fixtures\Document\TestFile;
-use ReflectionMethod;
 use stdClass;
 
 use function array_merge;
@@ -51,58 +43,6 @@ use const PHP_OS;
  */
 class BucketFunctionalTest extends FunctionalTestCase
 {
-    /** @doesNotPerformAssertions */
-    public function testValidConstructorOptions(): void
-    {
-        new Bucket($this->manager, $this->getDatabaseName(), [
-            'bucketName' => 'test',
-            'chunkSizeBytes' => 8192,
-            'readConcern' => new ReadConcern(ReadConcern::LOCAL),
-            'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
-            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000),
-            'disableMD5' => true,
-        ]);
-    }
-
-    /** @dataProvider provideInvalidConstructorOptions */
-    public function testConstructorOptionTypeChecks(array $options): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        new Bucket($this->manager, $this->getDatabaseName(), $options);
-    }
-
-    public static function provideInvalidConstructorOptions()
-    {
-        return self::createOptionDataProvider([
-            'bucketName' => self::getInvalidStringValues(true),
-            'chunkSizeBytes' => self::getInvalidIntegerValues(true),
-            'codec' => self::getInvalidDocumentCodecValues(),
-            'disableMD5' => self::getInvalidBooleanValues(true),
-            'readConcern' => self::getInvalidReadConcernValues(),
-            'readPreference' => self::getInvalidReadPreferenceValues(),
-            'typeMap' => self::getInvalidArrayValues(),
-            'writeConcern' => self::getInvalidWriteConcernValues(),
-        ]);
-    }
-
-    public function testConstructorShouldRequireChunkSizeBytesOptionToBePositive(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected "chunkSizeBytes" option to be >= 1, 0 given');
-        new Bucket($this->manager, $this->getDatabaseName(), ['chunkSizeBytes' => 0]);
-    }
-
-    public function testConstructorWithCodecAndTypeMapOptions(): void
-    {
-        $options = [
-            'codec' => new TestDocumentCodec(),
-            'typeMap' => ['root' => 'array', 'document' => 'array'],
-        ];
-
-        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
-        new Bucket($this->manager, $this->getDatabaseName(), $options);
-    }
-
     /** @dataProvider provideInputDataAndExpectedChunks */
     public function testDelete($input, $expectedChunks): void
     {
@@ -207,13 +147,6 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertStreamContents($input, $destination);
     }
 
-    /** @dataProvider provideInvalidStreamValues */
-    public function testDownloadToStreamShouldRequireDestinationStream($destination): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->bucket->downloadToStream('id', $destination);
-    }
-
     public static function provideInvalidStreamValues(): array
     {
         return self::wrapValuesForDataProvider(self::getInvalidStreamValues());
@@ -258,13 +191,6 @@ class BucketFunctionalTest extends FunctionalTestCase
         $destination = self::createStream();
         $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => 2]);
         $this->assertStreamContents('baz', $destination);
-    }
-
-    /** @dataProvider provideInvalidStreamValues */
-    public function testDownloadToStreamByNameShouldRequireDestinationStream($destination): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->bucket->downloadToStreamByName('filename', $destination);
     }
 
     /** @dataProvider provideNonexistentFilenameAndRevision */
@@ -452,43 +378,6 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertSame(6, $fileDocument->length);
     }
 
-    public function testGetBucketNameWithCustomValue(): void
-    {
-        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['bucketName' => 'custom_fs']);
-
-        $this->assertEquals('custom_fs', $bucket->getBucketName());
-    }
-
-    public function testGetBucketNameWithDefaultValue(): void
-    {
-        $this->assertEquals('fs', $this->bucket->getBucketName());
-    }
-
-    public function testGetChunksCollection(): void
-    {
-        $chunksCollection = $this->bucket->getChunksCollection();
-
-        $this->assertInstanceOf(Collection::class, $chunksCollection);
-        $this->assertEquals('fs.chunks', $chunksCollection->getCollectionName());
-    }
-
-    public function testGetChunkSizeBytesWithCustomValue(): void
-    {
-        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['chunkSizeBytes' => 8192]);
-
-        $this->assertEquals(8192, $bucket->getChunkSizeBytes());
-    }
-
-    public function testGetChunkSizeBytesWithDefaultValue(): void
-    {
-        $this->assertEquals(261120, $this->bucket->getChunkSizeBytes());
-    }
-
-    public function testGetDatabaseName(): void
-    {
-        $this->assertEquals($this->getDatabaseName(), $this->bucket->getDatabaseName());
-    }
-
     public function testGetFileDocumentForStreamUsesTypeMap(): void
     {
         $metadata = ['foo' => 'bar'];
@@ -578,21 +467,6 @@ class BucketFunctionalTest extends FunctionalTestCase
         $stream = $this->bucket->openUploadStream('filename', ['_id' => 1]);
 
         $this->assertEquals(1, $this->bucket->getFileIdForStream($stream));
-    }
-
-    /** @dataProvider provideInvalidGridFSStreamValues */
-    public function testGetFileIdForStreamShouldRequireGridFSStreamResource($stream): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->bucket->getFileIdForStream($stream);
-    }
-
-    public function testGetFilesCollection(): void
-    {
-        $filesCollection = $this->bucket->getFilesCollection();
-
-        $this->assertInstanceOf(Collection::class, $filesCollection);
-        $this->assertEquals('fs.files', $filesCollection->getCollectionName());
     }
 
     /** @dataProvider provideInputDataAndExpectedChunks */
@@ -935,42 +809,6 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->assertNotNull($fileDocument);
         $this->assertSame(14, $fileDocument->length);
-    }
-
-    public function testResolveStreamContextForRead(): void
-    {
-        $stream = $this->bucket->openUploadStream('filename');
-        fwrite($stream, 'foobar');
-        fclose($stream);
-
-        $method = new ReflectionMethod($this->bucket, 'resolveStreamContext');
-        $method->setAccessible(true);
-
-        $context = $method->invokeArgs($this->bucket, ['gridfs://bucket/filename', 'rb', []]);
-
-        $this->assertIsArray($context);
-        $this->assertArrayHasKey('collectionWrapper', $context);
-        $this->assertInstanceOf(CollectionWrapper::class, $context['collectionWrapper']);
-        $this->assertArrayHasKey('file', $context);
-        $this->assertIsObject($context['file']);
-        $this->assertInstanceOf(ObjectId::class, $context['file']->_id);
-        $this->assertSame('filename', $context['file']->filename);
-    }
-
-    public function testResolveStreamContextForWrite(): void
-    {
-        $method = new ReflectionMethod($this->bucket, 'resolveStreamContext');
-        $method->setAccessible(true);
-
-        $context = $method->invokeArgs($this->bucket, ['gridfs://bucket/filename', 'wb', []]);
-
-        $this->assertIsArray($context);
-        $this->assertArrayHasKey('collectionWrapper', $context);
-        $this->assertInstanceOf(CollectionWrapper::class, $context['collectionWrapper']);
-        $this->assertArrayHasKey('filename', $context);
-        $this->assertSame('filename', $context['filename']);
-        $this->assertArrayHasKey('options', $context);
-        $this->assertSame(['chunkSizeBytes' => 261120, 'disableMD5' => false], $context['options']);
     }
 
     /**

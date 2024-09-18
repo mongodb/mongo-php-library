@@ -46,7 +46,7 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         parent::setUp();
 
         $this->filesCollection->insertMany([
-            ['_id' => 'length-10', 'length' => 10, 'chunkSize' => 4, 'uploadDate' => new UTCDateTime('1484202200000')],
+            ['_id' => 'length-10', 'length' => 10, 'chunkSize' => 4, 'uploadDate' => new UTCDateTime(1484202200000)],
         ]);
 
         $this->chunksCollection->insertMany([

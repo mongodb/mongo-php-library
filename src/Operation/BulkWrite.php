@@ -45,8 +45,6 @@ use function sprintf;
  * Operation for executing multiple write operations.
  *
  * @see \MongoDB\Collection::bulkWrite()
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class BulkWrite implements Executable
 {

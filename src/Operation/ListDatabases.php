@@ -29,9 +29,7 @@ use MongoDB\Model\DatabaseInfoLegacyIterator;
  * Operation for the ListDatabases command.
  *
  * @see \MongoDB\Client::listDatabases()
- * @see https://mongodb.com/docs/manual/reference/command/listDatabases/#mongodb-dbcommand-dbcmd.listDatabases
- *
- * @final extending this class will not be supported in v2.0.0
+ * @see https://mongodb.com/docs/manual/reference/command/listDatabases/#mongodb-dbcommand-dbcmd.listDatabases`
  */
 class ListDatabases implements Executable
 {

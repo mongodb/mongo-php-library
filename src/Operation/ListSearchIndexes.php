@@ -34,8 +34,6 @@ use function is_string;
  *
  * @see \MongoDB\Collection::listSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/listSearchIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class ListSearchIndexes implements Executable
 {

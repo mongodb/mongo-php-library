@@ -31,8 +31,6 @@ use function MongoDB\is_document;
  * Operation for executing a database command.
  *
  * @see \MongoDB\Database::command()
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class DatabaseCommand implements Executable
 {

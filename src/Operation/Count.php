@@ -40,8 +40,6 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::count()
  * @see https://mongodb.com/docs/manual/reference/command/count/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class Count implements Executable, Explainable
 {

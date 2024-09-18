@@ -30,8 +30,6 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::updateSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/updateSearchIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class UpdateSearchIndex implements Executable
 {

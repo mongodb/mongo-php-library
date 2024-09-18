@@ -35,8 +35,6 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::insertOne()
  * @see https://mongodb.com/docs/manual/reference/command/insert/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class InsertOne implements Executable
 {

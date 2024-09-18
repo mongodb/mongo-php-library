@@ -35,8 +35,6 @@ use function is_array;
  * @see \MongoDB\Collection::drop()
  * @see \MongoDB\Database::dropCollection()
  * @see https://mongodb.com/docs/manual/reference/command/drop/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class DropCollection implements Executable
 {

@@ -40,8 +40,6 @@ use const E_USER_DEPRECATED;
  *
  * @see \MongoDB\Database::createCollection()
  * @see https://mongodb.com/docs/manual/reference/command/create/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class CreateCollection implements Executable
 {

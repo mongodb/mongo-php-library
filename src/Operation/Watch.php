@@ -56,8 +56,6 @@ use function MongoDB\select_server;
  *
  * @see \MongoDB\Collection::watch()
  * @see https://mongodb.com/docs/manual/changeStreams/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class Watch implements Executable, /* @internal */ CommandSubscriber
 {

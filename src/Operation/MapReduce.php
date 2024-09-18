@@ -53,8 +53,6 @@ use const E_USER_DEPRECATED;
  * @see \MongoDB\Collection::mapReduce()
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
  * @psalm-import-type MapReduceCallable from MapReduceResult
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class MapReduce implements Executable
 {

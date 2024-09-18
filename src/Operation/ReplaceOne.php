@@ -33,8 +33,6 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::replaceOne()
  * @see https://mongodb.com/docs/manual/reference/command/update/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class ReplaceOne implements Executable
 {

@@ -29,8 +29,6 @@ use MongoDB\Model\CallbackIterator;
  *
  * @see \MongoDB\Database::listCollectionNames()
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class ListCollectionNames implements Executable
 {

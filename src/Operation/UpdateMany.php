@@ -31,8 +31,6 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::updateMany()
  * @see https://mongodb.com/docs/manual/reference/command/update/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class UpdateMany implements Executable, Explainable
 {

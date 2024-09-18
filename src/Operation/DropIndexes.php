@@ -34,8 +34,6 @@ use function is_integer;
  *
  * @see \MongoDB\Collection::dropIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/dropIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class DropIndexes implements Executable
 {

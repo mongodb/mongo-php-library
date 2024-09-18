@@ -30,8 +30,6 @@ use function current;
  * @see \MongoDB\Collection::findOne()
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class FindOne implements Executable, Explainable
 {

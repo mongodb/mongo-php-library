@@ -34,8 +34,6 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::findOneAndReplace()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class FindOneAndReplace implements Executable, Explainable
 {

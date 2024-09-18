@@ -35,8 +35,6 @@ use function is_bool;
  * @see \MongoDB\Collection::rename()
  * @see \MongoDB\Database::renameCollection()
  * @see https://mongodb.com/docs/manual/reference/command/renameCollection/
- *
- * @final extending this class will not be supported in v2.0.0
  */
 class RenameCollection implements Executable
 {

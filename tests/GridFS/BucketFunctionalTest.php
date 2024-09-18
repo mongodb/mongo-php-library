@@ -782,8 +782,21 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testExistingIndexIsReused(): void
     {
+        // The collections may exist from other tests, ensure they are removed
+        // before and after to avoid potential conflicts.
+        $this->dropCollection($this->getDatabaseName(), 'fs.chunks');
+        $this->dropCollection($this->getDatabaseName(), 'fs.files');
+
+        // Create indexes with different numeric types before interacting with
+        // GridFS to assert that the library respects the existing indexes and
+        // does not attempt to create its own.
         $this->filesCollection->createIndex(['filename' => 1.0, 'uploadDate' => 1], ['name' => 'test']);
         $this->chunksCollection->createIndex(['files_id' => 1.0, 'n' => 1], ['name' => 'test', 'unique' => true]);
+
+        $this->assertIndexExists('fs.files', 'test');
+        $this->assertIndexExists('fs.chunks', 'test', function (IndexInfo $info): void {
+            $this->assertTrue($info->isUnique());
+        });
 
         $this->bucket->uploadFromStream('filename', self::createStream('foo'));
 

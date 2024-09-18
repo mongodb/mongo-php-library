@@ -3,8 +3,8 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\Collection;
-use MongoDB\Driver\Command;
 use MongoDB\GridFS\Bucket;
+use MongoDB\Operation\DropCollection;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 
 use function fopen;
@@ -53,8 +53,9 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     public static function dropCollectionsBeforeAfterClass(): void
     {
         $manager = static::createTestManager();
-        $manager->executeCommand(self::getDatabaseName(), new Command(['drop' => 'fs.chunks']));
-        $manager->executeCommand(self::getDatabaseName(), new Command(['drop' => 'fs.files']));
+
+        (new DropCollection(self::getDatabaseName(), 'fs.chunks'))->execute($manager->selectServer());
+        (new DropCollection(self::getDatabaseName(), 'fs.files'))->execute($manager->selectServer());
     }
 
     /**

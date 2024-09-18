@@ -32,8 +32,6 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
 
         $this->chunksCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.chunks');
         $this->filesCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.files');
-        $this->chunksCollection->deleteMany([]);
-        $this->filesCollection->deleteMany([]);
     }
 
     public function tearDown(): void

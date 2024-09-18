@@ -43,12 +43,6 @@ credentials in the connection string (i.e. `MONGODB_URI`) or set the
 Note that `MONGODB_USERNAME` and `MONGODB_PASSWORD` will override any
 credentials present in the connection string.
 
-To run tests use the `phpunit` executable installed by Composer:
-
-```console
-$ vendor/bin/phpunit
-```
-
 ### Environment Variables
 
 The test suite references the following environment variables:

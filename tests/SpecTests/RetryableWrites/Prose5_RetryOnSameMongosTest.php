@@ -6,7 +6,6 @@ use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
-use MongoDB\Driver\Server;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 
 /**
@@ -50,8 +49,8 @@ class Prose5_RetryOnSameMongosTest extends FunctionalTestCase
 
         // Step 4: Enable succeeded and failed command event monitoring
         $subscriber = new class implements CommandSubscriber {
-            public Server $commandSucceededServer;
-            public Server $commandFailedServer;
+            public ?int $commandSucceededServer = null;
+            public ?int $commandFailedServer = null;
 
             public function commandStarted(CommandStartedEvent $event): void
             {
@@ -59,12 +58,12 @@ class Prose5_RetryOnSameMongosTest extends FunctionalTestCase
 
             public function commandSucceeded(CommandSucceededEvent $event): void
             {
-                $this->commandSucceededServer = $event->getServer();
+                $this->commandSucceededServer = $event->getServerConnectionId();
             }
 
             public function commandFailed(CommandFailedEvent $event): void
             {
-                $this->commandFailedServer = $event->getServer();
+                $this->commandFailedServer = $event->getServerConnectionId();
             }
         };
 
@@ -78,7 +77,7 @@ class Prose5_RetryOnSameMongosTest extends FunctionalTestCase
 
         /* Step 6: Assert that exactly one failed command event and one
          * succeeded command event occurred. Assert that both events occurred on
-         * the same mongos. */
+         * the same mongos connection. */
         $this->assertNotNull($subscriber->commandSucceededServer);
         $this->assertNotNull($subscriber->commandFailedServer);
         $this->assertEquals($subscriber->commandSucceededServer, $subscriber->commandFailedServer);

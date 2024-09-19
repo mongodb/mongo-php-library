@@ -119,7 +119,7 @@ final class EventCollector implements CommandSubscriber
             'name' => self::getEventName($event),
             'observedAt' => microtime(true),
             'commandName' => $event->getCommandName(),
-            'connectionId' => $event->getServerConnectionId(),
+            'connectionId' => $event->getHost() . ':' . $event->getPort(),
             'requestId' => $event->getRequestId(),
             'operationId' => $event->getOperationId(),
         ];

@@ -7,7 +7,6 @@ use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
-use MongoDB\Driver\Server;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 
 use function assert;
@@ -65,7 +64,8 @@ class Prose2_RetryOnMongosTest extends FunctionalTestCase
 
         // Step 4: Enable failed command event monitoring for client
         $subscriber = new class implements CommandSubscriber {
-            public $commandFailedServers = [];
+            /** @var int[] */
+            public array $commandFailedServers = [];
 
             public function commandStarted(CommandStartedEvent $event): void
             {
@@ -77,7 +77,7 @@ class Prose2_RetryOnMongosTest extends FunctionalTestCase
 
             public function commandFailed(CommandFailedEvent $event): void
             {
-                $this->commandFailedServers[] = $event->getServer();
+                $this->commandFailedServers[] = $event->getServerConnectionId();
             }
         };
 
@@ -130,8 +130,8 @@ class Prose2_RetryOnMongosTest extends FunctionalTestCase
 
         // Step 4: Enable succeeded and failed command event monitoring
         $subscriber = new class implements CommandSubscriber {
-            public Server $commandSucceededServer;
-            public Server $commandFailedServer;
+            public ?int $commandSucceededServer = null;
+            public ?int $commandFailedServer = null;
 
             public function commandStarted(CommandStartedEvent $event): void
             {
@@ -139,12 +139,12 @@ class Prose2_RetryOnMongosTest extends FunctionalTestCase
 
             public function commandSucceeded(CommandSucceededEvent $event): void
             {
-                $this->commandSucceededServer = $event->getServer();
+                $this->commandSucceededServer = $event->getServerConnectionId();
             }
 
             public function commandFailed(CommandFailedEvent $event): void
             {
-                $this->commandFailedServer = $event->getServer();
+                $this->commandFailedServer = $event->getServerConnectionId();
             }
         };
 

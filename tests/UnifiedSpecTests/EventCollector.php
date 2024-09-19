@@ -119,17 +119,16 @@ final class EventCollector implements CommandSubscriber
             'name' => self::getEventName($event),
             'observedAt' => microtime(true),
             'commandName' => $event->getCommandName(),
-            'connectionId' => $event->getHost() . ':' . $event->getPort(),
-            'requestId' => $event->getRequestId(),
+            'databaseName' => $event->getDatabaseName(),
             'operationId' => $event->getOperationId(),
+            'requestId' => $event->getRequestId(),
+            'server' => $event->getHost() . ':' . $event->getPort(),
+            'serverConnectionId' => $event->getServerConnectionId(),
+            'serviceId' => $event->getServiceId(),
         ];
 
         /* Note: CommandStartedEvent.command and CommandSucceededEvent.reply can
          * be omitted from logged events. */
-
-        if ($event instanceof CommandStartedEvent) {
-            $log['databaseName'] = $event->getDatabaseName();
-        }
 
         if ($event instanceof CommandSucceededEvent) {
             $log['duration'] = $event->getDurationMicros();

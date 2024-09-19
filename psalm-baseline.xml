@@ -5,11 +5,7 @@
       <code><![CDATA[$document['name']]]></code>
       <code><![CDATA[$index->name]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$document['name']]]></code>
-    </MixedArrayAccess>
     <MixedAssignment>
-      <code><![CDATA[$document]]></code>
       <code><![CDATA[$index]]></code>
       <code><![CDATA[$index]]></code>
       <code><![CDATA[$index]]></code>
@@ -23,6 +19,9 @@
     <PossiblyFalseArgument>
       <code><![CDATA[$uri]]></code>
     </PossiblyFalseArgument>
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$document['name']]]></code>
+    </PossiblyInvalidArrayAccess>
   </file>
   <file src="examples/persistable.php">
     <LessSpecificReturnStatement>
@@ -184,9 +183,6 @@
     <DeprecatedConstant>
       <code><![CDATA[self::CURSOR_NOT_FOUND]]></code>
     </DeprecatedConstant>
-    <TooManyArguments>
-      <code><![CDATA[getId]]></code>
-    </TooManyArguments>
   </file>
   <file src="src/Client.php">
     <MixedArgument>
@@ -339,6 +335,15 @@
     </MixedArgument>
   </file>
   <file src="src/Model/ChangeStreamIterator.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$cursor]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[CursorInterface<TValue>]]></code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[CursorInterface<TValue>]]></code>
+    </LessSpecificImplementedReturnType>
     <MixedArgument>
       <code><![CDATA[$reply->cursor->nextBatch]]></code>
     </MixedArgument>
@@ -353,11 +358,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$this->current()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/Model/CodecCursor.php">
-    <TooManyArguments>
-      <code><![CDATA[getId]]></code>
-    </TooManyArguments>
   </file>
   <file src="src/Model/CollectionInfoCommandIterator.php">
     <MixedArrayAssignment>
@@ -711,18 +711,6 @@
       <code><![CDATA[$value === null ? $value : $this->options['codec']->decode($value)]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
-    </MixedReturnStatement>
-  </file>
-  <file src="src/Operation/FindOne.php">
-    <MixedAssignment>
-      <code><![CDATA[$document]]></code>
-    </MixedAssignment>
-    <MixedInferredReturnType>
-      <code><![CDATA[array|object|null]]></code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement>
-      <code><![CDATA[$document === false ? null : $document]]></code>
-      <code><![CDATA[$document === false ? null : $document]]></code>
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/FindOneAndDelete.php">

@@ -909,7 +909,7 @@ final class Operation
                 assertArrayHasKey('failPoint', $args);
                 assertInstanceOf(Client::class, $args['client']);
                 assertInstanceOf(stdClass::class, $args['failPoint']);
-                $args['client']->selectDatabase('admin')->command($args['failPoint']);
+                $this->createFailPoint($args['failPoint'], $args['client']->getManager()->selectServer());
                 break;
             case 'targetedFailPoint':
                 assertArrayHasKey('session', $args);
@@ -917,8 +917,7 @@ final class Operation
                 assertInstanceOf(Session::class, $args['session']);
                 assertInstanceOf(stdClass::class, $args['failPoint']);
                 assertNotNull($args['session']->getServer(), 'Session is pinned');
-                $operation = new DatabaseCommand('admin', $args['failPoint']);
-                $operation->execute($args['session']->getServer());
+                $this->createFailPoint($args['failPoint'], $args['session']->getServer());
                 break;
             case 'loop':
                 assertArrayHasKey('operations', $args);
@@ -935,6 +934,14 @@ final class Operation
             default:
                 Assert::fail('Unsupported test runner operation: ' . $this->name);
         }
+    }
+
+    private function createFailPoint(stdClass $failPoint, Server $server): void
+    {
+        $operation = new DatabaseCommand('admin', $failPoint);
+        $operation->execute($server);
+
+        $this->context->registerFailPoint($failPoint, $server);
     }
 
     private function getIndexNames(string $databaseName, string $collectionName): array

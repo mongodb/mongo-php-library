@@ -77,8 +77,6 @@ final class UnifiedTestRunner
     /** @var callable(EntityMap):void */
     private $entityMapObserver;
 
-    private ?FailPointObserver $failPointObserver = null;
-
     private ServerParameterHelper $serverParameterHelper;
 
     public function __construct(string $internalClientUri)
@@ -150,9 +148,6 @@ final class UnifiedTestRunner
          * after transient error within a transaction" pinning test causes the
          * subsequent transaction test to block. */
         $this->killAllSessions();
-
-        $this->failPointObserver = new FailPointObserver();
-        $this->failPointObserver->start();
     }
 
     private function doTearDown(bool $hasFailed): void
@@ -162,9 +157,6 @@ final class UnifiedTestRunner
         if ($hasFailed) {
             $this->killAllSessions();
         }
-
-        $this->failPointObserver->stop();
-        $this->failPointObserver->disableFailPoints();
 
         /* Manually invoking garbage collection since each test is prone to
          * create cycles (perhaps due to EntityMap), which can leak and prevent
@@ -216,13 +208,17 @@ final class UnifiedTestRunner
         $context->startEventObservers();
         $context->startEventCollectors();
 
-        foreach ($test->operations as $o) {
-            $operation = new Operation($o, $context);
-            $operation->assert();
-        }
+        try {
+            foreach ($test->operations as $o) {
+                $operation = new Operation($o, $context);
+                $operation->assert();
+            }
 
-        $context->stopEventObservers();
-        $context->stopEventCollectors();
+            $context->stopEventObservers();
+            $context->stopEventCollectors();
+        } finally {
+            $this->disableFailPoints($context->getFailPoints());
+        }
 
         if (isset($test->expectEvents)) {
             assertIsArray($test->expectEvents);
@@ -232,6 +228,15 @@ final class UnifiedTestRunner
         if (isset($test->outcome)) {
             assertIsArray($test->outcome);
             $this->assertOutcome($test->outcome);
+        }
+    }
+
+    /** @param list<array{failPoint: stdClass, server: Server}> $failPoints */
+    private function disableFailPoints(array $failPoints): void
+    {
+        foreach ($failPoints as ['failPoint' => $failPoint, 'server' => $server]) {
+            $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
+            $operation->execute($server);
         }
     }
 

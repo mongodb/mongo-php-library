@@ -21,7 +21,6 @@ use Iterator;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
 use MongoDB\Codec\DocumentCodec;
-use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
@@ -33,10 +32,6 @@ use ReturnTypeWillChange;
 use function assert;
 use function call_user_func;
 use function in_array;
-use function sprintf;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Iterator for a change stream.
@@ -88,12 +83,8 @@ class ChangeStream implements Iterator
      */
     private bool $hasAdvanced = false;
 
-    /**
-     * @see https://php.net/iterator.current
-     * @return array|object|null
-     */
-    #[ReturnTypeWillChange]
-    public function current()
+    /** @see https://php.net/iterator.current */
+    public function current(): array|object|null
     {
         $value = $this->iterator->current();
 
@@ -106,26 +97,9 @@ class ChangeStream implements Iterator
         return $this->codec->decode($value);
     }
 
-    /**
-     * @return CursorId|Int64
-     * @psalm-return ($asInt64 is true ? Int64 : CursorId)
-     */
-    #[ReturnTypeWillChange]
-    public function getCursorId(bool $asInt64 = false)
+    public function getCursorId(): Int64
     {
-        if (! $asInt64) {
-            @trigger_error(
-                sprintf(
-                    'The method "%s" will no longer return a "%s" instance in the future. Pass "true" as argument to change to the new behavior and receive a "%s" instance instead.',
-                    __METHOD__,
-                    CursorId::class,
-                    Int64::class,
-                ),
-                E_USER_DEPRECATED,
-            );
-        }
-
-        return $this->iterator->getInnerIterator()->getId($asInt64);
+        return $this->iterator->getInnerIterator()->getId();
     }
 
     /**
@@ -255,7 +229,8 @@ class ChangeStream implements Iterator
          * have been received in the last response. Therefore, we can unset the
          * resumeCallable. This will free any reference to Watch as well as the
          * only reference to any implicit session created therein. */
-        if ((string) $this->getCursorId(true) === '0') {
+        // Use a type-unsafe comparison to compare with Int64 instances
+        if ($this->getCursorId() == 0) {
             $this->resumeCallable = null;
         }
 

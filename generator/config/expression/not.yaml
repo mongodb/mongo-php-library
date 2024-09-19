@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $not
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Returns the boolean value that is the opposite of its argument expression. Accepts a single argument expression.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+            - resolvesToBool
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    result:
+                        $not:
+                            -
+                                $gt:
+                                    - '$qty'
+                                    - 250

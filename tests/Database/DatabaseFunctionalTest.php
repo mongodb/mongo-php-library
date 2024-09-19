@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Database;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
@@ -29,7 +30,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         new Database($this->manager, $databaseName);
     }
 
-    public function provideInvalidDatabaseNames()
+    public static function provideInvalidDatabaseNames()
     {
         return [
             [null, TypeError::class],
@@ -44,13 +45,13 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         new Database($this->manager, $this->getDatabaseName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 
@@ -82,7 +83,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = current($cursor->toArray());
 
         $this->assertCommandSucceeded($commandResult);
-        $this->assertObjectHasAttribute('ok', $commandResult);
+        $this->assertObjectHasProperty('ok', $commandResult);
         $this->assertSame(1, (int) $commandResult->ok);
     }
 
@@ -124,7 +125,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testCommandCommandArgumentTypeCheck($command): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($command instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         $this->database->command($command);
     }
 

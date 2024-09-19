@@ -1,0 +1,51 @@
+# $schema: ../schema.json
+name: $percentile
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/'
+type:
+    - resolvesToArray # of scalar
+encode: object
+description: |
+    Returns an array of scalar values that correspond to specified percentile values.
+    New in MongoDB 7.0.
+
+    This operator is available as an accumulator in these stages:
+    $group
+
+    $setWindowFields
+
+    It is also available as an aggregation expression.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToNumber
+            - array # of number
+        description: |
+            $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
+    -
+        name: p
+        type:
+            - resolvesToArray # of resolvesToNumber
+        description: |
+            $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
+            $percentile returns results in the same order as the elements in p.
+    -
+        name: method
+        type:
+            - string # AccumulatorPercentile
+        description: |
+            The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
+tests:
+    -
+        name: 'Use $percentile in a $project Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#use-operatorname-in-a--project-stage'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    studentId: 1
+                    testPercentiles:
+                        $percentile:
+                            input: ['$test01', '$test02', '$test03']
+                            p: [0.5, 0.95]
+                            method: 'approximate'

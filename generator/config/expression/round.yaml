@@ -1,0 +1,50 @@
+# $schema: ../schema.json
+name: $round
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/'
+type:
+    - resolvesToInt
+    - resolvesToDouble
+    - resolvesToDecimal
+    - resolvesToLong
+encode: array
+description: |
+    Rounds a number to a whole integer or to a specified decimal place.
+arguments:
+    -
+        name: number
+        type:
+            - resolvesToNumber
+        description: |
+            Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
+            $round returns an error if the expression resolves to a non-numeric data type.
+    -
+        name: place
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            Can be any valid expression that resolves to an integer between -20 and 100, exclusive.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/#example'
+        pipeline:
+            -
+                $project:
+                    roundedValue:
+                        $round:
+                            - '$value'
+                            - 1
+    -
+        name: 'Round Average Rating'
+        pipeline:
+            -
+                $project:
+                    roundedAverageRating:
+                        $avg:
+                            -
+                                $round:
+                                    -
+                                        $avg:
+                                            - '$averageRating'
+                                    - 2

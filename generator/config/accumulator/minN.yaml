@@ -1,0 +1,73 @@
+# $schema: ../schema.json
+name: $minN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/'
+type:
+    - accumulator
+    - window
+encode: object
+description: |
+    Returns the n smallest values in an array. Distinct from the $minN accumulator.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to the array from which to return the maximal n elements.
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
+tests:
+    -
+        name: 'Find the Minimum Three Scores for a Single Game'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#find-the-minimum-three-scores-for-a-single-game'
+        pipeline:
+            -
+                $match:
+                    gameId: 'G1'
+            -
+                $group:
+                    _id: '$gameId'
+                    minScores:
+                        $minN:
+                            input:
+                                - '$score'
+                                - '$playerId'
+                            n: 3
+    -
+        name: 'Finding the Minimum Three Documents Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#finding-the-minimum-three-documents-across-multiple-games'
+        pipeline:
+            -
+                $group:
+                    _id: '$gameId'
+                    minScores:
+                        $minN:
+                            input:
+                                - '$score'
+                                - '$playerId'
+                            n: 3
+    -
+        name: 'Computing n Based on the Group Key for $group'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#computing-n-based-on-the-group-key-for--group'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        gameId: '$gameId'
+                    gamescores:
+                        $minN:
+                            input:
+                                - '$score'
+                                - '$playerId'
+                            n:
+                                $cond:
+                                    if:
+                                        $eq:
+                                            - '$gameId'
+                                            - 'G2'
+                                    then: 1
+                                    else: 3

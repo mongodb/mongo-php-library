@@ -33,7 +33,7 @@ class BSONIteratorTest extends TestCase
         $this->assertEquals($expectedDocuments, $results);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments(): Generator
+    public static function provideTypeMapOptionsAndExpectedDocuments(): Generator
     {
         yield 'No type map' => [
             'typeMap' => null,

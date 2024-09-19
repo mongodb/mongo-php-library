@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Exception\InvalidArgumentException;
@@ -52,7 +53,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testInitialResumeTokenArgumentTypeCheck($initialResumeToken): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($initialResumeToken instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new ChangeStreamIterator($this->collection->find(), 0, $initialResumeToken, null);
     }
 
@@ -63,9 +64,9 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         new ChangeStreamIterator($this->collection->find(), 0, null, $postBatchResumeToken);
     }
 
-    public function provideInvalidObjectValues()
+    public static function provideInvalidObjectValues()
     {
-        return $this->wrapValuesForDataProvider([123, 3.14, 'foo', true, []]);
+        return self::wrapValuesForDataProvider([123, 3.14, 'foo', true, []]);
     }
 
     public function testPostBatchResumeTokenIsReturnedForLastElementInFirstBatch(): void

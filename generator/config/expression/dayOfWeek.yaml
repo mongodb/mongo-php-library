@@ -1,0 +1,36 @@
+# $schema: ../schema.json
+name: $dayOfWeek
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/'
+type:
+    - resolvesToInt
+encode: object
+description: |
+    Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).
+arguments:
+    -
+        name: date
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/#example'
+        pipeline:
+            -
+                $project:
+                    dayOfWeek:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $dayOfWeek: '$date'
+                        $dayOfWeek:
+                            date: '$date'

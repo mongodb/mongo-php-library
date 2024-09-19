@@ -1,0 +1,83 @@
+# $schema: ../schema.json
+name: $unionWith
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/'
+type:
+    - stage
+encode: object
+description: |
+    Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
+    New in MongoDB 4.4.
+arguments:
+    -
+        name: coll
+        type:
+            - string
+        description: |
+            The collection or view whose pipeline results you wish to include in the result set.
+    -
+        name: pipeline
+        type:
+            - pipeline
+        optional: true
+        description: |
+            An aggregation pipeline to apply to the specified coll.
+            The pipeline cannot include the $out and $merge stages. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
+tests:
+    -
+        name: 'Report 1 All Sales by Year and Stores and Items'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/#report-1--all-sales-by-year-and-stores-and-items'
+        pipeline:
+            -
+                $set:
+                    _id: '2017'
+            -
+                $unionWith:
+                    coll: 'sales_2018'
+                    pipeline:
+                        -
+                            $set:
+                                _id: '2018'
+            -
+                $unionWith:
+                    coll: 'sales_2019'
+                    pipeline:
+                        -
+                            $set:
+                                _id: '2019'
+            -
+                $unionWith:
+                    coll: 'sales_2020'
+                    pipeline:
+                        -
+                            $set:
+                                _id: '2020'
+            -
+                $sort:
+                    _id: 1
+                    store: 1
+                    item: 1
+    -
+        name: 'Report 2 Aggregated Sales by Items'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/#report-2--aggregated-sales-by-items'
+        pipeline:
+            -
+                # Example uses the short form, the builder always generates the verbose form
+                # $unionWith: 'sales_2018'
+                $unionWith:
+                    coll: 'sales_2018'
+            -
+                # $unionWith: 'sales_2019'
+                $unionWith:
+                    coll: 'sales_2019'
+            -
+                # $unionWith: 'sales_2020'
+                $unionWith:
+                    coll: 'sales_2020'
+            -
+                $group:
+                    _id: '$item'
+                    total:
+                        $sum: '$quantity'
+            -
+                $sort:
+                    total: -1

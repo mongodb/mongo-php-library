@@ -1,0 +1,81 @@
+# $schema: ../schema.json
+name: $dateToString
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/'
+type:
+    - resolvesToString
+encode: object
+description: |
+    Returns the date as a formatted string.
+arguments:
+    -
+        name: date
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The date to convert to string. Must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: format
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
+            If unspecified, $dateFromString uses "%Y-%m-%dT%H:%M:%S.%LZ" as the default format but accepts a variety of formats and attempts to parse the dateString if possible.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The time zone to use to format the date.
+    -
+        name: onNull
+        type:
+            - expression
+        optional: true
+        description: |
+            The value to return if the date is null or missing.
+            If unspecified, $dateToString returns null if the date is null or missing.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/#example'
+        pipeline:
+            -
+                $project:
+                    yearMonthDayUTC:
+                        $dateToString:
+                            format: '%Y-%m-%d'
+                            date: '$date'
+                    timewithOffsetNY:
+                        $dateToString:
+                            format: '%H:%M:%S:%L%z'
+                            date: '$date'
+                            timezone: 'America/New_York'
+                    timewithOffset430:
+                        $dateToString:
+                            format: '%H:%M:%S:%L%z'
+                            date: '$date'
+                            timezone: '+04:30'
+                    minutesOffsetNY:
+                        $dateToString:
+                            format: '%Z'
+                            date: '$date'
+                            timezone: 'America/New_York'
+                    minutesOffset430:
+                        $dateToString:
+                            format: '%Z'
+                            date: '$date'
+                            timezone: '+04:30'
+                    abbreviated_month:
+                        $dateToString:
+                            format: '%b'
+                            date: '$date'
+                            timezone: '+04:30'
+                    full_month:
+                        $dateToString:
+                            format: '%B'
+                            date: '$date'
+                            timezone: '+04:30'

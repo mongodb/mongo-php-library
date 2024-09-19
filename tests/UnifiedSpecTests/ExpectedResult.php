@@ -19,21 +19,18 @@ final class ExpectedResult
 {
     private ?Matches $constraint = null;
 
-    private EntityMap $entityMap;
-
     /**
      * ID of the entity yielding the result. This is mainly used to associate
      * entities with a root client for collation of observed events.
      */
     private ?string $yieldingEntityId = null;
 
-    public function __construct(stdClass $o, EntityMap $entityMap, ?string $yieldingEntityId = null)
+    public function __construct(stdClass $o, private EntityMap $entityMap, ?string $yieldingEntityId = null)
     {
         if (property_exists($o, 'expectResult')) {
             $this->constraint = new Matches($o->expectResult, $entityMap);
         }
 
-        $this->entityMap = $entityMap;
         $this->yieldingEntityId = $yieldingEntityId;
     }
 

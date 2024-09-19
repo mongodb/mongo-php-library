@@ -28,11 +28,8 @@ class CallbackIteratorTest extends TestCase
 
         $iteratorAggregate = new class ($listIterator) implements IteratorAggregate
         {
-            private Iterator $iterator;
-
-            public function __construct(Iterator $iterator)
+            public function __construct(private Iterator $iterator)
             {
-                $this->iterator = $iterator;
             }
 
             public function getIterator(): Iterator

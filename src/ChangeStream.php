@@ -80,8 +80,6 @@ class ChangeStream implements Iterator
     /** @var ResumeCallable|null */
     private $resumeCallable;
 
-    private ChangeStreamIterator $iterator;
-
     private int $key = 0;
 
     /**
@@ -89,8 +87,6 @@ class ChangeStream implements Iterator
      * to determine whether $key should be incremented after an iteration event.
      */
     private bool $hasAdvanced = false;
-
-    private ?DocumentCodec $codec;
 
     /**
      * @see https://php.net/iterator.current
@@ -210,11 +206,9 @@ class ChangeStream implements Iterator
      *
      * @param ResumeCallable $resumeCallable
      */
-    public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable, ?DocumentCodec $codec = null)
+    public function __construct(private ChangeStreamIterator $iterator, callable $resumeCallable, private ?DocumentCodec $codec = null)
     {
-        $this->iterator = $iterator;
         $this->resumeCallable = $resumeCallable;
-        $this->codec = $codec;
 
         if ($codec) {
             $this->iterator->getInnerIterator()->setTypeMap(['root' => 'bson']);

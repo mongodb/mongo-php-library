@@ -1,0 +1,41 @@
+# $schema: ../schema.json
+name: $toBool
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/'
+type:
+    - resolvesToBool
+encode: single
+description: |
+    Converts value to a boolean.
+    New in MongoDB 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedShippedFlag:
+                        $switch:
+                            branches:
+                                -
+                                    case:
+                                        $eq:
+                                            - '$shipped'
+                                            - 'false'
+                                    then: false
+                                -
+                                    case:
+                                        $eq:
+                                            - '$shipped'
+                                            - ''
+                                    then: false
+                            default:
+                                $toBool: '$shipped'
+            -
+                $match:
+                    convertedShippedFlag: false

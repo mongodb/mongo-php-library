@@ -1,0 +1,36 @@
+# $schema: ../schema.json
+name: $log
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/'
+type:
+    - resolvesToDouble
+encode: array
+description: |
+    Calculates the log of a number in the specified base.
+arguments:
+    -
+        name: number
+        type:
+            - resolvesToNumber
+        description: |
+            Any valid expression as long as it resolves to a non-negative number.
+    -
+        name: base
+        type:
+            - resolvesToNumber
+        description: |
+            Any valid expression as long as it resolves to a positive number greater than 1.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/#example'
+        pipeline:
+            -
+                $project:
+                    bitsNeeded:
+                        $floor:
+                            $add:
+                                - 1
+                                -
+                                    $log:
+                                        - '$int'
+                                        - 2

@@ -1,0 +1,108 @@
+# $schema: ../schema.json
+name: $graphLookup
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/'
+type:
+    - stage
+encode: object
+description: |
+    Performs a recursive search on a collection. To each output document, adds a new array field that contains the traversal results of the recursive search for that document.
+arguments:
+    -
+        name: from
+        type:
+            - string
+        description: |
+            Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
+            Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
+    -
+        name: startWith
+        type:
+            - expression
+            - array
+        description: |
+            Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
+    -
+        name: connectFromField
+        type:
+            - string
+        description: |
+            Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process.
+    -
+        name: connectToField
+        type:
+            - string
+        description: |
+            Field name in other documents against which to match the value of the field specified by the connectFromField parameter.
+    -
+        name: as
+        type:
+            - string
+        description: |
+            Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
+    -
+        name: maxDepth
+        type:
+            - int
+        optional: true
+        description: |
+            Non-negative integral number specifying the maximum recursion depth.
+    -
+        name: depthField
+        type:
+            - string
+        optional: true
+        description: |
+            Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
+    -
+        name: restrictSearchWithMatch
+        type:
+            - query
+        optional: true
+        description: |
+            A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
+tests:
+    -
+        name: 'Within a Single Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#within-a-single-collection'
+        pipeline:
+            -
+                $graphLookup:
+                    from: 'employees'
+                    startWith: '$reportsTo'
+                    connectFromField: 'reportsTo'
+                    connectToField: 'name'
+                    as: 'reportingHierarchy'
+    -
+        name: 'Across Multiple Collections'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#across-multiple-collections'
+        pipeline:
+            -
+                $graphLookup:
+                    from: 'airports'
+                    startWith: '$nearestAirport'
+                    connectFromField: 'connects'
+                    connectToField: 'airport'
+                    maxDepth: 2
+                    depthField: 'numConnections'
+                    as: 'destinations'
+    -
+        name: 'With a Query Filter'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#with-a-query-filter'
+        pipeline:
+            -
+                $match:
+                    name: 'Tanya Jordan'
+            -
+                $graphLookup:
+                    from: 'people'
+                    startWith: '$friends'
+                    connectFromField: 'friends'
+                    connectToField: 'name'
+                    as: 'golfers'
+                    restrictSearchWithMatch:
+                        hobbies: 'golf'
+            -
+                $project:
+                    name: 1
+                    friends: 1
+                    connections who play golf: '$golfers.name'

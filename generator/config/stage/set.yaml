@@ -1,0 +1,73 @@
+# $schema: ../schema.json
+name: $set
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/'
+type:
+    - stage
+encode: single
+description: |
+    Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
+    Alias for $addFields.
+arguments:
+    -
+        name: field
+        type:
+            - expression
+        variadic: object
+tests:
+    -
+        name: 'Using Two $set Stages'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#using-two--set-stages'
+        pipeline:
+            -
+                $set:
+                    totalHomework:
+                        # The $sum expression is always build as an array, even if the value is an array field name
+                        # $sum: '$homework'
+                        $sum: ['$homework']
+                    totalQuiz:
+                        # $sum: '$quiz'
+                        $sum: ['$quiz']
+            -
+                $set:
+                    totalScore:
+                        $add:
+                            - '$totalHomework'
+                            - '$totalQuiz'
+                            - '$extraCredit'
+    -
+        name: 'Adding Fields to an Embedded Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#adding-fields-to-an-embedded-document'
+        pipeline:
+            -
+                $set:
+                    specs.fuel_type: 'unleaded'
+    -
+        name: 'Overwriting an existing field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#overwriting-an-existing-field'
+        pipeline:
+            -
+                $set:
+                    cats: 20
+    -
+        name: 'Add Element to an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#add-element-to-an-array'
+        pipeline:
+            -
+                $match:
+                    _id: 1
+            -
+                $set:
+                    homework:
+                        $concatArrays:
+                            - '$homework'
+                            -
+                                - 7
+    -
+        name: 'Creating a New Field with Existing Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#creating-a-new-field-with-existing-fields'
+        pipeline:
+            -
+                $set:
+                    quizAverage:
+                        # $avg: '$quiz'
+                        $avg: ['$quiz']

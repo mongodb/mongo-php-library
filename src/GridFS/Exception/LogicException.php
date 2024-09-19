@@ -39,10 +39,9 @@ class LogicException extends BaseLogicException implements Exception
     /**
      * Throw when an invalid "gridfs" context option is provided.
      *
-     * @param mixed $context
      * @internal
      */
-    public static function invalidContext($context): self
+    public static function invalidContext(mixed $context): self
     {
         return new self(sprintf('Expected "gridfs" stream context to have type "array" but found "%s"', get_debug_type($context)));
     }
@@ -50,10 +49,9 @@ class LogicException extends BaseLogicException implements Exception
     /**
      * Thrown when a context is provided with an incorrect collection wrapper.
      *
-     * @param mixed $object
      * @internal
      */
-    public static function invalidContextCollectionWrapper($object): self
+    public static function invalidContextCollectionWrapper(mixed $object): self
     {
         return new self(sprintf('Expected "collectionWrapper" in "gridfs" stream context to have type "%s" but found "%s"', CollectionWrapper::class, get_debug_type($object)));
     }

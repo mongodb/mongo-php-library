@@ -1,0 +1,37 @@
+# $schema: ../schema.json
+name: $and
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/'
+type:
+    - resolvesToBool
+encode: single
+description: |
+    Returns true only when all its expressions evaluate to true. Accepts any number of argument expressions.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+            - resolvesToBool
+            - resolvesToNumber
+            - resolvesToString
+            - resolvesToNull
+        variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    qty: 1
+                    result:
+                        $and:
+                            -
+                                $gt:
+                                    - '$qty'
+                                    - 100
+                            -
+                                $lt:
+                                    - '$qty'
+                                    - 250

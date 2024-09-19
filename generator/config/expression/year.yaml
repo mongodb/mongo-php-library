@@ -1,0 +1,36 @@
+# $schema: ../schema.json
+name: $year
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/'
+type:
+    - resolvesToInt
+encode: object
+description: |
+    Returns the year for a date as a number (e.g. 2014).
+arguments:
+    -
+        name: date
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/#example'
+        pipeline:
+            -
+                $project:
+                    year:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $year: '$date'
+                        $year:
+                            date: '$date'

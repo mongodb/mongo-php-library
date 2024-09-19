@@ -10,7 +10,6 @@ use MongoDB\Model\BSONArray;
 
 use function array_filter;
 use function array_flip;
-use function get_class;
 use function microtime;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
@@ -45,15 +44,9 @@ final class EventCollector implements CommandSubscriber
         'CommandFailedEvent' => CommandFailedEvent::class,
     ];
 
-    private string $clientId;
-
-    private Context $context;
-
     private array $collectEvents = [];
 
-    private BSONArray $eventList;
-
-    public function __construct(BSONArray $eventList, array $collectEvents, string $clientId, Context $context)
+    public function __construct(private BSONArray $eventList, array $collectEvents, private string $clientId, private Context $context)
     {
         assertNotEmpty($collectEvents);
 
@@ -68,10 +61,6 @@ final class EventCollector implements CommandSubscriber
                 $this->collectEvents[self::$supportedEvents[$event]] = 1;
             }
         }
-
-        $this->clientId = $clientId;
-        $this->context = $context;
-        $this->eventList = $eventList;
     }
 
     /** @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php */
@@ -102,8 +91,7 @@ final class EventCollector implements CommandSubscriber
         removeSubscriber($this);
     }
 
-    /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private function handleCommandMonitoringEvent($event): void
+    private function handleCommandMonitoringEvent(CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event): void
     {
         assertIsObject($event);
 
@@ -111,7 +99,7 @@ final class EventCollector implements CommandSubscriber
             return;
         }
 
-        if (! isset($this->collectEvents[get_class($event)])) {
+        if (! isset($this->collectEvents[$event::class])) {
             return;
         }
 
@@ -151,6 +139,6 @@ final class EventCollector implements CommandSubscriber
             $eventNamesByClass = array_flip(array_filter(self::$supportedEvents));
         }
 
-        return $eventNamesByClass[get_class($event)];
+        return $eventNamesByClass[$event::class];
     }
 }

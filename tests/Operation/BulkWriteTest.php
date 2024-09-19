@@ -2,10 +2,12 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use TypeError;
 
 class BulkWriteTest extends TestCase
 {
@@ -227,9 +229,9 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function provideInvalidBooleanValues()
+    public static function provideInvalidBooleanValues()
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidBooleanValues());
+        return self::wrapValuesForDataProvider(self::getInvalidBooleanValues());
     }
 
     public function testReplaceOneWithCodecRejectsInvalidDocuments(): void
@@ -287,8 +289,7 @@ class BulkWriteTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testUpdateManyUpdateArgumentTypeCheck($update): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected update operator(s) or non-empty pipeline for $operations[0]["updateMany"][1]');
+        $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_MANY => [['x' => 1], $update]],
         ]);
@@ -380,8 +381,7 @@ class BulkWriteTest extends TestCase
     /** @dataProvider provideInvalidDocumentValues */
     public function testUpdateOneUpdateArgumentTypeCheck($update): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected update operator(s) or non-empty pipeline for $operations[0]["updateOne"][1]');
+        $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_ONE => [['x' => 1], $update]],
         ]);
@@ -442,14 +442,14 @@ class BulkWriteTest extends TestCase
         );
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'ordered' => $this->getInvalidBooleanValues(true),
-            'session' => $this->getInvalidSessionValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'ordered' => self::getInvalidBooleanValues(true),
+            'session' => self::getInvalidSessionValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 }

@@ -1,0 +1,22 @@
+# $schema: ../schema.json
+name: $type
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/'
+type:
+    - resolvesToString
+encode: single
+description: |
+    Return the BSON data type of the field.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/#example'
+        pipeline:
+            -
+                $project:
+                    a:
+                        $type: '$a'

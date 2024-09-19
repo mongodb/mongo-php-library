@@ -28,7 +28,7 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideCommandDocuments(): array
+    public static function provideCommandDocuments(): array
     {
         return [
             'array' => [['ping' => 1]],
@@ -55,7 +55,7 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }

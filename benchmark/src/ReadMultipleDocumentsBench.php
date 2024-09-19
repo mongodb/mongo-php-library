@@ -116,8 +116,7 @@ final class ReadMultipleDocumentsBench
         }
     }
 
-    /** @param array|object $document */
-    private function accessId($document, string $accessor): void
+    private function accessId(array|object $document, string $accessor): void
     {
         switch ($accessor) {
             case 'array':
@@ -140,8 +139,7 @@ final class ReadMultipleDocumentsBench
         }
     }
 
-    /** @param array|object $document */
-    private function accessNestedItem($document, string $accessor): void
+    private function accessNestedItem(array|object $document, string $accessor): void
     {
         switch ($accessor) {
             case 'array':

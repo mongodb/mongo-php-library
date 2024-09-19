@@ -1,0 +1,30 @@
+# $schema: ../schema.json
+name: $nin
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nin/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches none of the values specified in an array.
+arguments:
+    -
+        name: value
+        type:
+            - array # of expression
+tests:
+    -
+        name: 'Select on Unmatching Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nin/#select-on-unmatching-documents'
+        pipeline:
+            -
+                $match:
+                    quantity:
+                        $nin: [5, 15]
+    -
+        name: 'Select on Elements Not in an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nin/#select-on-elements-not-in-an-array'
+        pipeline:
+            -
+                $match:
+                    tags:
+                        $nin: ['school']

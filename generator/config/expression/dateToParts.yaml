@@ -1,0 +1,49 @@
+# $schema: ../schema.json
+name: $dateToParts
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/'
+type:
+    - resolvesToObject
+encode: object
+description: |
+    Returns a document containing the constituent parts of a date.
+arguments:
+    -
+        name: date
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The input date for which to return parts. date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+    -
+        name: iso8601
+        type:
+            - bool
+        optional: true
+        description: |
+            If set to true, modifies the output document to use ISO week date fields. Defaults to false.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/#example'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateToParts:
+                            date: '$date'
+                    date_iso:
+                        $dateToParts:
+                            date: '$date'
+                            iso8601: true
+                    date_timezone:
+                        $dateToParts:
+                            date: '$date'
+                            timezone: 'America/New_York'

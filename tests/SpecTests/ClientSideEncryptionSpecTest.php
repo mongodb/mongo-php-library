@@ -38,12 +38,9 @@ use function glob;
 use function in_array;
 use function iterator_to_array;
 use function json_decode;
-use function phpversion;
 use function sprintf;
 use function str_repeat;
-use function str_starts_with;
 use function substr;
-use function version_compare;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -167,10 +164,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
-        if (str_starts_with($this->dataDescription(), 'fle2v2-Range-') && version_compare(phpversion('mongodb'), '1.20.0dev', '>=')) {
-            $this->markTestIncomplete('Range protocol V1 is not supported by ext-mongodb 1.20+');
-        }
-
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }
@@ -222,7 +215,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
     }
 
-    public function provideTests()
+    public static function provideTests()
     {
         $testArgs = [];
 
@@ -347,8 +340,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $this->assertSame(Binary::TYPE_UUID, $dataKeyId->getType());
 
         $this->assertNotNull($insertCommand);
-        $this->assertObjectHasAttribute('writeConcern', $insertCommand);
-        $this->assertObjectHasAttribute('w', $insertCommand->writeConcern);
+        $this->assertObjectHasProperty('writeConcern', $insertCommand);
+        $this->assertObjectHasProperty('w', $insertCommand->writeConcern);
         $this->assertSame(WriteConcern::MAJORITY, $insertCommand->writeConcern->w);
 
         $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $dataKeyId]);
@@ -1566,10 +1559,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $keyId = $clientEncryption->createDataKey('local');
 
                 $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
-                $test->assertObjectNotHasAttribute('keyAltNames', $keyBeforeUpdate);
+                $test->assertObjectNotHasProperty('keyAltNames', $keyBeforeUpdate);
 
                 $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
-                $test->assertObjectHasAttribute('keyAltNames', $keyBeforeUpdate);
+                $test->assertObjectHasProperty('keyAltNames', $keyBeforeUpdate);
                 $test->assertIsArray($keyBeforeUpdate->keyAltNames);
                 $test->assertContains('abc', $keyBeforeUpdate->keyAltNames);
 
@@ -1583,7 +1576,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $originalKeyId = $clientEncryption->getKeyByAltName('def')->_id;
 
                 $originalKeyBeforeUpdate = $clientEncryption->addKeyAltName($originalKeyId, 'def');
-                $test->assertObjectHasAttribute('keyAltNames', $originalKeyBeforeUpdate);
+                $test->assertObjectHasProperty('keyAltNames', $originalKeyBeforeUpdate);
                 $test->assertIsArray($originalKeyBeforeUpdate->keyAltNames);
                 $test->assertContains('def', $originalKeyBeforeUpdate->keyAltNames);
             },
@@ -1698,7 +1691,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 try {
                     $encryptedClient->selectCollection('db', 'decryption_events')->aggregate([]);
                     $test->fail('Expected exception to be thrown');
-                } catch (ConnectionTimeoutException $e) {
+                } catch (ConnectionTimeoutException) {
                     $test->addToAssertionCount(1);
                 }
 
@@ -1839,10 +1832,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $result = $clientEncryption2->rewrapManyDataKey([], $rewrapManyDataKeyOpts);
 
-        $this->assertObjectHasAttribute('bulkWriteResult', $result);
+        $this->assertObjectHasProperty('bulkWriteResult', $result);
         $this->assertIsObject($result->bulkWriteResult);
         // libmongoc uses different field names for its BulkWriteResult
-        $this->assertObjectHasAttribute('nModified', $result->bulkWriteResult);
+        $this->assertObjectHasProperty('nModified', $result->bulkWriteResult);
         $this->assertSame(1, $result->bulkWriteResult->nModified);
 
         $this->assertSame('test', $clientEncryption1->decrypt($ciphertext));
@@ -1942,7 +1935,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         try {
             $clientEncryption->encrypt($data->value, $encryptionOptions);
             $this->fail('Expected exception to be thrown');
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
         }
 
         return $data->value;

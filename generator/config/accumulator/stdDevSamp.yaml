@@ -1,0 +1,43 @@
+# $schema: ../schema.json
+name: $stdDevSamp
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Calculates the sample standard deviation of the input values. Use if the values encompass a sample of a population of data from which to generalize about the population. $stdDevSamp ignores non-numeric values.
+    If the values represent the entire population of data or you do not wish to generalize about a larger population, use $stdDevPop instead.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/#use-in--group-stage'
+        pipeline:
+            -
+                $sample:
+                    size: 100
+            -
+                $group:
+                    _id: ~
+                    ageStdDev:
+                        $stdDevSamp: '$age'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        stdDevSampQuantityForState:
+                            $stdDevSamp: '$quantity'
+                            window:
+                                documents: ['unbounded', 'current']

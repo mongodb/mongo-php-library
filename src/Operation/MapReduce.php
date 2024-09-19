@@ -53,21 +53,12 @@ use const E_USER_DEPRECATED;
  * @see \MongoDB\Collection::mapReduce()
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
  * @psalm-import-type MapReduceCallable from MapReduceResult
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class MapReduce implements Executable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private JavascriptInterface $map;
-
-    private JavascriptInterface $reduce;
-
-    /** @var array|object|string */
-    private $out;
-
-    private array $options;
+    private array|object|string $out;
 
     /**
      * Constructs a mapReduce command.
@@ -156,82 +147,78 @@ class MapReduce implements Executable
      * @param array               $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private JavascriptInterface $map, private JavascriptInterface $reduce, string|array|object $out, private array $options = [])
     {
-        if (! is_string($out) && ! is_array($out) && ! is_object($out)) {
-            throw InvalidArgumentException::invalidType('$out', $out, 'string or array or object');
+        if (isset($this->options['bypassDocumentValidation']) && ! is_bool($this->options['bypassDocumentValidation'])) {
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $this->options['bypassDocumentValidation'], 'boolean');
         }
 
-        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        if (isset($this->options['collation']) && ! is_document($this->options['collation'])) {
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $this->options['collation']);
         }
 
-        if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
+        if (isset($this->options['finalize']) && ! $this->options['finalize'] instanceof JavascriptInterface) {
+            throw InvalidArgumentException::invalidType('"finalize" option', $this->options['finalize'], JavascriptInterface::class);
         }
 
-        if (isset($options['finalize']) && ! $options['finalize'] instanceof JavascriptInterface) {
-            throw InvalidArgumentException::invalidType('"finalize" option', $options['finalize'], JavascriptInterface::class);
+        if (isset($this->options['jsMode']) && ! is_bool($this->options['jsMode'])) {
+            throw InvalidArgumentException::invalidType('"jsMode" option', $this->options['jsMode'], 'boolean');
         }
 
-        if (isset($options['jsMode']) && ! is_bool($options['jsMode'])) {
-            throw InvalidArgumentException::invalidType('"jsMode" option', $options['jsMode'], 'boolean');
+        if (isset($this->options['limit']) && ! is_integer($this->options['limit'])) {
+            throw InvalidArgumentException::invalidType('"limit" option', $this->options['limit'], 'integer');
         }
 
-        if (isset($options['limit']) && ! is_integer($options['limit'])) {
-            throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
+        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        if (isset($this->options['query']) && ! is_document($this->options['query'])) {
+            throw InvalidArgumentException::expectedDocumentType('"query" option', $this->options['query']);
         }
 
-        if (isset($options['query']) && ! is_document($options['query'])) {
-            throw InvalidArgumentException::expectedDocumentType('"query" option', $options['query']);
+        if (isset($this->options['readConcern']) && ! $this->options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $this->options['readConcern'], ReadConcern::class);
         }
 
-        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], ReadConcern::class);
+        if (isset($this->options['readPreference']) && ! $this->options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $this->options['readPreference'], ReadPreference::class);
         }
 
-        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);
+        if (isset($this->options['scope']) && ! is_document($this->options['scope'])) {
+            throw InvalidArgumentException::expectedDocumentType('"scope" option', $this->options['scope']);
         }
 
-        if (isset($options['scope']) && ! is_document($options['scope'])) {
-            throw InvalidArgumentException::expectedDocumentType('"scope" option', $options['scope']);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['sort']) && ! is_document($this->options['sort'])) {
+            throw InvalidArgumentException::expectedDocumentType('"sort" option', $this->options['sort']);
         }
 
-        if (isset($options['sort']) && ! is_document($options['sort'])) {
-            throw InvalidArgumentException::expectedDocumentType('"sort" option', $options['sort']);
+        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
-        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        if (isset($this->options['verbose']) && ! is_bool($this->options['verbose'])) {
+            throw InvalidArgumentException::invalidType('"verbose" option', $this->options['verbose'], 'boolean');
         }
 
-        if (isset($options['verbose']) && ! is_bool($options['verbose'])) {
-            throw InvalidArgumentException::invalidType('"verbose" option', $options['verbose'], 'boolean');
+        if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $this->options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
+        if (isset($this->options['bypassDocumentValidation']) && ! $this->options['bypassDocumentValidation']) {
+            unset($this->options['bypassDocumentValidation']);
         }
 
-        if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
-            unset($options['bypassDocumentValidation']);
+        if (isset($this->options['readConcern']) && $this->options['readConcern']->isDefault()) {
+            unset($this->options['readConcern']);
         }
 
-        if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
-            unset($options['readConcern']);
-        }
-
-        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+        if (isset($this->options['writeConcern']) && $this->options['writeConcern']->isDefault()) {
+            unset($this->options['writeConcern']);
         }
 
         // Handle deprecation of CodeWScope
@@ -243,18 +230,13 @@ class MapReduce implements Executable
             @trigger_error('Use of Javascript with scope in "$reduce" argument for MapReduce is deprecated. Put all scope variables in the "scope" option of the MapReduce operation.', E_USER_DEPRECATED);
         }
 
-        if (isset($options['finalize']) && $options['finalize']->getScope() !== null) {
+        if (isset($this->options['finalize']) && $this->options['finalize']->getScope() !== null) {
             @trigger_error('Use of Javascript with scope in "finalize" option for MapReduce is deprecated. Put all scope variables in the "scope" option of the MapReduce operation.', E_USER_DEPRECATED);
         }
 
         $this->checkOutDeprecations($out);
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->map = $map;
-        $this->reduce = $reduce;
         $this->out = $out;
-        $this->options = $options;
     }
 
     /**
@@ -306,8 +288,7 @@ class MapReduce implements Executable
         return new MapReduceResult($getIterator, $result);
     }
 
-    /** @param string|array|object $out */
-    private function checkOutDeprecations($out): void
+    private function checkOutDeprecations(string|array|object $out): void
     {
         if (is_string($out)) {
             return;

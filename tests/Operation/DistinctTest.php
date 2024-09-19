@@ -2,17 +2,19 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Distinct;
+use TypeError;
 
 class DistinctTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', $filter);
     }
 
@@ -23,15 +25,15 @@ class DistinctTest extends TestCase
         new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'collation' => $this->getInvalidDocumentValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
+        return self::createOptionDataProvider([
+            'collation' => self::getInvalidDocumentValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'session' => self::getInvalidSessionValues(),
+            'typeMap' => self::getInvalidArrayValues(),
         ]);
     }
 

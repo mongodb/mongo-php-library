@@ -55,15 +55,12 @@ class CodecCursorFunctionalTest extends FunctionalTestCase
                 E_USER_DEPRECATED | E_DEPRECATED,
             );
 
-            $cursorId = $codecCursor->getId(true);
+            $cursorId = $codecCursor->getId();
         } finally {
             restore_error_handler();
         }
 
-        self::logicalOr(
-            self::isInstanceOf(Int64::class),
-            self::isInstanceOf(CursorId::class),
-        )->matches($cursorId);
+        self::assertInstanceOf(CursorId::class, $cursorId);
 
         // Expect 2 deprecations: 1 from CodecCursor, one from Cursor
         self::assertCount(2, $deprecations);

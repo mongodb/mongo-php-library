@@ -7,7 +7,6 @@ use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
-use MongoDB\Driver\Server;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 
 use function assert;

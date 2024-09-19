@@ -18,7 +18,6 @@ use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
-use function sprintf;
 
 /**
  * EventCollector handles "storeEventsAsEntities" for client entities.

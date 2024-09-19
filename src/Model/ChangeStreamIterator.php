@@ -17,7 +17,6 @@
 
 namespace MongoDB\Model;
 
-use Iterator;
 use IteratorIterator;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
@@ -49,7 +48,7 @@ use function MongoDB\is_document;
  *
  * @internal
  * @template TValue of array|object
- * @template-extends IteratorIterator<int, TValue, CursorInterface<int, TValue>&Iterator<int, TValue>>
+ * @template-extends IteratorIterator<int, TValue, CursorInterface<TValue>>
  */
 final class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {
@@ -77,18 +76,17 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
     }
 
     /**
-     * Necessary to let psalm know that we're always expecting a cursor as inner
-     * iterator. This could be side-stepped due to the class not being final,
-     * but it's very much an invalid use-case. This method can be dropped in 2.0
-     * once the class is final.
+     * This method is necessary as psalm does not properly set the return type
+     * of IteratorIterator::getInnerIterator to the templated iterator
      *
-     * @return CursorInterface<int, TValue>&Iterator<int, TValue>
+     * @see https://github.com/vimeo/psalm/pull/11100.
+     *
+     * @return CursorInterface<TValue>
      */
-    final public function getInnerIterator(): Iterator
+    public function getInnerIterator(): CursorInterface
     {
         $cursor = parent::getInnerIterator();
         assert($cursor instanceof CursorInterface);
-        assert($cursor instanceof Iterator);
 
         return $cursor;
     }
@@ -173,18 +171,10 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
 
     /**
      * @internal
-     * @psalm-param CursorInterface<int, TValue>&Iterator<int, TValue> $cursor
+     * @psalm-param CursorInterface<TValue> $cursor
      */
     public function __construct(CursorInterface $cursor, int $firstBatchSize, array|object|null $initialResumeToken, private ?object $postBatchResumeToken = null)
     {
-        if (! $cursor instanceof Iterator) {
-            throw InvalidArgumentException::invalidType(
-                '$cursor',
-                $cursor,
-                CursorInterface::class . '&' . Iterator::class,
-            );
-        }
-
         if (isset($initialResumeToken) && ! is_document($initialResumeToken)) {
             throw InvalidArgumentException::expectedDocumentType('$initialResumeToken', $initialResumeToken);
         }

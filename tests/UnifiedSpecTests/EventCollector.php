@@ -18,7 +18,6 @@ use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
-use function sprintf;
 
 /**
  * EventCollector handles "storeEventsAsEntities" for client entities.
@@ -120,7 +119,7 @@ final class EventCollector implements CommandSubscriber
             'name' => self::getEventName($event),
             'observedAt' => microtime(true),
             'commandName' => $event->getCommandName(),
-            'connectionId' => self::getConnectionId($event),
+            'connectionId' => $event->getServerConnectionId(),
             'requestId' => $event->getRequestId(),
             'operationId' => $event->getOperationId(),
         ];
@@ -142,14 +141,6 @@ final class EventCollector implements CommandSubscriber
         }
 
         $this->eventList[] = $log;
-    }
-
-    /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private static function getConnectionId($event): string
-    {
-        $server = $event->getServer();
-
-        return sprintf('%s:%d', $server->getHost(), $server->getPort());
     }
 
     private static function getEventName(object $event): string

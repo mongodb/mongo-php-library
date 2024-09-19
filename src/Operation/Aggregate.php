@@ -19,7 +19,6 @@ namespace MongoDB\Operation;
 
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Cursor;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\ReadConcern;
@@ -317,7 +316,7 @@ final class Aggregate implements Executable, Explainable
      * @see https://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @see https://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
      */
-    private function executeCommand(Server $server, Command $command): Cursor
+    private function executeCommand(Server $server, Command $command): CursorInterface
     {
         $options = [];
 

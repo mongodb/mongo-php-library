@@ -4,6 +4,11 @@ functions:
     - command: git.get_project
       params:
         directory: "src"
+    - command: shell.exec
+      params:
+        working_dir: "src"
+        script: |
+          git submodule update --init
     # Make an evergreen exapanstion file with dynamic values
     - command: shell.exec
       params:

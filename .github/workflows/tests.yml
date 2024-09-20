@@ -60,6 +60,7 @@ jobs:
         uses: "actions/checkout@v4"
         with:
           fetch-depth: 2
+          submodules: true
 
       - id: setup-mongodb
         uses: mongodb-labs/drivers-evergreen-tools@master

@@ -213,10 +213,9 @@ final class UnifiedTestRunner
                 $operation = new Operation($o, $context);
                 $operation->assert();
             }
-
+        } finally {
             $context->stopEventObservers();
             $context->stopEventCollectors();
-        } finally {
             $context->disableFailPoints();
         }
 

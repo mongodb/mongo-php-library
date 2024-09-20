@@ -217,7 +217,7 @@ final class UnifiedTestRunner
             $context->stopEventObservers();
             $context->stopEventCollectors();
         } finally {
-            $this->disableFailPoints($context->getFailPoints());
+            $context->disableFailPoints();
         }
 
         if (isset($test->expectEvents)) {
@@ -228,15 +228,6 @@ final class UnifiedTestRunner
         if (isset($test->outcome)) {
             assertIsArray($test->outcome);
             $this->assertOutcome($test->outcome);
-        }
-    }
-
-    /** @param list<array{failPoint: stdClass, server: Server}> $failPoints */
-    private function disableFailPoints(array $failPoints): void
-    {
-        foreach ($failPoints as ['failPoint' => $failPoint, 'server' => $server]) {
-            $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
-            $operation->execute($server);
         }
     }
 

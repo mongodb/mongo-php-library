@@ -5,7 +5,6 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 use LogicException;
 use MongoDB\Client;
 use MongoDB\Driver\ClientEncryption;
-use MongoDB\Driver\Server;
 use MongoDB\Driver\ServerApi;
 use MongoDB\Model\BSONArray;
 use MongoDB\Tests\FunctionalTestCase;
@@ -39,6 +38,8 @@ use function sprintf;
  */
 final class Context
 {
+    use ManagesFailPointsTrait;
+
     private ?string $activeClient = null;
 
     private EntityMap $entityMap;
@@ -60,9 +61,6 @@ final class Context
     private string $multiMongosUri;
 
     private ?object $advanceClusterTime = null;
-
-    /** @var list<array{failPoint: stdClass, server: Server}> */
-    private array $failPoints = [];
 
     public function __construct(Client $internalClient, string $uri)
     {
@@ -234,20 +232,6 @@ final class Context
         foreach ($this->eventCollectors as $eventCollector) {
             $eventCollector->stop();
         }
-    }
-
-    public function registerFailPoint(stdClass $failPoint, Server $server): void
-    {
-        $this->failPoints[] = [
-            'failPoint' => $failPoint,
-            'server' => $server,
-        ];
-    }
-
-    /** @return list<array{failPoint: stdClass, server: Server}> */
-    public function getFailPoints(): array
-    {
-        return $this->failPoints;
     }
 
     /** @param string|array $readPreferenceTags */

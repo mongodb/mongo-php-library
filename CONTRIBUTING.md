@@ -22,7 +22,11 @@ Installation directions for Composer may be found in its
 
 The library's test suite uses [PHPUnit](https://phpunit.de/), which is installed
 through the [PHPUnit Bridge](https://symfony.com/phpunit-bridge) dependency by
-Composer.
+Composer. To run the spec tests, initialize the corresponding Git submodule:
+
+```
+$ git submodule update --init
+```
 
 The test suite may be executed with:
 

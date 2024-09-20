@@ -16,7 +16,6 @@ use MongoDB\GridFS\Bucket;
 use MongoDB\Model\CollectionInfo;
 use MongoDB\Model\DatabaseInfo;
 use MongoDB\Model\IndexInfo;
-use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use PHPUnit\Framework\Assert;
@@ -909,7 +908,8 @@ final class Operation
                 assertArrayHasKey('failPoint', $args);
                 assertInstanceOf(Client::class, $args['client']);
                 assertInstanceOf(stdClass::class, $args['failPoint']);
-                $args['client']->selectDatabase('admin')->command($args['failPoint']);
+                // Configure the fail point via the Context so it can later be disabled
+                $this->context->configureFailPoint($args['failPoint'], $args['client']->getManager()->selectServer());
                 break;
             case 'targetedFailPoint':
                 assertArrayHasKey('session', $args);
@@ -917,8 +917,8 @@ final class Operation
                 assertInstanceOf(Session::class, $args['session']);
                 assertInstanceOf(stdClass::class, $args['failPoint']);
                 assertNotNull($args['session']->getServer(), 'Session is pinned');
-                $operation = new DatabaseCommand('admin', $args['failPoint']);
-                $operation->execute($args['session']->getServer());
+                // Configure the fail point via the Context so it can later be disabled
+                $this->context->configureFailPoint($args['failPoint'], $args['session']->getServer());
                 break;
             case 'loop':
                 assertArrayHasKey('operations', $args);

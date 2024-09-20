@@ -201,6 +201,8 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     private static UnifiedTestRunner $runner;
 
+    private static string $testDir = __DIR__ . '/../specifications/source';
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -236,7 +238,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideAtlasDataLakeTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/atlas-data-lake/*.json');
+        return self::provideTests('atlas-data-lake');
     }
 
     #[DataProvider('provideChangeStreamsTests')]
@@ -248,7 +250,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideChangeStreamsTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/change-streams/*.json');
+        return self::provideTests('change-streams');
     }
 
     #[DataProvider('provideClientSideEncryptionTests')]
@@ -261,7 +263,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideClientSideEncryptionTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/client-side-encryption/*.json');
+        return self::provideTests('client-side-encryption');
     }
 
     #[DataProvider('provideCollectionManagementTests')]
@@ -273,7 +275,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideCollectionManagementTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/collection-management/*.json');
+        return self::provideTests('collection-management');
     }
 
     #[DataProvider('provideCommandMonitoringTests')]
@@ -285,7 +287,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideCommandMonitoringTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/command-monitoring/*.json');
+        return self::provideTests('command-monitoring');
     }
 
     #[DataProvider('provideCrudTests')]
@@ -297,7 +299,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideCrudTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/crud/*.json');
+        return self::provideTests('crud');
     }
 
     #[DataProvider('provideGridFSTests')]
@@ -309,7 +311,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideGridFSTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/gridfs/*.json');
+        return self::provideTests('gridfs');
     }
 
     #[DataProvider('provideLoadBalancers')]
@@ -321,7 +323,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideLoadBalancers(): Generator
     {
-        return self::provideTests(__DIR__ . '/load-balancers/*.json');
+        return self::provideTests('load-balancers');
     }
 
     #[DataProvider('provideReadWriteConcernTests')]
@@ -332,7 +334,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideReadWriteConcernTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/read-write-concern/*.json');
+        return self::provideTests('read-write-concern');
     }
 
     #[DataProvider('provideRetryableReadsTests')]
@@ -344,7 +346,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideRetryableReadsTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/retryable-reads/*.json');
+        return self::provideTests('retryable-reads');
     }
 
     #[DataProvider('provideRetryableWritesTests')]
@@ -356,7 +358,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideRetryableWritesTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/retryable-writes/*.json');
+        return self::provideTests('retryable-writes');
     }
 
     #[DataProvider('provideRunCommandTests')]
@@ -368,7 +370,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideRunCommandTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/run-command/*.json');
+        return self::provideTests('run-command');
     }
 
     #[DataProvider('provideSessionsTests')]
@@ -380,7 +382,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideSessionsTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/sessions/*.json');
+        return self::provideTests('sessions');
     }
 
     #[DataProvider('provideTransactionsTests')]
@@ -392,7 +394,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideTransactionsTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/transactions/*.json');
+        return self::provideTests('transactions');
     }
 
     #[DataProvider('provideTransactionsConvenientApiTests')]
@@ -403,7 +405,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideTransactionsConvenientApiTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/transactions-convenient-api/*.json');
+        return self::provideTests('transactions-convenient-api');
     }
 
     #[DataProvider('provideVersionedApiTests')]
@@ -416,7 +418,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideVersionedApiTests(): Generator
     {
-        return self::provideTests(__DIR__ . '/versioned-api/*.json');
+        return self::provideTests('versioned-api');
     }
 
     #[DataProvider('providePassingTests')]
@@ -427,7 +429,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function providePassingTests(): Generator
     {
-        yield from self::provideTests(__DIR__ . '/valid-pass/*.json');
+        yield from self::provideTests('valid-pass');
     }
 
     #[DataProvider('provideFailingTests')]
@@ -465,7 +467,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideFailingTests(): Generator
     {
-        yield from self::provideTests(__DIR__ . '/valid-fail/*.json');
+        yield from self::provideTests('valid-fail');
     }
 
     #[DataProvider('provideIndexManagementTests')]
@@ -484,11 +486,13 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideIndexManagementTests(): Generator
     {
-        yield from self::provideTests(__DIR__ . '/index-management/*.json');
+        yield from self::provideTests('index-management');
     }
 
-    private static function provideTests(string $pattern): Generator
+    private static function provideTests(string $directory): Generator
     {
+        $pattern = self::$testDir . '/' . $directory . '/*.json';
+
         foreach (glob($pattern) as $filename) {
             $group = basename(dirname($filename));
 

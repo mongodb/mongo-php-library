@@ -18,6 +18,7 @@
 namespace MongoDB\Operation;
 
 use EmptyIterator;
+use Iterator;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -25,7 +26,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
-use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
 
 use function is_integer;
@@ -85,7 +85,7 @@ class ListIndexes implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return IndexInfoIterator
+     * @return Iterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)

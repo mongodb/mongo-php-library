@@ -27,6 +27,7 @@ class ResumeTokenException extends RuntimeException
      *
      * @param mixed $value Actual value (used to derive the type)
      * @return self
+     * @internal
      */
     public static function invalidType(mixed $value)
     {
@@ -37,6 +38,7 @@ class ResumeTokenException extends RuntimeException
      * Thrown when a resume token is not found in a change document.
      *
      * @return self
+     * @internal
      */
     public static function notFound()
     {

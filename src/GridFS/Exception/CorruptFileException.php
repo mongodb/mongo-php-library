@@ -25,6 +25,8 @@ class CorruptFileException extends RuntimeException
 {
     /**
      * Thrown when a chunk doesn't contain valid data.
+     *
+     * @internal
      */
     public static function invalidChunkData(int $chunkIndex): self
     {
@@ -36,6 +38,7 @@ class CorruptFileException extends RuntimeException
      *
      * @param integer $expectedIndex Expected index number
      * @return self
+     * @internal
      */
     public static function missingChunk(int $expectedIndex)
     {
@@ -48,6 +51,7 @@ class CorruptFileException extends RuntimeException
      * @param integer $index         Actual index number (i.e. "n" field)
      * @param integer $expectedIndex Expected index number
      * @return self
+     * @internal
      */
     public static function unexpectedIndex(int $index, int $expectedIndex)
     {
@@ -60,6 +64,7 @@ class CorruptFileException extends RuntimeException
      * @param integer $size         Actual size (i.e. "data" field length)
      * @param integer $expectedSize Expected size
      * @return self
+     * @internal
      */
     public static function unexpectedSize(int $size, int $expectedSize)
     {

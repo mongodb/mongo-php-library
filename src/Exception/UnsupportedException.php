@@ -24,6 +24,7 @@ class UnsupportedException extends RuntimeException
      * by a server.
      *
      * @return self
+     * @internal
      */
     public static function commitQuorumNotSupported()
     {
@@ -34,6 +35,7 @@ class UnsupportedException extends RuntimeException
      * Thrown when a command's hint option is not supported by a server.
      *
      * @return self
+     * @internal
      */
     public static function hintNotSupported()
     {
@@ -44,6 +46,7 @@ class UnsupportedException extends RuntimeException
      * Thrown when a readConcern is used with a read operation in a transaction.
      *
      * @return self
+     * @internal
      */
     public static function readConcernNotSupportedInTransaction()
     {
@@ -54,6 +57,7 @@ class UnsupportedException extends RuntimeException
      * Thrown when a writeConcern is used with a write operation in a transaction.
      *
      * @return self
+     * @internal
      */
     public static function writeConcernNotSupportedInTransaction()
     {

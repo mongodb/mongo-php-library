@@ -77,7 +77,11 @@ use function array_intersect_key;
 use function array_key_exists;
 use function current;
 use function is_array;
+use function sprintf;
 use function strlen;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 class Collection
 {
@@ -952,6 +956,8 @@ class Collection
      */
     public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, string|array|object $out, array $options = [])
     {
+        @trigger_error(sprintf('The %s method is deprecated and will be removed in a future release.', __METHOD__), E_USER_DEPRECATED);
+
         $hasOutputCollection = ! is_mapreduce_output_inline($out);
 
         // Check if the out option is inline because we will want to coerce a primary read preference if not

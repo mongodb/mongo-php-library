@@ -38,6 +38,8 @@ use function sprintf;
  */
 final class Context
 {
+    use ManagesFailPointsTrait;
+
     private ?string $activeClient = null;
 
     private EntityMap $entityMap;

@@ -67,7 +67,7 @@ class Prose4_RetryOnDifferentMongosTest extends FunctionalTestCase
 
         // Step 4: Enable failed command event monitoring for client
         $subscriber = new class implements CommandSubscriber {
-            /** @var int[]  */
+            /** @var string[]  */
             public array $commandFailedServers = [];
 
             public function commandStarted(CommandStartedEvent $event): void
@@ -80,7 +80,7 @@ class Prose4_RetryOnDifferentMongosTest extends FunctionalTestCase
 
             public function commandFailed(CommandFailedEvent $event): void
             {
-                $this->commandFailedServers[] = $event->getServerConnectionId();
+                $this->commandFailedServers[] = $event->getHost() . ':' . $event->getPort();
             }
         };
 

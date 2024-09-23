@@ -58,7 +58,6 @@ use function MongoDB\select_server;
  */
 final class Watch implements Executable, /* @internal */ CommandSubscriber
 {
-    public const FULL_DOCUMENT_DEFAULT = 'default';
     public const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
     public const FULL_DOCUMENT_WHEN_AVAILABLE = 'whenAvailable';
     public const FULL_DOCUMENT_REQUIRED = 'required';

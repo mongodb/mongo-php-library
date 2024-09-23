@@ -7,7 +7,7 @@ use MongoDB\Operation\DatabaseCommand;
 use stdClass;
 
 use function PHPUnit\Framework\assertIsString;
-use function PHPUnit\Framework\assertObjectHasAttribute;
+use function PHPUnit\Framework\assertObjectHasProperty;
 
 trait ManagesFailPointsTrait
 {
@@ -16,9 +16,9 @@ trait ManagesFailPointsTrait
 
     public function configureFailPoint(stdClass $failPoint, Server $server): void
     {
-        assertObjectHasAttribute('configureFailPoint', $failPoint);
+        assertObjectHasProperty('configureFailPoint', $failPoint);
         assertIsString($failPoint->configureFailPoint);
-        assertObjectHasAttribute('mode', $failPoint);
+        assertObjectHasProperty('mode', $failPoint);
 
         $operation = new DatabaseCommand('admin', $failPoint);
         $operation->execute($server);

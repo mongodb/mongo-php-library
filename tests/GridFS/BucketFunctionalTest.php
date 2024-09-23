@@ -872,7 +872,6 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $code = <<<'PHP'
             require '%s';
-            require '%s';
             $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
             $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
             $gridfs = $database->selectGridFSBucket();
@@ -888,8 +887,6 @@ class BucketFunctionalTest extends FunctionalTestCase
                     sprintf(
                         $code,
                         __DIR__ . '/../../vendor/autoload.php',
-                        // Include the PHPUnit autoload file to ensure PHPUnit classes can be loaded
-                        __DIR__ . '/../../vendor/bin/.phpunit/phpunit/vendor/autoload.php',
                     ),
                 ),
                 '2>&1',
@@ -915,7 +912,6 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $code = <<<'PHP'
             require '%s';
-            require '%s';
             $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
             $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
             $database->selectGridFSBucket()->registerGlobalStreamWrapperAlias('alias');
@@ -931,8 +927,6 @@ class BucketFunctionalTest extends FunctionalTestCase
                     sprintf(
                         $code,
                         __DIR__ . '/../../vendor/autoload.php',
-                        // Include the PHPUnit autoload file to ensure PHPUnit classes can be loaded
-                        __DIR__ . '/../../vendor/bin/.phpunit/phpunit/vendor/autoload.php',
                     ),
                 ),
                 '2>&1',

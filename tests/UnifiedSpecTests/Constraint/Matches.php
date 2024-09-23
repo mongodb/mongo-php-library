@@ -13,7 +13,6 @@ use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
-use Symfony\Bridge\PhpUnit\ConstraintTrait;
 
 use function array_keys;
 use function count;
@@ -49,8 +48,6 @@ use function strrchr;
  */
 class Matches extends Constraint
 {
-    use ConstraintTrait;
-
     private mixed $value;
 
     private bool $allowExtraRootKeys;
@@ -69,7 +66,7 @@ class Matches extends Constraint
         $this->comparatorFactory = Factory::getInstance();
     }
 
-    private function doEvaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, $description = '', $returnResult = false): ?bool
     {
         $other = self::prepare($other);
         $success = false;
@@ -104,6 +101,8 @@ class Matches extends Constraint
         if (! $success) {
             $this->fail($other, $description, $this->lastFailure);
         }
+
+        return null;
     }
 
     private function assertEquals($expected, $actual, string $keyPath): void
@@ -321,8 +320,7 @@ class Matches extends Constraint
         throw new LogicException('unsupported operator: ' . $name);
     }
 
-    /** @see ConstraintTrait */
-    private function doAdditionalFailureDescription($other)
+    protected function additionalFailureDescription($other): string
     {
         if ($this->lastFailure === null) {
             return '';
@@ -331,14 +329,12 @@ class Matches extends Constraint
         return $this->lastFailure->getMessage();
     }
 
-    /** @see ConstraintTrait */
-    private function doFailureDescription($other)
+    protected function failureDescription($other): string
     {
         return 'expected value matches actual value';
     }
 
-    /** @see ConstraintTrait */
-    private function doMatches($other)
+    protected function matches($other): bool
     {
         $other = self::prepare($other);
 
@@ -351,8 +347,7 @@ class Matches extends Constraint
         return true;
     }
 
-    /** @see ConstraintTrait */
-    private function doToString()
+    public function toString(): string
     {
         return 'matches ' . $this->exporter()->export($this->value);
     }

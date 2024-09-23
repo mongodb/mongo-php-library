@@ -23,7 +23,6 @@ use MongoDB\Model\BSONDocument;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\LogicalOr;
 use RuntimeException;
-use Symfony\Bridge\PhpUnit\ConstraintTrait;
 
 use function array_keys;
 use function array_map;
@@ -40,8 +39,6 @@ use function sprintf;
 
 final class IsBsonType extends Constraint
 {
-    use ConstraintTrait;
-
     private static array $types = [
         'double',
         'string',
@@ -88,7 +85,7 @@ final class IsBsonType extends Constraint
         return LogicalOr::fromConstraints(...array_map(fn ($type) => new self($type), $types));
     }
 
-    private function doMatches($other): bool
+    protected function matches($other): bool
     {
         return match ($this->type) {
             'double' => is_float($other),
@@ -118,7 +115,7 @@ final class IsBsonType extends Constraint
         };
     }
 
-    private function doToString(): string
+    public function toString(): string
     {
         return sprintf('is of BSON type "%s"', $this->type);
     }

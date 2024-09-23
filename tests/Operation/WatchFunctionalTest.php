@@ -18,6 +18,7 @@ use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\UnsupportedValueException;
@@ -1371,10 +1372,10 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $changeStream = $operation->execute($secondary);
         $previousCursorId = $changeStream->getCursorId(true);
-        $this->forceChangeStreamResume();
+        $this->forceChangeStreamResume($secondary);
 
         $changeStream->next();
-        $this->assertNotSame($previousCursorId, $changeStream->getCursorId(true));
+        $this->assertNotEquals($previousCursorId, $changeStream->getCursorId(true));
 
         $getCursor = Closure::bind(
             fn () => $this->iterator->getInnerIterator(),
@@ -1611,17 +1612,20 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertEmpty($commands);
     }
 
-    private function forceChangeStreamResume(): void
+    private function forceChangeStreamResume(?Server $server = null): void
     {
-        $this->configureFailPoint([
-            'configureFailPoint' => 'failCommand',
-            'mode' => ['times' => 1],
-            'data' => [
-                'failCommands' => ['getMore'],
-                'errorCode' => self::NOT_PRIMARY,
-                'errorLabels' => ['ResumableChangeStreamError'],
+        $this->configureFailPoint(
+            [
+                'configureFailPoint' => 'failCommand',
+                'mode' => ['times' => 1],
+                'data' => [
+                    'failCommands' => ['getMore'],
+                    'errorCode' => self::NOT_PRIMARY,
+                    'errorLabels' => ['ResumableChangeStreamError'],
+                ],
             ],
-        ]);
+            $server,
+        );
     }
 
     private function getPostBatchResumeTokenFromReply(stdClass $reply)

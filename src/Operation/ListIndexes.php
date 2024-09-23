@@ -38,7 +38,7 @@ use function is_integer;
  * @see \MongoDB\Collection::listIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/listIndexes/
  */
-final class ListIndexes implements Executable
+final class ListIndexes
 {
     private const ERROR_CODE_DATABASE_NOT_FOUND = 60;
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
@@ -76,7 +76,6 @@ final class ListIndexes implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return Iterator<int, IndexInfo>
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

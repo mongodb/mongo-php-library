@@ -43,7 +43,7 @@ use function MongoDB\is_document;
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
  */
-final class Find implements Executable, Explainable
+final class Find implements Explainable
 {
     public const NON_TAILABLE = 1;
     public const TAILABLE = 2;
@@ -250,7 +250,6 @@ final class Find implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

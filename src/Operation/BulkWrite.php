@@ -46,7 +46,7 @@ use function sprintf;
  *
  * @see \MongoDB\Collection::bulkWrite()
  */
-final class BulkWrite implements Executable
+final class BulkWrite
 {
     public const DELETE_MANY = 'deleteMany';
     public const DELETE_ONE  = 'deleteOne';
@@ -185,7 +185,6 @@ final class BulkWrite implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

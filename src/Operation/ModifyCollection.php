@@ -33,7 +33,7 @@ use function is_array;
  * @see \MongoDB\Database::modifyCollection()
  * @see https://mongodb.com/docs/manual/reference/command/collMod/
  */
-final class ModifyCollection implements Executable
+final class ModifyCollection
 {
     /**
      * Constructs a collMod command.
@@ -83,7 +83,6 @@ final class ModifyCollection implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return array|object Command result document
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

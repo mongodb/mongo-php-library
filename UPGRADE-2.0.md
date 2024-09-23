@@ -9,6 +9,7 @@ UPGRADE FROM 1.x to 2.0
  * The `MongoDB\Model\IndexInfo::isGeoHaystack` method has been removed.
  * The `maxScan`, `modifiers`, `oplogReplay`, and `snapshot` options for `find`
    and `findOne` operations have been removed.
+ * The `MongoDB\Operation\Executable` interface has been removed.
 
 GridFS
 ------

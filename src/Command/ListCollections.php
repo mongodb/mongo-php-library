@@ -24,7 +24,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
-use MongoDB\Operation\Executable;
 
 use function is_bool;
 use function is_integer;
@@ -36,7 +35,7 @@ use function MongoDB\is_document;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
  */
-final class ListCollections implements Executable
+final class ListCollections
 {
     /**
      * Constructs a listCollections command.
@@ -94,7 +93,6 @@ final class ListCollections implements Executable
      * Execute the operation.
      *
      * @return CachingIterator<int, array>
-     * @see Executable::execute()
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server): CachingIterator

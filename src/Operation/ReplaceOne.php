@@ -34,7 +34,7 @@ use function MongoDB\is_pipeline;
  * @see \MongoDB\Collection::replaceOne()
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */
-final class ReplaceOne implements Executable
+final class ReplaceOne
 {
     private Update $update;
 
@@ -103,7 +103,6 @@ final class ReplaceOne implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if collation is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

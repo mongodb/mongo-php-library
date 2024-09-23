@@ -56,7 +56,7 @@ use function MongoDB\select_server;
  * @see \MongoDB\Collection::watch()
  * @see https://mongodb.com/docs/manual/changeStreams/
  */
-final class Watch implements Executable, /* @internal */ CommandSubscriber
+final class Watch implements /* @internal */ CommandSubscriber
 {
     public const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
     public const FULL_DOCUMENT_WHEN_AVAILABLE = 'whenAvailable';
@@ -263,7 +263,6 @@ final class Watch implements Executable, /* @internal */ CommandSubscriber
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws RuntimeException for other driver errors (e.g. connection errors)
      */

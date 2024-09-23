@@ -54,7 +54,7 @@ use const E_USER_DEPRECATED;
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
  * @psalm-import-type MapReduceCallable from MapReduceResult
  */
-final class MapReduce implements Executable
+final class MapReduce
 {
     private array|object|string $out;
 
@@ -240,7 +240,6 @@ final class MapReduce implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

@@ -30,7 +30,7 @@ use MongoDB\Model\CallbackIterator;
  * @see \MongoDB\Database::listCollectionNames()
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
  */
-final class ListCollectionNames implements Executable
+final class ListCollectionNames
 {
     private ListCollectionsCommand $listCollections;
 
@@ -67,7 +67,6 @@ final class ListCollectionNames implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return Iterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

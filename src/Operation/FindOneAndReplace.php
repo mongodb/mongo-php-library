@@ -35,7 +35,7 @@ use function MongoDB\is_pipeline;
  * @see \MongoDB\Collection::findOneAndReplace()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */
-final class FindOneAndReplace implements Executable, Explainable
+final class FindOneAndReplace implements Explainable
 {
     public const RETURN_DOCUMENT_BEFORE = 1;
     public const RETURN_DOCUMENT_AFTER = 2;
@@ -150,7 +150,6 @@ final class FindOneAndReplace implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

@@ -32,7 +32,7 @@ use MongoDB\Model\CollectionInfoIterator;
  * @see \MongoDB\Database::listCollections()
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
  */
-final class ListCollections implements Executable
+final class ListCollections
 {
     private ListCollectionsCommand $listCollections;
 
@@ -69,7 +69,6 @@ final class ListCollections implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return Iterator<int, CollectionInfo>
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

@@ -36,7 +36,7 @@ use function is_bool;
  * @see \MongoDB\Database::renameCollection()
  * @see https://mongodb.com/docs/manual/reference/command/renameCollection/
  */
-final class RenameCollection implements Executable
+final class RenameCollection
 {
     private string $fromNamespace;
 
@@ -97,7 +97,6 @@ final class RenameCollection implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return array|object Command result document
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

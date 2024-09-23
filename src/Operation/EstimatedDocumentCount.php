@@ -35,7 +35,7 @@ use function is_integer;
  * @see \MongoDB\Collection::estimatedDocumentCount()
  * @see https://mongodb.com/docs/manual/reference/command/count/
  */
-final class EstimatedDocumentCount implements Executable, Explainable
+final class EstimatedDocumentCount implements Explainable
 {
     private array $options;
 
@@ -87,7 +87,6 @@ final class EstimatedDocumentCount implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

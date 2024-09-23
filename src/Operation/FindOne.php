@@ -31,7 +31,7 @@ use function current;
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
  */
-final class FindOne implements Executable, Explainable
+final class FindOne implements Explainable
 {
     private Find $find;
 
@@ -106,7 +106,6 @@ final class FindOne implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

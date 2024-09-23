@@ -23,7 +23,7 @@ namespace MongoDB\Operation;
  *
  * @internal
  */
-interface Explainable extends Executable
+interface Explainable
 {
     /**
      * Returns the command document for this operation.

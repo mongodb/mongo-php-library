@@ -30,7 +30,7 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::findOneAndDelete()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */
-final class FindOneAndDelete implements Executable, Explainable
+final class FindOneAndDelete implements Explainable
 {
     private FindAndModify $findAndModify;
 
@@ -107,7 +107,6 @@ final class FindOneAndDelete implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

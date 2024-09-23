@@ -29,7 +29,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see \MongoDB\Collection::deleteOne()
  * @see https://mongodb.com/docs/manual/reference/command/delete/
  */
-final class DeleteMany implements Executable, Explainable
+final class DeleteMany implements Explainable
 {
     private Delete $delete;
 
@@ -74,7 +74,6 @@ final class DeleteMany implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if collation is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

@@ -77,7 +77,7 @@ jobs:
           php-ini-values: "zend.assertions=1"
 
       - name: "Run PHPUnit"
-        run: "vendor/bin/simple-phpunit -v"
+        run: "vendor/bin/phpunit -v"
         env:
           SYMFONY_DEPRECATIONS_HELPER: 999999
           MONGODB_URI: ${{ steps.setup-mongodb.outputs.cluster-uri }}

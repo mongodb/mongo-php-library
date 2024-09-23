@@ -20,9 +20,9 @@
     },
     "require-dev": {
         "doctrine/coding-standard": "^12.0",
+        "phpunit/phpunit": "^9.6",
         "rector/rector": "^1.1",
         "squizlabs/php_codesniffer": "^3.7",
-        "symfony/phpunit-bridge": "^7.1",
         "vimeo/psalm": "^5.13"
     },
     "replace": {
@@ -50,7 +50,7 @@
         "fix:cs": "phpcbf",
         "fix:psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
         "fix:rector": "rector process --ansi",
-        "test": "simple-phpunit"
+        "test": "phpunit"
     },
     "extra": {
         "branch-alias": {

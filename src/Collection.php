@@ -33,7 +33,6 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
-use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Operation\Count;
@@ -882,7 +881,7 @@ class Collection
      * Returns information for all indexes for the collection.
      *
      * @see ListIndexes::__construct() for supported options
-     * @return IndexInfoIterator
+     * @return Iterator<int, IndexInfo>
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

@@ -33,7 +33,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Model\DatabaseInfoIterator;
+use MongoDB\Model\DatabaseInfo;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
@@ -294,7 +294,7 @@ class Client
      * List databases.
      *
      * @see ListDatabases::__construct() for supported options
-     * @return DatabaseInfoIterator
+     * @return Iterator<int, DatabaseInfo>
      * @throws UnexpectedValueException if the command response was malformed
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

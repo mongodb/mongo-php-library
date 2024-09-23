@@ -7,6 +7,8 @@ UPGRADE FROM 1.x to 2.0
  * The `MongoDB\Operation\Watch::FULL_DOCUMENT_DEFAULT` constant has been
    removed.
  * The `MongoDB\Model\IndexInfo::isGeoHaystack` method has been removed.
+ * The `maxScan`, `modifiers`, `oplogReplay`, and `snapshot` options for `find`
+   and `findOne` operations have been removed.
 
 GridFS
 ------

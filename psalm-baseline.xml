@@ -708,11 +708,7 @@
       <code><![CDATA[$this->options['codec']]]></code>
       <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$options['modifiers'][$modifier[1]]]]></code>
-    </MixedArrayAccess>
     <MixedAssignment>
-      <code><![CDATA[$options[$modifier[0]]]]></code>
       <code><![CDATA[$options[$option]]]></code>
       <code><![CDATA[$options['readPreference']]]></code>
       <code><![CDATA[$options['session']]]></code>

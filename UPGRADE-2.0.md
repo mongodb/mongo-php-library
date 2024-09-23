@@ -28,3 +28,18 @@ GridFS
    ```php
    $bucket->openUploadStream($fileId, ['metadata' => ['contentType' => 'image/png']]);
    ```
+
+UnsupportedException method removals
+------------------------------------
+
+The following methods have been removed from the
+`MongoDB\Exception\UnsupportedException` class:
+ * `allowDiskUseNotSupported`
+ * `arrayFiltersNotSupported`
+ * `collationNotSupported`
+ * `explainNotSupported`
+ * `readConcernNotSupported`
+ * `writeConcernNotSupported`
+
+The remaining methods have been marked as internal and may be removed in a
+future minor version. Only the class itself is covered by the BC promise.

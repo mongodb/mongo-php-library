@@ -32,6 +32,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Model\CollectionInfo;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateEncryptedCollection;
@@ -472,7 +473,7 @@ class Database
      * Returns information for all collections in this database.
      *
      * @see ListCollections::__construct() for supported options
-     * @return Iterator
+     * @return Iterator<int, CollectionInfo>
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

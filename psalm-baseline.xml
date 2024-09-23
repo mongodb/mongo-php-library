@@ -150,6 +150,9 @@
     </TooManyArguments>
   </file>
   <file src="src/Model/CollectionInfoCommandIterator.php">
+    <DeprecatedInterface>
+      <code><![CDATA[CollectionInfoCommandIterator]]></code>
+    </DeprecatedInterface>
     <MixedArrayAssignment>
       <code><![CDATA[$info['idIndex']['ns']]]></code>
     </MixedArrayAssignment>
@@ -158,6 +161,9 @@
     </MixedOperand>
   </file>
   <file src="src/Model/DatabaseInfoLegacyIterator.php">
+    <DeprecatedInterface>
+      <code><![CDATA[DatabaseInfoLegacyIterator]]></code>
+    </DeprecatedInterface>
     <MixedArgument>
       <code><![CDATA[current($this->databases)]]></code>
     </MixedArgument>
@@ -165,6 +171,11 @@
       <code><![CDATA[int]]></code>
       <code><![CDATA[key($this->databases)]]></code>
     </MixedReturnTypeCoercion>
+  </file>
+  <file src="src/Model/IndexInfoIteratorIterator.php">
+    <DeprecatedInterface>
+      <code><![CDATA[IndexInfoIteratorIterator]]></code>
+    </DeprecatedInterface>
   </file>
   <file src="src/Model/IndexInput.php">
     <LessSpecificReturnStatement>
@@ -553,7 +564,22 @@
       <code><![CDATA[$document]]></code>
     </PossiblyInvalidArgument>
   </file>
+  <file src="src/Operation/ListCollections.php">
+    <DeprecatedClass>
+      <code><![CDATA[new CollectionInfoCommandIterator($this->listCollections->execute($server), $this->databaseName)]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Operation/ListDatabases.php">
+    <DeprecatedClass>
+      <code><![CDATA[new DatabaseInfoLegacyIterator($this->listDatabases->execute($server))]]></code>
+    </DeprecatedClass>
+  </file>
   <file src="src/Operation/ListIndexes.php">
+    <DeprecatedClass>
+      <code><![CDATA[IndexInfoIteratorIterator]]></code>
+      <code><![CDATA[new IndexInfoIteratorIterator($iterator, $this->databaseName . '.' . $this->collectionName)]]></code>
+      <code><![CDATA[new IndexInfoIteratorIterator(new EmptyIterator())]]></code>
+    </DeprecatedClass>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>

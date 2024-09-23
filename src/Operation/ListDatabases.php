@@ -23,6 +23,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
+use MongoDB\Model\DatabaseInfo;
 use MongoDB\Model\DatabaseInfoLegacyIterator;
 
 /**
@@ -68,7 +69,7 @@ class ListDatabases implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return Iterator
+     * @return Iterator<int, DatabaseInfo>
      * @throws UnexpectedValueException if the command response was malformed
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

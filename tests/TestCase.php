@@ -6,8 +6,6 @@ use InvalidArgumentException;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\Codec;
-use MongoDB\Codec\DecodeIfSupported;
-use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;

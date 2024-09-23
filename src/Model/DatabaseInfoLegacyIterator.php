@@ -31,6 +31,7 @@ use function reset;
  * @internal
  * @see \MongoDB\Client::listDatabases()
  * @see https://mongodb.com/docs/manual/reference/command/listDatabases/
+ * @deprecated
  */
 class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
 {

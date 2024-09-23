@@ -55,24 +55,6 @@ class FindTest extends TestCase
         ]);
     }
 
-    public function testSnapshotOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => true]);
-        });
-
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => false]);
-        });
-    }
-
-    public function testMaxScanOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['maxScan' => 1]);
-        });
-    }
-
     /** @dataProvider provideInvalidConstructorCursorTypeOptions */
     public function testConstructorCursorTypeOption($cursorType): void
     {

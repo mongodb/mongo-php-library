@@ -6,6 +6,7 @@ UPGRADE FROM 1.x to 2.0
  * The `MongoDB\ChangeStream::CURSOR_NOT_FOUND` constant is now private.
  * The `MongoDB\Operation\Watch::FULL_DOCUMENT_DEFAULT` constant has been
    removed.
+ * The `MongoDB\Model\IndexInfo::isGeoHaystack` method has been removed.
 
 GridFS
 ------

@@ -111,18 +111,6 @@ class IndexInfo implements ArrayAccess
     }
 
     /**
-     * Return whether or not this index is of type geoHaystack.
-     *
-     * @deprecated Since 1.16: MongoDB 5.0 removes support for geoHaystack indexes.
-     */
-    public function isGeoHaystack(): bool
-    {
-        @trigger_error('MongoDB 5.0 removes support for "geoHaystack" indexes, the method "IndexInfo::isGeoHaystack()" will be removed in version 2.0', E_USER_DEPRECATED);
-
-        return array_search('geoHaystack', $this->getKey(), true) !== false;
-    }
-
-    /**
      * Return whether this is a sparse index.
      *
      * @see https://mongodb.com/docs/manual/core/index-sparse/

@@ -179,11 +179,6 @@
             count($queriesOrArrayOfQueries[0]) > 0]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
-  <file src="src/ChangeStream.php">
-    <DeprecatedConstant>
-      <code><![CDATA[self::CURSOR_NOT_FOUND]]></code>
-    </DeprecatedConstant>
-  </file>
   <file src="src/Client.php">
     <DeprecatedInterface>
       <code><![CDATA[DatabaseInfoIterator]]></code>

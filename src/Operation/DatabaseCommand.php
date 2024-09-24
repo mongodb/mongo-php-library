@@ -18,7 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -82,9 +82,8 @@ final class DatabaseCommand implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return Cursor
      */
-    public function execute(Server $server)
+    public function execute(Server $server): CursorInterface
     {
         $cursor = $server->executeCommand($this->databaseName, $this->command, $this->createOptions());
 

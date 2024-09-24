@@ -75,11 +75,10 @@ final class DeleteOne implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return DeleteResult
      * @throws UnsupportedException if collation is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): DeleteResult
     {
         return $this->delete->execute($server);
     }
@@ -88,9 +87,8 @@ final class DeleteOne implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         return $this->delete->getCommandDocument();
     }

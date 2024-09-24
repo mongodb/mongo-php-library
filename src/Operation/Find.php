@@ -17,7 +17,6 @@
 
 namespace MongoDB\Operation;
 
-use Iterator;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -300,11 +299,10 @@ final class Find implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return CursorInterface&Iterator
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): CursorInterface
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['readConcern'])) {
@@ -328,9 +326,8 @@ final class Find implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = ['find' => $this->collectionName, 'filter' => (object) $this->filter];
 

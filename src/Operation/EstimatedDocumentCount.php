@@ -88,12 +88,11 @@ final class EstimatedDocumentCount implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return integer
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): int
     {
         return $this->createCount()->execute($server);
     }
@@ -102,9 +101,8 @@ final class EstimatedDocumentCount implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         return $this->createCount()->getCommandDocument();
     }

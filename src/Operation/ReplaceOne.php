@@ -104,17 +104,15 @@ final class ReplaceOne implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return UpdateResult
      * @throws UnsupportedException if collation is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): UpdateResult
     {
         return $this->update->execute($server);
     }
 
-    /** @return array|object */
-    private function validateReplacement(array|object $replacement, ?DocumentCodec $codec)
+    private function validateReplacement(array|object $replacement, ?DocumentCodec $codec): array|object
     {
         if ($codec) {
             $replacement = $codec->encode($replacement);

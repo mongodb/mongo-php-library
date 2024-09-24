@@ -151,11 +151,10 @@ final class FindOneAndReplace implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return array|object|null
      * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object|null
     {
         return $this->findAndModify->execute($server);
     }
@@ -164,15 +163,13 @@ final class FindOneAndReplace implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         return $this->findAndModify->getCommandDocument();
     }
 
-    /** @return array|object */
-    private function validateReplacement(array|object $replacement, ?DocumentCodec $codec)
+    private function validateReplacement(array|object $replacement, ?DocumentCodec $codec): array|object
     {
         if (isset($codec)) {
             $replacement = $codec->encode($replacement);

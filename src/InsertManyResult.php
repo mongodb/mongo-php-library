@@ -38,10 +38,9 @@ class InsertManyResult
      * This method should only be called if the write was acknowledged.
      *
      * @see InsertManyResult::isAcknowledged()
-     * @return integer|null
      * @throws BadMethodCallException if the write result is unacknowledged
      */
-    public function getInsertedCount()
+    public function getInsertedCount(): ?int
     {
         if ($this->isAcknowledged) {
             return $this->writeResult->getInsertedCount();
@@ -58,10 +57,8 @@ class InsertManyResult
      * the driver did not generate an ID), the index will contain its "_id"
      * field value. Any driver-generated ID will be a MongoDB\BSON\ObjectId
      * instance.
-     *
-     * @return array
      */
-    public function getInsertedIds()
+    public function getInsertedIds(): array
     {
         return $this->insertedIds;
     }
@@ -71,10 +68,8 @@ class InsertManyResult
      *
      * If the insert was not acknowledged, other fields from the WriteResult
      * (e.g. insertedCount) will be undefined.
-     *
-     * @return boolean
      */
-    public function isAcknowledged()
+    public function isAcknowledged(): bool
     {
         return $this->writeResult->isAcknowledged();
     }

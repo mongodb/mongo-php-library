@@ -89,7 +89,7 @@ final class DropEncryptedCollection implements Executable
      * @return array|object Command result document from dropping the encrypted collection
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         foreach ($this->dropMetadataCollections as $dropMetadataCollection) {
             $dropMetadataCollection->execute($server);

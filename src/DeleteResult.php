@@ -38,10 +38,9 @@ class DeleteResult
      * This method should only be called if the write was acknowledged.
      *
      * @see DeleteResult::isAcknowledged()
-     * @return integer|null
      * @throws BadMethodCallException if the write result is unacknowledged
      */
-    public function getDeletedCount()
+    public function getDeletedCount(): ?int
     {
         if ($this->isAcknowledged) {
             return $this->writeResult->getDeletedCount();
@@ -55,10 +54,8 @@ class DeleteResult
      *
      * If the delete was not acknowledged, other fields from the WriteResult
      * (e.g. deletedCount) will be undefined.
-     *
-     * @return boolean
      */
-    public function isAcknowledged()
+    public function isAcknowledged(): bool
     {
         return $this->isAcknowledged;
     }

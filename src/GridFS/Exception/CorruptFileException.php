@@ -37,10 +37,9 @@ class CorruptFileException extends RuntimeException
      * Thrown when a chunk is not found for an expected index.
      *
      * @param integer $expectedIndex Expected index number
-     * @return self
      * @internal
      */
-    public static function missingChunk(int $expectedIndex)
+    public static function missingChunk(int $expectedIndex): self
     {
         return new self(sprintf('Chunk not found for index "%d"', $expectedIndex));
     }
@@ -50,10 +49,9 @@ class CorruptFileException extends RuntimeException
      *
      * @param integer $index         Actual index number (i.e. "n" field)
      * @param integer $expectedIndex Expected index number
-     * @return self
      * @internal
      */
-    public static function unexpectedIndex(int $index, int $expectedIndex)
+    public static function unexpectedIndex(int $index, int $expectedIndex): self
     {
         return new self(sprintf('Expected chunk to have index "%d" but found "%d"', $expectedIndex, $index));
     }
@@ -63,10 +61,9 @@ class CorruptFileException extends RuntimeException
      *
      * @param integer $size         Actual size (i.e. "data" field length)
      * @param integer $expectedSize Expected size
-     * @return self
      * @internal
      */
-    public static function unexpectedSize(int $size, int $expectedSize)
+    public static function unexpectedSize(int $size, int $expectedSize): self
     {
         return new self(sprintf('Expected chunk to have size "%d" but found "%d"', $expectedSize, $size));
     }

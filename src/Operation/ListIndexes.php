@@ -27,6 +27,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Model\IndexInfo;
+use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
 
 use function is_integer;
@@ -79,7 +80,7 @@ final class ListIndexes implements Executable
      * @return Iterator<int, IndexInfo>
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): IndexInfoIterator
     {
         return $this->executeCommand($server);
     }

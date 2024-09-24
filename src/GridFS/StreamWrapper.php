@@ -315,8 +315,7 @@ final class StreamWrapper
         return true;
     }
 
-    /** @return false|array */
-    public function url_stat(string $path, int $flags)
+    public function url_stat(string $path, int $flags): false|array
     {
         assert($this->stream === null);
 

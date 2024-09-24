@@ -243,7 +243,7 @@ final class CreateCollection implements Executable
      * @return array|object Command result document
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 

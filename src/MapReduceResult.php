@@ -18,7 +18,6 @@
 namespace MongoDB;
 
 use IteratorAggregate;
-use ReturnTypeWillChange;
 use stdClass;
 use Traversable;
 
@@ -52,20 +51,16 @@ class MapReduceResult implements IteratorAggregate
 
     /**
      * Returns various count statistics from the mapReduce command.
-     *
-     * @return array
      */
-    public function getCounts()
+    public function getCounts(): array
     {
         return $this->counts;
     }
 
     /**
      * Return the command execution time in milliseconds.
-     *
-     * @return integer
      */
-    public function getExecutionTimeMS()
+    public function getExecutionTimeMS(): int
     {
         return $this->executionTimeMS;
     }
@@ -76,8 +71,7 @@ class MapReduceResult implements IteratorAggregate
      * @see https://php.net/iteratoraggregate.getiterator
      * @return Traversable<int, array|object>
      */
-    #[ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return call_user_func($this->getIterator);
     }
@@ -87,10 +81,8 @@ class MapReduceResult implements IteratorAggregate
      *
      * Note: timing statistics are only available if the mapReduce command's
      * "verbose" option was true; otherwise, an empty array will be returned.
-     *
-     * @return array
      */
-    public function getTiming()
+    public function getTiming(): array
     {
         return $this->timing;
     }

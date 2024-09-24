@@ -5,11 +5,11 @@
         vars:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
-        # TODO: remove once 1.20.0 is released
+        # TODO: remove once 2.0.0 is released
         vars:
-          EXTENSION_BRANCH: "v1.20"
+          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
-  # TODO: re-enable once 1.20.0 is released
+  # TODO: re-enable once 2.0.0 is released
 #  - name: "build-php-%phpVersion%-lowest"
 #    tags: ["build", "php%phpVersion%", "lowest", "pr", "tag"]
 #    commands:
@@ -18,7 +18,7 @@
 #          PHP_VERSION: "%phpVersion%"
 #      - func: "compile extension"
 #        vars:
-#          EXTENSION_VERSION: "1.20.0"
+#          EXTENSION_VERSION: "2.0.0"
 #      - func: "upload extension"
 #  - name: "build-php-%phpVersion%-next-stable"
 #    tags: ["build", "php%phpVersion%", "next-stable", "pr", "tag"]
@@ -28,7 +28,7 @@
 #          PHP_VERSION: "%phpVersion%"
 #      - func: "compile extension"
 #        vars:
-#          EXTENSION_BRANCH: "v1.20.0"
+#          EXTENSION_BRANCH: "v2.0"
 #      - func: "upload extension"
 #  - name: "build-php-%phpVersion%-next-minor"
 #    tags: ["build", "php%phpVersion%", "next-minor"]
@@ -38,5 +38,5 @@
 #          PHP_VERSION: "%phpVersion%"
 #      - func: "compile extension"
 #        vars:
-#          EXTENSION_BRANCH: "master"
+#          EXTENSION_BRANCH: "v2.x"
 #      - func: "upload extension"

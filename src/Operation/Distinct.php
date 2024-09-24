@@ -110,12 +110,11 @@ final class Distinct implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return array
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['readConcern'])) {
@@ -141,9 +140,8 @@ final class Distinct implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = $this->createCommandDocument();
 

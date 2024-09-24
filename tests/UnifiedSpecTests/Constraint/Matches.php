@@ -13,6 +13,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
+use SebastianBergmann\Exporter\Exporter;
 
 use function array_keys;
 use function count;
@@ -82,14 +83,14 @@ class Matches extends Constraint
         } catch (RuntimeException $e) {
             /* This will generally catch internal errors from failAt(), which
              * include a key path to pinpoint the failure. */
+            $exporter = new Exporter();
             $this->lastFailure = new ComparisonFailure(
                 $this->value,
                 $other,
                 /* TODO: Improve the exporter to canonicalize documents by
                  * sorting keys and remove spl_object_hash from output. */
-                $this->exporter()->export($this->value),
-                $this->exporter()->export($other),
-                false,
+                $exporter->export($this->value),
+                $exporter->export($other),
                 $e->getMessage(),
             );
         }
@@ -256,7 +257,7 @@ class Matches extends Constraint
             $constraint = IsBsonType::anyOf(...(array) $operator['$$type']);
 
             if (! $constraint->evaluate($actual, '', true)) {
-                self::failAt(sprintf('%s is not an expected BSON type: %s', $this->exporter()->shortenedExport($actual), implode(', ', (array) $operator['$$type'])), $keyPath);
+                self::failAt(sprintf('%s is not an expected BSON type: %s', (new Exporter())->shortenedExport($actual), implode(', ', (array) $operator['$$type'])), $keyPath);
             }
 
             return;
@@ -284,7 +285,7 @@ class Matches extends Constraint
             assertIsString($actual);
 
             if ($actual !== hex2bin($operator['$$matchesHexBytes'])) {
-                self::failAt(sprintf('%s does not match expected hex bytes: %s', $this->exporter()->shortenedExport($actual), $operator['$$matchesHexBytes']), $keyPath);
+                self::failAt(sprintf('%s does not match expected hex bytes: %s', (new Exporter())->shortenedExport($actual), $operator['$$matchesHexBytes']), $keyPath);
             }
 
             return;
@@ -349,7 +350,7 @@ class Matches extends Constraint
 
     public function toString(): string
     {
-        return 'matches ' . $this->exporter()->export($this->value);
+        return 'matches ' . (new Exporter())->export($this->value);
     }
 
     /** @psalm-return never-return */

@@ -161,11 +161,16 @@ OUTPUT;
 
     protected function assertDeprecated(callable $execution)
     {
+        $this->assertError(E_USER_DEPRECATED | E_DEPRECATED, $execution);
+    }
+
+    protected function assertError(int $levels, callable $execution): void
+    {
         $errors = [];
 
         set_error_handler(function ($errno, $errstr) use (&$errors): void {
             $errors[] = $errstr;
-        }, E_USER_DEPRECATED | E_DEPRECATED);
+        }, $levels);
 
         try {
             $result = call_user_func($execution);

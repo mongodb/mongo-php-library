@@ -14,6 +14,7 @@ use MongoDB\Tests\Fixtures\Document\TestObject;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
+use function is_array;
 use function microtime;
 
 class FindFunctionalTest extends FunctionalTestCase
@@ -42,6 +43,11 @@ class FindFunctionalTest extends FunctionalTestCase
     {
         (new CommandObserver())->observe(
             function () use ($modifiers): void {
+                // @todo revert this lines after PHPC-2457
+                if (is_array($modifiers)) {
+                    $modifiers = [...$modifiers];
+                }
+
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),

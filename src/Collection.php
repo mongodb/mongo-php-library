@@ -956,7 +956,7 @@ class Collection
      */
     public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, string|array|object $out, array $options = [])
     {
-        @trigger_error(sprintf('The %s method is deprecated and will be removed in a future release.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s method is deprecated and will be removed in a version 2.0.', __METHOD__), E_USER_DEPRECATED);
 
         $hasOutputCollection = ! is_mapreduce_output_inline($out);
 

@@ -230,7 +230,7 @@ class CreateCollection implements Executable
         }
 
         if (isset($this->options['autoIndexId'])) {
-            trigger_error('The "autoIndexId" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
+            trigger_error('The "autoIndexId" option is deprecated and will be removed in version 2.0', E_USER_DEPRECATED);
         }
 
         if (isset($this->options['pipeline']) && ! is_pipeline($this->options['pipeline'], true /* allowEmpty */)) {

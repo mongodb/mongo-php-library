@@ -39,6 +39,8 @@
         }
     },
     "scripts": {
+        "pre-install-cmd": "git submodule update --init",
+        "pre-update-cmd": "git submodule update --init",
         "bench": "cd benchmark && composer update && vendor/bin/phpbench run --report=aggregate",
         "checks": [
             "@check:cs",

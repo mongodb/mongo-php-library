@@ -13,7 +13,8 @@ $ composer update
 
 In addition to installing project dependencies, Composer will check that the
 required extension version is installed. Directions for installing the extension
-may be found [here](https://php.net/manual/en/mongodb.installation.php).
+may be found [here](https://php.net/manual/en/mongodb.installation.php). Composer will also install the submodule required for
+running spec tests.
 
 Installation directions for Composer may be found in its
 [Getting Started](https://getcomposer.org/doc/00-intro.md) guide.
@@ -22,11 +23,7 @@ Installation directions for Composer may be found in its
 
 The library's test suite uses [PHPUnit](https://phpunit.de/), which is installed
 through the [PHPUnit Bridge](https://symfony.com/phpunit-bridge) dependency by
-Composer. To run the spec tests, initialize the corresponding Git submodule:
-
-```
-$ git submodule update --init
-```
+Composer.
 
 The test suite may be executed with:
 

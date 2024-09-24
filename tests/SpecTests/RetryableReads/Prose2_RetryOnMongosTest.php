@@ -64,7 +64,7 @@ class Prose2_RetryOnMongosTest extends FunctionalTestCase
 
         // Step 4: Enable failed command event monitoring for client
         $subscriber = new class implements CommandSubscriber {
-            /** @var int[] */
+            /** @var string[] */
             public array $commandFailedServers = [];
 
             public function commandStarted(CommandStartedEvent $event): void
@@ -77,7 +77,7 @@ class Prose2_RetryOnMongosTest extends FunctionalTestCase
 
             public function commandFailed(CommandFailedEvent $event): void
             {
-                $this->commandFailedServers[] = $event->getServerConnectionId();
+                $this->commandFailedServers[] = $event->getHost() . ':' . $event->getPort();
             }
         };
 
@@ -130,8 +130,8 @@ class Prose2_RetryOnMongosTest extends FunctionalTestCase
 
         // Step 4: Enable succeeded and failed command event monitoring
         $subscriber = new class implements CommandSubscriber {
-            public ?int $commandSucceededServer = null;
-            public ?int $commandFailedServer = null;
+            public ?string $commandSucceededServer = null;
+            public ?string $commandFailedServer = null;
 
             public function commandStarted(CommandStartedEvent $event): void
             {
@@ -139,12 +139,12 @@ class Prose2_RetryOnMongosTest extends FunctionalTestCase
 
             public function commandSucceeded(CommandSucceededEvent $event): void
             {
-                $this->commandSucceededServer = $event->getServerConnectionId();
+                $this->commandSucceededServer = $event->getHost() . ':' . $event->getPort();
             }
 
             public function commandFailed(CommandFailedEvent $event): void
             {
-                $this->commandFailedServer = $event->getServerConnectionId();
+                $this->commandFailedServer = $event->getHost() . ':' . $event->getPort();
             }
         };
 

@@ -5,38 +5,34 @@
         vars:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
-        # TODO: remove once 1.20.0 is released
+      - func: "upload extension"
+  - name: "build-php-%phpVersion%-lowest"
+    tags: ["build", "php%phpVersion%", "lowest", "pr", "tag"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "%phpVersion%"
+      - func: "compile extension"
+        vars:
+          EXTENSION_VERSION: "1.20.0"
+      - func: "upload extension"
+  - name: "build-php-%phpVersion%-next-stable"
+    tags: ["build", "php%phpVersion%", "next-stable", "pr", "tag"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "%phpVersion%"
+      - func: "compile extension"
         vars:
           EXTENSION_BRANCH: "v1.20"
       - func: "upload extension"
-  # TODO: re-enable once 1.20.0 is released
-#  - name: "build-php-%phpVersion%-lowest"
-#    tags: ["build", "php%phpVersion%", "lowest", "pr", "tag"]
-#    commands:
-#      - func: "locate PHP binaries"
-#        vars:
-#          PHP_VERSION: "%phpVersion%"
-#      - func: "compile extension"
-#        vars:
-#          EXTENSION_VERSION: "1.20.0"
-#      - func: "upload extension"
-#  - name: "build-php-%phpVersion%-next-stable"
-#    tags: ["build", "php%phpVersion%", "next-stable", "pr", "tag"]
-#    commands:
-#      - func: "locate PHP binaries"
-#        vars:
-#          PHP_VERSION: "%phpVersion%"
-#      - func: "compile extension"
-#        vars:
-#          EXTENSION_BRANCH: "v1.20.0"
-#      - func: "upload extension"
-#  - name: "build-php-%phpVersion%-next-minor"
-#    tags: ["build", "php%phpVersion%", "next-minor"]
-#    commands:
-#      - func: "locate PHP binaries"
-#        vars:
-#          PHP_VERSION: "%phpVersion%"
-#      - func: "compile extension"
-#        vars:
-#          EXTENSION_BRANCH: "master"
-#      - func: "upload extension"
+  - name: "build-php-%phpVersion%-next-minor"
+    tags: ["build", "php%phpVersion%", "next-minor"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "%phpVersion%"
+      - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "v1.x"
+      - func: "upload extension"

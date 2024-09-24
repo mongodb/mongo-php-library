@@ -35,7 +35,7 @@ trait ManagesFailPointsTrait
             try {
                 $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
                 $operation->execute($server);
-            } catch (ConnectionException $e) {
+            } catch (ConnectionException) {
                 // Retry once in case the connection was dropped by the last operation
                 $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
                 $operation->execute($server);

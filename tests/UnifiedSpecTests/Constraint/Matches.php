@@ -256,7 +256,7 @@ class Matches extends Constraint
             $constraint = IsBsonType::anyOf(...(array) $operator['$$type']);
 
             if (! $constraint->evaluate($actual, '', true)) {
-                self::failAt(sprintf('%s is not an expected BSON type: %s', $this->exporter()->shortenedExport($actual), implode(', ', $types)), $keyPath);
+                self::failAt(sprintf('%s is not an expected BSON type: %s', $this->exporter()->shortenedExport($actual), implode(', ', (array) $operator['$$type'])), $keyPath);
             }
 
             return;

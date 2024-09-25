@@ -51,6 +51,7 @@ $allFiles = [];
 
 // Build tasks
 $allFiles[] = generateConfigs('tasks', 'build', 'phpVersion', 'build-extension.yml', $supportedPhpVersions);
+$allFiles[] = generateConfigs('tasks', 'build', 'phpVersion', 'build-extension-next-minor.yml', $modernPhpVersions);
 
 // Test tasks
 $allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'local.yml', $localServerVersions);

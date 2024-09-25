@@ -25,6 +25,7 @@ use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Constraint\ObjectHasProperty;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionClass;
 use stdClass;
@@ -724,10 +725,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNotEquals('0', (string) $changeStream->getCursorId(true));
 
         $rc = new ReflectionClass(ChangeStream::class);
-        $rp = $rc->getProperty('iterator');
-        $rp->setAccessible(true);
-
-        $iterator = $rp->getValue($changeStream);
+        $iterator = $rc->getProperty('iterator')->getValue($changeStream);
 
         $this->assertInstanceOf('IteratorIterator', $iterator);
 
@@ -1225,7 +1223,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $rc = new ReflectionClass($changeStream);
         $rp = $rc->getProperty('resumeCallable');
-        $rp->setAccessible(true);
 
         $this->assertIsCallable($rp->getValue($changeStream));
 
@@ -1282,9 +1279,9 @@ class WatchFunctionalTest extends FunctionalTestCase
             $aggregateCommands[0]['pipeline'][0]->{'$changeStream'},
             $this->logicalNot(
                 $this->logicalOr(
-                    $this->objectHasAttribute('resumeAfter'),
-                    $this->objectHasAttribute('startAfter'),
-                    $this->objectHasAttribute('startAtOperationTime'),
+                    new ObjectHasProperty('resumeAfter'),
+                    new ObjectHasProperty('startAfter'),
+                    new ObjectHasProperty('startAtOperationTime'),
                 ),
             ),
         );
@@ -1292,9 +1289,9 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertThat(
             $aggregateCommands[1]['pipeline'][0]->{'$changeStream'},
             $this->logicalOr(
-                $this->objectHasAttribute('resumeAfter'),
-                $this->objectHasAttribute('startAfter'),
-                $this->objectHasAttribute('startAtOperationTime'),
+                new ObjectHasProperty('resumeAfter'),
+                new ObjectHasProperty('startAfter'),
+                new ObjectHasProperty('startAtOperationTime'),
             ),
         );
 

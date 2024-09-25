@@ -951,8 +951,6 @@ class BucketFunctionalTest extends FunctionalTestCase
         fclose($stream);
 
         $method = new ReflectionMethod($this->bucket, 'resolveStreamContext');
-        $method->setAccessible(true);
-
         $context = $method->invokeArgs($this->bucket, ['gridfs://bucket/filename', 'rb', []]);
 
         $this->assertIsArray($context);
@@ -967,8 +965,6 @@ class BucketFunctionalTest extends FunctionalTestCase
     public function testResolveStreamContextForWrite(): void
     {
         $method = new ReflectionMethod($this->bucket, 'resolveStreamContext');
-        $method->setAccessible(true);
-
         $context = $method->invokeArgs($this->bucket, ['gridfs://bucket/filename', 'wb', []]);
 
         $this->assertIsArray($context);

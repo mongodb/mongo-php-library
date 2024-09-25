@@ -159,12 +159,12 @@ OUTPUT;
         return self::wrapValuesForDataProvider(self::getInvalidStringValues());
     }
 
-    protected function assertDeprecated(callable $execution)
+    protected function assertDeprecated(callable $execution): mixed
     {
-        $this->assertError(E_USER_DEPRECATED | E_DEPRECATED, $execution);
+        return $this->assertError(E_USER_DEPRECATED | E_DEPRECATED, $execution);
     }
 
-    protected function assertError(int $levels, callable $execution): void
+    protected function assertError(int $levels, callable $execution): mixed
     {
         $errors = [];
 

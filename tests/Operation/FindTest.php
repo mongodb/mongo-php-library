@@ -57,25 +57,6 @@ class FindTest extends TestCase
     }
 
     #[DataProvider('provideInvalidConstructorCursorTypeOptions')]
-    public function testSnapshotOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => true]);
-        });
-
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => false]);
-        });
-    }
-
-    public function testMaxScanOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['maxScan' => 1]);
-        });
-    }
-
-    #[DataProvider('provideInvalidConstructorCursorTypeOptions')]
     public function testConstructorCursorTypeOption($cursorType): void
     {
         $this->expectException(InvalidArgumentException::class);

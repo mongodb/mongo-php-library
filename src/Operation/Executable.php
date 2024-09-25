@@ -32,7 +32,8 @@ interface Executable
     /**
      * Execute the operation.
      *
-     * @return mixed
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
+     * @return mixed|void
      */
     public function execute(Server $server);
 }

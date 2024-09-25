@@ -30,10 +30,8 @@ use function current;
  * @see \MongoDB\Collection::findOne()
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class FindOne implements Executable, Explainable
+final class FindOne implements Executable, Explainable
 {
     private Find $find;
 
@@ -120,11 +118,10 @@ class FindOne implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return array|object|null
      * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object|null
     {
         $cursor = $this->find->execute($server);
         $document = current($cursor->toArray());
@@ -136,9 +133,8 @@ class FindOne implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         return $this->find->getCommandDocument();
     }

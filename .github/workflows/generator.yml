@@ -13,9 +13,9 @@ on:
 
 env:
   PHP_VERSION: "8.2"
-  # TODO: change to "stable" once 1.20.0 is released
+  # TODO: change to "stable" once 2.0.0 is released
   # DRIVER_VERSION: "stable"
-  DRIVER_VERSION: "mongodb/mongo-php-driver@v1.20"
+  DRIVER_VERSION: "mongodb/mongo-php-driver@v2.x"
 
 jobs:
   psalm:

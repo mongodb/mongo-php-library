@@ -27,6 +27,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Model\IndexInfo;
+use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
 
 use function is_integer;
@@ -36,10 +37,8 @@ use function is_integer;
  *
  * @see \MongoDB\Collection::listIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/listIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class ListIndexes implements Executable
+final class ListIndexes implements Executable
 {
     private const ERROR_CODE_DATABASE_NOT_FOUND = 60;
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
@@ -81,7 +80,7 @@ class ListIndexes implements Executable
      * @return Iterator<int, IndexInfo>
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): IndexInfoIterator
     {
         return $this->executeCommand($server);
     }

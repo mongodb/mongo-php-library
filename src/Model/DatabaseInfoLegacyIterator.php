@@ -33,7 +33,7 @@ use function reset;
  * @see https://mongodb.com/docs/manual/reference/command/listDatabases/
  * @deprecated
  */
-class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
+final class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
 {
     public function __construct(private array $databases)
     {

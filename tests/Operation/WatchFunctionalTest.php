@@ -25,6 +25,7 @@ use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Constraint\ObjectHasProperty;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionClass;
 use stdClass;
@@ -1278,9 +1279,9 @@ class WatchFunctionalTest extends FunctionalTestCase
             $aggregateCommands[0]['pipeline'][0]->{'$changeStream'},
             $this->logicalNot(
                 $this->logicalOr(
-                    $this->objectHasAttribute('resumeAfter'),
-                    $this->objectHasAttribute('startAfter'),
-                    $this->objectHasAttribute('startAtOperationTime'),
+                    new ObjectHasProperty('resumeAfter'),
+                    new ObjectHasProperty('startAfter'),
+                    new ObjectHasProperty('startAtOperationTime'),
                 ),
             ),
         );
@@ -1288,9 +1289,9 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertThat(
             $aggregateCommands[1]['pipeline'][0]->{'$changeStream'},
             $this->logicalOr(
-                $this->objectHasAttribute('resumeAfter'),
-                $this->objectHasAttribute('startAfter'),
-                $this->objectHasAttribute('startAtOperationTime'),
+                new ObjectHasProperty('resumeAfter'),
+                new ObjectHasProperty('startAfter'),
+                new ObjectHasProperty('startAtOperationTime'),
             ),
         );
 

@@ -55,7 +55,7 @@ $allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'csfle.yml', $c
 
 // Test variants
 $allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'modern-php-full.yml', $supportedPhpVersions);
-// TODO: Re-enable when 1.20.0 is released
+// TODO: Re-enable when 2.0.0 is released
 // $allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'phpc.yml', [$latestPhpVersion]);
 // $allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'lowest.yml', [$lowestPhpVersion]);
 

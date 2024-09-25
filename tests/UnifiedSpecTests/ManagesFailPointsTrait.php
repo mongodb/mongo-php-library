@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Server;
 use MongoDB\Operation\DatabaseCommand;
 use stdClass;
@@ -31,8 +32,14 @@ trait ManagesFailPointsTrait
     public function disableFailPoints(): void
     {
         foreach ($this->failPointsAndServers as [$failPoint, $server]) {
-            $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
-            $operation->execute($server);
+            try {
+                $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
+                $operation->execute($server);
+            } catch (ConnectionException) {
+                // Retry once in case the connection was dropped by the last operation
+                $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
+                $operation->execute($server);
+            }
         }
 
         $this->failPointsAndServers = [];

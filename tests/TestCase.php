@@ -37,6 +37,7 @@ use function set_error_handler;
 use function sprintf;
 use function strtr;
 
+use const E_DEPRECATED;
 use const E_USER_DEPRECATED;
 
 abstract class TestCase extends BaseTestCase
@@ -166,7 +167,7 @@ OUTPUT;
 
         set_error_handler(function ($errno, $errstr) use (&$errors): void {
             $errors[] = $errstr;
-        }, E_USER_DEPRECATED);
+        }, E_USER_DEPRECATED | E_DEPRECATED);
 
         try {
             call_user_func($execution);

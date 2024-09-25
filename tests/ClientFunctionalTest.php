@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests;
 
+use Iterator;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
@@ -12,7 +13,6 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Session;
 use MongoDB\Model\DatabaseInfo;
-use MongoDB\Model\DatabaseInfoIterator;
 
 use function call_user_func;
 use function is_callable;
@@ -62,7 +62,7 @@ class ClientFunctionalTest extends FunctionalTestCase
 
         $databases = $this->client->listDatabases();
 
-        $this->assertInstanceOf(DatabaseInfoIterator::class, $databases);
+        $this->assertInstanceOf(Iterator::class, $databases);
 
         foreach ($databases as $database) {
             $this->assertInstanceOf(DatabaseInfo::class, $database);

@@ -22,9 +22,6 @@ use MongoDB\Exception\BadMethodCallException;
 
 use function array_key_exists;
 use function array_search;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Index information model class.
@@ -80,18 +77,6 @@ class IndexInfo implements ArrayAccess
     public function getName(): string
     {
         return (string) $this->info['name'];
-    }
-
-    /**
-     * Return the index namespace (e.g. "db.collection").
-     *
-     * @deprecated
-     */
-    public function getNamespace(): string
-    {
-        @trigger_error('MongoDB 4.4 drops support for the namespace in indexes, the method "IndexInfo::getNamespace()" will be removed in version 2.0', E_USER_DEPRECATED);
-
-        return (string) $this->info['ns'];
     }
 
     /**

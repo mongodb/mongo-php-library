@@ -2,9 +2,9 @@
 
 namespace MongoDB\Tests\Database;
 
+use Iterator;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Model\CollectionInfo;
-use MongoDB\Model\CollectionInfoIterator;
 
 /**
  * Functional tests for collection management methods.
@@ -57,7 +57,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $this->assertCommandSucceeded($commandResult);
 
         $collections = $this->database->listCollections();
-        $this->assertInstanceOf(CollectionInfoIterator::class, $collections);
+        $this->assertInstanceOf(Iterator::class, $collections);
 
         foreach ($collections as $collection) {
             $this->assertInstanceOf(CollectionInfo::class, $collection);
@@ -73,7 +73,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $options = ['filter' => ['name' => $collectionName]];
 
         $collections = $this->database->listCollections($options);
-        $this->assertInstanceOf(CollectionInfoIterator::class, $collections);
+        $this->assertInstanceOf(Iterator::class, $collections);
 
         foreach ($collections as $collection) {
             $this->assertInstanceOf(CollectionInfo::class, $collection);

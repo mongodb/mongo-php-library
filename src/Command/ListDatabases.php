@@ -100,6 +100,7 @@ final class ListDatabases
     {
         $cursor = $server->executeReadCommand('admin', $this->createCommand(), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
+
         $result = current($cursor->toArray());
 
         if (! isset($result['databases']) || ! is_array($result['databases'])) {

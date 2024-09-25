@@ -22,6 +22,7 @@ use MongoDB\Command\ListCollections as ListCollectionsCommand;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Model\CachingIterator;
 use MongoDB\Model\CallbackIterator;
 
 /**
@@ -72,9 +73,11 @@ final class ListCollectionNames
      */
     public function execute(Server $server): Iterator
     {
-        return new CallbackIterator(
-            $this->listCollections->execute($server),
-            fn (array $collectionInfo): string => (string) $collectionInfo['name'],
+        return new CachingIterator(
+            new CallbackIterator(
+                $this->listCollections->execute($server),
+                fn (array $collectionInfo): string => (string) $collectionInfo['name'],
+            ),
         );
     }
 }

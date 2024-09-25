@@ -6,10 +6,18 @@ UPGRADE FROM 1.x to 2.0
  * The `MongoDB\ChangeStream::CURSOR_NOT_FOUND` constant is now private.
  * The `MongoDB\Operation\Watch::FULL_DOCUMENT_DEFAULT` constant has been
    removed.
- * The `MongoDB\Model\IndexInfo::isGeoHaystack` method has been removed.
+ * The `getNamespace` and `isGeoHaystack` methods hav been removed from the
+   `MongoDB\Model\IndexInfo` class.
  * The `maxScan`, `modifiers`, `oplogReplay`, and `snapshot` options for `find`
    and `findOne` operations have been removed.
- * The `MongoDB\Operation\Executable` interface has been removed.
+ * The following classes and interfaces have been removed without replacement:
+   * `MongoDB\Operation\Executable`
+   * `MongoDB\Model\CollectionInfoCommandIterator`
+   * `MongoDB\Model\CollectionInfoIterator`
+   * `MongoDB\Model\DatabaseInfoIterator`
+   * `MongoDB\Model\DatabaseInfoLegacyIterator`
+   * `MongoDB\Model\IndexInfoIterator`
+   * `MongoDB\Model\IndexInfoIteratorIterator`
 
 GridFS
 ------

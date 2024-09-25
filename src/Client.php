@@ -39,7 +39,6 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\DatabaseInfo;
-use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
@@ -305,7 +304,7 @@ class Client
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function listDatabases(array $options = []): DatabaseInfoIterator
+    public function listDatabases(array $options = []): Iterator
     {
         $operation = new ListDatabases($options);
         $server = select_server($this->manager, $options);

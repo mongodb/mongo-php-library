@@ -38,7 +38,6 @@ use MongoDB\GridFS\Bucket;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\CollectionInfo;
-use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateEncryptedCollection;
@@ -479,7 +478,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function listCollections(array $options = []): CollectionInfoIterator
+    public function listCollections(array $options = []): Iterator
     {
         $operation = new ListCollections($this->databaseName, $options);
         $server = select_server($this->manager, $options);

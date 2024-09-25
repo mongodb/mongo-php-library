@@ -84,11 +84,8 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * Asserts that two given documents match.
      *
      * Extra keys in the actual value's document(s) will be ignored.
-     *
-     * @param array|object $expectedDocument
-     * @param array|object $actualDocument
      */
-    public static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
+    public static function assertDocumentsMatch(array|object $expectedDocument, array|object $actualDocument, string $message = ''): void
     {
         $constraint = new DocumentsMatchConstraint($expectedDocument, true, true);
 
@@ -107,7 +104,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     {
         foreach ($expected as $key => $value) {
             if ($value === null) {
-                static::assertObjectNotHasAttribute($key, $actual);
+                static::assertObjectNotHasProperty($key, $actual);
                 unset($expected->{$key});
             }
         }
@@ -129,18 +126,11 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             $this->assertNotNull($expectedDocument);
             $this->assertNotNull($actualDocument);
 
-            switch ($resultExpectation) {
-                case ResultExpectation::ASSERT_SAME_DOCUMENT:
-                    $this->assertSameDocument($expectedDocument, $actualDocument);
-                    break;
-
-                case ResultExpectation::ASSERT_DOCUMENTS_MATCH:
-                    $this->assertDocumentsMatch($expectedDocument, $actualDocument);
-                    break;
-
-                default:
-                    $this->fail(sprintf('Invalid result expectation "%d" for %s', $resultExpectation, __METHOD__));
-            }
+            match ($resultExpectation) {
+                ResultExpectation::ASSERT_SAME_DOCUMENT => $this->assertSameDocument($expectedDocument, $actualDocument),
+                ResultExpectation::ASSERT_DOCUMENTS_MATCH => $this->assertDocumentsMatch($expectedDocument, $actualDocument),
+                default => $this->fail(sprintf('Invalid result expectation "%d" for %s', $resultExpectation, __METHOD__)),
+            };
         }
     }
 
@@ -173,10 +163,8 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      *
      * This decodes the file through the driver's extended JSON parser to ensure
      * proper handling of special types.
-     *
-     * @return array|object
      */
-    protected function decodeJson(string $json)
+    protected function decodeJson(string $json): array|object
     {
         return Document::fromJSON($json)->toPHP();
     }
@@ -289,18 +277,12 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             return true;
         }
 
-        switch ($serverlessMode) {
-            case self::SERVERLESS_ALLOW:
-                return true;
-
-            case self::SERVERLESS_FORBID:
-                return ! static::isServerless();
-
-            case self::SERVERLESS_REQUIRE:
-                return static::isServerless();
-        }
-
-        throw new UnexpectedValueException(sprintf('Invalid serverless requirement "%s" found.', $serverlessMode));
+        return match ($serverlessMode) {
+            self::SERVERLESS_ALLOW => true,
+            self::SERVERLESS_FORBID => ! static::isServerless(),
+            self::SERVERLESS_REQUIRE => static::isServerless(),
+            default => throw new UnexpectedValueException(sprintf('Invalid serverless requirement "%s" found.', $serverlessMode)),
+        };
     }
 
     /**

@@ -1,0 +1,30 @@
+# $schema: ../schema.json
+name: $multiply
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/'
+type:
+    - resolvesToDecimal
+encode: single
+description: |
+    Multiplies numbers to return the product. Accepts any number of argument expressions.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+        variadic: array
+        description: |
+            The arguments can be any valid expression as long as they resolve to numbers.
+            Starting in MongoDB 6.1 you can optimize the $multiply operation. To improve performance, group references at the end of the argument list.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/#example'
+        pipeline:
+            -
+                $project:
+                    date: 1
+                    item: 1
+                    total:
+                        $multiply:
+                            - '$price'
+                            - '$quantity'

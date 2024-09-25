@@ -1,0 +1,32 @@
+# $schema: ../schema.json
+name: $in
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches any of the values specified in an array.
+arguments:
+    -
+        name: value
+        type:
+            - array # of expression
+tests:
+    -
+        name: 'Use the $in Operator to Match Values in an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-to-match-values'
+        pipeline:
+            -
+                $match:
+                    tags:
+                        $in: ['home', 'school']
+    -
+        name: 'Use the $in Operator with a Regular Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-with-a-regular-expression'
+        pipeline:
+            -
+                $match:
+                    tags:
+                        $in:
+                            - !bson_regex '^be'
+                            - !bson_regex '^st'

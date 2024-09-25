@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\BSON\Document;
@@ -9,6 +11,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\MapReduce;
 use stdClass;
+use TypeError;
 
 class MapReduceTest extends TestCase
 {
@@ -18,13 +21,13 @@ class MapReduceTest extends TestCase
         $map = new Javascript('function() { emit(this.x, this.y); }');
         $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out);
     }
 
-    public function provideInvalidOutValues()
+    public static function provideInvalidOutValues()
     {
-        return $this->wrapValuesForDataProvider([123, 3.14, true]);
+        return self::wrapValuesForDataProvider([123, 3.14, true]);
     }
 
     /** @dataProvider provideDeprecatedOutValues */
@@ -38,7 +41,7 @@ class MapReduceTest extends TestCase
         });
     }
 
-    public function provideDeprecatedOutValues(): array
+    public static function provideDeprecatedOutValues(): array
     {
         return [
             'nonAtomic:array' => [['nonAtomic' => false]],
@@ -63,28 +66,28 @@ class MapReduceTest extends TestCase
         new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out, $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'collation' => $this->getInvalidDocumentValues(),
-            'finalize' => $this->getInvalidJavascriptValues(),
-            'jsMode' => $this->getInvalidBooleanValues(),
-            'limit' => $this->getInvalidIntegerValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'query' => $this->getInvalidDocumentValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'scope' => $this->getInvalidDocumentValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'sort' => $this->getInvalidDocumentValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'verbose' => $this->getInvalidBooleanValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'collation' => self::getInvalidDocumentValues(),
+            'finalize' => self::getInvalidJavascriptValues(),
+            'jsMode' => self::getInvalidBooleanValues(),
+            'limit' => self::getInvalidIntegerValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'query' => self::getInvalidDocumentValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'scope' => self::getInvalidDocumentValues(),
+            'session' => self::getInvalidSessionValues(),
+            'sort' => self::getInvalidDocumentValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'verbose' => self::getInvalidBooleanValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 
-    private function getInvalidJavascriptValues()
+    private static function getInvalidJavascriptValues()
     {
         return [123, 3.14, 'foo', true, [], new stdClass(), new ObjectId()];
     }

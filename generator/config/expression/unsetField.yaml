@@ -1,0 +1,59 @@
+# $schema: ../schema.json
+name: $unsetField
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/'
+type:
+    - resolvesToObject
+encode: object
+description: |
+    You can use $unsetField to remove fields with names that contain periods (.) or that start with dollar signs ($).
+    $unsetField is an alias for $setField using $$REMOVE to remove fields.
+arguments:
+    -
+        name: field
+        type:
+            - resolvesToString
+        description: |
+            Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
+    -
+        name: input
+        type:
+            - resolvesToObject
+        description: |
+            Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
+tests:
+    -
+        name: 'Remove Fields that Contain Periods'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-contain-periods--.-'
+        pipeline:
+            -
+                $replaceWith:
+                    $unsetField:
+                        field: 'price.usd'
+                        input: '$$ROOT'
+    -
+        name: 'Remove Fields that Start with a Dollar Sign'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-start-with-a-dollar-sign----'
+        pipeline:
+            -
+                $replaceWith:
+                    $unsetField:
+                        field:
+                            $literal: '$price'
+                        input: '$$ROOT'
+    -
+        name: 'Remove A Subfield'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-a-subfield'
+        pipeline:
+            -
+                $replaceWith:
+                    $setField:
+                        field: 'price'
+                        input: '$$ROOT'
+                        value:
+                            $unsetField:
+                                field: 'euro'
+                                input:
+                                    # Example uses the short form, the builder always generates the verbose form
+                                    # $getField: 'price'
+                                    $getField:
+                                        field: 'price'

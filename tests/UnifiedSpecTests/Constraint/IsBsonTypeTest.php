@@ -33,7 +33,7 @@ class IsBsonTypeTest extends TestCase
         $this->assertResult(true, new IsBsonType($type), $value, $this->dataName() . ' is ' . $type);
     }
 
-    public function provideTypes()
+    public static function provideTypes()
     {
         $undefined = Document::fromJSON('{ "x": {"$undefined": true} }')->toPHP()->x;
         $symbol = Document::fromJSON('{ "x": {"$symbol": "test"} }')->toPHP()->x;

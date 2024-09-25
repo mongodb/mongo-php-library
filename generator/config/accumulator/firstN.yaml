@@ -1,0 +1,122 @@
+# $schema: ../schema.json
+name: $firstN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/'
+type:
+    - accumulator
+    - window
+encode: object
+description: |
+    Returns an aggregation of the first n elements within a group.
+    The elements returned are meaningful only if in a specified sort order.
+    If the group contains fewer than n elements, $firstN returns all elements in the group.
+arguments:
+    -
+        name: input
+        type:
+            - expression
+        description: |
+            An expression that resolves to the array from which to return n elements.
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            A positive integral expression that is either a constant or depends on the _id value for $group.
+tests:
+    -
+        name: 'Null and Missing Values'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#null-and-missing-values'
+        pipeline:
+            -
+                $documents:
+                    -
+                        playerId: 'PlayerA'
+                        gameId: 'G1'
+                        score: 1
+                    -
+                        playerId: 'PlayerB'
+                        gameId: 'G1'
+                        score: 2
+                    -
+                        playerId: 'PlayerC'
+                        gameId: 'G1'
+                        score: 3
+                    -
+                        playerId: 'PlayerD'
+                        gameId: 'G1'
+                    -
+                        playerId: 'PlayerE'
+                        gameId: 'G1'
+                        score: ~
+            -
+                $group:
+                    _id: '$gameId'
+                    firstFiveScores:
+                        $firstN:
+                            input: '$score'
+                            n: 5
+    -
+        name: 'Find the First Three Player Scores for a Single Game'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#find-the-first-three-player-scores-for-a-single-game'
+        pipeline:
+            -
+                $match:
+                    gameId: 'G1'
+            -
+                $group:
+                    _id: '$gameId'
+                    firstThreeScores:
+                        $firstN:
+                            input:
+                                - '$playerId'
+                                - '$score'
+                            n: 3
+    -
+        name: 'Finding the First Three Player Scores Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#finding-the-first-three-player-scores-across-multiple-games'
+        pipeline:
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $firstN:
+                            input:
+                                - '$playerId'
+                                - '$score'
+                            n: 3
+    -
+        name: 'Using $sort With $firstN'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#using--sort-with--firstn'
+        pipeline:
+            -
+                $sort:
+                    score: -1
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $firstN:
+                            input:
+                                - '$playerId'
+                                - '$score'
+                            n: 3
+    -
+        name: 'Computing n Based on the Group Key for $group'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#computing-n-based-on-the-group-key-for--group'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        gameId: '$gameId'
+                    gamescores:
+                        $firstN:
+                            input: '$score'
+                            n:
+                                $cond:
+                                    if:
+                                        $eq:
+                                            - '$gameId'
+                                            - 'G2'
+                                    then: 1
+                                    else: 3
+

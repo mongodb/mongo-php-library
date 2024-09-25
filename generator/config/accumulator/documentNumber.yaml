@@ -1,0 +1,22 @@
+# $schema: ../schema.json
+name: $documentNumber
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/'
+type:
+    - window
+encode: object
+description: |
+    Returns the position of a document (known as the document number) in the $setWindowFields stage partition. Ties result in different adjacent document numbers.
+    New in MongoDB 5.0.
+tests:
+    -
+        name: 'Document Number for Each State'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/#document-number-for-each-state'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        quantity: -1
+                    output:
+                        documentNumberForState:
+                            $documentNumber: {}

@@ -1,0 +1,26 @@
+# $schema: ../schema.json
+name: $toObjectId
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/'
+type:
+    - resolvesToObjectId
+encode: single
+description: |
+    Converts value to an ObjectId.
+    New in MongoDB 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedId:
+                        $toObjectId: '$_id'
+            -
+                $sort:
+                    convertedId: -1

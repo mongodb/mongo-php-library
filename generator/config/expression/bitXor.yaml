@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $bitXor
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/'
+type:
+    - resolvesToInt
+    - resolvesToLong
+encode: single
+description: |
+    Returns the result of a bitwise xor (exclusive or) operation on an array of int and long values.
+    New in MongoDB 6.3.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToInt
+            - resolvesToLong
+        variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/#example'
+        pipeline:
+            -
+                $project:
+                    result:
+                        $bitXor:
+                            - '$a'
+                            - '$b'

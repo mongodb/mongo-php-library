@@ -25,14 +25,14 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
+        return self::createOptionDataProvider([
             // commitQuorum is int|string, for which no helper exists
             'commitQuorum' => ['float' => 3.14, 'bool' => true, 'array' => [], 'object' => new stdClass()],
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'session' => self::getInvalidSessionValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 
@@ -51,9 +51,9 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [$index]);
     }
 
-    public function provideInvalidIndexSpecificationTypes()
+    public static function provideInvalidIndexSpecificationTypes()
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidArrayValues());
+        return self::wrapValuesForDataProvider(self::getInvalidArrayValues());
     }
 
     public function testConstructorRequiresIndexSpecificationKey(): void
@@ -79,7 +79,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => $key]]);
     }
 
-    public function provideKeyDocumentsWithInvalidOrder(): Generator
+    public static function provideKeyDocumentsWithInvalidOrder(): Generator
     {
         $invalidOrderValues = [true, [], new stdClass(), null];
 

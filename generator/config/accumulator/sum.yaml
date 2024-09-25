@@ -1,0 +1,56 @@
+# $schema: ../schema.json
+name: $sum
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns a sum of numerical values. Ignores non-numeric values.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#use-in--group-stage'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        day:
+                            # Example uses the short form, the builder always generates the verbose form
+                            # $dayOfYear: '$date'
+                            $dayOfYear:
+                                date: '$date'
+                        year:
+                            # Example uses the short form, the builder always generates the verbose form
+                            # $year: '$date'
+                            $year:
+                                date: '$date'
+                    totalAmount:
+                        $sum:
+                            $multiply:
+                                - '$price'
+                                - '$quantity'
+                    count:
+                        $sum: 1
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        sumQuantityForState:
+                            $sum: '$quantity'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

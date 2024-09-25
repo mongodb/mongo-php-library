@@ -30,14 +30,12 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::updateSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/updateSearchIndexes/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class UpdateSearchIndex implements Executable
 {
-    private string $databaseName;
-    private string $collectionName;
-    private string $name;
     private object $definition;
-    private array $options = [];
 
     /**
      * Constructs a createSearchIndexes command.
@@ -49,7 +47,7 @@ class UpdateSearchIndex implements Executable
      * @param array{comment?: mixed} $options        Command options
      * @throws InvalidArgumentException for parameter parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, string $name, $definition, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private string $name, array|object $definition, private array $options = [])
     {
         if ($name === '') {
             throw new InvalidArgumentException('Index name cannot be empty');
@@ -59,11 +57,7 @@ class UpdateSearchIndex implements Executable
             throw InvalidArgumentException::expectedDocumentType('$definition', $definition);
         }
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->name = $name;
         $this->definition = (object) $definition;
-        $this->options = $options;
     }
 
     /**

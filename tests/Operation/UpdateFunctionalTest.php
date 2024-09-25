@@ -75,7 +75,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideReplacementDocumentLikePipeline(): array
+    public static function provideReplacementDocumentLikePipeline(): array
     {
         /* Note: libmongoc encodes this replacement document as a BSON array
          * because it resembles an update pipeline (see: CDRIVER-4658). */
@@ -102,7 +102,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
@@ -122,7 +122,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectHasProperty('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             },
         );
@@ -143,7 +143,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('bypassDocumentValidation', $event['started']->getCommand());
             },
         );
     }

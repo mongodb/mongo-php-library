@@ -19,6 +19,11 @@ namespace MongoDB;
 
 use Composer\InstalledVersions;
 use Iterator;
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
+use MongoDB\Builder\BuilderEncoder;
+use MongoDB\Builder\Pipeline;
+use MongoDB\Codec\Encoder;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -38,8 +43,10 @@ use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Operation\Watch;
+use stdClass;
 use Throwable;
 
+use function array_diff_key;
 use function is_array;
 use function is_string;
 
@@ -67,6 +74,9 @@ class Client
 
     private array $typeMap;
 
+    /** @psalm-var Encoder<array|stdClass|Document|PackedArray, mixed> */
+    private readonly Encoder $builderEncoder;
+
     private WriteConcern $writeConcern;
 
     /**
@@ -77,6 +87,9 @@ class Client
      * databases and collections.
      *
      * Supported driver-specific options:
+     *
+     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *    aggregation builders. If not given, the default encoder will be used.
      *
      *  * typeMap (array): Default type map for cursors and BSON documents.
      *
@@ -108,12 +121,17 @@ class Client
             }
         }
 
+        if (isset($driverOptions['builderEncoder']) && ! $driverOptions['builderEncoder'] instanceof Encoder) {
+            throw InvalidArgumentException::invalidType('"builderEncoder" option', $driverOptions['builderEncoder'], Encoder::class);
+        }
+
         $driverOptions['driver'] = $this->mergeDriverInfo($driverOptions['driver'] ?? []);
 
         $this->uri = $uri ?? self::DEFAULT_URI;
+        $this->builderEncoder = $driverOptions['builderEncoder'] ?? new BuilderEncoder();
         $this->typeMap = $driverOptions['typeMap'];
 
-        unset($driverOptions['typeMap']);
+        $driverOptions = array_diff_key($driverOptions, ['builderEncoder' => 1, 'typeMap' => 1]);
 
         $this->manager = new Manager($uri, $uriOptions, $driverOptions);
         $this->readConcern = $this->manager->getReadConcern();
@@ -133,6 +151,7 @@ class Client
             'manager' => $this->manager,
             'uri' => $this->uri,
             'typeMap' => $this->typeMap,
+            'builderEncoder' => $this->builderEncoder,
             'writeConcern' => $this->writeConcern,
         ];
     }
@@ -329,7 +348,7 @@ class Client
      */
     public function selectCollection(string $databaseName, string $collectionName, array $options = [])
     {
-        $options += ['typeMap' => $this->typeMap];
+        $options += ['typeMap' => $this->typeMap, 'builderEncoder' => $this->builderEncoder];
 
         return new Collection($this->manager, $databaseName, $collectionName, $options);
     }
@@ -345,7 +364,7 @@ class Client
      */
     public function selectDatabase(string $databaseName, array $options = [])
     {
-        $options += ['typeMap' => $this->typeMap];
+        $options += ['typeMap' => $this->typeMap, 'builderEncoder' => $this->builderEncoder];
 
         return new Database($this->manager, $databaseName, $options);
     }
@@ -373,6 +392,12 @@ class Client
      */
     public function watch(array $pipeline = [], array $options = [])
     {
+        if (is_builder_pipeline($pipeline)) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
+
+        $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
+
         if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
             $options['readPreference'] = $this->readPreference;
         }
@@ -397,7 +422,7 @@ class Client
         if (self::$version === null) {
             try {
                 self::$version = InstalledVersions::getPrettyVersion('mongodb/mongodb') ?? 'unknown';
-            } catch (Throwable $t) {
+            } catch (Throwable) {
                 self::$version = 'error';
             }
         }

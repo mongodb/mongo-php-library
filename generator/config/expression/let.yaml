@@ -1,0 +1,46 @@
+# $schema: ../schema.json
+name: $let
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/'
+type:
+    - resolvesToAny
+encode: object
+description: |
+    Defines variables for use within the scope of a subexpression and returns the result of the subexpression. Accepts named parameters.
+    Accepts any number of argument expressions.
+arguments:
+    -
+        name: vars
+        type:
+            - object # of expression
+        description: |
+            Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
+            The variable assignments have no meaning outside the in expression, not even within the vars block itself.
+    -
+        name: in
+        type:
+            - expression
+        description: |
+            The expression to evaluate.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/#example'
+        pipeline:
+            -
+                $project:
+                    finalTotal:
+                        $let:
+                            vars:
+                                total:
+                                    $add:
+                                        - '$price'
+                                        - '$tax'
+                                discounted:
+                                    $cond:
+                                        if: '$applyDiscount'
+                                        then: 0.9
+                                        else: 1
+                            in:
+                                $multiply:
+                                    - '$$total'
+                                    - '$$discounted'

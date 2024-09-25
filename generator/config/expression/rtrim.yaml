@@ -1,0 +1,35 @@
+# $schema: ../schema.json
+name: $rtrim
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/'
+type:
+    - resolvesToString
+encode: object
+description: |
+    Removes whitespace characters, including null, or the specified characters from the end of a string.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToString
+        description: |
+            The string to trim. The argument can be any valid expression that resolves to a string.
+    -
+        name: chars
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The character(s) to trim from the beginning of the input.
+            The argument can be any valid expression that resolves to a string. The $ltrim operator breaks down the string into individual UTF code point to trim from input.
+            If unspecified, $ltrim removes whitespace characters, including the null character.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    description:
+                        $rtrim:
+                            input: '$description'

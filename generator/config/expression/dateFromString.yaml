@@ -1,0 +1,80 @@
+# $schema: ../schema.json
+name: $dateFromString
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/'
+type:
+    - resolvesToDate
+encode: object
+description: |
+    Converts a date/time string to a date object.
+arguments:
+    -
+        name: dateString
+        type:
+            - resolvesToString
+        description: |
+            The date/time string to convert to a date object.
+    -
+        name: format
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
+            If unspecified, $dateFromString uses "%Y-%m-%dT%H:%M:%S.%LZ" as the default format but accepts a variety of formats and attempts to parse the dateString if possible.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The time zone to use to format the date.
+    -
+        name: onError
+        type:
+            - expression
+        optional: true
+        description: |
+            If $dateFromString encounters an error while parsing the given dateString, it outputs the result value of the provided onError expression. This result value can be of any type.
+            If you do not specify onError, $dateFromString throws an error if it cannot parse dateString.
+    -
+        name: onNull
+        type:
+            - expression
+        optional: true
+        description: |
+            If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
+            If you do not specify onNull and dateString is null or missing, then $dateFromString outputs null.
+tests:
+    -
+        name: 'Converting Dates'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#converting-dates'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateFromString:
+                            dateString: '$date'
+                            timezone: 'America/New_York'
+    -
+        name: 'onError'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onerror'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateFromString:
+                            dateString: '$date'
+                            timezone: '$timezone'
+                            onError: '$date'
+    -
+        name: 'onNull'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onnull'
+        pipeline:
+            -
+                $project:
+                    date:
+                        $dateFromString:
+                            dateString: '$date'
+                            timezone: '$timezone'
+                            onNull: !bson_utcdatetime 0
+

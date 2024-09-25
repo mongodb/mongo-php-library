@@ -57,15 +57,15 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         new ReadableStream($this->collectionWrapper, $file);
     }
 
-    public function provideInvalidConstructorFileDocuments()
+    public static function provideInvalidConstructorFileDocuments()
     {
         $options = [];
 
-        foreach ($this->getInvalidIntegerValues() as $value) {
+        foreach (self::getInvalidIntegerValues() as $value) {
             $options[][] = (object) ['_id' => 1, 'chunkSize' => $value, 'length' => 0];
         }
 
-        foreach ($this->getInvalidIntegerValues() as $value) {
+        foreach (self::getInvalidIntegerValues() as $value) {
             $options[][] = (object) ['_id' => 1, 'chunkSize' => 1, 'length' => $value];
         }
 
@@ -85,7 +85,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame($expectedBytes, $stream->readBytes($length));
     }
 
-    public function provideFileIdAndExpectedBytes()
+    public static function provideFileIdAndExpectedBytes()
     {
         return [
             ['length-0', 0, ''],
@@ -111,10 +111,10 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function provideFilteredFileIdAndExpectedBytes()
+    public static function provideFilteredFileIdAndExpectedBytes()
     {
         return array_filter(
-            $this->provideFileIdAndExpectedBytes(),
+            self::provideFileIdAndExpectedBytes(),
             fn (array $args) => $args[1] > 0,
         );
     }
@@ -221,7 +221,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(['find'], $commands);
     }
 
-    public function providePreviousChunkSeekOffsetAndBytes()
+    public static function providePreviousChunkSeekOffsetAndBytes()
     {
         return [
             [0, 4, 'abcd'],
@@ -255,7 +255,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame([], $commands);
     }
 
-    public function provideSameChunkSeekOffsetAndBytes()
+    public static function provideSameChunkSeekOffsetAndBytes()
     {
         return [
             [4, 4, 'efgh'],
@@ -287,7 +287,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame([], $commands);
     }
 
-    public function provideSubsequentChunkSeekOffsetAndBytes()
+    public static function provideSubsequentChunkSeekOffsetAndBytes()
     {
         return [
             [4, 4, 'efgh'],

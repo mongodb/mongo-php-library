@@ -1,0 +1,94 @@
+# $schema: ../schema.json
+name: $filter
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Selects a subset of the array to return an array with only the elements that match the filter condition.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+    -
+        name: cond
+        type:
+            - resolvesToBool
+        description: |
+            An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
+    -
+        name: as
+        type:
+            - string
+        optional: true
+        description: |
+            A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+    -
+        name: limit
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
+            If the specified limit is greater than the number of matching array elements, $filter returns all matching array elements. If the limit is null, $filter returns all matching array elements.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#examples'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $filter:
+                            input: '$items'
+                            as: 'item'
+                            cond:
+                                $gte:
+                                    - '$$item.price'
+                                    - 100
+    -
+        name: 'Using the limit field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#using-the-limit-field'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $filter:
+                            input: '$items'
+                            cond:
+                                $gte:
+                                    - '$$item.price'
+                                    - 100
+                            as: 'item'
+                            limit: 1
+    -
+        name: 'limit as a Numeric Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#limit-as-a-numeric-expression'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $filter:
+                            input: '$items'
+                            cond:
+                                $lte:
+                                    - '$$item.price'
+                                    - 150
+                            as: 'item'
+                            limit: 2
+    -
+        name: 'limit Greater than Possible Matches'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#limit-greater-than-possible-matches'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $filter:
+                            input: '$items'
+                            cond:
+                                $gte:
+                                    - '$$item.price'
+                                    - 100
+                            as: 'item'
+                            limit: 5

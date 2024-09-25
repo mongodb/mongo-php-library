@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $box
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/box/'
+type:
+    - geometry
+encode: single
+description: |
+    Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.
+arguments:
+    -
+        name: value
+        type:
+            - array

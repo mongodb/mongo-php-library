@@ -6,6 +6,8 @@ use InvalidArgumentException;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\Codec;
+use MongoDB\Codec\DecodeIfSupported;
+use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -18,7 +20,6 @@ use stdClass;
 use Traversable;
 
 use function array_map;
-use function array_merge;
 use function array_values;
 use function call_user_func;
 use function get_debug_type;
@@ -92,11 +93,8 @@ OUTPUT;
      *
      * Only fields in the expected document will be checked. The actual document
      * may contain additional fields.
-     *
-     * @param array|object $expectedDocument
-     * @param array|object $actualDocument
      */
-    public function assertMatchesDocument($expectedDocument, $actualDocument): void
+    public function assertMatchesDocument(array|object $expectedDocument, array|object $actualDocument): void
     {
         (new DocumentsMatchConstraint($expectedDocument, true, true))->evaluate($actualDocument);
     }
@@ -106,11 +104,8 @@ OUTPUT;
      *
      * The actual document will be compared directly with the expected document
      * and may not contain extra fields.
-     *
-     * @param array|object $expectedDocument
-     * @param array|object $actualDocument
      */
-    public function assertSameDocument($expectedDocument, $actualDocument): void
+    public function assertSameDocument(array|object $expectedDocument, array|object $actualDocument): void
     {
         $this->assertEquals(
             Document::fromPHP($this->normalizeBSON($expectedDocument))->toRelaxedExtendedJSON(),
@@ -146,24 +141,24 @@ OUTPUT;
         return is_string($dataName) ? $dataName : '';
     }
 
-    public function provideInvalidArrayValues(): array
+    final public static function provideInvalidArrayValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidArrayValues());
+        return self::wrapValuesForDataProvider(self::getInvalidArrayValues());
     }
 
-    public function provideInvalidDocumentValues(): array
+    final public static function provideInvalidDocumentValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
+        return self::wrapValuesForDataProvider(self::getInvalidDocumentValues());
     }
 
-    public function provideInvalidIntegerValues(): array
+    final public static function provideInvalidIntegerValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidIntegerValues());
+        return self::wrapValuesForDataProvider(self::getInvalidIntegerValues());
     }
 
-    public function provideInvalidStringValues(): array
+    final public static function provideInvalidStringValues(): array
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidStringValues());
+        return self::wrapValuesForDataProvider(self::getInvalidStringValues());
     }
 
     protected function assertDeprecated(callable $execution): void
@@ -183,7 +178,7 @@ OUTPUT;
         $this->assertCount(1, $errors);
     }
 
-    protected function createOptionDataProvider(array $options): array
+    protected static function createOptionDataProvider(array $options): array
     {
         $data = [];
 
@@ -214,36 +209,68 @@ OUTPUT;
     /**
      * Return a list of invalid array values.
      */
-    protected function getInvalidArrayValues(bool $includeNull = false): array
+    protected static function getInvalidArrayValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, new stdClass()], $includeNull ? [null] : []);
+        return [123, 3.14, 'foo', true, new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     /**
      * Return a list of invalid boolean values.
      */
-    protected function getInvalidBooleanValues(bool $includeNull = false): array
+    protected static function getInvalidBooleanValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', [], new stdClass()], $includeNull ? [null] : []);
+        return [123, 3.14, 'foo', [], new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     /**
      * Return a list of invalid document values.
      */
-    protected function getInvalidDocumentValues(bool $includeNull = false): array
+    protected static function getInvalidDocumentValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, PackedArray::fromPHP([])], $includeNull ? [null] : []);
+        return [123, 3.14, 'foo', true, PackedArray::fromPHP([]), ...($includeNull ? [null] : [])];
     }
 
-    protected function getInvalidDocumentCodecValues(): array
+    protected static function getInvalidObjectValues(bool $includeNull = false): array
     {
-        return [123, 3.14, 'foo', true, [], new stdClass(), $this->createMock(Codec::class)];
+        return [123, 3.14, 'foo', true, [], new stdClass(), ...($includeNull ? [null] : [])];
+    }
+
+    protected static function getInvalidDocumentCodecValues(): array
+    {
+        $codec = new class implements Codec {
+            use DecodeIfSupported;
+            use EncodeIfSupported;
+
+            public function canDecode(mixed $value): bool
+            {
+                return true;
+            }
+
+            public function decode(mixed $value): mixed
+            {
+                return $value;
+            }
+
+            public function canEncode(mixed $value): bool
+            {
+                return true;
+            }
+
+            public function encode(mixed $value): mixed
+            {
+                return $value;
+            }
+        };
+        // @fixme: createStub can be called statically in PHPUnit 10
+        // $codec = self::createStub(Codec::class);
+
+        return [123, 3.14, 'foo', true, [], new stdClass(), $codec];
     }
 
     /**
      * Return a list of invalid hint values.
      */
-    protected function getInvalidHintValues()
+    protected static function getInvalidHintValues(): array
     {
         return [123, 3.14, true];
     }
@@ -251,98 +278,90 @@ OUTPUT;
     /**
      * Return a list of invalid integer values.
      */
-    protected function getInvalidIntegerValues(bool $includeNull = false): array
+    protected static function getInvalidIntegerValues(bool $includeNull = false): array
     {
-        return array_merge([3.14, 'foo', true, [], new stdClass()], $includeNull ? [null] : []);
+        return [3.14, 'foo', true, [], new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     /**
      * Return a list of invalid ReadPreference values.
      */
-    protected function getInvalidReadConcernValues(bool $includeNull = false): array
+    protected static function getInvalidReadConcernValues(bool $includeNull = false): array
     {
-        return array_merge(
-            [
-                123,
-                3.14,
-                'foo',
-                true,
-                [],
-                new stdClass(),
-                new ReadPreference(ReadPreference::PRIMARY),
-                new WriteConcern(1),
-            ],
-            $includeNull ? ['null' => null] : [],
-        );
+        return [
+            123,
+            3.14,
+            'foo',
+            true,
+            [],
+            new stdClass(),
+            new ReadPreference(ReadPreference::PRIMARY),
+            new WriteConcern(1),
+            ...($includeNull ? ['null' => null] : []),
+        ];
     }
 
     /**
      * Return a list of invalid ReadPreference values.
      */
-    protected function getInvalidReadPreferenceValues(bool $includeNull = false): array
+    protected static function getInvalidReadPreferenceValues(bool $includeNull = false): array
     {
-        return array_merge(
-            [
-                123,
-                3.14,
-                'foo',
-                true,
-                [],
-                new stdClass(),
-                new ReadConcern(),
-                new WriteConcern(1),
-            ],
-            $includeNull ? ['null' => null] : [],
-        );
+        return [
+            123,
+            3.14,
+            'foo',
+            true,
+            [],
+            new stdClass(),
+            new ReadConcern(),
+            new WriteConcern(1),
+            ...($includeNull ? ['null' => null] : []),
+        ];
     }
 
     /**
      * Return a list of invalid Session values.
      */
-    protected function getInvalidSessionValues(bool $includeNull = false): array
+    protected static function getInvalidSessionValues(bool $includeNull = false): array
     {
-        return array_merge(
-            [
-                123,
-                3.14,
-                'foo',
-                true,
-                [],
-                new stdClass(),
-                new ReadConcern(),
-                new ReadPreference(ReadPreference::PRIMARY),
-                new WriteConcern(1),
-            ],
-            $includeNull ? ['null' => null] : [],
-        );
+        return [
+            123,
+            3.14,
+            'foo',
+            true,
+            [],
+            new stdClass(),
+            new ReadConcern(),
+            new ReadPreference(ReadPreference::PRIMARY),
+            new WriteConcern(1),
+            ...($includeNull ? ['null' => null] : []),
+        ];
     }
 
     /**
      * Return a list of invalid string values.
      */
-    protected function getInvalidStringValues(bool $includeNull = false): array
+    protected static function getInvalidStringValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, true, [], new stdClass()], $includeNull ? [null] : []);
+        return [123, 3.14, true, [], new stdClass(), ...($includeNull ? [null] : [])];
     }
 
     /**
      * Return a list of invalid WriteConcern values.
      */
-    protected function getInvalidWriteConcernValues(bool $includeNull = false): array
+    protected static function getInvalidWriteConcernValues(bool $includeNull = false): array
     {
-        return array_merge(
-            [
-                123,
-                3.14,
-                'foo',
-                true,
-                [],
-                new stdClass(),
-                new ReadConcern(),
-                new ReadPreference(ReadPreference::PRIMARY),
-            ],
-            $includeNull ? ['null' => null] : [],
-        );
+        return [
+            123,
+            3.14,
+            'foo',
+            true,
+            [],
+            new stdClass(),
+            new ReadConcern(),
+            new ReadPreference(ReadPreference::PRIMARY),
+            ...($includeNull ? ['null' => null] : []),
+        ];
     }
 
     /**
@@ -358,7 +377,7 @@ OUTPUT;
      *
      * @param array $values List of values
      */
-    protected function wrapValuesForDataProvider(array $values): array
+    final protected static function wrapValuesForDataProvider(array $values): array
     {
         return array_map(fn ($value) => [$value], $values);
     }
@@ -370,11 +389,9 @@ OUTPUT;
      * its type and keys. Document fields will be sorted alphabetically. Each
      * value within the array or document will then be normalized recursively.
      *
-     * @param array|object $bson
-     * @return BSONDocument|BSONArray
      * @throws InvalidArgumentException if $bson is not an array or object
      */
-    private function normalizeBSON($bson)
+    private function normalizeBSON(array|object $bson): BSONDocument|BSONArray
     {
         if (! is_array($bson) && ! is_object($bson)) {
             throw new InvalidArgumentException('$bson is not an array or object');

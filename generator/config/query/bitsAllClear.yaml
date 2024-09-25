@@ -1,0 +1,38 @@
+# $schema: ../schema.json
+name: $bitsAllClear
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches numeric or binary values in which a set of bit positions all have a value of 0.
+arguments:
+    -
+        name: bitmask
+        type:
+            - int
+            - binData
+            - array # of int
+tests:
+    -
+        name: 'Bit Position Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bit-position-array'
+        pipeline:
+            -
+                $match:
+                    a:
+                        $bitsAllClear: [1, 5]
+    -
+        name: 'Integer Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#integer-bitmask'
+        pipeline:
+            - $match:
+                    a:
+                        $bitsAllClear: 35
+    -
+        name: 'BinData Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bindata-bitmask'
+        pipeline:
+            - $match:
+                  a:
+                      $bitsAllClear: !bson_binary 'IA=='

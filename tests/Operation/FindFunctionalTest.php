@@ -58,7 +58,7 @@ class FindFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideModifierDocuments(): array
+    public static function provideModifierDocuments(): array
     {
         $expectedSort = (object) ['x' => 1];
 
@@ -84,7 +84,7 @@ class FindFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
             },
         );
     }
@@ -154,7 +154,7 @@ class FindFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
@@ -170,7 +170,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $cursor->toArray());
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [

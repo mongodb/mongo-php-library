@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $abs
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/'
+type:
+    - resolvesToNumber
+encode: single
+description: |
+    Returns the absolute value of a number.
+arguments:
+    -
+        name: value
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/#example'
+        pipeline:
+            -
+                $project:
+                    delta:
+                        $abs:
+                            $subtract:
+                                - '$startTemp'
+                                - '$endTemp'

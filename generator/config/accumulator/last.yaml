@@ -1,0 +1,45 @@
+# $schema: ../schema.json
+name: $last
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns the result of an expression for the last document in a group or window.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/'
+        pipeline:
+            -
+                $sort:
+                    item: 1
+                    date: 1
+            -
+                $group:
+                    _id: '$item'
+                    lastSalesDate:
+                        $last: '$date'
+    -
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--setwindowfields-stage'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        lastOrderTypeForState:
+                            $last: '$type'
+                            window:
+                                documents:
+                                    - 'current'
+                                    - 'unbounded'

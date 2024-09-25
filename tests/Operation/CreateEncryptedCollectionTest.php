@@ -15,14 +15,14 @@ class CreateEncryptedCollectionTest extends TestCase
         new CreateEncryptedCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions(): Generator
+    public static function provideInvalidConstructorOptions(): Generator
     {
         yield 'encryptedFields is required' => [
             [],
         ];
 
-        yield from $this->createOptionDataProvider([
-            'encryptedFields' => $this->getInvalidDocumentValues(),
+        yield from self::createOptionDataProvider([
+            'encryptedFields' => self::getInvalidDocumentValues(),
         ]);
     }
 }

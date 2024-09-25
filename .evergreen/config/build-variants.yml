@@ -8,7 +8,7 @@ buildvariants:
     tags: ["build", "debian", "x64"]
     run_on: debian12-small
     tasks:
-      - name: "build-php-openssl3"
+      - name: "build-all-php"
   - name: build-debian11
     display_name: "Build: Debian 11"
     tags: ["build", "debian", "x64", "pr", "tag"]
@@ -34,7 +34,7 @@ buildvariants:
     tags: ["build", "rhel", "x64", "pr", "tag"]
     run_on: rhel90-small
     tasks:
-      - name: "build-php-openssl3"
+      - name: "build-all-php"
   - name: build-rhel83-zseries
     display_name: "Build: RHEL 8.3 Zseries"
     tags: ["build", "rhel", "zseries", "tag"]
@@ -66,13 +66,13 @@ buildvariants:
     tags: ["build", "ubuntu", "x64", "pr", "tag"]
     run_on: ubuntu2204-small
     tasks:
-      - name: "build-php-openssl3"
+      - name: "build-all-php"
   - name: build-ubuntu2204-arm64
     display_name: "Build: Ubuntu 22.04 ARM64"
     tags: ["build", "ubuntu", "arm64", "tag"]
     run_on: ubuntu2204-arm64-small
     tasks:
-      - name: "build-php-openssl3"
+      - name: "build-all-php"
   - name: build-ubuntu2004
     display_name: "Build: Ubuntu 20.04 x64"
     tags: ["build", "ubuntu", "x64", "pr", "tag"]

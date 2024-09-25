@@ -1,0 +1,27 @@
+# $schema: ../schema.json
+name: $sinh
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/'
+type:
+    - resolvesToDouble
+    - resolvesToDecimal
+encode: single
+description: |
+    Returns the hyperbolic sine of a value that is measured in radians.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+        description: |
+            $sinh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+            By default $sinh returns values as a double. $sinh can also return values as a 128-bit decimal if the expression resolves to a 128-bit decimal value.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/#example'
+        pipeline:
+            -
+                $addFields:
+                    sinh_output:
+                        $sinh:
+                            $degreesToRadians: '$angle'

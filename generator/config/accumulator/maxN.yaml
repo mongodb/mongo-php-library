@@ -1,0 +1,73 @@
+# $schema: ../schema.json
+name: $maxN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/'
+type:
+    - accumulator
+    - window
+encode: object
+description: |
+    Returns the n largest values in an array. Distinct from the $maxN accumulator.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to the array from which to return the maximal n elements.
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
+tests:
+    -
+        name: 'Find the Maximum Three Scores for a Single Game'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/#find-the-maximum-three-scores-for-a-single-game'
+        pipeline:
+            -
+                $match:
+                    gameId: 'G1'
+            -
+                $group:
+                    _id: '$gameId'
+                    maxThreeScores:
+                        $maxN:
+                            input:
+                                - '$score'
+                                - '$playerId'
+                            n: 3
+    -
+        name: 'Finding the Maximum Three Scores Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/#finding-the-maximum-three-scores-across-multiple-games'
+        pipeline:
+            -
+                $group:
+                    _id: '$gameId'
+                    maxScores:
+                        $maxN:
+                            input:
+                                - '$score'
+                                - '$playerId'
+                            n: 3
+    -
+        name: 'Computing n Based on the Group Key for $group'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/#computing-n-based-on-the-group-key-for--group'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        gameId: '$gameId'
+                    gamescores:
+                        $maxN:
+                            input:
+                                - '$score'
+                                - '$playerId'
+                            n:
+                                $cond:
+                                    if:
+                                        $eq:
+                                            - '$gameId'
+                                            - 'G2'
+                                    then: 1
+                                    else: 3

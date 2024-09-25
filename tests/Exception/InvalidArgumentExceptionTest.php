@@ -15,7 +15,7 @@ class InvalidArgumentExceptionTest extends TestCase
         $this->assertStringContainsString($typeString, $e->getMessage());
     }
 
-    public function provideExpectedTypes()
+    public static function provideExpectedTypes()
     {
         yield 'expectedType is a string' => [
             'array',

@@ -34,6 +34,8 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::findOneAndReplace()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class FindOneAndReplace implements Executable, Explainable
 {
@@ -102,7 +104,7 @@ class FindOneAndReplace implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $filter, $replacement, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array|object $filter, array|object $replacement, array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
@@ -171,11 +173,8 @@ class FindOneAndReplace implements Executable, Explainable
         return $this->findAndModify->getCommandDocument();
     }
 
-    /**
-     * @param array|object $replacement
-     * @return array|object
-     */
-    private function validateReplacement($replacement, ?DocumentCodec $codec)
+    /** @return array|object */
+    private function validateReplacement(array|object $replacement, ?DocumentCodec $codec)
     {
         if (isset($codec)) {
             $replacement = $codec->encode($replacement);

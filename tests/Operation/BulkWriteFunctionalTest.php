@@ -87,7 +87,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideDocumentsWithIds(): array
+    public static function provideDocumentsWithIds(): array
     {
         $expectedDocument = (object) ['_id' => 1];
 
@@ -99,7 +99,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function provideDocumentsWithoutIds(): array
+    public static function provideDocumentsWithoutIds(): array
     {
         /* Note: _id placeholders must be replaced with generated ObjectIds. We
          * also clone the value for each data set since tests may need to modify
@@ -379,7 +379,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
@@ -398,7 +398,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectHasProperty('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             },
         );
@@ -418,7 +418,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('bypassDocumentValidation', $event['started']->getCommand());
             },
         );
     }

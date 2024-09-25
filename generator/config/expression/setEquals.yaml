@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $setEquals
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/'
+type:
+    - resolvesToBool
+encode: single
+description: |
+    Returns true if the input sets have the same distinct elements. Accepts two or more argument expressions.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+        variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/#example'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    cakes: 1
+                    cupcakes: 1
+                    sameFlavors:
+                        $setEquals:
+                            - '$cakes'
+                            - '$cupcakes'

@@ -1,0 +1,24 @@
+# $schema: ../schema.json
+name: $toUpper
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/'
+type:
+    - resolvesToString
+encode: single
+description: |
+    Converts a string to uppercase. Accepts a single argument expression.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToString
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/#example'
+        pipeline:
+            -
+                $project:
+                    item:
+                        $toUpper: '$item'
+                    description:
+                        $toUpper: '$description'

@@ -1,0 +1,59 @@
+# $schema: ../schema.json
+name: $collStats
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/'
+type:
+    - stage
+encode: object
+description: |
+    Returns statistics regarding a collection or view.
+arguments:
+    -
+        name: latencyStats
+        type:
+            - object
+        optional: true
+    -
+        name: storageStats
+        type:
+            - object
+        optional: true
+    -
+        name: count
+        type:
+            - object # empty object
+        optional: true
+    -
+        name: queryExecStats
+        type:
+            - object # empty object
+        optional: true
+tests:
+    -
+        name: 'latencyStats Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#latencystats-document'
+        pipeline:
+            -
+                $collStats:
+                    latencyStats:
+                        histograms: true
+    -
+        name: 'storageStats Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#storagestats-document'
+        pipeline:
+            -
+                $collStats:
+                    storageStats: {}
+    -
+        name: 'count Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#count-field'
+        pipeline:
+            -
+                $collStats:
+                    count: {}
+    -
+        name: 'queryExecStats Document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#queryexecstats-document'
+        pipeline:
+            -
+                $collStats:
+                    queryExecStats: {}

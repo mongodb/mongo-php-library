@@ -144,7 +144,6 @@ MongoDB\Examples\Persistable\PersistableEntry Object
             [oid] => %s
         )
 
-    [name] => alcaeus
     [emails] => Array
         (
             [0] => MongoDB\Examples\Persistable\PersistableEmail Object
@@ -161,6 +160,7 @@ MongoDB\Examples\Persistable\PersistableEntry Object
 
         )
 
+    [name] => alcaeus
 )
 OUTPUT;
 

@@ -44,11 +44,11 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
                     $this->assertArrayHasKey('succeeded', $event);
 
                     $reply = $event['succeeded']->getReply();
-                    $this->assertObjectHasAttribute('cursor', $reply);
+                    $this->assertObjectHasProperty('cursor', $reply);
                     $this->assertIsObject($reply->cursor);
-                    $this->assertObjectHasAttribute('id', $reply->cursor);
+                    $this->assertObjectHasProperty('id', $reply->cursor);
                     $this->assertIsInt($reply->cursor->id);
-                    $this->assertObjectHasAttribute('ns', $reply->cursor);
+                    $this->assertObjectHasProperty('ns', $reply->cursor);
                     $this->assertIsString($reply->cursor->ns);
 
                     /* Note: MongoDB\Driver\CursorId is not used here; however,
@@ -74,9 +74,9 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
                  * cursor ID from the find command reply. */
                 $this->assertSame($databaseName, $event['started']->getDatabaseName());
                 $this->assertSame($databaseName, $command->{'$db'});
-                $this->assertObjectHasAttribute('killCursors', $command);
+                $this->assertObjectHasProperty('killCursors', $command);
                 $this->assertSame($collectionName, $command->killCursors);
-                $this->assertObjectHasAttribute('cursors', $command);
+                $this->assertObjectHasProperty('cursors', $command);
                 $this->assertIsArray($command->cursors);
                 $this->assertArrayHasKey(0, $command->cursors);
                 $this->assertSame($cursorId, $command->cursors[0]);
@@ -84,7 +84,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
                 /* Assert that the killCursors command reply indicates that the
                  * expected cursor ID was killed. */
                 $reply = $event['succeeded']->getReply();
-                $this->assertObjectHasAttribute('cursorsKilled', $reply);
+                $this->assertObjectHasProperty('cursorsKilled', $reply);
                 $this->assertIsArray($reply->cursorsKilled);
                 $this->assertArrayHasKey(0, $reply->cursorsKilled);
                 $this->assertSame($cursorId, $reply->cursorsKilled[0]);

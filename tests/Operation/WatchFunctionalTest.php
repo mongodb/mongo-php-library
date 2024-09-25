@@ -724,10 +724,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNotEquals('0', (string) $changeStream->getCursorId(true));
 
         $rc = new ReflectionClass(ChangeStream::class);
-        $rp = $rc->getProperty('iterator');
-        $rp->setAccessible(true);
-
-        $iterator = $rp->getValue($changeStream);
+        $iterator = $rc->getProperty('iterator')->getValue($changeStream);
 
         $this->assertInstanceOf('IteratorIterator', $iterator);
 
@@ -1225,7 +1222,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $rc = new ReflectionClass($changeStream);
         $rp = $rc->getProperty('resumeCallable');
-        $rp->setAccessible(true);
 
         $this->assertIsCallable($rp->getValue($changeStream));
 

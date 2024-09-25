@@ -34,10 +34,8 @@ use function is_integer;
  *
  * @see \MongoDB\Collection::dropIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/dropIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class DropIndexes implements Executable
+final class DropIndexes implements Executable
 {
     /**
      * Constructs a dropIndexes command.
@@ -99,7 +97,7 @@ class DropIndexes implements Executable
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {

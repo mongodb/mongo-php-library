@@ -40,10 +40,8 @@ use const E_USER_DEPRECATED;
  *
  * @see \MongoDB\Database::createCollection()
  * @see https://mongodb.com/docs/manual/reference/command/create/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class CreateCollection implements Executable
+final class CreateCollection implements Executable
 {
     public const USE_POWER_OF_2_SIZES = 1;
     public const NO_PADDING = 2;
@@ -245,7 +243,7 @@ class CreateCollection implements Executable
      * @return array|object Command result document
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 

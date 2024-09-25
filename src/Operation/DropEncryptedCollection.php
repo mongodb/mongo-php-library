@@ -37,7 +37,7 @@ use function MongoDB\is_document;
  * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#drop-collection-helper
  * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-collections/
  */
-class DropEncryptedCollection implements Executable
+final class DropEncryptedCollection implements Executable
 {
     private DropCollection $dropCollection;
 
@@ -89,7 +89,7 @@ class DropEncryptedCollection implements Executable
      * @return array|object Command result document from dropping the encrypted collection
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         foreach ($this->dropMetadataCollections as $dropMetadataCollection) {
             $dropMetadataCollection->execute($server);

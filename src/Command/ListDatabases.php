@@ -37,7 +37,7 @@ use function MongoDB\is_document;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/listDatabases/
  */
-class ListDatabases implements Executable
+final class ListDatabases implements Executable
 {
     /**
      * Constructs a listDatabases command.

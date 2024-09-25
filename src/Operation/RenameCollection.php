@@ -35,10 +35,8 @@ use function is_bool;
  * @see \MongoDB\Collection::rename()
  * @see \MongoDB\Database::renameCollection()
  * @see https://mongodb.com/docs/manual/reference/command/renameCollection/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class RenameCollection implements Executable
+final class RenameCollection implements Executable
 {
     private string $fromNamespace;
 
@@ -104,7 +102,7 @@ class RenameCollection implements Executable
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {

@@ -32,10 +32,8 @@ use function is_array;
  *
  * @see \MongoDB\Database::modifyCollection()
  * @see https://mongodb.com/docs/manual/reference/command/collMod/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class ModifyCollection implements Executable
+final class ModifyCollection implements Executable
 {
     /**
      * Constructs a collMod command.
@@ -89,7 +87,7 @@ class ModifyCollection implements Executable
      * @return array|object Command result document
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 

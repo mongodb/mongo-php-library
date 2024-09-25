@@ -10,14 +10,17 @@ UPGRADE FROM 1.x to 2.0
    `MongoDB\Model\IndexInfo` class.
  * The `maxScan`, `modifiers`, `oplogReplay`, and `snapshot` options for `find`
    and `findOne` operations have been removed.
+ * The `MongoDB\Collection::mapReduce` method has been removed. Use aggregation
+   pipeline instead.
  * The following classes and interfaces have been removed without replacement:
-   * `MongoDB\Operation\Executable`
+   * `MongoDB\MapReduceResult`
    * `MongoDB\Model\CollectionInfoCommandIterator`
    * `MongoDB\Model\CollectionInfoIterator`
    * `MongoDB\Model\DatabaseInfoIterator`
    * `MongoDB\Model\DatabaseInfoLegacyIterator`
    * `MongoDB\Model\IndexInfoIterator`
    * `MongoDB\Model\IndexInfoIteratorIterator`
+   * `MongoDB\Operation\Executable`
 
 GridFS
 ------

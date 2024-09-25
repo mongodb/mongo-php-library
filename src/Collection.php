@@ -20,7 +20,6 @@ namespace MongoDB;
 use Countable;
 use Iterator;
 use MongoDB\BSON\Document;
-use MongoDB\BSON\JavascriptInterface;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Pipeline;
@@ -63,7 +62,6 @@ use MongoDB\Operation\InsertMany;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Operation\ListSearchIndexes;
-use MongoDB\Operation\MapReduce;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\ReplaceOne;
 use MongoDB\Operation\UpdateMany;
@@ -77,11 +75,7 @@ use function array_intersect_key;
 use function array_key_exists;
 use function current;
 use function is_array;
-use function sprintf;
 use function strlen;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 class Collection
 {
@@ -906,48 +900,6 @@ class Collection
         $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
-    }
-
-    /**
-     * Executes a map-reduce aggregation on the collection.
-     *
-     * @see MapReduce::__construct() for supported options
-     * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
-     * @param JavascriptInterface $map     Map function
-     * @param JavascriptInterface $reduce  Reduce function
-     * @param string|array|object $out     Output specification
-     * @param array               $options Command options
-     * @throws UnsupportedException if options are not supported by the selected server
-     * @throws InvalidArgumentException for parameter/option parsing errors
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     * @throws UnexpectedValueException if the command response was malformed
-     */
-    public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, string|array|object $out, array $options = []): MapReduceResult
-    {
-        @trigger_error(sprintf('The %s method is deprecated and will be removed in a version 2.0.', __METHOD__), E_USER_DEPRECATED);
-
-        $hasOutputCollection = ! is_mapreduce_output_inline($out);
-
-        // Check if the out option is inline because we will want to coerce a primary read preference if not
-        if ($hasOutputCollection) {
-            $options['readPreference'] = new ReadPreference(ReadPreference::PRIMARY);
-        } else {
-            $options = $this->inheritReadPreference($options);
-        }
-
-        /* A "majority" read concern is not compatible with inline output, so
-         * avoid providing the Collection's read concern if it would conflict.
-         */
-        if (! $hasOutputCollection || $this->readConcern->getLevel() !== ReadConcern::MAJORITY) {
-            $options = $this->inheritReadConcern($options);
-        }
-
-        $options = $this->inheritWriteOptions($options);
-        $options = $this->inheritTypeMap($options);
-
-        $operation = new MapReduce($this->databaseName, $this->collectionName, $map, $reduce, $out, $options);
-
-        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**

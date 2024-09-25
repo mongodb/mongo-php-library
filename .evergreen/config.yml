@@ -66,6 +66,7 @@ include:
 
   # Automatically generated files
   - filename: .evergreen/config/generated/build/build-extension.yml
+  - filename: .evergreen/config/generated/build/build-extension-next-minor.yml
   - filename: .evergreen/config/generated/test/local.yml
   - filename: .evergreen/config/generated/test/load-balanced.yml
   - filename: .evergreen/config/generated/test/require-api-version.yml

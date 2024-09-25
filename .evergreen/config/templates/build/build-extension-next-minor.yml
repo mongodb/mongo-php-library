@@ -1,0 +1,10 @@
+  - name: "build-php-%phpVersion%-next-minor"
+    tags: ["build", "php%phpVersion%", "next-minor"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "%phpVersion%"
+      - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "v1.x"
+      - func: "upload extension"

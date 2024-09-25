@@ -33,15 +33,4 @@ class BadMethodCallException extends BaseBadMethodCallException implements Excep
     {
         return new self(sprintf('%s is immutable', $class));
     }
-
-    /**
-     * Thrown when accessing a result field on an unacknowledged write result.
-     *
-     * @param string $method Method name
-     * @internal
-     */
-    public static function unacknowledgedWriteResultAccess(string $method): self
-    {
-        return new self(sprintf('%s should not be called for an unacknowledged write result', $method));
-    }
 }

@@ -24,7 +24,7 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
             },
         );
     }
@@ -69,7 +69,7 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }

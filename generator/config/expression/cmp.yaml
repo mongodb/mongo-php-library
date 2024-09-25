@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $cmp
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/'
+type:
+    - resolvesToInt
+encode: array
+description: |
+    Returns 0 if the two values are equivalent, 1 if the first value is greater than the second, and -1 if the first value is less than the second.
+arguments:
+    -
+        name: expression1
+        type:
+            - expression
+    -
+        name: expression2
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/#example'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    qty: 1
+                    cmpTo250:
+                        $cmp:
+                            - '$qty'
+                            - 250
+                    _id: 0

@@ -4,14 +4,17 @@ namespace MongoDB\Tests;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
+use MongoDB\Builder\Stage\LimitStage;
+use MongoDB\Builder\Stage\MatchStage;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use TypeError;
 
 use function MongoDB\apply_type_map_to_document;
 use function MongoDB\create_field_path_type_map;
 use function MongoDB\document_to_array;
+use function MongoDB\is_builder_pipeline;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\is_mapreduce_output_inline;
@@ -29,7 +32,7 @@ class FunctionsTest extends TestCase
         $this->assertEquals($expectedDocument, apply_type_map_to_document($document, $typeMap));
     }
 
-    public function provideDocumentAndTypeMap()
+    public static function provideDocumentAndTypeMap()
     {
         return [
             [
@@ -99,7 +102,7 @@ class FunctionsTest extends TestCase
         $this->assertSame($expectedArray, document_to_array($document));
     }
 
-    public function provideDocumentsAndExpectedArrays(): array
+    public static function provideDocumentsAndExpectedArrays(): array
     {
         return [
             'array' => [['x' => 1], ['x' => 1]],
@@ -115,18 +118,17 @@ class FunctionsTest extends TestCase
     /** @dataProvider provideInvalidDocumentValuesForChecks */
     public function testDocumentToArrayArgumentTypeCheck($document): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected $document to have type "document" (array or object)');
+        $this->expectException(TypeError::class);
         document_to_array($document);
     }
 
-    public function provideInvalidDocumentValuesForChecks(): array
+    public static function provideInvalidDocumentValuesForChecks(): array
     {
         // PackedArray is intentionally left out, as document_to_array is used to convert aggregation pipelines
-        return $this->wrapValuesForDataProvider([123, 3.14, 'foo', true]);
+        return self::wrapValuesForDataProvider([123, 3.14, 'foo', true]);
     }
 
-    public function provideDocumentCasts(): array
+    public static function provideDocumentCasts(): array
     {
         // phpcs:disable SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing
         // phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration
@@ -154,7 +156,7 @@ class FunctionsTest extends TestCase
     /** @dataProvider provideInvalidDocumentValuesForChecks */
     public function testIsFirstKeyOperatorArgumentTypeCheck($document): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         is_first_key_operator($document);
     }
 
@@ -178,7 +180,7 @@ class FunctionsTest extends TestCase
         $this->assertEquals($expected, create_field_path_type_map($typeMap, $fieldPath));
     }
 
-    public function provideTypeMapValues()
+    public static function provideTypeMapValues()
     {
         return [
             'No root type' => [
@@ -254,7 +256,7 @@ class FunctionsTest extends TestCase
         $this->assertSame($expected, is_pipeline($pipeline, $allowEmpty));
     }
 
-    public function providePipelines(): array
+    public static function providePipelines(): array
     {
         $valid = [
             ['$match' => ['foo' => 'bar']],
@@ -312,13 +314,28 @@ class FunctionsTest extends TestCase
         ];
     }
 
+    /** @dataProvider provideStagePipelines */
+    public function testIsBuilderPipeline($expected, $pipeline): void
+    {
+        $this->assertSame($expected, is_builder_pipeline($pipeline));
+    }
+
+    public static function provideStagePipelines(): iterable
+    {
+        yield 'empty array' => [false, []];
+        yield 'array of arrays' => [false, [['$match' => ['x' => 1]]]];
+        yield 'map of stages' => [false, [1 => new MatchStage([])]];
+        yield 'stages' => [true, [new MatchStage([]), new LimitStage(1)]];
+        yield 'stages and operators' => [true, [new MatchStage([]), ['$limit' => 1]]];
+    }
+
     /** @dataProvider provideWriteConcerns */
     public function testIsWriteConcernAcknowledged($expected, WriteConcern $writeConcern): void
     {
         $this->assertSame($expected, is_write_concern_acknowledged($writeConcern));
     }
 
-    public function provideWriteConcerns(): array
+    public static function provideWriteConcerns(): array
     {
         // Note: WriteConcern constructor prohibits w=-1 or w=0 and journal=true
         return [

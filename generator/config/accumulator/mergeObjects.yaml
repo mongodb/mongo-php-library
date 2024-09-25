@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $mergeObjects
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/'
+type:
+    - accumulator
+encode: single
+description: |
+    Combines multiple documents into a single document.
+arguments:
+    -
+        name: document
+        type:
+            - resolvesToObject
+        description: |
+            Any valid expression that resolves to a document.
+tests:
+    -
+        name: '$mergeObjects as an Accumulator'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/#-mergeobjects-as-an-accumulator'
+        pipeline:
+            -
+                $group:
+                    _id: '$item'
+                    mergedSales:
+                        $mergeObjects: '$quantity'

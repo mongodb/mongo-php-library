@@ -1,0 +1,38 @@
+# $schema: ../schema.json
+name: $bitsAnySet
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches numeric or binary values in which any bit from a set of bit positions has a value of 1.
+arguments:
+    -
+        name: bitmask
+        type:
+            - int
+            - binData
+            - array # of int
+tests:
+    -
+        name: 'Bit Position Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bit-position-array'
+        pipeline:
+            -
+                $match:
+                    a:
+                        $bitsAnySet: [1, 5]
+    -
+        name: 'Integer Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#integer-bitmask'
+        pipeline:
+            - $match:
+                  a:
+                      $bitsAnySet: 35
+    -
+        name: 'BinData Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bindata-bitmask'
+        pipeline:
+            - $match:
+                  a:
+                      $bitsAnySet: !bson_binary 'MA=='

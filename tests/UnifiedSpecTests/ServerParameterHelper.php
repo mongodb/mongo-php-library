@@ -10,8 +10,6 @@ use function array_key_exists;
 
 final class ServerParameterHelper
 {
-    private Client $client;
-
     /** @var array<string|mixed> */
     private array $parameters = [];
 
@@ -19,13 +17,11 @@ final class ServerParameterHelper
 
     private bool $allParametersFetched = false;
 
-    public function __construct(Client $client)
+    public function __construct(private Client $client)
     {
-        $this->client = $client;
     }
 
-    /** @return mixed */
-    public function __get(string $parameter)
+    public function __get(string $parameter): mixed
     {
         if (! array_key_exists($parameter, $this->parameters)) {
             $this->fetchParameter($parameter);
@@ -68,7 +64,7 @@ final class ServerParameterHelper
 
             $this->parameters = $cursor->toArray()[0];
             $this->allParametersFetched = true;
-        } catch (CommandException $e) {
+        } catch (CommandException) {
             $this->fetchAllParametersFailed = true;
         }
     }

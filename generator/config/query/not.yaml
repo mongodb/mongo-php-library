@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $not
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/not/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Inverts the effect of a query expression and returns documents that do not match the query expression.
+arguments:
+    -
+        name: expression
+        type:
+            - fieldQuery
+tests:
+    -
+        name: 'Syntax'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/not/#syntax'
+        pipeline:
+            -
+                $match:
+                    price:
+                        $not:
+                            $gt: 1.99
+    -
+        name: 'Regular Expressions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/not/#-not-and-regular-expressions'
+        pipeline:
+            -
+                $match:
+                    price:
+                        $not: !bson_regex '^p.*'

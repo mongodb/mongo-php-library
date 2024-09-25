@@ -2,16 +2,18 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Count;
+use TypeError;
 
 class CountTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Count($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 
@@ -22,17 +24,17 @@ class CountTest extends TestCase
         new Count($this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'collation' => $this->getInvalidDocumentValues(),
-            'hint' => $this->getInvalidHintValues(),
-            'limit' => $this->getInvalidIntegerValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'skip' => $this->getInvalidIntegerValues(),
+        return self::createOptionDataProvider([
+            'collation' => self::getInvalidDocumentValues(),
+            'hint' => self::getInvalidHintValues(),
+            'limit' => self::getInvalidIntegerValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'session' => self::getInvalidSessionValues(),
+            'skip' => self::getInvalidIntegerValues(),
         ]);
     }
 

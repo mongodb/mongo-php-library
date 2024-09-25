@@ -30,6 +30,8 @@ use function current;
  * @see \MongoDB\Collection::findOne()
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class FindOne implements Executable, Explainable
 {
@@ -104,7 +106,7 @@ class FindOne implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array|object $filter, array $options = [])
     {
         $this->find = new Find(
             $databaseName,

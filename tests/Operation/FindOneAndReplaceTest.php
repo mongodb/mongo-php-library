@@ -2,23 +2,25 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndReplace;
+use TypeError;
 
 class FindOneAndReplaceTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
     }
 
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorReplacementArgumentTypeCheck($replacement): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($replacement instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
@@ -57,12 +59,12 @@ class FindOneAndReplaceTest extends TestCase
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'projection' => $this->getInvalidDocumentValues(),
-            'returnDocument' => $this->getInvalidIntegerValues(true),
+        return self::createOptionDataProvider([
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'projection' => self::getInvalidDocumentValues(),
+            'returnDocument' => self::getInvalidIntegerValues(true),
         ]);
     }
 
@@ -73,9 +75,9 @@ class FindOneAndReplaceTest extends TestCase
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], ['returnDocument' => $returnDocument]);
     }
 
-    public function provideInvalidConstructorReturnDocumentOptions()
+    public static function provideInvalidConstructorReturnDocumentOptions()
     {
-        return $this->wrapValuesForDataProvider([-1, 0, 3]);
+        return self::wrapValuesForDataProvider([-1, 0, 3]);
     }
 
     public function testExplainableCommandDocument(): void

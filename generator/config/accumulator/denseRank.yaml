@@ -1,0 +1,34 @@
+# $schema: ../schema.json
+name: $denseRank
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/'
+type:
+    - window
+encode: object
+description: |
+    Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition. There are no gaps in the ranks. Ties receive the same rank.
+    New in MongoDB 5.0.
+tests:
+    -
+        name: 'Dense Rank Partitions by an Integer Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-an-integer-field'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        quantity: -1
+                    output:
+                        denseRankQuantityForState:
+                            $denseRank: {}
+    -
+        name: 'Dense Rank Partitions by a Date Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-a-date-field'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        denseRankOrderDateForState:
+                            $denseRank: {}

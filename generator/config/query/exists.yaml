@@ -1,0 +1,39 @@
+# $schema: ../schema.json
+name: $exists
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches documents that have the specified field.
+arguments:
+    -
+        name: exists
+        type:
+            - bool
+        default: true
+tests:
+    -
+        name: 'Exists and Not Equal To'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/#exists-and-not-equal-to'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $exists: true
+                        $nin: [5, 15]
+    -
+        name: 'Null Values'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/#null-values'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $exists: true
+    -
+        name: 'Missing Field'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $exists: false

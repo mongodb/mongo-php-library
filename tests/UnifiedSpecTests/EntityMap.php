@@ -63,12 +63,9 @@ class EntityMap implements ArrayAccess
         return array_key_exists($id, $this->map);
     }
 
-    /**
-     * @see https://php.net/arrayaccess.offsetget
-     * @return mixed
-     */
+    /** @see https://php.net/arrayaccess.offsetget */
     #[ReturnTypeWillChange]
-    public function offsetGet($id)
+    public function offsetGet($id): mixed
     {
         assertIsString($id);
         assertArrayHasKey($id, $this->map, sprintf('No entity is defined for "%s"', $id));
@@ -100,16 +97,11 @@ class EntityMap implements ArrayAccess
         $parent = $parentId === null ? null : $this->map[$parentId];
 
         $this->map[$id] = new class ($id, $value, $parent) {
-            public string $id;
-            /** @var mixed */
-            public $value;
-            public ?self $parent;
+            public mixed $value;
 
-            public function __construct(string $id, $value, ?self $parent = null)
+            public function __construct(public string $id, $value, public ?self $parent = null)
             {
-                $this->id = $id;
                 $this->value = $value;
-                $this->parent = $parent;
             }
 
             public function getRoot(): self

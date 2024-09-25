@@ -14,13 +14,13 @@ class EstimatedDocumentCountTest extends TestCase
         new EstimatedDocumentCount($this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'session' => $this->getInvalidSessionValues(),
+        return self::createOptionDataProvider([
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'session' => self::getInvalidSessionValues(),
         ]);
     }
 }

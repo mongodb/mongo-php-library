@@ -46,17 +46,6 @@ class Delete implements Executable, Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 9;
 
-    private string $databaseName;
-
-    private string $collectionName;
-
-    /** @var array|object */
-    private $filter;
-
-    private int $limit;
-
-    private array $options;
-
     /**
      * Constructs a delete command.
      *
@@ -93,7 +82,7 @@ class Delete implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $filter, int $limit, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private array|object $filter, private int $limit, private array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
@@ -103,35 +92,29 @@ class Delete implements Executable, Explainable
             throw new InvalidArgumentException('$limit must be 0 or 1');
         }
 
-        if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
+        if (isset($this->options['collation']) && ! is_document($this->options['collation'])) {
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $this->options['collation']);
         }
 
-        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
-            throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], ['string', 'array', 'object']);
+        if (isset($this->options['hint']) && ! is_string($this->options['hint']) && ! is_array($this->options['hint']) && ! is_object($this->options['hint'])) {
+            throw InvalidArgumentException::invalidType('"hint" option', $this->options['hint'], ['string', 'array', 'object']);
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
+        if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $this->options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
+        if (isset($this->options['let']) && ! is_document($this->options['let'])) {
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $this->options['let']);
         }
 
-        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+        if (isset($this->options['writeConcern']) && $this->options['writeConcern']->isDefault()) {
+            unset($this->options['writeConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->filter = $filter;
-        $this->limit = $limit;
-        $this->options = $options;
     }
 
     /**

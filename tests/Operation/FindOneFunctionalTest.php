@@ -20,7 +20,7 @@ class FindOneFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocument, $document);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocument()
+    public static function provideTypeMapOptionsAndExpectedDocument()
     {
         return [
             [

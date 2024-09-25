@@ -1,0 +1,24 @@
+# $schema: ../schema.json
+name: $toLower
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/'
+type:
+    - resolvesToString
+encode: single
+description: |
+    Converts a string to lowercase. Accepts a single argument expression.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToString
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/#example'
+        pipeline:
+            -
+                $project:
+                    item:
+                        $toLower: '$item'
+                    description:
+                        $toLower: '$description'

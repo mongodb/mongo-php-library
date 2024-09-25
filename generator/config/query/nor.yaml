@@ -1,0 +1,58 @@
+# $schema: ../schema.json
+name: $nor
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/'
+type:
+    - query
+encode: single
+description: |
+    Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
+arguments:
+    -
+        name: queries
+        type:
+            - query
+        variadic: array
+        variadicMin: 1
+tests:
+    -
+        name: 'Query with Two Expressions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-query-with-two-expressions'
+        pipeline:
+            -
+                $match:
+                    $nor:
+                        -
+                            price: 1.99
+                        -
+                            sale: true
+    -
+        name: 'Additional Comparisons'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and-additional-comparisons'
+        pipeline:
+            -
+                $match:
+                    $nor:
+                        -
+                            price: 1.99
+                        -
+                            qty:
+                                $lt: 20
+                        -
+                            sale: true
+    -
+        name: '$nor and $exists'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and--exists'
+        pipeline:
+            -
+                $match:
+                    $nor:
+                        -
+                            price: 1.99
+                        -
+                            price:
+                                $exists: false
+                        -
+                            sale: true
+                        -
+                            sale:
+                                $exists: false

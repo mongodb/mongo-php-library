@@ -1,0 +1,26 @@
+# $schema: ../schema.json
+name: $toString
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/'
+type:
+    - resolvesToString
+encode: single
+description: |
+    Converts value to a string.
+    New in MongoDB 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedZipCode:
+                        $toString: '$zipcode'
+            -
+                $sort:
+                    convertedZipCode: 1

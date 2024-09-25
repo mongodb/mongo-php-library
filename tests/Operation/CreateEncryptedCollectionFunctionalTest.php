@@ -73,7 +73,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
     }
 
-    public function provideEncryptedFieldsAndFieldsIsMissing(): array
+    public static function provideEncryptedFieldsAndFieldsIsMissing(): array
     {
         $ef = [];
 
@@ -104,7 +104,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
     }
 
-    public function provideEncryptedFieldsAndFieldsHasInvalidType(): array
+    public static function provideEncryptedFieldsAndFieldsHasInvalidType(): array
     {
         $ef = ['fields' => 'not-an-array'];
 
@@ -135,7 +135,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
     }
 
-    public function provideEncryptedFieldsElementHasInvalidType(): array
+    public static function provideEncryptedFieldsElementHasInvalidType(): array
     {
         $ef = ['fields' => ['not-an-array-or-object']];
 
@@ -190,7 +190,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf(Binary::class, $modifiedEncryptedFields['fields'][0]['keyId'] ?? null);
     }
 
-    public function provideEncryptedFields(): array
+    public static function provideEncryptedFields(): array
     {
         $ef = ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null]]];
 

@@ -35,14 +35,14 @@ use function is_bool;
  * @see \MongoDB\Collection::rename()
  * @see \MongoDB\Database::renameCollection()
  * @see https://mongodb.com/docs/manual/reference/command/renameCollection/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class RenameCollection implements Executable
 {
     private string $fromNamespace;
 
     private string $toNamespace;
-
-    private array $options;
 
     /**
      * Constructs a renameCollection command.
@@ -70,31 +70,30 @@ class RenameCollection implements Executable
      * @param array  $options            Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $fromDatabaseName, string $fromCollectionName, string $toDatabaseName, string $toCollectionName, array $options = [])
+    public function __construct(string $fromDatabaseName, string $fromCollectionName, string $toDatabaseName, string $toCollectionName, private array $options = [])
     {
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
-        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
+        if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $this->options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+        if (isset($this->options['writeConcern']) && $this->options['writeConcern']->isDefault()) {
+            unset($this->options['writeConcern']);
         }
 
-        if (isset($options['dropTarget']) && ! is_bool($options['dropTarget'])) {
-            throw InvalidArgumentException::invalidType('"dropTarget" option', $options['dropTarget'], 'boolean');
+        if (isset($this->options['dropTarget']) && ! is_bool($this->options['dropTarget'])) {
+            throw InvalidArgumentException::invalidType('"dropTarget" option', $this->options['dropTarget'], 'boolean');
         }
 
         $this->fromNamespace = $fromDatabaseName . '.' . $fromCollectionName;
         $this->toNamespace = $toDatabaseName . '.' . $toCollectionName;
-        $this->options = $options;
     }
 
     /**

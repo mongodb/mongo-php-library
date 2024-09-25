@@ -35,11 +35,8 @@ use function reset;
  */
 class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
 {
-    private array $databases;
-
-    public function __construct(array $databases)
+    public function __construct(private array $databases)
     {
-        $this->databases = $databases;
     }
 
     /**

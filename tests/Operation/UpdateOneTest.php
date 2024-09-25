@@ -2,22 +2,24 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\UpdateOne;
+use TypeError;
 
 class UpdateOneTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 

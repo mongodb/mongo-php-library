@@ -50,11 +50,7 @@ final class Context
     /** @var array<string, EventObserver> */
     private array $eventObserversByClient = [];
 
-    private Client $internalClient;
-
     private bool $inLoop = false;
-
-    private string $uri;
 
     private string $singleMongosUri;
 
@@ -62,11 +58,9 @@ final class Context
 
     private ?object $advanceClusterTime = null;
 
-    public function __construct(Client $internalClient, string $uri)
+    public function __construct(private Client $internalClient, private string $uri)
     {
         $this->entityMap = new EntityMap();
-        $this->internalClient = $internalClient;
-        $this->uri = $uri;
 
         /* TODO: Consider leaving these unset, although that might require
          * redundant topology/serverless checks in Context::createClient(). */
@@ -103,34 +97,15 @@ final class Context
             $id = $def->id ?? null;
             assertIsString($id);
 
-            switch ($type) {
-                case 'client':
-                    $this->createClient($id, $def);
-                    break;
-
-                case 'clientEncryption':
-                    $this->createClientEncryption($id, $def);
-                    break;
-
-                case 'database':
-                    $this->createDatabase($id, $def);
-                    break;
-
-                case 'collection':
-                    $this->createCollection($id, $def);
-                    break;
-
-                case 'session':
-                    $this->createSession($id, $def);
-                    break;
-
-                case 'bucket':
-                    $this->createBucket($id, $def);
-                    break;
-
-                default:
-                    throw new LogicException('Unsupported entity type: ' . $type);
-            }
+            match ($type) {
+                'client' => $this->createClient($id, $def),
+                'clientEncryption' => $this->createClientEncryption($id, $def),
+                'database' => $this->createDatabase($id, $def),
+                'collection' => $this->createCollection($id, $def),
+                'session' => $this->createSession($id, $def),
+                'bucket' => $this->createBucket($id, $def),
+                default => throw new LogicException('Unsupported entity type: ' . $type),
+            };
         }
     }
 
@@ -234,8 +209,7 @@ final class Context
         }
     }
 
-    /** @param string|array $readPreferenceTags */
-    private function convertReadPreferenceTags($readPreferenceTags): array
+    private function convertReadPreferenceTags(string|array $readPreferenceTags): array
     {
         return array_map(
             static function (string $readPreferenceTagSet): array {

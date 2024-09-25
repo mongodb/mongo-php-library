@@ -1,0 +1,41 @@
+# $schema: ../schema.json
+name: $covariancePop
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/'
+type:
+    - window
+encode: array
+description: |
+    Returns the population covariance of two numeric expressions.
+    New in MongoDB 5.0.
+arguments:
+    -
+        name: expression1
+        type:
+            - resolvesToNumber
+    -
+        name: expression2
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/#example'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        covariancePopForState:
+                            $covariancePop:
+                                -
+                                    # Example uses the short form, the builder always generates the verbose form
+                                    # $year: '$orderDate'
+                                    $year:
+                                        date: '$orderDate'
+                                - '$quantity'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

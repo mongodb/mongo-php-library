@@ -13,20 +13,17 @@ final class PassThruCodec implements DocumentCodec
     use DecodeIfSupported;
     use EncodeIfSupported;
 
-    /** @param mixed $value */
-    public function canDecode($value): bool
+    public function canDecode(mixed $value): bool
     {
         return $value instanceof Document;
     }
 
-    /** @param mixed $value */
-    public function canEncode($value): bool
+    public function canEncode(mixed $value): bool
     {
         return $value instanceof Document;
     }
 
-    /** @param mixed $value */
-    public function decode($value): Document
+    public function decode(mixed $value): Document
     {
         if (! $value instanceof Document) {
             throw UnsupportedValueException::invalidDecodableValue($value);
@@ -35,8 +32,7 @@ final class PassThruCodec implements DocumentCodec
         return $value;
     }
 
-    /** @param mixed $value */
-    public function encode($value): Document
+    public function encode(mixed $value): Document
     {
         if (! $value instanceof Document) {
             throw UnsupportedValueException::invalidEncodableValue($value);

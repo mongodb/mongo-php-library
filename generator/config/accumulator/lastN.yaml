@@ -1,0 +1,89 @@
+# $schema: ../schema.json
+name: $lastN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/'
+type:
+    - accumulator
+    - window
+encode: object
+description: |
+    Returns an aggregation of the last n elements within a group.
+    The elements returned are meaningful only if in a specified sort order.
+    If the group contains fewer than n elements, $lastN returns all elements in the group.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to the array from which to return n elements.
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+tests:
+    -
+        name: 'Find the Last Three Player Scores for a Single Game'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#find-the-last-three-player-scores-for-a-single-game'
+        pipeline:
+            -
+                $match:
+                    gameId: 'G1'
+            -
+                $group:
+                    _id: '$gameId'
+                    lastThreeScores:
+                        $lastN:
+                            input:
+                                - '$playerId'
+                                - '$score'
+                            n: 3
+    -
+        name: 'Finding the Last Three Player Scores Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#finding-the-last-three-player-scores-across-multiple-games'
+        pipeline:
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $lastN:
+                            input:
+                                - '$playerId'
+                                - '$score'
+                            n: 3
+    -
+        name: 'Using $sort With $lastN'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#using--sort-with--lastn'
+        pipeline:
+            -
+                $sort:
+                    score: -1
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $lastN:
+                            input:
+                                - '$playerId'
+                                - '$score'
+                            n: 3
+    -
+        name: 'Computing n Based on the Group Key for $group'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#computing-n-based-on-the-group-key-for--group'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        gameId: '$gameId'
+                    gamescores:
+                        $lastN:
+                            input: '$score'
+                            n:
+                                $cond:
+                                    if:
+                                        $eq:
+                                            - '$gameId'
+                                            - 'G2'
+                                    then: 1
+                                    else: 3

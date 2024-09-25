@@ -2,25 +2,25 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Update;
+use TypeError;
 
 class UpdateTest extends TestCase
 {
     /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/Expected \$filter to have type "document" \(array or object\) but found ".+"/');
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
     /** @dataProvider provideInvalidUpdateValues */
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/Expected \$update to have type "array or object" but found "[\w ]+"/');
+        $this->expectException(TypeError::class);
         new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 
@@ -31,17 +31,17 @@ class UpdateTest extends TestCase
         new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'arrayFilters' => $this->getInvalidArrayValues(),
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'collation' => $this->getInvalidDocumentValues(),
-            'hint' => $this->getInvalidHintValues(),
-            'multi' => $this->getInvalidBooleanValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'upsert' => $this->getInvalidBooleanValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'arrayFilters' => self::getInvalidArrayValues(),
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'collation' => self::getInvalidDocumentValues(),
+            'hint' => self::getInvalidHintValues(),
+            'multi' => self::getInvalidBooleanValues(),
+            'session' => self::getInvalidSessionValues(),
+            'upsert' => self::getInvalidBooleanValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

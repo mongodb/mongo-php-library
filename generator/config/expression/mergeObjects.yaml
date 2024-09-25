@@ -1,0 +1,39 @@
+# $schema: ../schema.json
+name: $mergeObjects
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/'
+type:
+    - resolvesToObject
+encode: single
+description: |
+    Combines multiple documents into a single document.
+arguments:
+    -
+        name: document
+        type:
+            - resolvesToObject
+        variadic: array
+        description: |
+            Any valid expression that resolves to a document.
+tests:
+    -
+        name: '$mergeObjects'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/#-mergeobjects'
+        pipeline:
+            -
+                $lookup:
+                    from: 'items'
+                    localField: 'item'
+                    foreignField: 'item'
+                    as: 'fromItems'
+            -
+                $replaceRoot:
+                    newRoot:
+                        $mergeObjects:
+                            -
+                                $arrayElemAt:
+                                    - '$fromItems'
+                                    - 0
+                            - '$$ROOT'
+            -
+                $project:
+                    fromItems: 0

@@ -38,14 +38,14 @@ class InsertManyTest extends TestCase
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [['x' => 1]], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'ordered' => $this->getInvalidBooleanValues(true),
-            'session' => $this->getInvalidSessionValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'ordered' => self::getInvalidBooleanValues(true),
+            'session' => self::getInvalidSessionValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

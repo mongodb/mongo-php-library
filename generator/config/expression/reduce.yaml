@@ -1,0 +1,134 @@
+# $schema: ../schema.json
+name: $reduce
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/'
+type:
+    - resolvesToAny
+encode: object
+description: |
+    Applies an expression to each element in an array and combines them into a single value.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            Can be any valid expression that resolves to an array.
+            If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
+            If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
+    -
+        name: initialValue
+        type:
+            - expression
+        description: |
+            The initial cumulative value set before in is applied to the first element of the input array.
+    -
+        name: in
+        type:
+            - expression
+        description: |
+            A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
+            During evaluation of the in expression, two variables will be available:
+            - value is the variable that represents the cumulative value of the expression.
+            - this is the variable that refers to the element being processed.
+tests:
+    -
+        name: 'Multiplication'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#multiplication'
+        pipeline:
+            -
+                $group:
+                    _id: '$experimentId'
+                    probabilityArr:
+                        $push: '$probability'
+            -
+                $project:
+                    description: 1
+                    results:
+                        $reduce:
+                            input: '$probabilityArr'
+                            initialValue: 1
+                            in:
+                                $multiply:
+                                    - '$$value'
+                                    - '$$this'
+    -
+        name: 'Discounted Merchandise'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#discounted-merchandise'
+        pipeline:
+            -
+                $project:
+                    discountedPrice:
+                        $reduce:
+                            input: '$discounts'
+                            initialValue: '$price'
+                            in:
+                                $multiply:
+                                    - '$$value'
+                                    -
+                                        $subtract:
+                                            - 1
+                                            - '$$this'
+    -
+        name: 'String Concatenation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#string-concatenation'
+        pipeline:
+            # Filter to return only non-empty arrays
+            -
+                $match:
+                    hobbies:
+                        $gt: []
+            -
+                $project:
+                    name: 1
+                    bio:
+                        $reduce:
+                            input: '$hobbies'
+                            initialValue: 'My hobbies include:'
+                            in:
+                                $concat:
+                                    - '$$value'
+                                    -
+                                        $cond:
+                                            if:
+                                                $eq:
+                                                    - '$$value'
+                                                    - 'My hobbies include:'
+                                            then: ' '
+                                            else: ', '
+                                    - '$$this'
+    -
+        name: 'Array Concatenation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#array-concatenation'
+        pipeline:
+            -
+                $project:
+                    collapsed:
+                        $reduce:
+                            input: '$arr'
+                            initialValue: []
+                            in:
+                                $concatArrays:
+                                    - '$$value'
+                                    - '$$this'
+    -
+        name: 'Computing a Multiple Reductions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#computing-a-multiple-reductions'
+        pipeline:
+            -
+                $project:
+                    results:
+                        $reduce:
+                            input: '$arr'
+                            initialValue: []
+                            in:
+                                collapsed:
+                                    $concatArrays:
+                                        - '$$value.collapsed'
+                                        - '$$this'
+                                firstValues:
+                                    $concatArrays:
+                                        - '$$value.firstValues'
+                                        -
+                                            $slice:
+                                                - '$$this'
+                                                - 1

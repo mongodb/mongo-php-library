@@ -1,0 +1,56 @@
+# $schema: ../schema.json
+name: $top
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/'
+type:
+    - accumulator
+encode: object
+description: |
+    Returns the top element within a group according to the specified sort order.
+    New in MongoDB 5.2.
+
+    Available in the $group and $setWindowFields stages.
+arguments:
+    -
+        name: sortBy
+        type:
+            - object # SortSpec
+        description: |
+            Specifies the order of results, with syntax similar to $sort.
+    -
+        name: output
+        type:
+            - expression
+        description: |
+            Represents the output for each element in the group and can be any expression.
+tests:
+    -
+        name: 'Find the Top Score'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score'
+        pipeline:
+            -
+                $match:
+                    gameId: 'G1'
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $top:
+                            output:
+                                - '$playerId'
+                                - '$score'
+                            sortBy:
+                                score: -1
+    -
+        name: 'Find the Top Score Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score-across-multiple-games'
+        pipeline:
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $top:
+                            output:
+                                - '$playerId'
+                                - '$score'
+                            sortBy:
+                                score: -1

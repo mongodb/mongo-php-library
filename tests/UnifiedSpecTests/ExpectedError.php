@@ -7,7 +7,6 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
-use MongoDB\Driver\Exception\WriteException;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use PHPUnit\Framework\Assert;
 use stdClass;
@@ -157,14 +156,14 @@ final class ExpectedError
         }
 
         if (isset($this->matchesResultDocument)) {
-            assertThat($e, logicalOr(isInstanceOf(CommandException::class), isInstanceOf(WriteException::class)));
+            assertThat($e, logicalOr(isInstanceOf(CommandException::class), isInstanceOf(BulkWriteException::class)));
 
             if ($e instanceof CommandException) {
                 assertThat($e->getResultDocument(), $this->matchesResultDocument, 'CommandException result document matches');
-            } elseif ($e instanceof WriteException) {
+            } elseif ($e instanceof BulkWriteException) {
                 $writeErrors = $e->getWriteResult()->getErrorReplies();
                 assertCount(1, $writeErrors);
-                assertThat($writeErrors[0], $this->matchesResultDocument, 'WriteException result document matches');
+                assertThat($writeErrors[0], $this->matchesResultDocument, 'BulkWriteException result document matches');
             }
         }
 

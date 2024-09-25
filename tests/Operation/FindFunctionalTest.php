@@ -48,7 +48,9 @@ class FindFunctionalTest extends FunctionalTestCase
                     ['modifiers' => $modifiers],
                 );
 
-                $operation->execute($this->getPrimaryServer());
+                $this->assertDeprecated(
+                    fn () => $operation->execute($this->getPrimaryServer()),
+                );
             },
             function (array $event) use ($expectedSort): void {
                 $this->assertEquals($expectedSort, $event['started']->getCommand()->sort ?? null);

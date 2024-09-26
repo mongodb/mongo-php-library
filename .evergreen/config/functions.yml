@@ -84,9 +84,7 @@ functions:
         content_type: ${content_type|application/x-gzip}
         permissions: public-read
         local_file: ${build_id}.tar.gz
-        remote_file: mongo-php-driver/${build_variant}/${revision}/${task_name}/${version}.tar.gz
-        # TODO: Use separate folder for the library once it exists
-#        remote_file: ${project}/${build_variant}/${revision}/${task_name}/${version}.tar.gz
+        remote_file: mongo-php-driver/${build_variant}/${revision}/${task_name}/${version_id}.tar.gz
 
   "fetch extension":
     - command: s3.get
@@ -94,9 +92,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         bucket: mciuploads
-        # TODO: Use separate folder for the library once it exists
-        remote_file: mongo-php-driver/${FETCH_BUILD_VARIANT}/${revision}/${FETCH_BUILD_TASK}/${version}.tar.gz
-#        remote_file: ${project}/${FETCH_BUILD_VARIANT}/${revision}/${FETCH_BUILD_TASK}/${version}.tar.gz
+        remote_file: mongo-php-driver/${FETCH_BUILD_VARIANT}/${revision}/${FETCH_BUILD_TASK}/${version_id}.tar.gz
         local_file: build.tar.gz
     - command: archive.targz_extract
       params:

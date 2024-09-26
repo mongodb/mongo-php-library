@@ -433,7 +433,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
         $out = ['inline' => 1];
 
-        $result = $this->collection->mapReduce($map, $reduce, $out);
+        $result = $this->assertDeprecated(
+            fn () => $this->collection->mapReduce($map, $reduce, $out),
+        );
 
         $this->assertInstanceOf(MapReduceResult::class, $result);
         $expected = [

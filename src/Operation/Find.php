@@ -36,9 +36,6 @@ use function is_object;
 use function is_string;
 use function MongoDB\document_to_array;
 use function MongoDB\is_document;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Operation for the find command.
@@ -280,14 +277,6 @@ final class Find implements Executable, Explainable
 
         if (isset($this->options['readConcern']) && $this->options['readConcern']->isDefault()) {
             unset($this->options['readConcern']);
-        }
-
-        if (isset($this->options['snapshot'])) {
-            trigger_error('The "snapshot" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
-        }
-
-        if (isset($this->options['maxScan'])) {
-            trigger_error('The "maxScan" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
         }
 
         if (isset($this->options['codec']) && isset($this->options['typeMap'])) {

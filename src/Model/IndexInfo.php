@@ -89,7 +89,7 @@ class IndexInfo implements ArrayAccess
      */
     public function getNamespace(): string
     {
-        @trigger_error('MongoDB 4.4 drops support for the namespace in indexes, the method "IndexInfo::getNamespace()" will be removed in a future release', E_USER_DEPRECATED);
+        @trigger_error('MongoDB 4.4 drops support for the namespace in indexes, the method "IndexInfo::getNamespace()" will be removed in version 2.0', E_USER_DEPRECATED);
 
         return (string) $this->info['ns'];
     }
@@ -117,7 +117,7 @@ class IndexInfo implements ArrayAccess
      */
     public function isGeoHaystack(): bool
     {
-        @trigger_error('MongoDB 5.0 removes support for "geoHaystack" indexes, the method "IndexInfo::isGeoHaystack()" will be removed in a future release', E_USER_DEPRECATED);
+        @trigger_error('MongoDB 5.0 removes support for "geoHaystack" indexes, the method "IndexInfo::isGeoHaystack()" will be removed in version 2.0', E_USER_DEPRECATED);
 
         return array_search('geoHaystack', $this->getKey(), true) !== false;
     }

@@ -161,7 +161,7 @@ OUTPUT;
         return self::wrapValuesForDataProvider(self::getInvalidStringValues());
     }
 
-    protected function assertDeprecated(callable $execution): void
+    protected function assertDeprecated(callable $execution)
     {
         $errors = [];
 
@@ -170,12 +170,14 @@ OUTPUT;
         }, E_USER_DEPRECATED | E_DEPRECATED);
 
         try {
-            call_user_func($execution);
+            $result = call_user_func($execution);
         } finally {
             restore_error_handler();
         }
 
         $this->assertCount(1, $errors);
+
+        return $result;
     }
 
     protected static function createOptionDataProvider(array $options): array

@@ -17,19 +17,16 @@
 
 namespace MongoDB;
 
+use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\WriteResult;
-use MongoDB\Exception\BadMethodCallException;
 
 /**
  * Result class for a multi-document insert operation.
  */
 class InsertManyResult
 {
-    private bool $isAcknowledged;
-
     public function __construct(private WriteResult $writeResult, private array $insertedIds)
     {
-        $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 
     /**
@@ -38,15 +35,11 @@ class InsertManyResult
      * This method should only be called if the write was acknowledged.
      *
      * @see InsertManyResult::isAcknowledged()
-     * @throws BadMethodCallException if the write result is unacknowledged
+     * @throws LogicException if the write result is unacknowledged
      */
-    public function getInsertedCount(): ?int
+    public function getInsertedCount(): int
     {
-        if ($this->isAcknowledged) {
-            return $this->writeResult->getInsertedCount();
-        }
-
-        throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
+        return $this->writeResult->getInsertedCount();
     }
 
     /**

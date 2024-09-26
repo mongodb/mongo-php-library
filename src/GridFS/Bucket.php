@@ -583,16 +583,9 @@ class Bucket
             return;
         }
 
-        /* If the update resulted in no modification, it's possible that the
-         * file did not exist, in which case we must raise an error. Checking
-         * the write result's matched count will be most efficient, but fall
-         * back to a findOne operation if necessary (i.e. legacy writes).
-         */
-        $found = $updateResult->getMatchedCount() !== null
-            ? $updateResult->getMatchedCount() === 1
-            : $this->collectionWrapper->findFileById($id) !== null;
-
-        if (! $found) {
+        // If the update resulted in no modification, it's possible that the
+        // file did not exist, in which case we must raise an error.
+        if ($updateResult->getMatchedCount() !== 1) {
             throw FileNotFoundException::byId($id, $this->getFilesNamespace());
         }
     }

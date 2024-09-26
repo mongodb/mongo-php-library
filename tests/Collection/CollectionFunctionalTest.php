@@ -251,8 +251,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['x' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->drop();
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->drop();
         $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
@@ -328,8 +327,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['_id' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->rename($toCollectionName, null, ['dropTarget' => true]);
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->rename($toCollectionName, null, ['dropTarget' => true]);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName);
 
@@ -357,8 +355,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['_id' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->rename($toCollectionName, $toDatabaseName);
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->rename($toCollectionName, $toDatabaseName);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName, $toDatabaseName);
 

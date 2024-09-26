@@ -24,9 +24,6 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 
-use function current;
-use function is_array;
-
 /**
  * Operation for the dropDatabase command.
  *
@@ -47,9 +44,6 @@ final class DropDatabase
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     *  * typeMap (array): Type map for BSON deserialization. This will be used
-     *    for the returned command result document.
-     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      * @param string $databaseName Database name
@@ -60,10 +54,6 @@ final class DropDatabase
     {
         if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
-        }
-
-        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
         if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
@@ -78,18 +68,11 @@ final class DropDatabase
     /**
      * Execute the operation.
      *
-     * @return array|object Command result document
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server): array|object
+    public function execute(Server $server): void
     {
-        $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
-
-        if (isset($this->options['typeMap'])) {
-            $cursor->setTypeMap($this->options['typeMap']);
-        }
-
-        return current($cursor->toArray());
+        $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
     }
 
     /**

@@ -54,11 +54,7 @@ use stdClass;
 use Throwable;
 
 use function is_array;
-use function sprintf;
 use function strlen;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 class Database
 {
@@ -274,19 +270,12 @@ class Database
      * @see CreateCollection::__construct() for supported options
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#create-collection-helper
      * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-collections/
-     * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function createCollection(string $collectionName, array $options = []): array|object
+    public function createCollection(string $collectionName, array $options = []): void
     {
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        } else {
-            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
-        }
-
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
@@ -301,7 +290,7 @@ class Database
 
         $server = select_server_for_write($this->manager, $options);
 
-        return $operation->execute($server);
+        $operation->execute($server);
     }
 
     /**
@@ -319,19 +308,13 @@ class Database
      * getPrevious() and getEncryptedFields() methods, respectively.
      *
      * @see CreateCollection::__construct() for supported options
-     * @return array A tuple containing the command result document from creating the collection and the modified "encryptedFields" option
+     * @return array The modified "encryptedFields" option
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws CreateEncryptedCollectionException for any errors creating data keys or creating the collection
      * @throws UnsupportedException if Queryable Encryption is not supported by the selected server
      */
     public function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
     {
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        } else {
-            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
-        }
-
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
@@ -340,10 +323,10 @@ class Database
         $server = select_server_for_write($this->manager, $options);
 
         try {
-            $operation->createDataKeys($clientEncryption, $kmsProvider, $masterKey, $encryptedFields);
-            $result = $operation->execute($server);
+            $encryptedFields = $operation->createDataKeys($clientEncryption, $kmsProvider, $masterKey);
+            $operation->execute($server);
 
-            return [$result, $encryptedFields];
+            return $encryptedFields;
         } catch (Throwable $e) {
             throw new CreateEncryptedCollectionException($e, $encryptedFields ?? []);
         }
@@ -354,19 +337,12 @@ class Database
      *
      * @see DropDatabase::__construct() for supported options
      * @param array $options Additional options
-     * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function drop(array $options = []): array|object
+    public function drop(array $options = []): void
     {
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        } else {
-            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
-        }
-
         $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
@@ -375,7 +351,7 @@ class Database
 
         $operation = new DropDatabase($this->databaseName, $options);
 
-        return $operation->execute($server);
+        $operation->execute($server);
     }
 
     /**
@@ -384,19 +360,12 @@ class Database
      * @see DropCollection::__construct() for supported options
      * @param string $collectionName Collection name
      * @param array  $options        Additional options
-     * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function dropCollection(string $collectionName, array $options = []): array|object
+    public function dropCollection(string $collectionName, array $options = []): void
     {
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        } else {
-            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
-        }
-
         $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
@@ -412,7 +381,7 @@ class Database
             ? new DropEncryptedCollection($this->databaseName, $collectionName, $options)
             : new DropCollection($this->databaseName, $collectionName, $options);
 
-        return $operation->execute($server);
+        $operation->execute($server);
     }
 
     /**
@@ -509,12 +478,8 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function modifyCollection(string $collectionName, array $collectionOptions, array $options = []): array|object
+    public function modifyCollection(string $collectionName, array $collectionOptions, array $options = []): void
     {
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
-
         $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
@@ -523,7 +488,7 @@ class Database
 
         $operation = new ModifyCollection($this->databaseName, $collectionName, $collectionOptions, $options);
 
-        return $operation->execute($server);
+        $operation->execute($server);
     }
 
     /**
@@ -534,19 +499,14 @@ class Database
      * @param string      $toCollectionName   New name of the collection
      * @param string|null $toDatabaseName     New database name of the collection. Defaults to the original database.
      * @param array       $options            Additional options
-     * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = []): array|object
+    public function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = []): void
     {
         if (! isset($toDatabaseName)) {
             $toDatabaseName = $this->databaseName;
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
         }
 
         $server = select_server_for_write($this->manager, $options);
@@ -557,7 +517,7 @@ class Database
 
         $operation = new RenameCollection($this->databaseName, $fromCollectionName, $toDatabaseName, $toCollectionName, $options);
 
-        return $operation->execute($server);
+        $operation->execute($server);
     }
 
     /**

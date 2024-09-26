@@ -26,9 +26,6 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
-use function current;
-use function is_array;
-
 /**
  * Operation for the drop command.
  *
@@ -51,9 +48,6 @@ final class DropCollection
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     *  * typeMap (array): Type map for BSON deserialization. This will be used
-     *    for the returned command result document.
-     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      * @param string $databaseName   Database name
@@ -65,10 +59,6 @@ final class DropCollection
     {
         if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
-        }
-
-        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
         if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
@@ -83,11 +73,10 @@ final class DropCollection
     /**
      * Execute the operation.
      *
-     * @return array|object Command result document
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server): array|object
+    public function execute(Server $server): void
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {
@@ -95,23 +84,16 @@ final class DropCollection
         }
 
         try {
-            $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
+            $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
         } catch (CommandException $e) {
             /* The server may return an error if the collection does not exist.
-             * Check for an error code and return the command reply instead of
-             * throwing. */
+             * Ignore the exception to make the drop operation idempotent */
             if ($e->getCode() === self::ERROR_CODE_NAMESPACE_NOT_FOUND) {
-                return $e->getResultDocument();
+                return;
             }
 
             throw $e;
         }
-
-        if (isset($this->options['typeMap'])) {
-            $cursor->setTypeMap($this->options['typeMap']);
-        }
-
-        return current($cursor->toArray());
     }
 
     /**

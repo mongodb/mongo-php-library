@@ -84,16 +84,13 @@ final class DropEncryptedCollection
         $this->dropCollection = new DropCollection($databaseName, $collectionName, $options);
     }
 
-    /**
-     * @return array|object Command result document from dropping the encrypted collection
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     */
-    public function execute(Server $server): array|object
+    /** @throws DriverRuntimeException for other driver errors (e.g. connection errors) */
+    public function execute(Server $server): void
     {
         foreach ($this->dropMetadataCollections as $dropMetadataCollection) {
             $dropMetadataCollection->execute($server);
         }
 
-        return $this->dropCollection->execute($server);
+        $this->dropCollection->execute($server);
     }
 }

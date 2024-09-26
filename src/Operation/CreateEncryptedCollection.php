@@ -97,21 +97,20 @@ final class CreateEncryptedCollection
      * "encryptedFields" option and reconstruct the internal CreateCollection
      * operation used for creating the encrypted collection.
      *
-     * The $encryptedFields reference parameter may be used to determine which
-     * data keys have been created.
+     * Returns the data keys that have been created.
      *
      * @see \MongoDB\Database::createEncryptedCollection()
      * @see https://www.php.net/manual/en/mongodb-driver-clientencryption.createdatakey.php
      * @throws DriverRuntimeException for errors creating a data key
      */
-    public function createDataKeys(ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, ?array &$encryptedFields = null): void
+    public function createDataKeys(ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey): array
     {
         /** @psalm-var array{fields: list<array{keyId: ?Binary}|object{keyId: ?Binary}>|Serializable|PackedArray} */
         $encryptedFields = document_to_array($this->options['encryptedFields']);
 
         // NOP if there are no fields to examine
         if (! isset($encryptedFields['fields'])) {
-            return;
+            return $encryptedFields;
         }
 
         // Allow PackedArray or Serializable object for the fields array
@@ -128,7 +127,7 @@ final class CreateEncryptedCollection
 
         // Skip invalid types and defer to the server to raise an error
         if (! is_array($encryptedFields['fields'])) {
-            return;
+            return $encryptedFields;
         }
 
         $createDataKeyArgs = [
@@ -152,14 +151,15 @@ final class CreateEncryptedCollection
 
         $this->options['encryptedFields'] = $encryptedFields;
         $this->createCollection = new CreateCollection($this->databaseName, $this->collectionName, $this->options);
+
+        return $encryptedFields;
     }
 
     /**
-     * @return array|object Command result document from creating the encrypted collection
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      * @throws UnsupportedException if the server does not support Queryable Encryption
      */
-    public function execute(Server $server): array|object
+    public function execute(Server $server): void
     {
         if (! server_supports_feature($server, self::WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2)) {
             throw new UnsupportedException('Driver support of Queryable Encryption is incompatible with server. Upgrade server to use Queryable Encryption.');
@@ -169,10 +169,8 @@ final class CreateEncryptedCollection
             $createMetadataCollection->execute($server);
         }
 
-        $result = $this->createCollection->execute($server);
+        $this->createCollection->execute($server);
 
         $this->createSafeContentIndex->execute($server);
-
-        return $result;
     }
 }

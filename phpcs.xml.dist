@@ -133,14 +133,6 @@
     </rule>
 
 
-    <!-- *********************************************************** -->
-    <!-- Require native type hints for all code without a BC promise -->
-    <!-- *********************************************************** -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint">
-        <exclude-pattern>src</exclude-pattern>
-    </rule>
-
-
     <!-- ************************************************************* -->
     <!-- Ignore errors for certain files where this is part of the API -->
     <!-- ************************************************************* -->

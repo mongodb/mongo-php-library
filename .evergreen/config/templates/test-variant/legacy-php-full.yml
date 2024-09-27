@@ -21,27 +21,8 @@
       - "test-atlas-data-lake"
 
   # Test versions < 5.0
-  - name: test-debian92-php-%phpVersion%-local
-    tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
-    display_name: "Test: Debian 9.2, PHP %phpVersion%"
-    run_on: debian92-small
-    expansions:
-      FETCH_BUILD_VARIANT: "build-debian92"
-      FETCH_BUILD_TASK: "build-php-%phpVersion%"
-      PHP_VERSION: "%phpVersion%"
-    depends_on:
-      - variant: "build-debian92"
-        name: "build-php-%phpVersion%"
-    tasks:
-      # Remember to add new major versions here as they are released
-      - ".standalone .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
-      - ".replicaset .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
-      - ".sharded .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
-      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
-
-  # Test Atlas and CSFLE on RHEL 8
-  - name: test-rhel80-php-%phpVersion%-atlas
-    tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
+  - name: test-rhel80-php-%phpVersion%
+    tags: ["test", "rhel", "x64", "php%phpVersion%", "pr", "tag"]
     display_name: "Test: RHEL 8.0, PHP %phpVersion%"
     run_on: rhel80-small
     expansions:
@@ -52,5 +33,10 @@
       - variant: "build-rhel80"
         name: "build-php-%phpVersion%"
     tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.8.0 !.rapid !.latest"
       - "test_atlas_task_group"
       - ".csfle"

@@ -4,6 +4,7 @@ namespace MongoDB\Tests;
 
 use MongoDB\Client;
 use MongoDB\Driver\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 
@@ -28,7 +29,7 @@ class LogNonGenuineHostTest extends TestCase
         remove_logger($this->logger);
     }
 
-    /** @dataProvider provideCosmosUris */
+    #[DataProvider('provideCosmosUris')]
     public function testCosmosUriLogsInfoMessage(string $uri): void
     {
         $this->createClientAndIgnoreSrvLookupError($uri);
@@ -54,7 +55,7 @@ class LogNonGenuineHostTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideDocumentDbUris */
+    #[DataProvider('provideDocumentDbUris')]
     public function testDocumentDbUriLogsInfoMessage(string $uri): void
     {
         $this->createClientAndIgnoreSrvLookupError($uri);
@@ -83,7 +84,7 @@ class LogNonGenuineHostTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideGenuineUris */
+    #[DataProvider('provideGenuineUris')]
     public function testGenuineUriDoesNotLog(string $uri): void
     {
         $this->createClientAndIgnoreSrvLookupError($uri);

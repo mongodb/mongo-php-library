@@ -16,6 +16,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\ExpectationFailedException;
 
 use const PHP_INT_SIZE;
@@ -70,7 +71,7 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(false, $c, [1, ['a' => 2]], 'Keys must have the correct value');
     }
 
-    /** @dataProvider provideBSONTypes */
+    #[DataProvider('provideBSONTypes')]
     public function testBSONTypeAssertions($type, $value): void
     {
         $constraint = new DocumentsMatchConstraint(['x' => ['$$type' => $type]]);
@@ -132,7 +133,7 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(false, $c2, ['x' => true], 'bool is not number or string');
     }
 
-    /** @dataProvider errorMessageProvider */
+    #[DataProvider('errorMessageProvider')]
     public function testErrorMessages($expectedMessagePart, DocumentsMatchConstraint $constraint, $actualValue): void
     {
         try {

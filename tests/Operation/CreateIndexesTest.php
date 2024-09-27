@@ -7,6 +7,7 @@ use MongoDB\BSON\Document;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CreateIndexes;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class CreateIndexesTest extends TestCase
@@ -18,7 +19,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [1 => ['key' => ['x' => 1]]]);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -43,7 +44,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
-    /** @dataProvider provideInvalidIndexSpecificationTypes */
+    #[DataProvider('provideInvalidIndexSpecificationTypes')]
     public function testConstructorRequiresIndexSpecificationsToBeAnArray($index): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -63,7 +64,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [[]]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorRequiresIndexSpecificationKeyToBeADocument($key): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -71,7 +72,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => $key]]);
     }
 
-    /** @dataProvider provideKeyDocumentsWithInvalidOrder */
+    #[DataProvider('provideKeyDocumentsWithInvalidOrder')]
     public function testConstructorValidatesIndexSpecificationKeyOrder($key): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -91,7 +92,7 @@ class CreateIndexesTest extends TestCase
         }
     }
 
-    /** @dataProvider provideInvalidStringValues */
+    #[DataProvider('provideInvalidStringValues')]
     public function testConstructorRequiresIndexSpecificationNameToBeString($name): void
     {
         $this->expectException(InvalidArgumentException::class);

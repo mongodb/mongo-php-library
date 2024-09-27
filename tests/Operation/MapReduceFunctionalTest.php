@@ -8,18 +8,18 @@ use MongoDB\MapReduceResult;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 use function is_object;
 use function iterator_to_array;
 use function usort;
 use function version_compare;
 
-/**
- * @group matrix-testing-exclude-server-4.4-driver-4.0
- * @group matrix-testing-exclude-server-4.4-driver-4.2
- * @group matrix-testing-exclude-server-5.0-driver-4.0
- * @group matrix-testing-exclude-server-5.0-driver-4.2
- */
+#[Group('matrix-testing-exclude-server-4.4-driver-4.0')]
+#[Group('matrix-testing-exclude-server-4.4-driver-4.2')]
+#[Group('matrix-testing-exclude-server-5.0-driver-4.0')]
+#[Group('matrix-testing-exclude-server-5.0-driver-4.2')]
 class MapReduceFunctionalTest extends FunctionalTestCase
 {
     public function testDefaultReadConcernIsOmitted(): void
@@ -213,7 +213,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOptionWithInlineResults(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);
@@ -258,7 +258,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOptionWithOutputCollection(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);

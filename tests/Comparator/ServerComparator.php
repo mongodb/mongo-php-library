@@ -10,7 +10,7 @@ use function sprintf;
 
 class ServerComparator extends Comparator
 {
-    public function accepts($expected, $actual)
+    public function accepts($expected, $actual): bool
     {
         return $expected instanceof Server && $actual instanceof Server;
     }
@@ -26,7 +26,6 @@ class ServerComparator extends Comparator
             $actual,
             '',
             '',
-            false,
             sprintf(
                 'Failed asserting that Server("%s:%d") matches expected Server("%s:%d").',
                 $actual->getHost(),

@@ -17,6 +17,7 @@ use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\ListCollections;
 use stdClass;
+use Throwable;
 use UnexpectedValueException;
 
 use function array_intersect_key;
@@ -69,12 +70,15 @@ abstract class FunctionalTestCase extends TestCase
         $this->configuredFailPoints = [];
     }
 
+    protected function onNotSuccessfulTest(Throwable $t): never
+    {
+        $this->cleanupCollections();
+
+        throw $t;
+    }
+
     public function tearDown(): void
     {
-        if (! $this->hasFailed()) {
-            $this->cleanupCollections();
-        }
-
         $this->disableFailPoints();
 
         parent::tearDown();

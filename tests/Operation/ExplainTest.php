@@ -5,10 +5,11 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Explain;
 use MongoDB\Operation\Explainable;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ExplainTest extends TestCase
 {
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $explainable = $this->getMockBuilder(Explainable::class)->getMock();

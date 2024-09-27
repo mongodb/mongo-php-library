@@ -5,6 +5,8 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 use Exception;
 use Generator;
 use MongoDB\Tests\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\Warning;
 
@@ -221,10 +223,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
     }
 
-    /**
-     * @dataProvider provideAtlasDataLakeTests
-     * @group atlas-data-lake
-     */
+    #[DataProvider('provideAtlasDataLakeTests')]
+    #[Group('atlas-data-lake')]
     public function testAtlasDataLake(UnifiedTestCase $test): void
     {
         if (! $this->isAtlasDataLake()) {
@@ -239,10 +239,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/atlas-data-lake/*.json');
     }
 
-    /**
-     * @dataProvider provideChangeStreamsTests
-     * @group serverless
-     */
+    #[DataProvider('provideChangeStreamsTests')]
+    #[Group('serverless')]
     public function testChangeStreams(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -253,11 +251,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/change-streams/*.json');
     }
 
-    /**
-     * @dataProvider provideClientSideEncryptionTests
-     * @group csfle
-     * @group serverless
-     */
+    #[DataProvider('provideClientSideEncryptionTests')]
+    #[Group('csfle')]
+    #[Group('serverless')]
     public function testClientSideEncryption(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -268,10 +264,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/client-side-encryption/*.json');
     }
 
-    /**
-     * @dataProvider provideCollectionManagementTests
-     * @group serverless
-     */
+    #[DataProvider('provideCollectionManagementTests')]
+    #[Group('serverless')]
     public function testCollectionManagement(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -282,10 +276,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/collection-management/*.json');
     }
 
-    /**
-     * @dataProvider provideCommandMonitoringTests
-     * @group serverless
-     */
+    #[DataProvider('provideCommandMonitoringTests')]
+    #[Group('serverless')]
     public function testCommandMonitoring(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -296,10 +288,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/command-monitoring/*.json');
     }
 
-    /**
-     * @dataProvider provideCrudTests
-     * @group serverless
-     */
+    #[DataProvider('provideCrudTests')]
+    #[Group('serverless')]
     public function testCrud(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -310,10 +300,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/crud/*.json');
     }
 
-    /**
-     * @dataProvider provideGridFSTests
-     * @group serverless
-     */
+    #[DataProvider('provideGridFSTests')]
+    #[Group('serverless')]
     public function testGridFS(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -324,10 +312,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/gridfs/*.json');
     }
 
-    /**
-     * @dataProvider provideLoadBalancers
-     * @group serverless
-     */
+    #[DataProvider('provideLoadBalancers')]
+    #[Group('serverless')]
     public function testLoadBalancers(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -338,7 +324,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/load-balancers/*.json');
     }
 
-    /** @dataProvider provideReadWriteConcernTests */
+    #[DataProvider('provideReadWriteConcernTests')]
     public function testReadWriteConcern(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -349,10 +335,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/read-write-concern/*.json');
     }
 
-    /**
-     * @dataProvider provideRetryableReadsTests
-     * @group serverless
-     */
+    #[DataProvider('provideRetryableReadsTests')]
+    #[Group('serverless')]
     public function testRetryableReads(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -363,10 +347,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/retryable-reads/*.json');
     }
 
-    /**
-     * @dataProvider provideRetryableWritesTests
-     * @group serverless
-     */
+    #[DataProvider('provideRetryableWritesTests')]
+    #[Group('serverless')]
     public function testRetryableWrites(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -377,10 +359,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/retryable-writes/*.json');
     }
 
-    /**
-     * @dataProvider provideRunCommandTests
-     * @group serverless
-     */
+    #[DataProvider('provideRunCommandTests')]
+    #[Group('serverless')]
     public function testRunCommand(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -391,10 +371,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/run-command/*.json');
     }
 
-    /**
-     * @dataProvider provideSessionsTests
-     * @group serverless
-     */
+    #[DataProvider('provideSessionsTests')]
+    #[Group('serverless')]
     public function testSessions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -405,10 +383,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/sessions/*.json');
     }
 
-    /**
-     * @dataProvider provideTransactionsTests
-     * @group serverless
-     */
+    #[DataProvider('provideTransactionsTests')]
+    #[Group('serverless')]
     public function testTransactions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -419,7 +395,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/transactions/*.json');
     }
 
-    /** @dataProvider provideTransactionsConvenientApiTests */
+    #[DataProvider('provideTransactionsConvenientApiTests')]
     public function testTransactionsConvenientApi(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -430,11 +406,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/transactions-convenient-api/*.json');
     }
 
-    /**
-     * @dataProvider provideVersionedApiTests
-     * @group serverless
-     * @group versioned-api
-     */
+    #[DataProvider('provideVersionedApiTests')]
+    #[Group('serverless')]
+    #[Group('versioned-api')]
     public function testVersionedApi(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -445,7 +419,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests(__DIR__ . '/versioned-api/*.json');
     }
 
-    /** @dataProvider providePassingTests */
+    #[DataProvider('providePassingTests')]
     public function testPassingTests(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -456,7 +430,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         yield from self::provideTests(__DIR__ . '/valid-pass/*.json');
     }
 
-    /** @dataProvider provideFailingTests */
+    #[DataProvider('provideFailingTests')]
     public function testFailingTests(UnifiedTestCase $test): void
     {
         // Cannot use expectException(), as it ignores PHPUnit Exceptions
@@ -494,7 +468,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         yield from self::provideTests(__DIR__ . '/valid-fail/*.json');
     }
 
-    /** @dataProvider provideIndexManagementTests */
+    #[DataProvider('provideIndexManagementTests')]
     public function testIndexManagement(UnifiedTestCase $test): void
     {
         if (self::isAtlas()) {

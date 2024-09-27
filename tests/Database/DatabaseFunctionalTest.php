@@ -12,6 +12,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use TypeError;
 
 use function array_key_exists;
@@ -22,7 +24,7 @@ use function current;
  */
 class DatabaseFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideInvalidDatabaseNames */
+    #[DataProvider('provideInvalidDatabaseNames')]
     public function testConstructorDatabaseNameArgument($databaseName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -38,7 +40,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -122,7 +124,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, (int) $commandResult['ok']);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testCommandCommandArgumentTypeCheck($command): void
     {
         $this->expectException($command instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
@@ -170,11 +172,9 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    /**
-     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
-     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
-     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
-     */
+    #[Group('matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster')]
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster')]
     public function testModifyCollection(): void
     {
         $this->database->createCollection($this->getCollectionName());

@@ -43,7 +43,7 @@ if [ "${IS_MATRIX_TESTING}" = "true" ]; then
 fi
 
 # Enable verbose output to see skipped and incomplete tests
-PHPUNIT_OPTS="${PHPUNIT_OPTS} -v --configuration phpunit.evergreen.xml"
+PHPUNIT_OPTS="${PHPUNIT_OPTS} --configuration phpunit.evergreen.xml"
 
 if [ "$SSL" = "yes" ]; then
    SSL_OPTS="ssl=true&sslallowinvalidcertificates=true"

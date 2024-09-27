@@ -6,8 +6,6 @@ use InvalidArgumentException;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\Codec;
-use MongoDB\Codec\DecodeIfSupported;
-use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -161,13 +159,18 @@ OUTPUT;
         return self::wrapValuesForDataProvider(self::getInvalidStringValues());
     }
 
-    protected function assertDeprecated(callable $execution)
+    protected function assertDeprecated(callable $execution): mixed
+    {
+        return $this->assertError(E_USER_DEPRECATED | E_DEPRECATED, $execution);
+    }
+
+    protected function assertError(int $levels, callable $execution): mixed
     {
         $errors = [];
 
         set_error_handler(function ($errno, $errstr) use (&$errors): void {
             $errors[] = $errstr;
-        }, E_USER_DEPRECATED | E_DEPRECATED);
+        }, $levels);
 
         try {
             $result = call_user_func($execution);
@@ -205,7 +208,7 @@ OUTPUT;
     {
         $class = new ReflectionClass($this);
 
-        return sprintf('%s.%s', $class->getShortName(), hash('crc32b', $this->getName()));
+        return sprintf('%s.%s', $class->getShortName(), hash('xxh3', $this->name()));
     }
 
     /**
@@ -239,34 +242,7 @@ OUTPUT;
 
     protected static function getInvalidDocumentCodecValues(): array
     {
-        $codec = new class implements Codec {
-            use DecodeIfSupported;
-            use EncodeIfSupported;
-
-            public function canDecode(mixed $value): bool
-            {
-                return true;
-            }
-
-            public function decode(mixed $value): mixed
-            {
-                return $value;
-            }
-
-            public function canEncode(mixed $value): bool
-            {
-                return true;
-            }
-
-            public function encode(mixed $value): mixed
-            {
-                return $value;
-            }
-        };
-        // @fixme: createStub can be called statically in PHPUnit 10
-        // $codec = self::createStub(Codec::class);
-
-        return [123, 3.14, 'foo', true, [], new stdClass(), $codec];
+        return [123, 3.14, 'foo', true, [], new stdClass(), self::createStub(Codec::class)];
     }
 
     /**

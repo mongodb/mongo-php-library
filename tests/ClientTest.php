@@ -10,6 +10,8 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 
 /**
  * Unit tests for the Client class.
@@ -23,7 +25,7 @@ class ClientTest extends TestCase
         $this->assertEquals('mongodb://127.0.0.1/', (string) $client);
     }
 
-    /** @doesNotPerformAssertions */
+    #[DoesNotPerformAssertions]
     public function testConstructorAutoEncryptionOpts(): void
     {
         $autoEncryptionOpts = [
@@ -35,7 +37,7 @@ class ClientTest extends TestCase
         new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
     }
 
-    /** @dataProvider provideInvalidConstructorDriverOptions */
+    #[DataProvider('provideInvalidConstructorDriverOptions')]
     public function testConstructorDriverOptionTypeChecks(array $driverOptions, string $exception = InvalidArgumentException::class): void
     {
         $this->expectException($exception);

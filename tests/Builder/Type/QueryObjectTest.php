@@ -13,6 +13,7 @@ use MongoDB\Builder\Query\LtOperator;
 use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class QueryObjectTest extends TestCase
@@ -32,11 +33,8 @@ class QueryObjectTest extends TestCase
         $this->assertSame($query, $queryObject);
     }
 
-    /**
-     * @param array<array-key, mixed> $value
-     *
-     * @dataProvider provideQueryObjectValue
-     */
+    /** @param array<array-key, mixed> $value */
+    #[DataProvider('provideQueryObjectValue')]
     public function testCreateQueryObject(array $value, int $expectedCount = 1): void
     {
         $queryObject = QueryObject::create($value);
@@ -44,11 +42,8 @@ class QueryObjectTest extends TestCase
         $this->assertCount($expectedCount, $queryObject->queries);
     }
 
-    /**
-     * @param array<array-key, mixed> $value
-     *
-     * @dataProvider provideQueryObjectValue
-     */
+    /** @param array<array-key, mixed> $value */
+    #[DataProvider('provideQueryObjectValue')]
     public function testCreateQueryObjectFromArray(array $value, int $expectedCount = 1): void
     {
         // $value is wrapped in an array as if the user used an array instead of variadic arguments

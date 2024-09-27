@@ -6,10 +6,11 @@ use MongoDB\Driver\BulkWrite;
 use MongoDB\Operation\FindOne;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FindOneFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocument */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocument')]
     public function testTypeMapOption(array $typeMap, $expectedDocument): void
     {
         $this->createFixtures(1);

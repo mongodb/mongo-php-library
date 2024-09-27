@@ -10,12 +10,13 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\MapReduce;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 use TypeError;
 
 class MapReduceTest extends TestCase
 {
-    /** @dataProvider provideInvalidOutValues */
+    #[DataProvider('provideInvalidOutValues')]
     public function testConstructorOutArgumentTypeCheck($out): void
     {
         $map = new Javascript('function() { emit(this.x, this.y); }');
@@ -30,7 +31,7 @@ class MapReduceTest extends TestCase
         return self::wrapValuesForDataProvider([123, 3.14, true]);
     }
 
-    /** @dataProvider provideDeprecatedOutValues */
+    #[DataProvider('provideDeprecatedOutValues')]
     public function testConstructorOutArgumentDeprecations($out): void
     {
         $map = new Javascript('function() { emit(this.x, this.y); }');
@@ -55,7 +56,7 @@ class MapReduceTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $map = new Javascript('function() { emit(this.x, this.y); }');

@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\DropIndexes;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DropIndexesTest extends TestCase
 {
@@ -13,7 +14,7 @@ class DropIndexesTest extends TestCase
         new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), '');
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

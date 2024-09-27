@@ -6,25 +6,26 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Update;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class UpdateTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
-    /** @dataProvider provideInvalidUpdateValues */
+    #[DataProvider('provideInvalidUpdateValues')]
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(TypeError::class);
         new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -45,10 +46,8 @@ class UpdateTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @dataProvider provideEmptyUpdatePipelines
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DataProvider('provideEmptyUpdatePipelines')]
     public function testConstructorMultiOptionProhibitsReplacementDocumentOrEmptyPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);

@@ -6,6 +6,8 @@ use MongoDB\Collection;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
+use PHPUnit\Framework\Attributes\AfterClass;
+use PHPUnit\Framework\Attributes\BeforeClass;
 
 use function fopen;
 use function fwrite;
@@ -46,10 +48,9 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      * The bucket's collections are created by the first test that runs and
      * kept for all subsequent tests. This is done to avoid creating the
      * collections and their indexes for each test, which would be slow.
-     *
-     * @beforeClass
-     * @afterClass
      */
+    #[BeforeClass]
+    #[AfterClass]
     public static function dropCollectionsBeforeAfterClass(): void
     {
         $manager = static::createTestManager();

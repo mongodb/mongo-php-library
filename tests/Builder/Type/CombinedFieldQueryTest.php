@@ -9,6 +9,7 @@ use MongoDB\Builder\Query\EqOperator;
 use MongoDB\Builder\Query\GtOperator;
 use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CombinedFieldQueryTest extends TestCase
@@ -47,7 +48,7 @@ class CombinedFieldQueryTest extends TestCase
         $this->assertCount(3, $fieldQueries->fieldQueries);
     }
 
-    /** @dataProvider provideInvalidFieldQuery */
+    #[DataProvider('provideInvalidFieldQuery')]
     public function testRejectInvalidFieldQueries(mixed $invalidQuery, string $message = '-'): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -71,11 +72,8 @@ class CombinedFieldQueryTest extends TestCase
         yield 'object key without $' => [(object) ['eq' => 1], 'Operator must contain exactly one key starting with $, "eq" given'];
     }
 
-    /**
-     * @param array<mixed> $fieldQueries
-     *
-     * @dataProvider provideDuplicateOperator
-     */
+    /** @param array<mixed> $fieldQueries */
+    #[DataProvider('provideDuplicateOperator')]
     public function testRejectDuplicateOperator(array $fieldQueries): void
     {
         $this->expectException(InvalidArgumentException::class);

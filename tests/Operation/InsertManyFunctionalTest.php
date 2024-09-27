@@ -13,6 +13,7 @@ use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\Depends;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
 {
@@ -189,7 +190,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertManyResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -197,7 +198,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         $result->getInsertedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertManyResult $result): void
     {
         $this->assertInstanceOf(ObjectId::class, $result->getInsertedIds()[0]);

@@ -8,6 +8,7 @@ use Generator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Variable;
 use MongoDB\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class VariableTest extends TestCase
@@ -27,7 +28,7 @@ class VariableTest extends TestCase
         new Expression\Variable('$$foo');
     }
 
-    /** @dataProvider provideVariableBuilders */
+    #[DataProvider('provideVariableBuilders')]
     public function testSystemVariables($factory): void
     {
         $variable = $factory();

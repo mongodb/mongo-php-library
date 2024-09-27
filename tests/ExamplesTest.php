@@ -3,6 +3,9 @@
 namespace MongoDB\Tests;
 
 use Generator;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 use function bin2hex;
 use function getenv;
@@ -10,7 +13,7 @@ use function putenv;
 use function random_bytes;
 use function sprintf;
 
-/** @runTestsInSeparateProcesses */
+#[RunTestsInSeparateProcesses]
 final class ExamplesTest extends FunctionalTestCase
 {
     public function setUp(): void
@@ -26,7 +29,7 @@ final class ExamplesTest extends FunctionalTestCase
         }
     }
 
-    /** @dataProvider provideExamples */
+    #[DataProvider('provideExamples')]
     public function testExamples(string $file, string $expectedOutput): void
     {
         $this->assertExampleOutput($file, $expectedOutput);
@@ -223,9 +226,8 @@ OUTPUT;
     /**
      * MongoDB Atlas Search example requires a MongoDB Atlas M10+ cluster with MongoDB 7.0+
      * Tips for insiders: if using a cloud-dev server, append ".mongodb.net" to the MONGODB_URI.
-     *
-     * @group atlas
      */
+    #[Group('atlas')]
     public function testAtlasSearch(): void
     {
         $uri = getenv('MONGODB_URI') ?? '';

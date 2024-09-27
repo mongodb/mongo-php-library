@@ -5,18 +5,19 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CountDocuments;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class CountDocumentsTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new CountDocuments($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

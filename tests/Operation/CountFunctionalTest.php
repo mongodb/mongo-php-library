@@ -6,11 +6,12 @@ use MongoDB\Operation\Count;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class CountFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testFilterDocuments($filter, stdClass $expectedQuery): void
     {
         (new CommandObserver())->observe(

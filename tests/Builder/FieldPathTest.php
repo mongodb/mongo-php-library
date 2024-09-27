@@ -8,6 +8,7 @@ use Generator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Type\FieldPathInterface;
 use MongoDB\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function is_subclass_of;
@@ -15,7 +16,7 @@ use function sprintf;
 
 class FieldPathTest extends TestCase
 {
-    /** @dataProvider provideFieldPath */
+    #[DataProvider('provideFieldPath')]
     public function testFieldPath(string $fieldPathClass, string $resolveClass): void
     {
         $fieldPath = Expression::{$fieldPathClass}('foo');
@@ -27,7 +28,7 @@ class FieldPathTest extends TestCase
         $this->assertTrue(is_subclass_of(Expression\FieldPath::class, $resolveClass), sprintf('%s instanceof %s', Expression\FieldPath::class, $resolveClass));
     }
 
-    /** @dataProvider provideFieldPath */
+    #[DataProvider('provideFieldPath')]
     public function testRejectDollarPrefix(string $fieldPathClass): void
     {
         $this->expectException(InvalidArgumentException::class);

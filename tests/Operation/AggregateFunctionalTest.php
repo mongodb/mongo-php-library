@@ -11,6 +11,7 @@ use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 use function array_key_exists;
@@ -161,7 +162,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOption(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);

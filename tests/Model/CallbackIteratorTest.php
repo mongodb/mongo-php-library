@@ -8,12 +8,13 @@ use Iterator;
 use IteratorAggregate;
 use MongoDB\Model\CallbackIterator;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function iterator_to_array;
 
 class CallbackIteratorTest extends TestCase
 {
-    /** @dataProvider provideTests */
+    #[DataProvider('provideTests')]
     public function testIteration($expected, $source, $callback): void
     {
         $callbackIterator = new CallbackIterator($source, $callback);

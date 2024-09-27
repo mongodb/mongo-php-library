@@ -12,6 +12,8 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Tests\SpecTests\ClientSideEncryptionSpecTest;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\Group;
 
 use function base64_decode;
 use function in_array;
@@ -1009,7 +1011,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
-    /** @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster */
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster')]
     public function testChangeStreamExample_1_4(): void
     {
         $this->skipIfChangeStreamIsNotSupported();
@@ -1715,7 +1717,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertSame(1, $totalDailySales);
     }
 
-    /** @doesNotPerformAssertions */
+    #[DoesNotPerformAssertions]
     public function testVersionedApi(): void
     {
         $uriString = static::getUri(true);
@@ -1800,7 +1802,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // phpcs:enable
     }
 
-    /** @doesNotPerformAssertions */
+    #[DoesNotPerformAssertions]
     public function testWithTransactionExample(): void
     {
         $this->skipIfTransactionsAreNotSupported();

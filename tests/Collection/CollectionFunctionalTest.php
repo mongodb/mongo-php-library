@@ -16,6 +16,8 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use TypeError;
 
 use function array_filter;
@@ -33,7 +35,7 @@ use const JSON_THROW_ON_ERROR;
  */
 class CollectionFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideInvalidDatabaseAndCollectionNames */
+    #[DataProvider('provideInvalidDatabaseAndCollectionNames')]
     public function testConstructorDatabaseNameArgument($databaseName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -41,7 +43,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         new Collection($this->manager, $databaseName, $this->getCollectionName());
     }
 
-    /** @dataProvider provideInvalidDatabaseAndCollectionNames */
+    #[DataProvider('provideInvalidDatabaseAndCollectionNames')]
     public function testConstructorCollectionNameArgument($collectionName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -57,7 +59,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -168,7 +170,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testDistinctWithTypeMap(array $typeMap, array $expectedDocuments): void
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
@@ -419,12 +421,10 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    /**
-     * @group matrix-testing-exclude-server-4.4-driver-4.0
-     * @group matrix-testing-exclude-server-4.4-driver-4.2
-     * @group matrix-testing-exclude-server-5.0-driver-4.0
-     * @group matrix-testing-exclude-server-5.0-driver-4.2
-     */
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.0')]
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.2')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.2')]
     public function testMapReduce(): void
     {
         $this->createFixtures(3);
@@ -734,7 +734,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider collectionMethodClosures */
+    #[DataProvider('collectionMethodClosures')]
     public function testMethodDoesNotInheritReadWriteConcernInTransaction(Closure $method): void
     {
         $this->skipIfTransactionsAreNotSupported();
@@ -760,7 +760,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider collectionWriteMethodClosures */
+    #[DataProvider('collectionWriteMethodClosures')]
     public function testMethodInTransactionWithWriteConcernOption($method): void
     {
         $this->skipIfTransactionsAreNotSupported();
@@ -780,7 +780,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         }
     }
 
-    /** @dataProvider collectionReadMethodClosures */
+    #[DataProvider('collectionReadMethodClosures')]
     public function testMethodInTransactionWithReadConcernOption($method): void
     {
         $this->skipIfTransactionsAreNotSupported();

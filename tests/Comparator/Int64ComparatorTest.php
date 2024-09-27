@@ -4,12 +4,14 @@ namespace MongoDB\Tests\Comparator;
 
 use Generator;
 use MongoDB\BSON\Int64;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\Comparator\ComparisonFailure;
 
 class Int64ComparatorTest extends TestCase
 {
-    /** @dataProvider provideAcceptsValues */
+    #[DataProvider('provideAcceptsValues')]
     public function testAccepts(bool $expectedResult, $expectedValue, $actualValue): void
     {
         $this->assertSame($expectedResult, (new Int64Comparator())->accepts($expectedValue, $actualValue));
@@ -96,10 +98,8 @@ class Int64ComparatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideMatchingAssertions
-     * @doesNotPerformAssertions
-     */
+    #[DataProvider('provideMatchingAssertions')]
+    #[DoesNotPerformAssertions]
     public function testMatchingAssertions($expected, $actual): void
     {
         (new Int64Comparator())->assertEquals($expected, $actual);
@@ -153,7 +153,7 @@ class Int64ComparatorTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideFailingValues */
+    #[DataProvider('provideFailingValues')]
     public function testFailingAssertions($expected, $actual): void
     {
         $this->expectException(ComparisonFailure::class);

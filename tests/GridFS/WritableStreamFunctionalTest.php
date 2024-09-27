@@ -5,6 +5,8 @@ namespace MongoDB\Tests\GridFS;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\WritableStream;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 
 use function str_repeat;
 
@@ -22,7 +24,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         $this->collectionWrapper = new CollectionWrapper($this->manager, $this->getDatabaseName(), 'fs');
     }
 
-    /** @doesNotPerformAssertions */
+    #[DoesNotPerformAssertions]
     public function testValidConstructorOptions(): void
     {
         new WritableStream($this->collectionWrapper, 'filename', [
@@ -32,7 +34,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

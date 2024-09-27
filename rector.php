@@ -3,8 +3,10 @@
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
+use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\PHPUnit\PHPUnit100\Rector\Class_\StaticDataProviderClassMethodRector;
+use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -16,13 +18,17 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     // Modernize code
-    $rectorConfig->sets([LevelSetList::UP_TO_PHP_74]);
+    $rectorConfig->sets([
+        LevelSetList::UP_TO_PHP_74,
+        PHPUnitSetList::PHPUNIT_100,
+    ]);
 
     $rectorConfig->rule(ChangeSwitchToMatchRector::class);
     $rectorConfig->rule(StaticDataProviderClassMethodRector::class);
 
     // phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
     $rectorConfig->skip([
+        RemoveExtraParametersRector::class,
         // Do not use ternaries extensively
         IfIssetToCoalescingRector::class,
         ChangeSwitchToMatchRector::class => [

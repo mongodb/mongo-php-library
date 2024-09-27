@@ -7,10 +7,11 @@ use MongoDB\Driver\Command;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DatabaseCommandFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideCommandDocuments */
+    #[DataProvider('provideCommandDocuments')]
     public function testCommandDocuments($command): void
     {
         (new CommandObserver())->observe(

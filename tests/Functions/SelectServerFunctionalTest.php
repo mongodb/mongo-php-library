@@ -5,12 +5,13 @@ namespace MongoDB\Tests\Functions;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Tests\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function MongoDB\select_server;
 
 class SelectServerFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider providePinnedOptions */
+    #[DataProvider('providePinnedOptions')]
     public function testSelectServerPrefersPinnedServer(array $options): void
     {
         $this->skipIfTransactionsAreNotSupported();

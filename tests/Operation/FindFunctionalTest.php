@@ -11,13 +11,15 @@ use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
+use function is_array;
 use function microtime;
 
 class FindFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testFilterDocuments($filter, stdClass $expectedQuery): void
     {
         (new CommandObserver())->observe(
@@ -36,11 +38,16 @@ class FindFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider provideModifierDocuments */
+    #[DataProvider('provideModifierDocuments')]
     public function testModifierDocuments($modifiers, stdClass $expectedSort): void
     {
         (new CommandObserver())->observe(
             function () use ($modifiers): void {
+                // @todo revert this lines after PHPC-2457
+                if (is_array($modifiers)) {
+                    $modifiers = [...$modifiers];
+                }
+
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -159,7 +166,7 @@ class FindFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOption(array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);

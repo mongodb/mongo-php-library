@@ -7,6 +7,8 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use TypeError;
 
 class BulkWriteTest extends TestCase
@@ -57,7 +59,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testInsertOneDocumentArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -88,7 +90,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testDeleteManyFilterArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -98,7 +100,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testDeleteManyCollationOptionTypeCheck($collation): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -117,7 +119,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testDeleteOneFilterArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -127,7 +129,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testDeleteOneCollationOptionTypeCheck($collation): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -146,7 +148,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testReplaceOneFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -156,10 +158,8 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @doesNotPerformAssertions
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DoesNotPerformAssertions]
     public function testReplaceOneReplacementArgument($replacement): void
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
@@ -176,7 +176,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testReplaceOneReplacementArgumentTypeCheck($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -186,7 +186,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideUpdateDocuments */
+    #[DataProvider('provideUpdateDocuments')]
     public function testReplaceOneReplacementArgumentProhibitsUpdateDocument($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -196,10 +196,8 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideUpdatePipelines
-     * @dataProvider provideEmptyUpdatePipelinesExcludingArray
-     */
+    #[DataProvider('provideUpdatePipelines')]
+    #[DataProvider('provideEmptyUpdatePipelinesExcludingArray')]
     public function testReplaceOneReplacementArgumentProhibitsUpdatePipeline($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -209,7 +207,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testReplaceOneCollationOptionTypeCheck($collation): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -219,7 +217,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidBooleanValues */
+    #[DataProvider('provideInvalidBooleanValues')]
     public function testReplaceOneUpsertOptionTypeCheck($upsert): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -255,7 +253,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testUpdateManyFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -265,11 +263,9 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideUpdateDocuments
-     * @dataProvider provideUpdatePipelines
-     * @doesNotPerformAssertions
-     */
+    #[DataProvider('provideUpdateDocuments')]
+    #[DataProvider('provideUpdatePipelines')]
+    #[DoesNotPerformAssertions]
     public function testUpdateManyUpdateArgument($update): void
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
@@ -286,7 +282,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testUpdateManyUpdateArgumentTypeCheck($update): void
     {
         $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
@@ -295,10 +291,8 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @dataProvider provideEmptyUpdatePipelines
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DataProvider('provideEmptyUpdatePipelines')]
     public function testUpdateManyUpdateArgumentProhibitsReplacementDocumentOrEmptyPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -308,7 +302,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidArrayValues */
+    #[DataProvider('provideInvalidArrayValues')]
     public function testUpdateManyArrayFiltersOptionTypeCheck($arrayFilters): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -318,7 +312,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testUpdateManyCollationOptionTypeCheck($collation): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -328,7 +322,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidBooleanValues */
+    #[DataProvider('provideInvalidBooleanValues')]
     public function testUpdateManyUpsertOptionTypeCheck($upsert): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -338,11 +332,9 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideUpdateDocuments
-     * @dataProvider provideUpdatePipelines
-     * @doesNotPerformAssertions
-     */
+    #[DataProvider('provideUpdateDocuments')]
+    #[DataProvider('provideUpdatePipelines')]
+    #[DoesNotPerformAssertions]
     public function testUpdateOneUpdateArgument($update): void
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
@@ -359,7 +351,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testUpdateOneFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -378,7 +370,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testUpdateOneUpdateArgumentTypeCheck($update): void
     {
         $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
@@ -387,10 +379,8 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @dataProvider provideEmptyUpdatePipelines
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DataProvider('provideEmptyUpdatePipelines')]
     public function testUpdateOneUpdateArgumentProhibitsReplacementDocumentOrEmptyPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -400,7 +390,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidArrayValues */
+    #[DataProvider('provideInvalidArrayValues')]
     public function testUpdateOneArrayFiltersOptionTypeCheck($arrayFilters): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -410,7 +400,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testUpdateOneCollationOptionTypeCheck($collation): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -420,7 +410,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidBooleanValues */
+    #[DataProvider('provideInvalidBooleanValues')]
     public function testUpdateOneUpsertOptionTypeCheck($upsert): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -430,7 +420,7 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

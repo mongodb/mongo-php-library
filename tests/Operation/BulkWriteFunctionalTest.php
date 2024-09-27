@@ -14,6 +14,8 @@ use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use stdClass;
 
 use function is_array;
@@ -60,10 +62,8 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    /**
-     * @dataProvider provideDocumentsWithIds
-     * @dataProvider provideDocumentsWithoutIds
-     */
+    #[DataProvider('provideDocumentsWithIds')]
+    #[DataProvider('provideDocumentsWithoutIds')]
     public function testInsertDocumentEncoding($document, stdClass $expectedDocument): void
     {
         (new CommandObserver())->observe(
@@ -150,7 +150,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testUpdateFilterDocuments($filter, stdClass $expectedFilter): void
     {
         (new CommandObserver())->observe(
@@ -175,7 +175,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider provideReplacementDocuments */
+    #[DataProvider('provideReplacementDocuments')]
     public function testReplacementDocuments($replacement, stdClass $expectedReplacement): void
     {
         (new CommandObserver())->observe(
@@ -194,10 +194,8 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider provideUpdateDocuments
-     * @dataProvider provideUpdatePipelines
-     */
+    #[DataProvider('provideUpdateDocuments')]
+    #[DataProvider('provideUpdatePipelines')]
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
         if (is_array($expectedUpdate)) {
@@ -246,7 +244,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testDeleteFilterDocuments($filter, stdClass $expectedQuery): void
     {
         (new CommandObserver())->observe(
@@ -317,7 +315,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesDeletedCount(BulkWriteResult $result): void
     {
         $this->expectException(LogicException::class);
@@ -325,7 +323,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getDeletedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesInsertCount(BulkWriteResult $result): void
     {
         $this->expectException(LogicException::class);
@@ -333,7 +331,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getInsertedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesMatchedCount(BulkWriteResult $result): void
     {
         $this->expectException(LogicException::class);
@@ -341,7 +339,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getMatchedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesModifiedCount(BulkWriteResult $result): void
     {
         $this->expectException(LogicException::class);
@@ -349,7 +347,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getModifiedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesUpsertedCount(BulkWriteResult $result): void
     {
         $this->expectException(LogicException::class);
@@ -357,7 +355,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getUpsertedCount();
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesUpsertedIds(BulkWriteResult $result): void
     {
         $this->expectException(LogicException::class);

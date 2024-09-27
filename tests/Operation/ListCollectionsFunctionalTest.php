@@ -8,6 +8,7 @@ use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\Group;
 
 class ListCollectionsFunctionalTest extends FunctionalTestCase
 {
@@ -35,12 +36,10 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         }
     }
 
-    /**
-     * @group matrix-testing-exclude-server-4.4-driver-4.0
-     * @group matrix-testing-exclude-server-4.4-driver-4.2
-     * @group matrix-testing-exclude-server-5.0-driver-4.0
-     * @group matrix-testing-exclude-server-5.0-driver-4.2
-     */
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.0')]
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.2')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.2')]
     public function testIdIndexAndInfo(): void
     {
         $server = $this->getPrimaryServer();

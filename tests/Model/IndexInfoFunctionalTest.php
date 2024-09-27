@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Model;
 
 use MongoDB\Collection;
 use MongoDB\Tests\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 class IndexInfoFunctionalTest extends FunctionalTestCase
 {
@@ -32,11 +33,9 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
         $this->assertEquals(3, $index['2dsphereIndexVersion']);
     }
 
-    /**
-     * @group matrix-testing-exclude-server-5.0-driver-4.0
-     * @group matrix-testing-exclude-server-5.0-driver-4.2
-     * @group matrix-testing-exclude-server-5.0-driver-4.4
-     */
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.2')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.4')]
     public function testIsGeoHaystack(): void
     {
         $this->skipIfGeoHaystackIndexIsNotSupported();

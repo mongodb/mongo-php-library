@@ -3,6 +3,7 @@
 namespace MongoDB\Tests;
 
 use MongoDB;
+use PHPUnit\Framework\Attributes\DataProvider;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
@@ -32,7 +33,7 @@ class PedantryTest extends TestCase
         MongoDB\Builder\Stage\FluentFactoryTrait::class,
     ];
 
-    /** @dataProvider provideProjectClassNames */
+    #[DataProvider('provideProjectClassNames')]
     public function testMethodsAreOrderedAlphabeticallyByVisibility($className): void
     {
         $class = new ReflectionClass($className);

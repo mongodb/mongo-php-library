@@ -11,25 +11,26 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Delete;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class DeleteTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 0);
     }
 
-    /** @dataProvider provideInvalidIntegerValues */
+    #[DataProvider('provideInvalidIntegerValues')]
     public function testConstructorLimitArgumentMustBeInt($limit): void
     {
         $this->expectException(TypeError::class);
         new Delete($this->getDatabaseName(), $this->getCollectionName(), [], $limit);
     }
 
-    /** @dataProvider provideInvalidLimitValues */
+    #[DataProvider('provideInvalidLimitValues')]
     public function testConstructorLimitArgumentMustBeOneOrZero($limit): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -42,7 +43,7 @@ class DeleteTest extends TestCase
         return self::wrapValuesForDataProvider([-1, 2]);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

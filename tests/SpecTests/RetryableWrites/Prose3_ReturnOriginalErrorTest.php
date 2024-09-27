@@ -8,13 +8,14 @@ use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Prose test 3: Return Original Error
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/retryable-writes/tests/README.md
- * @group serverless
  */
+#[Group('serverless')]
 class Prose3_ReturnOriginalErrorTest extends FunctionalTestCase
 {
     public const NOT_WRITABLE_PRIMARY = 10107;

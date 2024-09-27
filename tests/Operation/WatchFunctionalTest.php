@@ -25,6 +25,8 @@ use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Constraint\ObjectHasProperty;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionClass;
@@ -37,11 +39,9 @@ use function bin2hex;
 use function microtime;
 use function sprintf;
 
-/**
- * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
- * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
- * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
- */
+#[Group('matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster')]
+#[Group('matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster')]
+#[Group('matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster')]
 class WatchFunctionalTest extends FunctionalTestCase
 {
     public const INTERRUPTED = 11601;
@@ -109,9 +109,8 @@ class WatchFunctionalTest extends FunctionalTestCase
     /**
      * Prose test 1: "ChangeStream must continuously track the last seen
      * resumeToken"
-     *
-     * @dataProvider provideCodecOptions
      */
+    #[DataProvider('provideCodecOptions')]
     public function testGetResumeToken(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken is supported');
@@ -162,9 +161,8 @@ class WatchFunctionalTest extends FunctionalTestCase
      *  - The batch has been iterated up to but not including the last element.
      * Expected result: getResumeToken must return the _id of the previous
      * document returned.
-     *
-     * @dataProvider provideCodecOptions
      */
+    #[DataProvider('provideCodecOptions')]
     public function testGetResumeTokenWithPostBatchResumeToken(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('<', '4.0.7', 'postBatchResumeToken is not supported');
@@ -489,7 +487,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNull($changeStream->current());
     }
 
-    /** @dataProvider provideCodecOptions */
+    #[DataProvider('provideCodecOptions')]
     public function testNoChangeAfterResumeBeforeInsert(array $options): void
     {
         $operation = new Watch(
@@ -895,7 +893,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         }
     }
 
-    /** @dataProvider provideCodecOptions */
+    #[DataProvider('provideCodecOptions')]
     public function testRewindExtractsResumeTokenAndNextResumes(array $options, Closure $getIdentifier): void
     {
         $operation = new Watch(
@@ -953,7 +951,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument(['_id' => 3, 'x' => 'baz'], $changeStream->current()->fullDocument);
     }
 
-    /** @dataProvider provideCodecOptions */
+    #[DataProvider('provideCodecOptions')]
     public function testResumeAfterOption(array $options, Closure $getIdentifier): void
     {
         $operation = new Watch(
@@ -999,7 +997,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument(['_id' => 2, 'x' => 'bar'], $changeStream->current()->fullDocument);
     }
 
-    /** @dataProvider provideCodecOptions */
+    #[DataProvider('provideCodecOptions')]
     public function testStartAfterOption(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('<', '4.1.1', 'startAfter is not supported');
@@ -1047,7 +1045,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument(['_id' => 2, 'x' => 'bar'], $changeStream->current()->fullDocument);
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedChangeDocument */
+    #[DataProvider('provideTypeMapOptionsAndExpectedChangeDocument')]
     public function testTypeMapOption(array $typeMap, $expectedChangeDocument): void
     {
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['typeMap' => $typeMap] + $this->defaultOptions);
@@ -1427,9 +1425,8 @@ class WatchFunctionalTest extends FunctionalTestCase
      *  - getResumeToken must return startAfter from the initial aggregate if the option was specified.
      *  - getResumeToken must return resumeAfter from the initial aggregate if the option was specified.
      *  - If neither the startAfter nor resumeAfter options were specified, the getResumeToken result must be empty.
-     *
-     * @dataProvider provideCodecOptions
      */
+    #[DataProvider('provideCodecOptions')]
     public function testResumeTokenBehaviour(array $options): void
     {
         $this->skipIfServerVersion('<', '4.1.1', 'Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');

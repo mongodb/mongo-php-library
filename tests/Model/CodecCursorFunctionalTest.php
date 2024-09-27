@@ -7,6 +7,8 @@ use MongoDB\Codec\DocumentCodec;
 use MongoDB\Model\CodecCursor;
 use MongoDB\Tests\FunctionalTestCase;
 
+use const E_USER_WARNING;
+
 class CodecCursorFunctionalTest extends FunctionalTestCase
 {
     public function setUp(): void
@@ -23,10 +25,7 @@ class CodecCursorFunctionalTest extends FunctionalTestCase
 
         $codecCursor = CodecCursor::fromCursor($cursor, $this->createMock(DocumentCodec::class));
 
-        $this->expectWarning();
-        $this->expectWarningMessage('Discarding type map for MongoDB\Model\CodecCursor::setTypeMap');
-
-        $codecCursor->setTypeMap(['root' => 'array']);
+        $this->assertError(E_USER_WARNING, fn () => $codecCursor->setTypeMap(['root' => 'array']));
     }
 
     public function testGetIdReturnTypeWithArgument(): void

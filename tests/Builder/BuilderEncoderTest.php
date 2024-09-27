@@ -14,6 +14,7 @@ use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
 use MongoDB\Builder\Type\Sort;
 use MongoDB\Builder\Variable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function array_merge;
@@ -153,9 +154,8 @@ class BuilderEncoderTest extends TestCase
      *
      * @param list<int>          $limit
      * @param array<string, int> $expectedLimit
-     *
-     * @dataProvider provideExpressionFilterLimit
      */
+    #[DataProvider('provideExpressionFilterLimit')]
     public function testExpressionFilter(array $limit, array $expectedLimit): void
     {
         $pipeline = new Pipeline(

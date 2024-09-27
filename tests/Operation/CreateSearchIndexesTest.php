@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateSearchIndexes;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CreateSearchIndexesTest extends TestCase
 {
@@ -14,7 +15,7 @@ class CreateSearchIndexesTest extends TestCase
         new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [1 => ['name' => 'index name', 'definition' => ['mappings' => ['dynamic' => true]]]], []);
     }
 
-    /** @dataProvider provideInvalidArrayValues */
+    #[DataProvider('provideInvalidArrayValues')]
     public function testConstructorIndexDefinitionMustBeADocument($index): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -22,7 +23,7 @@ class CreateSearchIndexesTest extends TestCase
         new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [$index], []);
     }
 
-    /** @dataProvider provideInvalidStringValues */
+    #[DataProvider('provideInvalidStringValues')]
     public function testConstructorIndexNameMustBeAString($name): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -30,7 +31,7 @@ class CreateSearchIndexesTest extends TestCase
         new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [['name' => $name, 'definition' => ['mappings' => ['dynamic' => true]]]], []);
     }
 
-    /** @dataProvider provideInvalidStringValues */
+    #[DataProvider('provideInvalidStringValues')]
     public function testConstructorIndexTypeMustBeAString($type): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -45,7 +46,7 @@ class CreateSearchIndexesTest extends TestCase
         new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [['name' => 'index name']], []);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorIndexDefinitionMustBeAnArray($definition): void
     {
         $this->expectException(InvalidArgumentException::class);

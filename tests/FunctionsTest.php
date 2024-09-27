@@ -9,6 +9,7 @@ use MongoDB\Builder\Stage\MatchStage;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 use function MongoDB\apply_type_map_to_document;
@@ -26,7 +27,7 @@ use function MongoDB\is_write_concern_acknowledged;
  */
 class FunctionsTest extends TestCase
 {
-    /** @dataProvider provideDocumentAndTypeMap */
+    #[DataProvider('provideDocumentAndTypeMap')]
     public function testApplyTypeMapToDocument($document, array $typeMap, $expectedDocument): void
     {
         $this->assertEquals($expectedDocument, apply_type_map_to_document($document, $typeMap));
@@ -96,7 +97,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideDocumentsAndExpectedArrays */
+    #[DataProvider('provideDocumentsAndExpectedArrays')]
     public function testDocumentToArray($document, array $expectedArray): void
     {
         $this->assertSame($expectedArray, document_to_array($document));
@@ -115,7 +116,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideInvalidDocumentValuesForChecks */
+    #[DataProvider('provideInvalidDocumentValuesForChecks')]
     public function testDocumentToArrayArgumentTypeCheck($document): void
     {
         $this->expectException(TypeError::class);
@@ -142,7 +143,7 @@ class FunctionsTest extends TestCase
         // phpcs:enable
     }
 
-    /** @dataProvider provideDocumentCasts */
+    #[DataProvider('provideDocumentCasts')]
     public function testIsFirstKeyOperator(callable $cast): void
     {
         $this->assertFalse(is_first_key_operator($cast(['y' => 1])));
@@ -153,14 +154,14 @@ class FunctionsTest extends TestCase
         $this->assertFalse(is_first_key_operator($cast(['foo'])));
     }
 
-    /** @dataProvider provideInvalidDocumentValuesForChecks */
+    #[DataProvider('provideInvalidDocumentValuesForChecks')]
     public function testIsFirstKeyOperatorArgumentTypeCheck($document): void
     {
         $this->expectException(TypeError::class);
         is_first_key_operator($document);
     }
 
-    /** @dataProvider provideDocumentCasts */
+    #[DataProvider('provideDocumentCasts')]
     public function testIsMapReduceOutputInlineWithDocumentValues(callable $cast): void
     {
         $this->assertTrue(is_mapreduce_output_inline($cast(['inline' => 1])));
@@ -174,7 +175,7 @@ class FunctionsTest extends TestCase
         $this->assertFalse(is_mapreduce_output_inline('collectionName'));
     }
 
-    /** @dataProvider provideTypeMapValues */
+    #[DataProvider('provideTypeMapValues')]
     public function testCreateFieldPathTypeMap(array $expected, array $typeMap, $fieldPath = 'field'): void
     {
         $this->assertEquals($expected, create_field_path_type_map($typeMap, $fieldPath));
@@ -234,7 +235,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideDocumentCasts */
+    #[DataProvider('provideDocumentCasts')]
     public function testIsLastPipelineOperatorWrite(callable $cast): void
     {
         $match = ['$match' => ['x' => 1]];
@@ -250,7 +251,7 @@ class FunctionsTest extends TestCase
         $this->assertFalse(is_last_pipeline_operator_write([$cast($out), $cast($match)]));
     }
 
-    /** @dataProvider providePipelines */
+    #[DataProvider('providePipelines')]
     public function testIsPipeline($expected, $pipeline, $allowEmpty = false): void
     {
         $this->assertSame($expected, is_pipeline($pipeline, $allowEmpty));
@@ -314,7 +315,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideStagePipelines */
+    #[DataProvider('provideStagePipelines')]
     public function testIsBuilderPipeline($expected, $pipeline): void
     {
         $this->assertSame($expected, is_builder_pipeline($pipeline));
@@ -329,7 +330,7 @@ class FunctionsTest extends TestCase
         yield 'stages and operators' => [true, [new MatchStage([]), ['$limit' => 1]]];
     }
 
-    /** @dataProvider provideWriteConcerns */
+    #[DataProvider('provideWriteConcerns')]
     public function testIsWriteConcernAcknowledged($expected, WriteConcern $writeConcern): void
     {
         $this->assertSame($expected, is_write_concern_acknowledged($writeConcern));

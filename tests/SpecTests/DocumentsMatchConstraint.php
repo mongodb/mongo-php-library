@@ -12,6 +12,7 @@ use PHPUnit\Framework\Constraint\Constraint;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
+use SebastianBergmann\Exporter\Exporter;
 use stdClass;
 
 use function array_values;
@@ -80,12 +81,12 @@ class DocumentsMatchConstraint extends Constraint
             $this->assertEquals($this->value, $other, $this->ignoreExtraKeysInRoot);
             $success = true;
         } catch (RuntimeException $e) {
+            $exporter = new Exporter();
             $this->lastFailure = new ComparisonFailure(
                 $this->value,
                 $other,
-                $this->exporter()->export($this->value),
-                $this->exporter()->export($other),
-                false,
+                $exporter->export($this->value),
+                $exporter->export($other),
                 $e->getMessage(),
             );
         }
@@ -123,7 +124,7 @@ class DocumentsMatchConstraint extends Constraint
         if ($expected::class !== $actual::class) {
             throw new RuntimeException(sprintf(
                 '%s is not instance of expected class "%s"',
-                $this->exporter()->shortenedExport($actual),
+                (new Exporter())->shortenedExport($actual),
                 $expected::class,
             ));
         }
@@ -162,11 +163,10 @@ class DocumentsMatchConstraint extends Constraint
                     $actualValue,
                     '',
                     '',
-                    false,
                     sprintf(
                         'Field path "%s": %s is not instance of expected type "%s".',
                         $keyPrefix . $key,
-                        $this->exporter()->shortenedExport($actualValue),
+                        (new Exporter())->shortenedExport($actualValue),
                         $expectedType,
                     ),
                 );
@@ -180,7 +180,6 @@ class DocumentsMatchConstraint extends Constraint
                     $actualValue,
                     '',
                     '',
-                    false,
                     sprintf('Field path "%s": %s', $keyPrefix . $key, $failure->getMessage()),
                 );
             }
@@ -233,7 +232,7 @@ class DocumentsMatchConstraint extends Constraint
 
     public function toString(): string
     {
-        return 'matches ' . $this->exporter()->export($this->value);
+        return 'matches ' . (new Exporter())->export($this->value);
     }
 
     private static function isNumeric($value): bool

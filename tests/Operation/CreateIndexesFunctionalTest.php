@@ -12,6 +12,7 @@ use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function call_user_func;
 use function is_callable;
@@ -79,7 +80,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         });
     }
 
-    /** @dataProvider provideKeyCasts */
+    #[DataProvider('provideKeyCasts')]
     public function testCreateIndexes(callable $cast): void
     {
         $expectedNames = ['x_1', 'y_-1_z_1', 'g_2dsphere_z_1', 'my_ttl'];

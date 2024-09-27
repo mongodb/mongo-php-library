@@ -4,7 +4,6 @@ namespace MongoDB\Driver;
 
 use Iterator;
 use MongoDB\BSON\Int64;
-use Traversable;
 
 /**
  * @template TValue of array|object

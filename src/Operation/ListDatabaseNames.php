@@ -69,6 +69,7 @@ final class ListDatabaseNames
     /**
      * Execute the operation.
      *
+     * @return Iterator<int, string>
      * @throws UnexpectedValueException if the command response was malformed
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

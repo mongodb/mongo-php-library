@@ -283,6 +283,7 @@ class Client
      * List database names.
      *
      * @see ListDatabaseNames::__construct() for supported options
+     * @return Iterator<int, string>
      * @throws UnexpectedValueException if the command response was malformed
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

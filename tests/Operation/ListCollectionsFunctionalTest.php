@@ -56,6 +56,8 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         foreach ($collections as $collection) {
             $this->assertInstanceOf(CollectionInfo::class, $collection);
             $this->assertArrayHasKey('readOnly', $collection['info']);
+            // Use assertMatchesDocument as MongoDB 4.0 and 4.2 include a ns field
+            // TODO: change to assertEquals when dropping support for MongoDB 4.2
             $this->assertMatchesDocument(['v' => 2, 'key' => ['_id' => 1], 'name' => '_id_'], $collection['idIndex']);
         }
     }

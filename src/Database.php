@@ -459,6 +459,7 @@ class Database
      * Returns the names of all collections in this database
      *
      * @see ListCollectionNames::__construct() for supported options
+     * @return Iterator<int, string>
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

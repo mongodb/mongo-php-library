@@ -68,7 +68,7 @@ final class ListCollectionNames
     /**
      * Execute the operation.
      *
-     * @return Iterator
+     * @return Iterator<int, string>
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server): Iterator

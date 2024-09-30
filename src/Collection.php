@@ -524,7 +524,7 @@ class Collection
     public function drop(array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
-        $options = $this->inheritTypeMap($options);
+        $options = $this->inheritTypeMap($options, __FUNCTION__);
 
         $server = select_server_for_write($this->manager, $options);
 
@@ -560,7 +560,7 @@ class Collection
         }
 
         $options = $this->inheritWriteOptions($options);
-        $options = $this->inheritTypeMap($options);
+        $options = $this->inheritTypeMap($options, __FUNCTION__);
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
 
@@ -580,7 +580,7 @@ class Collection
     public function dropIndexes(array $options = [])
     {
         $options = $this->inheritWriteOptions($options);
-        $options = $this->inheritTypeMap($options);
+        $options = $this->inheritTypeMap($options, __FUNCTION__);
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
 
@@ -1212,8 +1212,12 @@ class Collection
         return $options;
     }
 
-    private function inheritTypeMap(array $options): array
+    private function inheritTypeMap(array $options, ?string $deprecatedFunction = null): array
     {
+        if ($deprecatedFunction !== null && isset($options['typeMap'])) {
+            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', $deprecatedFunction), E_USER_DEPRECATED);
+        }
+
         // Only inherit the type map if no codec is used
         if (! isset($options['typeMap']) && ! isset($options['codec'])) {
             $options['typeMap'] = $this->typeMap;

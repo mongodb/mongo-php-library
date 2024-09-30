@@ -49,6 +49,10 @@ use Throwable;
 use function array_diff_key;
 use function is_array;
 use function is_string;
+use function sprintf;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 class Client
 {
@@ -228,6 +232,8 @@ class Client
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
+        } else {
+            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
         }
 
         $server = select_server_for_write($this->manager, $options);

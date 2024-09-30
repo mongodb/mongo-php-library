@@ -32,7 +32,7 @@ use function MongoDB\is_pipeline;
  * @see \MongoDB\Collection::updateMany()
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */
-final class UpdateMany implements Executable, Explainable
+final class UpdateMany implements Explainable
 {
     private Update $update;
 
@@ -97,7 +97,6 @@ final class UpdateMany implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if collation is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

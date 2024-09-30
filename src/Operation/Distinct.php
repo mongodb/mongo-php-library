@@ -40,7 +40,7 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::distinct()
  * @see https://mongodb.com/docs/manual/reference/command/distinct/
  */
-final class Distinct implements Executable, Explainable
+final class Distinct implements Explainable
 {
     /**
      * Constructs a distinct command.
@@ -109,7 +109,6 @@ final class Distinct implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

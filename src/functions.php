@@ -388,24 +388,6 @@ function is_last_pipeline_operator_write(array $pipeline): bool
 }
 
 /**
- * Return whether the "out" option for a mapReduce operation is "inline".
- *
- * This is used to determine if a mapReduce command requires a primary.
- *
- * @internal
- * @see https://mongodb.com/docs/manual/reference/command/mapReduce/#output-inline
- * @param string|array|object $out Output specification
- */
-function is_mapreduce_output_inline(string|array|object $out): bool
-{
-    if (! is_array($out) && ! is_object($out)) {
-        return false;
-    }
-
-    return array_key_first(document_to_array($out)) === 'inline';
-}
-
-/**
  * Return whether the write concern is acknowledged.
  *
  * This function is similar to mongoc_write_concern_is_acknowledged but does not

@@ -35,7 +35,7 @@ use function is_integer;
  * @see \MongoDB\Collection::dropIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/dropIndexes/
  */
-final class DropIndexes implements Executable
+final class DropIndexes
 {
     /**
      * Constructs a dropIndexes command.
@@ -92,7 +92,6 @@ final class DropIndexes implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return array|object Command result document
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

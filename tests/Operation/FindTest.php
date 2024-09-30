@@ -38,11 +38,8 @@ class FindTest extends TestCase
             'limit' => self::getInvalidIntegerValues(),
             'max' => self::getInvalidDocumentValues(),
             'maxAwaitTimeMS' => self::getInvalidIntegerValues(),
-            'maxScan' => self::getInvalidIntegerValues(),
             'maxTimeMS' => self::getInvalidIntegerValues(),
             'min' => self::getInvalidDocumentValues(),
-            'modifiers' => self::getInvalidDocumentValues(),
-            'oplogReplay' => self::getInvalidBooleanValues(),
             'projection' => self::getInvalidDocumentValues(),
             'readConcern' => self::getInvalidReadConcernValues(),
             'readPreference' => self::getInvalidReadPreferenceValues(),
@@ -50,7 +47,6 @@ class FindTest extends TestCase
             'session' => self::getInvalidSessionValues(),
             'showRecordId' => self::getInvalidBooleanValues(),
             'skip' => self::getInvalidIntegerValues(),
-            'snapshot' => self::getInvalidBooleanValues(),
             'sort' => self::getInvalidDocumentValues(),
             'typeMap' => self::getInvalidArrayValues(),
         ]);
@@ -70,7 +66,6 @@ class FindTest extends TestCase
 
     public function testExplainableCommandDocument(): void
     {
-        // all options except deprecated "snapshot" and "maxScan"
         $options = [
             'allowDiskUse' => true,
             'allowPartialResults' => true,
@@ -83,7 +78,6 @@ class FindTest extends TestCase
             'maxTimeMS' => 100,
             'min' => ['x' => 10],
             'noCursorTimeout' => true,
-            'oplogReplay' => true,
             'projection' => ['_id' => 0],
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'returnKey' => true,
@@ -94,7 +88,6 @@ class FindTest extends TestCase
             // Intentionally omitted options
             'cursorType' => Find::NON_TAILABLE,
             'maxAwaitTimeMS' => 500,
-            'modifiers' => ['foo' => 'bar'],
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array'],
         ];
@@ -111,7 +104,6 @@ class FindTest extends TestCase
             'limit' => 15,
             'maxTimeMS' => 100,
             'noCursorTimeout' => true,
-            'oplogReplay' => true,
             'projection' => ['_id' => 0],
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'returnKey' => true,

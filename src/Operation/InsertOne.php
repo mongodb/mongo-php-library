@@ -36,7 +36,7 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::insertOne()
  * @see https://mongodb.com/docs/manual/reference/command/insert/
  */
-final class InsertOne implements Executable
+final class InsertOne
 {
     private array|object $document;
 
@@ -97,7 +97,6 @@ final class InsertOne implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

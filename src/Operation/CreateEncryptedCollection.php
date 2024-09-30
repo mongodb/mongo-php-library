@@ -48,7 +48,7 @@ use function MongoDB\server_supports_feature;
  * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#create-encrypted-collection-helper
  * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-collections/
  */
-final class CreateEncryptedCollection implements Executable
+final class CreateEncryptedCollection
 {
     private const WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2 = 21;
 
@@ -155,7 +155,6 @@ final class CreateEncryptedCollection implements Executable
     }
 
     /**
-     * @see Executable::execute()
      * @return array|object Command result document from creating the encrypted collection
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      * @throws UnsupportedException if the server does not support Queryable Encryption

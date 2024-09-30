@@ -22,9 +22,6 @@ use MongoDB\Exception\BadMethodCallException;
 
 use function array_key_exists;
 use function array_search;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Index information model class.
@@ -83,18 +80,6 @@ class IndexInfo implements ArrayAccess
     }
 
     /**
-     * Return the index namespace (e.g. "db.collection").
-     *
-     * @deprecated
-     */
-    public function getNamespace(): string
-    {
-        @trigger_error('MongoDB 4.4 drops support for the namespace in indexes, the method "IndexInfo::getNamespace()" will be removed in version 2.0', E_USER_DEPRECATED);
-
-        return (string) $this->info['ns'];
-    }
-
-    /**
      * Return the index version.
      */
     public function getVersion(): int
@@ -108,18 +93,6 @@ class IndexInfo implements ArrayAccess
     public function is2dSphere(): bool
     {
         return array_search('2dsphere', $this->getKey(), true) !== false;
-    }
-
-    /**
-     * Return whether or not this index is of type geoHaystack.
-     *
-     * @deprecated Since 1.16: MongoDB 5.0 removes support for geoHaystack indexes.
-     */
-    public function isGeoHaystack(): bool
-    {
-        @trigger_error('MongoDB 5.0 removes support for "geoHaystack" indexes, the method "IndexInfo::isGeoHaystack()" will be removed in version 2.0', E_USER_DEPRECATED);
-
-        return array_search('geoHaystack', $this->getKey(), true) !== false;
     }
 
     /**

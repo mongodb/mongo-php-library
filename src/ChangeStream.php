@@ -43,11 +43,7 @@ use function in_array;
  */
 class ChangeStream implements Iterator
 {
-    /**
-     * @deprecated 1.4
-     * @todo make this constant private in 2.0 (see: PHPLIB-360)
-     */
-    public const CURSOR_NOT_FOUND = 43;
+    private const CURSOR_NOT_FOUND = 43;
 
     private const RESUMABLE_ERROR_CODES = [
         6, // HostUnreachable

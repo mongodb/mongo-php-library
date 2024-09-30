@@ -32,7 +32,7 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Database::command()
  */
-final class DatabaseCommand implements Executable
+final class DatabaseCommand
 {
     private Command $command;
 
@@ -78,11 +78,6 @@ final class DatabaseCommand implements Executable
         $this->command = $command instanceof Command ? $command : new Command($command);
     }
 
-    /**
-     * Execute the operation.
-     *
-     * @see Executable::execute()
-     */
     public function execute(Server $server): CursorInterface
     {
         $cursor = $server->executeCommand($this->databaseName, $this->command, $this->createOptions());

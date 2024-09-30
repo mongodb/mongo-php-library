@@ -3,6 +3,25 @@ UPGRADE FROM 1.x to 2.0
 
  * Classes in the namespace `MongoDB\Operation\` are `final`.
  * All methods in interfaces and classes now define a return type.
+ * The `MongoDB\ChangeStream::CURSOR_NOT_FOUND` constant is now private.
+ * The `MongoDB\Operation\Watch::FULL_DOCUMENT_DEFAULT` constant has been
+   removed.
+ * The `getNamespace` and `isGeoHaystack` methods have been removed from the
+   `MongoDB\Model\IndexInfo` class.
+ * The `maxScan`, `modifiers`, `oplogReplay`, and `snapshot` options for `find`
+   and `findOne` operations have been removed.
+ * The `MongoDB\Collection::mapReduce` method has been removed. Use
+   [aggregation pipeline](https://www.mongodb.com/docs/manual/reference/map-reduce-to-aggregation-pipeline/)
+   instead.
+ * The following classes and interfaces have been removed without replacement:
+   * `MongoDB\MapReduceResult`
+   * `MongoDB\Model\CollectionInfoCommandIterator`
+   * `MongoDB\Model\CollectionInfoIterator`
+   * `MongoDB\Model\DatabaseInfoIterator`
+   * `MongoDB\Model\DatabaseInfoLegacyIterator`
+   * `MongoDB\Model\IndexInfoIterator`
+   * `MongoDB\Model\IndexInfoIteratorIterator`
+   * `MongoDB\Operation\Executable`
 
 GridFS
 ------

@@ -28,7 +28,7 @@ use function call_user_func;
  *
  * @internal
  *
- * @template TKey
+ * @template TKey of array-key
  * @template TValue
  * @template TCallbackValue
  * @template-implements Iterator<TKey, TCallbackValue>

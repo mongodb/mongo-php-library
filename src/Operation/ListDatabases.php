@@ -17,15 +17,15 @@
 
 namespace MongoDB\Operation;
 
+use ArrayIterator;
 use Iterator;
 use MongoDB\Command\ListDatabases as ListDatabasesCommand;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
+use MongoDB\Model\CallbackIterator;
 use MongoDB\Model\DatabaseInfo;
-use MongoDB\Model\DatabaseInfoIterator;
-use MongoDB\Model\DatabaseInfoLegacyIterator;
 
 /**
  * Operation for the ListDatabases command.
@@ -33,7 +33,7 @@ use MongoDB\Model\DatabaseInfoLegacyIterator;
  * @see \MongoDB\Client::listDatabases()
  * @see https://mongodb.com/docs/manual/reference/command/listDatabases/#mongodb-dbcommand-dbcmd.listDatabases`
  */
-final class ListDatabases implements Executable
+final class ListDatabases
 {
     private ListDatabasesCommand $listDatabases;
 
@@ -69,13 +69,18 @@ final class ListDatabases implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return Iterator<int, DatabaseInfo>
      * @throws UnexpectedValueException if the command response was malformed
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server): DatabaseInfoIterator
+    public function execute(Server $server): Iterator
     {
-        return new DatabaseInfoLegacyIterator($this->listDatabases->execute($server));
+        /** @var list<array> $databases */
+        $databases = $this->listDatabases->execute($server);
+
+        return new CallbackIterator(
+            new ArrayIterator($databases),
+            fn (array $databaseInfo): DatabaseInfo => new DatabaseInfo($databaseInfo),
+        );
     }
 }

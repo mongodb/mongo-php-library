@@ -21,6 +21,9 @@
         <file name="stubs/BSON/Document.stub.php"/>
         <file name="stubs/BSON/Iterator.stub.php"/>
         <file name="stubs/BSON/PackedArray.stub.php"/>
+        <file name="stubs/Driver/Cursor.stub.php"/>
+        <file name="stubs/Driver/CursorInterface.stub.php"/>
+        <file name="stubs/Driver/WriteResult.stub.php"/>
     </stubs>
 
     <issueHandlers>

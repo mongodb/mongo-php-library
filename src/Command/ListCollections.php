@@ -36,7 +36,7 @@ use function MongoDB\is_document;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
  */
-class ListCollections implements Executable
+final class ListCollections implements Executable
 {
     /**
      * Constructs a listCollections command.

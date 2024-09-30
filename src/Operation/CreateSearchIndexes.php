@@ -36,10 +36,8 @@ use function sprintf;
  * @see \MongoDB\Collection::createSearchIndex()
  * @see \MongoDB\Collection::createSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/createSearchIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class CreateSearchIndexes implements Executable
+final class CreateSearchIndexes implements Executable
 {
     private array $indexes = [];
 

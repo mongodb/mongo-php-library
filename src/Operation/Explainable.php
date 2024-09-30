@@ -27,8 +27,6 @@ interface Explainable extends Executable
 {
     /**
      * Returns the command document for this operation.
-     *
-     * @return array
      */
-    public function getCommandDocument();
+    public function getCommandDocument(): array;
 }

@@ -37,13 +37,11 @@ use function sprintf;
  *
  * @see \MongoDB\Collection::insertMany()
  * @see https://mongodb.com/docs/manual/reference/command/insert/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class InsertMany implements Executable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
     /** @var list<object|array> */
     private array $documents;
 
@@ -79,7 +77,7 @@ class InsertMany implements Executable
      * @param array              $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, array $documents, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, array $documents, array $options = [])
     {
         $options += ['ordered' => true];
 
@@ -111,8 +109,6 @@ class InsertMany implements Executable
             unset($options['writeConcern']);
         }
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
         $this->documents = $this->validateDocuments($documents, $options['codec'] ?? null);
         $this->options = $options;
     }

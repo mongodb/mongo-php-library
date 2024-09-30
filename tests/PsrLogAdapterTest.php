@@ -5,6 +5,7 @@ namespace MongoDB\Tests;
 use MongoDB\Driver\Monitoring\LogSubscriber;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\PsrLogAdapter;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
@@ -84,10 +85,8 @@ class PsrLogAdapterTest extends BaseTestCase
         $this->assertSame($expectedLogs, $this->logger->logs);
     }
 
-    /**
-     * @testWith [-1]
-     *           [9]
-     */
+    #[TestWith([-1])]
+    #[TestWith([9])]
     public function testWriteLogWithInvalidLevel(int $level): void
     {
         $this->expectException(UnexpectedValueException::class);

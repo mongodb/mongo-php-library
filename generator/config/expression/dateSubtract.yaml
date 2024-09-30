@@ -1,0 +1,139 @@
+# $schema: ../schema.json
+name: $dateSubtract
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/'
+type:
+    - resolvesToDate
+encode: object
+description: |
+    Subtracts a number of time units from a date object.
+arguments:
+    -
+        name: startDate
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: unit
+        type:
+            - timeUnit
+        description: |
+            The unit used to measure the amount of time added to the startDate.
+    -
+        name: amount
+        type:
+            - resolvesToInt
+            - resolvesToLong
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+tests:
+    -
+        name: 'Subtract A Fixed Amount'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/#subtract-a-fixed-amount'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $eq:
+                            -
+                                # Example uses the short form, the builder always generates the verbose form
+                                # $month: '$logout'
+                                $month:
+                                    date: '$logout'
+                            - 1
+            -
+                $project:
+                    logoutTime:
+                        $dateSubtract:
+                            startDate: '$logout'
+                            unit: 'hour'
+                            amount: 3
+            -
+                # Example uses the short form, the builder always generates the verbose form
+                # $merge: 'connectionTime'
+                $merge:
+                    into: 'connectionTime'
+    -
+        name: 'Filter by Relative Dates'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/#filter-by-relative-dates'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $gt:
+                            - '$logoutTime'
+                            -
+                                $dateSubtract:
+                                    startDate: '$$NOW'
+                                    unit: 'week'
+                                    amount: 1
+            -
+                $project:
+                    _id: 0
+                    custId: 1
+                    loggedOut:
+                        $dateToString:
+                            format: '%Y-%m-%d'
+                            date: '$logoutTime'
+    -
+        name: 'Adjust for Daylight Savings Time'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/#adjust-for-daylight-savings-time'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    location: 1
+                    start:
+                        $dateToString:
+                            format: '%Y-%m-%d %H:%M'
+                            date: '$login'
+                    days:
+                        $dateToString:
+                            format: '%Y-%m-%d %H:%M'
+                            date:
+                                $dateSubtract:
+                                    startDate: '$login'
+                                    unit: 'day'
+                                    amount: 1
+                                    timezone: '$location'
+                    hours:
+                        $dateToString:
+                            format: '%Y-%m-%d %H:%M'
+                            date:
+                                $dateSubtract:
+                                    startDate: '$login'
+                                    unit: 'hour'
+                                    amount: 24
+                                    timezone: '$location'
+                    startTZInfo:
+                        $dateToString:
+                            format: '%Y-%m-%d %H:%M'
+                            date: '$login'
+                            timezone: '$location'
+                    daysTZInfo:
+                        $dateToString:
+                            format: '%Y-%m-%d %H:%M'
+                            date:
+                                $dateSubtract:
+                                    startDate: '$login'
+                                    unit: 'day'
+                                    amount: 1
+                                    timezone: '$location'
+                            timezone: '$location'
+                    hoursTZInfo:
+                        $dateToString:
+                            format: '%Y-%m-%d %H:%M'
+                            date:
+                                $dateSubtract:
+                                    startDate: '$login'
+                                    unit: 'hour'
+                                    amount: 24
+                                    timezone: '$location'
+                            timezone: '$location'

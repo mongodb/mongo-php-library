@@ -2,6 +2,8 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB;
+use PHPUnit\Framework\Attributes\DataProvider;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
@@ -10,6 +12,7 @@ use RegexIterator;
 
 use function array_filter;
 use function array_map;
+use function in_array;
 use function realpath;
 use function str_contains;
 use function str_replace;
@@ -25,7 +28,12 @@ use const DIRECTORY_SEPARATOR;
  */
 class PedantryTest extends TestCase
 {
-    /** @dataProvider provideProjectClassNames */
+    private const SKIPPED_CLASSES = [
+        // Generated
+        MongoDB\Builder\Stage\FluentFactoryTrait::class,
+    ];
+
+    #[DataProvider('provideProjectClassNames')]
     public function testMethodsAreOrderedAlphabeticallyByVisibility($className): void
     {
         $class = new ReflectionClass($className);
@@ -56,7 +64,7 @@ class PedantryTest extends TestCase
         $this->assertEquals($sortedMethods, $methods);
     }
 
-    public function provideProjectClassNames()
+    public static function provideProjectClassNames()
     {
         $classNames = [];
         $srcDir = realpath(__DIR__ . '/../src/');
@@ -74,6 +82,10 @@ class PedantryTest extends TestCase
             }
 
             $className = 'MongoDB\\' . str_replace(DIRECTORY_SEPARATOR, '\\', substr($file->getRealPath(), strlen($srcDir) + 1, -4));
+            if (in_array($className, self::SKIPPED_CLASSES)) {
+                continue;
+            }
+
             $classNames[$className][] = $className;
         }
 

@@ -4,7 +4,10 @@ namespace MongoDB\Tests\GridFS;
 
 use MongoDB\Collection;
 use MongoDB\GridFS\Bucket;
+use MongoDB\Operation\DropCollection;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
+use PHPUnit\Framework\Attributes\AfterClass;
+use PHPUnit\Framework\Attributes\BeforeClass;
 
 use function fopen;
 use function fwrite;
@@ -28,10 +31,32 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         parent::setUp();
 
         $this->bucket = new Bucket($this->manager, $this->getDatabaseName());
-        $this->bucket->drop();
 
-        $this->chunksCollection = $this->createCollection($this->getDatabaseName(), 'fs.chunks');
-        $this->filesCollection = $this->createCollection($this->getDatabaseName(), 'fs.files');
+        $this->chunksCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.chunks');
+        $this->filesCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.files');
+    }
+
+    public function tearDown(): void
+    {
+        $this->chunksCollection->deleteMany([]);
+        $this->filesCollection->deleteMany([]);
+
+        parent::tearDown();
+    }
+
+    /**
+     * The bucket's collections are created by the first test that runs and
+     * kept for all subsequent tests. This is done to avoid creating the
+     * collections and their indexes for each test, which would be slow.
+     */
+    #[BeforeClass]
+    #[AfterClass]
+    public static function dropCollectionsBeforeAfterClass(): void
+    {
+        $manager = static::createTestManager();
+
+        (new DropCollection(self::getDatabaseName(), 'fs.chunks'))->execute($manager->selectServer());
+        (new DropCollection(self::getDatabaseName(), 'fs.files'))->execute($manager->selectServer());
     }
 
     /**
@@ -53,7 +78,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      *
      * @return resource
      */
-    protected function createStream(string $data = '')
+    protected static function createStream(string $data = '')
     {
         $stream = fopen('php://temp', 'w+b');
         fwrite($stream, $data);

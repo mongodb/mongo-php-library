@@ -1,0 +1,76 @@
+# $schema: ../schema.json
+name: $map
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Applies a subexpression to each element of an array and returns the array of resulting values in order. Accepts named parameters.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to an array.
+    -
+        name: as
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+    -
+        name: in
+        type:
+            - expression
+        description: |
+            An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
+tests:
+    -
+        name: 'Add to Each Element of an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/#add-to-each-element-of-an-array'
+        pipeline:
+            -
+                $project:
+                    adjustedGrades:
+                        $map:
+                            input: '$quizzes'
+                            as: 'grade'
+                            in:
+                                $add:
+                                    - '$$grade'
+                                    - 2
+    -
+        name: 'Truncate Each Array Element'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/#truncate-each-array-element'
+        pipeline:
+            -
+                $project:
+                    city: '$city'
+                    integerValues:
+                        $map:
+                            input: '$distances'
+                            as: 'decimalValue'
+                            in:
+                                # Example uses the short form, the builder always generates the verbose form
+                                # $trunc: '$$decimalValue'
+                                $trunc:
+                                    - '$$decimalValue'
+    -
+        name: 'Convert Celsius Temperatures to Fahrenheit'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/#convert-celsius-temperatures-to-fahrenheit'
+        pipeline:
+            -
+                $addFields:
+                    tempsF:
+                        $map:
+                            input: '$tempsC'
+                            as: 'tempInCelsius'
+                            in:
+                                $add:
+                                    -
+                                        $multiply:
+                                            - '$$tempInCelsius'
+                                            - 1.8
+                                    - 32

@@ -17,6 +17,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
@@ -27,13 +28,13 @@ use const PHP_INT_SIZE;
 
 class IsBsonTypeTest extends TestCase
 {
-    /** @dataProvider provideTypes */
+    #[DataProvider('provideTypes')]
     public function testConstraint($type, $value): void
     {
         $this->assertResult(true, new IsBsonType($type), $value, $this->dataName() . ' is ' . $type);
     }
 
-    public function provideTypes()
+    public static function provideTypes()
     {
         $undefined = Document::fromJSON('{ "x": {"$undefined": true} }')->toPHP()->x;
         $symbol = Document::fromJSON('{ "x": {"$symbol": "test"} }')->toPHP()->x;
@@ -76,7 +77,7 @@ class IsBsonTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideTypes */
+    #[DataProvider('provideTypes')]
     public function testAny($type, $value): void
     {
         $this->assertResult(true, IsBsonType::any(), $value, $this->dataName() . ' is a BSON type');

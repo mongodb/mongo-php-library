@@ -61,10 +61,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     private bool $isValid = false;
 
-    private ?object $postBatchResumeToken = null;
-
-    /** @var array|object|null */
-    private $resumeToken;
+    private array|object|null $resumeToken = null;
 
     private Server $server;
 
@@ -176,10 +173,9 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @internal
-     * @param array|object|null $initialResumeToken
      * @psalm-param CursorInterface<int, TValue>&Iterator<int, TValue> $cursor
      */
-    public function __construct(CursorInterface $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
+    public function __construct(CursorInterface $cursor, int $firstBatchSize, array|object|null $initialResumeToken, private ?object $postBatchResumeToken = null)
     {
         if (! $cursor instanceof Iterator) {
             throw InvalidArgumentException::invalidType(
@@ -197,7 +193,6 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
         $this->batchSize = $firstBatchSize;
         $this->isRewindNop = ($firstBatchSize === 0);
-        $this->postBatchResumeToken = $postBatchResumeToken;
         $this->resumeToken = $initialResumeToken;
         $this->server = $cursor->getServer();
     }
@@ -247,7 +242,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * @throws InvalidArgumentException
      * @throws ResumeTokenException if the resume token is not found or invalid
      */
-    private function extractResumeToken($document)
+    private function extractResumeToken(array|object $document)
     {
         if (! is_document($document)) {
             throw InvalidArgumentException::expectedDocumentType('$document', $document);

@@ -1,0 +1,20 @@
+# $schema: ../schema.json
+name: $limit
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/'
+type:
+    - stage
+encode: single
+description: |
+    Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document, outputs either one document (for the first n documents) or zero documents (after the first n documents).
+arguments:
+    -
+        name: limit
+        type:
+            - int
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/#example'
+        pipeline:
+            -
+                $limit: 5

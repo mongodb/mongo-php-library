@@ -7,6 +7,7 @@ use MongoDB\BSON\Document;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\BSONIterator;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function array_map;
 use function implode;
@@ -15,7 +16,7 @@ use function substr;
 
 class BSONIteratorTest extends TestCase
 {
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testValidValues(?array $typeMap, array $expectedDocuments): void
     {
         $binaryString = implode(array_map(
@@ -33,7 +34,7 @@ class BSONIteratorTest extends TestCase
         $this->assertEquals($expectedDocuments, $results);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments(): Generator
+    public static function provideTypeMapOptionsAndExpectedDocuments(): Generator
     {
         yield 'No type map' => [
             'typeMap' => null,

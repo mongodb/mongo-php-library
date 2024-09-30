@@ -1,0 +1,32 @@
+# $schema: ../schema.json
+name: $maxN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Returns the n largest values in an array. Distinct from the $maxN accumulator.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to the array from which to return the maximal n elements.
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/#example'
+        pipeline:
+            -
+                $addFields:
+                    maxScores:
+                        $maxN:
+                            n: 2
+                            input: '$score'

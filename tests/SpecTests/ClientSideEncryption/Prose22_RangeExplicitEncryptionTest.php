@@ -5,6 +5,7 @@ namespace MongoDB\Tests\SpecTests\ClientSideEncryption;
 use ArrayIterator;
 use Generator;
 use Iterator;
+use LogicException;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
@@ -15,21 +16,21 @@ use MongoDB\Collection;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\EncryptionException;
 use MultipleIterator;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 use function base64_decode;
 use function file_get_contents;
 use function get_debug_type;
 use function is_int;
-use function phpversion;
-use function version_compare;
 
 /**
  * Prose test 22: Range Explicit Encryption
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#22-range-explicit-encryption
- * @group csfle
- * @group serverless
  */
+#[Group('csfle')]
+#[Group('serverless')]
 class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 {
     private ?ClientEncryption $clientEncryption = null;
@@ -40,10 +41,6 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        if (version_compare(phpversion('mongodb'), '1.20.0dev', '>=')) {
-            $this->markTestIncomplete('Range protocol V1 is not supported by ext-mongodb 1.20+');
-        }
 
         if ($this->isStandalone()) {
             $this->markTestSkipped('Range explicit encryption tests require replica sets');
@@ -102,14 +99,13 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             'rangeOpts' => $rangeOpts,
         ];
 
-        $cast = self::getCastCallableForType($type);
         $fieldName = 'encrypted' . $type;
 
         $this->collection->insertMany([
-            ['_id' => 0, $fieldName => $this->clientEncryption->encrypt($cast(0), $encryptOpts)],
-            ['_id' => 1, $fieldName => $this->clientEncryption->encrypt($cast(6), $encryptOpts)],
-            ['_id' => 2, $fieldName => $this->clientEncryption->encrypt($cast(30), $encryptOpts)],
-            ['_id' => 3, $fieldName => $this->clientEncryption->encrypt($cast(200), $encryptOpts)],
+            ['_id' => 0, $fieldName => $this->clientEncryption->encrypt(self::cast($type, 0), $encryptOpts)],
+            ['_id' => 1, $fieldName => $this->clientEncryption->encrypt(self::cast($type, 6), $encryptOpts)],
+            ['_id' => 2, $fieldName => $this->clientEncryption->encrypt(self::cast($type, 30), $encryptOpts)],
+            ['_id' => 3, $fieldName => $this->clientEncryption->encrypt(self::cast($type, 200), $encryptOpts)],
         ]);
     }
 
@@ -184,10 +180,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-1-can-decrypt-a-payload
-     * @dataProvider provideTypeAndRangeOpts
-     */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-1-can-decrypt-a-payload */
+    #[DataProvider('provideTypeAndRangeOpts')]
     public function testCase1_CanDecryptAPayload(string $type, array $rangeOpts): void
     {
         $this->setUpWithTypeAndRangeOpts($type, $rangeOpts);
@@ -199,8 +193,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             'rangeOpts' => $rangeOpts,
         ];
 
-        $cast = self::getCastCallableForType($type);
-        $originalValue = $cast(6);
+        $originalValue = self::cast($type, 6);
 
         $insertPayload = $this->clientEncryption->encrypt($originalValue, $encryptOpts);
         $decryptedValue = $this->clientEncryption->decrypt($insertPayload);
@@ -208,7 +201,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         /* Decryption of a 64-bit integer will likely result in a scalar int, so
          * cast it back to an Int64 before comparing to the original value. */
         if ($type === 'Long' && is_int($decryptedValue)) {
-            $decryptedValue = $cast($decryptedValue);
+            $decryptedValue = self::cast($type, $decryptedValue);
         }
 
         /* Use separate assertions for type and equality as assertSame isn't
@@ -218,10 +211,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         $this->assertEquals($originalValue, $decryptedValue);
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-2-can-find-encrypted-range-and-return-the-maximum
-     * @dataProvider provideTypeAndRangeOpts
-     */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-2-can-find-encrypted-range-and-return-the-maximum */
+    #[DataProvider('provideTypeAndRangeOpts')]
     public function testCase2_CanFindEncryptedRangeAndReturnTheMaximum(string $type, array $rangeOpts): void
     {
         $this->setUpWithTypeAndRangeOpts($type, $rangeOpts);
@@ -234,13 +225,12 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             'rangeOpts' => $rangeOpts,
         ];
 
-        $cast = self::getCastCallableForType($type);
         $fieldName = 'encrypted' . $type;
 
         $expr = [
             '$and' => [
-                [$fieldName => ['$gte' => $cast(6)]],
-                [$fieldName => ['$lte' => $cast(200)]],
+                [$fieldName => ['$gte' => self::cast($type, 6)]],
+                [$fieldName => ['$lte' => self::cast($type, 200)]],
             ],
         ];
 
@@ -248,18 +238,16 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         $cursor = $this->collection->find($encryptedExpr, ['sort' => ['_id' => 1]]);
 
         $expectedDocuments = [
-            ['_id' => 1, $fieldName => $cast(6)],
-            ['_id' => 2, $fieldName => $cast(30)],
-            ['_id' => 3, $fieldName => $cast(200)],
+            ['_id' => 1, $fieldName => self::cast($type, 6)],
+            ['_id' => 2, $fieldName => self::cast($type, 30)],
+            ['_id' => 3, $fieldName => self::cast($type, 200)],
         ];
 
         $this->assertMultipleDocumentsMatch($expectedDocuments, $cursor);
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-3-can-find-encrypted-range-and-return-the-minimum
-     * @dataProvider provideTypeAndRangeOpts
-     */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-3-can-find-encrypted-range-and-return-the-minimum */
+    #[DataProvider('provideTypeAndRangeOpts')]
     public function testCase3_CanFindEncryptedRangeAndReturnTheMinimum(string $type, array $rangeOpts): void
     {
         $this->setUpWithTypeAndRangeOpts($type, $rangeOpts);
@@ -272,13 +260,12 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             'rangeOpts' => $rangeOpts,
         ];
 
-        $cast = self::getCastCallableForType($type);
         $fieldName = 'encrypted' . $type;
 
         $expr = [
             '$and' => [
-                [$fieldName => ['$gte' => $cast(0)]],
-                [$fieldName => ['$lte' => $cast(6)]],
+                [$fieldName => ['$gte' => self::cast($type, 0)]],
+                [$fieldName => ['$lte' => self::cast($type, 6)]],
             ],
         ];
 
@@ -286,17 +273,15 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         $cursor = $this->collection->find($encryptedExpr, ['sort' => ['_id' => 1]]);
 
         $expectedDocuments = [
-            ['_id' => 0, $fieldName => $cast(0)],
-            ['_id' => 1, $fieldName => $cast(6)],
+            ['_id' => 0, $fieldName => self::cast($type, 0)],
+            ['_id' => 1, $fieldName => self::cast($type, 6)],
         ];
 
         $this->assertMultipleDocumentsMatch($expectedDocuments, $cursor);
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-4-can-find-encrypted-range-with-an-open-range-query
-     * @dataProvider provideTypeAndRangeOpts
-     */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-4-can-find-encrypted-range-with-an-open-range-query */
+    #[DataProvider('provideTypeAndRangeOpts')]
     public function testCase4_CanFindEncryptedRangeWithAnOpenRangeQuery(string $type, array $rangeOpts): void
     {
         $this->setUpWithTypeAndRangeOpts($type, $rangeOpts);
@@ -309,22 +294,19 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             'rangeOpts' => $rangeOpts,
         ];
 
-        $cast = self::getCastCallableForType($type);
         $fieldName = 'encrypted' . $type;
 
-        $expr = ['$and' => [[$fieldName => ['$gt' => $cast(30)]]]];
+        $expr = ['$and' => [[$fieldName => ['$gt' => self::cast($type, 30)]]]];
 
         $encryptedExpr = $this->clientEncryption->encryptExpression($expr, $encryptOpts);
         $cursor = $this->collection->find($encryptedExpr, ['sort' => ['_id' => 1]]);
-        $expectedDocuments = [['_id' => 3, $fieldName => $cast(200)]];
+        $expectedDocuments = [['_id' => 3, $fieldName => self::cast($type, 200)]];
 
         $this->assertMultipleDocumentsMatch($expectedDocuments, $cursor);
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-5-can-run-an-aggregation-expression-inside-expr
-     * @dataProvider provideTypeAndRangeOpts
-     */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-5-can-run-an-aggregation-expression-inside-expr */
+    #[DataProvider('provideTypeAndRangeOpts')]
     public function testCase5_CanRunAnAggregationExpressionInsideExpr(string $type, array $rangeOpts): void
     {
         $this->setUpWithTypeAndRangeOpts($type, $rangeOpts);
@@ -337,27 +319,24 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             'rangeOpts' => $rangeOpts,
         ];
 
-        $cast = self::getCastCallableForType($type);
         $fieldName = 'encrypted' . $type;
         $fieldPath = '$' . $fieldName;
 
-        $expr = ['$and' => [['$lt' => [$fieldPath, $cast(30)]]]];
+        $expr = ['$and' => [['$lt' => [$fieldPath, self::cast($type, 30)]]]];
 
         $encryptedExpr = $this->clientEncryption->encryptExpression($expr, $encryptOpts);
         $cursor = $this->collection->find(['$expr' => $encryptedExpr], ['sort' => ['_id' => 1]]);
 
         $expectedDocuments = [
-            ['_id' => 0, $fieldName => $cast(0)],
-            ['_id' => 1, $fieldName => $cast(6)],
+            ['_id' => 0, $fieldName => self::cast($type, 0)],
+            ['_id' => 1, $fieldName => self::cast($type, 6)],
         ];
 
         $this->assertMultipleDocumentsMatch($expectedDocuments, $cursor);
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-6-encrypting-a-document-greater-than-the-maximum-errors
-     * @dataProvider provideTypeAndRangeOpts
-     */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-6-encrypting-a-document-greater-than-the-maximum-errors */
+    #[DataProvider('provideTypeAndRangeOpts')]
     public function testCase6_EncryptingADocumentGreaterThanTheMaximumErrors(string $type, array $rangeOpts): void
     {
         if ($type === 'DecimalNoPrecision' || $type === 'DoubleNoPrecision') {
@@ -373,17 +352,13 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             'rangeOpts' => $rangeOpts,
         ];
 
-        $cast = self::getCastCallableForType($type);
-
         $this->expectException(EncryptionException::class);
         $this->expectExceptionMessage('Value must be greater than or equal to the minimum value and less than or equal to the maximum value');
-        $this->clientEncryption->encrypt($cast(201), $encryptOpts);
+        $this->clientEncryption->encrypt(self::cast($type, 201), $encryptOpts);
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-7-encrypting-a-value-of-a-different-type-errors
-     * @dataProvider provideTypeAndRangeOpts
-     */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-7-encrypting-a-value-of-a-different-type-errors */
+    #[DataProvider('provideTypeAndRangeOpts')]
     public function testCase7_EncryptingAValueOfADifferentTypeErrors(string $type, array $rangeOpts): void
     {
         if ($type === 'DecimalNoPrecision' || $type === 'DoubleNoPrecision') {
@@ -408,10 +383,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         $this->clientEncryption->encrypt($value, $encryptOpts);
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-8-setting-precision-errors-if-the-type-is-not-double-or-decimal128
-     * @dataProvider provideTypeAndRangeOpts
-     */
+    /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#case-8-setting-precision-errors-if-the-type-is-not-double-or-decimal128 */
+    #[DataProvider('provideTypeAndRangeOpts')]
     public function testCase8_SettingPrecisionErrorsIfTheTypeIsNotDoubleOrDecimal128(string $type, array $rangeOpts): void
     {
         if ($type === 'DecimalNoPrecision' || $type === 'DecimalPrecision' || $type === 'DoubleNoPrecision' || $type === 'DoublePrecision') {
@@ -427,11 +400,9 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             'rangeOpts' => $rangeOpts + ['precision' => 2],
         ];
 
-        $cast = self::getCastCallableForType($type);
-
         $this->expectException(EncryptionException::class);
         $this->expectExceptionMessage('expected \'precision\' to be set with double or decimal128 index');
-        $this->clientEncryption->encrypt($cast(6), $encryptOpts);
+        $this->clientEncryption->encrypt(self::cast($type, 6), $encryptOpts);
     }
 
     private function assertMultipleDocumentsMatch(array $expectedDocuments, Iterator $actualDocuments): void
@@ -449,28 +420,15 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         }
     }
 
-    private static function getCastCallableForType(string $type): callable
+    private static function cast(string $type, int $value): mixed
     {
-        switch ($type) {
-            case 'DecimalNoPrecision':
-            case 'DecimalPrecision':
-                return fn (int $value) => new Decimal128((string) $value);
-
-            case 'DoubleNoPrecision':
-            case 'DoublePrecision':
-                return fn (int $value) => (double) $value;
-
-            case 'Date':
-                return fn (int $value) => new UTCDateTime($value);
-
-            case 'Int':
-                return fn (int $value) => $value;
-
-            case 'Long':
-                return fn (int $value) => new Int64($value);
-
-            default:
-                throw new LogicException('Unsupported type: ' . $type);
-        }
+        return match ($type) {
+            'DecimalNoPrecision', 'DecimalPrecision' => new Decimal128((string) $value),
+            'DoubleNoPrecision', 'DoublePrecision' => (double) $value,
+            'Date' => new UTCDateTime($value),
+            'Int' => $value,
+            'Long' => new Int64($value),
+            default => throw new LogicException('Unsupported type: ' . $type),
+        };
     }
 }

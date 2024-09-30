@@ -4,22 +4,23 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\DropDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DropDatabaseTest extends TestCase
 {
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new DropDatabase($this->getDatabaseName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'session' => $this->getInvalidSessionValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'session' => self::getInvalidSessionValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 }

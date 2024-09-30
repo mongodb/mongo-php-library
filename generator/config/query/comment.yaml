@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $comment
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/comment/'
+type:
+    - query
+encode: single
+description: |
+    Adds a comment to a query predicate.
+arguments:
+    -
+        name: comment
+        type:
+            - string
+tests:
+    -
+        name: 'Attach a Comment to an Aggregation Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/comment/#attach-a-comment-to-an-aggregation-expression'
+        pipeline:
+            -
+                $match:
+                    x:
+                        $gt: 0
+                    $comment: 'Don''t allow negative inputs.'
+            -
+                $group:
+                    _id:
+                        $mod:
+                            - '$x'
+                            - 2
+                    total:
+                        $sum: '$x'

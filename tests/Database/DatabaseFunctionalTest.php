@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Database;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
@@ -11,6 +12,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use TypeError;
 
 use function array_key_exists;
@@ -21,7 +24,7 @@ use function current;
  */
 class DatabaseFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideInvalidDatabaseNames */
+    #[DataProvider('provideInvalidDatabaseNames')]
     public function testConstructorDatabaseNameArgument($databaseName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -29,7 +32,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         new Database($this->manager, $databaseName);
     }
 
-    public function provideInvalidDatabaseNames()
+    public static function provideInvalidDatabaseNames()
     {
         return [
             [null, TypeError::class],
@@ -37,20 +40,20 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Database($this->manager, $this->getDatabaseName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 
@@ -82,7 +85,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = current($cursor->toArray());
 
         $this->assertCommandSucceeded($commandResult);
-        $this->assertObjectHasAttribute('ok', $commandResult);
+        $this->assertObjectHasProperty('ok', $commandResult);
         $this->assertSame(1, (int) $commandResult->ok);
     }
 
@@ -121,10 +124,10 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, (int) $commandResult['ok']);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testCommandCommandArgumentTypeCheck($command): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($command instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         $this->database->command($command);
     }
 
@@ -169,11 +172,9 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    /**
-     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
-     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
-     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
-     */
+    #[Group('matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster')]
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster')]
     public function testModifyCollection(): void
     {
         $this->database->createCollection($this->getCollectionName());

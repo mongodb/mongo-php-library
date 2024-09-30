@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Operation\Distinct;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 use function is_scalar;
@@ -15,7 +16,7 @@ use const JSON_THROW_ON_ERROR;
 
 class DistinctFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testFilterDocuments($filter, stdClass $expectedQuery): void
     {
         (new CommandObserver())->observe(
@@ -50,7 +51,7 @@ class DistinctFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
             },
         );
     }
@@ -70,12 +71,12 @@ class DistinctFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOption(array $typeMap, array $expectedDocuments): void
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
@@ -118,7 +119,7 @@ class DistinctFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $values);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             'No type map' => [

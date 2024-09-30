@@ -5,34 +5,35 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindAndModify;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FindAndModifyTest extends TestCase
 {
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'arrayFilters' => $this->getInvalidArrayValues(),
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'collation' => $this->getInvalidDocumentValues(),
-            'fields' => $this->getInvalidDocumentValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'new' => $this->getInvalidBooleanValues(),
-            'query' => $this->getInvalidDocumentValues(),
-            'remove' => $this->getInvalidBooleanValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'sort' => $this->getInvalidDocumentValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'update' => $this->getInvalidUpdateValues(),
-            'upsert' => $this->getInvalidBooleanValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'arrayFilters' => self::getInvalidArrayValues(),
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'collation' => self::getInvalidDocumentValues(),
+            'fields' => self::getInvalidDocumentValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'new' => self::getInvalidBooleanValues(),
+            'query' => self::getInvalidDocumentValues(),
+            'remove' => self::getInvalidBooleanValues(),
+            'session' => self::getInvalidSessionValues(),
+            'sort' => self::getInvalidDocumentValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'update' => self::getInvalidUpdateValues(),
+            'upsert' => self::getInvalidBooleanValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

@@ -7,6 +7,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\GridFS\Exception\LogicException;
 use MongoDB\GridFS\StreamWrapper;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function copy;
 use function fclose;
@@ -232,7 +233,7 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(6, fwrite($stream, 'foobar'));
     }
 
-    /** @dataProvider provideUrl */
+    #[DataProvider('provideUrl')]
     public function testStreamWithContextResolver(string $url, string $expectedFilename): void
     {
         $this->bucket->registerGlobalStreamWrapperAlias('bucket');

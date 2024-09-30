@@ -1,0 +1,24 @@
+# $schema: ../schema.json
+name: $planCacheStats
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/'
+type:
+    - stage
+encode: object
+description: |
+    Returns plan cache information for a collection.
+tests:
+    -
+        name: 'Return Information for All Entries in the Query Cache'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/#return-information-for-all-entries-in-the-query-cache'
+        pipeline:
+            -
+                $planCacheStats: {}
+    -
+        name: 'Find Cache Entry Details for a Query Hash'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/#find-cache-entry-details-for-a-query-hash'
+        pipeline:
+            -
+                $planCacheStats: {}
+            -
+                $match:
+                    planCacheKey: 'B1435201'

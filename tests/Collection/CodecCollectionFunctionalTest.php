@@ -12,6 +12,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CodecCollectionFunctionalTest extends FunctionalTestCase
 {
@@ -54,7 +55,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideAggregateOptions */
+    #[DataProvider('provideAggregateOptions')]
     public function testAggregate($expected, $options): void
     {
         $this->createFixtures(3);
@@ -114,7 +115,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideBulkWriteOptions */
+    #[DataProvider('provideBulkWriteOptions')]
     public function testBulkWrite($expected, $options): void
     {
         $this->createFixtures(3);
@@ -151,7 +152,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideFindOneAndModifyOptions(): Generator
+    public static function provideFindOneAndModifyOptions(): Generator
     {
         yield 'Default codec' => [
             'expected' => TestObject::createDecodedForFixture(1),
@@ -169,7 +170,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideFindOneAndModifyOptions */
+    #[DataProvider('provideFindOneAndModifyOptions')]
     public function testFindOneAndDelete($expected, $options): void
     {
         $this->createFixtures(1);
@@ -190,7 +191,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $this->collection->findOneAndDelete(['_id' => 1], $options);
     }
 
-    /** @dataProvider provideFindOneAndModifyOptions */
+    #[DataProvider('provideFindOneAndModifyOptions')]
     public function testFindOneAndUpdate($expected, $options): void
     {
         $this->createFixtures(1);
@@ -235,7 +236,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideFindOneAndReplaceOptions */
+    #[DataProvider('provideFindOneAndReplaceOptions')]
     public function testFindOneAndReplace($expected, $options): void
     {
         $this->createFixtures(1);
@@ -293,7 +294,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideFindOptions */
+    #[DataProvider('provideFindOptions')]
     public function testFind($expected, $options): void
     {
         $this->createFixtures(3);
@@ -332,7 +333,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideFindOneOptions */
+    #[DataProvider('provideFindOneOptions')]
     public function testFindOne($expected, $options): void
     {
         $this->createFixtures(1);
@@ -383,7 +384,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideInsertManyOptions */
+    #[DataProvider('provideInsertManyOptions')]
     public function testInsertMany($expected, $options): void
     {
         $documents = [
@@ -430,7 +431,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideInsertOneOptions */
+    #[DataProvider('provideInsertOneOptions')]
     public function testInsertOne($expected, $options): void
     {
         $result = $this->collection->insertOne(TestObject::createForFixture(1), $options);
@@ -475,7 +476,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideReplaceOneOptions */
+    #[DataProvider('provideReplaceOneOptions')]
     public function testReplaceOne($expected, $options): void
     {
         $this->createFixtures(1);

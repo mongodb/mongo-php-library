@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $allElementsTrue
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument expression.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/#example'
+        pipeline:
+            -
+                $project:
+                    responses: 1
+                    isAllTrue:
+                        $allElementsTrue:
+                            - '$responses'
+                    _id: 0

@@ -1,0 +1,74 @@
+# $schema: ../schema.json
+name: $function
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/'
+type:
+    - resolvesToAny
+encode: object
+description: |
+    Defines a custom function.
+    New in MongoDB 4.4.
+arguments:
+    -
+        name: body
+        type:
+            - javascript
+        description: |
+            The function definition. You can specify the function definition as either BSON\JavaScript or string.
+            function(arg1, arg2, ...) { ... }
+    -
+        name: args
+        type:
+            - array
+        description: |
+            Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
+        default: []
+    -
+        name: lang
+        type:
+            - string
+        default: js
+tests:
+    -
+        name: 'Usage Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-1--usage-example'
+        pipeline:
+            -
+                $addFields:
+                    isFound:
+                        $function:
+                            body:
+                                $code: |-
+                                    function(name) {
+                                        return hex_md5(name) == "15b0a220baa16331e8d80e15367677ad"
+                                    }
+                            args:
+                                - '$name'
+                            lang: 'js'
+                    message:
+                        $function:
+                            body:
+                                $code: |-
+                                    function(name, scores) {
+                                        let total = Array.sum(scores);
+                                        return `Hello ${name}. Your total score is ${total}.`
+                                    }
+                            args:
+                                - '$name'
+                                - '$scores'
+                            lang: 'js'
+    -
+        name: 'Alternative to $where'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-2--alternative-to--where'
+        pipeline:
+            -
+                $match:
+                    $expr:
+                        $function:
+                            body:
+                                $code: |-
+                                    function(name) {
+                                        return hex_md5(name) == "15b0a220baa16331e8d80e15367677ad";
+                                    }
+                            args:
+                                - '$name'
+                            lang: 'js'

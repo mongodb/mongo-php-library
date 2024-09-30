@@ -1,0 +1,51 @@
+# $schema: ../schema.json
+name: $lastN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Returns a specified number of elements from the end of an array.
+arguments:
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to the array from which to return n elements.
+tests:
+    -
+        name: Example
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/#example'
+        pipeline:
+            -
+                $addFields:
+                    lastScores:
+                        $lastN:
+                            n: 3
+                            input: '$score'
+
+    -
+        name: 'Using $lastN as an Aggregation Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#using--lastn-as-an-aggregation-expression'
+        pipeline:
+            -
+                $documents:
+                    -
+                        array:
+                            - 10
+                            - 20
+                            - 30
+                            - 40
+            -
+                $project:
+                    lastThreeElements:
+                        $lastN:
+                            input: '$array'
+                            n: 3

@@ -18,6 +18,11 @@
 namespace MongoDB;
 
 use Iterator;
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
+use MongoDB\Builder\BuilderEncoder;
+use MongoDB\Builder\Pipeline;
+use MongoDB\Codec\Encoder;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -45,6 +50,7 @@ use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\Watch;
+use stdClass;
 use Throwable;
 use Traversable;
 
@@ -61,9 +67,8 @@ class Database
 
     private const WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE = 8;
 
-    private string $databaseName;
-
-    private Manager $manager;
+    /** @psalm-var Encoder<array|stdClass|Document|PackedArray, mixed> */
+    private readonly Encoder $builderEncoder;
 
     private ReadConcern $readConcern;
 
@@ -80,6 +85,9 @@ class Database
      * as a gateway for accessing collections.
      *
      * Supported options:
+     *
+     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *    aggregation builders. If not given, the default encoder will be used.
      *
      *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
      *    use for database operations and selected collections. Defaults to the
@@ -100,10 +108,14 @@ class Database
      * @param array   $options      Database options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(Manager $manager, string $databaseName, array $options = [])
+    public function __construct(private Manager $manager, private string $databaseName, array $options = [])
     {
         if (strlen($databaseName) < 1) {
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
+        }
+
+        if (isset($options['builderEncoder']) && ! $options['builderEncoder'] instanceof Encoder) {
+            throw InvalidArgumentException::invalidType('"builderEncoder" option', $options['builderEncoder'], Encoder::class);
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
@@ -122,8 +134,7 @@ class Database
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
-        $this->manager = $manager;
-        $this->databaseName = $databaseName;
+        $this->builderEncoder = $options['builderEncoder'] ?? new BuilderEncoder();
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
         $this->typeMap = $options['typeMap'] ?? self::DEFAULT_TYPE_MAP;
@@ -139,6 +150,7 @@ class Database
     public function __debugInfo()
     {
         return [
+            'builderEncoder' => $this->builderEncoder,
             'databaseName' => $this->databaseName,
             'manager' => $this->manager,
             'readConcern' => $this->readConcern,
@@ -191,6 +203,12 @@ class Database
      */
     public function aggregate(array $pipeline, array $options = [])
     {
+        if (is_builder_pipeline($pipeline)) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
+
+        $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
+
         $hasWriteStage = is_last_pipeline_operator_write($pipeline);
 
         if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
@@ -237,7 +255,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function command($command, array $options = [])
+    public function command(array|object $command, array $options = [])
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
@@ -559,6 +577,7 @@ class Database
     public function selectCollection(string $collectionName, array $options = [])
     {
         $options += [
+            'builderEncoder' => $this->builderEncoder,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
             'typeMap' => $this->typeMap,
@@ -599,6 +618,12 @@ class Database
      */
     public function watch(array $pipeline = [], array $options = [])
     {
+        if (is_builder_pipeline($pipeline)) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
+
+        $pipeline = $this->builderEncoder->encodeIfSupported($pipeline);
+
         if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
             $options['readPreference'] = $this->readPreference;
         }

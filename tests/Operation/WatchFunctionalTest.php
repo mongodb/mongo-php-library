@@ -25,6 +25,9 @@ use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Constraint\ObjectHasProperty;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionClass;
 use stdClass;
@@ -36,11 +39,9 @@ use function bin2hex;
 use function microtime;
 use function sprintf;
 
-/**
- * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
- * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
- * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
- */
+#[Group('matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster')]
+#[Group('matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster')]
+#[Group('matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster')]
 class WatchFunctionalTest extends FunctionalTestCase
 {
     public const INTERRUPTED = 11601;
@@ -98,7 +99,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         yield 'Codec' => [
             'options' => ['codec' => $codec],
             'getIdentifier' => static function (object $document): object {
-                self::assertObjectHasAttribute('id', $document);
+                self::assertObjectHasProperty('id', $document);
 
                 return $document->id;
             },
@@ -108,9 +109,8 @@ class WatchFunctionalTest extends FunctionalTestCase
     /**
      * Prose test 1: "ChangeStream must continuously track the last seen
      * resumeToken"
-     *
-     * @dataProvider provideCodecOptions
      */
+    #[DataProvider('provideCodecOptions')]
     public function testGetResumeToken(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken is supported');
@@ -161,9 +161,8 @@ class WatchFunctionalTest extends FunctionalTestCase
      *  - The batch has been iterated up to but not including the last element.
      * Expected result: getResumeToken must return the _id of the previous
      * document returned.
-     *
-     * @dataProvider provideCodecOptions
      */
+    #[DataProvider('provideCodecOptions')]
     public function testGetResumeTokenWithPostBatchResumeToken(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('<', '4.0.7', 'postBatchResumeToken is not supported');
@@ -308,26 +307,26 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertCount(3, $events);
 
         $this->assertSame('getMore', $events[0]['started']->getCommandName());
-        $this->arrayHasKey('failed', $events[0]);
+        $this->assertArrayHasKey('failed', $events[0]);
 
         $this->assertSame('aggregate', $events[1]['started']->getCommandName());
         $this->assertResumeAfter($postBatchResumeToken, $events[1]['started']->getCommand());
-        $this->arrayHasKey('succeeded', $events[1]);
+        $this->assertArrayHasKey('succeeded', $events[1]);
 
         // Original cursor is freed immediately after the change stream resumes
         $this->assertSame('killCursors', $events[2]['started']->getCommandName());
-        $this->arrayHasKey('succeeded', $events[2]);
+        $this->assertArrayHasKey('succeeded', $events[2]);
 
         $this->assertFalse($changeStream->valid());
     }
 
     private function assertResumeAfter($expectedResumeToken, stdClass $command): void
     {
-        $this->assertObjectHasAttribute('pipeline', $command);
+        $this->assertObjectHasProperty('pipeline', $command);
         $this->assertIsArray($command->pipeline);
         $this->assertArrayHasKey(0, $command->pipeline);
-        $this->assertObjectHasAttribute('$changeStream', $command->pipeline[0]);
-        $this->assertObjectHasAttribute('resumeAfter', $command->pipeline[0]->{'$changeStream'});
+        $this->assertObjectHasProperty('$changeStream', $command->pipeline[0]);
+        $this->assertObjectHasProperty('resumeAfter', $command->pipeline[0]->{'$changeStream'});
         $this->assertEquals($expectedResumeToken, $command->pipeline[0]->{'$changeStream'}->resumeAfter);
     }
 
@@ -356,7 +355,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertCount(1, $events);
         $this->assertSame('aggregate', $events[0]['started']->getCommandName());
         $reply = $events[0]['succeeded']->getReply();
-        $this->assertObjectHasAttribute('operationTime', $reply);
+        $this->assertObjectHasProperty('operationTime', $reply);
         $operationTime = $reply->operationTime;
         $this->assertInstanceOf(TimestampInterface::class, $operationTime);
 
@@ -381,26 +380,26 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertCount(3, $events);
 
         $this->assertSame('getMore', $events[0]['started']->getCommandName());
-        $this->arrayHasKey('failed', $events[0]);
+        $this->assertArrayHasKey('failed', $events[0]);
 
         $this->assertSame('aggregate', $events[1]['started']->getCommandName());
         $this->assertStartAtOperationTime($operationTime, $events[1]['started']->getCommand());
-        $this->arrayHasKey('succeeded', $events[1]);
+        $this->assertArrayHasKey('succeeded', $events[1]);
 
         // Original cursor is freed immediately after the change stream resumes
         $this->assertSame('killCursors', $events[2]['started']->getCommandName());
-        $this->arrayHasKey('succeeded', $events[2]);
+        $this->assertArrayHasKey('succeeded', $events[2]);
 
         $this->assertFalse($changeStream->valid());
     }
 
     private function assertStartAtOperationTime(TimestampInterface $expectedOperationTime, stdClass $command): void
     {
-        $this->assertObjectHasAttribute('pipeline', $command);
+        $this->assertObjectHasProperty('pipeline', $command);
         $this->assertIsArray($command->pipeline);
         $this->assertArrayHasKey(0, $command->pipeline);
-        $this->assertObjectHasAttribute('$changeStream', $command->pipeline[0]);
-        $this->assertObjectHasAttribute('startAtOperationTime', $command->pipeline[0]->{'$changeStream'});
+        $this->assertObjectHasProperty('$changeStream', $command->pipeline[0]);
+        $this->assertObjectHasProperty('startAtOperationTime', $command->pipeline[0]->{'$changeStream'});
         $this->assertEquals($expectedOperationTime, $command->pipeline[0]->{'$changeStream'}->startAtOperationTime);
     }
 
@@ -488,7 +487,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNull($changeStream->current());
     }
 
-    /** @dataProvider provideCodecOptions */
+    #[DataProvider('provideCodecOptions')]
     public function testNoChangeAfterResumeBeforeInsert(array $options): void
     {
         $operation = new Watch(
@@ -724,10 +723,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNotEquals('0', (string) $changeStream->getCursorId(true));
 
         $rc = new ReflectionClass(ChangeStream::class);
-        $rp = $rc->getProperty('iterator');
-        $rp->setAccessible(true);
-
-        $iterator = $rp->getValue($changeStream);
+        $iterator = $rc->getProperty('iterator')->getValue($changeStream);
 
         $this->assertInstanceOf('IteratorIterator', $iterator);
 
@@ -897,7 +893,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         }
     }
 
-    /** @dataProvider provideCodecOptions */
+    #[DataProvider('provideCodecOptions')]
     public function testRewindExtractsResumeTokenAndNextResumes(array $options, Closure $getIdentifier): void
     {
         $operation = new Watch(
@@ -955,7 +951,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument(['_id' => 3, 'x' => 'baz'], $changeStream->current()->fullDocument);
     }
 
-    /** @dataProvider provideCodecOptions */
+    #[DataProvider('provideCodecOptions')]
     public function testResumeAfterOption(array $options, Closure $getIdentifier): void
     {
         $operation = new Watch(
@@ -1001,7 +997,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument(['_id' => 2, 'x' => 'bar'], $changeStream->current()->fullDocument);
     }
 
-    /** @dataProvider provideCodecOptions */
+    #[DataProvider('provideCodecOptions')]
     public function testStartAfterOption(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('<', '4.1.1', 'startAfter is not supported');
@@ -1049,7 +1045,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument(['_id' => 2, 'x' => 'bar'], $changeStream->current()->fullDocument);
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedChangeDocument */
+    #[DataProvider('provideTypeMapOptionsAndExpectedChangeDocument')]
     public function testTypeMapOption(array $typeMap, $expectedChangeDocument): void
     {
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['typeMap' => $typeMap] + $this->defaultOptions);
@@ -1065,7 +1061,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument($expectedChangeDocument, $changeStream->current());
     }
 
-    public function provideTypeMapOptionsAndExpectedChangeDocument()
+    public static function provideTypeMapOptionsAndExpectedChangeDocument()
     {
         /* Note: the "_id" and "ns" fields are purposefully omitted because the
          * resume token's value cannot be anticipated and the collection name,
@@ -1136,9 +1132,9 @@ class WatchFunctionalTest extends FunctionalTestCase
         try {
             $this->advanceCursorUntilValid($changeStream);
             $this->fail('Exception for missing resume token was not thrown');
-        } catch (ResumeTokenException $e) {
+        } catch (ResumeTokenException) {
             /* On server versions < 4.1.8, a client-side error is thrown. */
-        } catch (ServerException $e) {
+        } catch (ServerException) {
             /* On server versions >= 4.1.8, the error is thrown server-side. */
         }
 
@@ -1148,7 +1144,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         try {
             $changeStream->next();
             $this->fail('Exception for missing resume token was not thrown');
-        } catch (ResumeTokenException | ServerException $e) {
+        } catch (ResumeTokenException | ServerException) {
         }
 
         $this->assertFalse($changeStream->valid());
@@ -1225,7 +1221,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $rc = new ReflectionClass($changeStream);
         $rp = $rc->getProperty('resumeCallable');
-        $rp->setAccessible(true);
 
         $this->assertIsCallable($rp->getValue($changeStream));
 
@@ -1282,9 +1277,9 @@ class WatchFunctionalTest extends FunctionalTestCase
             $aggregateCommands[0]['pipeline'][0]->{'$changeStream'},
             $this->logicalNot(
                 $this->logicalOr(
-                    $this->objectHasAttribute('resumeAfter'),
-                    $this->objectHasAttribute('startAfter'),
-                    $this->objectHasAttribute('startAtOperationTime'),
+                    new ObjectHasProperty('resumeAfter'),
+                    new ObjectHasProperty('startAfter'),
+                    new ObjectHasProperty('startAtOperationTime'),
                 ),
             ),
         );
@@ -1292,9 +1287,9 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertThat(
             $aggregateCommands[1]['pipeline'][0]->{'$changeStream'},
             $this->logicalOr(
-                $this->objectHasAttribute('resumeAfter'),
-                $this->objectHasAttribute('startAfter'),
-                $this->objectHasAttribute('startAtOperationTime'),
+                new ObjectHasProperty('resumeAfter'),
+                new ObjectHasProperty('startAfter'),
+                new ObjectHasProperty('startAtOperationTime'),
             ),
         );
 
@@ -1366,7 +1361,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         try {
             $secondary = $this->manager->selectServer($readPreference);
-        } catch (ConnectionTimeoutException $e) {
+        } catch (ConnectionTimeoutException) {
             $this->markTestSkipped('Secondary is not available');
         }
 
@@ -1430,9 +1425,8 @@ class WatchFunctionalTest extends FunctionalTestCase
      *  - getResumeToken must return startAfter from the initial aggregate if the option was specified.
      *  - getResumeToken must return resumeAfter from the initial aggregate if the option was specified.
      *  - If neither the startAfter nor resumeAfter options were specified, the getResumeToken result must be empty.
-     *
-     * @dataProvider provideCodecOptions
      */
+    #[DataProvider('provideCodecOptions')]
     public function testResumeTokenBehaviour(array $options): void
     {
         $this->skipIfServerVersion('<', '4.1.1', 'Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
@@ -1455,7 +1449,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->assertInstanceOf(CommandSucceededEvent::class, $event['succeeded']);
             $reply = $event['succeeded']->getReply();
 
-            $this->assertObjectHasAttribute('operationTime', $reply);
+            $this->assertObjectHasProperty('operationTime', $reply);
             $lastOpTime = $reply->operationTime;
         });
 
@@ -1545,8 +1539,8 @@ class WatchFunctionalTest extends FunctionalTestCase
         );
 
         $this->assertNotNull($aggregateCommand);
-        $this->assertObjectNotHasAttribute('resumeAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
-        $this->assertObjectHasAttribute('startAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
+        $this->assertObjectNotHasProperty('resumeAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
+        $this->assertObjectHasProperty('startAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
     }
 
     /**
@@ -1594,8 +1588,8 @@ class WatchFunctionalTest extends FunctionalTestCase
         );
 
         $this->assertNotNull($aggregateCommand);
-        $this->assertObjectNotHasAttribute('startAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
-        $this->assertObjectHasAttribute('resumeAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
+        $this->assertObjectNotHasProperty('startAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
+        $this->assertObjectHasProperty('resumeAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
     }
 
     private function assertNoCommandExecuted(callable $callable): void
@@ -1630,9 +1624,9 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     private function getPostBatchResumeTokenFromReply(stdClass $reply)
     {
-        $this->assertObjectHasAttribute('cursor', $reply);
+        $this->assertObjectHasProperty('cursor', $reply);
         $this->assertIsObject($reply->cursor);
-        $this->assertObjectHasAttribute('postBatchResumeToken', $reply->cursor);
+        $this->assertObjectHasProperty('postBatchResumeToken', $reply->cursor);
         $this->assertIsObject($reply->cursor->postBatchResumeToken);
 
         return $reply->cursor->postBatchResumeToken;

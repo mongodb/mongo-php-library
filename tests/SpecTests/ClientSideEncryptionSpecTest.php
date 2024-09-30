@@ -24,6 +24,9 @@ use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\SkippedTestError;
 use stdClass;
 use Throwable;
@@ -38,12 +41,9 @@ use function glob;
 use function in_array;
 use function iterator_to_array;
 use function json_decode;
-use function phpversion;
 use function sprintf;
 use function str_repeat;
-use function str_starts_with;
 use function substr;
-use function version_compare;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -51,9 +51,9 @@ use const JSON_THROW_ON_ERROR;
  * Client-side encryption spec tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption
- * @group csfle
- * @group serverless
  */
+#[Group('csfle')]
+#[Group('serverless')]
 class ClientSideEncryptionSpecTest extends FunctionalTestCase
 {
     public const LOCAL_MASTERKEY = 'Mng0NCt4ZHVUYUJCa1kxNkVyNUR1QURhZ2h2UzR2d2RrZzh0cFBwM3R6NmdWMDFBMUN3YkQ5aXRRMkhGRGdQV09wOGVNYUMxT2k3NjZKelhaQmRCZGJkTXVyZG9uSjFk';
@@ -152,7 +152,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     /**
      * Execute an individual test case from the specification.
      *
-     * @dataProvider provideTests
      * @param stdClass    $test           Individual "tests[]" document
      * @param array       $runOn          Top-level "runOn" array with server requirements
      * @param array       $data           Top-level "data" array to initialize collection
@@ -161,14 +160,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * @param string      $databaseName   Name of database under test
      * @param string      $collectionName Name of collection under test
      */
+    #[DataProvider('provideTests')]
     public function testClientSideEncryption(stdClass $test, ?array $runOn, array $data, ?stdClass $encryptedFields = null, ?array $keyVaultData = null, ?stdClass $jsonSchema = null, ?string $databaseName = null, ?string $collectionName = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
-        }
-
-        if (str_starts_with($this->dataDescription(), 'fle2v2-Range-') && version_compare(phpversion('mongodb'), '1.20.0dev', '>=')) {
-            $this->markTestIncomplete('Range protocol V1 is not supported by ext-mongodb 1.20+');
         }
 
         if (isset($runOn)) {
@@ -222,7 +218,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
     }
 
-    public function provideTests()
+    public static function provideTests()
     {
         $testArgs = [];
 
@@ -277,8 +273,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 2: Data Key and Double Encryption
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#data-key-and-double-encryption
-     * @dataProvider dataKeyProvider
      */
+    #[DataProvider('dataKeyProvider')]
     public function testDataKeyAndDoubleEncryption(string $providerName, $masterKey): void
     {
         $client = static::createTestClient();
@@ -347,8 +343,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $this->assertSame(Binary::TYPE_UUID, $dataKeyId->getType());
 
         $this->assertNotNull($insertCommand);
-        $this->assertObjectHasAttribute('writeConcern', $insertCommand);
-        $this->assertObjectHasAttribute('w', $insertCommand->writeConcern);
+        $this->assertObjectHasProperty('writeConcern', $insertCommand);
+        $this->assertObjectHasProperty('w', $insertCommand->writeConcern);
         $this->assertSame(WriteConcern::MAJORITY, $insertCommand->writeConcern->w);
 
         $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $dataKeyId]);
@@ -416,9 +412,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 3: External Key Vault
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#external-key-vault-test
-     * @testWith [false]
-     *           [true]
      */
+    #[TestWith([false])]
+    #[TestWith([true])]
     public function testExternalKeyVault($withExternalKeyVault): void
     {
         $client = static::createTestClient();
@@ -564,8 +560,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 4: BSON Size Limits and Batch Splitting
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#bson-size-limits-and-batch-splitting
-     * @dataProvider provideBSONSizeLimitsAndBatchSplittingTests
      */
+    #[DataProvider('provideBSONSizeLimitsAndBatchSplittingTests')]
     public function testBSONSizeLimitsAndBatchSplitting(Closure $test): void
     {
         $client = static::createTestClient();
@@ -630,9 +626,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 6: BSON Corpus
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#corpus-test
-     * @testWith [true]
-     *           [false]
      */
+    #[TestWith([true])]
+    #[TestWith([false])]
     public function testCorpus($schemaMap = true): void
     {
         $client = static::createTestClient();
@@ -739,8 +735,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 7: Custom Endpoint
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#custom-endpoint-test
-     * @dataProvider customEndpointProvider
      */
+    #[DataProvider('customEndpointProvider')]
     public function testCustomEndpoint(Closure $test): void
     {
         $client = static::createTestClient();
@@ -1110,8 +1106,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 11: KMS TLS Options
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#kms-tls-options-tests
-     * @dataProvider provideKmsTlsOptionsTests
      */
+    #[DataProvider('provideKmsTlsOptionsTests')]
     public function testKmsTlsOptions(Closure $test): void
     {
         $client = static::createTestClient();
@@ -1328,8 +1324,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 12: Explicit Encryption
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#explicit-encryption
-     * @dataProvider provideExplicitEncryptionTests
      */
+    #[DataProvider('provideExplicitEncryptionTests')]
     public function testExplicitEncryption(Closure $test): void
     {
         if ($this->isStandalone()) {
@@ -1507,8 +1503,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 13: Unique Index on keyAltNames
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#unique-index-on-keyaltnames
-     * @dataProvider provideUniqueIndexOnKeyAltNamesTests
      */
+    #[DataProvider('provideUniqueIndexOnKeyAltNamesTests')]
     public function testUniqueIndexOnKeyAltNames(Closure $test): void
     {
         // Test setup
@@ -1566,10 +1562,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $keyId = $clientEncryption->createDataKey('local');
 
                 $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
-                $test->assertObjectNotHasAttribute('keyAltNames', $keyBeforeUpdate);
+                $test->assertObjectNotHasProperty('keyAltNames', $keyBeforeUpdate);
 
                 $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
-                $test->assertObjectHasAttribute('keyAltNames', $keyBeforeUpdate);
+                $test->assertObjectHasProperty('keyAltNames', $keyBeforeUpdate);
                 $test->assertIsArray($keyBeforeUpdate->keyAltNames);
                 $test->assertContains('abc', $keyBeforeUpdate->keyAltNames);
 
@@ -1583,7 +1579,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $originalKeyId = $clientEncryption->getKeyByAltName('def')->_id;
 
                 $originalKeyBeforeUpdate = $clientEncryption->addKeyAltName($originalKeyId, 'def');
-                $test->assertObjectHasAttribute('keyAltNames', $originalKeyBeforeUpdate);
+                $test->assertObjectHasProperty('keyAltNames', $originalKeyBeforeUpdate);
                 $test->assertIsArray($originalKeyBeforeUpdate->keyAltNames);
                 $test->assertContains('def', $originalKeyBeforeUpdate->keyAltNames);
             },
@@ -1594,8 +1590,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 14: Decryption Events
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#decryption-events
-     * @dataProvider provideDecryptionEventsTests
      */
+    #[DataProvider('provideDecryptionEventsTests')]
     public function testDecryptionEvents(Closure $test): void
     {
         // Test setup
@@ -1698,7 +1694,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 try {
                     $encryptedClient->selectCollection('db', 'decryption_events')->aggregate([]);
                     $test->fail('Expected exception to be thrown');
-                } catch (ConnectionTimeoutException $e) {
+                } catch (ConnectionTimeoutException) {
                     $test->addToAssertionCount(1);
                 }
 
@@ -1743,10 +1739,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 15: On-demand AWS Credentials
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#on-demand-aws-credentials
-     * @group csfle-without-aws-creds
-     * @testWith [true]
-     *           [false]
      */
+    #[TestWith([true])]
+    #[TestWith([false])]
+    #[Group('csfle-without-aws-creds')]
     public function testOnDemandAwsCredentials(bool $shouldSucceed): void
     {
         $hasCredentials = (getenv('AWS_ACCESS_KEY_ID') && getenv('AWS_SECRET_ACCESS_KEY'));
@@ -1786,8 +1782,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 16: RewrapManyDataKey
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#rewrap
-     * @dataProvider provideRewrapManyDataKeySrcAndDstProviders
      */
+    #[DataProvider('provideRewrapManyDataKeySrcAndDstProviders')]
     public function testRewrapManyDataKey(string $srcProvider, string $dstProvider): void
     {
         $providerMasterKeys = [
@@ -1839,10 +1835,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $result = $clientEncryption2->rewrapManyDataKey([], $rewrapManyDataKeyOpts);
 
-        $this->assertObjectHasAttribute('bulkWriteResult', $result);
+        $this->assertObjectHasProperty('bulkWriteResult', $result);
         $this->assertIsObject($result->bulkWriteResult);
         // libmongoc uses different field names for its BulkWriteResult
-        $this->assertObjectHasAttribute('nModified', $result->bulkWriteResult);
+        $this->assertObjectHasProperty('nModified', $result->bulkWriteResult);
         $this->assertSame(1, $result->bulkWriteResult->nModified);
 
         $this->assertSame('test', $clientEncryption1->decrypt($ciphertext));
@@ -1942,7 +1938,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         try {
             $clientEncryption->encrypt($data->value, $encryptionOptions);
             $this->fail('Expected exception to be thrown');
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
         }
 
         return $data->value;

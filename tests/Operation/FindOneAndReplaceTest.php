@@ -2,36 +2,38 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndReplace;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use TypeError;
 
 class FindOneAndReplaceTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorReplacementArgumentTypeCheck($replacement): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($replacement instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @doesNotPerformAssertions
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DoesNotPerformAssertions]
     public function testConstructorReplacementArgument($replacement): void
     {
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /** @dataProvider provideUpdateDocuments */
+    #[DataProvider('provideUpdateDocuments')]
     public function testConstructorReplacementArgumentProhibitsUpdateDocument($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -39,10 +41,8 @@ class FindOneAndReplaceTest extends TestCase
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /**
-     * @dataProvider provideUpdatePipelines
-     * @dataProvider provideEmptyUpdatePipelinesExcludingArray
-     */
+    #[DataProvider('provideUpdatePipelines')]
+    #[DataProvider('provideEmptyUpdatePipelinesExcludingArray')]
     public function testConstructorReplacementArgumentProhibitsUpdatePipeline($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -50,32 +50,32 @@ class FindOneAndReplaceTest extends TestCase
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'projection' => $this->getInvalidDocumentValues(),
-            'returnDocument' => $this->getInvalidIntegerValues(true),
+        return self::createOptionDataProvider([
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'projection' => self::getInvalidDocumentValues(),
+            'returnDocument' => self::getInvalidIntegerValues(true),
         ]);
     }
 
-    /** @dataProvider provideInvalidConstructorReturnDocumentOptions */
+    #[DataProvider('provideInvalidConstructorReturnDocumentOptions')]
     public function testConstructorReturnDocumentOption($returnDocument): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], ['returnDocument' => $returnDocument]);
     }
 
-    public function provideInvalidConstructorReturnDocumentOptions()
+    public static function provideInvalidConstructorReturnDocumentOptions()
     {
-        return $this->wrapValuesForDataProvider([-1, 0, 3]);
+        return self::wrapValuesForDataProvider([-1, 0, 3]);
     }
 
     public function testExplainableCommandDocument(): void

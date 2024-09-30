@@ -11,6 +11,7 @@ use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 use function array_key_exists;
@@ -33,7 +34,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('allowDiskUse', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('allowDiskUse', $event['started']->getCommand());
             },
         );
     }
@@ -92,7 +93,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
             },
         );
     }
@@ -111,7 +112,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
             },
         );
 
@@ -156,12 +157,12 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOption(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);
@@ -218,14 +219,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
                 if (isset($result->shards)) {
                     foreach ($result->shards as $shard) {
-                        $this->assertObjectHasAttribute('stages', $shard);
+                        $this->assertObjectHasProperty('stages', $shard);
                     }
                 } else {
-                    $this->assertObjectHasAttribute('stages', $result);
+                    $this->assertObjectHasProperty('stages', $result);
                 }
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
             },
         );
 
@@ -246,7 +247,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectHasProperty('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             },
         );
@@ -266,12 +267,12 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('bypassDocumentValidation', $event['started']->getCommand());
             },
         );
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [

@@ -1,0 +1,51 @@
+# $schema: ../schema.json
+name: $and
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/'
+type:
+    - query
+encode: single
+description: |
+    Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
+arguments:
+    -
+        name: queries
+        type:
+            - query
+        variadic: array
+        variadicMin: 1
+tests:
+    -
+        name: 'AND Queries With Multiple Expressions Specifying the Same Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-field'
+        pipeline:
+            -
+                $match:
+                    $and:
+                        -
+                            price:
+                                $ne: 1.99
+                        -
+                            price:
+                                $exists: true
+    -
+        name: 'AND Queries With Multiple Expressions Specifying the Same Operator'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-operator'
+        pipeline:
+            -
+                $match:
+                    $and:
+                        -
+                            $or:
+                                -
+                                    qty:
+                                        $lt: 10
+                                -
+                                    qty:
+                                        $gt: 50
+                        -
+                            $or:
+                                -
+                                    sale: true
+                                -
+                                    price:
+                                        $lt: 5

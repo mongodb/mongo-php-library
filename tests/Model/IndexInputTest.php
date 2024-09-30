@@ -8,6 +8,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInput;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class IndexInputTest extends TestCase
@@ -19,7 +20,7 @@ class IndexInputTest extends TestCase
         new IndexInput([]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorShouldRequireKeyToBeArrayOrObject($key): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -27,7 +28,7 @@ class IndexInputTest extends TestCase
         new IndexInput(['key' => $key]);
     }
 
-    /** @dataProvider provideInvalidFieldOrderValues */
+    #[DataProvider('provideInvalidFieldOrderValues')]
     public function testConstructorShouldRequireKeyFieldOrderToBeNumericOrString($order): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -35,12 +36,12 @@ class IndexInputTest extends TestCase
         new IndexInput(['key' => ['x' => $order]]);
     }
 
-    public function provideInvalidFieldOrderValues()
+    public static function provideInvalidFieldOrderValues()
     {
-        return $this->wrapValuesForDataProvider([true, [], new stdClass()]);
+        return self::wrapValuesForDataProvider([true, [], new stdClass()]);
     }
 
-    /** @dataProvider provideInvalidStringValues */
+    #[DataProvider('provideInvalidStringValues')]
     public function testConstructorShouldRequireNameToBeString($name): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -48,16 +49,13 @@ class IndexInputTest extends TestCase
         new IndexInput(['key' => ['x' => 1], 'name' => $name]);
     }
 
-    /**
-     * @dataProvider provideExpectedNameAndKey
-     * @param array|object $key
-     */
-    public function testNameGeneration($expectedName, $key): void
+    #[DataProvider('provideExpectedNameAndKey')]
+    public function testNameGeneration($expectedName, array|object $key): void
     {
         $this->assertSame($expectedName, (string) new IndexInput(['key' => $key]));
     }
 
-    public function provideExpectedNameAndKey(): array
+    public static function provideExpectedNameAndKey(): array
     {
         return [
             ['x_1', ['x' => 1]],

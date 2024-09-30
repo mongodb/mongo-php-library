@@ -34,17 +34,11 @@ use function is_integer;
  *
  * @see \MongoDB\Collection::dropIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/dropIndexes/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class DropIndexes implements Executable
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
-    private string $indexName;
-
-    private array $options;
-
     /**
      * Constructs a dropIndexes command.
      *
@@ -70,36 +64,31 @@ class DropIndexes implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, string $indexName, array $options = [])
+    public function __construct(private string $databaseName, private string $collectionName, private string $indexName, private array $options = [])
     {
         if ($indexName === '') {
             throw new InvalidArgumentException('$indexName cannot be empty');
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
-        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
+        if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $this->options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+        if (isset($this->options['writeConcern']) && $this->options['writeConcern']->isDefault()) {
+            unset($this->options['writeConcern']);
         }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->indexName = $indexName;
-        $this->options = $options;
     }
 
     /**

@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $exp
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/'
+type:
+    - resolvesToDouble
+encode: single
+description: |
+    Raises e to the specified exponent.
+arguments:
+    -
+        name: exponent
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/#example'
+        pipeline:
+            -
+                $project:
+                    effectiveRate:
+                        $subtract:
+                            -
+                                $exp: '$interestRate'
+                            - 1

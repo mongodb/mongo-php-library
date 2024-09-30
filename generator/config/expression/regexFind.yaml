@@ -1,0 +1,66 @@
+# $schema: ../schema.json
+name: $regexFind
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/'
+type:
+    - resolvesToObject
+encode: object
+description: |
+    Applies a regular expression (regex) to a string and returns information on the first matched substring.
+    New in MongoDB 4.2.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToString
+        description: |
+            The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
+    -
+        name: regex
+        type:
+            - resolvesToString
+            - regex
+        description: |
+            The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
+    -
+        name: options
+        type:
+            - string
+        optional: true
+tests:
+    -
+        name: '$regexFind and Its Options'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/#-regexfind-and-its-options'
+        pipeline:
+            -
+                $addFields:
+                    returnObject:
+                        $regexFind:
+                            input: '$description'
+                            regex: !bson_regex 'line'
+    -
+        name: 'i Option'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/#i-option'
+        pipeline:
+            -
+                $addFields:
+                    returnObject:
+                        # Specify i as part of the Regex type
+                        $regexFind:
+                            input: '$description'
+                            regex: !bson_regex ['line', 'i']
+            -
+                $addFields:
+                    returnObject:
+                        # Specify i in the options field
+                        $regexFind:
+                            input: '$description'
+                            regex: 'line'
+                            options: 'i'
+            -
+                $addFields:
+                    returnObject:
+                        # Mix Regex type with options field
+                        $regexFind:
+                            input: '$description'
+                            regex: !bson_regex 'line'
+                            options: 'i'

@@ -1,0 +1,21 @@
+# $schema: ../schema.json
+name: $case
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/'
+type:
+    - switchBranch
+encode: flat_object
+description: |
+    Represents a single case in a $switch expression
+arguments:
+    -
+        name: case
+        type:
+            - resolvesToBool
+        description: |
+            Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
+    -
+        name: then
+        type:
+            - expression
+        description: |
+            Can be any valid expression.

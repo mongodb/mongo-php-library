@@ -1,0 +1,41 @@
+# $schema: ../schema.json
+name: $covarianceSamp
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/'
+type:
+    - window
+encode: array
+description: |
+    Returns the sample covariance of two numeric expressions.
+    New in MongoDB 5.0.
+arguments:
+    -
+        name: expression1
+        type:
+            - resolvesToNumber
+    -
+        name: expression2
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/#example'
+        pipeline:
+            -
+                $setWindowFields:
+                    partitionBy: '$state'
+                    sortBy:
+                        orderDate: 1
+                    output:
+                        covarianceSampForState:
+                            $covarianceSamp:
+                                -
+                                    # Example uses the short form, the builder always generates the verbose form
+                                    # $year: '$orderDate'
+                                    $year:
+                                        date: '$orderDate'
+                                - '$quantity'
+                            window:
+                                documents:
+                                    - 'unbounded'
+                                    - 'current'

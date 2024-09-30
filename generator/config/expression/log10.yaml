@@ -1,0 +1,27 @@
+# $schema: ../schema.json
+name: $log10
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/'
+type:
+    - resolvesToDouble
+encode: single
+description: |
+    Calculates the log base 10 of a number.
+arguments:
+    -
+        name: number
+        type:
+            - resolvesToNumber
+        description: |
+            Any valid expression as long as it resolves to a non-negative number.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/#example'
+        pipeline:
+            -
+                $project:
+                    pH:
+                        $multiply:
+                            - -1
+                            -
+                                $log10: '$H3O'

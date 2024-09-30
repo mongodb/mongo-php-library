@@ -1,0 +1,77 @@
+# $schema: ../schema.json
+name: $dateTrunc
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/'
+type:
+    - resolvesToDate
+encode: object
+description: |
+    Truncates a date.
+arguments:
+    -
+        name: date
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: unit
+        type:
+            - timeUnit
+        description: |
+            The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
+            Together, binSize and unit specify the time period used in the $dateTrunc calculation.
+    -
+        name: binSize
+        type:
+            - resolvesToNumber
+        optional: true
+        description: |
+            The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
+            Together, binSize and unit specify the time period used in the $dateTrunc calculation.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+    -
+        name: startOfWeek
+        type:
+            - string
+        optional: true
+        description: |
+            The start of the week. Used when 
+            unit is week. Defaults to Sunday.
+tests:
+    -
+        name: 'Truncate Order Dates in a $project Pipeline Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/#truncate-order-dates-in-a--project-pipeline-stage'
+        pipeline:
+            -
+                $project:
+                    _id: 1
+                    orderDate: 1
+                    truncatedOrderDate:
+                        $dateTrunc:
+                            date: '$orderDate'
+                            unit: 'week'
+                            binSize: 2
+                            timezone: 'America/Los_Angeles'
+                            startOfWeek: 'Monday'
+    -
+        name: 'Truncate Order Dates and Obtain Quantity Sum in a $group Pipeline Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/#truncate-order-dates-and-obtain-quantity-sum-in-a--group-pipeline-stage'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        truncatedOrderDate:
+                            $dateTrunc:
+                                date: '$orderDate'
+                                unit: 'month'
+                                binSize: 6
+                    sumQuantity:
+                        $sum: '$quantity'

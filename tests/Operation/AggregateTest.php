@@ -7,6 +7,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Aggregate;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AggregateTest extends TestCase
 {
@@ -17,31 +18,31 @@ class AggregateTest extends TestCase
         new Aggregate($this->getDatabaseName(), $this->getCollectionName(), [1 => ['$match' => ['x' => 1]]]);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Aggregate($this->getDatabaseName(), $this->getCollectionName(), [['$match' => ['x' => 1]]], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'allowDiskUse' => $this->getInvalidBooleanValues(),
-            'batchSize' => $this->getInvalidIntegerValues(),
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'collation' => $this->getInvalidDocumentValues(),
-            'hint' => $this->getInvalidHintValues(),
-            'let' => $this->getInvalidDocumentValues(),
-            'explain' => $this->getInvalidBooleanValues(),
-            'maxAwaitTimeMS' => $this->getInvalidIntegerValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'allowDiskUse' => self::getInvalidBooleanValues(),
+            'batchSize' => self::getInvalidIntegerValues(),
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'collation' => self::getInvalidDocumentValues(),
+            'hint' => self::getInvalidHintValues(),
+            'let' => self::getInvalidDocumentValues(),
+            'explain' => self::getInvalidBooleanValues(),
+            'maxAwaitTimeMS' => self::getInvalidIntegerValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'session' => self::getInvalidSessionValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

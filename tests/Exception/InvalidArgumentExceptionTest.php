@@ -5,17 +5,18 @@ namespace MongoDB\Tests\Exception;
 use AssertionError;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class InvalidArgumentExceptionTest extends TestCase
 {
-    /** @dataProvider provideExpectedTypes */
+    #[DataProvider('provideExpectedTypes')]
     public function testExpectedTypeFormatting($expectedType, $typeString): void
     {
         $e = InvalidArgumentException::invalidType('$arg', null, $expectedType);
         $this->assertStringContainsString($typeString, $e->getMessage());
     }
 
-    public function provideExpectedTypes()
+    public static function provideExpectedTypes()
     {
         yield 'expectedType is a string' => [
             'array',

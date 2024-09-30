@@ -2,36 +2,39 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Distinct;
+use PHPUnit\Framework\Attributes\DataProvider;
+use TypeError;
 
 class DistinctTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', $filter);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'collation' => $this->getInvalidDocumentValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
+        return self::createOptionDataProvider([
+            'collation' => self::getInvalidDocumentValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'session' => self::getInvalidSessionValues(),
+            'typeMap' => self::getInvalidArrayValues(),
         ]);
     }
 

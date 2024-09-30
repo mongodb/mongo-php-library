@@ -1,0 +1,85 @@
+# $schema: ../schema.json
+name: $bottomN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/'
+type:
+    - accumulator
+    - window
+encode: object
+description: |
+    Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer than n elements, $bottomN returns all elements in the group.
+    New in MongoDB 5.2.
+    Available in the $group and $setWindowFields stages.
+arguments:
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
+    -
+        name: sortBy
+        type:
+            - object # SortSpec
+        description: |
+            Specifies the order of results, with syntax similar to $sort.
+    -
+        name: output
+        type:
+            - expression
+        description: |
+            Represents the output for each element in the group and can be any expression.
+tests:
+    -
+        name: 'Find the Three Lowest Scores'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#find-the-three-lowest-scores'
+        pipeline:
+            -
+                $match:
+                    gameId: 'G1'
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $bottomN:
+                            output:
+                                - '$playerId'
+                                - '$score'
+                            sortBy:
+                                score: -1
+                            n: 3
+    -
+        name: 'Finding the Three Lowest Score Documents Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#finding-the-three-lowest-score-documents-across-multiple-games'
+        pipeline:
+            -
+                $group:
+                    _id: '$gameId'
+                    playerId:
+                        $bottomN:
+                            output:
+                                - '$playerId'
+                                - '$score'
+                            sortBy:
+                                score: -1
+                            n: 3
+    -
+        name: 'Computing n Based on the Group Key for $group'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#computing-n-based-on-the-group-key-for--group'
+        pipeline:
+            -
+                $group:
+                    _id:
+                        gameId: '$gameId'
+                    gamescores:
+                        $bottomN:
+                            output: '$score'
+                            n:
+                                $cond:
+                                    if:
+                                        $eq:
+                                            - '$gameId'
+                                            - 'G2'
+                                    then: 1
+                                    else: 3
+                            sortBy:
+                                score: -1

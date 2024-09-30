@@ -5,12 +5,10 @@ on:
   pull_request:
     branches:
       - "v*.*"
-      - "master"
       - "feature/*"
   push:
     branches:
       - "v*.*"
-      - "master"
       - "feature/*"
 
 env:

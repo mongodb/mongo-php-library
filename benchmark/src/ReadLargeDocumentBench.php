@@ -129,8 +129,7 @@ final class ReadLargeDocumentBench
         }
     }
 
-    /** @param array|object $document */
-    private function accessId($document, string $accessor): void
+    private function accessId(array|object $document, string $accessor): void
     {
         switch ($accessor) {
             case 'array':
@@ -153,8 +152,7 @@ final class ReadLargeDocumentBench
         }
     }
 
-    /** @param array|object $document */
-    private function accessLastField($document, string $accessor): void
+    private function accessLastField(array|object $document, string $accessor): void
     {
         switch ($accessor) {
             case 'array':
@@ -178,8 +176,7 @@ final class ReadLargeDocumentBench
         }
     }
 
-    /** @param array|object $document */
-    private function accessFirstField($document, string $accessor): void
+    private function accessFirstField(array|object $document, string $accessor): void
     {
         switch ($accessor) {
             case 'array':

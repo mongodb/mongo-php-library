@@ -17,6 +17,7 @@ use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\ListCollections;
 use stdClass;
+use Throwable;
 use UnexpectedValueException;
 
 use function array_intersect_key;
@@ -69,12 +70,15 @@ abstract class FunctionalTestCase extends TestCase
         $this->configuredFailPoints = [];
     }
 
+    protected function onNotSuccessfulTest(Throwable $t): never
+    {
+        $this->cleanupCollections();
+
+        throw $t;
+    }
+
     public function tearDown(): void
     {
-        if (! $this->hasFailed()) {
-            $this->cleanupCollections();
-        }
-
         $this->disableFailPoints();
 
         parent::tearDown();
@@ -213,7 +217,7 @@ abstract class FunctionalTestCase extends TestCase
      * @param array|stdClass $command configureFailPoint command document
      * @throws InvalidArgumentException if $command is not a configureFailPoint command
      */
-    public function configureFailPoint($command, ?Server $server = null): void
+    public function configureFailPoint(array|stdClass $command, ?Server $server = null): void
     {
         if (! $this->isFailCommandSupported()) {
             $this->markTestSkipped('failCommand is only supported on mongod >= 4.0.0 and mongos >= 4.1.5.');
@@ -393,7 +397,7 @@ abstract class FunctionalTestCase extends TestCase
             );
 
             $document = current($cursor->toArray());
-        } catch (CommandException $e) {
+        } catch (CommandException) {
             return false;
         }
 
@@ -710,7 +714,7 @@ abstract class FunctionalTestCase extends TestCase
             );
 
             $document = current($cursor->toArray());
-        } catch (CommandException $e) {
+        } catch (CommandException) {
             return false;
         }
 

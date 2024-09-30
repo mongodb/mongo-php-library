@@ -15,20 +15,17 @@ final class ToObjectCodec implements DocumentCodec
     use DecodeIfSupported;
     use EncodeIfSupported;
 
-    /** @param mixed $value */
-    public function canDecode($value): bool
+    public function canDecode(mixed $value): bool
     {
         return $value instanceof Document;
     }
 
-    /** @param mixed $value */
-    public function canEncode($value): bool
+    public function canEncode(mixed $value): bool
     {
         return is_object($value);
     }
 
-    /** @param mixed $value */
-    public function decode($value): object
+    public function decode(mixed $value): object
     {
         if (! $value instanceof Document) {
             throw UnsupportedValueException::invalidDecodableValue($value);
@@ -37,8 +34,7 @@ final class ToObjectCodec implements DocumentCodec
         return $value->toPHP(['root' => 'stdClass', 'array' => 'array', 'document' => 'stdClass']);
     }
 
-    /** @param mixed $value */
-    public function encode($value): Document
+    public function encode(mixed $value): Document
     {
         if (! is_object($value)) {
             throw UnsupportedValueException::invalidEncodableValue($value);

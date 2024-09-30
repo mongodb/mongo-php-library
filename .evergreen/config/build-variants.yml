@@ -15,18 +15,6 @@ buildvariants:
     run_on: debian11-small
     tasks:
       - name: "build-all-php"
-  - name: build-debian10
-    display_name: "Build: Debian 10"
-    tags: ["build", "debian", "x64", "pr", "tag"]
-    run_on: debian10-small
-    tasks:
-      - name: "build-all-php"
-  - name: build-debian92
-    display_name: "Build: Debian 9.2"
-    tags: ["build", "debian", "x64", "pr", "tag"]
-    run_on: debian92-small
-    tasks:
-      - name: "build-all-php"
 
   # RHEL
   - name: build-rhel90

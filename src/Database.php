@@ -55,7 +55,11 @@ use stdClass;
 use Throwable;
 
 use function is_array;
+use function sprintf;
 use function strlen;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 class Database
 {
@@ -280,6 +284,8 @@ class Database
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
+        } else {
+            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
         }
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
@@ -323,6 +329,8 @@ class Database
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
+        } else {
+            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
         }
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
@@ -356,6 +364,8 @@ class Database
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
+        } else {
+            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
         }
 
         $server = select_server_for_write($this->manager, $options);
@@ -384,6 +394,8 @@ class Database
     {
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
+        } else {
+            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
         }
 
         $server = select_server_for_write($this->manager, $options);

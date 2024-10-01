@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\Warning;
 
+use function array_flip;
 use function basename;
 use function dirname;
 use function glob;
@@ -191,6 +192,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         // libmongoc always adds readConcern to aggregate command
         'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
     ];
+
+    private static array $duplicateTests = ['crud/client bulkWrite partial results: partialResult is set when first operation fails during an unordered bulk write (summary)'];
 
     /**
      * Any tests that rely on session pinning (including targetedFailPoint) must
@@ -494,11 +497,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     {
         $pattern = self::$testDir . '/' . $directory . '/*.json';
 
+        $duplicateTests = array_flip(self::$duplicateTests);
+
         foreach (glob($pattern) as $filename) {
             $testGroup = $group ?? dirname(basename($filename));
 
             foreach (UnifiedTestCase::fromFile($filename) as $name => $test) {
-                yield $testGroup . '/' . $name => [$test];
+                $testKey = $testGroup . '/' . $name;
+
+                if (isset($duplicateTests[$testKey])) {
+                    continue;
+                }
+
+                yield $testKey => [$test];
             }
         }
     }

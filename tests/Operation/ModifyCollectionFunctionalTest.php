@@ -3,12 +3,8 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\CreateIndexes;
-use MongoDB\Operation\ListIndexes;
 use MongoDB\Operation\ModifyCollection;
 use PHPUnit\Framework\Attributes\Group;
-
-use function iterator_to_array;
-use function json_encode;
 
 class ModifyCollectionFunctionalTest extends FunctionalTestCase
 {
@@ -33,23 +29,9 @@ class ModifyCollectionFunctionalTest extends FunctionalTestCase
             ['index' => ['keyPattern' => ['lastAccess' => 1], 'expireAfterSeconds' => 1000]],
             ['typeMap' => ['root' => 'array', 'document' => 'array']],
         );
-        $modifyCollection->execute($this->getPrimaryServer());
+        $result = $modifyCollection->execute($this->getPrimaryServer());
 
-        $listIndexes = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
-        $indexes = $listIndexes->execute($this->getPrimaryServer());
-        $indexes = iterator_to_array($indexes);
-        $this->assertCount(2, $indexes);
-
-        foreach ($indexes as $index) {
-            switch ($index['key']) {
-                case ['_id' => 1]:
-                    break;
-                case ['lastAccess' => 1]:
-                    $this->assertSame(1000, $index['expireAfterSeconds']);
-                    break;
-                default:
-                    $this->fail('Unexpected index key: ' . json_encode($index->key));
-            }
-        }
+        $this->assertSame(3, $result['expireAfterSeconds_old']);
+        $this->assertSame(1000, $result['expireAfterSeconds_new']);
     }
 }

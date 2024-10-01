@@ -31,10 +31,11 @@ type changed to `void`. In case of an error, an exception is thrown.
 
  * `MongoDB\Client`: `dropDatabase`
  * `MongoDB\Collection`: `drop`, `dropIndex`, `dropIndexes`, `dropSearchIndex`, `rename`
- * `MongoDB\Database`: `createCollection`, `drop`, `dropCollection`, `modifyCollection`, `renameCollection`
+ * `MongoDB\Database`: `createCollection`, `drop`, `dropCollection`, `renameCollection`
  * `MongoDB\Database::createEncryptedCollection()` returns the list of encrypted fields
 
-If you still need to access the raw command result, you can use a `CommandSubscriber`.
+If you still need to access the raw command result, you can use a
+[`CommandSubscriber`](https://www.php.net/manual/en/class.mongodb-driver-monitoring-commandsubscriber.php).
 
 GridFS
 ------

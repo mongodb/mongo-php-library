@@ -733,6 +733,9 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/ModifyCollection.php">
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
+    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['comment']]]></code>
       <code><![CDATA[$options['session']]]></code>

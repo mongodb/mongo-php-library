@@ -478,8 +478,12 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function modifyCollection(string $collectionName, array $collectionOptions, array $options = []): void
+    public function modifyCollection(string $collectionName, array $collectionOptions, array $options = []): array|object
     {
+        if (! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
         $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
@@ -488,7 +492,7 @@ class Database
 
         $operation = new ModifyCollection($this->databaseName, $collectionName, $collectionOptions, $options);
 
-        $operation->execute($server);
+        return $operation->execute($server);
     }
 
     /**

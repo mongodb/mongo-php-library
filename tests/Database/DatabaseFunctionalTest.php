@@ -16,9 +16,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use TypeError;
 
+use function array_key_exists;
 use function current;
-use function iterator_to_array;
-use function json_encode;
 
 /**
  * Functional tests for the Database class.
@@ -182,25 +181,28 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $createIndexes = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), $indexes);
         $createIndexes->execute($this->getPrimaryServer());
 
-        $this->database->modifyCollection(
+        $commandResult = $this->database->modifyCollection(
             $this->getCollectionName(),
             ['index' => ['keyPattern' => ['lastAccess' => 1], 'expireAfterSeconds' => 1000]],
+            ['typeMap' => ['root' => 'array', 'document' => 'array']],
         );
+        $this->assertCommandSucceeded($commandResult);
 
-        $indexes = $this->database->selectCollection($this->getCollectionName())->listIndexes();
-        $indexes = iterator_to_array($indexes);
-        $this->assertCount(2, $indexes);
+        $commandResult = (array) $commandResult;
 
-        foreach ($indexes as $index) {
-            switch ($index['key']) {
-                case ['_id' => 1]:
-                    break;
-                case ['lastAccess' => 1]:
-                    $this->assertSame(1000, $index['expireAfterSeconds']);
-                    break;
-                default:
-                    $this->fail('Unexpected index key: ' . json_encode($index->key));
+        if (array_key_exists('raw', $commandResult)) {
+            /* Sharded environment, where we only assert if a shard had a successful update. For
+             * non-primary shards that don't have chunks for the collection, the result contains a
+             * "ns does not exist" error. */
+            foreach ($commandResult['raw'] as $shard) {
+                if (array_key_exists('ok', $shard) && $shard['ok'] == 1) {
+                    $this->assertSame(3, $shard['expireAfterSeconds_old']);
+                    $this->assertSame(1000, $shard['expireAfterSeconds_new']);
+                }
             }
+        } else {
+            $this->assertSame(3, $commandResult['expireAfterSeconds_old']);
+            $this->assertSame(1000, $commandResult['expireAfterSeconds_new']);
         }
     }
 

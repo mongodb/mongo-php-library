@@ -235,6 +235,10 @@ final class Operation
 
     private function executeForClient(Client $client)
     {
+        if ($this->name === 'clientBulkWrite') {
+            Assert::markTestSkipped('clientBulkWrite operation is not implemented');
+        }
+
         $args = $this->prepareArguments();
         Util::assertArgumentsBySchema(Client::class, $this->name, $args);
 

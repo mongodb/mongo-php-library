@@ -180,15 +180,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-commandCursor: createCommandCursor\'s cursor can be closed and will perform a killCursors operation' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
         // libmongoc always adds readConcern to aggregate command
         'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
-        // Tests need updating of the spec test
-        'crud/aggregate-write-readPreference: Aggregate with $out includes read preference for 5.0+ server' => 'PHPLIB-1458',
-        'crud/aggregate-write-readPreference: Aggregate with $out omits read preference for pre-5.0 server' => 'PHPLIB-1458',
-        'crud/aggregate-write-readPreference: Aggregate with $merge includes read preference for 5.0+ server' => 'PHPLIB-1458',
-        'crud/aggregate-write-readPreference: Aggregate with $merge omits read preference for pre-5.0 server' => 'PHPLIB-1458',
-        'crud/db-aggregate-write-readPreference: Database-level aggregate with $out includes read preference for 5.0+ server' => 'PHPLIB-1458',
-        'crud/db-aggregate-write-readPreference: Database-level aggregate with $out omits read preference for pre-5.0 server' => 'PHPLIB-1458',
-        'crud/db-aggregate-write-readPreference: Database-level aggregate with $merge includes read preference for 5.0+ server' => 'PHPLIB-1458',
-        'crud/db-aggregate-write-readPreference: Database-level aggregate with $merge omits read preference for pre-5.0 server' => 'PHPLIB-1458',
     ];
 
     /**

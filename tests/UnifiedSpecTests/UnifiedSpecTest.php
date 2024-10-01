@@ -178,6 +178,16 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-commandCursor: runCursorCommand creates and exhausts cursor by running getMores' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
         'valid-pass/entity-commandCursor: createCommandCursor creates a cursor and stores it as an entity that can be iterated one document at a time' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
         'valid-pass/entity-commandCursor: createCommandCursor\'s cursor can be closed and will perform a killCursors operation' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: successfully executes checkMetadataConsistency cursor creating command' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: errors if the command response is not a cursor' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: creates an implicit session that is reused across getMores' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: accepts an explicit session that is reused across getMores' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: returns pinned connections to the pool when the cursor is exhausted' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: returns pinned connections to the pool when the cursor is closed' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: supports configuring getMore batchSize' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: supports configuring getMore maxTimeMS' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: supports configuring getMore comment' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        'run-command/runCursorCommand: does not close the cursor when receiving an empty batch' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
         // libmongoc always adds readConcern to aggregate command
         'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
     ];
@@ -229,7 +239,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideAtlasDataLakeTests(): Generator
     {
-        return self::provideTests('atlas-data-lake');
+        return self::provideTests('atlas-data-lake-testing/tests/unified', 'atlas-data-lake');
     }
 
     #[DataProvider('provideChangeStreamsTests')]
@@ -241,7 +251,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideChangeStreamsTests(): Generator
     {
-        return self::provideTests('change-streams');
+        return self::provideTests('change-streams/tests/unified', 'change-streams');
     }
 
     #[DataProvider('provideClientSideEncryptionTests')]
@@ -254,7 +264,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideClientSideEncryptionTests(): Generator
     {
-        return self::provideTests('client-side-encryption');
+        return self::provideTests('client-side-encryption/tests/unified', 'client-side-encryption');
     }
 
     #[DataProvider('provideCollectionManagementTests')]
@@ -266,7 +276,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideCollectionManagementTests(): Generator
     {
-        return self::provideTests('collection-management');
+        return self::provideTests('collection-management/tests', 'collection-management');
     }
 
     #[DataProvider('provideCommandMonitoringTests')]
@@ -278,7 +288,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideCommandMonitoringTests(): Generator
     {
-        return self::provideTests('command-monitoring');
+        return self::provideTests('command-logging-and-monitoring/tests/monitoring', 'command-monitoring');
     }
 
     #[DataProvider('provideCrudTests')]
@@ -290,7 +300,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideCrudTests(): Generator
     {
-        return self::provideTests('crud');
+        return self::provideTests('crud/tests/unified', 'crud');
     }
 
     #[DataProvider('provideGridFSTests')]
@@ -302,7 +312,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideGridFSTests(): Generator
     {
-        return self::provideTests('gridfs');
+        return self::provideTests('gridfs/tests', 'gridfs');
     }
 
     #[DataProvider('provideLoadBalancers')]
@@ -314,7 +324,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideLoadBalancers(): Generator
     {
-        return self::provideTests('load-balancers');
+        return self::provideTests('load-balancers/tests', 'load-balancers');
     }
 
     #[DataProvider('provideReadWriteConcernTests')]
@@ -325,7 +335,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideReadWriteConcernTests(): Generator
     {
-        return self::provideTests('read-write-concern');
+        return self::provideTests('read-write-concern/tests/operation', 'read-write-concern');
     }
 
     #[DataProvider('provideRetryableReadsTests')]
@@ -337,7 +347,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideRetryableReadsTests(): Generator
     {
-        return self::provideTests('retryable-reads');
+        return self::provideTests('retryable-reads/tests/unified', 'retryable-reads');
     }
 
     #[DataProvider('provideRetryableWritesTests')]
@@ -349,7 +359,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideRetryableWritesTests(): Generator
     {
-        return self::provideTests('retryable-writes');
+        return self::provideTests('retryable-writes/tests/unified', 'retryable-writes');
     }
 
     #[DataProvider('provideRunCommandTests')]
@@ -361,7 +371,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideRunCommandTests(): Generator
     {
-        return self::provideTests('run-command');
+        return self::provideTests('run-command/tests/unified', 'run-command');
     }
 
     #[DataProvider('provideSessionsTests')]
@@ -373,7 +383,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideSessionsTests(): Generator
     {
-        return self::provideTests('sessions');
+        return self::provideTests('sessions/tests', 'sessions');
     }
 
     #[DataProvider('provideTransactionsTests')]
@@ -385,7 +395,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideTransactionsTests(): Generator
     {
-        return self::provideTests('transactions');
+        return self::provideTests('transactions/tests/unified', 'transactions');
     }
 
     #[DataProvider('provideTransactionsConvenientApiTests')]
@@ -396,7 +406,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideTransactionsConvenientApiTests(): Generator
     {
-        return self::provideTests('transactions-convenient-api');
+        return self::provideTests('transactions-convenient-api/tests/unified', 'transactions-convenient-api');
     }
 
     #[DataProvider('provideVersionedApiTests')]
@@ -409,7 +419,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideVersionedApiTests(): Generator
     {
-        return self::provideTests('versioned-api');
+        return self::provideTests('versioned-api/tests', 'versioned-api');
     }
 
     #[DataProvider('providePassingTests')]
@@ -420,7 +430,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function providePassingTests(): Generator
     {
-        yield from self::provideTests('valid-pass');
+        yield from self::provideTests('unified-test-format/tests/valid-pass', 'valid-pass');
     }
 
     #[DataProvider('provideFailingTests')]
@@ -458,7 +468,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideFailingTests(): Generator
     {
-        yield from self::provideTests('valid-fail');
+        yield from self::provideTests('unified-test-format/tests/valid-fail', 'valid-fail');
     }
 
     #[DataProvider('provideIndexManagementTests')]
@@ -477,18 +487,18 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public static function provideIndexManagementTests(): Generator
     {
-        yield from self::provideTests('index-management');
+        yield from self::provideTests('index-management/tests', 'index-management');
     }
 
-    private static function provideTests(string $directory): Generator
+    private static function provideTests(string $directory, ?string $group = null): Generator
     {
         $pattern = self::$testDir . '/' . $directory . '/*.json';
 
         foreach (glob($pattern) as $filename) {
-            $group = basename(dirname($filename));
+            $testGroup = $group ?? dirname(basename($filename));
 
             foreach (UnifiedTestCase::fromFile($filename) as $name => $test) {
-                yield $group . '/' . $name => [$test];
+                yield $testGroup . '/' . $name => [$test];
             }
         }
     }

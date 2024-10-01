@@ -501,15 +501,13 @@ class Collection
      *
      * @see DropCollection::__construct() for supported options
      * @param array $options Additional options
-     * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function drop(array $options = []): array|object
+    public function drop(array $options = []): void
     {
         $options = $this->inheritWriteOptions($options);
-        $options = $this->inheritTypeMap($options, __FUNCTION__);
 
         $server = select_server_for_write($this->manager, $options);
 
@@ -522,7 +520,7 @@ class Collection
             ? new DropEncryptedCollection($this->databaseName, $this->collectionName, $options)
             : new DropCollection($this->databaseName, $this->collectionName, $options);
 
-        return $operation->execute($server);
+        $operation->execute($server);
     }
 
     /**
@@ -531,12 +529,11 @@ class Collection
      * @see DropIndexes::__construct() for supported options
      * @param string|IndexInfo $indexName Index name or model object
      * @param array            $options   Additional options
-     * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function dropIndex(string|IndexInfo $indexName, array $options = []): array|object
+    public function dropIndex(string|IndexInfo $indexName, array $options = []): void
     {
         $indexName = (string) $indexName;
 
@@ -545,11 +542,10 @@ class Collection
         }
 
         $options = $this->inheritWriteOptions($options);
-        $options = $this->inheritTypeMap($options, __FUNCTION__);
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
 
-        return $operation->execute(select_server_for_write($this->manager, $options));
+        $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -557,19 +553,17 @@ class Collection
      *
      * @see DropIndexes::__construct() for supported options
      * @param array $options Additional options
-     * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function dropIndexes(array $options = []): array|object
+    public function dropIndexes(array $options = []): void
     {
         $options = $this->inheritWriteOptions($options);
-        $options = $this->inheritTypeMap($options, __FUNCTION__);
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
 
-        return $operation->execute(select_server_for_write($this->manager, $options));
+        $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -909,23 +903,21 @@ class Collection
      * @param string      $toCollectionName New name of the collection
      * @param string|null $toDatabaseName   New database name of the collection. Defaults to the original database.
      * @param array       $options          Additional options
-     * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function rename(string $toCollectionName, ?string $toDatabaseName = null, array $options = []): array|object
+    public function rename(string $toCollectionName, ?string $toDatabaseName = null, array $options = []): void
     {
         if (! isset($toDatabaseName)) {
             $toDatabaseName = $this->databaseName;
         }
 
         $options = $this->inheritWriteOptions($options);
-        $options = $this->inheritTypeMap($options);
 
         $operation = new RenameCollection($this->databaseName, $this->collectionName, $toDatabaseName, $toCollectionName, $options);
 
-        return $operation->execute(select_server_for_write($this->manager, $options));
+        $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -1127,12 +1119,8 @@ class Collection
         return $options;
     }
 
-    private function inheritTypeMap(array $options, ?string $deprecatedFunction = null): array
+    private function inheritTypeMap(array $options): array
     {
-        if ($deprecatedFunction !== null && isset($options['typeMap'])) {
-            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', $deprecatedFunction), E_USER_DEPRECATED);
-        }
-
         // Only inherit the type map if no codec is used
         if (! isset($options['typeMap']) && ! isset($options['codec'])) {
             $options['typeMap'] = $this->typeMap;

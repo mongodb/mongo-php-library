@@ -49,10 +49,6 @@ use Throwable;
 use function array_diff_key;
 use function is_array;
 use function is_string;
-use function sprintf;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 class Client
 {
@@ -217,19 +213,12 @@ class Client
      * @see DropDatabase::__construct() for supported options
      * @param string $databaseName Database name
      * @param array  $options      Additional options
-     * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function dropDatabase(string $databaseName, array $options = []): array|object
+    public function dropDatabase(string $databaseName, array $options = []): void
     {
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        } else {
-            @trigger_error(sprintf('The function %s() will return nothing in mongodb/mongodb v2.0, the "typeMap" option is deprecated', __FUNCTION__), E_USER_DEPRECATED);
-        }
-
         $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
@@ -238,7 +227,7 @@ class Client
 
         $operation = new DropDatabase($databaseName, $options);
 
-        return $operation->execute($server);
+        $operation->execute($server);
     }
 
     /**

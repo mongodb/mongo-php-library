@@ -41,7 +41,6 @@ class CreateCollectionTest extends TestCase
             'size' => self::getInvalidIntegerValues(),
             'storageEngine' => self::getInvalidDocumentValues(),
             'timeseries' => self::getInvalidDocumentValues(),
-            'typeMap' => self::getInvalidArrayValues(),
             'validationAction' => self::getInvalidStringValues(),
             'validationLevel' => self::getInvalidStringValues(),
             'validator' => self::getInvalidDocumentValues(),

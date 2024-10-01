@@ -16,8 +16,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $that = $this;
         $basicCollectionName = $this->getCollectionName() . '.basic';
 
-        $commandResult = $this->database->createCollection($basicCollectionName);
-        $this->assertCommandSucceeded($commandResult);
+        $this->database->createCollection($basicCollectionName);
         $this->assertCollectionExists($basicCollectionName, null, function (CollectionInfo $info) use ($that): void {
             $that->assertFalse($info->isCapped());
         });
@@ -29,8 +28,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
             'size' => 1_048_576,
         ];
 
-        $commandResult = $this->database->createCollection($cappedCollectionName, $cappedCollectionOptions);
-        $this->assertCommandSucceeded($commandResult);
+        $this->database->createCollection($cappedCollectionName, $cappedCollectionOptions);
         $this->assertCollectionExists($cappedCollectionName, null, function (CollectionInfo $info) use ($that): void {
             $that->assertTrue($info->isCapped());
             $that->assertEquals(100, $info->getCappedMax());
@@ -46,15 +44,13 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->database->dropCollection($this->getCollectionName());
-        $this->assertCommandSucceeded($commandResult);
+        $this->database->dropCollection($this->getCollectionName());
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
 
     public function testListCollections(): void
     {
-        $commandResult = $this->database->createCollection($this->getCollectionName());
-        $this->assertCommandSucceeded($commandResult);
+        $this->database->createCollection($this->getCollectionName());
 
         $collections = $this->database->listCollections();
         $this->assertInstanceOf(Iterator::class, $collections);
@@ -66,8 +62,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
     public function testListCollectionsWithFilter(): void
     {
-        $commandResult = $this->database->createCollection($this->getCollectionName());
-        $this->assertCommandSucceeded($commandResult);
+        $this->database->createCollection($this->getCollectionName());
 
         $collectionName = $this->getCollectionName();
         $options = ['filter' => ['name' => $collectionName]];
@@ -83,8 +78,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
     public function testListCollectionNames(): void
     {
-        $commandResult = $this->database->createCollection($this->getCollectionName());
-        $this->assertCommandSucceeded($commandResult);
+        $this->database->createCollection($this->getCollectionName());
 
         $collections = $this->database->listCollectionNames();
 
@@ -95,8 +89,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
     public function testListCollectionNamesWithFilter(): void
     {
-        $commandResult = $this->database->createCollection($this->getCollectionName());
-        $this->assertCommandSucceeded($commandResult);
+        $this->database->createCollection($this->getCollectionName());
 
         $collectionName = $this->getCollectionName();
         $options = ['filter' => ['name' => $collectionName]];

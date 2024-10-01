@@ -519,9 +519,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/CreateCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -593,9 +590,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DropCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['comment']]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -606,9 +600,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DropDatabase.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['comment']]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -621,9 +612,6 @@
     </MixedArgument>
   </file>
   <file src="src/Operation/DropIndexes.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -755,9 +743,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/RenameCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>

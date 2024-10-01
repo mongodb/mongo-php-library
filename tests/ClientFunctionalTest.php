@@ -47,8 +47,7 @@ class ClientFunctionalTest extends FunctionalTestCase
         $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->client->dropDatabase($this->getDatabaseName());
-        $this->assertCommandSucceeded($commandResult);
+        $this->client->dropDatabase($this->getDatabaseName());
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
 

@@ -24,7 +24,6 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 
-use function current;
 use function is_array;
 use function is_bool;
 use function is_integer;
@@ -112,9 +111,6 @@ final class CreateCollection
      *
      *    This is not supported for servers versions < 5.0.
      *
-     *  * typeMap (array): Type map for BSON deserialization. This will only be
-     *    used for the returned command result document.
-     *
      *  * validationAction (string): Validation action.
      *
      *  * validationLevel (string): Validation level.
@@ -199,10 +195,6 @@ final class CreateCollection
             throw InvalidArgumentException::expectedDocumentType('"timeseries" option', $this->options['timeseries']);
         }
 
-        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
-        }
-
         if (isset($this->options['validationAction']) && ! is_string($this->options['validationAction'])) {
             throw InvalidArgumentException::invalidType('"validationAction" option', $this->options['validationAction'], 'string');
         }
@@ -239,18 +231,11 @@ final class CreateCollection
     /**
      * Execute the operation.
      *
-     * @return array|object Command result document
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server): array|object
+    public function execute(Server $server): void
     {
-        $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
-
-        if (isset($this->options['typeMap'])) {
-            $cursor->setTypeMap($this->options['typeMap']);
-        }
-
-        return current($cursor->toArray());
+        $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
     }
 
     /**

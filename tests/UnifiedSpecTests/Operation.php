@@ -83,6 +83,24 @@ final class Operation
 
     private ?string $saveResultAsEntity = null;
 
+    private static array $unsupportedOperations = [
+        self::OBJECT_TEST_RUNNER => [
+            'assertNumberConnectionsCheckedOut' => 'PHP does not implement CMAP',
+            'createEntities' => 'createEntities is not implemented (PHPC-1760)',
+        ],
+        Client::class => [
+            'clientBulkWrite' => 'clientBulkWrite is not implemented (PHPLIB-847)',
+            'listDatabaseObjects' => 'listDatabaseObjects is not implemented',
+        ],
+        Cursor::class => ['iterateOnce' => 'iterateOnce is not implemented (PHPC-1760)'],
+        Database::class => [
+            'createCommandCursor' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+            'listCollectionObjects' => 'listCollectionObjects is not implemented',
+            'runCursorCommand' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        ],
+        Collection::class => ['listIndexNames' => 'listIndexNames is not implemented'],
+    ];
+
     public function __construct(stdClass $o, private Context $context)
     {
         $this->entityMap = $context->getEntityMap();
@@ -166,6 +184,7 @@ final class Operation
         $object = $this->entityMap[$this->object];
         assertIsObject($object);
 
+        $this->skipIfOperationIsNotSupported($object::class);
         $this->context->setActiveClient($this->entityMap->getRootClientIdOf($this->object));
 
         switch ($object::class) {
@@ -235,10 +254,6 @@ final class Operation
 
     private function executeForClient(Client $client)
     {
-        if ($this->name === 'clientBulkWrite') {
-            Assert::markTestSkipped('clientBulkWrite operation is not implemented');
-        }
-
         $args = $this->prepareArguments();
         Util::assertArgumentsBySchema(Client::class, $this->name, $args);
 
@@ -811,6 +826,8 @@ final class Operation
 
     private function executeForTestRunner()
     {
+        $this->skipIfOperationIsNotSupported(self::OBJECT_TEST_RUNNER);
+
         $args = $this->prepareArguments();
         Util::assertArgumentsBySchema(self::OBJECT_TEST_RUNNER, $this->name, $args);
 
@@ -961,6 +978,16 @@ final class Operation
 
         // Prepare readConcern, readPreference, and writeConcern
         return Util::prepareCommonOptions($args);
+    }
+
+    private function skipIfOperationIsNotSupported(string $executingObjectName): void
+    {
+        $skipReason = self::$unsupportedOperations[$executingObjectName][$this->name] ?? null;
+        if (! $skipReason) {
+            return;
+        }
+
+        Assert::markTestSkipped($skipReason);
     }
 
     private static function prepareBulkWriteRequest(stdClass $request): array

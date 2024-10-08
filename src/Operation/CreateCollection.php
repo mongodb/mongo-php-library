@@ -47,14 +47,6 @@ final class CreateCollection
      *
      * Supported options:
      *
-     *  * autoIndexId (boolean): Specify false to disable the automatic creation
-     *    of an index on the _id field. For replica sets, this option cannot be
-     *    false. The default is true.
-     *
-     *    This option has been deprecated since MongoDB 3.2. As of MongoDB 4.0,
-     *    this option cannot be false when creating a replicated collection
-     *    (i.e. a collection outside of the local database in any mongod mode).
-     *
      *  * capped (boolean): Specify true to create a capped collection. If set,
      *    the size option must also be specified. The default is false.
      *
@@ -123,10 +115,6 @@ final class CreateCollection
      */
     public function __construct(private string $databaseName, private string $collectionName, private array $options = [])
     {
-        if (isset($this->options['autoIndexId']) && ! is_bool($this->options['autoIndexId'])) {
-            throw InvalidArgumentException::invalidType('"autoIndexId" option', $this->options['autoIndexId'], 'boolean');
-        }
-
         if (isset($this->options['capped']) && ! is_bool($this->options['capped'])) {
             throw InvalidArgumentException::invalidType('"capped" option', $this->options['capped'], 'boolean');
         }
@@ -207,10 +195,6 @@ final class CreateCollection
             unset($this->options['writeConcern']);
         }
 
-        if (isset($this->options['autoIndexId'])) {
-            trigger_error('The "autoIndexId" option is deprecated and will be removed in version 2.0', E_USER_DEPRECATED);
-        }
-
         if (isset($this->options['pipeline']) && ! is_pipeline($this->options['pipeline'], true /* allowEmpty */)) {
             throw new InvalidArgumentException('"pipeline" option is not a valid aggregation pipeline');
         }
@@ -233,7 +217,7 @@ final class CreateCollection
     {
         $cmd = ['create' => $this->collectionName];
 
-        foreach (['autoIndexId', 'capped', 'comment', 'expireAfterSeconds', 'max', 'maxTimeMS', 'pipeline', 'size', 'validationAction', 'validationLevel', 'viewOn'] as $option) {
+        foreach (['capped', 'comment', 'expireAfterSeconds', 'max', 'maxTimeMS', 'pipeline', 'size', 'validationAction', 'validationLevel', 'viewOn'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

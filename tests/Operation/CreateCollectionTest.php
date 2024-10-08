@@ -25,7 +25,6 @@ class CreateCollectionTest extends TestCase
     public static function provideInvalidConstructorOptions()
     {
         return self::createOptionDataProvider([
-            'autoIndexId' => self::getInvalidBooleanValues(),
             'capped' => self::getInvalidBooleanValues(),
             'changeStreamPreAndPostImages' => self::getInvalidDocumentValues(),
             'clusteredIndex' => self::getInvalidDocumentValues(),
@@ -46,16 +45,5 @@ class CreateCollectionTest extends TestCase
             'viewOn' => self::getInvalidStringValues(),
             'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
-    }
-
-    public function testAutoIndexIdOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => true]);
-        });
-
-        $this->assertDeprecated(function (): void {
-            new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => false]);
-        });
     }
 }

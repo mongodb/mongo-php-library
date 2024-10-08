@@ -75,7 +75,7 @@ final class Util
         Database::class => [
             'aggregate' => ['pipeline', 'session', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS', 'showExpandedEvents'],
-            'createCollection' => ['collection', 'session', 'autoIndexId', 'capped', 'changeStreamPreAndPostImages', 'clusteredIndex', 'collation', 'expireAfterSeconds', 'indexOptionDefaults', 'max', 'maxTimeMS', 'pipeline', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator', 'viewOn'],
+            'createCollection' => ['collection', 'session', 'capped', 'changeStreamPreAndPostImages', 'clusteredIndex', 'collation', 'expireAfterSeconds', 'indexOptionDefaults', 'max', 'maxTimeMS', 'pipeline', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator', 'viewOn'],
             'dropCollection' => ['collection', 'session'],
             'listCollectionNames' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],

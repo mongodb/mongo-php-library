@@ -60,4 +60,11 @@ class CreateCollectionTest extends TestCase
             new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => false]);
         });
     }
+
+    public function testFlagsOptionIsDeprecated(): void
+    {
+        $this->assertDeprecated(function (): void {
+            new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['flags' => CreateCollection::USE_POWER_OF_2_SIZES]);
+        });
+    }
 }

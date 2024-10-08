@@ -32,7 +32,6 @@ class CreateCollectionTest extends TestCase
             'collation' => self::getInvalidDocumentValues(),
             'encryptedFields' => self::getInvalidDocumentValues(),
             'expireAfterSeconds' => self::getInvalidIntegerValues(),
-            'flags' => self::getInvalidIntegerValues(),
             'indexOptionDefaults' => self::getInvalidDocumentValues(),
             'max' => self::getInvalidIntegerValues(),
             'maxTimeMS' => self::getInvalidIntegerValues(),

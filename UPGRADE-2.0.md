@@ -22,6 +22,10 @@ UPGRADE FROM 1.x to 2.0
    * `MongoDB\Model\IndexInfoIterator`
    * `MongoDB\Model\IndexInfoIteratorIterator`
    * `MongoDB\Operation\Executable`
+ * The `flags` and `autoIndexId` options for
+   `MongoDB\Database::createCollection()` have been removed. Additionally, the
+   `USE_POWER_OF_2_SIZES` and `NO_PADDING` constants in
+   `MongoDB\Operation\CreateCollection` have been removed.
 
 Operations with no result
 -------------------------

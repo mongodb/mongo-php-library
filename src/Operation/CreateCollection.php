@@ -30,9 +30,6 @@ use function is_integer;
 use function is_string;
 use function MongoDB\is_document;
 use function MongoDB\is_pipeline;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Operation for the create command.
@@ -42,21 +39,10 @@ use const E_USER_DEPRECATED;
  */
 final class CreateCollection
 {
-    public const USE_POWER_OF_2_SIZES = 1;
-    public const NO_PADDING = 2;
-
     /**
      * Constructs a create command.
      *
      * Supported options:
-     *
-     *  * autoIndexId (boolean): Specify false to disable the automatic creation
-     *    of an index on the _id field. For replica sets, this option cannot be
-     *    false. The default is true.
-     *
-     *    This option has been deprecated since MongoDB 3.2. As of MongoDB 4.0,
-     *    this option cannot be false when creating a replicated collection
-     *    (i.e. a collection outside of the local database in any mongod mode).
      *
      *  * capped (boolean): Specify true to create a capped collection. If set,
      *    the size option must also be specified. The default is false.
@@ -82,11 +68,6 @@ final class CreateCollection
      *  * expireAfterSeconds: The TTL for documents in time series collections.
      *
      *    This is not supported for servers versions < 5.0.
-     *
-     *  * flags (integer): Options for the MMAPv1 storage engine only. Must be a
-     *    bitwise combination CreateCollection::USE_POWER_OF_2_SIZES and
-     *    CreateCollection::NO_PADDING. The default is
-     *    CreateCollection::USE_POWER_OF_2_SIZES.
      *
      *  * indexOptionDefaults (document): Default configuration for indexes when
      *    creating the collection.
@@ -131,10 +112,6 @@ final class CreateCollection
      */
     public function __construct(private string $databaseName, private string $collectionName, private array $options = [])
     {
-        if (isset($this->options['autoIndexId']) && ! is_bool($this->options['autoIndexId'])) {
-            throw InvalidArgumentException::invalidType('"autoIndexId" option', $this->options['autoIndexId'], 'boolean');
-        }
-
         if (isset($this->options['capped']) && ! is_bool($this->options['capped'])) {
             throw InvalidArgumentException::invalidType('"capped" option', $this->options['capped'], 'boolean');
         }
@@ -157,10 +134,6 @@ final class CreateCollection
 
         if (isset($this->options['expireAfterSeconds']) && ! is_integer($this->options['expireAfterSeconds'])) {
             throw InvalidArgumentException::invalidType('"expireAfterSeconds" option', $this->options['expireAfterSeconds'], 'integer');
-        }
-
-        if (isset($this->options['flags']) && ! is_integer($this->options['flags'])) {
-            throw InvalidArgumentException::invalidType('"flags" option', $this->options['flags'], 'integer');
         }
 
         if (isset($this->options['indexOptionDefaults']) && ! is_document($this->options['indexOptionDefaults'])) {
@@ -219,10 +192,6 @@ final class CreateCollection
             unset($this->options['writeConcern']);
         }
 
-        if (isset($this->options['autoIndexId'])) {
-            trigger_error('The "autoIndexId" option is deprecated and will be removed in version 2.0', E_USER_DEPRECATED);
-        }
-
         if (isset($this->options['pipeline']) && ! is_pipeline($this->options['pipeline'], true /* allowEmpty */)) {
             throw new InvalidArgumentException('"pipeline" option is not a valid aggregation pipeline');
         }
@@ -245,7 +214,7 @@ final class CreateCollection
     {
         $cmd = ['create' => $this->collectionName];
 
-        foreach (['autoIndexId', 'capped', 'comment', 'expireAfterSeconds', 'flags', 'max', 'maxTimeMS', 'pipeline', 'size', 'validationAction', 'validationLevel', 'viewOn'] as $option) {
+        foreach (['capped', 'comment', 'expireAfterSeconds', 'max', 'maxTimeMS', 'pipeline', 'size', 'validationAction', 'validationLevel', 'viewOn'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

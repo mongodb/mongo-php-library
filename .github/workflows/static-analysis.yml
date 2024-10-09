@@ -19,7 +19,9 @@ on:
 
 env:
   PHP_VERSION: "8.2"
-  DRIVER_VERSION: "stable"
+  # TODO: change to "stable" once 2.0.0 is released
+  # DRIVER_VERSION: "stable"
+  DRIVER_VERSION: "mongodb/mongo-php-driver@v2.x"
 
 jobs:
   psalm:

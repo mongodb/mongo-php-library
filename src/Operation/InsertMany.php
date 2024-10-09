@@ -37,10 +37,8 @@ use function sprintf;
  *
  * @see \MongoDB\Collection::insertMany()
  * @see https://mongodb.com/docs/manual/reference/command/insert/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class InsertMany implements Executable
+final class InsertMany
 {
     /** @var list<object|array> */
     private array $documents;
@@ -116,12 +114,10 @@ class InsertMany implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return InsertManyResult
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): InsertManyResult
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {

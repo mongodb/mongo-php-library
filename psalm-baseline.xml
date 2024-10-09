@@ -5,11 +5,7 @@
       <code><![CDATA[$document['name']]]></code>
       <code><![CDATA[$index->name]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$document['name']]]></code>
-    </MixedArrayAccess>
     <MixedAssignment>
-      <code><![CDATA[$document]]></code>
       <code><![CDATA[$index]]></code>
       <code><![CDATA[$index]]></code>
       <code><![CDATA[$index]]></code>
@@ -23,6 +19,9 @@
     <PossiblyFalseArgument>
       <code><![CDATA[$uri]]></code>
     </PossiblyFalseArgument>
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$document['name']]]></code>
+    </PossiblyInvalidArrayAccess>
   </file>
   <file src="examples/persistable.php">
     <LessSpecificReturnStatement>
@@ -180,14 +179,6 @@
             count($queriesOrArrayOfQueries[0]) > 0]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
-  <file src="src/ChangeStream.php">
-    <DeprecatedConstant>
-      <code><![CDATA[self::CURSOR_NOT_FOUND]]></code>
-    </DeprecatedConstant>
-    <TooManyArguments>
-      <code><![CDATA[getId]]></code>
-    </TooManyArguments>
-  </file>
   <file src="src/Client.php">
     <MixedArgument>
       <code><![CDATA[$driverOptions['driver'] ?? []]]></code>
@@ -324,12 +315,14 @@
     </InvalidParamDefault>
     <LessSpecificReturnStatement>
       <code><![CDATA[(object) $this->getArrayCopy()]]></code>
+      <code><![CDATA[(object) $this->getArrayCopy()]]></code>
     </LessSpecificReturnStatement>
     <MixedAssignment>
       <code><![CDATA[$this[$key]]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MoreSpecificReturnType>
+      <code><![CDATA[stdClass]]></code>
       <code><![CDATA[stdClass]]></code>
     </MoreSpecificReturnType>
   </file>
@@ -339,6 +332,15 @@
     </MixedArgument>
   </file>
   <file src="src/Model/ChangeStreamIterator.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$cursor]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[CursorInterface<TValue>]]></code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[CursorInterface<TValue>]]></code>
+    </LessSpecificImplementedReturnType>
     <MixedArgument>
       <code><![CDATA[$reply->cursor->nextBatch]]></code>
     </MixedArgument>
@@ -353,39 +355,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$this->current()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/Model/CodecCursor.php">
-    <TooManyArguments>
-      <code><![CDATA[getId]]></code>
-    </TooManyArguments>
-  </file>
-  <file src="src/Model/CollectionInfoCommandIterator.php">
-    <DeprecatedInterface>
-      <code><![CDATA[CollectionInfoCommandIterator]]></code>
-    </DeprecatedInterface>
-    <MixedArrayAssignment>
-      <code><![CDATA[$info['idIndex']['ns']]]></code>
-    </MixedArrayAssignment>
-    <MixedOperand>
-      <code><![CDATA[$info['name']]]></code>
-    </MixedOperand>
-  </file>
-  <file src="src/Model/DatabaseInfoLegacyIterator.php">
-    <DeprecatedInterface>
-      <code><![CDATA[DatabaseInfoLegacyIterator]]></code>
-    </DeprecatedInterface>
-    <MixedArgument>
-      <code><![CDATA[current($this->databases)]]></code>
-    </MixedArgument>
-    <MixedReturnTypeCoercion>
-      <code><![CDATA[int]]></code>
-      <code><![CDATA[key($this->databases)]]></code>
-    </MixedReturnTypeCoercion>
-  </file>
-  <file src="src/Model/IndexInfoIteratorIterator.php">
-    <DeprecatedInterface>
-      <code><![CDATA[IndexInfoIteratorIterator]]></code>
-    </DeprecatedInterface>
   </file>
   <file src="src/Model/IndexInput.php">
     <LessSpecificReturnStatement>
@@ -550,9 +519,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/CreateCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -624,9 +590,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DropCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['comment']]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -637,9 +600,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DropDatabase.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['comment']]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -652,9 +612,6 @@
     </MixedArgument>
   </file>
   <file src="src/Operation/DropIndexes.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -684,11 +641,7 @@
       <code><![CDATA[$this->options['codec']]]></code>
       <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$options['modifiers'][$modifier[1]]]]></code>
-    </MixedArrayAccess>
     <MixedAssignment>
-      <code><![CDATA[$options[$modifier[0]]]]></code>
       <code><![CDATA[$options[$option]]]></code>
       <code><![CDATA[$options['readPreference']]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -722,18 +675,6 @@
       <code><![CDATA[$value === null ? $value : $this->options['codec']->decode($value)]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
-    </MixedReturnStatement>
-  </file>
-  <file src="src/Operation/FindOne.php">
-    <MixedAssignment>
-      <code><![CDATA[$document]]></code>
-    </MixedAssignment>
-    <MixedInferredReturnType>
-      <code><![CDATA[array|object|null]]></code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement>
-      <code><![CDATA[$document === false ? null : $document]]></code>
-      <code><![CDATA[$document === false ? null : $document]]></code>
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/FindOneAndDelete.php">
@@ -785,43 +726,11 @@
       <code><![CDATA[$document]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="src/Operation/ListCollections.php">
-    <DeprecatedClass>
-      <code><![CDATA[new CollectionInfoCommandIterator($this->listCollections->execute($server), $this->databaseName)]]></code>
-    </DeprecatedClass>
-  </file>
-  <file src="src/Operation/ListDatabases.php">
-    <DeprecatedClass>
-      <code><![CDATA[new DatabaseInfoLegacyIterator($this->listDatabases->execute($server))]]></code>
-    </DeprecatedClass>
-  </file>
   <file src="src/Operation/ListIndexes.php">
-    <DeprecatedClass>
-      <code><![CDATA[IndexInfoIteratorIterator]]></code>
-      <code><![CDATA[new IndexInfoIteratorIterator($iterator, $this->databaseName . '.' . $this->collectionName)]]></code>
-      <code><![CDATA[new IndexInfoIteratorIterator(new EmptyIterator())]]></code>
-    </DeprecatedClass>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
-  </file>
-  <file src="src/Operation/MapReduce.php">
-    <MixedArgument>
-      <code><![CDATA[$result->result->collection]]></code>
-      <code><![CDATA[$result->result->db]]></code>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$cmd[$option]]]></code>
-      <code><![CDATA[$options['readConcern']]]></code>
-      <code><![CDATA[$options['readPreference']]]></code>
-      <code><![CDATA[$options['session']]]></code>
-      <code><![CDATA[$options['writeConcern']]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[isInTransaction]]></code>
-    </MixedMethodCall>
   </file>
   <file src="src/Operation/ModifyCollection.php">
     <MixedArgument>
@@ -834,9 +743,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/RenameCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>

@@ -499,7 +499,7 @@ final class Context
 
     private static function prepareBucketOptions(array $options): array
     {
-        Util::assertHasOnlyKeys($options, ['bucketName', 'chunkSizeBytes', 'disableMD5', 'readConcern', 'readPreference', 'writeConcern']);
+        Util::assertHasOnlyKeys($options, ['bucketName', 'chunkSizeBytes', 'readConcern', 'readPreference', 'writeConcern']);
 
         if (array_key_exists('bucketName', $options)) {
             assertIsString($options['bucketName']);
@@ -507,10 +507,6 @@ final class Context
 
         if (array_key_exists('chunkSizeBytes', $options)) {
             assertIsInt($options['chunkSizeBytes']);
-        }
-
-        if (array_key_exists('disableMD5', $options)) {
-            assertIsBool($options['disableMD5']);
         }
 
         return Util::prepareCommonOptions($options);

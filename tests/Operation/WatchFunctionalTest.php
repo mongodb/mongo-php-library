@@ -720,7 +720,7 @@ class WatchFunctionalTest extends FunctionalTestCase
          * reports the cursor as alive. While the cursor ID is accessed through
          * ChangeStream, we'll need to use reflection to access the internal
          * Cursor and call isDead(). */
-        $this->assertNotEquals('0', (string) $changeStream->getCursorId(true));
+        $this->assertNotEquals(0, $changeStream->getCursorId());
 
         $rc = new ReflectionClass(ChangeStream::class);
         $iterator = $rc->getProperty('iterator')->getValue($changeStream);
@@ -1366,11 +1366,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         }
 
         $changeStream = $operation->execute($secondary);
-        $previousCursorId = $changeStream->getCursorId(true);
+        $previousCursorId = $changeStream->getCursorId();
         $this->forceChangeStreamResume($secondary);
 
         $changeStream->next();
-        $this->assertNotEquals($previousCursorId, $changeStream->getCursorId(true));
+        $this->assertNotEquals($previousCursorId, $changeStream->getCursorId());
 
         $getCursor = Closure::bind(
             fn () => $this->iterator->getInnerIterator(),

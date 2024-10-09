@@ -26,7 +26,6 @@ class RenameCollectionTest extends TestCase
         return self::createOptionDataProvider([
             'dropTarget' => self::getInvalidBooleanValues(),
             'session' => self::getInvalidSessionValues(),
-            'typeMap' => self::getInvalidArrayValues(),
             'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }

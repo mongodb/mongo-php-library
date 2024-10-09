@@ -30,9 +30,6 @@ use function is_integer;
 use function is_string;
 use function MongoDB\is_document;
 use function MongoDB\is_pipeline;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Operation for the create command.

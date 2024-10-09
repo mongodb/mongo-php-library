@@ -45,7 +45,10 @@ use const E_USER_DEPRECATED;
  */
 class CreateCollection implements Executable
 {
+    /** @deprecated 1.21 */
     public const USE_POWER_OF_2_SIZES = 1;
+
+    /** @deprecated 1.21 */
     public const NO_PADDING = 2;
 
     /**
@@ -231,6 +234,10 @@ class CreateCollection implements Executable
 
         if (isset($this->options['autoIndexId'])) {
             trigger_error('The "autoIndexId" option is deprecated and will be removed in version 2.0', E_USER_DEPRECATED);
+        }
+
+        if (isset($this->options['flags'])) {
+            trigger_error('The "flags" option is deprecated and will be removed in version 2.0', E_USER_DEPRECATED);
         }
 
         if (isset($this->options['pipeline']) && ! is_pipeline($this->options['pipeline'], true /* allowEmpty */)) {

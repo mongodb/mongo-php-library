@@ -118,6 +118,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         'fle2v2-Compact: Compact works' => 'Failing due to bug in libmongocrypt (LIBMONGOCRYPT-699)',
     ];
 
+    private static string $specDir = __DIR__ . '/../specifications/source/client-side-encryption';
+
     public function setUp(): void
     {
         parent::setUp();
@@ -222,7 +224,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     {
         $testArgs = [];
 
-        foreach (glob(__DIR__ . '/client-side-encryption/tests/*.json') as $filename) {
+        foreach (glob(self::$specDir . '/tests/legacy/*.json') as $filename) {
             $group = basename($filename, '.json');
 
             /* Some tests need to differentiate int32 and int64 BSON types.
@@ -421,7 +423,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $client->selectCollection('db', 'coll')->drop();
 
         self::insertKeyVaultData($client, [
-            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-key.json')),
+            $this->decodeJson(file_get_contents(self::$specDir . '/external/external-key.json')),
         ]);
 
         $encryptionOpts = [
@@ -437,7 +439,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $autoEncryptionOpts = $encryptionOpts + [
             'schemaMap' => [
-                'db.coll' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-schema.json')),
+                'db.coll' => $this->decodeJson(file_get_contents(self::$specDir . '/external/external-schema.json')),
             ],
         ];
 
@@ -567,10 +569,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $client = static::createTestClient();
 
         $client->selectCollection('db', 'coll')->drop();
-        $client->selectDatabase('db')->createCollection('coll', ['validator' => ['$jsonSchema' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-schema.json'))]]);
+        $client->selectDatabase('db')->createCollection('coll', ['validator' => ['$jsonSchema' => $this->decodeJson(file_get_contents(self::$specDir . '/limits/limits-schema.json'))]]);
 
         self::insertKeyVaultData($client, [
-            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-key.json')),
+            $this->decodeJson(file_get_contents(self::$specDir . '/limits/limits-key.json')),
         ]);
 
         $autoEncryptionOpts = [
@@ -585,7 +587,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $collection = $clientEncrypted->selectCollection('db', 'coll');
 
-        $document = json_decode(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-doc.json'), true, 512, JSON_THROW_ON_ERROR);
+        $document = json_decode(file_get_contents(self::$specDir . '/limits/limits-doc.json'), true, 512, JSON_THROW_ON_ERROR);
 
         $test($this, $collection, $document);
     }
@@ -634,18 +636,18 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $client = static::createTestClient();
         $client->selectDatabase('db')->dropCollection('coll');
 
-        $schema = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-schema.json'));
+        $schema = $this->decodeJson(file_get_contents(self::$specDir . '/corpus/corpus-schema.json'));
 
         if (! $schemaMap) {
             $client->selectDatabase('db')->createCollection('coll', ['validator' => ['$jsonSchema' => $schema]]);
         }
 
         self::insertKeyVaultData($client, [
-            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-local.json')),
-            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-aws.json')),
-            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-azure.json')),
-            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-gcp.json')),
-            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-kmip.json')),
+            $this->decodeJson(file_get_contents(self::$specDir . '/corpus/corpus-key-local.json')),
+            $this->decodeJson(file_get_contents(self::$specDir . '/corpus/corpus-key-aws.json')),
+            $this->decodeJson(file_get_contents(self::$specDir . '/corpus/corpus-key-azure.json')),
+            $this->decodeJson(file_get_contents(self::$specDir . '/corpus/corpus-key-gcp.json')),
+            $this->decodeJson(file_get_contents(self::$specDir . '/corpus/corpus-key-kmip.json')),
         ]);
 
         $encryptionOpts = [
@@ -670,7 +672,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ];
         }
 
-        $corpus = (array) $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus.json'));
+        $corpus = (array) $this->decodeJson(file_get_contents(self::$specDir . '/corpus/corpus.json'));
         $corpusCopied = [];
 
         $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
@@ -701,7 +703,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $this->assertDocumentsMatch($corpus, $corpusDecrypted);
 
-        $corpusEncryptedExpected = (array) $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-encrypted.json'));
+        $corpusEncryptedExpected = (array) $this->decodeJson(file_get_contents(self::$specDir . '/corpus/corpus-encrypted.json'));
         $corpusEncryptedActual = $client->selectCollection('db', 'coll')->findOne(['_id' => 'client_side_encryption_corpus'], ['typeMap' => ['root' => 'array', 'document' => stdClass::class, 'array' => 'array']]);
 
         foreach ($corpusEncryptedExpected as $fieldName => $expectedData) {
@@ -913,7 +915,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
             'schemaMap' => [
-                'db.coll' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-schema.json')),
+                'db.coll' => $this->decodeJson(file_get_contents(self::$specDir . '/external/external-schema.json')),
             ],
             'extraOptions' => [
                 'mongocryptdBypassSpawn' => true,
@@ -955,7 +957,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
             'schemaMap' => [
-                'db.coll' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-schema.json')),
+                'db.coll' => $this->decodeJson(file_get_contents(self::$specDir . '/external/external-schema.json')),
             ],
             'extraOptions' => [
                 'mongocryptdBypassSpawn' => true,
@@ -1335,8 +1337,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $this->skipIfServerVersion('<', '7.0.0', 'Explicit encryption tests require MongoDB 7.0 or later');
 
         // Test setup
-        $encryptedFields = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/encryptedFields.json'));
-        $key1Document = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/keys/key1-document.json'));
+        $encryptedFields = $this->decodeJson(file_get_contents(self::$specDir . '/etc/data/encryptedFields.json'));
+        $key1Document = $this->decodeJson(file_get_contents(self::$specDir . '/etc/data/keys/key1-document.json'));
         $key1Id = $key1Document->_id;
 
         $client = static::createTestClient();

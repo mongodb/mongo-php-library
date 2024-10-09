@@ -38,6 +38,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     private ?Client $encryptedClient = null;
     private $key1Id;
 
+    private static string $specDir = __DIR__ . '/../../specifications/source/client-side-encryption';
+
     public function setUp(): void
     {
         parent::setUp();
@@ -50,7 +52,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         $client = static::createTestClient();
 
-        $key1Document = $this->decodeJson(file_get_contents(__DIR__ . '/../client-side-encryption/etc/data/keys/key1-document.json'));
+        $key1Document = $this->decodeJson(file_get_contents(self::$specDir . '/etc/data/keys/key1-document.json'));
         $this->key1Id = $key1Document->_id;
 
         // Drop the key vault collection and insert key1Document with a majority write concern
@@ -85,7 +87,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
          * for 64-bit integers. This means that DropEncryptedCollection and
          * CreateEncryptedCollection will be unable to inspect the option for
          * metadata collection names, but that's not necessary for the test. */
-        $encryptedFields = Document::fromJSON(file_get_contents(__DIR__ . '/../client-side-encryption/etc/data/range-encryptedFields-' . $type . '.json'));
+        $encryptedFields = Document::fromJSON(file_get_contents(self::$specDir . '/etc/data/range-encryptedFields-' . $type . '.json'));
 
         $database = $this->encryptedClient->selectDatabase($this->getDatabaseName());
         $database->dropCollection('explicit_encryption', ['encryptedFields' => $encryptedFields]);

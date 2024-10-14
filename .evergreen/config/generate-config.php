@@ -3,6 +3,7 @@
 
 // Supported PHP versions. Add new versions to the beginning of the list
 $modernPhpVersions = [
+    '8.4',
     '8.3',
     '8.2',
     '8.1',
@@ -13,7 +14,9 @@ $legacyPhpVersions = [
 ];
 $supportedPhpVersions = array_merge($modernPhpVersions, $legacyPhpVersions);
 
-$latestPhpVersion = max($supportedPhpVersions);
+// TODO: use max() once PHP 8.4 is stable
+//$latestPhpVersion = max($supportedPhpVersions);
+$latestPhpVersion = '8.3';
 $lowestPhpVersion = min($supportedPhpVersions);
 
 // Supported MongoDB versions. Add new versions after "rapid"

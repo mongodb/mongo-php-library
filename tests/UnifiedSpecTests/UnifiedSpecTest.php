@@ -14,8 +14,7 @@ use function array_flip;
 use function basename;
 use function dirname;
 use function glob;
-use function preg_match;
-use function sprintf;
+use function str_starts_with;
 
 /**
  * Unified test format spec tests.
@@ -101,7 +100,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         foreach (self::$incompleteTestGroups as $testGroup => $reason) {
-            if (preg_match(sprintf('#^%s#', $testGroup), $this->dataDescription())) {
+            if (str_starts_with($this->dataDescription(), $testGroup)) {
                 $this->markTestIncomplete($reason);
             }
         }

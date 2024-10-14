@@ -44,9 +44,9 @@ final class ListSearchIndexes
     /**
      * Constructs an aggregate command for listing Atlas Search indexes
      *
-     * @param string               $databaseName   Database name
-     * @param string               $collectionName Collection name
-     * @param array{name?: string} $options        Command options
+     * @param string $databaseName   Database name
+     * @param string $collectionName Collection name
+     * @param array  $options        Command options
      */
     public function __construct(private string $databaseName, private string $collectionName, array $options = [])
     {

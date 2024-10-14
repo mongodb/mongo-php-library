@@ -65,7 +65,7 @@ class UnifiedSpecTest extends FunctionalTestCase
      * not be reused in spec tests, this offers a way to skip such tests until
      * the name is changed.
      */
-    private static array $duplicateTests = ['crud/client bulkWrite partial results: partialResult is set when first operation fails during an unordered bulk write (summary)'];
+    private static array $duplicateTests = [];
 
     /**
      * Any tests that rely on session pinning (including targetedFailPoint) must

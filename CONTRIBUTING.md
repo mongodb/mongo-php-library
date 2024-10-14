@@ -13,8 +13,8 @@ $ composer update
 
 In addition to installing project dependencies, Composer will check that the
 required extension version is installed. Directions for installing the extension
-may be found [here](https://php.net/manual/en/mongodb.installation.php). Composer will also install the submodule required for
-running spec tests.
+may be found [here](https://php.net/manual/en/mongodb.installation.php).
+Composer will also install the submodule required for running spec tests.
 
 Installation directions for Composer may be found in its
 [Getting Started](https://getcomposer.org/doc/00-intro.md) guide.

@@ -896,7 +896,7 @@ class Collection
      * Returns information for all Atlas Search indexes for the collection.
      * Only available when used against a 7.0+ Atlas cluster.
      *
-     * @param array{name?: string} $options Command options
+     * @param array{name?: string, ...} $options Command options
      * @return Countable&Iterator
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

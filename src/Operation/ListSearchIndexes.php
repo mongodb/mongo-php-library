@@ -48,7 +48,7 @@ class ListSearchIndexes implements Executable
      *
      * @param string               $databaseName   Database name
      * @param string               $collectionName Collection name
-     * @param array{name?: string} $options        Command options
+     * @param array{name?: string, ...} $options        Command options
      */
     public function __construct(string $databaseName, string $collectionName, array $options = [])
     {

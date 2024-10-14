@@ -457,6 +457,15 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
+    protected function skipIfAtlasSearchIndexIsNotSupported(): void
+    {
+        if (! self::isAtlas()) {
+            self::markTestSkipped('Search Indexes are only supported on MongoDB Atlas 7.0+');
+        }
+
+        $this->skipIfServerVersion('<', '7.0', 'Search Indexes are only supported on MongoDB Atlas 7.0+');
+    }
+
     protected function skipIfChangeStreamIsNotSupported(): void
     {
         if ($this->isStandalone()) {

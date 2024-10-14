@@ -29,13 +29,9 @@ class SearchIndexSpecTest extends FunctionalTestCase
 
     public function setUp(): void
     {
-        if (! self::isAtlas()) {
-            self::markTestSkipped('Search Indexes are only supported on MongoDB Atlas 7.0+');
-        }
-
         parent::setUp();
 
-        $this->skipIfServerVersion('<', '7.0', 'Search Indexes are only supported on MongoDB Atlas 7.0+');
+        $this->skipIfAtlasSearchIndexIsNotSupported();
     }
 
     /**

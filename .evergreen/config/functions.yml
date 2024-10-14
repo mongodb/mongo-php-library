@@ -325,9 +325,9 @@ functions:
         working_dir: "src"
         script: |
           ${PREPARE_SHELL}
-          file="${PROJECT_DIRECTORY}/.evergreen/install-composer.sh"
-          # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
-          [ -f "$file" ] && DEPENDENCIES=${DEPENDENCIES} bash $file || echo "$file not available, skipping"
+          DEPENDENCIES=${DEPENDENCIES} \
+          PHP_VERSION=${PHP_VERSION} \
+          bash ${PROJECT_DIRECTORY}/.evergreen/install-composer.sh
 
   "start load balancer":
     - command: shell.exec

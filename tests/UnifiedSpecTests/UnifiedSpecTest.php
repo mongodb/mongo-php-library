@@ -379,15 +379,13 @@ class UnifiedSpecTest extends FunctionalTestCase
         yield from self::provideTests('index-management/tests', 'index-management');
     }
 
-    private static function provideTests(string $directory, ?string $group = null): Generator
+    private static function provideTests(string $directory, string $testGroup): Generator
     {
         $pattern = self::$testDir . '/' . $directory . '/*.json';
 
         $duplicateTests = array_flip(self::$duplicateTests);
 
         foreach (glob($pattern) as $filename) {
-            $testGroup = $group ?? dirname(basename($filename));
-
             foreach (UnifiedTestCase::fromFile($filename) as $name => $test) {
                 $testKey = $testGroup . '/' . $name;
 

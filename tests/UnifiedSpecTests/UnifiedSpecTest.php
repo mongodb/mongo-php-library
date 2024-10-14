@@ -24,8 +24,11 @@ use function str_starts_with;
 class UnifiedSpecTest extends FunctionalTestCase
 {
     /**
-     * Incomplete test groups are listed here. These are checked using a left-
-     * anchored regex. Note that regex placeholder can't be used.
+     * Incomplete test groups are listed here. Any data set that starts with a
+     * string listed in this index will be skipped with the message given as
+     * value.
+     *
+     * @var array<string, string>
      */
     private static array $incompleteTestGroups = [
         // Many load balancer tests use CMAP events and/or assertNumberConnectionsCheckedOut
@@ -38,6 +41,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         'retryable-writes/retryable writes handshake failures' => 'Handshakes are not retried (CDRIVER-4532)',
     ];
 
+    /** @var array<string, string> */
     private static array $incompleteTests = [
         // Many load balancer tests use CMAP events and/or assertNumberConnectionsCheckedOut
         'load-balancers/monitoring events include correct fields: poolClearedEvent events include serviceId' => 'PHPC does not implement CMAP',
@@ -63,12 +67,17 @@ class UnifiedSpecTest extends FunctionalTestCase
      * Any tests with duplicate names are skipped here. While test names should
      * not be reused in spec tests, this offers a way to skip such tests until
      * the name is changed.
+     *
+     * @var array<string, string>
      */
     private static array $duplicateTests = [];
 
     /**
      * Any tests that rely on session pinning (including targetedFailPoint) must
-     * be skipped since libmongoc does not pin on load-balanced toplogies. */
+     * be skipped since libmongoc does not pin on load-balanced toplogies.
+     *
+     * @var array<string, string>
+     */
     private static array $incompleteLoadBalancerTests = [
         'transactions/mongos-recovery-token: commitTransaction explicit retries include recoveryToken' => 'libmongoc omits recoveryToken for load-balanced topology (CDRIVER-4718)',
         'transactions/pin-mongos: multiple commits' => 'libmongoc does not pin for load-balanced topology',

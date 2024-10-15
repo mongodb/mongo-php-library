@@ -7,6 +7,7 @@ use MongoDB\Codec\Encoder;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -20,6 +21,7 @@ use TypeError;
 use function array_filter;
 use function call_user_func;
 use function is_scalar;
+use function iterator_to_array;
 use function json_encode;
 use function str_contains;
 use function usort;
@@ -749,6 +751,32 @@ class CollectionFunctionalTest extends FunctionalTestCase
         } finally {
             $session->endSession();
         }
+    }
+
+    public function testListSearchIndexesInheritTypeMap(): void
+    {
+        $this->skipIfAtlasSearchIndexIsNotSupported();
+
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), ['typeMap' => ['root' => 'array']]);
+
+        // Insert a document to create the collection
+        $collection->insertOne(['_id' => 1]);
+
+        try {
+            $collection->createSearchIndex(['mappings' => ['dynamic' => false]], ['name' => 'test-search-index']);
+        } catch (CommandException $e) {
+            // Ignore duplicate errors in case this test is re-run too quickly
+            // Index is asynchronously dropped during tearDown, we only need to
+            // ensure it exists for this test.
+            if ($e->getCode() !== 68 /* IndexAlreadyExists */) {
+                throw $e;
+            }
+        }
+
+        $indexes = $collection->listSearchIndexes();
+        $indexes = iterator_to_array($indexes);
+        $this->assertCount(1, $indexes);
+        $this->assertIsArray($indexes[0]);
     }
 
     /**

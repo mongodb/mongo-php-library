@@ -890,6 +890,8 @@ class Collection
      */
     public function listSearchIndexes(array $options = []): Iterator
     {
+        $options = $this->inheritTypeMap($options);
+
         $operation = new ListSearchIndexes($this->databaseName, $this->collectionName, $options);
         $server = select_server($this->manager, $options);
 

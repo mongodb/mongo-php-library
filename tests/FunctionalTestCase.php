@@ -242,10 +242,7 @@ abstract class FunctionalTestCase extends TestCase
         $failPointServer = $server ?: $this->getPrimaryServer();
 
         $operation = new DatabaseCommand('admin', $command);
-        $cursor = $operation->execute($failPointServer);
-        $result = $cursor->toArray()[0];
-
-        $this->assertCommandSucceeded($result);
+        $operation->execute($failPointServer);
 
         // Record the fail point so it can be disabled during tearDown()
         $this->configuredFailPoints[] = [$command->configureFailPoint, $failPointServer];

@@ -18,7 +18,6 @@
 namespace MongoDB\GridFS;
 
 use ArrayIterator;
-use Iterator;
 use MongoDB\Collection;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Manager;
@@ -39,7 +38,7 @@ use function sprintf;
  *
  * @internal
  */
-class CollectionWrapper
+final class CollectionWrapper
 {
     private Collection $chunksCollection;
 
@@ -74,7 +73,7 @@ class CollectionWrapper
     /**
      * Delete all GridFS files and chunks for a given filename.
      */
-    public function deleteFileAndChunksByFilename(string $filename): ?int
+    public function deleteFileAndChunksByFilename(string $filename): int
     {
         /** @var iterable<array{_id: mixed}> $files */
         $files = $this->findFiles(['filename' => $filename], [
@@ -117,9 +116,8 @@ class CollectionWrapper
      *
      * @param mixed   $id        File ID
      * @param integer $fromChunk Starting chunk (inclusive)
-     * @return CursorInterface&Iterator
      */
-    public function findChunksByFileId(mixed $id, int $fromChunk = 0)
+    public function findChunksByFileId(mixed $id, int $fromChunk = 0): CursorInterface
     {
         return $this->chunksCollection->find(
             [
@@ -194,9 +192,8 @@ class CollectionWrapper
      * @see Find::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return CursorInterface&Iterator
      */
-    public function findFiles(array|object $filter, array $options = [])
+    public function findFiles(array|object $filter, array $options = []): CursorInterface
     {
         return $this->filesCollection->find($filter, $options);
     }
@@ -206,9 +203,8 @@ class CollectionWrapper
      *
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return array|object|null
      */
-    public function findOneFile(array|object $filter, array $options = [])
+    public function findOneFile(array|object $filter, array $options = []): array|object|null
     {
         return $this->filesCollection->findOne($filter, $options);
     }
@@ -266,7 +262,7 @@ class CollectionWrapper
     /**
      * Updates the filename field in the file document for all the files with a given filename.
      */
-    public function updateFilenameForFilename(string $filename, string $newFilename): ?int
+    public function updateFilenameForFilename(string $filename, string $newFilename): int
     {
         return $this->filesCollection->updateMany(
             ['filename' => $filename],

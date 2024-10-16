@@ -25,8 +25,6 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
-use function current;
-use function is_array;
 use function is_bool;
 
 /**
@@ -35,10 +33,8 @@ use function is_bool;
  * @see \MongoDB\Collection::rename()
  * @see \MongoDB\Database::renameCollection()
  * @see https://mongodb.com/docs/manual/reference/command/renameCollection/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class RenameCollection implements Executable
+final class RenameCollection
 {
     private string $fromNamespace;
 
@@ -54,9 +50,6 @@ class RenameCollection implements Executable
      *    This is not supported for servers versions < 4.4.
      *
      *  * session (MongoDB\Driver\Session): Client session.
-     *
-     *  * typeMap (array): Type map for BSON deserialization. This will be used
-     *    for the returned command result document.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
@@ -74,10 +67,6 @@ class RenameCollection implements Executable
     {
         if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
-        }
-
-        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
         if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
@@ -99,25 +88,17 @@ class RenameCollection implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return array|object Command result document
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): void
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $cursor = $server->executeWriteCommand('admin', $this->createCommand(), $this->createOptions());
-
-        if (isset($this->options['typeMap'])) {
-            $cursor->setTypeMap($this->options['typeMap']);
-        }
-
-        return current($cursor->toArray());
+        $server->executeWriteCommand('admin', $this->createCommand(), $this->createOptions());
     }
 
     /**

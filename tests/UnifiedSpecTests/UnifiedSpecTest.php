@@ -64,6 +64,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
         // Uses an invalid object name
         'run-command/runCursorCommand: does not close the cursor when receiving an empty batch' => 'Uses an invalid object name',
+        // GridFS deprecated fields are removed
+        'gridfs/gridfs-upload-disableMD5: upload when length is 0 sans MD5' => 'Deprecated fields are removed',
+        'gridfs/gridfs-upload-disableMD5: upload when length is 1 sans MD5' => 'Deprecated fields are removed',
+        'gridfs/gridfs-upload: upload when contentType is provided' => 'Deprecated fields are removed',
     ];
 
     /**

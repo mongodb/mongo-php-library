@@ -69,7 +69,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
     #[DataProvider('provideKmsProviderAndMasterKey')]
     public function testCase1_SimpleCreationAndValidation(string $kmsProvider, ?array $masterKey): void
     {
-        [$result, $encryptedFields] = $this->database->createEncryptedCollection(
+        $encryptedFields = $this->database->createEncryptedCollection(
             $this->getCollectionName(),
             $this->clientEncryption,
             $kmsProvider,
@@ -77,7 +77,6 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
             ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null]]]],
         );
 
-        $this->assertCommandSucceeded($result);
         $this->assertInstanceOf(Binary::class, $encryptedFields['fields'][0]['keyId'] ?? null);
 
         $this->expectException(BulkWriteException::class);
@@ -140,7 +139,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
     #[DataProvider('provideKmsProviderAndMasterKey')]
     public function testCase4_InsertEncryptedValue(string $kmsProvider, ?array $masterKey): void
     {
-        [$result, $encryptedFields] = $this->database->createEncryptedCollection(
+        $encryptedFields = $this->database->createEncryptedCollection(
             $this->getCollectionName(),
             $this->clientEncryption,
             $kmsProvider,
@@ -148,7 +147,6 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
             ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null]]]],
         );
 
-        $this->assertCommandSucceeded($result);
         $this->assertInstanceOf(Binary::class, $encryptedFields['fields'][0]['keyId'] ?? null);
 
         $encrypted = $this->clientEncryption->encrypt('123-45-6789', [

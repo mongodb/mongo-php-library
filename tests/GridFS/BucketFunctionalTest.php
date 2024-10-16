@@ -842,6 +842,9 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $code = <<<'PHP'
             require '%s';
+            // Don't report deprecations - if the issue exists this code will
+            // result in a fatal error
+            error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
             $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
             $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
             $gridfs = $database->selectGridFSBucket();
@@ -882,6 +885,9 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $code = <<<'PHP'
             require '%s';
+            // Don't report deprecations - if the issue exists this code will
+            // result in a fatal error
+            error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
             $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
             $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
             $database->selectGridFSBucket()->registerGlobalStreamWrapperAlias('alias');

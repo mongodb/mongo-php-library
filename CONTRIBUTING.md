@@ -14,6 +14,7 @@ $ composer update
 In addition to installing project dependencies, Composer will check that the
 required extension version is installed. Directions for installing the extension
 may be found [here](https://php.net/manual/en/mongodb.installation.php).
+Composer will also install the submodule required for running spec tests.
 
 Installation directions for Composer may be found in its
 [Getting Started](https://getcomposer.org/doc/00-intro.md) guide.
@@ -99,6 +100,35 @@ The following environment variables are used for [CSFLE testing](https://github.
  * `KMS_ENDPOINT_REQUIRE_CLIENT_CERT`
  * `KMS_TLS_CA_FILE`
  * `KMS_TLS_CERTIFICATE_KEY_FILE`
+
+### Updating spec tests
+
+Tests from the MongoDB Specifications repository are included through a
+submodule and updated automatically through Dependabot. To update tests
+manually, switch to the `tests/specifications` directory and update the
+repository to the appropriate commit. Remember to commit this change to the
+library repository.
+
+#### Handling test failures on updates
+
+Failures on updates can occur for multiple reasons, and the remedy to this will
+depend on the type of failure. Note that only tests for implemented
+specifications are run in the test runner.
+
+ * If a specification is not fully implemented (e.g. a recent change to the spec
+   has not been applied yet), skip the test in question with a reference to the
+   ticket that covers the change
+ * If a test fails because it uses features not yet implemented in the unified
+   test runner, skip the corresponding test with a reference to the ticket that
+   covers implementing the new features
+ * If the test failure points to a bug in the spec, consider the effort required
+   to fix the failure. If it's a small change, commit and push the fix directly
+   to the pull request. Otherwise, skip the test with a reference to a ticket to
+   fix the failing test.
+
+The goal is that the library passes tests with the latest spec version at all
+times, either by implementing small changes quickly, or by skipping tests as
+necessary.
 
 ## Code quality
 

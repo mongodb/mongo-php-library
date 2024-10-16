@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\Driver\Cursor;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\Group;
 
 use function current;
 use function explode;
@@ -13,8 +14,8 @@ use function parse_url;
  * Atlas Data Lake spec tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/atlas-data-lake-testing/tests
- * @group atlas-data-lake
  */
+#[Group('atlas-data-lake')]
 class AtlasDataLakeSpecTest extends FunctionalTestCase
 {
     public function setUp(): void
@@ -44,11 +45,11 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
                     $this->assertArrayHasKey('succeeded', $event);
 
                     $reply = $event['succeeded']->getReply();
-                    $this->assertObjectHasAttribute('cursor', $reply);
+                    $this->assertObjectHasProperty('cursor', $reply);
                     $this->assertIsObject($reply->cursor);
-                    $this->assertObjectHasAttribute('id', $reply->cursor);
+                    $this->assertObjectHasProperty('id', $reply->cursor);
                     $this->assertIsInt($reply->cursor->id);
-                    $this->assertObjectHasAttribute('ns', $reply->cursor);
+                    $this->assertObjectHasProperty('ns', $reply->cursor);
                     $this->assertIsString($reply->cursor->ns);
 
                     /* Note: MongoDB\Driver\CursorId is not used here; however,
@@ -74,9 +75,9 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
                  * cursor ID from the find command reply. */
                 $this->assertSame($databaseName, $event['started']->getDatabaseName());
                 $this->assertSame($databaseName, $command->{'$db'});
-                $this->assertObjectHasAttribute('killCursors', $command);
+                $this->assertObjectHasProperty('killCursors', $command);
                 $this->assertSame($collectionName, $command->killCursors);
-                $this->assertObjectHasAttribute('cursors', $command);
+                $this->assertObjectHasProperty('cursors', $command);
                 $this->assertIsArray($command->cursors);
                 $this->assertArrayHasKey(0, $command->cursors);
                 $this->assertSame($cursorId, $command->cursors[0]);
@@ -84,7 +85,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
                 /* Assert that the killCursors command reply indicates that the
                  * expected cursor ID was killed. */
                 $reply = $event['succeeded']->getReply();
-                $this->assertObjectHasAttribute('cursorsKilled', $reply);
+                $this->assertObjectHasProperty('cursorsKilled', $reply);
                 $this->assertIsArray($reply->cursorsKilled);
                 $this->assertArrayHasKey(0, $reply->cursorsKilled);
                 $this->assertSame($cursorId, $reply->cursorsKilled[0]);

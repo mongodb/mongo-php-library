@@ -10,6 +10,8 @@ use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use stdClass;
 
 class DeleteFunctionalTest extends FunctionalTestCase
@@ -23,7 +25,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testFilterDocuments($filter, stdClass $expectedQuery): void
     {
         (new CommandObserver())->observe(
@@ -115,7 +117,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
@@ -133,7 +135,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /** @depends testUnacknowledgedWriteConcern */
+    #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesDeletedCount(DeleteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);

@@ -10,7 +10,7 @@
         { "name": "Jérôme Tamarelle", "email": "jerome.tamarelle@mongodb.com" }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "ext-hash": "*",
         "ext-json": "*",
         "ext-mongodb": "^1.20.0",
@@ -21,10 +21,13 @@
     },
     "require-dev": {
         "doctrine/coding-standard": "^12.0",
-        "rector/rector": "^1.1",
+        "phpunit/phpunit": "^10.5.35",
+        "rector/rector": "^1.2",
         "squizlabs/php_codesniffer": "^3.7",
-        "symfony/phpunit-bridge": "^5.2",
         "vimeo/psalm": "^5.13"
+    },
+    "replace": {
+        "mongodb/builder": "*"
     },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" },
@@ -33,10 +36,11 @@
     "autoload-dev": {
         "psr-4": {
             "MongoDB\\Tests\\": "tests/"
-        },
-        "files": [ "tests/PHPUnit/Functions.php" ]
+        }
     },
     "scripts": {
+        "pre-install-cmd": "git submodule update --init",
+        "pre-update-cmd": "git submodule update --init",
         "bench": "cd benchmark && composer update && vendor/bin/phpbench run --report=aggregate",
         "checks": [
             "@check:cs",
@@ -49,7 +53,7 @@
         "fix:cs": "phpcbf",
         "fix:psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
         "fix:rector": "rector process --ansi",
-        "test": "simple-phpunit"
+        "test": "phpunit"
     },
     "extra": {
         "branch-alias": {

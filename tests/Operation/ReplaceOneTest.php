@@ -2,37 +2,39 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\ReplaceOne;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use TypeError;
 
 class ReplaceOneTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), $filter, ['y' => 1]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorReplacementArgumentTypeCheck($replacement): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($replacement instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @doesNotPerformAssertions
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DoesNotPerformAssertions]
     public function testConstructorReplacementArgument($replacement): void
     {
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
     }
 
-    /** @dataProvider provideUpdateDocuments */
+    #[DataProvider('provideUpdateDocuments')]
     public function testConstructorReplacementArgumentProhibitsUpdateDocument($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -40,10 +42,8 @@ class ReplaceOneTest extends TestCase
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
     }
 
-    /**
-     * @dataProvider provideUpdatePipelines
-     * @dataProvider provideEmptyUpdatePipelinesExcludingArray
-     */
+    #[DataProvider('provideUpdatePipelines')]
+    #[DataProvider('provideEmptyUpdatePipelinesExcludingArray')]
     public function testConstructorReplacementArgumentProhibitsUpdatePipeline($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -51,17 +51,17 @@ class ReplaceOneTest extends TestCase
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionsTypeCheck($options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'codec' => $this->getInvalidDocumentCodecValues(),
+        return self::createOptionDataProvider([
+            'codec' => self::getInvalidDocumentCodecValues(),
         ]);
     }
 

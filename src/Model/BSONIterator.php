@@ -44,15 +44,11 @@ class BSONIterator implements Iterator
 
     private int $bufferLength;
 
-    /** @var array|object|null */
-    private $current = null;
+    private array|object|null $current = null;
 
     private int $key = 0;
 
     private int $position = 0;
-
-    /** @var array{typeMap: array, ...} */
-    private array $options;
 
     /**
      * @see https://php.net/iterator.current
@@ -119,19 +115,18 @@ class BSONIterator implements Iterator
      * @param array  $options Iterator options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $data, array $options = [])
+    public function __construct(string $data, private array $options = [])
     {
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         if (! isset($options['typeMap'])) {
-            $options['typeMap'] = [];
+            $this->options['typeMap'] = [];
         }
 
         $this->buffer = $data;
         $this->bufferLength = strlen($data);
-        $this->options = $options;
     }
 
     private function advance(): void

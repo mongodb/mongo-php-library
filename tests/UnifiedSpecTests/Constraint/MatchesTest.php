@@ -5,13 +5,12 @@ namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 use MongoDB\BSON\Binary;
 use MongoDB\Tests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
 
 use function hex2bin;
-use function phpversion;
 use function preg_quote;
-use function version_compare;
 
 class MatchesTest extends FunctionalTestCase
 {
@@ -71,10 +70,6 @@ class MatchesTest extends FunctionalTestCase
 
     public function testOperatorType(): void
     {
-        if (version_compare(phpversion(), '8.4', '>=')) {
-            $this->markTestIncomplete('Test fails on PHP 8.4 due to deprecations');
-        }
-
         $c = new Matches(['x' => ['$$type' => 'string']]);
         $this->assertResult(true, $c, ['x' => 'foo'], 'string matches string type');
         $this->assertResult(false, $c, ['x' => 1], 'integer does not match string type');
@@ -176,7 +171,7 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(false, $c, ['x' => 1], 'session LSID does not match (embedded)');
     }
 
-    /** @dataProvider errorMessageProvider */
+    #[DataProvider('errorMessageProvider')]
     public function testErrorMessages($expectedMessageRegex, Matches $constraint, $actualValue): void
     {
         try {
@@ -188,7 +183,7 @@ class MatchesTest extends FunctionalTestCase
         }
     }
 
-    public function errorMessageProvider()
+    public static function errorMessageProvider()
     {
         return [
             'assertEquals: type check (root-level)' => [
@@ -259,7 +254,7 @@ class MatchesTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider operatorErrorMessageProvider */
+    #[DataProvider('operatorErrorMessageProvider')]
     public function testOperatorSyntaxValidation($expectedMessage, Matches $constraint): void
     {
         $this->expectException(ExpectationFailedException::class);
@@ -268,7 +263,7 @@ class MatchesTest extends FunctionalTestCase
         $constraint->evaluate(['x' => 1], '', true);
     }
 
-    public function operatorErrorMessageProvider()
+    public static function operatorErrorMessageProvider()
     {
         return [
             '$$exists type' => [

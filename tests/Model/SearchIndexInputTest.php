@@ -6,6 +6,7 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\SearchIndexInput;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SearchIndexInputTest extends TestCase
 {
@@ -16,7 +17,7 @@ class SearchIndexInputTest extends TestCase
         new SearchIndexInput([]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorIndexDefinitionMustBeADocument($definition): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -24,7 +25,7 @@ class SearchIndexInputTest extends TestCase
         new SearchIndexInput(['definition' => $definition]);
     }
 
-    /** @dataProvider provideInvalidStringValues */
+    #[DataProvider('provideInvalidStringValues')]
     public function testConstructorShouldRequireNameToBeString($name): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -32,7 +33,7 @@ class SearchIndexInputTest extends TestCase
         new SearchIndexInput(['definition' => ['mapping' => ['dynamic' => true]], 'name' => $name]);
     }
 
-    /** @dataProvider provideInvalidStringValues */
+    #[DataProvider('provideInvalidStringValues')]
     public function testConstructorShouldRequireTypeToBeString($type): void
     {
         $this->expectException(InvalidArgumentException::class);

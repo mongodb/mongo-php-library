@@ -31,7 +31,6 @@ use function array_map;
 use function current;
 use function fopen;
 use function fwrite;
-use function get_class;
 use function hex2bin;
 use function iterator_to_array;
 use function key;
@@ -51,7 +50,7 @@ use function PHPUnit\Framework\assertNotContains;
 use function PHPUnit\Framework\assertNotEquals;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertNull;
-use function PHPUnit\Framework\assertObjectHasAttribute;
+use function PHPUnit\Framework\assertObjectHasProperty;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertThat;
 use function PHPUnit\Framework\assertTrue;
@@ -74,8 +73,6 @@ final class Operation
 
     private array $arguments = [];
 
-    private Context $context;
-
     private EntityMap $entityMap;
 
     private ExpectedError $expectError;
@@ -86,9 +83,26 @@ final class Operation
 
     private ?string $saveResultAsEntity = null;
 
-    public function __construct(stdClass $o, Context $context)
+    private static array $unsupportedOperations = [
+        self::OBJECT_TEST_RUNNER => [
+            'assertNumberConnectionsCheckedOut' => 'PHP does not implement CMAP',
+            'createEntities' => 'createEntities is not implemented (PHPC-1760)',
+        ],
+        Client::class => [
+            'clientBulkWrite' => 'clientBulkWrite is not implemented (PHPLIB-847)',
+            'listDatabaseObjects' => 'listDatabaseObjects is not implemented',
+        ],
+        Cursor::class => ['iterateOnce' => 'iterateOnce is not implemented (PHPC-1760)'],
+        Database::class => [
+            'createCommandCursor' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+            'listCollectionObjects' => 'listCollectionObjects is not implemented',
+            'runCursorCommand' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
+        ],
+        Collection::class => ['listIndexNames' => 'listIndexNames is not implemented'],
+    ];
+
+    public function __construct(stdClass $o, private Context $context)
     {
-        $this->context = $context;
         $this->entityMap = $context->getEntityMap();
 
         assertIsString($o->name);
@@ -170,9 +184,10 @@ final class Operation
         $object = $this->entityMap[$this->object];
         assertIsObject($object);
 
+        $this->skipIfOperationIsNotSupported($object::class);
         $this->context->setActiveClient($this->entityMap->getRootClientIdOf($this->object));
 
-        switch (get_class($object)) {
+        switch ($object::class) {
             case Client::class:
                 $result = $this->executeForClient($object);
                 break;
@@ -198,7 +213,7 @@ final class Operation
                 $result = $this->executeForBucket($object);
                 break;
             default:
-                Assert::fail('Unsupported entity type: ' . get_class($object));
+                Assert::fail('Unsupported entity type: ' . $object::class);
         }
 
         return $result;
@@ -538,7 +553,7 @@ final class Operation
             case 'createSearchIndex':
                 assertArrayHasKey('model', $args);
                 assertIsObject($args['model']);
-                assertObjectHasAttribute('definition', $args['model']);
+                assertObjectHasProperty('definition', $args['model']);
                 assertInstanceOf(stdClass::class, $args['model']->definition);
 
                 /* Note: tests specify options within "model". A top-level
@@ -811,6 +826,8 @@ final class Operation
 
     private function executeForTestRunner()
     {
+        $this->skipIfOperationIsNotSupported(self::OBJECT_TEST_RUNNER);
+
         $args = $this->prepareArguments();
         Util::assertArgumentsBySchema(self::OBJECT_TEST_RUNNER, $this->name, $args);
 
@@ -963,6 +980,16 @@ final class Operation
         return Util::prepareCommonOptions($args);
     }
 
+    private function skipIfOperationIsNotSupported(string $executingObjectName): void
+    {
+        $skipReason = self::$unsupportedOperations[$executingObjectName][$this->name] ?? null;
+        if (! $skipReason) {
+            return;
+        }
+
+        Assert::markTestSkipped($skipReason);
+    }
+
     private static function prepareBulkWriteRequest(stdClass $request): array
     {
         $request = (array) $request;
@@ -1054,7 +1081,7 @@ final class Operation
     {
         $source = $args['source'] ?? null;
         assertIsObject($source);
-        assertObjectHasAttribute('$$hexBytes', $source);
+        assertObjectHasProperty('$$hexBytes', $source);
         Util::assertHasOnlyKeys($source, ['$$hexBytes']);
         $hexBytes = $source->{'$$hexBytes'};
         assertIsString($hexBytes);

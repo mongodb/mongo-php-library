@@ -3,12 +3,15 @@
 namespace MongoDB\Tests;
 
 use MongoDB\Client;
+use MongoDB\Codec\Encoder;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 
 /**
  * Unit tests for the Client class.
@@ -22,7 +25,7 @@ class ClientTest extends TestCase
         $this->assertEquals('mongodb://127.0.0.1/', (string) $client);
     }
 
-    /** @doesNotPerformAssertions */
+    #[DoesNotPerformAssertions]
     public function testConstructorAutoEncryptionOpts(): void
     {
         $autoEncryptionOpts = [
@@ -34,32 +37,36 @@ class ClientTest extends TestCase
         new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
     }
 
-    /** @dataProvider provideInvalidConstructorDriverOptions */
+    #[DataProvider('provideInvalidConstructorDriverOptions')]
     public function testConstructorDriverOptionTypeChecks(array $driverOptions, string $exception = InvalidArgumentException::class): void
     {
         $this->expectException($exception);
         new Client(static::getUri(), [], $driverOptions);
     }
 
-    public function provideInvalidConstructorDriverOptions()
+    public static function provideInvalidConstructorDriverOptions()
     {
         $options = [];
 
-        foreach ($this->getInvalidArrayValues(true) as $value) {
+        foreach (self::getInvalidObjectValues() as $value) {
+            $options[][] = ['builderEncoder' => $value];
+        }
+
+        foreach (self::getInvalidArrayValues(true) as $value) {
             $options[][] = ['typeMap' => $value];
         }
 
         $options[][] = ['autoEncryption' => ['keyVaultClient' => 'foo']];
 
-        foreach ($this->getInvalidStringValues() as $value) {
+        foreach (self::getInvalidStringValues() as $value) {
             $options[][] = ['driver' => ['name' => $value]];
         }
 
-        foreach ($this->getInvalidStringValues() as $value) {
+        foreach (self::getInvalidStringValues() as $value) {
             $options[][] = ['driver' => ['version' => $value]];
         }
 
-        foreach ($this->getInvalidStringValues() as $value) {
+        foreach (self::getInvalidStringValues() as $value) {
             $options[] = [
                 'driverOptions' => ['driver' => ['platform' => $value]],
                 'exception' => DriverInvalidArgumentException::class,
@@ -85,6 +92,7 @@ class ClientTest extends TestCase
         ];
 
         $driverOptions = [
+            'builderEncoder' => $builderEncoder = $this->createMock(Encoder::class),
             'typeMap' => ['root' => 'array'],
         ];
 
@@ -92,6 +100,7 @@ class ClientTest extends TestCase
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $debug = $collection->__debugInfo();
 
+        $this->assertSame($builderEncoder, $debug['builderEncoder']);
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
@@ -105,6 +114,7 @@ class ClientTest extends TestCase
     public function testSelectCollectionPassesOptions(): void
     {
         $collectionOptions = [
+            'builderEncoder' => $builderEncoder = $this->createMock(Encoder::class),
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array'],
@@ -115,6 +125,7 @@ class ClientTest extends TestCase
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
         $debug = $collection->__debugInfo();
 
+        $this->assertSame($builderEncoder, $debug['builderEncoder']);
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
@@ -129,11 +140,19 @@ class ClientTest extends TestCase
     {
         $uriOptions = ['w' => WriteConcern::MAJORITY];
 
-        $client = new Client(static::getUri(), $uriOptions);
+        $driverOptions = [
+            'builderEncoder' => $builderEncoder = $this->createMock(Encoder::class),
+            'typeMap' => ['root' => 'array'],
+        ];
+
+        $client = new Client(static::getUri(), $uriOptions, $driverOptions);
         $database = $client->{$this->getDatabaseName()};
         $debug = $database->__debugInfo();
 
+        $this->assertSame($builderEncoder, $debug['builderEncoder']);
         $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertIsArray($debug['typeMap']);
+        $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
@@ -147,6 +166,7 @@ class ClientTest extends TestCase
         ];
 
         $driverOptions = [
+            'builderEncoder' => $builderEncoder = $this->createMock(Encoder::class),
             'typeMap' => ['root' => 'array'],
         ];
 
@@ -154,6 +174,7 @@ class ClientTest extends TestCase
         $database = $client->selectDatabase($this->getDatabaseName());
         $debug = $database->__debugInfo();
 
+        $this->assertSame($builderEncoder, $debug['builderEncoder']);
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
@@ -167,6 +188,7 @@ class ClientTest extends TestCase
     public function testSelectDatabasePassesOptions(): void
     {
         $databaseOptions = [
+            'builderEncoder' => $builderEncoder = $this->createMock(Encoder::class),
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array'],

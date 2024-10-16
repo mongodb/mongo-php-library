@@ -1,0 +1,33 @@
+# $schema: ../schema.json
+name: $tsSecond
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/'
+type:
+    - resolvesToLong
+encode: single
+description: |
+    Returns the seconds from a timestamp as a long.
+    New in MongoDB 5.1.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToTimestamp
+tests:
+    -
+        name: 'Obtain the Number of Seconds from a Timestamp Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#obtain-the-number-of-seconds-from-a-timestamp-field'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    saleTimestamp: 1
+                    saleSeconds:
+                        $tsSecond: '$saleTimestamp'
+    -
+        name: 'Use $tsSecond in a Change Stream Cursor to Monitor Collection Changes'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#use--tssecond-in-a-change-stream-cursor-to-monitor-collection-changes'
+        pipeline:
+            -
+                $addFields:
+                    clusterTimeSeconds:
+                        $tsSecond: '$clusterTime'

@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $pow
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/pow/'
+type:
+    - resolvesToNumber
+encode: array
+description: |
+    Raises a number to the specified exponent.
+arguments:
+    -
+        name: number
+        type:
+            - resolvesToNumber
+    -
+        name: exponent
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/pow/#example'
+        pipeline:
+            -
+                $project:
+                    variance:
+                        $pow:
+                            -
+                                # Example uses the short form, the builder always generates the verbose form
+                                # $stdDevPop: '$scores.score'
+                                $stdDevPop: ['$scores.score']
+                            - 2

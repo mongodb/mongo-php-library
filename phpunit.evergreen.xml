@@ -26,6 +26,6 @@
     </testsuites>
 
     <logging>
-        <log type="junit" target="test-results.xml" />
+        <junit outputFile="test-results.xml" />
     </logging>
 </phpunit>

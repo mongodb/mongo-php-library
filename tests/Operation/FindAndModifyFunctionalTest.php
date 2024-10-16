@@ -12,11 +12,12 @@ use MongoDB\Operation\FindAndModify;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class FindAndModifyFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideQueryDocuments */
+    #[DataProvider('provideQueryDocuments')]
     public function testQueryDocuments($query, stdClass $expectedQuery): void
     {
         (new CommandObserver())->observe(
@@ -35,7 +36,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideQueryDocuments(): array
+    public static function provideQueryDocuments(): array
     {
         $expected = (object) ['x' => 1];
 
@@ -47,12 +48,10 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @dataProvider provideUpdateDocuments
-     * @dataProvider provideUpdatePipelines
-     * @dataProvider provideReplacementDocumentLikePipeline
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DataProvider('provideUpdateDocuments')]
+    #[DataProvider('provideUpdatePipelines')]
+    #[DataProvider('provideReplacementDocumentLikePipeline')]
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
         (new CommandObserver())->observe(
@@ -74,7 +73,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideReplacementDocumentLikePipeline(): array
+    public static function provideReplacementDocumentLikePipeline(): array
     {
         /* Note: this expected value differs from UpdateFunctionalTest because
          * FindAndModify is not affected by libmongoc's pipeline detection for
@@ -104,7 +103,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation->execute($server);
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
             },
         );
     }
@@ -122,7 +121,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
             },
         );
     }
@@ -191,7 +190,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
@@ -209,7 +208,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectHasProperty('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             },
         );
@@ -228,12 +227,12 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('bypassDocumentValidation', $event['started']->getCommand());
             },
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocument */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocument')]
     public function testTypeMapOption(?array $typeMap, $expectedDocument): void
     {
         $this->createFixtures(1);
@@ -251,7 +250,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocument, $document);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocument()
+    public static function provideTypeMapOptionsAndExpectedDocument()
     {
         return [
             [

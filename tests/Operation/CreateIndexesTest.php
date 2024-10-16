@@ -7,6 +7,7 @@ use MongoDB\BSON\Document;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CreateIndexes;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class CreateIndexesTest extends TestCase
@@ -18,21 +19,21 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [1 => ['key' => ['x' => 1]]]);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
+        return self::createOptionDataProvider([
             // commitQuorum is int|string, for which no helper exists
             'commitQuorum' => ['float' => 3.14, 'bool' => true, 'array' => [], 'object' => new stdClass()],
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'session' => self::getInvalidSessionValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 
@@ -43,7 +44,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
-    /** @dataProvider provideInvalidIndexSpecificationTypes */
+    #[DataProvider('provideInvalidIndexSpecificationTypes')]
     public function testConstructorRequiresIndexSpecificationsToBeAnArray($index): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -51,9 +52,9 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [$index]);
     }
 
-    public function provideInvalidIndexSpecificationTypes()
+    public static function provideInvalidIndexSpecificationTypes()
     {
-        return $this->wrapValuesForDataProvider($this->getInvalidArrayValues());
+        return self::wrapValuesForDataProvider(self::getInvalidArrayValues());
     }
 
     public function testConstructorRequiresIndexSpecificationKey(): void
@@ -63,7 +64,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [[]]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorRequiresIndexSpecificationKeyToBeADocument($key): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -71,7 +72,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => $key]]);
     }
 
-    /** @dataProvider provideKeyDocumentsWithInvalidOrder */
+    #[DataProvider('provideKeyDocumentsWithInvalidOrder')]
     public function testConstructorValidatesIndexSpecificationKeyOrder($key): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -79,7 +80,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => $key]]);
     }
 
-    public function provideKeyDocumentsWithInvalidOrder(): Generator
+    public static function provideKeyDocumentsWithInvalidOrder(): Generator
     {
         $invalidOrderValues = [true, [], new stdClass(), null];
 
@@ -91,7 +92,7 @@ class CreateIndexesTest extends TestCase
         }
     }
 
-    /** @dataProvider provideInvalidStringValues */
+    #[DataProvider('provideInvalidStringValues')]
     public function testConstructorRequiresIndexSpecificationNameToBeString($name): void
     {
         $this->expectException(InvalidArgumentException::class);

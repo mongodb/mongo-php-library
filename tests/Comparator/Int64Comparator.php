@@ -5,13 +5,14 @@ namespace MongoDB\Tests\Comparator;
 use MongoDB\BSON\Int64;
 use SebastianBergmann\Comparator\Comparator;
 use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Exporter\Exporter;
 
 use function is_numeric;
 use function sprintf;
 
 class Int64Comparator extends Comparator
 {
-    public function accepts($expected, $actual)
+    public function accepts($expected, $actual): bool
     {
         // Only compare if either value is an Int64 and the other value is numeric
         return ($expected instanceof Int64 && $this->isComparable($actual))
@@ -24,16 +25,17 @@ class Int64Comparator extends Comparator
             return;
         }
 
+        $exporter = new Exporter();
+
         throw new ComparisonFailure(
             $expected,
             $actual,
             '',
             '',
-            false,
             sprintf(
                 'Failed asserting that %s matches expected %s.',
-                $this->exporter->export($actual),
-                $this->exporter->export($expected),
+                $exporter->export($actual),
+                $exporter->export($expected),
             ),
         );
     }

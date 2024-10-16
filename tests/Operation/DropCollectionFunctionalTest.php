@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\Depends;
 
 class DropCollectionFunctionalTest extends FunctionalTestCase
 {
@@ -21,7 +22,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
             },
         );
     }
@@ -41,7 +42,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
-    /** @depends testDropExistingCollection */
+    #[Depends('testDropExistingCollection')]
     public function testDropNonexistentCollection(): void
     {
         $this->assertCollectionDoesNotExist($this->getCollectionName());
@@ -67,7 +68,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }

@@ -7,10 +7,11 @@ use MongoDB\Driver\Command;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DatabaseCommandFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideCommandDocuments */
+    #[DataProvider('provideCommandDocuments')]
     public function testCommandDocuments($command): void
     {
         (new CommandObserver())->observe(
@@ -28,7 +29,7 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideCommandDocuments(): array
+    public static function provideCommandDocuments(): array
     {
         return [
             'array' => [['ping' => 1]],
@@ -55,7 +56,7 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }

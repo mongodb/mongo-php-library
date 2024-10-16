@@ -1,0 +1,108 @@
+# $schema: ../schema.json
+name: $sortArray
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Sorts the elements of an array.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            The array to be sorted.
+            The result is null if the expression: is missing, evaluates to null, or evaluates to undefined
+            If the expression evaluates to any other non-array value, the document returns an error.
+    -
+        name: sortBy
+        type:
+            - object # SortSpec
+            - int
+            - sortSpec
+        description: |
+            The document specifies a sort ordering.
+tests:
+    -
+        name: 'Sort on a Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-a-field'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    result:
+                        $sortArray:
+                            input: '$team'
+                            sortBy:
+                                name: 1
+    -
+        name: 'Sort on a Subfield'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-a-subfield'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    result:
+                        $sortArray:
+                            input: '$team'
+                            sortBy:
+                                address.city: -1
+    -
+        name: 'Sort on Multiple Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-multiple-fields'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    result:
+                        $sortArray:
+                            input: '$team'
+                            sortBy:
+                                age: -1
+                                name: 1
+    -
+        name: 'Sort an Array of Integers'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-an-array-of-integers'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    result:
+                        $sortArray:
+                            input:
+                                - 1
+                                - 4
+                                - 1
+                                - 6
+                                - 12
+                                - 5
+                            sortBy: 1
+    -
+        name: 'Sort on Mixed Type Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-mixed-type-fields'
+        pipeline:
+            -
+                $project:
+                    _id: 0
+                    result:
+                        $sortArray:
+                            input:
+                                - 20
+                                - 4
+                                -
+                                    a: 'Free'
+                                - 6
+                                - 21
+                                - 5
+                                - 'Gratis'
+                                -
+                                    a: ~
+                                -
+                                    a:
+                                        sale: true
+                                        price: 19
+                                - !bson_decimal128 '10.23'
+                                -
+                                    a: 'On sale'
+                            sortBy: 1

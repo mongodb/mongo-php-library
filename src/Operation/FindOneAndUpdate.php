@@ -23,9 +23,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_key_exists;
-use function is_array;
 use function is_integer;
-use function is_object;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
@@ -35,6 +33,8 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::findOneAndUpdate()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class FindOneAndUpdate implements Executable, Explainable
 {
@@ -106,14 +106,10 @@ class FindOneAndUpdate implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $filter, $update, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array|object $filter, array|object $update, array $options = [])
     {
         if (! is_document($filter)) {
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
-        }
-
-        if (! is_array($update) && ! is_object($update)) {
-            throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
         if (! is_first_key_operator($update) && ! is_pipeline($update)) {

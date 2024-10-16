@@ -7,13 +7,11 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
-use MongoDB\Driver\Exception\WriteException;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use PHPUnit\Framework\Assert;
 use stdClass;
 use Throwable;
 
-use function get_class;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertCount;
@@ -27,7 +25,7 @@ use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotInstanceOf;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertNull;
-use function PHPUnit\Framework\assertObjectHasAttribute;
+use function PHPUnit\Framework\assertObjectHasProperty;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsStringIgnoringCase;
 use function PHPUnit\Framework\assertThat;
@@ -128,7 +126,7 @@ final class ExpectedError
     public function assert(?Throwable $e = null): void
     {
         if (! $this->isError && $e !== null) {
-            Assert::fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString()));
+            Assert::fail(sprintf("Operation threw unexpected %s: %s\n%s", $e::class, $e->getMessage(), $e->getTraceAsString()));
         }
 
         if (! $this->isError) {
@@ -158,14 +156,14 @@ final class ExpectedError
         }
 
         if (isset($this->matchesResultDocument)) {
-            assertThat($e, logicalOr(isInstanceOf(CommandException::class), isInstanceOf(WriteException::class)));
+            assertThat($e, logicalOr(isInstanceOf(CommandException::class), isInstanceOf(BulkWriteException::class)));
 
             if ($e instanceof CommandException) {
                 assertThat($e->getResultDocument(), $this->matchesResultDocument, 'CommandException result document matches');
-            } elseif ($e instanceof WriteException) {
+            } elseif ($e instanceof BulkWriteException) {
                 $writeErrors = $e->getWriteResult()->getErrorReplies();
                 assertCount(1, $writeErrors);
-                assertThat($writeErrors[0], $this->matchesResultDocument, 'WriteException result document matches');
+                assertThat($writeErrors[0], $this->matchesResultDocument, 'BulkWriteException result document matches');
             }
         }
 
@@ -219,13 +217,13 @@ final class ExpectedError
         $result = $e->getResultDocument();
 
         if (isset($result->writeConcernError)) {
-            assertObjectHasAttribute('codeName', $result->writeConcernError);
+            assertObjectHasProperty('codeName', $result->writeConcernError);
             assertSame($this->codeName, $result->writeConcernError->codeName);
 
             return;
         }
 
-        assertObjectHasAttribute('codeName', $result);
+        assertObjectHasProperty('codeName', $result);
         assertSame($this->codeName, $result->codeName);
     }
 }

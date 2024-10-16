@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+use MongoDB\CodeGenerator\Command\GenerateCommand;
+use Symfony\Component\Console\Application;
+
+if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
+    echo "Run `composer install` before you run the `console` script.\n";
+    exit(1);
+}
+
+require __DIR__ . '/vendor/autoload.php';
+
+$application = new Application();
+$application->add(new GenerateCommand(__DIR__ . '/../', __DIR__ . '/config'));
+$application->setDefaultCommand('generate');
+$application->run();

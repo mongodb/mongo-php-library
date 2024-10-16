@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $binarySize
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the size of a given string or binary data value's content in bytes.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToString
+            - resolvesToBinData
+            - resolvesToNull
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/#example'
+        pipeline:
+            -
+                $project:
+                    name: '$name'
+                    imageSize:
+                        $binarySize: '$binary'

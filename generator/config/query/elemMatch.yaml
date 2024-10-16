@@ -1,0 +1,68 @@
+# $schema: ../schema.json
+name: $elemMatch
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.
+arguments:
+    -
+        name: query
+        type:
+            - query
+            - fieldQuery
+tests:
+    -
+        name: 'Element Match'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#element-match'
+        pipeline:
+            -
+                $match:
+                    results:
+                        $elemMatch:
+                            $gte: 80
+                            $lt: 85
+    -
+        name: 'Array of Embedded Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#array-of-embedded-documents'
+        pipeline:
+            -
+                $match:
+                    results:
+                        $elemMatch:
+                            product: 'xyz'
+                            score:
+                                $gte: 8
+    -
+        name: 'Single Query Condition'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#single-query-condition'
+        pipeline:
+            -
+                $match:
+                    results:
+                        $elemMatch:
+                            product:
+                                $ne: 'xyz'
+    -
+        name: 'Using $or with $elemMatch'
+        pipeline:
+            -
+                $match:
+                    game:
+                        $elemMatch:
+                            $or:
+                                -
+                                    score:
+                                        $gt: 10
+                                -
+                                    score:
+                                        $lt: 5
+    -
+        name: 'Single field operator'
+        pipeline:
+            -
+                $match:
+                    results:
+                        $elemMatch:
+                            $gt: 10

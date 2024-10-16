@@ -4,9 +4,11 @@ namespace MongoDB\Tests\Collection;
 
 use Closure;
 use MongoDB\BSON\Javascript;
+use MongoDB\Codec\Encoder;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -15,11 +17,14 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use TypeError;
 
 use function array_filter;
 use function call_user_func;
 use function is_scalar;
+use function iterator_to_array;
 use function json_encode;
 use function str_contains;
 use function usort;
@@ -32,7 +37,7 @@ use const JSON_THROW_ON_ERROR;
  */
 class CollectionFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideInvalidDatabaseAndCollectionNames */
+    #[DataProvider('provideInvalidDatabaseAndCollectionNames')]
     public function testConstructorDatabaseNameArgument($databaseName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -40,7 +45,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         new Collection($this->manager, $databaseName, $this->getCollectionName());
     }
 
-    /** @dataProvider provideInvalidDatabaseAndCollectionNames */
+    #[DataProvider('provideInvalidDatabaseAndCollectionNames')]
     public function testConstructorCollectionNameArgument($collectionName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -48,7 +53,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         new Collection($this->manager, $this->getDatabaseName(), $collectionName);
     }
 
-    public function provideInvalidDatabaseAndCollectionNames()
+    public static function provideInvalidDatabaseAndCollectionNames()
     {
         return [
             [null, TypeError::class],
@@ -56,21 +61,22 @@ class CollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions(): array
+    public static function provideInvalidConstructorOptions(): array
     {
-        return $this->createOptionDataProvider([
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'builderEncoder' => self::getInvalidObjectValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 
@@ -155,18 +161,18 @@ class CollectionFunctionalTest extends FunctionalTestCase
             },
             function (array $event): void {
                 $command = $event['started']->getCommand();
-                $this->assertObjectHasAttribute('comment', $command);
-                $this->assertObjectHasAttribute('commitQuorum', $command);
-                $this->assertObjectHasAttribute('lsid', $command);
-                $this->assertObjectHasAttribute('maxTimeMS', $command);
-                $this->assertObjectHasAttribute('writeConcern', $command);
-                $this->assertObjectHasAttribute('sparse', $command->indexes[0]);
-                $this->assertObjectHasAttribute('unique', $command->indexes[0]);
+                $this->assertObjectHasProperty('comment', $command);
+                $this->assertObjectHasProperty('commitQuorum', $command);
+                $this->assertObjectHasProperty('lsid', $command);
+                $this->assertObjectHasProperty('maxTimeMS', $command);
+                $this->assertObjectHasProperty('writeConcern', $command);
+                $this->assertObjectHasProperty('sparse', $command->indexes[0]);
+                $this->assertObjectHasProperty('unique', $command->indexes[0]);
             },
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testDistinctWithTypeMap(array $typeMap, array $expectedDocuments): void
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
@@ -208,7 +214,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $values);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             'No type map' => [
@@ -396,6 +402,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function testWithOptionsPassesOptions(): void
     {
         $collectionOptions = [
+            'builderEncoder' => $builderEncoder = $this->createMock(Encoder::class),
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array'],
@@ -405,6 +412,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $clone = $this->collection->withOptions($collectionOptions);
         $debug = $clone->__debugInfo();
 
+        $this->assertSame($builderEncoder, $debug['builderEncoder']);
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
@@ -415,12 +423,10 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    /**
-     * @group matrix-testing-exclude-server-4.4-driver-4.0
-     * @group matrix-testing-exclude-server-4.4-driver-4.2
-     * @group matrix-testing-exclude-server-5.0-driver-4.0
-     * @group matrix-testing-exclude-server-5.0-driver-4.2
-     */
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.0')]
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.2')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.2')]
     public function testMapReduce(): void
     {
         $this->createFixtures(3);
@@ -429,7 +435,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
         $out = ['inline' => 1];
 
-        $result = $this->collection->mapReduce($map, $reduce, $out);
+        $result = $this->assertDeprecated(
+            fn () => $this->collection->mapReduce($map, $reduce, $out),
+        );
 
         $this->assertInstanceOf(MapReduceResult::class, $result);
         $expected = [
@@ -444,7 +452,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function collectionMethodClosures()
+    public static function collectionMethodClosures()
     {
         return [
             'read-only aggregate' => [
@@ -712,23 +720,23 @@ class CollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function collectionReadMethodClosures(): array
+    public static function collectionReadMethodClosures(): array
     {
         return array_filter(
-            $this->collectionMethodClosures(),
+            self::collectionMethodClosures(),
             fn ($rw) => str_contains($rw[1], 'r'),
         );
     }
 
-    public function collectionWriteMethodClosures(): array
+    public static function collectionWriteMethodClosures(): array
     {
         return array_filter(
-            $this->collectionMethodClosures(),
+            self::collectionMethodClosures(),
             fn ($rw) => str_contains($rw[1], 'w'),
         );
     }
 
-    /** @dataProvider collectionMethodClosures */
+    #[DataProvider('collectionMethodClosures')]
     public function testMethodDoesNotInheritReadWriteConcernInTransaction(Closure $method): void
     {
         $this->skipIfTransactionsAreNotSupported();
@@ -748,13 +756,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 call_user_func($method, $collection, $session);
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
             },
         );
     }
 
-    /** @dataProvider collectionWriteMethodClosures */
+    #[DataProvider('collectionWriteMethodClosures')]
     public function testMethodInTransactionWithWriteConcernOption($method): void
     {
         $this->skipIfTransactionsAreNotSupported();
@@ -774,7 +782,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         }
     }
 
-    /** @dataProvider collectionReadMethodClosures */
+    #[DataProvider('collectionReadMethodClosures')]
     public function testMethodInTransactionWithReadConcernOption($method): void
     {
         $this->skipIfTransactionsAreNotSupported();
@@ -792,6 +800,32 @@ class CollectionFunctionalTest extends FunctionalTestCase
         } finally {
             $session->endSession();
         }
+    }
+
+    public function testListSearchIndexesInheritTypeMap(): void
+    {
+        $this->skipIfAtlasSearchIndexIsNotSupported();
+
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), ['typeMap' => ['root' => 'array']]);
+
+        // Insert a document to create the collection
+        $collection->insertOne(['_id' => 1]);
+
+        try {
+            $collection->createSearchIndex(['mappings' => ['dynamic' => false]], ['name' => 'test-search-index']);
+        } catch (CommandException $e) {
+            // Ignore duplicate errors in case this test is re-run too quickly
+            // Index is asynchronously dropped during tearDown, we only need to
+            // ensure it exists for this test.
+            if ($e->getCode() !== 68 /* IndexAlreadyExists */) {
+                throw $e;
+            }
+        }
+
+        $indexes = $collection->listSearchIndexes();
+        $indexes = iterator_to_array($indexes);
+        $this->assertCount(1, $indexes);
+        $this->assertIsArray($indexes[0]);
     }
 
     /**

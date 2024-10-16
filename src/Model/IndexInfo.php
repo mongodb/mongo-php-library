@@ -44,12 +44,9 @@ use const E_USER_DEPRECATED;
  */
 class IndexInfo implements ArrayAccess
 {
-    private array $info;
-
     /** @param array $info Index info */
-    public function __construct(array $info)
+    public function __construct(private array $info)
     {
-        $this->info = $info;
     }
 
     /**
@@ -102,7 +99,7 @@ class IndexInfo implements ArrayAccess
      */
     public function getNamespace()
     {
-        @trigger_error('MongoDB 4.4 drops support for the namespace in indexes, the method "IndexInfo::getNamespace()" will be removed in a future release', E_USER_DEPRECATED);
+        @trigger_error('MongoDB 4.4 drops support for the namespace in indexes, the method "IndexInfo::getNamespace()" will be removed in version 2.0', E_USER_DEPRECATED);
 
         return (string) $this->info['ns'];
     }
@@ -135,7 +132,7 @@ class IndexInfo implements ArrayAccess
      */
     public function isGeoHaystack()
     {
-        @trigger_error('MongoDB 5.0 removes support for "geoHaystack" indexes, the method "IndexInfo::isGeoHaystack()" will be removed in a future release', E_USER_DEPRECATED);
+        @trigger_error('MongoDB 5.0 removes support for "geoHaystack" indexes, the method "IndexInfo::isGeoHaystack()" will be removed in version 2.0', E_USER_DEPRECATED);
 
         return array_search('geoHaystack', $this->getKey(), true) !== false;
     }
@@ -187,12 +184,11 @@ class IndexInfo implements ArrayAccess
      * Check whether a field exists in the index information.
      *
      * @see https://php.net/arrayaccess.offsetexists
-     * @param mixed $offset
      * @return boolean
      * @psalm-param array-key $offset
      */
     #[ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset)
     {
         return array_key_exists($offset, $this->info);
     }
@@ -206,12 +202,11 @@ class IndexInfo implements ArrayAccess
      *
      * @see https://php.net/arrayaccess.offsetget
      * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst#getting-full-index-information
-     * @param mixed $offset
      * @return mixed
      * @psalm-param array-key $offset
      */
     #[ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset)
     {
         return $this->info[$offset];
     }
@@ -220,13 +215,11 @@ class IndexInfo implements ArrayAccess
      * Not supported.
      *
      * @see https://php.net/arrayaccess.offsetset
-     * @param mixed $offset
-     * @param mixed $value
      * @throws BadMethodCallException
      * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
     }
@@ -235,12 +228,11 @@ class IndexInfo implements ArrayAccess
      * Not supported.
      *
      * @see https://php.net/arrayaccess.offsetunset
-     * @param mixed $offset
      * @throws BadMethodCallException
      * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
     }

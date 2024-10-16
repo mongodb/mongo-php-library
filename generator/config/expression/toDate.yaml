@@ -1,0 +1,26 @@
+# $schema: ../schema.json
+name: $toDate
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/'
+type:
+    - resolvesToDate
+encode: single
+description: |
+    Converts value to a Date.
+    New in MongoDB 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedDate:
+                        $toDate: '$order_date'
+            -
+                $sort:
+                    convertedDate: 1

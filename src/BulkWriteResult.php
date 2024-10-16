@@ -25,16 +25,10 @@ use MongoDB\Exception\BadMethodCallException;
  */
 class BulkWriteResult
 {
-    private WriteResult $writeResult;
-
-    private array $insertedIds;
-
     private bool $isAcknowledged;
 
-    public function __construct(WriteResult $writeResult, array $insertedIds)
+    public function __construct(private WriteResult $writeResult, private array $insertedIds)
     {
-        $this->writeResult = $writeResult;
-        $this->insertedIds = $insertedIds;
         $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 

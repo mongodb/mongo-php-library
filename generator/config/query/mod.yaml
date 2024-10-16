@@ -1,0 +1,42 @@
+# $schema: ../schema.json
+name: $mod
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/mod/'
+type:
+    - fieldQuery
+encode: array
+description: |
+    Performs a modulo operation on the value of a field and selects documents with a specified result.
+arguments:
+    -
+        name: divisor
+        type:
+            - number
+    -
+        name: remainder
+        type:
+            - number
+tests:
+    -
+        name: 'Use $mod to Select Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/mod/#use--mod-to-select-documents'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $mod: [4, 0]
+    -
+        name: 'Floating Point Arguments'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/mod/#floating-point-arguments'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $mod: [4.0, 0]
+            -
+                $match:
+                    qty:
+                        $mod: [4.5, 0]
+            -
+                $match:
+                    qty:
+                        $mod: [4.99, 0]

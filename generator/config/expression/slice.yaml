@@ -1,0 +1,44 @@
+# $schema: ../schema.json
+name: $slice
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/'
+type:
+    - resolvesToArray
+encode: array
+description: |
+    Returns a subset of an array.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+        description: |
+            Any valid expression as long as it resolves to an array.
+    -
+        name: position
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            Any valid expression as long as it resolves to an integer.
+            If positive, $slice determines the starting position from the start of the array. If position is greater than the number of elements, the $slice returns an empty array.
+            If negative, $slice determines the starting position from the end of the array. If the absolute value of the <position> is greater than the number of elements, the starting position is the start of the array.
+    -
+        name: "n"
+        type:
+            - resolvesToInt
+        description: |
+            Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
+            If positive, $slice returns up to the first n elements in the array. If the position is specified, $slice returns the first n elements starting from the position.
+            If negative, $slice returns up to the last n elements in the array. n cannot resolve to a negative number if <position> is specified.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/#example'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    threeFavorites:
+                        $slice:
+                            - '$favorites'
+                            - 3

@@ -1,0 +1,23 @@
+# $schema: ../schema.json
+name: $toDecimal
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/'
+type:
+    - resolvesToDecimal
+encode: single
+description: |
+    Converts value to a Decimal128.
+    New in MongoDB 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/#example'
+        pipeline:
+            -
+                $addFields:
+                    convertedPrice:
+                        $toDecimal: '$price'

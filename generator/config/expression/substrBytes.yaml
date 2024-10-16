@@ -1,0 +1,59 @@
+# $schema: ../schema.json
+name: $substrBytes
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/'
+type:
+    - resolvesToString
+encode: array
+description: |
+    Returns the substring of a string. Starts with the character at the specified UTF-8 byte index (zero-based) in the string and continues for the specified number of bytes.
+arguments:
+    -
+        name: string
+        type:
+            - resolvesToString
+    -
+        name: start
+        type:
+            - resolvesToInt
+        description: |
+            If start is a negative number, $substr returns an empty string "".
+    -
+        name: length
+        type:
+            - resolvesToInt
+        description: |
+            If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
+tests:
+    -
+        name: 'Single-Byte Character Set'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/#single-byte-character-set'
+        pipeline:
+            -
+                $project:
+                    item: 1
+                    yearSubstring:
+                        $substrBytes:
+                            - '$quarter'
+                            - 0
+                            - 2
+                    quarterSubtring:
+                        $substrBytes:
+                            - '$quarter'
+                            - 2
+                            -
+                                $subtract:
+                                    -
+                                        $strLenBytes: '$quarter'
+                                    - 2
+    -
+        name: 'Single-Byte and Multibyte Character Set'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/#single-byte-and-multibyte-character-set'
+        pipeline:
+            -
+                $project:
+                    name: 1
+                    menuCode:
+                        $substrBytes:
+                            - '$name'
+                            - 0
+                            - 3

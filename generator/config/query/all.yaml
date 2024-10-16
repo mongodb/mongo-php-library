@@ -1,0 +1,43 @@
+# $schema: ../schema.json
+name: $all
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/all/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches arrays that contain all elements specified in the query.
+arguments:
+    -
+        name: value
+        type:
+            - fieldQuery
+        variadic: array
+tests:
+    -
+        name: 'Use $all to Match Values'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/all/#use--all-to-match-values'
+        pipeline:
+            -
+                $match:
+                    tags:
+                        $all:
+                            - 'appliance'
+                            - 'school'
+                            - 'book'
+    -
+        name: 'Use $all with $elemMatch'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/all/#use--all-with--elemmatch'
+        pipeline:
+            -
+                $match:
+                    qty:
+                        $all:
+                            -
+                                $elemMatch:
+                                    size: 'M'
+                                    num:
+                                        $gt: 50
+                            -
+                                $elemMatch:
+                                    num: 100
+                                    color: 'green'

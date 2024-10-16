@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $anyElementTrue
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Returns true if any elements of a set evaluate to true; otherwise, returns false. Accepts a single argument expression.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/#example'
+        pipeline:
+            -
+                $project:
+                    responses: 1
+                    isAnyTrue:
+                        $anyElementTrue:
+                            - '$responses'
+                    _id: 0

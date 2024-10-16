@@ -1,0 +1,32 @@
+# $schema: ../schema.json
+name: $setIsSubset
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Returns true if all elements of the first set appear in the second set, including when the first set equals the second set; i.e. not a strict subset. Accepts exactly two argument expressions.
+arguments:
+    -
+        name: expression1
+        type:
+            - resolvesToArray
+    -
+        name: expression2
+        type:
+            - resolvesToArray
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/#example'
+        pipeline:
+            -
+                $project:
+                    flowerFieldA: 1
+                    flowerFieldB: 1
+                    AisSubset:
+                        $setIsSubset:
+                            - '$flowerFieldA'
+                            - '$flowerFieldB'
+                    _id: 0
+

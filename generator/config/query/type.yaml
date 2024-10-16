@@ -1,0 +1,88 @@
+# $schema: ../schema.json
+name: $type
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/type/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Selects documents if a field is of the specified type.
+arguments:
+    -
+        name: type
+        type:
+            - int
+            - string
+        variadic: array
+tests:
+    -
+        name: 'Querying by Data Type'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-data-type'
+        pipeline:
+            -
+                $match:
+                    zipCode:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $type: 2
+                        $type: [2]
+            -
+                $match:
+                    zipCode:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $type: 'string'
+                        $type: ['string']
+            -
+                $match:
+                    zipCode:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $type: 1
+                        $type: [1]
+            -
+                $match:
+                    zipCode:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $type: 'double'
+                        $type: ['double']
+            -
+                $match:
+                    zipCode:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $type: 'number'
+                        $type: ['number']
+    -
+        name: 'Querying by Multiple Data Type'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-multiple-data-type'
+        pipeline:
+            -
+                $match:
+                    zipCode:
+                        $type: [2, 1]
+            -
+                $match:
+                    zipCode:
+                        $type: ['string', 'double']
+    -
+        name: 'Querying by MinKey and MaxKey'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-minkey-and-maxkey'
+        pipeline:
+            -
+                $match:
+                    zipCode:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $type: 'minKey'
+                        $type: ['minKey']
+            -
+                $match:
+                    zipCode:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $type: 'maxKey'
+                        $type: ['maxKey']
+    -
+        name: 'Querying by Array Type'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-array-type'
+        pipeline:
+            -
+                $match:
+                    zipCode:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $type: 'array'
+                        $type: ['array']

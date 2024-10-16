@@ -2,30 +2,31 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndUpdate;
+use PHPUnit\Framework\Attributes\DataProvider;
+use TypeError;
 
 class FindOneAndUpdateTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($update instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], $update);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     * @dataProvider provideEmptyUpdatePipelines
-     */
+    #[DataProvider('provideReplacementDocuments')]
+    #[DataProvider('provideEmptyUpdatePipelines')]
     public function testConstructorUpdateArgumentProhibitsReplacementDocumentOrEmptyPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -33,31 +34,31 @@ class FindOneAndUpdateTest extends TestCase
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], $update);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], ['$set' => ['x' => 1]], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'projection' => $this->getInvalidDocumentValues(),
-            'returnDocument' => $this->getInvalidIntegerValues(),
+        return self::createOptionDataProvider([
+            'projection' => self::getInvalidDocumentValues(),
+            'returnDocument' => self::getInvalidIntegerValues(),
         ]);
     }
 
-    /** @dataProvider provideInvalidConstructorReturnDocumentOptions */
+    #[DataProvider('provideInvalidConstructorReturnDocumentOptions')]
     public function testConstructorReturnDocumentOption($returnDocument): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], [], ['returnDocument' => $returnDocument]);
     }
 
-    public function provideInvalidConstructorReturnDocumentOptions()
+    public static function provideInvalidConstructorReturnDocumentOptions()
     {
-        return $this->wrapValuesForDataProvider([-1, 0, 3]);
+        return self::wrapValuesForDataProvider([-1, 0, 3]);
     }
 
     public function testExplainableCommandDocument(): void

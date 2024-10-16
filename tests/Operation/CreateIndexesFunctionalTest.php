@@ -12,6 +12,7 @@ use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function call_user_func;
 use function is_callable;
@@ -79,7 +80,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         });
     }
 
-    /** @dataProvider provideKeyCasts */
+    #[DataProvider('provideKeyCasts')]
     public function testCreateIndexes(callable $cast): void
     {
         $expectedNames = ['x_1', 'y_-1_z_1', 'g_2dsphere_z_1', 'my_ttl'];
@@ -121,7 +122,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         });
     }
 
-    public function provideKeyCasts(): array
+    public static function provideKeyCasts(): array
     {
         // phpcs:disable SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing
         // phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration
@@ -162,7 +163,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
             },
         );
     }
@@ -181,7 +182,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
@@ -206,7 +207,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('commitQuorum', $event['started']->getCommand());
+                $this->assertObjectHasProperty('commitQuorum', $event['started']->getCommand());
             },
         );
     }

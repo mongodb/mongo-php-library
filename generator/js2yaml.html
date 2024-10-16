@@ -1,0 +1,163 @@
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+    }
+    h1 {
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+    textarea {
+        width: 100%;
+        height: 300px;
+        font-family: monospace;
+    }
+</style>
+
+<h1>Convert JS examples into Yaml</h1>
+
+<div>
+    <label for="input">Input JS code:</label>
+    <textarea id="input">
+[
+  // Tests
+  {
+    $project: {
+      date: new Date(36),
+      regex: /^123/,
+      regex_with_flags: /^123/i,
+      binary: BinData(0, "IA=="),
+      empty_object: {},
+      empty_array: [],
+    }
+  },
+  // First Stage
+  {
+    $bucket: {
+      groupBy: "$year_born",                        // Field to group by
+      boundaries: [ 1840, 1850, 1860, 1870, 1880 ], // Boundaries for the buckets
+      default: "Other",                             // Bucket ID for documents which do not fall into a bucket
+      output: {                                     // Output for each bucket
+        "count": { $sum: 1 },
+        "artists" :
+          {
+            $push: {
+              "name": { $concat: [ "$first_name", " ", "$last_name"] },
+              "year_born": "$year_born"
+            }
+          }
+      }
+    }
+  },
+  // Second Stage
+  {
+    $match: { count: {$gt: 3} }
+  }
+]
+    </textarea>
+</div>
+
+<div>
+    <label for="output">Output YAML code:</label>
+    <textarea id="output"></textarea>
+</div>
+
+
+<script>
+    class TaggedValue {
+        constructor(tag, value) {
+            this.tag = tag;
+            this.value = value;
+        }
+    }
+
+    function BinData(type, value) {
+        return new TaggedValue('bson_binary', value);
+    }
+
+    function ISODate(value) {
+        return new TaggedValue('bson_utcdatetime', value);
+    }
+
+    function Decimal128(value) {
+        return new TaggedValue('bson_decimal128', value)
+    }
+
+    function Int32(value) {
+        return parseInt(value);
+    }
+
+    function Int64(value) {
+        return new TaggedValue('bson_int64', value)
+    }
+
+    function convert(jsString) {
+        try {
+            return toYaml(eval(jsString), 1);
+        } catch (e) {
+            return e.toString();
+        }
+    }
+
+    function toYaml(object, indent = 0) {
+        const newline = '\n' + ('    '.repeat(indent + 1));
+        if (object === null) {
+            return ' ~';
+        }
+
+        if (Array.isArray(object)) {
+            if (object.length === 0) {
+                return ' []';
+            }
+
+            return newline + '-' + object.map((item) => toYaml(item, indent + 1)).join(newline + '-');
+        }
+
+        if (object instanceof RegExp) {
+            return ' !bson_regex ' + (object.flags ? "['" + object.source + "', '" + object.flags + "']" : "'" + object.source + "'");
+        }
+
+        if (object instanceof Date) {
+            return ' !bson_utcdatetime ' + object.getTime();
+        }
+
+        if (object instanceof TaggedValue) {
+            return " !" + object.tag + toYaml(object.value);
+        }
+
+        switch (typeof object) {
+            case 'boolean':
+                return object ? ' true' : ' false';
+            case 'string':
+                return " '" + object.replace(/'/g, "''") + "'";
+            case 'number':
+                return ' ' + object.toString();
+            case 'object':
+                var dump = [];
+                for (var key in object) {
+                    dump.push(key + ':' + toYaml(object[key], indent + 1));
+                }
+                if (dump.length === 0) {
+                    return ' {}';
+                }
+
+                return newline + dump.join(newline);
+            case 'function':
+                return toYaml({
+                  $code: object.toString()
+                        .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
+                        .replace(/\s+/g, ' ')
+                }, indent)
+            default:
+                return 'Unsupported type: ' + typeof object;
+        }
+    }
+
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+
+    output.value = convert(input.value);
+
+    input.addEventListener('keyup', function () {
+      output.value = convert(input.value);
+    });
+</script>

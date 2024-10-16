@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $centerSphere
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/'
+type:
+    - geometry
+encode: single
+description: |
+    Specifies a circle using either legacy coordinate pairs or GeoJSON format for $geoWithin queries when using spherical geometry. The 2dsphere and 2d indexes support $centerSphere.
+arguments:
+    -
+        name: value
+        type:
+            - array

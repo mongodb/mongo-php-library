@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $setUnion
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/'
+type:
+    - resolvesToArray
+encode: single
+description: |
+    Returns a set with elements that appear in any of the input sets.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+        variadic: array
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/#example'
+        pipeline:
+            -
+                $project:
+                    flowerFieldA: 1
+                    flowerFieldB: 1
+                    allValues:
+                        $setUnion:
+                            - '$flowerFieldA'
+                            - '$flowerFieldB'
+                    _id: 0

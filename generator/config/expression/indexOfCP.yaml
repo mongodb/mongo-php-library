@@ -1,0 +1,50 @@
+# $schema: ../schema.json
+name: $indexOfCP
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/'
+type:
+    - resolvesToInt
+encode: array
+description: |
+    Searches a string for an occurrence of a substring and returns the UTF-8 code point index of the first occurrence. If the substring is not found, returns -1
+arguments:
+    -
+        name: string
+        type:
+            - resolvesToString
+        description: |
+            Can be any valid expression as long as it resolves to a string.
+            If the string expression resolves to a value of null or refers to a field that is missing, $indexOfCP returns null.
+            If the string expression does not resolve to a string or null nor refers to a missing field, $indexOfCP returns an error.
+    -
+        name: substring
+        type:
+            - resolvesToString
+        description: |
+            Can be any valid expression as long as it resolves to a string.
+    -
+        name: start
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
+            If unspecified, the starting index position for the search is the beginning of the string.
+    -
+        name: end
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
+            If unspecified, the ending index position for the search is the end of the string.
+tests:
+    -
+        name: 'Examples'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/#examples'
+        pipeline:
+            -
+                $project:
+                    cpLocation:
+                        $indexOfCP:
+                            - '$item'
+                            - 'foo'

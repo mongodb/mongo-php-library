@@ -5,10 +5,11 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Explain;
 use MongoDB\Operation\Explainable;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ExplainTest extends TestCase
 {
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $explainable = $this->getMockBuilder(Explainable::class)->getMock();
@@ -16,13 +17,13 @@ class ExplainTest extends TestCase
         new Explain($this->getDatabaseName(), $explainable, $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
-            'verbosity' => $this->getInvalidStringValues(),
+        return self::createOptionDataProvider([
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'session' => self::getInvalidSessionValues(),
+            'typeMap' => self::getInvalidArrayValues(),
+            'verbosity' => self::getInvalidStringValues(),
         ]);
     }
 }

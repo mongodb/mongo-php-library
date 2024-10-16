@@ -1,0 +1,20 @@
+# $schema: ../schema.json
+name: $skip
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/'
+type:
+    - stage
+encode: single
+description: |
+    Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. For each input document, outputs either zero documents (for the first n documents) or one document (if after the first n documents).
+arguments:
+    -
+        name: skip
+        type:
+            - int
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/#example'
+        pipeline:
+            -
+                $skip: 5

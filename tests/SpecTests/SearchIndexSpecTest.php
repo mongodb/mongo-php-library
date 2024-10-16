@@ -6,6 +6,7 @@ use Closure;
 use MongoDB\Collection;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Tests\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 use function bin2hex;
 use function count;
@@ -19,8 +20,8 @@ use function sprintf;
  * Functional tests for the Atlas Search index management.
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#search-index-management-helpers
- * @group atlas
  */
+#[Group('atlas')]
 class SearchIndexSpecTest extends FunctionalTestCase
 {
     private const WAIT_TIMEOUT_SEC = 300;
@@ -28,13 +29,9 @@ class SearchIndexSpecTest extends FunctionalTestCase
 
     public function setUp(): void
     {
-        if (! self::isAtlas()) {
-            self::markTestSkipped('Search Indexes are only supported on MongoDB Atlas 7.0+');
-        }
-
         parent::setUp();
 
-        $this->skipIfServerVersion('<', '7.0', 'Search Indexes are only supported on MongoDB Atlas 7.0+');
+        $this->skipIfAtlasSearchIndexIsNotSupported();
     }
 
     /**

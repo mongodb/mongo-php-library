@@ -8,13 +8,12 @@ use MongoDB\Driver\CursorId;
 use MongoDB\Model\CodecCursor;
 use MongoDB\Tests\FunctionalTestCase;
 
-use function phpversion;
 use function restore_error_handler;
 use function set_error_handler;
-use function version_compare;
 
 use const E_DEPRECATED;
 use const E_USER_DEPRECATED;
+use const E_USER_WARNING;
 
 class CodecCursorFunctionalTest extends FunctionalTestCase
 {
@@ -27,19 +26,12 @@ class CodecCursorFunctionalTest extends FunctionalTestCase
 
     public function testSetTypeMap(): void
     {
-        if (version_compare(phpversion(), '8.4', '>=')) {
-            $this->markTestIncomplete('Test fails on PHP 8.4 due to deprecations');
-        }
-
         $collection = self::createTestClient()->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $cursor = $collection->find();
 
         $codecCursor = CodecCursor::fromCursor($cursor, $this->createMock(DocumentCodec::class));
 
-        $this->expectWarning();
-        $this->expectWarningMessage('Discarding type map for MongoDB\Model\CodecCursor::setTypeMap');
-
-        $codecCursor->setTypeMap(['root' => 'array']);
+        $this->assertError(E_USER_WARNING, fn () => $codecCursor->setTypeMap(['root' => 'array']));
     }
 
     public function testGetIdReturnTypeWithoutArgument(): void

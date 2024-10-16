@@ -11,13 +11,15 @@ use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
+use function is_array;
 use function microtime;
 
 class FindFunctionalTest extends FunctionalTestCase
 {
-    /** @dataProvider provideFilterDocuments */
+    #[DataProvider('provideFilterDocuments')]
     public function testFilterDocuments($filter, stdClass $expectedQuery): void
     {
         (new CommandObserver())->observe(
@@ -36,11 +38,16 @@ class FindFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /** @dataProvider provideModifierDocuments */
+    #[DataProvider('provideModifierDocuments')]
     public function testModifierDocuments($modifiers, stdClass $expectedSort): void
     {
         (new CommandObserver())->observe(
             function () use ($modifiers): void {
+                // @todo revert this lines after PHPC-2457
+                if (is_array($modifiers)) {
+                    $modifiers = [...$modifiers];
+                }
+
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -58,7 +65,7 @@ class FindFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideModifierDocuments(): array
+    public static function provideModifierDocuments(): array
     {
         $expectedSort = (object) ['x' => 1];
 
@@ -84,7 +91,7 @@ class FindFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
             },
         );
     }
@@ -154,12 +161,12 @@ class FindFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOption(array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);
@@ -170,7 +177,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $cursor->toArray());
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [

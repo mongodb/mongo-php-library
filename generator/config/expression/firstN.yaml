@@ -1,0 +1,47 @@
+# $schema: ../schema.json
+name: $firstN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Returns a specified number of elements from the beginning of an array.
+arguments:
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to the array from which to return n elements.
+
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/#example'
+        pipeline:
+            -
+                $addFields:
+                    firstScores:
+                        $firstN:
+                            n: 3
+                            input: '$score'
+    -
+        name: 'Using $firstN as an Aggregation Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#using--firstn-as-an-aggregation-expression'
+        pipeline:
+            -
+                $documents:
+                    -
+                        array: [10, 20, 30, 40]
+            -
+                $project:
+                    firstThreeElements:
+                        $firstN:
+                            input: '$array'
+                            n: 3

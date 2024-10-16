@@ -11,7 +11,6 @@ use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 
 use function assert;
-use function get_class;
 use function getenv;
 use function is_object;
 use function printf;
@@ -46,7 +45,7 @@ class CommandLogger implements CommandSubscriber
         printf("reply: %s\n", toJson($event->getReply()));
 
         $exception = $event->getError();
-        printf("exception: %s\n", get_class($exception));
+        printf("exception: %s\n", $exception::class);
         printf("exception.code: %d\n", $exception->getCode());
         printf("exception.message: %s\n", $exception->getMessage());
         echo "\n";

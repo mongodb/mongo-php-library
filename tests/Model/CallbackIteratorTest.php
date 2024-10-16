@@ -8,12 +8,13 @@ use Iterator;
 use IteratorAggregate;
 use MongoDB\Model\CallbackIterator;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function iterator_to_array;
 
 class CallbackIteratorTest extends TestCase
 {
-    /** @dataProvider provideTests */
+    #[DataProvider('provideTests')]
     public function testIteration($expected, $source, $callback): void
     {
         $callbackIterator = new CallbackIterator($source, $callback);
@@ -28,11 +29,8 @@ class CallbackIteratorTest extends TestCase
 
         $iteratorAggregate = new class ($listIterator) implements IteratorAggregate
         {
-            private Iterator $iterator;
-
-            public function __construct(Iterator $iterator)
+            public function __construct(private Iterator $iterator)
             {
-                $this->iterator = $iterator;
             }
 
             public function getIterator(): Iterator

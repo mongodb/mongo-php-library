@@ -2,6 +2,9 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB\Builder\Pipeline;
+use MongoDB\Builder\Query;
+use MongoDB\Builder\Stage;
 use MongoDB\Client;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
@@ -13,6 +16,7 @@ use MongoDB\Model\DatabaseInfoIterator;
 
 use function call_user_func;
 use function is_callable;
+use function iterator_to_array;
 use function sprintf;
 
 /**
@@ -136,5 +140,26 @@ class ClientFunctionalTest extends FunctionalTestCase
         $client->removeSubscriber($removedSubscriber);
 
         $client->getManager()->executeCommand('admin', new Command(['ping' => 1]));
+    }
+
+    public function testWatchWithBuilderPipeline(): void
+    {
+        $this->skipIfChangeStreamIsNotSupported();
+
+        if ($this->isShardedCluster()) {
+            $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
+        }
+
+        $pipeline = new Pipeline(
+            Stage::match(operationType: Query::eq('insert')),
+        );
+        // Extract the list of stages for arg type restriction
+        $pipeline = iterator_to_array($pipeline);
+
+        $changeStream = $this->client->watch($pipeline);
+        $this->client->selectCollection($this->getDatabaseName(), $this->getCollectionName())->insertOne(['x' => 3]);
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+        $this->assertEquals('insert', $changeStream->current()->operationType);
     }
 }

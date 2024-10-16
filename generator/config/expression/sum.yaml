@@ -1,0 +1,36 @@
+# $schema: ../schema.json
+name: $sum
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/'
+type:
+    - resolvesToNumber
+encode: single
+description: |
+    Returns a sum of numerical values. Ignores non-numeric values.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+            - resolvesToArray
+        variadic: array
+tests:
+    -
+        name: 'Use in $project Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#use-in--project-stage'
+        pipeline:
+            -
+                $project:
+                    quizTotal:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $sum: '$quizzes'
+                        $sum:
+                            - '$quizzes'
+                    labTotal:
+                        # $sum: '$labs'
+                        $sum:
+                            - '$labs'
+                    examTotal:
+                        $sum:
+                            - '$final'
+                            - '$midterm'

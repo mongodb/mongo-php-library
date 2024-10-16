@@ -10,6 +10,8 @@ use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Exception\CreateEncryptedCollectionException;
 use MongoDB\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 use function base64_decode;
 
@@ -17,9 +19,9 @@ use function base64_decode;
  * Prose test 21: Automatic Data Encryption Keys
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#automatic-data-encryption-keys
- * @group csfle
- * @group serverless
  */
+#[Group('csfle')]
+#[Group('serverless')]
 class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
 {
     public const SERVER_ERROR_TYPEMISMATCH = 14;
@@ -63,10 +65,8 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
         $this->database = null;
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/bc37892f360cab9df4082922384e0f4d4233f6d3/source/client-side-encryption/tests/README.rst#case-1-simple-creation-and-validation
-     * @dataProvider provideKmsProviderAndMasterKey
-     */
+    /** @see https://github.com/mongodb/specifications/blob/bc37892f360cab9df4082922384e0f4d4233f6d3/source/client-side-encryption/tests/README.rst#case-1-simple-creation-and-validation */
+    #[DataProvider('provideKmsProviderAndMasterKey')]
     public function testCase1_SimpleCreationAndValidation(string $kmsProvider, ?array $masterKey): void
     {
         [$result, $encryptedFields] = $this->database->createEncryptedCollection(
@@ -98,10 +98,8 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/bc37892f360cab9df4082922384e0f4d4233f6d3/source/client-side-encryption/tests/README.rst#case-2-missing-encryptedfields
-     * @dataProvider provideKmsProviderAndMasterKey
-     */
+    /** @see https://github.com/mongodb/specifications/blob/bc37892f360cab9df4082922384e0f4d4233f6d3/source/client-side-encryption/tests/README.rst#case-2-missing-encryptedfields */
+    #[DataProvider('provideKmsProviderAndMasterKey')]
     public function testCase2_MissingEncryptedFields(string $kmsProvider, ?array $masterKey): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -115,10 +113,8 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/bc37892f360cab9df4082922384e0f4d4233f6d3/source/client-side-encryption/tests/README.rst#case-3-invalid-keyid
-     * @dataProvider provideKmsProviderAndMasterKey
-     */
+    /** @see https://github.com/mongodb/specifications/blob/bc37892f360cab9df4082922384e0f4d4233f6d3/source/client-side-encryption/tests/README.rst#case-3-invalid-keyid */
+    #[DataProvider('provideKmsProviderAndMasterKey')]
     public function testCase3_InvalidKeyId(string $kmsProvider, ?array $masterKey): void
     {
         try {
@@ -140,10 +136,8 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
         }
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/blob/bc37892f360cab9df4082922384e0f4d4233f6d3/source/client-side-encryption/tests/README.rst#case-4-insert-encrypted-value
-     * @dataProvider provideKmsProviderAndMasterKey
-     */
+    /** @see https://github.com/mongodb/specifications/blob/bc37892f360cab9df4082922384e0f4d4233f6d3/source/client-side-encryption/tests/README.rst#case-4-insert-encrypted-value */
+    #[DataProvider('provideKmsProviderAndMasterKey')]
     public function testCase4_InsertEncryptedValue(string $kmsProvider, ?array $masterKey): void
     {
         [$result, $encryptedFields] = $this->database->createEncryptedCollection(

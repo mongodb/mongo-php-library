@@ -6,6 +6,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class InsertManyTest extends TestCase
 {
@@ -23,7 +24,7 @@ class InsertManyTest extends TestCase
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [1 => ['x' => 1]]);
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorDocumentsArgumentElementTypeChecks($document): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -31,21 +32,21 @@ class InsertManyTest extends TestCase
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [$document]);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [['x' => 1]], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'ordered' => $this->getInvalidBooleanValues(true),
-            'session' => $this->getInvalidSessionValues(),
-            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        return self::createOptionDataProvider([
+            'bypassDocumentValidation' => self::getInvalidBooleanValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'ordered' => self::getInvalidBooleanValues(true),
+            'session' => self::getInvalidSessionValues(),
+            'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }
 

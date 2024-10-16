@@ -2,85 +2,70 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Find;
+use PHPUnit\Framework\Attributes\DataProvider;
+use TypeError;
 
 class FindTest extends TestCase
 {
-    /** @dataProvider provideInvalidDocumentValues */
+    #[DataProvider('provideInvalidDocumentValues')]
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($filter instanceof PackedArray ? InvalidArgumentException::class : TypeError::class);
         new Find($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Find($this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public static function provideInvalidConstructorOptions()
     {
-        return $this->createOptionDataProvider([
-            'allowPartialResults' => $this->getInvalidBooleanValues(),
-            'batchSize' => $this->getInvalidIntegerValues(),
-            'codec' => $this->getInvalidDocumentCodecValues(),
-            'collation' => $this->getInvalidDocumentValues(),
-            'cursorType' => $this->getInvalidIntegerValues(),
-            'hint' => $this->getInvalidHintValues(),
-            'limit' => $this->getInvalidIntegerValues(),
-            'max' => $this->getInvalidDocumentValues(),
-            'maxAwaitTimeMS' => $this->getInvalidIntegerValues(),
-            'maxScan' => $this->getInvalidIntegerValues(),
-            'maxTimeMS' => $this->getInvalidIntegerValues(),
-            'min' => $this->getInvalidDocumentValues(),
-            'modifiers' => $this->getInvalidDocumentValues(),
-            'oplogReplay' => $this->getInvalidBooleanValues(),
-            'projection' => $this->getInvalidDocumentValues(),
-            'readConcern' => $this->getInvalidReadConcernValues(),
-            'readPreference' => $this->getInvalidReadPreferenceValues(),
-            'returnKey' => $this->getInvalidBooleanValues(),
-            'session' => $this->getInvalidSessionValues(),
-            'showRecordId' => $this->getInvalidBooleanValues(),
-            'skip' => $this->getInvalidIntegerValues(),
-            'snapshot' => $this->getInvalidBooleanValues(),
-            'sort' => $this->getInvalidDocumentValues(),
-            'typeMap' => $this->getInvalidArrayValues(),
+        return self::createOptionDataProvider([
+            'allowPartialResults' => self::getInvalidBooleanValues(),
+            'batchSize' => self::getInvalidIntegerValues(),
+            'codec' => self::getInvalidDocumentCodecValues(),
+            'collation' => self::getInvalidDocumentValues(),
+            'cursorType' => self::getInvalidIntegerValues(),
+            'hint' => self::getInvalidHintValues(),
+            'limit' => self::getInvalidIntegerValues(),
+            'max' => self::getInvalidDocumentValues(),
+            'maxAwaitTimeMS' => self::getInvalidIntegerValues(),
+            'maxScan' => self::getInvalidIntegerValues(),
+            'maxTimeMS' => self::getInvalidIntegerValues(),
+            'min' => self::getInvalidDocumentValues(),
+            'modifiers' => self::getInvalidDocumentValues(),
+            'oplogReplay' => self::getInvalidBooleanValues(),
+            'projection' => self::getInvalidDocumentValues(),
+            'readConcern' => self::getInvalidReadConcernValues(),
+            'readPreference' => self::getInvalidReadPreferenceValues(),
+            'returnKey' => self::getInvalidBooleanValues(),
+            'session' => self::getInvalidSessionValues(),
+            'showRecordId' => self::getInvalidBooleanValues(),
+            'skip' => self::getInvalidIntegerValues(),
+            'snapshot' => self::getInvalidBooleanValues(),
+            'sort' => self::getInvalidDocumentValues(),
+            'typeMap' => self::getInvalidArrayValues(),
         ]);
     }
 
-    public function testSnapshotOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => true]);
-        });
-
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => false]);
-        });
-    }
-
-    public function testMaxScanOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['maxScan' => 1]);
-        });
-    }
-
-    /** @dataProvider provideInvalidConstructorCursorTypeOptions */
+    #[DataProvider('provideInvalidConstructorCursorTypeOptions')]
     public function testConstructorCursorTypeOption($cursorType): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['cursorType' => $cursorType]);
     }
 
-    public function provideInvalidConstructorCursorTypeOptions()
+    public static function provideInvalidConstructorCursorTypeOptions()
     {
-        return $this->wrapValuesForDataProvider([-1, 0, 4]);
+        return self::wrapValuesForDataProvider([-1, 0, 4]);
     }
 
     public function testExplainableCommandDocument(): void

@@ -1,0 +1,27 @@
+# $schema: ../schema.json
+name: $count
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/'
+type:
+    - stage
+encode: single
+description: |
+    Returns a count of the number of documents at this stage of the aggregation pipeline.
+    Distinct from the $count aggregation accumulator.
+arguments:
+    -
+        name: field
+        type:
+            - string
+        description: |
+            Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/#example'
+        pipeline:
+            -
+                $match:
+                    score:
+                        $gt: 80
+            -
+                $count: 'passing_scores'

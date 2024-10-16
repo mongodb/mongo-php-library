@@ -2,17 +2,12 @@
 <?php
 
 // Supported PHP versions. Add new versions to the beginning of the list
-$modernPhpVersions = [
+$supportedPhpVersions = [
     '8.4',
     '8.3',
     '8.2',
     '8.1',
 ];
-$legacyPhpVersions = [
-    '8.0',
-    '7.4',
-];
-$supportedPhpVersions = array_merge($modernPhpVersions, $legacyPhpVersions);
 
 // TODO: use max() once PHP 8.4 is stable
 //$latestPhpVersion = max($supportedPhpVersions);
@@ -54,7 +49,6 @@ $allFiles = [];
 
 // Build tasks
 $allFiles[] = generateConfigs('tasks', 'build', 'phpVersion', 'build-extension.yml', $supportedPhpVersions);
-$allFiles[] = generateConfigs('tasks', 'build', 'phpVersion', 'build-extension-next-minor.yml', $modernPhpVersions);
 
 // Test tasks
 $allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'local.yml', $localServerVersions);
@@ -63,8 +57,7 @@ $allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'require-api-ve
 $allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'csfle.yml', $csfleServerVersions);
 
 // Test variants
-$allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'modern-php-full.yml', $modernPhpVersions);
-$allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'legacy-php-full.yml', $legacyPhpVersions);
+$allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'modern-php-full.yml', $supportedPhpVersions);
 $allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'phpc.yml', [$latestPhpVersion]);
 $allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'lowest.yml', [$lowestPhpVersion]);
 

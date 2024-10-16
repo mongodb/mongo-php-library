@@ -1,0 +1,36 @@
+# $schema: ../schema.json
+name: $week
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/'
+type:
+    - resolvesToInt
+encode: object
+description: |
+    Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the year) and 53 (leap year).
+arguments:
+    -
+        name: date
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/#example'
+        pipeline:
+            -
+                $project:
+                    week:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $week: '$date'
+                        $week:
+                            date: '$date'

@@ -1,0 +1,30 @@
+# $schema: ../schema.json
+name: $mod
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/'
+type:
+    - resolvesToInt
+encode: array
+description: |
+    Returns the remainder of the first number divided by the second. Accepts two argument expressions.
+arguments:
+    -
+        name: dividend
+        type:
+            - resolvesToNumber
+        description: |
+            The first argument is the dividend, and the second argument is the divisor; i.e. first argument is divided by the second argument.
+    -
+        name: divisor
+        type:
+            - resolvesToNumber
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/#example'
+        pipeline:
+            -
+                $project:
+                    remainder:
+                        $mod:
+                            - '$hours'
+                            - '$tasks'

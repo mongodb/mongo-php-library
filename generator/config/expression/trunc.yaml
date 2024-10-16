@@ -1,0 +1,34 @@
+# $schema: ../schema.json
+name: $trunc
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/'
+type:
+    - resolvesToString
+encode: array
+description: |
+    Truncates a number to a whole integer or to a specified decimal place.
+arguments:
+    -
+        name: number
+        type:
+            - resolvesToNumber
+        description: |
+            Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
+            $trunc returns an error if the expression resolves to a non-numeric data type.
+    -
+        name: place
+        type:
+            - resolvesToInt
+        optional: true
+        description: |
+            Can be any valid expression that resolves to an integer between -20 and 100, exclusive. e.g. -20 < place < 100. Defaults to 0.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/#example'
+        pipeline:
+            -
+                $project:
+                    truncatedValue:
+                        $trunc:
+                            - '$value'
+                            - 1

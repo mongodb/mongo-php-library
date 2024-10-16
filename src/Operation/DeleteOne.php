@@ -28,6 +28,8 @@ use MongoDB\Exception\UnsupportedException;
  *
  * @see \MongoDB\Collection::deleteOne()
  * @see https://mongodb.com/docs/manual/reference/command/delete/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
 class DeleteOne implements Executable, Explainable
 {
@@ -66,7 +68,7 @@ class DeleteOne implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array|object $filter, array $options = [])
     {
         $this->delete = new Delete($databaseName, $collectionName, $filter, 1, $options);
     }

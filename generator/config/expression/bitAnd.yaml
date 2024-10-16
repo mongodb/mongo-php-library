@@ -1,0 +1,38 @@
+# $schema: ../schema.json
+name: $bitAnd
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/'
+type:
+    - resolvesToInt
+    - resolvesToLong
+encode: single
+description: |
+    Returns the result of a bitwise and operation on an array of int or long values.
+    New in MongoDB 6.3.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToInt
+            - resolvesToLong
+        variadic: array
+tests:
+    -
+        name: 'Bitwise AND with Two Integers'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-two-integers'
+        pipeline:
+            -
+                $project:
+                    result:
+                        $bitAnd:
+                            - '$a'
+                            - '$b'
+    -
+        name: 'Bitwise AND with a Long and Integer'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-a-long-and-integer'
+        pipeline:
+            -
+                $project:
+                    result:
+                        $bitAnd:
+                            - '$a'
+                            - { "$numberLong": "63" }

@@ -12,6 +12,8 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Tests\SpecTests\ClientSideEncryptionSpecTest;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\Group;
 
 use function base64_decode;
 use function in_array;
@@ -591,7 +593,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'size', 'instock'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
         }
 
@@ -606,11 +608,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
             foreach (['size', 'instock'] as $field) {
-                $this->assertObjectNotHasAttribute($field, $document);
+                $this->assertObjectNotHasProperty($field, $document);
             }
         }
 
@@ -625,11 +627,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['item', 'status'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
             foreach (['_id', 'size', 'instock'] as $field) {
-                $this->assertObjectNotHasAttribute($field, $document);
+                $this->assertObjectNotHasProperty($field, $document);
             }
         }
 
@@ -644,11 +646,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'size'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
             foreach (['status', 'instock'] as $field) {
-                $this->assertObjectNotHasAttribute($field, $document);
+                $this->assertObjectNotHasProperty($field, $document);
             }
         }
 
@@ -663,13 +665,13 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'size'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectNotHasAttribute('instock', $document);
-            $this->assertObjectHasAttribute('uom', $document->size);
-            $this->assertObjectNotHasAttribute('h', $document->size);
-            $this->assertObjectNotHasAttribute('w', $document->size);
+            $this->assertObjectNotHasProperty('instock', $document);
+            $this->assertObjectHasProperty('uom', $document->size);
+            $this->assertObjectNotHasProperty('h', $document->size);
+            $this->assertObjectNotHasProperty('w', $document->size);
         }
 
         // Start Example 48
@@ -683,12 +685,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'size', 'instock'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectHasAttribute('h', $document->size);
-            $this->assertObjectHasAttribute('w', $document->size);
-            $this->assertObjectNotHasAttribute('uom', $document->size);
+            $this->assertObjectHasProperty('h', $document->size);
+            $this->assertObjectHasProperty('w', $document->size);
+            $this->assertObjectNotHasProperty('uom', $document->size);
         }
 
         // Start Example 49
@@ -702,13 +704,13 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'instock'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectNotHasAttribute('size', $document);
+            $this->assertObjectNotHasProperty('size', $document);
             foreach ($document->instock as $instock) {
-                $this->assertObjectHasAttribute('qty', $instock);
-                $this->assertObjectNotHasAttribute('warehouse', $instock);
+                $this->assertObjectHasProperty('qty', $instock);
+                $this->assertObjectNotHasProperty('warehouse', $instock);
             }
         }
 
@@ -723,10 +725,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['_id', 'item', 'status', 'instock'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectNotHasAttribute('size', $document);
+            $this->assertObjectNotHasProperty('size', $document);
             $this->assertCount(1, $document->instock);
         }
     }
@@ -786,10 +788,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCount(3, $documents);
         foreach ($documents as $document) {
             foreach (['item', 'status', 'area', 'reportNumber'] as $field) {
-                $this->assertObjectHasAttribute($field, $document);
+                $this->assertObjectHasProperty($field, $document);
             }
 
-            $this->assertObjectNotHasAttribute('_id', $document);
+            $this->assertObjectNotHasProperty('_id', $document);
             $this->assertIsString($document->status);
             $this->assertIsString($document->area);
             $this->assertSame(1, $document->reportNumber);
@@ -1009,7 +1011,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
-    /** @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster */
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster')]
     public function testChangeStreamExample_1_4(): void
     {
         $this->skipIfChangeStreamIsNotSupported();
@@ -1501,7 +1503,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         try {
             $this->runTransactionWithRetry3([$this, 'updateEmployeeInfo3'], $client, $session);
-        } catch (\MongoDB\Driver\Exception\Exception $error) {
+        } catch (\MongoDB\Driver\Exception\Exception) {
             // Do something with error
         }
     }
@@ -1547,7 +1549,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
              * around this, we run a query on a secondary and rely on an
              * exception to let us know that no secondary is available. */
             $items->countDocuments([], ['readPreference' => new ReadPreference(ReadPreference::SECONDARY)]);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->markTestSkipped('Secondary is not available');
         }
 
@@ -1715,7 +1717,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertSame(1, $totalDailySales);
     }
 
-    /** @doesNotPerformAssertions */
+    #[DoesNotPerformAssertions]
     public function testVersionedApi(): void
     {
         $uriString = static::getUri(true);
@@ -1800,7 +1802,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // phpcs:enable
     }
 
-    /** @doesNotPerformAssertions */
+    #[DoesNotPerformAssertions]
     public function testWithTransactionExample(): void
     {
         $this->skipIfTransactionsAreNotSupported();

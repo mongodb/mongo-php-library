@@ -26,10 +26,6 @@ final class Loop
 
     private static int $sleepUsecBetweenIterations = 0;
 
-    private Context $context;
-
-    private array $operations = [];
-
     private ?BSONArray $errorList = null;
 
     private ?BSONArray $failureList = null;
@@ -38,12 +34,9 @@ final class Loop
 
     private string $numIterationsEntityId;
 
-    public function __construct(array $operations, Context $context, array $options = [])
+    public function __construct(private array $operations, private Context $context, array $options = [])
     {
         assertContainsOnly(Operation::class, $operations);
-
-        $this->operations = $operations;
-        $this->context = $context;
 
         foreach (['storeErrorsAsEntity', 'storeFailuresAsEntity', 'storeSuccessesAsEntity', 'storeIterationsAsEntity'] as $option) {
             if (array_key_exists($option, $options)) {

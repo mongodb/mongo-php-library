@@ -8,18 +8,18 @@ use MongoDB\MapReduceResult;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 use function is_object;
 use function iterator_to_array;
 use function usort;
 use function version_compare;
 
-/**
- * @group matrix-testing-exclude-server-4.4-driver-4.0
- * @group matrix-testing-exclude-server-4.4-driver-4.2
- * @group matrix-testing-exclude-server-5.0-driver-4.0
- * @group matrix-testing-exclude-server-5.0-driver-4.2
- */
+#[Group('matrix-testing-exclude-server-4.4-driver-4.0')]
+#[Group('matrix-testing-exclude-server-4.4-driver-4.2')]
+#[Group('matrix-testing-exclude-server-5.0-driver-4.0')]
+#[Group('matrix-testing-exclude-server-5.0-driver-4.2')]
 class MapReduceFunctionalTest extends FunctionalTestCase
 {
     public function testDefaultReadConcernIsOmitted(): void
@@ -41,7 +41,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
             },
         );
     }
@@ -66,7 +66,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
             },
         );
     }
@@ -161,7 +161,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }
@@ -184,7 +184,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectHasProperty('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             },
         );
@@ -208,12 +208,12 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('bypassDocumentValidation', $event['started']->getCommand());
             },
         );
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOptionWithInlineResults(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);
@@ -228,7 +228,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertEquals($this->sortResults($expectedDocuments), $this->sortResults($results));
     }
 
-    public function provideTypeMapOptionsAndExpectedDocuments()
+    public static function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [
@@ -258,7 +258,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
+    #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testTypeMapOptionWithOutputCollection(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);

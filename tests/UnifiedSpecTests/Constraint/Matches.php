@@ -13,7 +13,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
-use Symfony\Bridge\PhpUnit\ConstraintTrait;
+use SebastianBergmann\Exporter\Exporter;
 
 use function array_keys;
 use function count;
@@ -49,12 +49,7 @@ use function strrchr;
  */
 class Matches extends Constraint
 {
-    use ConstraintTrait;
-
-    private ?EntityMap $entityMap = null;
-
-    /** @var mixed */
-    private $value;
+    private mixed $value;
 
     private bool $allowExtraRootKeys;
 
@@ -64,16 +59,15 @@ class Matches extends Constraint
 
     private Factory $comparatorFactory;
 
-    public function __construct($value, ?EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
+    public function __construct($value, private ?EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
     {
         $this->value = self::prepare($value);
-        $this->entityMap = $entityMap;
         $this->allowExtraRootKeys = $allowExtraRootKeys;
         $this->allowOperators = $allowOperators;
         $this->comparatorFactory = Factory::getInstance();
     }
 
-    private function doEvaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, $description = '', $returnResult = false): ?bool
     {
         $other = self::prepare($other);
         $success = false;
@@ -89,14 +83,14 @@ class Matches extends Constraint
         } catch (RuntimeException $e) {
             /* This will generally catch internal errors from failAt(), which
              * include a key path to pinpoint the failure. */
+            $exporter = new Exporter();
             $this->lastFailure = new ComparisonFailure(
                 $this->value,
                 $other,
                 /* TODO: Improve the exporter to canonicalize documents by
                  * sorting keys and remove spl_object_hash from output. */
-                $this->exporter()->export($this->value),
-                $this->exporter()->export($other),
-                false,
+                $exporter->export($this->value),
+                $exporter->export($other),
                 $e->getMessage(),
             );
         }
@@ -108,6 +102,8 @@ class Matches extends Constraint
         if (! $success) {
             $this->fail($other, $description, $this->lastFailure);
         }
+
+        return null;
     }
 
     private function assertEquals($expected, $actual, string $keyPath): void
@@ -261,7 +257,7 @@ class Matches extends Constraint
             $constraint = IsBsonType::anyOf(...(array) $operator['$$type']);
 
             if (! $constraint->evaluate($actual, '', true)) {
-                self::failAt(sprintf('%s is not an expected BSON type: %s', $this->exporter()->shortenedExport($actual), implode(', ', $types)), $keyPath);
+                self::failAt(sprintf('%s is not an expected BSON type: %s', (new Exporter())->shortenedExport($actual), implode(', ', (array) $operator['$$type'])), $keyPath);
             }
 
             return;
@@ -289,7 +285,7 @@ class Matches extends Constraint
             assertIsString($actual);
 
             if ($actual !== hex2bin($operator['$$matchesHexBytes'])) {
-                self::failAt(sprintf('%s does not match expected hex bytes: %s', $this->exporter()->shortenedExport($actual), $operator['$$matchesHexBytes']), $keyPath);
+                self::failAt(sprintf('%s does not match expected hex bytes: %s', (new Exporter())->shortenedExport($actual), $operator['$$matchesHexBytes']), $keyPath);
             }
 
             return;
@@ -325,8 +321,7 @@ class Matches extends Constraint
         throw new LogicException('unsupported operator: ' . $name);
     }
 
-    /** @see ConstraintTrait */
-    private function doAdditionalFailureDescription($other)
+    protected function additionalFailureDescription($other): string
     {
         if ($this->lastFailure === null) {
             return '';
@@ -335,30 +330,27 @@ class Matches extends Constraint
         return $this->lastFailure->getMessage();
     }
 
-    /** @see ConstraintTrait */
-    private function doFailureDescription($other)
+    protected function failureDescription($other): string
     {
         return 'expected value matches actual value';
     }
 
-    /** @see ConstraintTrait */
-    private function doMatches($other)
+    protected function matches($other): bool
     {
         $other = self::prepare($other);
 
         try {
             $this->assertMatches($this->value, $other);
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             return false;
         }
 
         return true;
     }
 
-    /** @see ConstraintTrait */
-    private function doToString()
+    public function toString(): string
     {
-        return 'matches ' . $this->exporter()->export($this->value);
+        return 'matches ' . (new Exporter())->export($this->value);
     }
 
     /** @psalm-return never-return */
@@ -408,11 +400,8 @@ class Matches extends Constraint
      * converted to a BSONDocument; otherwise, it will be converted to a
      * BSONArray or BSONDocument based on its keys. Each value within an array
      * or document will then be prepared recursively.
-     *
-     * @param mixed $bson
-     * @return mixed
      */
-    private static function prepare($bson)
+    private static function prepare(mixed $bson): mixed
     {
         if (! is_array($bson) && ! is_object($bson)) {
             return $bson;

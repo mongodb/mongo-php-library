@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $changeStreamSplitLargeEvent
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/'
+type:
+    - stage
+encode: object
+description: |
+    Splits large change stream events that exceed 16 MB into smaller fragments returned in a change stream cursor.
+    You can only use $changeStreamSplitLargeEvent in a $changeStream pipeline and it must be the final stage in the pipeline.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/#example'
+        pipeline:
+            -
+                $changeStreamSplitLargeEvent: {}

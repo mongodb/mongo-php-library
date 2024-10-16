@@ -4,14 +4,13 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\ModifyCollection;
+use PHPUnit\Framework\Attributes\Group;
 
 class ModifyCollectionFunctionalTest extends FunctionalTestCase
 {
-    /**
-     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
-     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
-     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
-     */
+    #[Group('matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster')]
+    #[Group('matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster')]
+    #[Group('matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster')]
     public function testCollMod(): void
     {
         if ($this->isShardedCluster()) {

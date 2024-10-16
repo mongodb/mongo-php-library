@@ -7,6 +7,7 @@ use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Attributes\Depends;
 
 use function sprintf;
 
@@ -24,7 +25,7 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasProperty('writeConcern', $event['started']->getCommand());
             },
         );
     }
@@ -43,7 +44,7 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
         $this->assertDatabaseDoesNotExist($server, $this->getDatabaseName());
     }
 
-    /** @depends testDropExistingDatabase */
+    #[Depends('testDropExistingDatabase')]
     public function testDropNonexistentDatabase(): void
     {
         $server = $this->getPrimaryServer();
@@ -69,7 +70,7 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
-                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
+                $this->assertObjectHasProperty('lsid', $event['started']->getCommand());
             },
         );
     }

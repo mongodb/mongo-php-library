@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $asin
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/'
+type:
+    - resolvesToDouble
+    - resolvesToDecimal
+encode: single
+description: |
+    Returns the inverse sin (arc sine) of a value in radians.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+        description: |
+            $asin takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
+            $asin returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
+            By default $asin returns values as a double. $asin can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/#example'
+        pipeline:
+            -
+                $addFields:
+                    angle_a:
+                        $radiansToDegrees:
+                            $asin:
+                                $divide:
+                                    - '$side_a'
+                                    - '$hypotenuse'

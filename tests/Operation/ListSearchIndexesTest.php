@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\ListSearchIndexes;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ListSearchIndexesTest extends TestCase
 {
@@ -13,18 +14,18 @@ class ListSearchIndexesTest extends TestCase
         new ListSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), ['name' => '']);
     }
 
-    /** @dataProvider provideInvalidConstructorOptions */
+    #[DataProvider('provideInvalidConstructorOptions')]
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new ListSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions(): array
+    public static function provideInvalidConstructorOptions(): array
     {
         $options = [];
 
-        foreach ($this->getInvalidIntegerValues() as $value) {
+        foreach (self::getInvalidIntegerValues() as $value) {
             $options[][] = ['batchSize' => $value];
         }
 

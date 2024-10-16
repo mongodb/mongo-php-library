@@ -11,8 +11,6 @@ use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\Warning;
 
 use function array_flip;
-use function basename;
-use function dirname;
 use function glob;
 use function str_starts_with;
 

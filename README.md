@@ -22,7 +22,7 @@ extension may be found in
 ## Documentation
 
  - https://www.mongodb.com/docs/php-library/current/
- - https://www.mongodb.com/docs/drivers/php/
+ - https://www.mongodb.com/docs/drivers/php-drivers/
 
 ## Installation
 

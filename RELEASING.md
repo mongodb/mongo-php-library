@@ -192,7 +192,7 @@ New major and minor releases will also require documentation updates to other
 projects:
 
  * Create a DOCSP ticket to add the new version to PHP's server and language
-   [compatibility tables](https://mongodb.com/docs/drivers/php/#compatibility)
+   [compatibility tables](https://www.mongodb.com/docs/drivers/php-drivers/#compatibility)
    in the driver docs portal. See
    [mongodb/docs-ecosystem#642](https://github.com/mongodb/docs-ecosystem/pull/642)
    for an example.

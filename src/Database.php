@@ -178,7 +178,7 @@ class Database
      */
     public function __get(string $collectionName)
     {
-        return $this->selectCollection($collectionName);
+        return $this->getCollection($collectionName);
     }
 
     /**
@@ -423,6 +423,30 @@ class Database
     }
 
     /**
+     * Returns a collection instance.
+     *
+     * If the collection does not exist in the database, it is not created when
+     * invoking this method.
+     *
+     * @param string $collectionName Name of the collection to select
+     * @param array  $options        Collection constructor options
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @see Collection::__construct() for supported options
+     */
+    public function getCollection(string $collectionName, array $options = []): Collection
+    {
+        $options += [
+            'builderEncoder' => $this->builderEncoder,
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
+            'writeConcern' => $this->writeConcern,
+        ];
+
+        return new Collection($this->manager, $this->databaseName, $collectionName, $options);
+    }
+
+    /**
      * Returns the database name.
      *
      * @return string
@@ -588,15 +612,7 @@ class Database
      */
     public function selectCollection(string $collectionName, array $options = [])
     {
-        $options += [
-            'builderEncoder' => $this->builderEncoder,
-            'readConcern' => $this->readConcern,
-            'readPreference' => $this->readPreference,
-            'typeMap' => $this->typeMap,
-            'writeConcern' => $this->writeConcern,
-        ];
-
-        return new Collection($this->manager, $this->databaseName, $collectionName, $options);
+        return $this->getCollection($collectionName, $options);
     }
 
     /**

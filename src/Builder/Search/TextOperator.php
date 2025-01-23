@@ -43,8 +43,8 @@ final class TextOperator implements SearchOperatorInterface, OperatorInterface
     /** @var string $query */
     public readonly string $query;
 
-    /** @var Optional|Document|Serializable|array|stdClass $fuzzy */
-    public readonly Optional|Document|Serializable|stdClass|array $fuzzy;
+    /** @var Optional|Document|Serializable|array|stdClass|string $fuzzy */
+    public readonly Optional|Document|Serializable|stdClass|array|string $fuzzy;
 
     /** @var Optional|string $matchCriteria */
     public readonly Optional|string $matchCriteria;
@@ -58,7 +58,7 @@ final class TextOperator implements SearchOperatorInterface, OperatorInterface
     /**
      * @param array|string $path
      * @param string $query
-     * @param Optional|Document|Serializable|array|stdClass $fuzzy
+     * @param Optional|Document|Serializable|array|stdClass|string $fuzzy
      * @param Optional|string $matchCriteria
      * @param Optional|string $synonyms
      * @param Optional|Document|Serializable|array|stdClass $score
@@ -66,7 +66,7 @@ final class TextOperator implements SearchOperatorInterface, OperatorInterface
     public function __construct(
         array|string $path,
         string $query,
-        Optional|Document|Serializable|stdClass|array $fuzzy = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $fuzzy = Optional::Undefined,
         Optional|string $matchCriteria = Optional::Undefined,
         Optional|string $synonyms = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,

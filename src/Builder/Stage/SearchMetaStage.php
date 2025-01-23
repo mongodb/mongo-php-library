@@ -39,19 +39,19 @@ final class SearchMetaStage implements StageInterface, OperatorInterface
     /** @var Optional|string $index Name of the Atlas Search index to use. If omitted, defaults to default. */
     public readonly Optional|string $index;
 
-    /** @var Optional|Document|Serializable|array|stdClass $count Document that specifies the count options for retrieving a count of the results. */
-    public readonly Optional|Document|Serializable|stdClass|array $count;
+    /** @var Optional|Document|Serializable|array|stdClass|string $count Document that specifies the count options for retrieving a count of the results. */
+    public readonly Optional|Document|Serializable|stdClass|array|string $count;
 
     /**
      * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator Operator to search with.  You can provide a specific operator or use
      * the compound operator to run a compound query with multiple operators.
      * @param Optional|string $index Name of the Atlas Search index to use. If omitted, defaults to default.
-     * @param Optional|Document|Serializable|array|stdClass $count Document that specifies the count options for retrieving a count of the results.
+     * @param Optional|Document|Serializable|array|stdClass|string $count Document that specifies the count options for retrieving a count of the results.
      */
     public function __construct(
         Document|Serializable|SearchOperatorInterface|stdClass|array $operator,
         Optional|string $index = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array $count = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $count = Optional::Undefined,
     ) {
         $this->operator = $operator;
         $this->index = $index;

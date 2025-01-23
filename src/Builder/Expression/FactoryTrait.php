@@ -36,9 +36,9 @@ trait FactoryTrait
      * Returns the absolute value of a number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $value
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $value
      */
-    public static function abs(Decimal128|Int64|ResolvesToNumber|float|int $value): AbsOperator
+    public static function abs(Decimal128|Int64|ResolvesToNumber|float|int|string $value): AbsOperator
     {
         return new AbsOperator($value);
     }
@@ -47,11 +47,11 @@ trait FactoryTrait
      * Returns the inverse cosine (arc cosine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $acos takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $acos takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
      * $acos returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $acos returns values as a double. $acos can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function acos(Decimal128|Int64|ResolvesToNumber|float|int $expression): AcosOperator
+    public static function acos(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): AcosOperator
     {
         return new AcosOperator($expression);
     }
@@ -60,11 +60,11 @@ trait FactoryTrait
      * Returns the inverse hyperbolic cosine (hyperbolic arc cosine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $acosh takes any valid expression that resolves to a number between 1 and +Infinity, e.g. 1 <= value <= +Infinity.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $acosh takes any valid expression that resolves to a number between 1 and +Infinity, e.g. 1 <= value <= +Infinity.
      * $acosh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $acosh returns values as a double. $acosh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function acosh(Decimal128|Int64|ResolvesToNumber|float|int $expression): AcoshOperator
+    public static function acosh(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): AcoshOperator
     {
         return new AcoshOperator($expression);
     }
@@ -74,10 +74,10 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/
      * @no-named-arguments
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
      */
     public static function add(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int ...$expression,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string ...$expression,
     ): AddOperator {
         return new AddOperator(...$expression);
     }
@@ -86,10 +86,10 @@ trait FactoryTrait
      * Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression
      */
     public static function allElementsTrue(
-        PackedArray|ResolvesToArray|BSONArray|array $expression,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression,
     ): AllElementsTrueOperator {
         return new AllElementsTrueOperator($expression);
     }
@@ -111,10 +111,10 @@ trait FactoryTrait
      * Returns true if any elements of a set evaluate to true; otherwise, returns false. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression
      */
     public static function anyElementTrue(
-        PackedArray|ResolvesToArray|BSONArray|array $expression,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression,
     ): AnyElementTrueOperator {
         return new AnyElementTrueOperator($expression);
     }
@@ -123,12 +123,12 @@ trait FactoryTrait
      * Returns the element at the specified array index.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $array
-     * @param ResolvesToInt|int $idx
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $array
+     * @param ResolvesToInt|int|string $idx
      */
     public static function arrayElemAt(
-        PackedArray|ResolvesToArray|BSONArray|array $array,
-        ResolvesToInt|int $idx,
+        PackedArray|ResolvesToArray|BSONArray|array|string $array,
+        ResolvesToInt|int|string $idx,
     ): ArrayElemAtOperator {
         return new ArrayElemAtOperator($array, $idx);
     }
@@ -137,10 +137,11 @@ trait FactoryTrait
      * Converts an array of key value pairs to a document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $array
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $array
      */
-    public static function arrayToObject(PackedArray|ResolvesToArray|BSONArray|array $array): ArrayToObjectOperator
-    {
+    public static function arrayToObject(
+        PackedArray|ResolvesToArray|BSONArray|array|string $array,
+    ): ArrayToObjectOperator {
         return new ArrayToObjectOperator($array);
     }
 
@@ -148,11 +149,11 @@ trait FactoryTrait
      * Returns the inverse sin (arc sine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $asin takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $asin takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
      * $asin returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $asin returns values as a double. $asin can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function asin(Decimal128|Int64|ResolvesToNumber|float|int $expression): AsinOperator
+    public static function asin(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): AsinOperator
     {
         return new AsinOperator($expression);
     }
@@ -161,11 +162,11 @@ trait FactoryTrait
      * Returns the inverse hyperbolic sine (hyperbolic arc sine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $asinh takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $asinh takes any valid expression that resolves to a number.
      * $asinh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $asinh returns values as a double. $asinh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function asinh(Decimal128|Int64|ResolvesToNumber|float|int $expression): AsinhOperator
+    public static function asinh(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): AsinhOperator
     {
         return new AsinhOperator($expression);
     }
@@ -174,11 +175,11 @@ trait FactoryTrait
      * Returns the inverse tangent (arc tangent) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $atan takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $atan takes any valid expression that resolves to a number.
      * $atan returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $atan returns values as a double. $atan can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function atan(Decimal128|Int64|ResolvesToNumber|float|int $expression): AtanOperator
+    public static function atan(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): AtanOperator
     {
         return new AtanOperator($expression);
     }
@@ -187,14 +188,14 @@ trait FactoryTrait
      * Returns the inverse tangent (arc tangent) of y / x in radians, where y and x are the first and second values passed to the expression respectively.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $y $atan2 takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $y $atan2 takes any valid expression that resolves to a number.
      * $atan2 returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $atan returns values as a double. $atan2 can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $x
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $x
      */
     public static function atan2(
-        Decimal128|Int64|ResolvesToNumber|float|int $y,
-        Decimal128|Int64|ResolvesToNumber|float|int $x,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $y,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $x,
     ): Atan2Operator {
         return new Atan2Operator($y, $x);
     }
@@ -203,11 +204,11 @@ trait FactoryTrait
      * Returns the inverse hyperbolic tangent (hyperbolic arc tangent) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $atanh takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $atanh takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
      * $atanh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $atanh returns values as a double. $atanh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function atanh(Decimal128|Int64|ResolvesToNumber|float|int $expression): AtanhOperator
+    public static function atanh(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): AtanhOperator
     {
         return new AtanhOperator($expression);
     }
@@ -218,9 +219,9 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/
      * @no-named-arguments
-     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression
      */
-    public static function avg(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): AvgOperator
+    public static function avg(Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression): AvgOperator
     {
         return new AvgOperator(...$expression);
     }
@@ -243,9 +244,9 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/
      * @no-named-arguments
-     * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
+     * @param Int64|ResolvesToInt|ResolvesToLong|int|string ...$expression
      */
-    public static function bitAnd(Int64|ResolvesToInt|ResolvesToLong|int ...$expression): BitAndOperator
+    public static function bitAnd(Int64|ResolvesToInt|ResolvesToLong|int|string ...$expression): BitAndOperator
     {
         return new BitAndOperator(...$expression);
     }
@@ -255,9 +256,9 @@ trait FactoryTrait
      * New in MongoDB 6.3.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/
-     * @param Int64|ResolvesToInt|ResolvesToLong|int $expression
+     * @param Int64|ResolvesToInt|ResolvesToLong|int|string $expression
      */
-    public static function bitNot(Int64|ResolvesToInt|ResolvesToLong|int $expression): BitNotOperator
+    public static function bitNot(Int64|ResolvesToInt|ResolvesToLong|int|string $expression): BitNotOperator
     {
         return new BitNotOperator($expression);
     }
@@ -268,9 +269,9 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/
      * @no-named-arguments
-     * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
+     * @param Int64|ResolvesToInt|ResolvesToLong|int|string ...$expression
      */
-    public static function bitOr(Int64|ResolvesToInt|ResolvesToLong|int ...$expression): BitOrOperator
+    public static function bitOr(Int64|ResolvesToInt|ResolvesToLong|int|string ...$expression): BitOrOperator
     {
         return new BitOrOperator(...$expression);
     }
@@ -281,9 +282,9 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/
      * @no-named-arguments
-     * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
+     * @param Int64|ResolvesToInt|ResolvesToLong|int|string ...$expression
      */
-    public static function bitXor(Int64|ResolvesToInt|ResolvesToLong|int ...$expression): BitXorOperator
+    public static function bitXor(Int64|ResolvesToInt|ResolvesToLong|int|string ...$expression): BitXorOperator
     {
         return new BitXorOperator(...$expression);
     }
@@ -292,10 +293,10 @@ trait FactoryTrait
      * Returns the size in bytes of a given document (i.e. BSON type Object) when encoded as BSON.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/
-     * @param Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass $object
+     * @param Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass|string $object
      */
     public static function bsonSize(
-        Document|Serializable|ResolvesToNull|ResolvesToObject|stdClass|array|null $object,
+        Document|Serializable|ResolvesToNull|ResolvesToObject|stdClass|array|null|string $object,
     ): BsonSizeOperator {
         return new BsonSizeOperator($object);
     }
@@ -304,11 +305,11 @@ trait FactoryTrait
      * Represents a single case in a $switch expression
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
-     * @param ResolvesToBool|bool $case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
+     * @param ResolvesToBool|bool|string $case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then Can be any valid expression.
      */
     public static function case(
-        ResolvesToBool|bool $case,
+        ResolvesToBool|bool|string $case,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then,
     ): CaseOperator {
         return new CaseOperator($case, $then);
@@ -318,9 +319,9 @@ trait FactoryTrait
      * Returns the smallest integer greater than or equal to the specified number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN.
      */
-    public static function ceil(Decimal128|Int64|ResolvesToNumber|float|int $expression): CeilOperator
+    public static function ceil(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): CeilOperator
     {
         return new CeilOperator($expression);
     }
@@ -356,10 +357,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/
      * @no-named-arguments
-     * @param BSONArray|PackedArray|ResolvesToArray|array ...$array
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string ...$array
      */
-    public static function concatArrays(PackedArray|ResolvesToArray|BSONArray|array ...$array): ConcatArraysOperator
-    {
+    public static function concatArrays(
+        PackedArray|ResolvesToArray|BSONArray|array|string ...$array,
+    ): ConcatArraysOperator {
         return new ConcatArraysOperator(...$array);
     }
 
@@ -367,12 +369,12 @@ trait FactoryTrait
      * A ternary operator that evaluates one expression, and depending on the result, returns the value of one of the other two expressions. Accepts either three expressions in an ordered list or three named parameters.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/
-     * @param ResolvesToBool|bool $if
+     * @param ResolvesToBool|bool|string $if
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $else
      */
     public static function cond(
-        ResolvesToBool|bool $if,
+        ResolvesToBool|bool|string $if,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $else,
     ): CondOperator {
@@ -404,10 +406,10 @@ trait FactoryTrait
      * Returns the cosine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $cos takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $cos takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
      * By default $cos returns values as a double. $cos can also return values as a 128-bit decimal as long as the <expression> resolves to a 128-bit decimal value.
      */
-    public static function cos(Decimal128|Int64|ResolvesToNumber|float|int $expression): CosOperator
+    public static function cos(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): CosOperator
     {
         return new CosOperator($expression);
     }
@@ -416,10 +418,10 @@ trait FactoryTrait
      * Returns the hyperbolic cosine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
      * By default $cosh returns values as a double. $cosh can also return values as a 128-bit decimal if the <expression> resolves to a 128-bit decimal value.
      */
-    public static function cosh(Decimal128|Int64|ResolvesToNumber|float|int $expression): CoshOperator
+    public static function cosh(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): CoshOperator
     {
         return new CoshOperator($expression);
     }
@@ -428,15 +430,15 @@ trait FactoryTrait
      * Adds a number of time units to a date object.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ResolvesToString|TimeUnit|string $unit The unit used to measure the amount of time added to the startDate.
-     * @param Int64|ResolvesToInt|ResolvesToLong|int $amount
+     * @param Int64|ResolvesToInt|ResolvesToLong|int|string $amount
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dateAdd(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $startDate,
         ResolvesToString|TimeUnit|string $unit,
-        Int64|ResolvesToInt|ResolvesToLong|int $amount,
+        Int64|ResolvesToInt|ResolvesToLong|int|string $amount,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): DateAddOperator {
         return new DateAddOperator($startDate, $unit, $amount, $timezone);
@@ -446,15 +448,15 @@ trait FactoryTrait
      * Returns the difference between two dates.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The start of the time period. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $endDate The end of the time period. The endDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The start of the time period. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $endDate The end of the time period. The endDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ResolvesToString|TimeUnit|string $unit The time measurement unit between the startDate and endDate
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      * @param Optional|ResolvesToString|string $startOfWeek Used when the unit is equal to week. Defaults to Sunday. The startOfWeek parameter is an expression that resolves to a case insensitive string
      */
     public static function dateDiff(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $endDate,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $startDate,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $endDate,
         ResolvesToString|TimeUnit|string $unit,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
         Optional|ResolvesToString|string $startOfWeek = Optional::Undefined,
@@ -466,29 +468,29 @@ trait FactoryTrait
      * Constructs a BSON Date object given the date's constituent parts.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $year Calendar year. Can be any expression that evaluates to a number.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeekYear ISO Week Date Year. Can be any expression that evaluates to a number.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $month Month. Defaults to 1.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeek Week of year. Defaults to 1.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $day Day of month. Defaults to 1.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoDayOfWeek Day of week (Monday 1 - Sunday 7). Defaults to 1.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $hour Hour. Defaults to 0.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $minute Minute. Defaults to 0.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $second Second. Defaults to 0.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $millisecond Millisecond. Defaults to 0.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $year Calendar year. Can be any expression that evaluates to a number.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $isoWeekYear ISO Week Date Year. Can be any expression that evaluates to a number.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $month Month. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $isoWeek Week of year. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $day Day of month. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $isoDayOfWeek Day of week (Monday 1 - Sunday 7). Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $hour Hour. Defaults to 0.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $minute Minute. Defaults to 0.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $second Second. Defaults to 0.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $millisecond Millisecond. Defaults to 0.
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dateFromParts(
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $year = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeekYear = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $month = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeek = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $day = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoDayOfWeek = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $hour = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $minute = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $second = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $millisecond = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $year = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $isoWeekYear = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $month = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $isoWeek = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $day = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $isoDayOfWeek = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $hour = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $minute = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $second = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $millisecond = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): DateFromPartsOperator {
         return new DateFromPartsOperator($year, $isoWeekYear, $month, $isoWeek, $day, $isoDayOfWeek, $hour, $minute, $second, $millisecond, $timezone);
@@ -521,15 +523,15 @@ trait FactoryTrait
      * Subtracts a number of time units from a date object.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ResolvesToString|TimeUnit|string $unit The unit used to measure the amount of time added to the startDate.
-     * @param Int64|ResolvesToInt|ResolvesToLong|int $amount
+     * @param Int64|ResolvesToInt|ResolvesToLong|int|string $amount
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dateSubtract(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $startDate,
         ResolvesToString|TimeUnit|string $unit,
-        Int64|ResolvesToInt|ResolvesToLong|int $amount,
+        Int64|ResolvesToInt|ResolvesToLong|int|string $amount,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): DateSubtractOperator {
         return new DateSubtractOperator($startDate, $unit, $amount, $timezone);
@@ -539,14 +541,14 @@ trait FactoryTrait
      * Returns a document containing the constituent parts of a date.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The input date for which to return parts. date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The input date for which to return parts. date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
-     * @param Optional|bool $iso8601 If set to true, modifies the output document to use ISO week date fields. Defaults to false.
+     * @param Optional|bool|string $iso8601 If set to true, modifies the output document to use ISO week date fields. Defaults to false.
      */
     public static function dateToParts(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
-        Optional|bool $iso8601 = Optional::Undefined,
+        Optional|bool|string $iso8601 = Optional::Undefined,
     ): DateToPartsOperator {
         return new DateToPartsOperator($date, $timezone, $iso8601);
     }
@@ -555,7 +557,7 @@ trait FactoryTrait
      * Returns the date as a formatted string.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to convert to string. Must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to convert to string. Must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $format The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
      * If unspecified, $dateFromString uses "%Y-%m-%dT%H:%M:%S.%LZ" as the default format but accepts a variety of formats and attempts to parse the dateString if possible.
      * @param Optional|ResolvesToString|string $timezone The time zone to use to format the date.
@@ -563,7 +565,7 @@ trait FactoryTrait
      * If unspecified, $dateToString returns null if the date is null or missing.
      */
     public static function dateToString(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $format = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
         Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
@@ -575,19 +577,19 @@ trait FactoryTrait
      * Truncates a date.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ResolvesToString|TimeUnit|string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      * @param Optional|string $startOfWeek The start of the week. Used when
      * unit is week. Defaults to Sunday.
      */
     public static function dateTrunc(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         ResolvesToString|TimeUnit|string $unit,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $binSize = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
         Optional|string $startOfWeek = Optional::Undefined,
     ): DateTruncOperator {
@@ -598,11 +600,11 @@ trait FactoryTrait
      * Returns the day of the month for a date as a number between 1 and 31.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dayOfMonth(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): DayOfMonthOperator {
         return new DayOfMonthOperator($date, $timezone);
@@ -612,11 +614,11 @@ trait FactoryTrait
      * Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dayOfWeek(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): DayOfWeekOperator {
         return new DayOfWeekOperator($date, $timezone);
@@ -626,11 +628,11 @@ trait FactoryTrait
      * Returns the day of the year for a date as a number between 1 and 366 (leap year).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfYear/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dayOfYear(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): DayOfYearOperator {
         return new DayOfYearOperator($date, $timezone);
@@ -640,11 +642,11 @@ trait FactoryTrait
      * Converts a value from degrees to radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $degreesToRadians takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $degreesToRadians takes any valid expression that resolves to a number.
      * By default $degreesToRadians returns values as a double. $degreesToRadians can also return values as a 128-bit decimal as long as the <expression> resolves to a 128-bit decimal value.
      */
     public static function degreesToRadians(
-        Decimal128|Int64|ResolvesToNumber|float|int $expression,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression,
     ): DegreesToRadiansOperator {
         return new DegreesToRadiansOperator($expression);
     }
@@ -653,12 +655,12 @@ trait FactoryTrait
      * Returns the result of dividing the first number by the second. Accepts two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument.
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $divisor
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $divisor
      */
     public static function divide(
-        Decimal128|Int64|ResolvesToNumber|float|int $dividend,
-        Decimal128|Int64|ResolvesToNumber|float|int $divisor,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $dividend,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $divisor,
     ): DivideOperator {
         return new DivideOperator($dividend, $divisor);
     }
@@ -681,9 +683,9 @@ trait FactoryTrait
      * Raises e to the specified exponent.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $exponent
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $exponent
      */
-    public static function exp(Decimal128|Int64|ResolvesToNumber|float|int $exponent): ExpOperator
+    public static function exp(Decimal128|Int64|ResolvesToNumber|float|int|string $exponent): ExpOperator
     {
         return new ExpOperator($exponent);
     }
@@ -692,17 +694,17 @@ trait FactoryTrait
      * Selects a subset of the array to return an array with only the elements that match the filter condition.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input
-     * @param ResolvesToBool|bool $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input
+     * @param ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
      * @param Optional|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
-     * @param Optional|ResolvesToInt|int $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
+     * @param Optional|ResolvesToInt|int|string $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
      * If the specified limit is greater than the number of matching array elements, $filter returns all matching array elements. If the limit is null, $filter returns all matching array elements.
      */
     public static function filter(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        ResolvesToBool|bool $cond,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+        ResolvesToBool|bool|string $cond,
         Optional|string $as = Optional::Undefined,
-        Optional|ResolvesToInt|int $limit = Optional::Undefined,
+        Optional|ResolvesToInt|int|string $limit = Optional::Undefined,
     ): FilterOperator {
         return new FilterOperator($input, $cond, $as, $limit);
     }
@@ -711,9 +713,9 @@ trait FactoryTrait
      * Returns the result of an expression for the first document in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression
      */
-    public static function first(PackedArray|ResolvesToArray|BSONArray|array $expression): FirstOperator
+    public static function first(PackedArray|ResolvesToArray|BSONArray|array|string $expression): FirstOperator
     {
         return new FirstOperator($expression);
     }
@@ -722,12 +724,12 @@ trait FactoryTrait
      * Returns a specified number of elements from the beginning of an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return n elements.
      */
     public static function firstN(
-        ResolvesToInt|int $n,
-        PackedArray|ResolvesToArray|BSONArray|array $input,
+        ResolvesToInt|int|string $n,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
     ): FirstNOperator {
         return new FirstNOperator($n, $input);
     }
@@ -736,9 +738,9 @@ trait FactoryTrait
      * Returns the largest integer less than or equal to the specified number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
      */
-    public static function floor(Decimal128|Int64|ResolvesToNumber|float|int $expression): FloorOperator
+    public static function floor(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): FloorOperator
     {
         return new FloorOperator($expression);
     }
@@ -750,12 +752,12 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
      * @param Javascript|string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
      * function(arg1, arg2, ...) { ... }
-     * @param BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
+     * @param BSONArray|PackedArray|array|string $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
      * @param string $lang
      */
     public static function function(
         Javascript|string $body,
-        PackedArray|BSONArray|array $args = [],
+        PackedArray|BSONArray|array|string $args = [],
         string $lang = 'js',
     ): FunctionOperator {
         return new FunctionOperator($body, $args, $lang);
@@ -810,11 +812,11 @@ trait FactoryTrait
      * Returns the hour for a date as a number between 0 and 23.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function hour(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): HourOperator {
         return new HourOperator($date, $timezone);
@@ -838,11 +840,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/in/
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $array Any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $array Any valid expression that resolves to an array.
      */
     public static function in(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
-        PackedArray|ResolvesToArray|BSONArray|array $array,
+        PackedArray|ResolvesToArray|BSONArray|array|string $array,
     ): InOperator {
         return new InOperator($expression, $array);
     }
@@ -851,20 +853,20 @@ trait FactoryTrait
      * Searches an array for an occurrence of a specified value and returns the array index of the first occurrence. Array indexes start at zero.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $array Can be any valid expression as long as it resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $array Can be any valid expression as long as it resolves to an array.
      * If the array expression resolves to a value of null or refers to a field that is missing, $indexOfArray returns null.
      * If the array expression does not resolve to an array or null nor refers to a missing field, $indexOfArray returns an error.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $search
-     * @param Optional|ResolvesToInt|int $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
+     * @param Optional|ResolvesToInt|int|string $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
-     * @param Optional|ResolvesToInt|int $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
+     * @param Optional|ResolvesToInt|int|string $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
      * If unspecified, the ending index position for the search is the end of the string.
      */
     public static function indexOfArray(
-        PackedArray|ResolvesToArray|BSONArray|array $array,
+        PackedArray|ResolvesToArray|BSONArray|array|string $array,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $search,
-        Optional|ResolvesToInt|int $start = Optional::Undefined,
-        Optional|ResolvesToInt|int $end = Optional::Undefined,
+        Optional|ResolvesToInt|int|string $start = Optional::Undefined,
+        Optional|ResolvesToInt|int|string $end = Optional::Undefined,
     ): IndexOfArrayOperator {
         return new IndexOfArrayOperator($array, $search, $start, $end);
     }
@@ -877,16 +879,16 @@ trait FactoryTrait
      * If the string expression resolves to a value of null or refers to a field that is missing, $indexOfBytes returns null.
      * If the string expression does not resolve to a string or null nor refers to a missing field, $indexOfBytes returns an error.
      * @param ResolvesToString|string $substring Can be any valid expression as long as it resolves to a string.
-     * @param Optional|ResolvesToInt|int $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
+     * @param Optional|ResolvesToInt|int|string $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
-     * @param Optional|ResolvesToInt|int $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
+     * @param Optional|ResolvesToInt|int|string $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
      * If unspecified, the ending index position for the search is the end of the string.
      */
     public static function indexOfBytes(
         ResolvesToString|string $string,
         ResolvesToString|string $substring,
-        Optional|ResolvesToInt|int $start = Optional::Undefined,
-        Optional|ResolvesToInt|int $end = Optional::Undefined,
+        Optional|ResolvesToInt|int|string $start = Optional::Undefined,
+        Optional|ResolvesToInt|int|string $end = Optional::Undefined,
     ): IndexOfBytesOperator {
         return new IndexOfBytesOperator($string, $substring, $start, $end);
     }
@@ -899,16 +901,16 @@ trait FactoryTrait
      * If the string expression resolves to a value of null or refers to a field that is missing, $indexOfCP returns null.
      * If the string expression does not resolve to a string or null nor refers to a missing field, $indexOfCP returns an error.
      * @param ResolvesToString|string $substring Can be any valid expression as long as it resolves to a string.
-     * @param Optional|ResolvesToInt|int $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
+     * @param Optional|ResolvesToInt|int|string $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
-     * @param Optional|ResolvesToInt|int $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
+     * @param Optional|ResolvesToInt|int|string $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
      * If unspecified, the ending index position for the search is the end of the string.
      */
     public static function indexOfCP(
         ResolvesToString|string $string,
         ResolvesToString|string $substring,
-        Optional|ResolvesToInt|int $start = Optional::Undefined,
-        Optional|ResolvesToInt|int $end = Optional::Undefined,
+        Optional|ResolvesToInt|int|string $start = Optional::Undefined,
+        Optional|ResolvesToInt|int|string $end = Optional::Undefined,
     ): IndexOfCPOperator {
         return new IndexOfCPOperator($string, $substring, $start, $end);
     }
@@ -943,11 +945,11 @@ trait FactoryTrait
      * Returns the weekday number in ISO 8601 format, ranging from 1 (for Monday) to 7 (for Sunday).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function isoDayOfWeek(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): IsoDayOfWeekOperator {
         return new IsoDayOfWeekOperator($date, $timezone);
@@ -957,11 +959,11 @@ trait FactoryTrait
      * Returns the week number in ISO 8601 format, ranging from 1 to 53. Week numbers start at 1 with the week (Monday through Sunday) that contains the year's first Thursday.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function isoWeek(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): IsoWeekOperator {
         return new IsoWeekOperator($date, $timezone);
@@ -971,11 +973,11 @@ trait FactoryTrait
      * Returns the year number in ISO 8601 format. The year starts with the Monday of week 1 (ISO 8601) and ends with the Sunday of the last week (ISO 8601).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function isoWeekYear(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): IsoWeekYearOperator {
         return new IsoWeekYearOperator($date, $timezone);
@@ -985,9 +987,9 @@ trait FactoryTrait
      * Returns the result of an expression for the last document in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression
      */
-    public static function last(PackedArray|ResolvesToArray|BSONArray|array $expression): LastOperator
+    public static function last(PackedArray|ResolvesToArray|BSONArray|array|string $expression): LastOperator
     {
         return new LastOperator($expression);
     }
@@ -996,12 +998,12 @@ trait FactoryTrait
      * Returns a specified number of elements from the end of an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return n elements.
      */
     public static function lastN(
-        ResolvesToInt|int $n,
-        PackedArray|ResolvesToArray|BSONArray|array $input,
+        ResolvesToInt|int|string $n,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
     ): LastNOperator {
         return new LastNOperator($n, $input);
     }
@@ -1011,12 +1013,12 @@ trait FactoryTrait
      * Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/
-     * @param Document|Serializable|array|stdClass $vars Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
+     * @param Document|Serializable|array|stdClass|string $vars Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
      * The variable assignments have no meaning outside the in expression, not even within the vars block itself.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in The expression to evaluate.
      */
     public static function let(
-        Document|Serializable|stdClass|array $vars,
+        Document|Serializable|stdClass|array|string $vars,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
     ): LetOperator {
         return new LetOperator($vars, $in);
@@ -1038,9 +1040,9 @@ trait FactoryTrait
      * $ln is equivalent to $log: [ <number>, Math.E ] expression, where Math.E is a JavaScript representation for Euler's number e.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions.
      */
-    public static function ln(Decimal128|Int64|ResolvesToNumber|float|int $number): LnOperator
+    public static function ln(Decimal128|Int64|ResolvesToNumber|float|int|string $number): LnOperator
     {
         return new LnOperator($number);
     }
@@ -1049,12 +1051,12 @@ trait FactoryTrait
      * Calculates the log of a number in the specified base.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number.
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $base Any valid expression as long as it resolves to a positive number greater than 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $base Any valid expression as long as it resolves to a positive number greater than 1.
      */
     public static function log(
-        Decimal128|Int64|ResolvesToNumber|float|int $number,
-        Decimal128|Int64|ResolvesToNumber|float|int $base,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $number,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $base,
     ): LogOperator {
         return new LogOperator($number, $base);
     }
@@ -1063,9 +1065,9 @@ trait FactoryTrait
      * Calculates the log base 10 of a number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number.
      */
-    public static function log10(Decimal128|Int64|ResolvesToNumber|float|int $number): Log10Operator
+    public static function log10(Decimal128|Int64|ResolvesToNumber|float|int|string $number): Log10Operator
     {
         return new Log10Operator($number);
     }
@@ -1119,12 +1121,12 @@ trait FactoryTrait
      * Applies a subexpression to each element of an array and returns the array of resulting values in order. Accepts named parameters.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to an array.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
      * @param Optional|ResolvesToString|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      */
     public static function map(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
         Optional|ResolvesToString|string $as = Optional::Undefined,
     ): MapOperator {
@@ -1149,12 +1151,12 @@ trait FactoryTrait
      * Returns the n largest values in an array. Distinct from the $maxN accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return the maximal n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the maximal n elements.
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
      */
     public static function maxN(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        ResolvesToInt|int $n,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+        ResolvesToInt|int|string $n,
     ): MaxNOperator {
         return new MaxNOperator($input, $n);
     }
@@ -1168,11 +1170,11 @@ trait FactoryTrait
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
-     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
+     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int|string $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
      * @param string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
      */
     public static function median(
-        Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input,
+        Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int|string $input,
         string $method,
     ): MedianOperator {
         return new MedianOperator($input, $method);
@@ -1183,10 +1185,10 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/
      * @no-named-arguments
-     * @param Document|ResolvesToObject|Serializable|array|stdClass ...$document Any valid expression that resolves to a document.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string ...$document Any valid expression that resolves to a document.
      */
     public static function mergeObjects(
-        Document|Serializable|ResolvesToObject|stdClass|array ...$document,
+        Document|Serializable|ResolvesToObject|stdClass|array|string ...$document,
     ): MergeObjectsOperator {
         return new MergeObjectsOperator(...$document);
     }
@@ -1206,11 +1208,11 @@ trait FactoryTrait
      * Returns the milliseconds of a date as a number between 0 and 999.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/millisecond/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function millisecond(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): MillisecondOperator {
         return new MillisecondOperator($date, $timezone);
@@ -1234,12 +1236,12 @@ trait FactoryTrait
      * Returns the n smallest values in an array. Distinct from the $minN accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return the maximal n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the maximal n elements.
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
      */
     public static function minN(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        ResolvesToInt|int $n,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+        ResolvesToInt|int|string $n,
     ): MinNOperator {
         return new MinNOperator($input, $n);
     }
@@ -1248,11 +1250,11 @@ trait FactoryTrait
      * Returns the minute for a date as a number between 0 and 59.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function minute(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): MinuteOperator {
         return new MinuteOperator($date, $timezone);
@@ -1262,12 +1264,12 @@ trait FactoryTrait
      * Returns the remainder of the first number divided by the second. Accepts two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. first argument is divided by the second argument.
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $divisor
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $dividend The first argument is the dividend, and the second argument is the divisor; i.e. first argument is divided by the second argument.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $divisor
      */
     public static function mod(
-        Decimal128|Int64|ResolvesToNumber|float|int $dividend,
-        Decimal128|Int64|ResolvesToNumber|float|int $divisor,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $dividend,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $divisor,
     ): ModOperator {
         return new ModOperator($dividend, $divisor);
     }
@@ -1276,11 +1278,11 @@ trait FactoryTrait
      * Returns the month for a date as a number between 1 (January) and 12 (December).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/month/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function month(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): MonthOperator {
         return new MonthOperator($date, $timezone);
@@ -1291,11 +1293,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/
      * @no-named-arguments
-     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression The arguments can be any valid expression as long as they resolve to numbers.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression The arguments can be any valid expression as long as they resolve to numbers.
      * Starting in MongoDB 6.1 you can optimize the $multiply operation. To improve performance, group references at the end of the argument list.
      */
-    public static function multiply(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): MultiplyOperator
-    {
+    public static function multiply(
+        Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression,
+    ): MultiplyOperator {
         return new MultiplyOperator(...$expression);
     }
 
@@ -1329,10 +1332,10 @@ trait FactoryTrait
      * Converts a document to an array of documents representing key-value pairs.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/
-     * @param Document|ResolvesToObject|Serializable|array|stdClass $object Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $object Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields.
      */
     public static function objectToArray(
-        Document|Serializable|ResolvesToObject|stdClass|array $object,
+        Document|Serializable|ResolvesToObject|stdClass|array|string $object,
     ): ObjectToArrayOperator {
         return new ObjectToArrayOperator($object);
     }
@@ -1362,14 +1365,14 @@ trait FactoryTrait
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
-     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
+     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int|string $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
      * @param string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
      */
     public static function percentile(
-        Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input,
-        PackedArray|ResolvesToArray|BSONArray|array $p,
+        Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int|string $input,
+        PackedArray|ResolvesToArray|BSONArray|array|string $p,
         string $method,
     ): PercentileOperator {
         return new PercentileOperator($input, $p, $method);
@@ -1379,12 +1382,12 @@ trait FactoryTrait
      * Raises a number to the specified exponent.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/pow/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $exponent
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $exponent
      */
     public static function pow(
-        Decimal128|Int64|ResolvesToNumber|float|int $number,
-        Decimal128|Int64|ResolvesToNumber|float|int $exponent,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $number,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $exponent,
     ): PowOperator {
         return new PowOperator($number, $exponent);
     }
@@ -1393,10 +1396,10 @@ trait FactoryTrait
      * Converts a value from radians to degrees.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
      */
     public static function radiansToDegrees(
-        Decimal128|Int64|ResolvesToNumber|float|int $expression,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression,
     ): RadiansToDegreesOperator {
         return new RadiansToDegreesOperator($expression);
     }
@@ -1415,14 +1418,14 @@ trait FactoryTrait
      * Outputs an array containing a sequence of integers according to user-defined inputs.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/range/
-     * @param ResolvesToInt|int $start An integer that specifies the start of the sequence. Can be any valid expression that resolves to an integer.
-     * @param ResolvesToInt|int $end An integer that specifies the exclusive upper limit of the sequence. Can be any valid expression that resolves to an integer.
-     * @param Optional|ResolvesToInt|int $step An integer that specifies the increment value. Can be any valid expression that resolves to a non-zero integer. Defaults to 1.
+     * @param ResolvesToInt|int|string $start An integer that specifies the start of the sequence. Can be any valid expression that resolves to an integer.
+     * @param ResolvesToInt|int|string $end An integer that specifies the exclusive upper limit of the sequence. Can be any valid expression that resolves to an integer.
+     * @param Optional|ResolvesToInt|int|string $step An integer that specifies the increment value. Can be any valid expression that resolves to a non-zero integer. Defaults to 1.
      */
     public static function range(
-        ResolvesToInt|int $start,
-        ResolvesToInt|int $end,
-        Optional|ResolvesToInt|int $step = Optional::Undefined,
+        ResolvesToInt|int|string $start,
+        ResolvesToInt|int|string $end,
+        Optional|ResolvesToInt|int|string $step = Optional::Undefined,
     ): RangeOperator {
         return new RangeOperator($start, $end, $step);
     }
@@ -1431,7 +1434,7 @@ trait FactoryTrait
      * Applies an expression to each element in an array and combines them into a single value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input Can be any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input Can be any valid expression that resolves to an array.
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $initialValue The initial cumulative value set before in is applied to the first element of the input array.
@@ -1441,7 +1444,7 @@ trait FactoryTrait
      * - this is the variable that refers to the element being processed.
      */
     public static function reduce(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $initialValue,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
     ): ReduceOperator {
@@ -1538,10 +1541,11 @@ trait FactoryTrait
      * Returns an array with the elements in reverse order.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reverseArray/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression The argument can be any valid expression as long as it resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression The argument can be any valid expression as long as it resolves to an array.
      */
-    public static function reverseArray(PackedArray|ResolvesToArray|BSONArray|array $expression): ReverseArrayOperator
-    {
+    public static function reverseArray(
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression,
+    ): ReverseArrayOperator {
         return new ReverseArrayOperator($expression);
     }
 
@@ -1549,13 +1553,13 @@ trait FactoryTrait
      * Rounds a number to a whole integer or to a specified decimal place.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
      * $round returns an error if the expression resolves to a non-numeric data type.
-     * @param Optional|ResolvesToInt|int $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive.
+     * @param Optional|ResolvesToInt|int|string $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive.
      */
     public static function round(
-        Decimal128|Int64|ResolvesToNumber|float|int $number,
-        Optional|ResolvesToInt|int $place = Optional::Undefined,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $number,
+        Optional|ResolvesToInt|int|string $place = Optional::Undefined,
     ): RoundOperator {
         return new RoundOperator($number, $place);
     }
@@ -1580,11 +1584,11 @@ trait FactoryTrait
      * Returns the seconds for a date as a number between 0 and 60 (leap seconds).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/second/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function second(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): SecondOperator {
         return new SecondOperator($date, $timezone);
@@ -1594,12 +1598,12 @@ trait FactoryTrait
      * Returns a set with elements that appear in the first set but not in the second set; i.e. performs a relative complement of the second set relative to the first. Accepts exactly two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression1 The arguments can be any valid expression as long as they each resolve to an array.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression2 The arguments can be any valid expression as long as they each resolve to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression1 The arguments can be any valid expression as long as they each resolve to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression2 The arguments can be any valid expression as long as they each resolve to an array.
      */
     public static function setDifference(
-        PackedArray|ResolvesToArray|BSONArray|array $expression1,
-        PackedArray|ResolvesToArray|BSONArray|array $expression2,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression1,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression2,
     ): SetDifferenceOperator {
         return new SetDifferenceOperator($expression1, $expression2);
     }
@@ -1609,10 +1613,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/
      * @no-named-arguments
-     * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string ...$expression
      */
-    public static function setEquals(PackedArray|ResolvesToArray|BSONArray|array ...$expression): SetEqualsOperator
-    {
+    public static function setEquals(
+        PackedArray|ResolvesToArray|BSONArray|array|string ...$expression,
+    ): SetEqualsOperator {
         return new SetEqualsOperator(...$expression);
     }
 
@@ -1622,13 +1627,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/
      * @param ResolvesToString|string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
-     * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value The value that you want to assign to field. value can be any valid expression.
      * Set to $$REMOVE to remove field from the input document.
      */
     public static function setField(
         ResolvesToString|string $field,
-        Document|Serializable|ResolvesToObject|stdClass|array $input,
+        Document|Serializable|ResolvesToObject|stdClass|array|string $input,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value,
     ): SetFieldOperator {
         return new SetFieldOperator($field, $input, $value);
@@ -1639,10 +1644,10 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/
      * @no-named-arguments
-     * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string ...$expression
      */
     public static function setIntersection(
-        PackedArray|ResolvesToArray|BSONArray|array ...$expression,
+        PackedArray|ResolvesToArray|BSONArray|array|string ...$expression,
     ): SetIntersectionOperator {
         return new SetIntersectionOperator(...$expression);
     }
@@ -1651,12 +1656,12 @@ trait FactoryTrait
      * Returns true if all elements of the first set appear in the second set, including when the first set equals the second set; i.e. not a strict subset. Accepts exactly two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression1
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression2
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression1
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression2
      */
     public static function setIsSubset(
-        PackedArray|ResolvesToArray|BSONArray|array $expression1,
-        PackedArray|ResolvesToArray|BSONArray|array $expression2,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression1,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression2,
     ): SetIsSubsetOperator {
         return new SetIsSubsetOperator($expression1, $expression2);
     }
@@ -1666,10 +1671,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/
      * @no-named-arguments
-     * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string ...$expression
      */
-    public static function setUnion(PackedArray|ResolvesToArray|BSONArray|array ...$expression): SetUnionOperator
-    {
+    public static function setUnion(
+        PackedArray|ResolvesToArray|BSONArray|array|string ...$expression,
+    ): SetUnionOperator {
         return new SetUnionOperator(...$expression);
     }
 
@@ -1677,10 +1683,10 @@ trait FactoryTrait
      * Returns the sine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $sin takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $sin takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
      * By default $sin returns values as a double. $sin can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function sin(Decimal128|Int64|ResolvesToNumber|float|int $expression): SinOperator
+    public static function sin(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): SinOperator
     {
         return new SinOperator($expression);
     }
@@ -1689,10 +1695,10 @@ trait FactoryTrait
      * Returns the hyperbolic sine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $sinh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $sinh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
      * By default $sinh returns values as a double. $sinh can also return values as a 128-bit decimal if the expression resolves to a 128-bit decimal value.
      */
-    public static function sinh(Decimal128|Int64|ResolvesToNumber|float|int $expression): SinhOperator
+    public static function sinh(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): SinhOperator
     {
         return new SinhOperator($expression);
     }
@@ -1701,9 +1707,9 @@ trait FactoryTrait
      * Returns the number of elements in the array. Accepts a single expression as argument.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression The argument for $size can be any expression as long as it resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression The argument for $size can be any expression as long as it resolves to an array.
      */
-    public static function size(PackedArray|ResolvesToArray|BSONArray|array $expression): SizeOperator
+    public static function size(PackedArray|ResolvesToArray|BSONArray|array|string $expression): SizeOperator
     {
         return new SizeOperator($expression);
     }
@@ -1712,18 +1718,18 @@ trait FactoryTrait
      * Returns a subset of an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression Any valid expression as long as it resolves to an array.
-     * @param ResolvesToInt|int $n Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression Any valid expression as long as it resolves to an array.
+     * @param ResolvesToInt|int|string $n Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
      * If positive, $slice returns up to the first n elements in the array. If the position is specified, $slice returns the first n elements starting from the position.
      * If negative, $slice returns up to the last n elements in the array. n cannot resolve to a negative number if <position> is specified.
-     * @param Optional|ResolvesToInt|int $position Any valid expression as long as it resolves to an integer.
+     * @param Optional|ResolvesToInt|int|string $position Any valid expression as long as it resolves to an integer.
      * If positive, $slice determines the starting position from the start of the array. If position is greater than the number of elements, the $slice returns an empty array.
      * If negative, $slice determines the starting position from the end of the array. If the absolute value of the <position> is greater than the number of elements, the starting position is the start of the array.
      */
     public static function slice(
-        PackedArray|ResolvesToArray|BSONArray|array $expression,
-        ResolvesToInt|int $n,
-        Optional|ResolvesToInt|int $position = Optional::Undefined,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression,
+        ResolvesToInt|int|string $n,
+        Optional|ResolvesToInt|int|string $position = Optional::Undefined,
     ): SliceOperator {
         return new SliceOperator($expression, $n, $position);
     }
@@ -1732,14 +1738,14 @@ trait FactoryTrait
      * Sorts the elements of an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input The array to be sorted.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input The array to be sorted.
      * The result is null if the expression: is missing, evaluates to null, or evaluates to undefined
      * If the expression evaluates to any other non-array value, the document returns an error.
-     * @param Document|Serializable|Sort|array|int|stdClass $sortBy The document specifies a sort ordering.
+     * @param Document|Serializable|Sort|array|int|stdClass|string $sortBy The document specifies a sort ordering.
      */
     public static function sortArray(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        Document|Serializable|Sort|stdClass|array|int $sortBy,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+        Document|Serializable|Sort|stdClass|array|int|string $sortBy,
     ): SortArrayOperator {
         return new SortArrayOperator($input, $sortBy);
     }
@@ -1760,9 +1766,9 @@ trait FactoryTrait
      * Calculates the square root.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sqrt/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number The argument can be any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number The argument can be any valid expression as long as it resolves to a non-negative number.
      */
-    public static function sqrt(Decimal128|Int64|ResolvesToNumber|float|int $number): SqrtOperator
+    public static function sqrt(Decimal128|Int64|ResolvesToNumber|float|int|string $number): SqrtOperator
     {
         return new SqrtOperator($number);
     }
@@ -1774,10 +1780,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
      * @no-named-arguments
-     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression
      */
-    public static function stdDevPop(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): StdDevPopOperator
-    {
+    public static function stdDevPop(
+        Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression,
+    ): StdDevPopOperator {
         return new StdDevPopOperator(...$expression);
     }
 
@@ -1787,10 +1794,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
      * @no-named-arguments
-     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression
      */
-    public static function stdDevSamp(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): StdDevSampOperator
-    {
+    public static function stdDevSamp(
+        Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression,
+    ): StdDevSampOperator {
         return new StdDevSampOperator(...$expression);
     }
 
@@ -1835,13 +1843,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substr/
      * @param ResolvesToString|string $string
-     * @param ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "".
-     * @param ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
+     * @param ResolvesToInt|int|string $start If start is a negative number, $substr returns an empty string "".
+     * @param ResolvesToInt|int|string $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
      */
     public static function substr(
         ResolvesToString|string $string,
-        ResolvesToInt|int $start,
-        ResolvesToInt|int $length,
+        ResolvesToInt|int|string $start,
+        ResolvesToInt|int|string $length,
     ): SubstrOperator {
         return new SubstrOperator($string, $start, $length);
     }
@@ -1851,13 +1859,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/
      * @param ResolvesToString|string $string
-     * @param ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "".
-     * @param ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
+     * @param ResolvesToInt|int|string $start If start is a negative number, $substr returns an empty string "".
+     * @param ResolvesToInt|int|string $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
      */
     public static function substrBytes(
         ResolvesToString|string $string,
-        ResolvesToInt|int $start,
-        ResolvesToInt|int $length,
+        ResolvesToInt|int|string $start,
+        ResolvesToInt|int|string $length,
     ): SubstrBytesOperator {
         return new SubstrBytesOperator($string, $start, $length);
     }
@@ -1867,13 +1875,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/
      * @param ResolvesToString|string $string
-     * @param ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "".
-     * @param ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
+     * @param ResolvesToInt|int|string $start If start is a negative number, $substr returns an empty string "".
+     * @param ResolvesToInt|int|string $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
      */
     public static function substrCP(
         ResolvesToString|string $string,
-        ResolvesToInt|int $start,
-        ResolvesToInt|int $length,
+        ResolvesToInt|int|string $start,
+        ResolvesToInt|int|string $length,
     ): SubstrCPOperator {
         return new SubstrCPOperator($string, $start, $length);
     }
@@ -1882,12 +1890,12 @@ trait FactoryTrait
      * Returns the result of subtracting the second value from the first. If the two values are numbers, return the difference. If the two values are dates, return the difference in milliseconds. If the two values are a date and a number in milliseconds, return the resulting date. Accepts two argument expressions. If the two values are a date and a number, specify the date argument first as it is not meaningful to subtract a date from a number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $expression1
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $expression2
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression1
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression2
      */
     public static function subtract(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $expression1,
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $expression2,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression1,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression2,
     ): SubtractOperator {
         return new SubtractOperator($expression1, $expression2);
     }
@@ -1898,10 +1906,10 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/
      * @no-named-arguments
-     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|array|float|int ...$expression
+     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|array|float|int|string ...$expression
      */
     public static function sum(
-        Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|BSONArray|array|float|int ...$expression,
+        Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|BSONArray|array|float|int|string ...$expression,
     ): SumOperator {
         return new SumOperator(...$expression);
     }
@@ -1910,7 +1918,7 @@ trait FactoryTrait
      * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression and breaks out of the control flow.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
-     * @param BSONArray|PackedArray|array $branches An array of control branch documents. Each branch is a document with the following fields:
+     * @param BSONArray|PackedArray|array|string $branches An array of control branch documents. Each branch is a document with the following fields:
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
@@ -1918,7 +1926,7 @@ trait FactoryTrait
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
     public static function switch(
-        PackedArray|BSONArray|array $branches,
+        PackedArray|BSONArray|array|string $branches,
         Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
     ): SwitchOperator {
         return new SwitchOperator($branches, $default);
@@ -1928,10 +1936,10 @@ trait FactoryTrait
      * Returns the tangent of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $tan takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $tan takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
      * By default $tan returns values as a double. $tan can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function tan(Decimal128|Int64|ResolvesToNumber|float|int $expression): TanOperator
+    public static function tan(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): TanOperator
     {
         return new TanOperator($expression);
     }
@@ -1940,10 +1948,10 @@ trait FactoryTrait
      * Returns the hyperbolic tangent of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $tanh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $tanh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
      * By default $tanh returns values as a double. $tanh can also return values as a 128-bit decimal if the expression resolves to a 128-bit decimal value.
      */
-    public static function tanh(Decimal128|Int64|ResolvesToNumber|float|int $expression): TanhOperator
+    public static function tanh(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): TanhOperator
     {
         return new TanhOperator($expression);
     }
@@ -2107,13 +2115,13 @@ trait FactoryTrait
      * Truncates a number to a whole integer or to a specified decimal place.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
      * $trunc returns an error if the expression resolves to a non-numeric data type.
-     * @param Optional|ResolvesToInt|int $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive. e.g. -20 < place < 100. Defaults to 0.
+     * @param Optional|ResolvesToInt|int|string $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive. e.g. -20 < place < 100. Defaults to 0.
      */
     public static function trunc(
-        Decimal128|Int64|ResolvesToNumber|float|int $number,
-        Optional|ResolvesToInt|int $place = Optional::Undefined,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $number,
+        Optional|ResolvesToInt|int|string $place = Optional::Undefined,
     ): TruncOperator {
         return new TruncOperator($number, $place);
     }
@@ -2123,9 +2131,9 @@ trait FactoryTrait
      * New in MongoDB 5.1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/
-     * @param ResolvesToTimestamp|Timestamp|int $expression
+     * @param ResolvesToTimestamp|Timestamp|int|string $expression
      */
-    public static function tsIncrement(Timestamp|ResolvesToTimestamp|int $expression): TsIncrementOperator
+    public static function tsIncrement(Timestamp|ResolvesToTimestamp|int|string $expression): TsIncrementOperator
     {
         return new TsIncrementOperator($expression);
     }
@@ -2135,9 +2143,9 @@ trait FactoryTrait
      * New in MongoDB 5.1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/
-     * @param ResolvesToTimestamp|Timestamp|int $expression
+     * @param ResolvesToTimestamp|Timestamp|int|string $expression
      */
-    public static function tsSecond(Timestamp|ResolvesToTimestamp|int $expression): TsSecondOperator
+    public static function tsSecond(Timestamp|ResolvesToTimestamp|int|string $expression): TsSecondOperator
     {
         return new TsSecondOperator($expression);
     }
@@ -2160,11 +2168,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/
      * @param ResolvesToString|string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
-     * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
      */
     public static function unsetField(
         ResolvesToString|string $field,
-        Document|Serializable|ResolvesToObject|stdClass|array $input,
+        Document|Serializable|ResolvesToObject|stdClass|array|string $input,
     ): UnsetFieldOperator {
         return new UnsetFieldOperator($field, $input);
     }
@@ -2173,11 +2181,11 @@ trait FactoryTrait
      * Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the year) and 53 (leap year).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function week(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): WeekOperator {
         return new WeekOperator($date, $timezone);
@@ -2187,11 +2195,11 @@ trait FactoryTrait
      * Returns the year for a date as a number (e.g. 2014).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function year(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): YearOperator {
         return new YearOperator($date, $timezone);
@@ -2201,19 +2209,19 @@ trait FactoryTrait
      * Merge two arrays together.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $inputs An array of expressions that resolve to arrays. The elements of these input arrays combine to form the arrays of the output array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $inputs An array of expressions that resolve to arrays. The elements of these input arrays combine to form the arrays of the output array.
      * If any of the inputs arrays resolves to a value of null or refers to a missing field, $zip returns null.
      * If any of the inputs arrays does not resolve to an array or null nor refers to a missing field, $zip returns an error.
-     * @param Optional|bool $useLongestLength A boolean which specifies whether the length of the longest array determines the number of arrays in the output array.
+     * @param Optional|bool|string $useLongestLength A boolean which specifies whether the length of the longest array determines the number of arrays in the output array.
      * The default value is false: the shortest array length determines the number of arrays in the output array.
-     * @param Optional|BSONArray|PackedArray|array $defaults An array of default element values to use if the input arrays have different lengths. You must specify useLongestLength: true along with this field, or else $zip will return an error.
+     * @param Optional|BSONArray|PackedArray|array|string $defaults An array of default element values to use if the input arrays have different lengths. You must specify useLongestLength: true along with this field, or else $zip will return an error.
      * If useLongestLength: true but defaults is empty or not specified, $zip uses null as the default value.
      * If specifying a non-empty defaults, you must specify a default for each input array or else $zip will return an error.
      */
     public static function zip(
-        PackedArray|ResolvesToArray|BSONArray|array $inputs,
-        Optional|bool $useLongestLength = Optional::Undefined,
-        Optional|PackedArray|BSONArray|array $defaults = Optional::Undefined,
+        PackedArray|ResolvesToArray|BSONArray|array|string $inputs,
+        Optional|bool|string $useLongestLength = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array|string $defaults = Optional::Undefined,
     ): ZipOperator {
         return new ZipOperator($inputs, $useLongestLength, $defaults);
     }

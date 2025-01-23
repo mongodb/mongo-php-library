@@ -27,22 +27,22 @@ final class RoundOperator implements ResolvesToInt, ResolvesToDouble, ResolvesTo
     public const PROPERTIES = ['number' => 'number', 'place' => 'place'];
 
     /**
-     * @var Decimal128|Int64|ResolvesToNumber|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
+     * @var Decimal128|Int64|ResolvesToNumber|float|int|string $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
      * $round returns an error if the expression resolves to a non-numeric data type.
      */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $number;
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $number;
 
-    /** @var Optional|ResolvesToInt|int $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive. */
-    public readonly Optional|ResolvesToInt|int $place;
+    /** @var Optional|ResolvesToInt|int|string $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive. */
+    public readonly Optional|ResolvesToInt|int|string $place;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
      * $round returns an error if the expression resolves to a non-numeric data type.
-     * @param Optional|ResolvesToInt|int $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive.
+     * @param Optional|ResolvesToInt|int|string $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive.
      */
     public function __construct(
-        Decimal128|Int64|ResolvesToNumber|float|int $number,
-        Optional|ResolvesToInt|int $place = Optional::Undefined,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $number,
+        Optional|ResolvesToInt|int|string $place = Optional::Undefined,
     ) {
         $this->number = $number;
         $this->place = $place;

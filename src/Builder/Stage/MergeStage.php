@@ -49,8 +49,8 @@ final class MergeStage implements StageInterface, OperatorInterface
     /** @var Optional|BSONArray|PackedArray|array|string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection. */
     public readonly Optional|PackedArray|BSONArray|array|string $on;
 
-    /** @var Optional|Document|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline. */
-    public readonly Optional|Document|Serializable|stdClass|array $let;
+    /** @var Optional|Document|Serializable|array|stdClass|string $let Specifies variables for use in the whenMatched pipeline. */
+    public readonly Optional|Document|Serializable|stdClass|array|string $let;
 
     /** @var Optional|BSONArray|PackedArray|Pipeline|array|string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s). */
     public readonly Optional|PackedArray|Pipeline|BSONArray|array|string $whenMatched;
@@ -61,14 +61,14 @@ final class MergeStage implements StageInterface, OperatorInterface
     /**
      * @param Document|Serializable|array|stdClass|string $into The output collection.
      * @param Optional|BSONArray|PackedArray|array|string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
-     * @param Optional|Document|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
+     * @param Optional|Document|Serializable|array|stdClass|string $let Specifies variables for use in the whenMatched pipeline.
      * @param Optional|BSONArray|PackedArray|Pipeline|array|string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
      * @param Optional|string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.
      */
     public function __construct(
         Document|Serializable|stdClass|array|string $into,
         Optional|PackedArray|BSONArray|array|string $on = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array $let = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $let = Optional::Undefined,
         Optional|PackedArray|Pipeline|BSONArray|array|string $whenMatched = Optional::Undefined,
         Optional|string $whenNotMatched = Optional::Undefined,
     ) {

@@ -29,19 +29,19 @@ final class SetDifferenceOperator implements ResolvesToArray, OperatorInterface
     public const NAME = '$setDifference';
     public const PROPERTIES = ['expression1' => 'expression1', 'expression2' => 'expression2'];
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $expression1 The arguments can be any valid expression as long as they each resolve to an array. */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $expression1;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array|string $expression1 The arguments can be any valid expression as long as they each resolve to an array. */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $expression1;
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $expression2 The arguments can be any valid expression as long as they each resolve to an array. */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $expression2;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array|string $expression2 The arguments can be any valid expression as long as they each resolve to an array. */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $expression2;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression1 The arguments can be any valid expression as long as they each resolve to an array.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression2 The arguments can be any valid expression as long as they each resolve to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression1 The arguments can be any valid expression as long as they each resolve to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression2 The arguments can be any valid expression as long as they each resolve to an array.
      */
     public function __construct(
-        PackedArray|ResolvesToArray|BSONArray|array $expression1,
-        PackedArray|ResolvesToArray|BSONArray|array $expression2,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression1,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression2,
     ) {
         if (is_array($expression1) && ! array_is_list($expression1)) {
             throw new InvalidArgumentException('Expected $expression1 argument to be a list, got an associative array.');

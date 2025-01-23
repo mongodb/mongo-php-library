@@ -32,18 +32,18 @@ final class MoreLikeThisOperator implements SearchOperatorInterface, OperatorInt
     public const NAME = 'moreLikeThis';
     public const PROPERTIES = ['like' => 'like', 'score' => 'score'];
 
-    /** @var BSONArray|Document|PackedArray|Serializable|array|stdClass $like */
-    public readonly Document|PackedArray|Serializable|BSONArray|stdClass|array $like;
+    /** @var BSONArray|Document|PackedArray|Serializable|array|stdClass|string $like */
+    public readonly Document|PackedArray|Serializable|BSONArray|stdClass|array|string $like;
 
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
 
     /**
-     * @param BSONArray|Document|PackedArray|Serializable|array|stdClass $like
+     * @param BSONArray|Document|PackedArray|Serializable|array|stdClass|string $like
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
-        Document|PackedArray|Serializable|BSONArray|stdClass|array $like,
+        Document|PackedArray|Serializable|BSONArray|stdClass|array|string $like,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {
         $this->like = $like;

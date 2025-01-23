@@ -32,13 +32,13 @@ final class ShiftAccumulator implements WindowInterface, OperatorInterface
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output;
 
     /**
-     * @var int $by Specifies an integer with a numeric document position relative to the current document in the output.
+     * @var int|string $by Specifies an integer with a numeric document position relative to the current document in the output.
      * For example:
      * 1 specifies the document position after the current document.
      * -1 specifies the document position before the current document.
      * -2 specifies the document position that is two positions before the current document.
      */
-    public readonly int $by;
+    public readonly int|string $by;
 
     /**
      * @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
@@ -49,7 +49,7 @@ final class ShiftAccumulator implements WindowInterface, OperatorInterface
 
     /**
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Specifies an expression to evaluate and return in the output.
-     * @param int $by Specifies an integer with a numeric document position relative to the current document in the output.
+     * @param int|string $by Specifies an integer with a numeric document position relative to the current document in the output.
      * For example:
      * 1 specifies the document position after the current document.
      * -1 specifies the document position before the current document.
@@ -60,7 +60,7 @@ final class ShiftAccumulator implements WindowInterface, OperatorInterface
      */
     public function __construct(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
-        int $by,
+        int|string $by,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default,
     ) {
         $this->output = $output;

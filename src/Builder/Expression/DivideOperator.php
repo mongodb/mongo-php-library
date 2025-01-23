@@ -25,19 +25,19 @@ final class DivideOperator implements ResolvesToDouble, OperatorInterface
     public const NAME = '$divide';
     public const PROPERTIES = ['dividend' => 'dividend', 'divisor' => 'divisor'];
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument. */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $dividend;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument. */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $dividend;
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $divisor */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $divisor;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $divisor */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $divisor;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument.
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $divisor
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $divisor
      */
     public function __construct(
-        Decimal128|Int64|ResolvesToNumber|float|int $dividend,
-        Decimal128|Int64|ResolvesToNumber|float|int $divisor,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $dividend,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $divisor,
     ) {
         $this->dividend = $dividend;
         $this->divisor = $divisor;

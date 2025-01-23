@@ -29,14 +29,14 @@ final class StdDevSampOperator implements ResolvesToDouble, OperatorInterface
     public const NAME = '$stdDevSamp';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var list<Decimal128|Int64|ResolvesToNumber|float|int> $expression */
+    /** @var list<Decimal128|Int64|ResolvesToNumber|float|int|string> $expression */
     public readonly array $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression
      * @no-named-arguments
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int ...$expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression)
     {
         if (\count($expression) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));

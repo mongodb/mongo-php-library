@@ -34,21 +34,21 @@ final class NearSphereOperator implements FieldQueryInterface, OperatorInterface
     /** @var Document|GeometryInterface|Serializable|array|stdClass $geometry */
     public readonly Document|Serializable|GeometryInterface|stdClass|array $geometry;
 
-    /** @var Optional|Decimal128|Int64|float|int $maxDistance Distance in meters. */
-    public readonly Optional|Decimal128|Int64|float|int $maxDistance;
+    /** @var Optional|Decimal128|Int64|float|int|string $maxDistance Distance in meters. */
+    public readonly Optional|Decimal128|Int64|float|int|string $maxDistance;
 
-    /** @var Optional|Decimal128|Int64|float|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point. */
-    public readonly Optional|Decimal128|Int64|float|int $minDistance;
+    /** @var Optional|Decimal128|Int64|float|int|string $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point. */
+    public readonly Optional|Decimal128|Int64|float|int|string $minDistance;
 
     /**
      * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
-     * @param Optional|Decimal128|Int64|float|int $maxDistance Distance in meters.
-     * @param Optional|Decimal128|Int64|float|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int|string $maxDistance Distance in meters.
+     * @param Optional|Decimal128|Int64|float|int|string $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public function __construct(
         Document|Serializable|GeometryInterface|stdClass|array $geometry,
-        Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
-        Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int|string $maxDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int|string $minDistance = Optional::Undefined,
     ) {
         $this->geometry = $geometry;
         $this->maxDistance = $maxDistance;

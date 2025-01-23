@@ -25,13 +25,13 @@ final class TsIncrementOperator implements ResolvesToLong, OperatorInterface
     public const NAME = '$tsIncrement';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var ResolvesToTimestamp|Timestamp|int $expression */
-    public readonly Timestamp|ResolvesToTimestamp|int $expression;
+    /** @var ResolvesToTimestamp|Timestamp|int|string $expression */
+    public readonly Timestamp|ResolvesToTimestamp|int|string $expression;
 
     /**
-     * @param ResolvesToTimestamp|Timestamp|int $expression
+     * @param ResolvesToTimestamp|Timestamp|int|string $expression
      */
-    public function __construct(Timestamp|ResolvesToTimestamp|int $expression)
+    public function __construct(Timestamp|ResolvesToTimestamp|int|string $expression)
     {
         $this->expression = $expression;
     }

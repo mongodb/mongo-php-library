@@ -34,29 +34,29 @@ final class CollStatsStage implements StageInterface, OperatorInterface
         'queryExecStats' => 'queryExecStats',
     ];
 
-    /** @var Optional|Document|Serializable|array|stdClass $latencyStats */
-    public readonly Optional|Document|Serializable|stdClass|array $latencyStats;
+    /** @var Optional|Document|Serializable|array|stdClass|string $latencyStats */
+    public readonly Optional|Document|Serializable|stdClass|array|string $latencyStats;
 
-    /** @var Optional|Document|Serializable|array|stdClass $storageStats */
-    public readonly Optional|Document|Serializable|stdClass|array $storageStats;
+    /** @var Optional|Document|Serializable|array|stdClass|string $storageStats */
+    public readonly Optional|Document|Serializable|stdClass|array|string $storageStats;
 
-    /** @var Optional|Document|Serializable|array|stdClass $count */
-    public readonly Optional|Document|Serializable|stdClass|array $count;
+    /** @var Optional|Document|Serializable|array|stdClass|string $count */
+    public readonly Optional|Document|Serializable|stdClass|array|string $count;
 
-    /** @var Optional|Document|Serializable|array|stdClass $queryExecStats */
-    public readonly Optional|Document|Serializable|stdClass|array $queryExecStats;
+    /** @var Optional|Document|Serializable|array|stdClass|string $queryExecStats */
+    public readonly Optional|Document|Serializable|stdClass|array|string $queryExecStats;
 
     /**
-     * @param Optional|Document|Serializable|array|stdClass $latencyStats
-     * @param Optional|Document|Serializable|array|stdClass $storageStats
-     * @param Optional|Document|Serializable|array|stdClass $count
-     * @param Optional|Document|Serializable|array|stdClass $queryExecStats
+     * @param Optional|Document|Serializable|array|stdClass|string $latencyStats
+     * @param Optional|Document|Serializable|array|stdClass|string $storageStats
+     * @param Optional|Document|Serializable|array|stdClass|string $count
+     * @param Optional|Document|Serializable|array|stdClass|string $queryExecStats
      */
     public function __construct(
-        Optional|Document|Serializable|stdClass|array $latencyStats = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array $storageStats = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array $count = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array $queryExecStats = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $latencyStats = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $storageStats = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $count = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $queryExecStats = Optional::Undefined,
     ) {
         $this->latencyStats = $latencyStats;
         $this->storageStats = $storageStats;

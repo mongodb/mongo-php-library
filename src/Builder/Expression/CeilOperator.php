@@ -25,13 +25,13 @@ final class CeilOperator implements ResolvesToInt, OperatorInterface
     public const NAME = '$ceil';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $expression If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN. */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $expression;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $expression If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN. */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN.
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $expression)
     {
         $this->expression = $expression;
     }

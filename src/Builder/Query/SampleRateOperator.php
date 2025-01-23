@@ -27,16 +27,16 @@ final class SampleRateOperator implements QueryInterface, OperatorInterface
     public const PROPERTIES = ['rate' => 'rate'];
 
     /**
-     * @var Int64|ResolvesToDouble|float|int $rate The selection process uses a uniform random distribution. The sample rate is a floating point number between 0 and 1, inclusive, which represents the probability that a given document will be selected as it passes through the pipeline.
+     * @var Int64|ResolvesToDouble|float|int|string $rate The selection process uses a uniform random distribution. The sample rate is a floating point number between 0 and 1, inclusive, which represents the probability that a given document will be selected as it passes through the pipeline.
      * For example, a sample rate of 0.33 selects roughly one document in three.
      */
-    public readonly Int64|ResolvesToDouble|float|int $rate;
+    public readonly Int64|ResolvesToDouble|float|int|string $rate;
 
     /**
-     * @param Int64|ResolvesToDouble|float|int $rate The selection process uses a uniform random distribution. The sample rate is a floating point number between 0 and 1, inclusive, which represents the probability that a given document will be selected as it passes through the pipeline.
+     * @param Int64|ResolvesToDouble|float|int|string $rate The selection process uses a uniform random distribution. The sample rate is a floating point number between 0 and 1, inclusive, which represents the probability that a given document will be selected as it passes through the pipeline.
      * For example, a sample rate of 0.33 selects roughly one document in three.
      */
-    public function __construct(Int64|ResolvesToDouble|float|int $rate)
+    public function __construct(Int64|ResolvesToDouble|float|int|string $rate)
     {
         $this->rate = $rate;
     }

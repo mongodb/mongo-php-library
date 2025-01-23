@@ -26,18 +26,18 @@ final class AsinhOperator implements ResolvesToDouble, ResolvesToDecimal, Operat
     public const PROPERTIES = ['expression' => 'expression'];
 
     /**
-     * @var Decimal128|Int64|ResolvesToNumber|float|int $expression $asinh takes any valid expression that resolves to a number.
+     * @var Decimal128|Int64|ResolvesToNumber|float|int|string $expression $asinh takes any valid expression that resolves to a number.
      * $asinh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $asinh returns values as a double. $asinh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $expression;
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $asinh takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $asinh takes any valid expression that resolves to a number.
      * $asinh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $asinh returns values as a double. $asinh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $expression)
     {
         $this->expression = $expression;
     }

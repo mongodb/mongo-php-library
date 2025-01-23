@@ -33,8 +33,8 @@ final class TopNAccumulator implements AccumulatorInterface, OperatorInterface
     public const NAME = '$topN';
     public const PROPERTIES = ['n' => 'n', 'sortBy' => 'sortBy', 'output' => 'output'];
 
-    /** @var ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group. */
-    public readonly ResolvesToInt|int $n;
+    /** @var ResolvesToInt|int|string $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group. */
+    public readonly ResolvesToInt|int|string $n;
 
     /** @var Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort. */
     public readonly Document|Serializable|stdClass|array $sortBy;
@@ -43,12 +43,12 @@ final class TopNAccumulator implements AccumulatorInterface, OperatorInterface
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output;
 
     /**
-     * @param ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
+     * @param ResolvesToInt|int|string $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public function __construct(
-        ResolvesToInt|int $n,
+        ResolvesToInt|int|string $n,
         Document|Serializable|stdClass|array $sortBy,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
     ) {

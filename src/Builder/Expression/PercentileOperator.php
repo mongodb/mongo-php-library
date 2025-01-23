@@ -39,27 +39,27 @@ final class PercentileOperator implements ResolvesToArray, OperatorInterface
     public const NAME = '$percentile';
     public const PROPERTIES = ['input' => 'input', 'p' => 'p', 'method' => 'method'];
 
-    /** @var BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it. */
-    public readonly Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input;
+    /** @var BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int|string $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it. */
+    public readonly Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int|string $input;
 
     /**
-     * @var BSONArray|PackedArray|ResolvesToArray|array $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
+     * @var BSONArray|PackedArray|ResolvesToArray|array|string $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
      */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $p;
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $p;
 
     /** @var string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'. */
     public readonly string $method;
 
     /**
-     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
+     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int|string $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
      * @param string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
      */
     public function __construct(
-        Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int $input,
-        PackedArray|ResolvesToArray|BSONArray|array $p,
+        Decimal128|Int64|PackedArray|ResolvesToNumber|BSONArray|array|float|int|string $input,
+        PackedArray|ResolvesToArray|BSONArray|array|string $p,
         string $method,
     ) {
         if (is_array($input) && ! array_is_list($input)) {

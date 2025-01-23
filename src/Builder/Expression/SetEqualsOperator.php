@@ -28,14 +28,14 @@ final class SetEqualsOperator implements ResolvesToBool, OperatorInterface
     public const NAME = '$setEquals';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> $expression */
+    /** @var list<BSONArray|PackedArray|ResolvesToArray|array|string> $expression */
     public readonly array $expression;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string ...$expression
      * @no-named-arguments
      */
-    public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$expression)
+    public function __construct(PackedArray|ResolvesToArray|BSONArray|array|string ...$expression)
     {
         if (\count($expression) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));

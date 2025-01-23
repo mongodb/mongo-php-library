@@ -46,14 +46,14 @@ final class GeoNearStage implements StageInterface, OperatorInterface
         'spherical' => 'spherical',
     ];
 
-    /** @var Document|ResolvesToObject|Serializable|array|stdClass $near The point for which to find the closest documents. */
-    public readonly Document|Serializable|ResolvesToObject|stdClass|array $near;
+    /** @var Document|ResolvesToObject|Serializable|array|stdClass|string $near The point for which to find the closest documents. */
+    public readonly Document|Serializable|ResolvesToObject|stdClass|array|string $near;
 
     /** @var Optional|string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation. */
     public readonly Optional|string $distanceField;
 
-    /** @var Optional|Decimal128|Int64|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth. */
-    public readonly Optional|Decimal128|Int64|float|int $distanceMultiplier;
+    /** @var Optional|Decimal128|Int64|float|int|string $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth. */
+    public readonly Optional|Decimal128|Int64|float|int|string $distanceMultiplier;
 
     /** @var Optional|string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation. */
     public readonly Optional|string $includeLocs;
@@ -62,16 +62,16 @@ final class GeoNearStage implements StageInterface, OperatorInterface
     public readonly Optional|string $key;
 
     /**
-     * @var Optional|Decimal128|Int64|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
+     * @var Optional|Decimal128|Int64|float|int|string $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
      */
-    public readonly Optional|Decimal128|Int64|float|int $maxDistance;
+    public readonly Optional|Decimal128|Int64|float|int|string $maxDistance;
 
     /**
-     * @var Optional|Decimal128|Int64|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
+     * @var Optional|Decimal128|Int64|float|int|string $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
      */
-    public readonly Optional|Decimal128|Int64|float|int $minDistance;
+    public readonly Optional|Decimal128|Int64|float|int|string $minDistance;
 
     /**
      * @var Optional|QueryInterface|array $query Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
@@ -80,40 +80,40 @@ final class GeoNearStage implements StageInterface, OperatorInterface
     public readonly Optional|QueryInterface|array $query;
 
     /**
-     * @var Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
+     * @var Optional|bool|string $spherical Determines how MongoDB calculates the distance between two points:
      * - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
      * - When false, MongoDB uses $near semantics: spherical geometry for 2dsphere indexes and planar geometry for 2d indexes.
      * Default: false.
      */
-    public readonly Optional|bool $spherical;
+    public readonly Optional|bool|string $spherical;
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|stdClass $near The point for which to find the closest documents.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $near The point for which to find the closest documents.
      * @param Optional|string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
-     * @param Optional|Decimal128|Int64|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
+     * @param Optional|Decimal128|Int64|float|int|string $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
      * @param Optional|string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
      * @param Optional|string $key Specify the geospatial indexed field to use when calculating the distance.
-     * @param Optional|Decimal128|Int64|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int|string $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
-     * @param Optional|Decimal128|Int64|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int|string $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
      * @param Optional|QueryInterface|array $query Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
-     * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
+     * @param Optional|bool|string $spherical Determines how MongoDB calculates the distance between two points:
      * - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
      * - When false, MongoDB uses $near semantics: spherical geometry for 2dsphere indexes and planar geometry for 2d indexes.
      * Default: false.
      */
     public function __construct(
-        Document|Serializable|ResolvesToObject|stdClass|array $near,
+        Document|Serializable|ResolvesToObject|stdClass|array|string $near,
         Optional|string $distanceField = Optional::Undefined,
-        Optional|Decimal128|Int64|float|int $distanceMultiplier = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int|string $distanceMultiplier = Optional::Undefined,
         Optional|string $includeLocs = Optional::Undefined,
         Optional|string $key = Optional::Undefined,
-        Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
-        Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int|string $maxDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int|string $minDistance = Optional::Undefined,
         Optional|QueryInterface|array $query = Optional::Undefined,
-        Optional|bool $spherical = Optional::Undefined,
+        Optional|bool|string $spherical = Optional::Undefined,
     ) {
         $this->near = $near;
         $this->distanceField = $distanceField;

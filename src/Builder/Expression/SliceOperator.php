@@ -30,36 +30,36 @@ final class SliceOperator implements ResolvesToArray, OperatorInterface
     public const NAME = '$slice';
     public const PROPERTIES = ['expression' => 'expression', 'n' => 'n', 'position' => 'position'];
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $expression Any valid expression as long as it resolves to an array. */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $expression;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array|string $expression Any valid expression as long as it resolves to an array. */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $expression;
 
     /**
-     * @var ResolvesToInt|int $n Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
+     * @var ResolvesToInt|int|string $n Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
      * If positive, $slice returns up to the first n elements in the array. If the position is specified, $slice returns the first n elements starting from the position.
      * If negative, $slice returns up to the last n elements in the array. n cannot resolve to a negative number if <position> is specified.
      */
-    public readonly ResolvesToInt|int $n;
+    public readonly ResolvesToInt|int|string $n;
 
     /**
-     * @var Optional|ResolvesToInt|int $position Any valid expression as long as it resolves to an integer.
+     * @var Optional|ResolvesToInt|int|string $position Any valid expression as long as it resolves to an integer.
      * If positive, $slice determines the starting position from the start of the array. If position is greater than the number of elements, the $slice returns an empty array.
      * If negative, $slice determines the starting position from the end of the array. If the absolute value of the <position> is greater than the number of elements, the starting position is the start of the array.
      */
-    public readonly Optional|ResolvesToInt|int $position;
+    public readonly Optional|ResolvesToInt|int|string $position;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression Any valid expression as long as it resolves to an array.
-     * @param ResolvesToInt|int $n Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression Any valid expression as long as it resolves to an array.
+     * @param ResolvesToInt|int|string $n Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
      * If positive, $slice returns up to the first n elements in the array. If the position is specified, $slice returns the first n elements starting from the position.
      * If negative, $slice returns up to the last n elements in the array. n cannot resolve to a negative number if <position> is specified.
-     * @param Optional|ResolvesToInt|int $position Any valid expression as long as it resolves to an integer.
+     * @param Optional|ResolvesToInt|int|string $position Any valid expression as long as it resolves to an integer.
      * If positive, $slice determines the starting position from the start of the array. If position is greater than the number of elements, the $slice returns an empty array.
      * If negative, $slice determines the starting position from the end of the array. If the absolute value of the <position> is greater than the number of elements, the starting position is the start of the array.
      */
     public function __construct(
-        PackedArray|ResolvesToArray|BSONArray|array $expression,
-        ResolvesToInt|int $n,
-        Optional|ResolvesToInt|int $position = Optional::Undefined,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression,
+        ResolvesToInt|int|string $n,
+        Optional|ResolvesToInt|int|string $position = Optional::Undefined,
     ) {
         if (is_array($expression) && ! array_is_list($expression)) {
             throw new InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');

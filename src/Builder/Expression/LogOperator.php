@@ -25,19 +25,19 @@ final class LogOperator implements ResolvesToDouble, OperatorInterface
     public const NAME = '$log';
     public const PROPERTIES = ['number' => 'number', 'base' => 'base'];
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number. */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $number;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number. */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $number;
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $base Any valid expression as long as it resolves to a positive number greater than 1. */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $base;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $base Any valid expression as long as it resolves to a positive number greater than 1. */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $base;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number.
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $base Any valid expression as long as it resolves to a positive number greater than 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $base Any valid expression as long as it resolves to a positive number greater than 1.
      */
     public function __construct(
-        Decimal128|Int64|ResolvesToNumber|float|int $number,
-        Decimal128|Int64|ResolvesToNumber|float|int $base,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $number,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $base,
     ) {
         $this->number = $number;
         $this->base = $base;

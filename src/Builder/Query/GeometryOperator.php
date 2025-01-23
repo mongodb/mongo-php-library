@@ -37,21 +37,21 @@ final class GeometryOperator implements GeometryInterface, OperatorInterface
     /** @var string $type */
     public readonly string $type;
 
-    /** @var BSONArray|PackedArray|array $coordinates */
-    public readonly PackedArray|BSONArray|array $coordinates;
+    /** @var BSONArray|PackedArray|array|string $coordinates */
+    public readonly PackedArray|BSONArray|array|string $coordinates;
 
-    /** @var Optional|Document|Serializable|array|stdClass $crs */
-    public readonly Optional|Document|Serializable|stdClass|array $crs;
+    /** @var Optional|Document|Serializable|array|stdClass|string $crs */
+    public readonly Optional|Document|Serializable|stdClass|array|string $crs;
 
     /**
      * @param string $type
-     * @param BSONArray|PackedArray|array $coordinates
-     * @param Optional|Document|Serializable|array|stdClass $crs
+     * @param BSONArray|PackedArray|array|string $coordinates
+     * @param Optional|Document|Serializable|array|stdClass|string $crs
      */
     public function __construct(
         string $type,
-        PackedArray|BSONArray|array $coordinates,
-        Optional|Document|Serializable|stdClass|array $crs = Optional::Undefined,
+        PackedArray|BSONArray|array|string $coordinates,
+        Optional|Document|Serializable|stdClass|array|string $crs = Optional::Undefined,
     ) {
         $this->type = $type;
         if (is_array($coordinates) && ! array_is_list($coordinates)) {

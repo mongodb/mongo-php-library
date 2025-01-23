@@ -35,18 +35,20 @@ final class LastNAccumulator implements AccumulatorInterface, WindowInterface, O
     public const NAME = '$lastN';
     public const PROPERTIES = ['input' => 'input', 'n' => 'n'];
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements. */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $input;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return n elements. */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $input;
 
-    /** @var ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns. */
-    public readonly ResolvesToInt|int $n;
+    /** @var ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns. */
+    public readonly ResolvesToInt|int|string $n;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return n elements.
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
      */
-    public function __construct(PackedArray|ResolvesToArray|BSONArray|array $input, ResolvesToInt|int $n)
-    {
+    public function __construct(
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+        ResolvesToInt|int|string $n,
+    ) {
         if (is_array($input) && ! array_is_list($input)) {
             throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }

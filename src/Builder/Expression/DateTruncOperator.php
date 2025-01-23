@@ -37,8 +37,8 @@ final class DateTruncOperator implements ResolvesToDate, OperatorInterface
         'startOfWeek' => 'startOfWeek',
     ];
 
-    /** @var ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
-    public readonly ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date;
+    /** @var ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
+    public readonly ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date;
 
     /**
      * @var ResolvesToString|TimeUnit|string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
@@ -47,10 +47,10 @@ final class DateTruncOperator implements ResolvesToDate, OperatorInterface
     public readonly ResolvesToString|TimeUnit|string $unit;
 
     /**
-     * @var Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
+     * @var Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
      */
-    public readonly Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize;
+    public readonly Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $binSize;
 
     /** @var Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC. */
     public readonly Optional|ResolvesToString|string $timezone;
@@ -62,19 +62,19 @@ final class DateTruncOperator implements ResolvesToDate, OperatorInterface
     public readonly Optional|string $startOfWeek;
 
     /**
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ResolvesToString|TimeUnit|string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
-     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      * @param Optional|string $startOfWeek The start of the week. Used when
      * unit is week. Defaults to Sunday.
      */
     public function __construct(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         ResolvesToString|TimeUnit|string $unit,
-        Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $binSize = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
         Optional|string $startOfWeek = Optional::Undefined,
     ) {

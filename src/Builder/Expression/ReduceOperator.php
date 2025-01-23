@@ -33,11 +33,11 @@ final class ReduceOperator implements ResolvesToAny, OperatorInterface
     public const PROPERTIES = ['input' => 'input', 'initialValue' => 'initialValue', 'in' => 'in'];
 
     /**
-     * @var BSONArray|PackedArray|ResolvesToArray|array $input Can be any valid expression that resolves to an array.
+     * @var BSONArray|PackedArray|ResolvesToArray|array|string $input Can be any valid expression that resolves to an array.
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
      */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $input;
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $input;
 
     /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $initialValue The initial cumulative value set before in is applied to the first element of the input array. */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $initialValue;
@@ -51,7 +51,7 @@ final class ReduceOperator implements ResolvesToAny, OperatorInterface
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input Can be any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input Can be any valid expression that resolves to an array.
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $initialValue The initial cumulative value set before in is applied to the first element of the input array.
@@ -61,7 +61,7 @@ final class ReduceOperator implements ResolvesToAny, OperatorInterface
      * - this is the variable that refers to the element being processed.
      */
     public function __construct(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $initialValue,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
     ) {

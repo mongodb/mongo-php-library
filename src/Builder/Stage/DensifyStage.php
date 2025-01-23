@@ -44,20 +44,20 @@ final class DensifyStage implements StageInterface, OperatorInterface
     /** @var Document|Serializable|array|stdClass $range Specification for range based densification. */
     public readonly Document|Serializable|stdClass|array $range;
 
-    /** @var Optional|BSONArray|PackedArray|array $partitionByFields The field(s) that will be used as the partition keys. */
-    public readonly Optional|PackedArray|BSONArray|array $partitionByFields;
+    /** @var Optional|BSONArray|PackedArray|array|string $partitionByFields The field(s) that will be used as the partition keys. */
+    public readonly Optional|PackedArray|BSONArray|array|string $partitionByFields;
 
     /**
      * @param string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
      * @param Document|Serializable|array|stdClass $range Specification for range based densification.
-     * @param Optional|BSONArray|PackedArray|array $partitionByFields The field(s) that will be used as the partition keys.
+     * @param Optional|BSONArray|PackedArray|array|string $partitionByFields The field(s) that will be used as the partition keys.
      */
     public function __construct(
         string $field,
         Document|Serializable|stdClass|array $range,
-        Optional|PackedArray|BSONArray|array $partitionByFields = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array|string $partitionByFields = Optional::Undefined,
     ) {
         $this->field = $field;
         $this->range = $range;

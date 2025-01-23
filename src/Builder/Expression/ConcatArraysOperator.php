@@ -28,14 +28,14 @@ final class ConcatArraysOperator implements ResolvesToArray, OperatorInterface
     public const NAME = '$concatArrays';
     public const PROPERTIES = ['array' => 'array'];
 
-    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> $array */
+    /** @var list<BSONArray|PackedArray|ResolvesToArray|array|string> $array */
     public readonly array $array;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array ...$array
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string ...$array
      * @no-named-arguments
      */
-    public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$array)
+    public function __construct(PackedArray|ResolvesToArray|BSONArray|array|string ...$array)
     {
         if (\count($array) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $array, got %d.', 1, \count($array)));

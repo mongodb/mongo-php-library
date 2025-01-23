@@ -29,13 +29,13 @@ final class ReplaceWithStage implements StageInterface, OperatorInterface
     public const NAME = '$replaceWith';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var Document|ResolvesToObject|Serializable|array|stdClass $expression */
-    public readonly Document|Serializable|ResolvesToObject|stdClass|array $expression;
+    /** @var Document|ResolvesToObject|Serializable|array|stdClass|string $expression */
+    public readonly Document|Serializable|ResolvesToObject|stdClass|array|string $expression;
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|stdClass $expression
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $expression
      */
-    public function __construct(Document|Serializable|ResolvesToObject|stdClass|array $expression)
+    public function __construct(Document|Serializable|ResolvesToObject|stdClass|array|string $expression)
     {
         $this->expression = $expression;
     }

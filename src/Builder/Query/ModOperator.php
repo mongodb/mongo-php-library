@@ -26,18 +26,20 @@ final class ModOperator implements FieldQueryInterface, OperatorInterface
     public const NAME = '$mod';
     public const PROPERTIES = ['divisor' => 'divisor', 'remainder' => 'remainder'];
 
-    /** @var Decimal128|Int64|float|int $divisor */
-    public readonly Decimal128|Int64|float|int $divisor;
+    /** @var Decimal128|Int64|float|int|string $divisor */
+    public readonly Decimal128|Int64|float|int|string $divisor;
 
-    /** @var Decimal128|Int64|float|int $remainder */
-    public readonly Decimal128|Int64|float|int $remainder;
+    /** @var Decimal128|Int64|float|int|string $remainder */
+    public readonly Decimal128|Int64|float|int|string $remainder;
 
     /**
-     * @param Decimal128|Int64|float|int $divisor
-     * @param Decimal128|Int64|float|int $remainder
+     * @param Decimal128|Int64|float|int|string $divisor
+     * @param Decimal128|Int64|float|int|string $remainder
      */
-    public function __construct(Decimal128|Int64|float|int $divisor, Decimal128|Int64|float|int $remainder)
-    {
+    public function __construct(
+        Decimal128|Int64|float|int|string $divisor,
+        Decimal128|Int64|float|int|string $remainder,
+    ) {
         $this->divisor = $divisor;
         $this->remainder = $remainder;
     }

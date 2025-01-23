@@ -25,13 +25,13 @@ final class FloorOperator implements ResolvesToInt, OperatorInterface
     public const NAME = '$floor';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $expression */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $expression;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $expression */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $expression)
     {
         $this->expression = $expression;
     }

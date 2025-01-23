@@ -40,19 +40,19 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
      * @param Javascript|string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
      * @param Javascript|string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
      * @param Javascript|string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
      * @param string $lang The language used in the $accumulator code.
-     * @param Optional|BSONArray|PackedArray|ResolvesToArray|array $initArgs Arguments passed to the init function.
+     * @param Optional|BSONArray|PackedArray|ResolvesToArray|array|string $initArgs Arguments passed to the init function.
      * @param Optional|Javascript|string $finalize Function used to update the result of the accumulation.
      */
     public static function accumulator(
         Javascript|string $init,
         Javascript|string $accumulate,
-        PackedArray|ResolvesToArray|BSONArray|array $accumulateArgs,
+        PackedArray|ResolvesToArray|BSONArray|array|string $accumulateArgs,
         Javascript|string $merge,
         string $lang,
-        Optional|PackedArray|ResolvesToArray|BSONArray|array $initArgs = Optional::Undefined,
+        Optional|PackedArray|ResolvesToArray|BSONArray|array|string $initArgs = Optional::Undefined,
         Optional|Javascript|string $finalize = Optional::Undefined,
     ): AccumulatorAccumulator {
         return new AccumulatorAccumulator($init, $accumulate, $accumulateArgs, $merge, $lang, $initArgs, $finalize);
@@ -76,9 +76,9 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
      */
-    public static function avg(Decimal128|Int64|ResolvesToNumber|float|int $expression): AvgAccumulator
+    public static function avg(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): AvgAccumulator
     {
         return new AvgAccumulator($expression);
     }
@@ -104,12 +104,12 @@ trait FactoryTrait
      * Available in the $group and $setWindowFields stages.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/
-     * @param ResolvesToInt|int $n Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
+     * @param ResolvesToInt|int|string $n Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public static function bottomN(
-        ResolvesToInt|int $n,
+        ResolvesToInt|int|string $n,
         Document|Serializable|stdClass|array $sortBy,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
     ): BottomNAccumulator {
@@ -133,12 +133,12 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression1
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression2
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression1
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression2
      */
     public static function covariancePop(
-        Decimal128|Int64|ResolvesToNumber|float|int $expression1,
-        Decimal128|Int64|ResolvesToNumber|float|int $expression2,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression1,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression2,
     ): CovariancePopAccumulator {
         return new CovariancePopAccumulator($expression1, $expression2);
     }
@@ -148,12 +148,12 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression1
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression2
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression1
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression2
      */
     public static function covarianceSamp(
-        Decimal128|Int64|ResolvesToNumber|float|int $expression1,
-        Decimal128|Int64|ResolvesToNumber|float|int $expression2,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression1,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression2,
     ): CovarianceSampAccumulator {
         return new CovarianceSampAccumulator($expression1, $expression2);
     }
@@ -174,12 +174,12 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $input
      * @param Optional|ResolvesToString|TimeUnit|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public static function derivative(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $input,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $input,
         Optional|ResolvesToString|TimeUnit|string $unit = Optional::Undefined,
     ): DerivativeAccumulator {
         return new DerivativeAccumulator($input, $unit);
@@ -201,17 +201,17 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $input
-     * @param Optional|int $N An integer that specifies the number of historical documents that have a significant mathematical weight in the exponential moving average calculation, with the most recent documents contributing the most weight.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $input
+     * @param Optional|int|string $N An integer that specifies the number of historical documents that have a significant mathematical weight in the exponential moving average calculation, with the most recent documents contributing the most weight.
      * You must specify either N or alpha. You cannot specify both.
      * The N value is used in this formula to calculate the current result based on the expression value from the current document being read and the previous result of the calculation:
-     * @param Optional|Int64|float|int $alpha A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher alpha value assigns a lower mathematical significance to previous results from the calculation.
+     * @param Optional|Int64|float|int|string $alpha A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher alpha value assigns a lower mathematical significance to previous results from the calculation.
      * You must specify either N or alpha. You cannot specify both.
      */
     public static function expMovingAvg(
-        Decimal128|Int64|ResolvesToNumber|float|int $input,
-        Optional|int $N = Optional::Undefined,
-        Optional|Int64|float|int $alpha = Optional::Undefined,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $input,
+        Optional|int|string $N = Optional::Undefined,
+        Optional|Int64|float|int|string $alpha = Optional::Undefined,
     ): ExpMovingAvgAccumulator {
         return new ExpMovingAvgAccumulator($input, $N, $alpha);
     }
@@ -236,11 +236,11 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements.
-     * @param ResolvesToInt|int $n A positive integral expression that is either a constant or depends on the _id value for $group.
+     * @param ResolvesToInt|int|string $n A positive integral expression that is either a constant or depends on the _id value for $group.
      */
     public static function firstN(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
-        ResolvesToInt|int $n,
+        ResolvesToInt|int|string $n,
     ): FirstNAccumulator {
         return new FirstNAccumulator($input, $n);
     }
@@ -250,12 +250,12 @@ trait FactoryTrait
      * New in MongoDB 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $input
      * @param Optional|ResolvesToString|TimeUnit|string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public static function integral(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $input,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $input,
         Optional|ResolvesToString|TimeUnit|string $unit = Optional::Undefined,
     ): IntegralAccumulator {
         return new IntegralAccumulator($input, $unit);
@@ -280,12 +280,12 @@ trait FactoryTrait
      * If the group contains fewer than n elements, $lastN returns all elements in the group.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return n elements.
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
      */
     public static function lastN(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        ResolvesToInt|int $n,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+        ResolvesToInt|int|string $n,
     ): LastNAccumulator {
         return new LastNAccumulator($input, $n);
     }
@@ -296,10 +296,11 @@ trait FactoryTrait
      * New in MongoDB 5.3.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
      */
-    public static function linearFill(Decimal128|Int64|ResolvesToNumber|float|int $expression): LinearFillAccumulator
-    {
+    public static function linearFill(
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression,
+    ): LinearFillAccumulator {
         return new LinearFillAccumulator($expression);
     }
 
@@ -334,12 +335,12 @@ trait FactoryTrait
      * Returns the n largest values in an array. Distinct from the $maxN accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return the maximal n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the maximal n elements.
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
      */
     public static function maxN(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        ResolvesToInt|int $n,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+        ResolvesToInt|int|string $n,
     ): MaxNAccumulator {
         return new MaxNAccumulator($input, $n);
     }
@@ -353,11 +354,11 @@ trait FactoryTrait
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
      * @param string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
      */
     public static function median(
-        Decimal128|Int64|ResolvesToNumber|float|int $input,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $input,
         string $method,
     ): MedianAccumulator {
         return new MedianAccumulator($input, $method);
@@ -367,10 +368,10 @@ trait FactoryTrait
      * Combines multiple documents into a single document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/
-     * @param Document|ResolvesToObject|Serializable|array|stdClass $document Any valid expression that resolves to a document.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $document Any valid expression that resolves to a document.
      */
     public static function mergeObjects(
-        Document|Serializable|ResolvesToObject|stdClass|array $document,
+        Document|Serializable|ResolvesToObject|stdClass|array|string $document,
     ): MergeObjectsAccumulator {
         return new MergeObjectsAccumulator($document);
     }
@@ -392,12 +393,12 @@ trait FactoryTrait
      * Returns the n smallest values in an array. Distinct from the $minN accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return the maximal n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the maximal n elements.
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
      */
     public static function minN(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        ResolvesToInt|int $n,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+        ResolvesToInt|int|string $n,
     ): MinNAccumulator {
         return new MinNAccumulator($input, $n);
     }
@@ -414,14 +415,14 @@ trait FactoryTrait
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
      * @param string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
      */
     public static function percentile(
-        Decimal128|Int64|ResolvesToNumber|float|int $input,
-        PackedArray|ResolvesToArray|BSONArray|array $p,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $input,
+        PackedArray|ResolvesToArray|BSONArray|array|string $p,
         string $method,
     ): PercentileAccumulator {
         return new PercentileAccumulator($input, $p, $method);
@@ -457,7 +458,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Specifies an expression to evaluate and return in the output.
-     * @param int $by Specifies an integer with a numeric document position relative to the current document in the output.
+     * @param int|string $by Specifies an integer with a numeric document position relative to the current document in the output.
      * For example:
      * 1 specifies the document position after the current document.
      * -1 specifies the document position before the current document.
@@ -468,7 +469,7 @@ trait FactoryTrait
      */
     public static function shift(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
-        int $by,
+        int|string $by,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default,
     ): ShiftAccumulator {
         return new ShiftAccumulator($output, $by, $default);
@@ -480,10 +481,11 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
      */
-    public static function stdDevPop(Decimal128|Int64|ResolvesToNumber|float|int $expression): StdDevPopAccumulator
-    {
+    public static function stdDevPop(
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression,
+    ): StdDevPopAccumulator {
         return new StdDevPopAccumulator($expression);
     }
 
@@ -493,10 +495,11 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
      */
-    public static function stdDevSamp(Decimal128|Int64|ResolvesToNumber|float|int $expression): StdDevSampAccumulator
-    {
+    public static function stdDevSamp(
+        Decimal128|Int64|ResolvesToNumber|float|int|string $expression,
+    ): StdDevSampAccumulator {
         return new StdDevSampAccumulator($expression);
     }
 
@@ -505,9 +508,9 @@ trait FactoryTrait
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
      */
-    public static function sum(Decimal128|Int64|ResolvesToNumber|float|int $expression): SumAccumulator
+    public static function sum(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): SumAccumulator
     {
         return new SumAccumulator($expression);
     }
@@ -536,12 +539,12 @@ trait FactoryTrait
      * Available in the $group and $setWindowFields stages.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/
-     * @param ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
+     * @param ResolvesToInt|int|string $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public static function topN(
-        ResolvesToInt|int $n,
+        ResolvesToInt|int|string $n,
         Document|Serializable|stdClass|array $sortBy,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
     ): TopNAccumulator {

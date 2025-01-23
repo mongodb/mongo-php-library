@@ -26,16 +26,16 @@ final class CoshOperator implements ResolvesToDouble, ResolvesToDecimal, Operato
     public const PROPERTIES = ['expression' => 'expression'];
 
     /**
-     * @var Decimal128|Int64|ResolvesToNumber|float|int $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+     * @var Decimal128|Int64|ResolvesToNumber|float|int|string $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
      * By default $cosh returns values as a double. $cosh can also return values as a 128-bit decimal if the <expression> resolves to a 128-bit decimal value.
      */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $expression;
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
      * By default $cosh returns values as a double. $cosh can also return values as a 128-bit decimal if the <expression> resolves to a 128-bit decimal value.
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $expression)
     {
         $this->expression = $expression;
     }

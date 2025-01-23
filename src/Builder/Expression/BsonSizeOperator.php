@@ -26,14 +26,15 @@ final class BsonSizeOperator implements ResolvesToInt, OperatorInterface
     public const NAME = '$bsonSize';
     public const PROPERTIES = ['object' => 'object'];
 
-    /** @var Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass $object */
-    public readonly Document|Serializable|ResolvesToNull|ResolvesToObject|stdClass|array|null $object;
+    /** @var Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass|string $object */
+    public readonly Document|Serializable|ResolvesToNull|ResolvesToObject|stdClass|array|null|string $object;
 
     /**
-     * @param Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass $object
+     * @param Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass|string $object
      */
-    public function __construct(Document|Serializable|ResolvesToNull|ResolvesToObject|stdClass|array|null $object)
-    {
+    public function __construct(
+        Document|Serializable|ResolvesToNull|ResolvesToObject|stdClass|array|null|string $object,
+    ) {
         $this->object = $object;
     }
 }

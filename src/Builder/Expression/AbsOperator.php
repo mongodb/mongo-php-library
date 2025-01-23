@@ -25,13 +25,13 @@ final class AbsOperator implements ResolvesToNumber, OperatorInterface
     public const NAME = '$abs';
     public const PROPERTIES = ['value' => 'value'];
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $value */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $value;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $value */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $value;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $value
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $value
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $value)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $value)
     {
         $this->value = $value;
     }

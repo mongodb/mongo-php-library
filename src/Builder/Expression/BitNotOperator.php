@@ -25,13 +25,13 @@ final class BitNotOperator implements ResolvesToInt, ResolvesToLong, OperatorInt
     public const NAME = '$bitNot';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var Int64|ResolvesToInt|ResolvesToLong|int $expression */
-    public readonly Int64|ResolvesToInt|ResolvesToLong|int $expression;
+    /** @var Int64|ResolvesToInt|ResolvesToLong|int|string $expression */
+    public readonly Int64|ResolvesToInt|ResolvesToLong|int|string $expression;
 
     /**
-     * @param Int64|ResolvesToInt|ResolvesToLong|int $expression
+     * @param Int64|ResolvesToInt|ResolvesToLong|int|string $expression
      */
-    public function __construct(Int64|ResolvesToInt|ResolvesToLong|int $expression)
+    public function __construct(Int64|ResolvesToInt|ResolvesToLong|int|string $expression)
     {
         $this->expression = $expression;
     }

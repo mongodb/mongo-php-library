@@ -38,23 +38,23 @@ final class UnwindStage implements StageInterface, OperatorInterface
     public readonly Optional|string $includeArrayIndex;
 
     /**
-     * @var Optional|bool $preserveNullAndEmptyArrays If true, if the path is null, missing, or an empty array, $unwind outputs the document.
+     * @var Optional|bool|string $preserveNullAndEmptyArrays If true, if the path is null, missing, or an empty array, $unwind outputs the document.
      * If false, if path is null, missing, or an empty array, $unwind does not output a document.
      * The default value is false.
      */
-    public readonly Optional|bool $preserveNullAndEmptyArrays;
+    public readonly Optional|bool|string $preserveNullAndEmptyArrays;
 
     /**
      * @param ArrayFieldPath|string $path Field path to an array field.
      * @param Optional|string $includeArrayIndex The name of a new field to hold the array index of the element. The name cannot start with a dollar sign $.
-     * @param Optional|bool $preserveNullAndEmptyArrays If true, if the path is null, missing, or an empty array, $unwind outputs the document.
+     * @param Optional|bool|string $preserveNullAndEmptyArrays If true, if the path is null, missing, or an empty array, $unwind outputs the document.
      * If false, if path is null, missing, or an empty array, $unwind does not output a document.
      * The default value is false.
      */
     public function __construct(
         ArrayFieldPath|string $path,
         Optional|string $includeArrayIndex = Optional::Undefined,
-        Optional|bool $preserveNullAndEmptyArrays = Optional::Undefined,
+        Optional|bool|string $preserveNullAndEmptyArrays = Optional::Undefined,
     ) {
         $this->path = $path;
         $this->includeArrayIndex = $includeArrayIndex;

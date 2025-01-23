@@ -28,13 +28,13 @@ final class MergeObjectsAccumulator implements AccumulatorInterface, OperatorInt
     public const NAME = '$mergeObjects';
     public const PROPERTIES = ['document' => 'document'];
 
-    /** @var Document|ResolvesToObject|Serializable|array|stdClass $document Any valid expression that resolves to a document. */
-    public readonly Document|Serializable|ResolvesToObject|stdClass|array $document;
+    /** @var Document|ResolvesToObject|Serializable|array|stdClass|string $document Any valid expression that resolves to a document. */
+    public readonly Document|Serializable|ResolvesToObject|stdClass|array|string $document;
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|stdClass $document Any valid expression that resolves to a document.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $document Any valid expression that resolves to a document.
      */
-    public function __construct(Document|Serializable|ResolvesToObject|stdClass|array $document)
+    public function __construct(Document|Serializable|ResolvesToObject|stdClass|array|string $document)
     {
         $this->document = $document;
     }

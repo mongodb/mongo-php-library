@@ -31,15 +31,15 @@ final class SumOperator implements ResolvesToNumber, OperatorInterface
     public const NAME = '$sum';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var list<BSONArray|Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|array|float|int> $expression */
+    /** @var list<BSONArray|Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|array|float|int|string> $expression */
     public readonly array $expression;
 
     /**
-     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|array|float|int ...$expression
+     * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|array|float|int|string ...$expression
      * @no-named-arguments
      */
     public function __construct(
-        Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|BSONArray|array|float|int ...$expression,
+        Decimal128|Int64|PackedArray|ResolvesToArray|ResolvesToNumber|BSONArray|array|float|int|string ...$expression,
     ) {
         if (\count($expression) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));

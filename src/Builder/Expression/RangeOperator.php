@@ -24,24 +24,24 @@ final class RangeOperator implements ResolvesToArray, OperatorInterface
     public const NAME = '$range';
     public const PROPERTIES = ['start' => 'start', 'end' => 'end', 'step' => 'step'];
 
-    /** @var ResolvesToInt|int $start An integer that specifies the start of the sequence. Can be any valid expression that resolves to an integer. */
-    public readonly ResolvesToInt|int $start;
+    /** @var ResolvesToInt|int|string $start An integer that specifies the start of the sequence. Can be any valid expression that resolves to an integer. */
+    public readonly ResolvesToInt|int|string $start;
 
-    /** @var ResolvesToInt|int $end An integer that specifies the exclusive upper limit of the sequence. Can be any valid expression that resolves to an integer. */
-    public readonly ResolvesToInt|int $end;
+    /** @var ResolvesToInt|int|string $end An integer that specifies the exclusive upper limit of the sequence. Can be any valid expression that resolves to an integer. */
+    public readonly ResolvesToInt|int|string $end;
 
-    /** @var Optional|ResolvesToInt|int $step An integer that specifies the increment value. Can be any valid expression that resolves to a non-zero integer. Defaults to 1. */
-    public readonly Optional|ResolvesToInt|int $step;
+    /** @var Optional|ResolvesToInt|int|string $step An integer that specifies the increment value. Can be any valid expression that resolves to a non-zero integer. Defaults to 1. */
+    public readonly Optional|ResolvesToInt|int|string $step;
 
     /**
-     * @param ResolvesToInt|int $start An integer that specifies the start of the sequence. Can be any valid expression that resolves to an integer.
-     * @param ResolvesToInt|int $end An integer that specifies the exclusive upper limit of the sequence. Can be any valid expression that resolves to an integer.
-     * @param Optional|ResolvesToInt|int $step An integer that specifies the increment value. Can be any valid expression that resolves to a non-zero integer. Defaults to 1.
+     * @param ResolvesToInt|int|string $start An integer that specifies the start of the sequence. Can be any valid expression that resolves to an integer.
+     * @param ResolvesToInt|int|string $end An integer that specifies the exclusive upper limit of the sequence. Can be any valid expression that resolves to an integer.
+     * @param Optional|ResolvesToInt|int|string $step An integer that specifies the increment value. Can be any valid expression that resolves to a non-zero integer. Defaults to 1.
      */
     public function __construct(
-        ResolvesToInt|int $start,
-        ResolvesToInt|int $end,
-        Optional|ResolvesToInt|int $step = Optional::Undefined,
+        ResolvesToInt|int|string $start,
+        ResolvesToInt|int|string $end,
+        Optional|ResolvesToInt|int|string $step = Optional::Undefined,
     ) {
         $this->start = $start;
         $this->end = $end;

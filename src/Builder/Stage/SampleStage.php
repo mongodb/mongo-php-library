@@ -24,13 +24,13 @@ final class SampleStage implements StageInterface, OperatorInterface
     public const NAME = '$sample';
     public const PROPERTIES = ['size' => 'size'];
 
-    /** @var int $size The number of documents to randomly select. */
-    public readonly int $size;
+    /** @var int|string $size The number of documents to randomly select. */
+    public readonly int|string $size;
 
     /**
-     * @param int $size The number of documents to randomly select.
+     * @param int|string $size The number of documents to randomly select.
      */
-    public function __construct(int $size)
+    public function __construct(int|string $size)
     {
         $this->size = $size;
     }

@@ -34,12 +34,12 @@ final class SwitchOperator implements ResolvesToAny, OperatorInterface
     public const PROPERTIES = ['branches' => 'branches', 'default' => 'default'];
 
     /**
-     * @var BSONArray|PackedArray|array $branches An array of control branch documents. Each branch is a document with the following fields:
+     * @var BSONArray|PackedArray|array|string $branches An array of control branch documents. Each branch is a document with the following fields:
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
      */
-    public readonly PackedArray|BSONArray|array $branches;
+    public readonly PackedArray|BSONArray|array|string $branches;
 
     /**
      * @var Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default The path to take if no branch case expression evaluates to true.
@@ -48,7 +48,7 @@ final class SwitchOperator implements ResolvesToAny, OperatorInterface
     public readonly Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default;
 
     /**
-     * @param BSONArray|PackedArray|array $branches An array of control branch documents. Each branch is a document with the following fields:
+     * @param BSONArray|PackedArray|array|string $branches An array of control branch documents. Each branch is a document with the following fields:
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
@@ -56,7 +56,7 @@ final class SwitchOperator implements ResolvesToAny, OperatorInterface
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
     public function __construct(
-        PackedArray|BSONArray|array $branches,
+        PackedArray|BSONArray|array|string $branches,
         Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
     ) {
         if (is_array($branches) && ! array_is_list($branches)) {

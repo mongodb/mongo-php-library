@@ -26,16 +26,16 @@ final class CosOperator implements ResolvesToDouble, ResolvesToDecimal, Operator
     public const PROPERTIES = ['expression' => 'expression'];
 
     /**
-     * @var Decimal128|Int64|ResolvesToNumber|float|int $expression $cos takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
+     * @var Decimal128|Int64|ResolvesToNumber|float|int|string $expression $cos takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
      * By default $cos returns values as a double. $cos can also return values as a 128-bit decimal as long as the <expression> resolves to a 128-bit decimal value.
      */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $expression;
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $cos takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $cos takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
      * By default $cos returns values as a double. $cos can also return values as a 128-bit decimal as long as the <expression> resolves to a 128-bit decimal value.
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $expression)
     {
         $this->expression = $expression;
     }

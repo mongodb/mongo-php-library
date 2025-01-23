@@ -26,19 +26,22 @@ final class SubstrBytesOperator implements ResolvesToString, OperatorInterface
     /** @var ResolvesToString|string $string */
     public readonly ResolvesToString|string $string;
 
-    /** @var ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "". */
-    public readonly ResolvesToInt|int $start;
+    /** @var ResolvesToInt|int|string $start If start is a negative number, $substr returns an empty string "". */
+    public readonly ResolvesToInt|int|string $start;
 
-    /** @var ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string. */
-    public readonly ResolvesToInt|int $length;
+    /** @var ResolvesToInt|int|string $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string. */
+    public readonly ResolvesToInt|int|string $length;
 
     /**
      * @param ResolvesToString|string $string
-     * @param ResolvesToInt|int $start If start is a negative number, $substr returns an empty string "".
-     * @param ResolvesToInt|int $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
+     * @param ResolvesToInt|int|string $start If start is a negative number, $substr returns an empty string "".
+     * @param ResolvesToInt|int|string $length If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.
      */
-    public function __construct(ResolvesToString|string $string, ResolvesToInt|int $start, ResolvesToInt|int $length)
-    {
+    public function __construct(
+        ResolvesToString|string $string,
+        ResolvesToInt|int|string $start,
+        ResolvesToInt|int|string $length,
+    ) {
         $this->string = $string;
         $this->start = $start;
         $this->length = $length;

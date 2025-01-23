@@ -25,19 +25,19 @@ final class PowOperator implements ResolvesToNumber, OperatorInterface
     public const NAME = '$pow';
     public const PROPERTIES = ['number' => 'number', 'exponent' => 'exponent'];
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $number */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $number;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $number */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $number;
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $exponent */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $exponent;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $exponent */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $exponent;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $exponent
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $exponent
      */
     public function __construct(
-        Decimal128|Int64|ResolvesToNumber|float|int $number,
-        Decimal128|Int64|ResolvesToNumber|float|int $exponent,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $number,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $exponent,
     ) {
         $this->number = $number;
         $this->exponent = $exponent;

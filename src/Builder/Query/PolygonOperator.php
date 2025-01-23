@@ -30,13 +30,13 @@ final class PolygonOperator implements GeometryInterface, OperatorInterface
     public const NAME = '$polygon';
     public const PROPERTIES = ['points' => 'points'];
 
-    /** @var BSONArray|PackedArray|array $points */
-    public readonly PackedArray|BSONArray|array $points;
+    /** @var BSONArray|PackedArray|array|string $points */
+    public readonly PackedArray|BSONArray|array|string $points;
 
     /**
-     * @param BSONArray|PackedArray|array $points
+     * @param BSONArray|PackedArray|array|string $points
      */
-    public function __construct(PackedArray|BSONArray|array $points)
+    public function __construct(PackedArray|BSONArray|array|string $points)
     {
         if (is_array($points) && ! array_is_list($points)) {
             throw new InvalidArgumentException('Expected $points argument to be a list, got an associative array.');

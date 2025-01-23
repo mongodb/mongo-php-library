@@ -41,11 +41,11 @@ final class GeoWithinOperator implements SearchOperatorInterface, OperatorInterf
     /** @var array|string $path */
     public readonly array|string $path;
 
-    /** @var Optional|Document|Serializable|array|stdClass $box */
-    public readonly Optional|Document|Serializable|stdClass|array $box;
+    /** @var Optional|Document|Serializable|array|stdClass|string $box */
+    public readonly Optional|Document|Serializable|stdClass|array|string $box;
 
-    /** @var Optional|Document|Serializable|array|stdClass $circle */
-    public readonly Optional|Document|Serializable|stdClass|array $circle;
+    /** @var Optional|Document|Serializable|array|stdClass|string $circle */
+    public readonly Optional|Document|Serializable|stdClass|array|string $circle;
 
     /** @var Optional|Document|GeometryInterface|Serializable|array|stdClass $geometry */
     public readonly Optional|Document|Serializable|GeometryInterface|stdClass|array $geometry;
@@ -55,15 +55,15 @@ final class GeoWithinOperator implements SearchOperatorInterface, OperatorInterf
 
     /**
      * @param array|string $path
-     * @param Optional|Document|Serializable|array|stdClass $box
-     * @param Optional|Document|Serializable|array|stdClass $circle
+     * @param Optional|Document|Serializable|array|stdClass|string $box
+     * @param Optional|Document|Serializable|array|stdClass|string $circle
      * @param Optional|Document|GeometryInterface|Serializable|array|stdClass $geometry
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
         array|string $path,
-        Optional|Document|Serializable|stdClass|array $box = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array $circle = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $box = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $circle = Optional::Undefined,
         Optional|Document|Serializable|GeometryInterface|stdClass|array $geometry = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {

@@ -29,19 +29,19 @@ final class SetIsSubsetOperator implements ResolvesToBool, OperatorInterface
     public const NAME = '$setIsSubset';
     public const PROPERTIES = ['expression1' => 'expression1', 'expression2' => 'expression2'];
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $expression1 */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $expression1;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array|string $expression1 */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $expression1;
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $expression2 */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $expression2;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array|string $expression2 */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $expression2;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression1
-     * @param BSONArray|PackedArray|ResolvesToArray|array $expression2
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression1
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression2
      */
     public function __construct(
-        PackedArray|ResolvesToArray|BSONArray|array $expression1,
-        PackedArray|ResolvesToArray|BSONArray|array $expression2,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression1,
+        PackedArray|ResolvesToArray|BSONArray|array|string $expression2,
     ) {
         if (is_array($expression1) && ! array_is_list($expression1)) {
             throw new InvalidArgumentException('Expected $expression1 argument to be a list, got an associative array.');

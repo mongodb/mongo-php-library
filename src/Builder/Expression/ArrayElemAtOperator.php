@@ -29,18 +29,20 @@ final class ArrayElemAtOperator implements ResolvesToAny, OperatorInterface
     public const NAME = '$arrayElemAt';
     public const PROPERTIES = ['array' => 'array', 'idx' => 'idx'];
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $array */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $array;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array|string $array */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $array;
 
-    /** @var ResolvesToInt|int $idx */
-    public readonly ResolvesToInt|int $idx;
+    /** @var ResolvesToInt|int|string $idx */
+    public readonly ResolvesToInt|int|string $idx;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array $array
-     * @param ResolvesToInt|int $idx
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $array
+     * @param ResolvesToInt|int|string $idx
      */
-    public function __construct(PackedArray|ResolvesToArray|BSONArray|array $array, ResolvesToInt|int $idx)
-    {
+    public function __construct(
+        PackedArray|ResolvesToArray|BSONArray|array|string $array,
+        ResolvesToInt|int|string $idx,
+    ) {
         if (is_array($array) && ! array_is_list($array)) {
             throw new InvalidArgumentException('Expected $array argument to be a list, got an associative array.');
         }

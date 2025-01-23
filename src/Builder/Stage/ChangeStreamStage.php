@@ -38,8 +38,8 @@ final class ChangeStreamStage implements StageInterface, OperatorInterface
         'startAtOperationTime' => 'startAtOperationTime',
     ];
 
-    /** @var Optional|bool $allChangesForCluster A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections. */
-    public readonly Optional|bool $allChangesForCluster;
+    /** @var Optional|bool|string $allChangesForCluster A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections. */
+    public readonly Optional|bool|string $allChangesForCluster;
 
     /** @var Optional|string $fullDocument Specifies whether change notifications include a copy of the full document when modified by update operations. */
     public readonly Optional|string $fullDocument;
@@ -47,39 +47,39 @@ final class ChangeStreamStage implements StageInterface, OperatorInterface
     /** @var Optional|string $fullDocumentBeforeChange Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available. */
     public readonly Optional|string $fullDocumentBeforeChange;
 
-    /** @var Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields. */
-    public readonly Optional|int $resumeAfter;
+    /** @var Optional|int|string $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields. */
+    public readonly Optional|int|string $resumeAfter;
 
     /**
-     * @var Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
+     * @var Optional|bool|string $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      * New in MongoDB 6.0.
      */
-    public readonly Optional|bool $showExpandedEvents;
+    public readonly Optional|bool|string $showExpandedEvents;
 
-    /** @var Optional|Document|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields. */
-    public readonly Optional|Document|Serializable|stdClass|array $startAfter;
+    /** @var Optional|Document|Serializable|array|stdClass|string $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields. */
+    public readonly Optional|Document|Serializable|stdClass|array|string $startAfter;
 
-    /** @var Optional|Timestamp|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields. */
-    public readonly Optional|Timestamp|int $startAtOperationTime;
+    /** @var Optional|Timestamp|int|string $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields. */
+    public readonly Optional|Timestamp|int|string $startAtOperationTime;
 
     /**
-     * @param Optional|bool $allChangesForCluster A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections.
+     * @param Optional|bool|string $allChangesForCluster A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections.
      * @param Optional|string $fullDocument Specifies whether change notifications include a copy of the full document when modified by update operations.
      * @param Optional|string $fullDocumentBeforeChange Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available.
-     * @param Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
-     * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
+     * @param Optional|int|string $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
+     * @param Optional|bool|string $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      * New in MongoDB 6.0.
-     * @param Optional|Document|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
-     * @param Optional|Timestamp|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
+     * @param Optional|Document|Serializable|array|stdClass|string $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
+     * @param Optional|Timestamp|int|string $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
      */
     public function __construct(
-        Optional|bool $allChangesForCluster = Optional::Undefined,
+        Optional|bool|string $allChangesForCluster = Optional::Undefined,
         Optional|string $fullDocument = Optional::Undefined,
         Optional|string $fullDocumentBeforeChange = Optional::Undefined,
-        Optional|int $resumeAfter = Optional::Undefined,
-        Optional|bool $showExpandedEvents = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array $startAfter = Optional::Undefined,
-        Optional|Timestamp|int $startAtOperationTime = Optional::Undefined,
+        Optional|int|string $resumeAfter = Optional::Undefined,
+        Optional|bool|string $showExpandedEvents = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array|string $startAfter = Optional::Undefined,
+        Optional|Timestamp|int|string $startAtOperationTime = Optional::Undefined,
     ) {
         $this->allChangesForCluster = $allChangesForCluster;
         $this->fullDocument = $fullDocument;

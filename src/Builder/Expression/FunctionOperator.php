@@ -38,8 +38,8 @@ final class FunctionOperator implements ResolvesToAny, OperatorInterface
      */
     public readonly Javascript|string $body;
 
-    /** @var BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ]. */
-    public readonly PackedArray|BSONArray|array $args;
+    /** @var BSONArray|PackedArray|array|string $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ]. */
+    public readonly PackedArray|BSONArray|array|string $args;
 
     /** @var string $lang */
     public readonly string $lang;
@@ -47,11 +47,14 @@ final class FunctionOperator implements ResolvesToAny, OperatorInterface
     /**
      * @param Javascript|string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
      * function(arg1, arg2, ...) { ... }
-     * @param BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
+     * @param BSONArray|PackedArray|array|string $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
      * @param string $lang
      */
-    public function __construct(Javascript|string $body, PackedArray|BSONArray|array $args = [], string $lang = 'js')
-    {
+    public function __construct(
+        Javascript|string $body,
+        PackedArray|BSONArray|array|string $args = [],
+        string $lang = 'js',
+    ) {
         if (is_string($body)) {
             $body = new Javascript($body);
         }

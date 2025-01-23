@@ -25,13 +25,13 @@ final class Log10Operator implements ResolvesToDouble, OperatorInterface
     public const NAME = '$log10';
     public const PROPERTIES = ['number' => 'number'];
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number. */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $number;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number. */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $number;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number.
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $number)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $number)
     {
         $this->number = $number;
     }

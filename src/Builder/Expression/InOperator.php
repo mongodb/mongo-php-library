@@ -35,16 +35,16 @@ final class InOperator implements ResolvesToBool, OperatorInterface
     /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression. */
     public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
-    /** @var BSONArray|PackedArray|ResolvesToArray|array $array Any valid expression that resolves to an array. */
-    public readonly PackedArray|ResolvesToArray|BSONArray|array $array;
+    /** @var BSONArray|PackedArray|ResolvesToArray|array|string $array Any valid expression that resolves to an array. */
+    public readonly PackedArray|ResolvesToArray|BSONArray|array|string $array;
 
     /**
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $array Any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $array Any valid expression that resolves to an array.
      */
     public function __construct(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
-        PackedArray|ResolvesToArray|BSONArray|array $array,
+        PackedArray|ResolvesToArray|BSONArray|array|string $array,
     ) {
         $this->expression = $expression;
         if (is_array($array) && ! array_is_list($array)) {

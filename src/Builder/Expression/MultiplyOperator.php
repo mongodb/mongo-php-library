@@ -29,17 +29,17 @@ final class MultiplyOperator implements ResolvesToDecimal, OperatorInterface
     public const PROPERTIES = ['expression' => 'expression'];
 
     /**
-     * @var list<Decimal128|Int64|ResolvesToNumber|float|int> $expression The arguments can be any valid expression as long as they resolve to numbers.
+     * @var list<Decimal128|Int64|ResolvesToNumber|float|int|string> $expression The arguments can be any valid expression as long as they resolve to numbers.
      * Starting in MongoDB 6.1 you can optimize the $multiply operation. To improve performance, group references at the end of the argument list.
      */
     public readonly array $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression The arguments can be any valid expression as long as they resolve to numbers.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression The arguments can be any valid expression as long as they resolve to numbers.
      * Starting in MongoDB 6.1 you can optimize the $multiply operation. To improve performance, group references at the end of the argument list.
      * @no-named-arguments
      */
-    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int ...$expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression)
     {
         if (\count($expression) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));

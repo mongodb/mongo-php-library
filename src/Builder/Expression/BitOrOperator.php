@@ -28,14 +28,14 @@ final class BitOrOperator implements ResolvesToInt, ResolvesToLong, OperatorInte
     public const NAME = '$bitOr';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var list<Int64|ResolvesToInt|ResolvesToLong|int> $expression */
+    /** @var list<Int64|ResolvesToInt|ResolvesToLong|int|string> $expression */
     public readonly array $expression;
 
     /**
-     * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
+     * @param Int64|ResolvesToInt|ResolvesToLong|int|string ...$expression
      * @no-named-arguments
      */
-    public function __construct(Int64|ResolvesToInt|ResolvesToLong|int ...$expression)
+    public function __construct(Int64|ResolvesToInt|ResolvesToLong|int|string ...$expression)
     {
         if (\count($expression) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));

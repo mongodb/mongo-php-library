@@ -25,13 +25,13 @@ final class MinDistanceOperator implements FieldQueryInterface, OperatorInterfac
     public const NAME = '$minDistance';
     public const PROPERTIES = ['value' => 'value'];
 
-    /** @var Int64|float|int $value */
-    public readonly Int64|float|int $value;
+    /** @var Int64|float|int|string $value */
+    public readonly Int64|float|int|string $value;
 
     /**
-     * @param Int64|float|int $value
+     * @param Int64|float|int|string $value
      */
-    public function __construct(Int64|float|int $value)
+    public function __construct(Int64|float|int|string $value)
     {
         $this->value = $value;
     }

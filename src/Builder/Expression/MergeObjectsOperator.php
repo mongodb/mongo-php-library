@@ -29,14 +29,14 @@ final class MergeObjectsOperator implements ResolvesToObject, OperatorInterface
     public const NAME = '$mergeObjects';
     public const PROPERTIES = ['document' => 'document'];
 
-    /** @var list<Document|ResolvesToObject|Serializable|array|stdClass> $document Any valid expression that resolves to a document. */
+    /** @var list<Document|ResolvesToObject|Serializable|array|stdClass|string> $document Any valid expression that resolves to a document. */
     public readonly array $document;
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|stdClass ...$document Any valid expression that resolves to a document.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string ...$document Any valid expression that resolves to a document.
      * @no-named-arguments
      */
-    public function __construct(Document|Serializable|ResolvesToObject|stdClass|array ...$document)
+    public function __construct(Document|Serializable|ResolvesToObject|stdClass|array|string ...$document)
     {
         if (\count($document) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $document, got %d.', 1, \count($document)));

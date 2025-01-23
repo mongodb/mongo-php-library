@@ -26,24 +26,24 @@ final class Atan2Operator implements ResolvesToDouble, ResolvesToDecimal, Operat
     public const PROPERTIES = ['y' => 'y', 'x' => 'x'];
 
     /**
-     * @var Decimal128|Int64|ResolvesToNumber|float|int $y $atan2 takes any valid expression that resolves to a number.
+     * @var Decimal128|Int64|ResolvesToNumber|float|int|string $y $atan2 takes any valid expression that resolves to a number.
      * $atan2 returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $atan returns values as a double. $atan2 can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $y;
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $y;
 
-    /** @var Decimal128|Int64|ResolvesToNumber|float|int $x */
-    public readonly Decimal128|Int64|ResolvesToNumber|float|int $x;
+    /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $x */
+    public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $x;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $y $atan2 takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $y $atan2 takes any valid expression that resolves to a number.
      * $atan2 returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $atan returns values as a double. $atan2 can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $x
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $x
      */
     public function __construct(
-        Decimal128|Int64|ResolvesToNumber|float|int $y,
-        Decimal128|Int64|ResolvesToNumber|float|int $x,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $y,
+        Decimal128|Int64|ResolvesToNumber|float|int|string $x,
     ) {
         $this->y = $y;
         $this->x = $x;

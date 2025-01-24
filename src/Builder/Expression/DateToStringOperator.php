@@ -16,7 +16,11 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns the date as a formatted string.
@@ -62,6 +66,10 @@ final class DateToStringOperator implements ResolvesToString, OperatorInterface
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
         Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
     ) {
+        if (is_string($date) && ! str_starts_with($date, '$')) {
+            throw new InvalidArgumentException('Argument $date can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->date = $date;
         $this->format = $format;
         $this->timezone = $timezone;

@@ -17,7 +17,11 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\WindowInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer than n elements, $bottomN returns all elements in the group.
@@ -52,6 +56,10 @@ final class BottomNAccumulator implements AccumulatorInterface, WindowInterface,
         Document|Serializable|stdClass|array $sortBy,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
     ) {
+        if (is_string($n) && ! str_starts_with($n, '$')) {
+            throw new InvalidArgumentException('Argument $n can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->n = $n;
         $this->sortBy = $sortBy;
         $this->output = $output;

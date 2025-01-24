@@ -47,8 +47,8 @@ final class PhraseOperator implements SearchOperatorInterface, OperatorInterface
     /** @var BSONArray|PackedArray|array|string $query */
     public readonly PackedArray|BSONArray|array|string $query;
 
-    /** @var Optional|int|string $slop */
-    public readonly Optional|int|string $slop;
+    /** @var Optional|int $slop */
+    public readonly Optional|int $slop;
 
     /** @var Optional|string $synonyms */
     public readonly Optional|string $synonyms;
@@ -59,14 +59,14 @@ final class PhraseOperator implements SearchOperatorInterface, OperatorInterface
     /**
      * @param array|string $path
      * @param BSONArray|PackedArray|array|string $query
-     * @param Optional|int|string $slop
+     * @param Optional|int $slop
      * @param Optional|string $synonyms
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
         array|string $path,
         PackedArray|BSONArray|array|string $query,
-        Optional|int|string $slop = Optional::Undefined,
+        Optional|int $slop = Optional::Undefined,
         Optional|string $synonyms = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {

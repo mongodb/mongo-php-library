@@ -12,6 +12,10 @@ use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns the inverse tangent (arc tangent) of y / x in radians, where y and x are the first and second values passed to the expression respectively.
@@ -45,7 +49,15 @@ final class Atan2Operator implements ResolvesToDouble, ResolvesToDecimal, Operat
         Decimal128|Int64|ResolvesToNumber|float|int|string $y,
         Decimal128|Int64|ResolvesToNumber|float|int|string $x,
     ) {
+        if (is_string($y) && ! str_starts_with($y, '$')) {
+            throw new InvalidArgumentException('Argument $y can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->y = $y;
+        if (is_string($x) && ! str_starts_with($x, '$')) {
+            throw new InvalidArgumentException('Argument $x can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->x = $x;
     }
 }

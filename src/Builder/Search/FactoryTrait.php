@@ -38,14 +38,14 @@ trait FactoryTrait
      * @param array|string $path
      * @param string $query
      * @param Optional|string $tokenOrder
-     * @param Optional|Document|Serializable|array|stdClass|string $fuzzy
+     * @param Optional|Document|Serializable|array|stdClass $fuzzy
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function autocomplete(
         array|string $path,
         string $query,
         Optional|string $tokenOrder = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array|string $fuzzy = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $fuzzy = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): AutocompleteOperator {
         return new AutocompleteOperator($path, $query, $tokenOrder, $fuzzy, $score);
@@ -57,19 +57,19 @@ trait FactoryTrait
      * consists of one or more sub-queries.
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/
-     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $must
-     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $mustNot
-     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $should
-     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $filter
-     * @param Optional|int|string $minimumShouldMatch
+     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $must
+     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $mustNot
+     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $should
+     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $filter
+     * @param Optional|int $minimumShouldMatch
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function compound(
-        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $must = Optional::Undefined,
-        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $mustNot = Optional::Undefined,
-        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $should = Optional::Undefined,
-        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $filter = Optional::Undefined,
-        Optional|int|string $minimumShouldMatch = Optional::Undefined,
+        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $must = Optional::Undefined,
+        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $mustNot = Optional::Undefined,
+        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $should = Optional::Undefined,
+        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $filter = Optional::Undefined,
+        Optional|int $minimumShouldMatch = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): CompoundOperator {
         return new CompoundOperator($must, $mustNot, $should, $filter, $minimumShouldMatch, $score);
@@ -129,11 +129,11 @@ trait FactoryTrait
      * faceted fields and returns the count for each of those groups.
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/
-     * @param Document|Serializable|array|stdClass|string $facets
+     * @param Document|Serializable|array|stdClass $facets
      * @param Optional|Document|SearchOperatorInterface|Serializable|array|stdClass $operator
      */
     public static function facet(
-        Document|Serializable|stdClass|array|string $facets,
+        Document|Serializable|stdClass|array $facets,
         Optional|Document|Serializable|SearchOperatorInterface|stdClass|array $operator = Optional::Undefined,
     ): FacetOperator {
         return new FacetOperator($facets, $operator);
@@ -165,15 +165,15 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/
      * @param array|string $path
-     * @param Optional|Document|Serializable|array|stdClass|string $box
-     * @param Optional|Document|Serializable|array|stdClass|string $circle
+     * @param Optional|Document|Serializable|array|stdClass $box
+     * @param Optional|Document|Serializable|array|stdClass $circle
      * @param Optional|Document|GeometryInterface|Serializable|array|stdClass $geometry
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function geoWithin(
         array|string $path,
-        Optional|Document|Serializable|stdClass|array|string $box = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array|string $circle = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $box = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $circle = Optional::Undefined,
         Optional|Document|Serializable|GeometryInterface|stdClass|array $geometry = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): GeoWithinOperator {
@@ -202,11 +202,11 @@ trait FactoryTrait
      * that display similar or alternative results based on one or more given documents.
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/moreLikeThis/
-     * @param BSONArray|Document|PackedArray|Serializable|array|stdClass|string $like
+     * @param BSONArray|Document|PackedArray|Serializable|array|stdClass $like
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function moreLikeThis(
-        Document|PackedArray|Serializable|BSONArray|stdClass|array|string $like,
+        Document|PackedArray|Serializable|BSONArray|stdClass|array $like,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): MoreLikeThisOperator {
         return new MoreLikeThisOperator($like, $score);
@@ -217,14 +217,14 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/near/
      * @param array|string $path
-     * @param Decimal128|Document|GeometryInterface|Int64|Serializable|UTCDateTime|array|float|int|stdClass|string $origin
-     * @param Decimal128|Int64|float|int|string $pivot
+     * @param Decimal128|Document|GeometryInterface|Int64|Serializable|UTCDateTime|array|float|int|stdClass $origin
+     * @param Decimal128|Int64|float|int $pivot
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function near(
         array|string $path,
-        Decimal128|Document|Int64|Serializable|UTCDateTime|GeometryInterface|stdClass|array|float|int|string $origin,
-        Decimal128|Int64|float|int|string $pivot,
+        Decimal128|Document|Int64|Serializable|UTCDateTime|GeometryInterface|stdClass|array|float|int $origin,
+        Decimal128|Int64|float|int $pivot,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): NearOperator {
         return new NearOperator($path, $origin, $pivot, $score);
@@ -236,14 +236,14 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/atlas/atlas-search/phrase/
      * @param array|string $path
      * @param BSONArray|PackedArray|array|string $query
-     * @param Optional|int|string $slop
+     * @param Optional|int $slop
      * @param Optional|string $synonyms
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function phrase(
         array|string $path,
         PackedArray|BSONArray|array|string $query,
-        Optional|int|string $slop = Optional::Undefined,
+        Optional|int $slop = Optional::Undefined,
         Optional|string $synonyms = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): PhraseOperator {
@@ -290,13 +290,13 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/atlas/atlas-search/regex/
      * @param array|string $path
      * @param string $query
-     * @param Optional|bool|string $allowAnalyzedField
+     * @param Optional|bool $allowAnalyzedField
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function regex(
         array|string $path,
         string $query,
-        Optional|bool|string $allowAnalyzedField = Optional::Undefined,
+        Optional|bool $allowAnalyzedField = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): RegexOperator {
         return new RegexOperator($path, $query, $allowAnalyzedField, $score);
@@ -309,7 +309,7 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/
      * @param array|string $path
      * @param string $query
-     * @param Optional|Document|Serializable|array|stdClass|string $fuzzy
+     * @param Optional|Document|Serializable|array|stdClass $fuzzy
      * @param Optional|string $matchCriteria
      * @param Optional|string $synonyms
      * @param Optional|Document|Serializable|array|stdClass $score
@@ -317,7 +317,7 @@ trait FactoryTrait
     public static function text(
         array|string $path,
         string $query,
-        Optional|Document|Serializable|stdClass|array|string $fuzzy = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $fuzzy = Optional::Undefined,
         Optional|string $matchCriteria = Optional::Undefined,
         Optional|string $synonyms = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
@@ -331,13 +331,13 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/atlas/atlas-search/wildcard/
      * @param array|string $path
      * @param string $query
-     * @param Optional|bool|string $allowAnalyzedField
+     * @param Optional|bool $allowAnalyzedField
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function wildcard(
         array|string $path,
         string $query,
-        Optional|bool|string $allowAnalyzedField = Optional::Undefined,
+        Optional|bool $allowAnalyzedField = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): WildcardOperator {
         return new WildcardOperator($path, $query, $allowAnalyzedField, $score);

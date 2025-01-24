@@ -13,6 +13,10 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Rounds a number to a whole integer or to a specified decimal place.
@@ -44,7 +48,15 @@ final class RoundOperator implements ResolvesToInt, ResolvesToDouble, ResolvesTo
         Decimal128|Int64|ResolvesToNumber|float|int|string $number,
         Optional|ResolvesToInt|int|string $place = Optional::Undefined,
     ) {
+        if (is_string($number) && ! str_starts_with($number, '$')) {
+            throw new InvalidArgumentException('Argument $number can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->number = $number;
+        if (is_string($place) && ! str_starts_with($place, '$')) {
+            throw new InvalidArgumentException('Argument $place can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->place = $place;
     }
 }

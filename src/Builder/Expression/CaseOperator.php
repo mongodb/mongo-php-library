@@ -13,7 +13,11 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\SwitchBranchInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Represents a single case in a $switch expression
@@ -41,6 +45,10 @@ final class CaseOperator implements SwitchBranchInterface, OperatorInterface
         ResolvesToBool|bool|string $case,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then,
     ) {
+        if (is_string($case) && ! str_starts_with($case, '$')) {
+            throw new InvalidArgumentException('Argument $case can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->case = $case;
         $this->then = $then;
     }

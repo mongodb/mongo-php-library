@@ -15,6 +15,10 @@ use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\WindowInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns an approximation of the median, the 50th percentile, as a scalar value.
@@ -45,6 +49,10 @@ final class MedianAccumulator implements AccumulatorInterface, WindowInterface, 
      */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $input, string $method)
     {
+        if (is_string($input) && ! str_starts_with($input, '$')) {
+            throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->input = $input;
         $this->method = $method;
     }

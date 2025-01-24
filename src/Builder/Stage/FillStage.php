@@ -41,10 +41,10 @@ final class FillStage implements StageInterface, OperatorInterface
     ];
 
     /**
-     * @var Document|Serializable|array|stdClass|string $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
+     * @var Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
      * The object name is the name of the field to fill. The object value specifies how the field is filled.
      */
-    public readonly Document|Serializable|stdClass|array|string $output;
+    public readonly Document|Serializable|stdClass|array $output;
 
     /**
      * @var Optional|Document|Serializable|array|stdClass|string $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
@@ -54,30 +54,30 @@ final class FillStage implements StageInterface, OperatorInterface
     public readonly Optional|Document|Serializable|stdClass|array|string $partitionBy;
 
     /**
-     * @var Optional|BSONArray|PackedArray|array|string $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
+     * @var Optional|BSONArray|PackedArray|array $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
      */
-    public readonly Optional|PackedArray|BSONArray|array|string $partitionByFields;
+    public readonly Optional|PackedArray|BSONArray|array $partitionByFields;
 
     /** @var Optional|Document|Serializable|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage. */
     public readonly Optional|Document|Serializable|stdClass|array $sortBy;
 
     /**
-     * @param Document|Serializable|array|stdClass|string $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
+     * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
      * The object name is the name of the field to fill. The object value specifies how the field is filled.
      * @param Optional|Document|Serializable|array|stdClass|string $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
-     * @param Optional|BSONArray|PackedArray|array|string $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
+     * @param Optional|BSONArray|PackedArray|array $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
      * @param Optional|Document|Serializable|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
      */
     public function __construct(
-        Document|Serializable|stdClass|array|string $output,
+        Document|Serializable|stdClass|array $output,
         Optional|Document|Serializable|stdClass|array|string $partitionBy = Optional::Undefined,
-        Optional|PackedArray|BSONArray|array|string $partitionByFields = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array $partitionByFields = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $sortBy = Optional::Undefined,
     ) {
         $this->output = $output;

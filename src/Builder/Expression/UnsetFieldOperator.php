@@ -12,7 +12,11 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * You can use $unsetField to remove fields with names that contain periods (.) or that start with dollar signs ($).
@@ -42,6 +46,10 @@ final class UnsetFieldOperator implements ResolvesToObject, OperatorInterface
         Document|Serializable|ResolvesToObject|stdClass|array|string $input,
     ) {
         $this->field = $field;
+        if (is_string($input) && ! str_starts_with($input, '$')) {
+            throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->input = $input;
     }
 }

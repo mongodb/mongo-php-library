@@ -13,7 +13,6 @@ use MongoDB\CodeGenerator\Definition\PhpObject;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
-use function in_array;
 use function ucfirst;
 
 $bsonTypes = [
@@ -46,11 +45,6 @@ $bsonTypes['number'] = ['int', 'float', BSON\Int64::class, BSON\Decimal128::clas
 $expressions = [];
 $resolvesToInterfaces = [];
 foreach ($bsonTypes as $name => $acceptedTypes) {
-    // an expression can be a string with a $-prefixed field name
-    if (! in_array('string', $acceptedTypes)) {
-        $acceptedTypes[] = 'string';
-    }
-
     $expressions[$name] = ['acceptedTypes' => $acceptedTypes];
 
     $resolvesTo = 'resolvesTo' . ucfirst($name);

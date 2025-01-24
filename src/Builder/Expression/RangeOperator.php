@@ -11,6 +11,10 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Outputs an array containing a sequence of integers according to user-defined inputs.
@@ -43,8 +47,20 @@ final class RangeOperator implements ResolvesToArray, OperatorInterface
         ResolvesToInt|int|string $end,
         Optional|ResolvesToInt|int|string $step = Optional::Undefined,
     ) {
+        if (is_string($start) && ! str_starts_with($start, '$')) {
+            throw new InvalidArgumentException('Argument $start can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->start = $start;
+        if (is_string($end) && ! str_starts_with($end, '$')) {
+            throw new InvalidArgumentException('Argument $end can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->end = $end;
+        if (is_string($step) && ! str_starts_with($step, '$')) {
+            throw new InvalidArgumentException('Argument $step can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->step = $step;
     }
 }

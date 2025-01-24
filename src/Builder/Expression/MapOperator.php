@@ -20,6 +20,8 @@ use stdClass;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
+use function str_starts_with;
 
 /**
  * Applies a subexpression to each element of an array and returns the array of resulting values in order. Accepts named parameters.
@@ -54,6 +56,10 @@ final class MapOperator implements ResolvesToArray, OperatorInterface
     ) {
         if (is_array($input) && ! array_is_list($input)) {
             throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
+        }
+
+        if (is_string($input) && ! str_starts_with($input, '$')) {
+            throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
         }
 
         $this->input = $input;

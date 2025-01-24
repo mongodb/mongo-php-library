@@ -10,6 +10,10 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns the substring of a string. Starts with the character at the specified UTF-8 code point (CP) index (zero-based) in the string and continues for the number of code points specified.
@@ -43,7 +47,15 @@ final class SubstrCPOperator implements ResolvesToString, OperatorInterface
         ResolvesToInt|int|string $length,
     ) {
         $this->string = $string;
+        if (is_string($start) && ! str_starts_with($start, '$')) {
+            throw new InvalidArgumentException('Argument $start can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->start = $start;
+        if (is_string($length) && ! str_starts_with($length, '$')) {
+            throw new InvalidArgumentException('Argument $length can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->length = $length;
     }
 }

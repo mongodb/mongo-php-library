@@ -14,7 +14,11 @@ use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Adds, updates, or removes a specified field in a document. You can use $setField to add, update, or remove fields with names that contain periods (.) or start with dollar signs ($).
@@ -53,6 +57,10 @@ final class SetFieldOperator implements ResolvesToObject, OperatorInterface
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value,
     ) {
         $this->field = $field;
+        if (is_string($input) && ! str_starts_with($input, '$')) {
+            throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->input = $input;
         $this->value = $value;
     }

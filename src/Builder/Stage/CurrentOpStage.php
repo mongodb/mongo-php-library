@@ -32,34 +32,34 @@ final class CurrentOpStage implements StageInterface, OperatorInterface
         'localOps' => 'localOps',
     ];
 
-    /** @var Optional|bool|string $allUsers */
-    public readonly Optional|bool|string $allUsers;
+    /** @var Optional|bool $allUsers */
+    public readonly Optional|bool $allUsers;
 
-    /** @var Optional|bool|string $idleConnections */
-    public readonly Optional|bool|string $idleConnections;
+    /** @var Optional|bool $idleConnections */
+    public readonly Optional|bool $idleConnections;
 
-    /** @var Optional|bool|string $idleCursors */
-    public readonly Optional|bool|string $idleCursors;
+    /** @var Optional|bool $idleCursors */
+    public readonly Optional|bool $idleCursors;
 
-    /** @var Optional|bool|string $idleSessions */
-    public readonly Optional|bool|string $idleSessions;
+    /** @var Optional|bool $idleSessions */
+    public readonly Optional|bool $idleSessions;
 
-    /** @var Optional|bool|string $localOps */
-    public readonly Optional|bool|string $localOps;
+    /** @var Optional|bool $localOps */
+    public readonly Optional|bool $localOps;
 
     /**
-     * @param Optional|bool|string $allUsers
-     * @param Optional|bool|string $idleConnections
-     * @param Optional|bool|string $idleCursors
-     * @param Optional|bool|string $idleSessions
-     * @param Optional|bool|string $localOps
+     * @param Optional|bool $allUsers
+     * @param Optional|bool $idleConnections
+     * @param Optional|bool $idleCursors
+     * @param Optional|bool $idleSessions
+     * @param Optional|bool $localOps
      */
     public function __construct(
-        Optional|bool|string $allUsers = Optional::Undefined,
-        Optional|bool|string $idleConnections = Optional::Undefined,
-        Optional|bool|string $idleCursors = Optional::Undefined,
-        Optional|bool|string $idleSessions = Optional::Undefined,
-        Optional|bool|string $localOps = Optional::Undefined,
+        Optional|bool $allUsers = Optional::Undefined,
+        Optional|bool $idleConnections = Optional::Undefined,
+        Optional|bool $idleCursors = Optional::Undefined,
+        Optional|bool $idleSessions = Optional::Undefined,
+        Optional|bool $localOps = Optional::Undefined,
     ) {
         $this->allUsers = $allUsers;
         $this->idleConnections = $idleConnections;

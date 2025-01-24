@@ -45,45 +45,45 @@ final class VectorSearchStage implements StageInterface, OperatorInterface
     /** @var string $index Name of the Atlas Vector Search index to use. */
     public readonly string $index;
 
-    /** @var int|string $limit Number of documents to return in the results. This value can't exceed the value of numCandidates if you specify numCandidates. */
-    public readonly int|string $limit;
+    /** @var int $limit Number of documents to return in the results. This value can't exceed the value of numCandidates if you specify numCandidates. */
+    public readonly int $limit;
 
     /** @var string $path Indexed vector type field to search. */
     public readonly string $path;
 
-    /** @var BSONArray|PackedArray|array|string $queryVector Array of numbers that represent the query vector. The number type must match the indexed field value type. */
-    public readonly PackedArray|BSONArray|array|string $queryVector;
+    /** @var BSONArray|PackedArray|array $queryVector Array of numbers that represent the query vector. The number type must match the indexed field value type. */
+    public readonly PackedArray|BSONArray|array $queryVector;
 
-    /** @var Optional|bool|string $exact This is required if numCandidates is omitted. false to run ANN search. true to run ENN search. */
-    public readonly Optional|bool|string $exact;
+    /** @var Optional|bool $exact This is required if numCandidates is omitted. false to run ANN search. true to run ENN search. */
+    public readonly Optional|bool $exact;
 
     /** @var Optional|QueryInterface|array $filter Any match query that compares an indexed field with a boolean, date, objectId, number (not decimals), string, or UUID to use as a pre-filter. */
     public readonly Optional|QueryInterface|array $filter;
 
     /**
-     * @var Optional|int|string $numCandidates This field is required if exact is false or omitted.
+     * @var Optional|int $numCandidates This field is required if exact is false or omitted.
      * Number of nearest neighbors to use during the search. Value must be less than or equal to (<=) 10000. You can't specify a number less than the number of documents to return (limit).
      */
-    public readonly Optional|int|string $numCandidates;
+    public readonly Optional|int $numCandidates;
 
     /**
      * @param string $index Name of the Atlas Vector Search index to use.
-     * @param int|string $limit Number of documents to return in the results. This value can't exceed the value of numCandidates if you specify numCandidates.
+     * @param int $limit Number of documents to return in the results. This value can't exceed the value of numCandidates if you specify numCandidates.
      * @param string $path Indexed vector type field to search.
-     * @param BSONArray|PackedArray|array|string $queryVector Array of numbers that represent the query vector. The number type must match the indexed field value type.
-     * @param Optional|bool|string $exact This is required if numCandidates is omitted. false to run ANN search. true to run ENN search.
+     * @param BSONArray|PackedArray|array $queryVector Array of numbers that represent the query vector. The number type must match the indexed field value type.
+     * @param Optional|bool $exact This is required if numCandidates is omitted. false to run ANN search. true to run ENN search.
      * @param Optional|QueryInterface|array $filter Any match query that compares an indexed field with a boolean, date, objectId, number (not decimals), string, or UUID to use as a pre-filter.
-     * @param Optional|int|string $numCandidates This field is required if exact is false or omitted.
+     * @param Optional|int $numCandidates This field is required if exact is false or omitted.
      * Number of nearest neighbors to use during the search. Value must be less than or equal to (<=) 10000. You can't specify a number less than the number of documents to return (limit).
      */
     public function __construct(
         string $index,
-        int|string $limit,
+        int $limit,
         string $path,
-        PackedArray|BSONArray|array|string $queryVector,
-        Optional|bool|string $exact = Optional::Undefined,
+        PackedArray|BSONArray|array $queryVector,
+        Optional|bool $exact = Optional::Undefined,
         Optional|QueryInterface|array $filter = Optional::Undefined,
-        Optional|int|string $numCandidates = Optional::Undefined,
+        Optional|int $numCandidates = Optional::Undefined,
     ) {
         $this->index = $index;
         $this->limit = $limit;

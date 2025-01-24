@@ -16,6 +16,10 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\TimeUnit;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Subtracts a number of time units from a date object.
@@ -53,8 +57,16 @@ final class DateSubtractOperator implements ResolvesToDate, OperatorInterface
         Int64|ResolvesToInt|ResolvesToLong|int|string $amount,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ) {
+        if (is_string($startDate) && ! str_starts_with($startDate, '$')) {
+            throw new InvalidArgumentException('Argument $startDate can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->startDate = $startDate;
         $this->unit = $unit;
+        if (is_string($amount) && ! str_starts_with($amount, '$')) {
+            throw new InvalidArgumentException('Argument $amount can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->amount = $amount;
         $this->timezone = $timezone;
     }

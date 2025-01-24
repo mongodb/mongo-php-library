@@ -35,25 +35,25 @@ final class NearOperator implements SearchOperatorInterface, OperatorInterface
     /** @var array|string $path */
     public readonly array|string $path;
 
-    /** @var Decimal128|Document|GeometryInterface|Int64|Serializable|UTCDateTime|array|float|int|stdClass|string $origin */
-    public readonly Decimal128|Document|Int64|Serializable|UTCDateTime|GeometryInterface|stdClass|array|float|int|string $origin;
+    /** @var Decimal128|Document|GeometryInterface|Int64|Serializable|UTCDateTime|array|float|int|stdClass $origin */
+    public readonly Decimal128|Document|Int64|Serializable|UTCDateTime|GeometryInterface|stdClass|array|float|int $origin;
 
-    /** @var Decimal128|Int64|float|int|string $pivot */
-    public readonly Decimal128|Int64|float|int|string $pivot;
+    /** @var Decimal128|Int64|float|int $pivot */
+    public readonly Decimal128|Int64|float|int $pivot;
 
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
 
     /**
      * @param array|string $path
-     * @param Decimal128|Document|GeometryInterface|Int64|Serializable|UTCDateTime|array|float|int|stdClass|string $origin
-     * @param Decimal128|Int64|float|int|string $pivot
+     * @param Decimal128|Document|GeometryInterface|Int64|Serializable|UTCDateTime|array|float|int|stdClass $origin
+     * @param Decimal128|Int64|float|int $pivot
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
         array|string $path,
-        Decimal128|Document|Int64|Serializable|UTCDateTime|GeometryInterface|stdClass|array|float|int|string $origin,
-        Decimal128|Int64|float|int|string $pivot,
+        Decimal128|Document|Int64|Serializable|UTCDateTime|GeometryInterface|stdClass|array|float|int $origin,
+        Decimal128|Int64|float|int $pivot,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {
         $this->path = $path;

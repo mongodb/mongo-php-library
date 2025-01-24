@@ -41,8 +41,8 @@ final class RegexOperator implements SearchOperatorInterface, OperatorInterface
     /** @var string $query */
     public readonly string $query;
 
-    /** @var Optional|bool|string $allowAnalyzedField */
-    public readonly Optional|bool|string $allowAnalyzedField;
+    /** @var Optional|bool $allowAnalyzedField */
+    public readonly Optional|bool $allowAnalyzedField;
 
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
@@ -50,13 +50,13 @@ final class RegexOperator implements SearchOperatorInterface, OperatorInterface
     /**
      * @param array|string $path
      * @param string $query
-     * @param Optional|bool|string $allowAnalyzedField
+     * @param Optional|bool $allowAnalyzedField
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
         array|string $path,
         string $query,
-        Optional|bool|string $allowAnalyzedField = Optional::Undefined,
+        Optional|bool $allowAnalyzedField = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {
         $this->path = $path;

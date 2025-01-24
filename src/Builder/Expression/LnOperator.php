@@ -12,6 +12,10 @@ use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Calculates the natural log of a number.
@@ -34,6 +38,10 @@ final class LnOperator implements ResolvesToDouble, OperatorInterface
      */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $number)
     {
+        if (is_string($number) && ! str_starts_with($number, '$')) {
+            throw new InvalidArgumentException('Argument $number can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->number = $number;
     }
 }

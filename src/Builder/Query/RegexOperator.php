@@ -25,13 +25,13 @@ final class RegexOperator implements FieldQueryInterface, OperatorInterface
     public const NAME = '$regex';
     public const PROPERTIES = ['regex' => 'regex'];
 
-    /** @var Regex|string $regex */
-    public readonly Regex|string $regex;
+    /** @var Regex $regex */
+    public readonly Regex $regex;
 
     /**
-     * @param Regex|string $regex
+     * @param Regex $regex
      */
-    public function __construct(Regex|string $regex)
+    public function __construct(Regex $regex)
     {
         $this->regex = $regex;
     }

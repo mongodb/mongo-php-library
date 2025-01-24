@@ -40,38 +40,38 @@ final class CompoundOperator implements SearchOperatorInterface, OperatorInterfa
         'score' => 'score',
     ];
 
-    /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $must */
-    public readonly Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $must;
+    /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $must */
+    public readonly Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $must;
 
-    /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $mustNot */
-    public readonly Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $mustNot;
+    /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $mustNot */
+    public readonly Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $mustNot;
 
-    /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $should */
-    public readonly Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $should;
+    /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $should */
+    public readonly Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $should;
 
-    /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $filter */
-    public readonly Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $filter;
+    /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $filter */
+    public readonly Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $filter;
 
-    /** @var Optional|int|string $minimumShouldMatch */
-    public readonly Optional|int|string $minimumShouldMatch;
+    /** @var Optional|int $minimumShouldMatch */
+    public readonly Optional|int $minimumShouldMatch;
 
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
 
     /**
-     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $must
-     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $mustNot
-     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $should
-     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass|string $filter
-     * @param Optional|int|string $minimumShouldMatch
+     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $must
+     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $mustNot
+     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $should
+     * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $filter
+     * @param Optional|int $minimumShouldMatch
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
-        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $must = Optional::Undefined,
-        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $mustNot = Optional::Undefined,
-        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $should = Optional::Undefined,
-        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array|string $filter = Optional::Undefined,
-        Optional|int|string $minimumShouldMatch = Optional::Undefined,
+        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $must = Optional::Undefined,
+        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $mustNot = Optional::Undefined,
+        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $should = Optional::Undefined,
+        Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $filter = Optional::Undefined,
+        Optional|int $minimumShouldMatch = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {
         $this->must = $must;

@@ -104,9 +104,9 @@ trait FactoryTrait
      * Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/box/
-     * @param BSONArray|PackedArray|array|string $value
+     * @param BSONArray|PackedArray|array $value
      */
-    public static function box(PackedArray|BSONArray|array|string $value): BoxOperator
+    public static function box(PackedArray|BSONArray|array $value): BoxOperator
     {
         return new BoxOperator($value);
     }
@@ -115,9 +115,9 @@ trait FactoryTrait
      * Specifies a circle using legacy coordinate pairs to $geoWithin queries when using planar geometry. The 2d index supports $center.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/center/
-     * @param BSONArray|PackedArray|array|string $value
+     * @param BSONArray|PackedArray|array $value
      */
-    public static function center(PackedArray|BSONArray|array|string $value): CenterOperator
+    public static function center(PackedArray|BSONArray|array $value): CenterOperator
     {
         return new CenterOperator($value);
     }
@@ -126,9 +126,9 @@ trait FactoryTrait
      * Specifies a circle using either legacy coordinate pairs or GeoJSON format for $geoWithin queries when using spherical geometry. The 2dsphere and 2d indexes support $centerSphere.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/
-     * @param BSONArray|PackedArray|array|string $value
+     * @param BSONArray|PackedArray|array $value
      */
-    public static function centerSphere(PackedArray|BSONArray|array|string $value): CenterSphereOperator
+    public static function centerSphere(PackedArray|BSONArray|array $value): CenterSphereOperator
     {
         return new CenterSphereOperator($value);
     }
@@ -171,9 +171,9 @@ trait FactoryTrait
      * Matches documents that have the specified field.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/exists/
-     * @param bool|string $exists
+     * @param bool $exists
      */
-    public static function exists(bool|string $exists = true): ExistsOperator
+    public static function exists(bool $exists = true): ExistsOperator
     {
         return new ExistsOperator($exists);
     }
@@ -207,13 +207,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
      * @param string $type
-     * @param BSONArray|PackedArray|array|string $coordinates
-     * @param Optional|Document|Serializable|array|stdClass|string $crs
+     * @param BSONArray|PackedArray|array $coordinates
+     * @param Optional|Document|Serializable|array|stdClass $crs
      */
     public static function geometry(
         string $type,
-        PackedArray|BSONArray|array|string $coordinates,
-        Optional|Document|Serializable|stdClass|array|string $crs = Optional::Undefined,
+        PackedArray|BSONArray|array $coordinates,
+        Optional|Document|Serializable|stdClass|array $crs = Optional::Undefined,
     ): GeometryOperator {
         return new GeometryOperator($type, $coordinates, $crs);
     }
@@ -256,9 +256,9 @@ trait FactoryTrait
      * Matches any of the values specified in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/
-     * @param BSONArray|PackedArray|array|string $value
+     * @param BSONArray|PackedArray|array $value
      */
-    public static function in(PackedArray|BSONArray|array|string $value): InOperator
+    public static function in(PackedArray|BSONArray|array $value): InOperator
     {
         return new InOperator($value);
     }
@@ -267,9 +267,9 @@ trait FactoryTrait
      * Validate documents against the given JSON Schema.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/
-     * @param Document|Serializable|array|stdClass|string $schema
+     * @param Document|Serializable|array|stdClass $schema
      */
-    public static function jsonSchema(Document|Serializable|stdClass|array|string $schema): JsonSchemaOperator
+    public static function jsonSchema(Document|Serializable|stdClass|array $schema): JsonSchemaOperator
     {
         return new JsonSchemaOperator($schema);
     }
@@ -300,9 +300,9 @@ trait FactoryTrait
      * Specifies a maximum distance to limit the results of $near and $nearSphere queries. The 2dsphere and 2d indexes support $maxDistance.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/maxDistance/
-     * @param Decimal128|Int64|float|int|string $value
+     * @param Decimal128|Int64|float|int $value
      */
-    public static function maxDistance(Decimal128|Int64|float|int|string $value): MaxDistanceOperator
+    public static function maxDistance(Decimal128|Int64|float|int $value): MaxDistanceOperator
     {
         return new MaxDistanceOperator($value);
     }
@@ -311,9 +311,9 @@ trait FactoryTrait
      * Specifies a minimum distance to limit the results of $near and $nearSphere queries. For use with 2dsphere index only.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/minDistance/
-     * @param Int64|float|int|string $value
+     * @param Int64|float|int $value
      */
-    public static function minDistance(Int64|float|int|string $value): MinDistanceOperator
+    public static function minDistance(Int64|float|int $value): MinDistanceOperator
     {
         return new MinDistanceOperator($value);
     }
@@ -322,12 +322,12 @@ trait FactoryTrait
      * Performs a modulo operation on the value of a field and selects documents with a specified result.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/
-     * @param Decimal128|Int64|float|int|string $divisor
-     * @param Decimal128|Int64|float|int|string $remainder
+     * @param Decimal128|Int64|float|int $divisor
+     * @param Decimal128|Int64|float|int $remainder
      */
     public static function mod(
-        Decimal128|Int64|float|int|string $divisor,
-        Decimal128|Int64|float|int|string $remainder,
+        Decimal128|Int64|float|int $divisor,
+        Decimal128|Int64|float|int $remainder,
     ): ModOperator {
         return new ModOperator($divisor, $remainder);
     }
@@ -348,13 +348,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/
      * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
-     * @param Optional|Decimal128|Int64|float|int|string $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
-     * @param Optional|Decimal128|Int64|float|int|string $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function near(
         Document|Serializable|GeometryInterface|stdClass|array $geometry,
-        Optional|Decimal128|Int64|float|int|string $maxDistance = Optional::Undefined,
-        Optional|Decimal128|Int64|float|int|string $minDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
     ): NearOperator {
         return new NearOperator($geometry, $maxDistance, $minDistance);
     }
@@ -364,13 +364,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/
      * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
-     * @param Optional|Decimal128|Int64|float|int|string $maxDistance Distance in meters.
-     * @param Optional|Decimal128|Int64|float|int|string $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|float|int $maxDistance Distance in meters.
+     * @param Optional|Decimal128|Int64|float|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function nearSphere(
         Document|Serializable|GeometryInterface|stdClass|array $geometry,
-        Optional|Decimal128|Int64|float|int|string $maxDistance = Optional::Undefined,
-        Optional|Decimal128|Int64|float|int|string $minDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
     ): NearSphereOperator {
         return new NearSphereOperator($geometry, $maxDistance, $minDistance);
     }
@@ -379,9 +379,9 @@ trait FactoryTrait
      * Matches none of the values specified in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/
-     * @param BSONArray|PackedArray|array|string $value
+     * @param BSONArray|PackedArray|array $value
      */
-    public static function nin(PackedArray|BSONArray|array|string $value): NinOperator
+    public static function nin(PackedArray|BSONArray|array $value): NinOperator
     {
         return new NinOperator($value);
     }
@@ -426,9 +426,9 @@ trait FactoryTrait
      * Specifies a polygon to using legacy coordinate pairs for $geoWithin queries. The 2d index supports $center.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/polygon/
-     * @param BSONArray|PackedArray|array|string $points
+     * @param BSONArray|PackedArray|array $points
      */
-    public static function polygon(PackedArray|BSONArray|array|string $points): PolygonOperator
+    public static function polygon(PackedArray|BSONArray|array $points): PolygonOperator
     {
         return new PolygonOperator($points);
     }
@@ -447,9 +447,9 @@ trait FactoryTrait
      * Selects documents where values match a specified regular expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/regex/
-     * @param Regex|string $regex
+     * @param Regex $regex
      */
-    public static function regex(Regex|string $regex): RegexOperator
+    public static function regex(Regex $regex): RegexOperator
     {
         return new RegexOperator($regex);
     }
@@ -470,9 +470,9 @@ trait FactoryTrait
      * Selects documents if the array field is a specified size.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/size/
-     * @param int|string $value
+     * @param int $value
      */
-    public static function size(int|string $value): SizeOperator
+    public static function size(int $value): SizeOperator
     {
         return new SizeOperator($value);
     }
@@ -484,15 +484,15 @@ trait FactoryTrait
      * @param string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase.
      * @param Optional|string $language The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer. If not specified, the search uses the default language of the index.
      * If you specify a default_language value of none, then the text index parses through each word in the field, including stop words, and ignores suffix stemming.
-     * @param Optional|bool|string $caseSensitive A boolean flag to enable or disable case sensitive search. Defaults to false; i.e. the search defers to the case insensitivity of the text index.
-     * @param Optional|bool|string $diacriticSensitive A boolean flag to enable or disable diacritic sensitive search against version 3 text indexes. Defaults to false; i.e. the search defers to the diacritic insensitivity of the text index.
+     * @param Optional|bool $caseSensitive A boolean flag to enable or disable case sensitive search. Defaults to false; i.e. the search defers to the case insensitivity of the text index.
+     * @param Optional|bool $diacriticSensitive A boolean flag to enable or disable diacritic sensitive search against version 3 text indexes. Defaults to false; i.e. the search defers to the diacritic insensitivity of the text index.
      * Text searches against earlier versions of the text index are inherently diacritic sensitive and cannot be diacritic insensitive. As such, the $diacriticSensitive option has no effect with earlier versions of the text index.
      */
     public static function text(
         string $search,
         Optional|string $language = Optional::Undefined,
-        Optional|bool|string $caseSensitive = Optional::Undefined,
-        Optional|bool|string $diacriticSensitive = Optional::Undefined,
+        Optional|bool $caseSensitive = Optional::Undefined,
+        Optional|bool $diacriticSensitive = Optional::Undefined,
     ): TextOperator {
         return new TextOperator($search, $language, $caseSensitive, $diacriticSensitive);
     }

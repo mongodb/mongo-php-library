@@ -29,18 +29,18 @@ final class FacetOperator implements SearchOperatorInterface, OperatorInterface
     public const NAME = 'facet';
     public const PROPERTIES = ['facets' => 'facets', 'operator' => 'operator'];
 
-    /** @var Document|Serializable|array|stdClass|string $facets */
-    public readonly Document|Serializable|stdClass|array|string $facets;
+    /** @var Document|Serializable|array|stdClass $facets */
+    public readonly Document|Serializable|stdClass|array $facets;
 
     /** @var Optional|Document|SearchOperatorInterface|Serializable|array|stdClass $operator */
     public readonly Optional|Document|Serializable|SearchOperatorInterface|stdClass|array $operator;
 
     /**
-     * @param Document|Serializable|array|stdClass|string $facets
+     * @param Document|Serializable|array|stdClass $facets
      * @param Optional|Document|SearchOperatorInterface|Serializable|array|stdClass $operator
      */
     public function __construct(
-        Document|Serializable|stdClass|array|string $facets,
+        Document|Serializable|stdClass|array $facets,
         Optional|Document|Serializable|SearchOperatorInterface|stdClass|array $operator = Optional::Undefined,
     ) {
         $this->facets = $facets;

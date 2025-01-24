@@ -30,13 +30,13 @@ final class NinOperator implements FieldQueryInterface, OperatorInterface
     public const NAME = '$nin';
     public const PROPERTIES = ['value' => 'value'];
 
-    /** @var BSONArray|PackedArray|array|string $value */
-    public readonly PackedArray|BSONArray|array|string $value;
+    /** @var BSONArray|PackedArray|array $value */
+    public readonly PackedArray|BSONArray|array $value;
 
     /**
-     * @param BSONArray|PackedArray|array|string $value
+     * @param BSONArray|PackedArray|array $value
      */
-    public function __construct(PackedArray|BSONArray|array|string $value)
+    public function __construct(PackedArray|BSONArray|array $value)
     {
         if (is_array($value) && ! array_is_list($value)) {
             throw new InvalidArgumentException('Expected $value argument to be a list, got an associative array.');

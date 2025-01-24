@@ -19,6 +19,10 @@ use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\TimeUnit;
 use MongoDB\Builder\Type\WindowInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns the approximation of the area under a curve.
@@ -51,6 +55,10 @@ final class IntegralAccumulator implements WindowInterface, OperatorInterface
         Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $input,
         Optional|ResolvesToString|TimeUnit|string $unit = Optional::Undefined,
     ) {
+        if (is_string($input) && ! str_starts_with($input, '$')) {
+            throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->input = $input;
         $this->unit = $unit;
     }

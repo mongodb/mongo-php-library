@@ -14,7 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Replaces a document with the specified embedded document. The operation replaces all existing fields in the input document, including the _id field. Specify a document embedded in the input document to promote the embedded document to the top level.
@@ -37,6 +41,10 @@ final class ReplaceWithStage implements StageInterface, OperatorInterface
      */
     public function __construct(Document|Serializable|ResolvesToObject|stdClass|array|string $expression)
     {
+        if (is_string($expression) && ! str_starts_with($expression, '$')) {
+            throw new InvalidArgumentException('Argument $expression can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->expression = $expression;
     }
 }

@@ -26,6 +26,7 @@ use function interface_exists;
 use function ltrim;
 use function sort;
 use function sprintf;
+use function str_starts_with;
 use function ucfirst;
 use function usort;
 
@@ -71,13 +72,19 @@ abstract class OperatorGenerator extends AbstractGenerator
      * Expression types can contain class names, interface, native types or "list".
      * PHPDoc types are more precise than native types, so we use them systematically even if redundant.
      *
-     * @return object{native:string,doc:string,use:list<class-string>,list:bool,query:bool,javascript:bool}
+     * @return object{native:string,doc:string,use:list<class-string>,list:bool,query:bool,javascript:bool,dollarPrefixedString:bool}
      */
     final protected function getAcceptedTypes(ArgumentDefinition $arg): stdClass
     {
         $nativeTypes = [];
 
+        $dollarPrefixedString = false;
+
         foreach ($arg->type as $type) {
+            if (str_starts_with($type, 'resolvesTo')) {
+                $dollarPrefixedString = true;
+            }
+
             $type = $this->getType($type);
             $nativeTypes = array_merge($nativeTypes, $type->acceptedTypes);
 
@@ -89,6 +96,14 @@ abstract class OperatorGenerator extends AbstractGenerator
         if ($arg->optional) {
             $use[] = '\\' . Optional::class;
             $nativeTypes[] = Optional::class;
+        }
+
+        // If the argument accepts an expression, a $-prefixed string is accepted (field path or variable)
+        // Checked only if the argument does not already accept a string
+        if (in_array('string', $nativeTypes, true)) {
+            $dollarPrefixedString = false;
+        } elseif ($dollarPrefixedString) {
+            $nativeTypes[] = 'string';
         }
 
         $docTypes = $nativeTypes = array_unique($nativeTypes);
@@ -131,6 +146,7 @@ abstract class OperatorGenerator extends AbstractGenerator
             'list' => $listCheck,
             'query' => $isQuery,
             'javascript' => $isJavascript,
+            'dollarPrefixedString' => $dollarPrefixedString,
         ];
     }
 

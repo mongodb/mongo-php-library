@@ -47,8 +47,8 @@ final class AutocompleteOperator implements SearchOperatorInterface, OperatorInt
     /** @var Optional|string $tokenOrder */
     public readonly Optional|string $tokenOrder;
 
-    /** @var Optional|Document|Serializable|array|stdClass|string $fuzzy */
-    public readonly Optional|Document|Serializable|stdClass|array|string $fuzzy;
+    /** @var Optional|Document|Serializable|array|stdClass $fuzzy */
+    public readonly Optional|Document|Serializable|stdClass|array $fuzzy;
 
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
@@ -57,14 +57,14 @@ final class AutocompleteOperator implements SearchOperatorInterface, OperatorInt
      * @param array|string $path
      * @param string $query
      * @param Optional|string $tokenOrder
-     * @param Optional|Document|Serializable|array|stdClass|string $fuzzy
+     * @param Optional|Document|Serializable|array|stdClass $fuzzy
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
         array|string $path,
         string $query,
         Optional|string $tokenOrder = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array|string $fuzzy = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $fuzzy = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {
         $this->path = $path;

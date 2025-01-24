@@ -15,6 +15,10 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\TimeUnit;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns the difference between two dates.
@@ -64,7 +68,15 @@ final class DateDiffOperator implements ResolvesToInt, OperatorInterface
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
         Optional|ResolvesToString|string $startOfWeek = Optional::Undefined,
     ) {
+        if (is_string($startDate) && ! str_starts_with($startDate, '$')) {
+            throw new InvalidArgumentException('Argument $startDate can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->startDate = $startDate;
+        if (is_string($endDate) && ! str_starts_with($endDate, '$')) {
+            throw new InvalidArgumentException('Argument $endDate can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->endDate = $endDate;
         $this->unit = $unit;
         $this->timezone = $timezone;

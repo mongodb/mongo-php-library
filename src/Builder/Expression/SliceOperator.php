@@ -17,6 +17,8 @@ use MongoDB\Model\BSONArray;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns a subset of an array.
@@ -65,8 +67,20 @@ final class SliceOperator implements ResolvesToArray, OperatorInterface
             throw new InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
         }
 
+        if (is_string($expression) && ! str_starts_with($expression, '$')) {
+            throw new InvalidArgumentException('Argument $expression can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->expression = $expression;
+        if (is_string($n) && ! str_starts_with($n, '$')) {
+            throw new InvalidArgumentException('Argument $n can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->n = $n;
+        if (is_string($position) && ! str_starts_with($position, '$')) {
+            throw new InvalidArgumentException('Argument $position can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->position = $position;
     }
 }

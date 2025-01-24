@@ -14,6 +14,10 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns the month for a date as a number between 1 (January) and 12 (December).
@@ -41,6 +45,10 @@ final class MonthOperator implements ResolvesToInt, OperatorInterface
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ) {
+        if (is_string($date) && ! str_starts_with($date, '$')) {
+            throw new InvalidArgumentException('Argument $date can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->date = $date;
         $this->timezone = $timezone;
     }

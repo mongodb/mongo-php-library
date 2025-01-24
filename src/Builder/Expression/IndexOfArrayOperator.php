@@ -20,6 +20,8 @@ use stdClass;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
+use function str_starts_with;
 
 /**
  * Searches an array for an occurrence of a specified value and returns the array index of the first occurrence. Array indexes start at zero.
@@ -75,9 +77,21 @@ final class IndexOfArrayOperator implements ResolvesToInt, OperatorInterface
             throw new InvalidArgumentException('Expected $array argument to be a list, got an associative array.');
         }
 
+        if (is_string($array) && ! str_starts_with($array, '$')) {
+            throw new InvalidArgumentException('Argument $array can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->array = $array;
         $this->search = $search;
+        if (is_string($start) && ! str_starts_with($start, '$')) {
+            throw new InvalidArgumentException('Argument $start can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->start = $start;
+        if (is_string($end) && ! str_starts_with($end, '$')) {
+            throw new InvalidArgumentException('Argument $end can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->end = $end;
     }
 }

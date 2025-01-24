@@ -31,19 +31,19 @@ final class ListSessionsStage implements StageInterface, OperatorInterface
     public const NAME = '$listSessions';
     public const PROPERTIES = ['users' => 'users', 'allUsers' => 'allUsers'];
 
-    /** @var Optional|BSONArray|PackedArray|array|string $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users. */
-    public readonly Optional|PackedArray|BSONArray|array|string $users;
+    /** @var Optional|BSONArray|PackedArray|array $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users. */
+    public readonly Optional|PackedArray|BSONArray|array $users;
 
-    /** @var Optional|bool|string $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster. */
-    public readonly Optional|bool|string $allUsers;
+    /** @var Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster. */
+    public readonly Optional|bool $allUsers;
 
     /**
-     * @param Optional|BSONArray|PackedArray|array|string $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
-     * @param Optional|bool|string $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
+     * @param Optional|BSONArray|PackedArray|array $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
+     * @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
      */
     public function __construct(
-        Optional|PackedArray|BSONArray|array|string $users = Optional::Undefined,
-        Optional|bool|string $allUsers = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array $users = Optional::Undefined,
+        Optional|bool $allUsers = Optional::Undefined,
     ) {
         if (is_array($users) && ! array_is_list($users)) {
             throw new InvalidArgumentException('Expected $users argument to be a list, got an associative array.');

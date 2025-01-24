@@ -16,6 +16,8 @@ use MongoDB\Model\BSONArray;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument expression.
@@ -39,6 +41,10 @@ final class AllElementsTrueOperator implements ResolvesToBool, OperatorInterface
     {
         if (is_array($expression) && ! array_is_list($expression)) {
             throw new InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
+        }
+
+        if (is_string($expression) && ! str_starts_with($expression, '$')) {
+            throw new InvalidArgumentException('Argument $expression can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
         }
 
         $this->expression = $expression;

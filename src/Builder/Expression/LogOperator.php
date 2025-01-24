@@ -12,6 +12,10 @@ use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Calculates the log of a number in the specified base.
@@ -39,7 +43,15 @@ final class LogOperator implements ResolvesToDouble, OperatorInterface
         Decimal128|Int64|ResolvesToNumber|float|int|string $number,
         Decimal128|Int64|ResolvesToNumber|float|int|string $base,
     ) {
+        if (is_string($number) && ! str_starts_with($number, '$')) {
+            throw new InvalidArgumentException('Argument $number can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->number = $number;
+        if (is_string($base) && ! str_starts_with($base, '$')) {
+            throw new InvalidArgumentException('Argument $base can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->base = $base;
     }
 }

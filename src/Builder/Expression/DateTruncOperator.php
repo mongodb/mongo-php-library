@@ -17,6 +17,10 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\TimeUnit;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Truncates a date.
@@ -78,8 +82,16 @@ final class DateTruncOperator implements ResolvesToDate, OperatorInterface
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
         Optional|string $startOfWeek = Optional::Undefined,
     ) {
+        if (is_string($date) && ! str_starts_with($date, '$')) {
+            throw new InvalidArgumentException('Argument $date can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->date = $date;
         $this->unit = $unit;
+        if (is_string($binSize) && ! str_starts_with($binSize, '$')) {
+            throw new InvalidArgumentException('Argument $binSize can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->binSize = $binSize;
         $this->timezone = $timezone;
         $this->startOfWeek = $startOfWeek;

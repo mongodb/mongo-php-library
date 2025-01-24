@@ -16,6 +16,8 @@ use MongoDB\Model\BSONArray;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns a specified number of elements from the end of an array.
@@ -43,9 +45,17 @@ final class LastNOperator implements ResolvesToArray, OperatorInterface
         ResolvesToInt|int|string $n,
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
     ) {
+        if (is_string($n) && ! str_starts_with($n, '$')) {
+            throw new InvalidArgumentException('Argument $n can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->n = $n;
         if (is_array($input) && ! array_is_list($input)) {
             throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
+        }
+
+        if (is_string($input) && ! str_starts_with($input, '$')) {
+            throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
         }
 
         $this->input = $input;

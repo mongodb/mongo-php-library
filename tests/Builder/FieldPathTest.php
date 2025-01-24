@@ -56,4 +56,18 @@ class FieldPathTest extends TestCase
         yield 'number' => ['numberFieldPath', Expression\ResolvesToNumber::class];
         yield 'any' => ['fieldPath', Expression\ResolvesToAny::class];
     }
+
+    public function testStringFieldPathAcceptedAsExpression(): void
+    {
+        $operator = Expression::abs('$foo');
+
+        $this->assertSame('$foo', $operator->value);
+    }
+
+    public function testNonDollarPrefixedStringRejected(): void
+    {
+        self::expectException(InvalidArgumentException::class);
+
+        Expression::abs('foo');
+    }
 }

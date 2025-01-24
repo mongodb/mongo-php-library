@@ -64,8 +64,8 @@ final class GraphLookupStage implements StageInterface, OperatorInterface
     /** @var string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document. */
     public readonly string $as;
 
-    /** @var Optional|int|string $maxDepth Non-negative integral number specifying the maximum recursion depth. */
-    public readonly Optional|int|string $maxDepth;
+    /** @var Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth. */
+    public readonly Optional|int $maxDepth;
 
     /** @var Optional|string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth. */
     public readonly Optional|string $depthField;
@@ -80,7 +80,7 @@ final class GraphLookupStage implements StageInterface, OperatorInterface
      * @param string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process.
      * @param string $connectToField Field name in other documents against which to match the value of the field specified by the connectFromField parameter.
      * @param string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
-     * @param Optional|int|string $maxDepth Non-negative integral number specifying the maximum recursion depth.
+     * @param Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth.
      * @param Optional|string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
      * @param Optional|QueryInterface|array $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
      */
@@ -90,7 +90,7 @@ final class GraphLookupStage implements StageInterface, OperatorInterface
         string $connectFromField,
         string $connectToField,
         string $as,
-        Optional|int|string $maxDepth = Optional::Undefined,
+        Optional|int $maxDepth = Optional::Undefined,
         Optional|string $depthField = Optional::Undefined,
         Optional|QueryInterface|array $restrictSearchWithMatch = Optional::Undefined,
     ) {

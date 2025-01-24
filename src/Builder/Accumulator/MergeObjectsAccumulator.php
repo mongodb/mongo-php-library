@@ -14,7 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Combines multiple documents into a single document.
@@ -36,6 +40,10 @@ final class MergeObjectsAccumulator implements AccumulatorInterface, OperatorInt
      */
     public function __construct(Document|Serializable|ResolvesToObject|stdClass|array|string $document)
     {
+        if (is_string($document) && ! str_starts_with($document, '$')) {
+            throw new InvalidArgumentException('Argument $document can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->document = $document;
     }
 }

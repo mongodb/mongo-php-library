@@ -15,6 +15,10 @@ use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\WindowInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Calculates the population standard deviation of the input values. Use if the values encompass the entire population of data you want to represent and do not wish to generalize about a larger population. $stdDevPop ignores non-numeric values.
@@ -38,6 +42,10 @@ final class StdDevPopAccumulator implements AccumulatorInterface, WindowInterfac
      */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $expression)
     {
+        if (is_string($expression) && ! str_starts_with($expression, '$')) {
+            throw new InvalidArgumentException('Argument $expression can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->expression = $expression;
     }
 }

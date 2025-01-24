@@ -543,12 +543,12 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The input date for which to return parts. date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
-     * @param Optional|bool|string $iso8601 If set to true, modifies the output document to use ISO week date fields. Defaults to false.
+     * @param Optional|bool $iso8601 If set to true, modifies the output document to use ISO week date fields. Defaults to false.
      */
     public static function dateToParts(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
-        Optional|bool|string $iso8601 = Optional::Undefined,
+        Optional|bool $iso8601 = Optional::Undefined,
     ): DateToPartsOperator {
         return new DateToPartsOperator($date, $timezone, $iso8601);
     }
@@ -752,12 +752,12 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
      * @param Javascript|string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
      * function(arg1, arg2, ...) { ... }
-     * @param BSONArray|PackedArray|array|string $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
+     * @param BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
      * @param string $lang
      */
     public static function function(
         Javascript|string $body,
-        PackedArray|BSONArray|array|string $args = [],
+        PackedArray|BSONArray|array $args = [],
         string $lang = 'js',
     ): FunctionOperator {
         return new FunctionOperator($body, $args, $lang);
@@ -1013,12 +1013,12 @@ trait FactoryTrait
      * Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/
-     * @param Document|Serializable|array|stdClass|string $vars Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
+     * @param Document|Serializable|array|stdClass $vars Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
      * The variable assignments have no meaning outside the in expression, not even within the vars block itself.
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in The expression to evaluate.
      */
     public static function let(
-        Document|Serializable|stdClass|array|string $vars,
+        Document|Serializable|stdClass|array $vars,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
     ): LetOperator {
         return new LetOperator($vars, $in);
@@ -1741,11 +1741,11 @@ trait FactoryTrait
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input The array to be sorted.
      * The result is null if the expression: is missing, evaluates to null, or evaluates to undefined
      * If the expression evaluates to any other non-array value, the document returns an error.
-     * @param Document|Serializable|Sort|array|int|stdClass|string $sortBy The document specifies a sort ordering.
+     * @param Document|Serializable|Sort|array|int|stdClass $sortBy The document specifies a sort ordering.
      */
     public static function sortArray(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
-        Document|Serializable|Sort|stdClass|array|int|string $sortBy,
+        Document|Serializable|Sort|stdClass|array|int $sortBy,
     ): SortArrayOperator {
         return new SortArrayOperator($input, $sortBy);
     }
@@ -1918,7 +1918,7 @@ trait FactoryTrait
      * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression and breaks out of the control flow.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
-     * @param BSONArray|PackedArray|array|string $branches An array of control branch documents. Each branch is a document with the following fields:
+     * @param BSONArray|PackedArray|array $branches An array of control branch documents. Each branch is a document with the following fields:
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
@@ -1926,7 +1926,7 @@ trait FactoryTrait
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
     public static function switch(
-        PackedArray|BSONArray|array|string $branches,
+        PackedArray|BSONArray|array $branches,
         Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
     ): SwitchOperator {
         return new SwitchOperator($branches, $default);
@@ -2212,16 +2212,16 @@ trait FactoryTrait
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $inputs An array of expressions that resolve to arrays. The elements of these input arrays combine to form the arrays of the output array.
      * If any of the inputs arrays resolves to a value of null or refers to a missing field, $zip returns null.
      * If any of the inputs arrays does not resolve to an array or null nor refers to a missing field, $zip returns an error.
-     * @param Optional|bool|string $useLongestLength A boolean which specifies whether the length of the longest array determines the number of arrays in the output array.
+     * @param Optional|bool $useLongestLength A boolean which specifies whether the length of the longest array determines the number of arrays in the output array.
      * The default value is false: the shortest array length determines the number of arrays in the output array.
-     * @param Optional|BSONArray|PackedArray|array|string $defaults An array of default element values to use if the input arrays have different lengths. You must specify useLongestLength: true along with this field, or else $zip will return an error.
+     * @param Optional|BSONArray|PackedArray|array $defaults An array of default element values to use if the input arrays have different lengths. You must specify useLongestLength: true along with this field, or else $zip will return an error.
      * If useLongestLength: true but defaults is empty or not specified, $zip uses null as the default value.
      * If specifying a non-empty defaults, you must specify a default for each input array or else $zip will return an error.
      */
     public static function zip(
         PackedArray|ResolvesToArray|BSONArray|array|string $inputs,
-        Optional|bool|string $useLongestLength = Optional::Undefined,
-        Optional|PackedArray|BSONArray|array|string $defaults = Optional::Undefined,
+        Optional|bool $useLongestLength = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array $defaults = Optional::Undefined,
     ): ZipOperator {
         return new ZipOperator($inputs, $useLongestLength, $defaults);
     }

@@ -18,6 +18,8 @@ use MongoDB\Model\BSONArray;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns literal documents from input values.
@@ -51,6 +53,10 @@ final class DocumentsStage implements StageInterface, OperatorInterface
     {
         if (is_array($documents) && ! array_is_list($documents)) {
             throw new InvalidArgumentException('Expected $documents argument to be a list, got an associative array.');
+        }
+
+        if (is_string($documents) && ! str_starts_with($documents, '$')) {
+            throw new InvalidArgumentException('Argument $documents can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
         }
 
         $this->documents = $documents;

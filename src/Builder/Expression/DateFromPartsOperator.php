@@ -13,6 +13,10 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function is_string;
+use function str_starts_with;
 
 /**
  * Constructs a BSON Date object given the date's constituent parts.
@@ -98,15 +102,55 @@ final class DateFromPartsOperator implements ResolvesToDate, OperatorInterface
         Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $millisecond = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ) {
+        if (is_string($year) && ! str_starts_with($year, '$')) {
+            throw new InvalidArgumentException('Argument $year can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->year = $year;
+        if (is_string($isoWeekYear) && ! str_starts_with($isoWeekYear, '$')) {
+            throw new InvalidArgumentException('Argument $isoWeekYear can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->isoWeekYear = $isoWeekYear;
+        if (is_string($month) && ! str_starts_with($month, '$')) {
+            throw new InvalidArgumentException('Argument $month can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->month = $month;
+        if (is_string($isoWeek) && ! str_starts_with($isoWeek, '$')) {
+            throw new InvalidArgumentException('Argument $isoWeek can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->isoWeek = $isoWeek;
+        if (is_string($day) && ! str_starts_with($day, '$')) {
+            throw new InvalidArgumentException('Argument $day can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->day = $day;
+        if (is_string($isoDayOfWeek) && ! str_starts_with($isoDayOfWeek, '$')) {
+            throw new InvalidArgumentException('Argument $isoDayOfWeek can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->isoDayOfWeek = $isoDayOfWeek;
+        if (is_string($hour) && ! str_starts_with($hour, '$')) {
+            throw new InvalidArgumentException('Argument $hour can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->hour = $hour;
+        if (is_string($minute) && ! str_starts_with($minute, '$')) {
+            throw new InvalidArgumentException('Argument $minute can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->minute = $minute;
+        if (is_string($second) && ! str_starts_with($second, '$')) {
+            throw new InvalidArgumentException('Argument $second can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->second = $second;
+        if (is_string($millisecond) && ! str_starts_with($millisecond, '$')) {
+            throw new InvalidArgumentException('Argument $millisecond can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->millisecond = $millisecond;
         $this->timezone = $timezone;
     }

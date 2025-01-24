@@ -202,16 +202,16 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/
      * @param Decimal128|Int64|ResolvesToNumber|float|int|string $input
-     * @param Optional|int|string $N An integer that specifies the number of historical documents that have a significant mathematical weight in the exponential moving average calculation, with the most recent documents contributing the most weight.
+     * @param Optional|int $N An integer that specifies the number of historical documents that have a significant mathematical weight in the exponential moving average calculation, with the most recent documents contributing the most weight.
      * You must specify either N or alpha. You cannot specify both.
      * The N value is used in this formula to calculate the current result based on the expression value from the current document being read and the previous result of the calculation:
-     * @param Optional|Int64|float|int|string $alpha A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher alpha value assigns a lower mathematical significance to previous results from the calculation.
+     * @param Optional|Int64|float|int $alpha A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher alpha value assigns a lower mathematical significance to previous results from the calculation.
      * You must specify either N or alpha. You cannot specify both.
      */
     public static function expMovingAvg(
         Decimal128|Int64|ResolvesToNumber|float|int|string $input,
-        Optional|int|string $N = Optional::Undefined,
-        Optional|Int64|float|int|string $alpha = Optional::Undefined,
+        Optional|int $N = Optional::Undefined,
+        Optional|Int64|float|int $alpha = Optional::Undefined,
     ): ExpMovingAvgAccumulator {
         return new ExpMovingAvgAccumulator($input, $N, $alpha);
     }
@@ -458,7 +458,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/
      * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Specifies an expression to evaluate and return in the output.
-     * @param int|string $by Specifies an integer with a numeric document position relative to the current document in the output.
+     * @param int $by Specifies an integer with a numeric document position relative to the current document in the output.
      * For example:
      * 1 specifies the document position after the current document.
      * -1 specifies the document position before the current document.
@@ -469,7 +469,7 @@ trait FactoryTrait
      */
     public static function shift(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
-        int|string $by,
+        int $by,
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default,
     ): ShiftAccumulator {
         return new ShiftAccumulator($output, $by, $default);

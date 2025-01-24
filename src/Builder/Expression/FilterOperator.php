@@ -17,6 +17,8 @@ use MongoDB\Model\BSONArray;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
+use function str_starts_with;
 
 /**
  * Selects a subset of the array to return an array with only the elements that match the filter condition.
@@ -62,9 +64,21 @@ final class FilterOperator implements ResolvesToArray, OperatorInterface
             throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }
 
+        if (is_string($input) && ! str_starts_with($input, '$')) {
+            throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->input = $input;
+        if (is_string($cond) && ! str_starts_with($cond, '$')) {
+            throw new InvalidArgumentException('Argument $cond can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->cond = $cond;
         $this->as = $as;
+        if (is_string($limit) && ! str_starts_with($limit, '$')) {
+            throw new InvalidArgumentException('Argument $limit can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->limit = $limit;
     }
 }

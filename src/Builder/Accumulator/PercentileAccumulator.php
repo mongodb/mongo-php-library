@@ -22,6 +22,8 @@ use MongoDB\Model\BSONArray;
 
 use function array_is_list;
 use function is_array;
+use function is_string;
+use function str_starts_with;
 
 /**
  * Returns an array of scalar values that correspond to specified percentile values.
@@ -66,9 +68,17 @@ final class PercentileAccumulator implements AccumulatorInterface, WindowInterfa
         PackedArray|ResolvesToArray|BSONArray|array|string $p,
         string $method,
     ) {
+        if (is_string($input) && ! str_starts_with($input, '$')) {
+            throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
         $this->input = $input;
         if (is_array($p) && ! array_is_list($p)) {
             throw new InvalidArgumentException('Expected $p argument to be a list, got an associative array.');
+        }
+
+        if (is_string($p) && ! str_starts_with($p, '$')) {
+            throw new InvalidArgumentException('Argument $p can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
         }
 
         $this->p = $p;

@@ -169,6 +169,18 @@ class OperatorClassGenerator extends OperatorGenerator
 
                     PHP);
                 }
+
+                if ($type->dollarPrefixedString) {
+                    $namespace->addUseFunction('is_string');
+                    $namespace->addUseFunction('str_starts_with');
+                    $namespace->addUse(InvalidArgumentException::class);
+                    $constructor->addBody(<<<PHP
+                    if (is_string(\${$argument->propertyName}) && ! str_starts_with(\${$argument->propertyName}, '$')) {
+                        throw new InvalidArgumentException('Argument \${$argument->propertyName} can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+                    }
+
+                    PHP);
+                }
             }
 
             // Set property from constructor argument

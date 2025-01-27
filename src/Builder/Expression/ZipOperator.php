@@ -67,12 +67,12 @@ final class ZipOperator implements ResolvesToArray, OperatorInterface
         Optional|bool $useLongestLength = Optional::Undefined,
         Optional|PackedArray|BSONArray|array $defaults = Optional::Undefined,
     ) {
-        if (is_array($inputs) && ! array_is_list($inputs)) {
-            throw new InvalidArgumentException('Expected $inputs argument to be a list, got an associative array.');
-        }
-
         if (is_string($inputs) && ! str_starts_with($inputs, '$')) {
             throw new InvalidArgumentException('Argument $inputs can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
+        if (is_array($inputs) && ! array_is_list($inputs)) {
+            throw new InvalidArgumentException('Expected $inputs argument to be a list, got an associative array.');
         }
 
         $this->inputs = $inputs;

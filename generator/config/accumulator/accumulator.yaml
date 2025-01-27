@@ -115,8 +115,7 @@ tests:
                                         }
                                         return state;
                                     }
-                            accumulateArgs:
-                                - '$name'
+                            accumulateArgs: ['$name']
                             merge:
                                 $code: |-
                                     function(state1, state2) {

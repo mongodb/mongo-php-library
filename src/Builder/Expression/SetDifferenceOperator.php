@@ -45,21 +45,21 @@ final class SetDifferenceOperator implements ResolvesToArray, OperatorInterface
         PackedArray|ResolvesToArray|BSONArray|array|string $expression1,
         PackedArray|ResolvesToArray|BSONArray|array|string $expression2,
     ) {
-        if (is_array($expression1) && ! array_is_list($expression1)) {
-            throw new InvalidArgumentException('Expected $expression1 argument to be a list, got an associative array.');
-        }
-
         if (is_string($expression1) && ! str_starts_with($expression1, '$')) {
             throw new InvalidArgumentException('Argument $expression1 can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
         }
 
-        $this->expression1 = $expression1;
-        if (is_array($expression2) && ! array_is_list($expression2)) {
-            throw new InvalidArgumentException('Expected $expression2 argument to be a list, got an associative array.');
+        if (is_array($expression1) && ! array_is_list($expression1)) {
+            throw new InvalidArgumentException('Expected $expression1 argument to be a list, got an associative array.');
         }
 
+        $this->expression1 = $expression1;
         if (is_string($expression2) && ! str_starts_with($expression2, '$')) {
             throw new InvalidArgumentException('Argument $expression2 can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
+        if (is_array($expression2) && ! array_is_list($expression2)) {
+            throw new InvalidArgumentException('Expected $expression2 argument to be a list, got an associative array.');
         }
 
         $this->expression2 = $expression2;

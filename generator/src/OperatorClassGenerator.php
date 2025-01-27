@@ -135,6 +135,18 @@ class OperatorClassGenerator extends OperatorGenerator
                     $constructorParam->setDefaultValue($argument->default);
                 }
 
+                if ($type->dollarPrefixedString) {
+                    $namespace->addUseFunction('is_string');
+                    $namespace->addUseFunction('str_starts_with');
+                    $namespace->addUse(InvalidArgumentException::class);
+                    $constructor->addBody(<<<PHP
+                    if (is_string(\${$argument->propertyName}) && ! str_starts_with(\${$argument->propertyName}, '$')) {
+                        throw new InvalidArgumentException('Argument \${$argument->propertyName} can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+                    }
+
+                    PHP);
+                }
+
                 // List type must be validated with array_is_list()
                 if ($type->list) {
                     $namespace->addUseFunction('is_array');
@@ -165,18 +177,6 @@ class OperatorClassGenerator extends OperatorGenerator
                     $constructor->addBody(<<<PHP
                     if (is_string(\${$argument->propertyName})) {
                         \${$argument->propertyName} = new Javascript(\${$argument->propertyName});
-                    }
-
-                    PHP);
-                }
-
-                if ($type->dollarPrefixedString) {
-                    $namespace->addUseFunction('is_string');
-                    $namespace->addUseFunction('str_starts_with');
-                    $namespace->addUse(InvalidArgumentException::class);
-                    $constructor->addBody(<<<PHP
-                    if (is_string(\${$argument->propertyName}) && ! str_starts_with(\${$argument->propertyName}, '$')) {
-                        throw new InvalidArgumentException('Argument \${$argument->propertyName} can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
                     }
 
                     PHP);

@@ -55,12 +55,12 @@ final class SortArrayOperator implements ResolvesToArray, OperatorInterface
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         Document|Serializable|Sort|stdClass|array|int $sortBy,
     ) {
-        if (is_array($input) && ! array_is_list($input)) {
-            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
-        }
-
         if (is_string($input) && ! str_starts_with($input, '$')) {
             throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
+        if (is_array($input) && ! array_is_list($input)) {
+            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }
 
         $this->input = $input;

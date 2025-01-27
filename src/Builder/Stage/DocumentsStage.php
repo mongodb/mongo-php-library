@@ -51,12 +51,12 @@ final class DocumentsStage implements StageInterface, OperatorInterface
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array|string $documents)
     {
-        if (is_array($documents) && ! array_is_list($documents)) {
-            throw new InvalidArgumentException('Expected $documents argument to be a list, got an associative array.');
-        }
-
         if (is_string($documents) && ! str_starts_with($documents, '$')) {
             throw new InvalidArgumentException('Argument $documents can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
+        if (is_array($documents) && ! array_is_list($documents)) {
+            throw new InvalidArgumentException('Expected $documents argument to be a list, got an associative array.');
         }
 
         $this->documents = $documents;

@@ -94,12 +94,12 @@ final class AccumulatorAccumulator implements AccumulatorInterface, OperatorInte
         }
 
         $this->accumulate = $accumulate;
-        if (is_array($accumulateArgs) && ! array_is_list($accumulateArgs)) {
-            throw new InvalidArgumentException('Expected $accumulateArgs argument to be a list, got an associative array.');
-        }
-
         if (is_string($accumulateArgs) && ! str_starts_with($accumulateArgs, '$')) {
             throw new InvalidArgumentException('Argument $accumulateArgs can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
+        if (is_array($accumulateArgs) && ! array_is_list($accumulateArgs)) {
+            throw new InvalidArgumentException('Expected $accumulateArgs argument to be a list, got an associative array.');
         }
 
         $this->accumulateArgs = $accumulateArgs;
@@ -109,12 +109,12 @@ final class AccumulatorAccumulator implements AccumulatorInterface, OperatorInte
 
         $this->merge = $merge;
         $this->lang = $lang;
-        if (is_array($initArgs) && ! array_is_list($initArgs)) {
-            throw new InvalidArgumentException('Expected $initArgs argument to be a list, got an associative array.');
-        }
-
         if (is_string($initArgs) && ! str_starts_with($initArgs, '$')) {
             throw new InvalidArgumentException('Argument $initArgs can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
+        if (is_array($initArgs) && ! array_is_list($initArgs)) {
+            throw new InvalidArgumentException('Expected $initArgs argument to be a list, got an associative array.');
         }
 
         $this->initArgs = $initArgs;

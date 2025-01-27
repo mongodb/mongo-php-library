@@ -51,12 +51,12 @@ final class LastNAccumulator implements AccumulatorInterface, WindowInterface, O
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         ResolvesToInt|int|string $n,
     ) {
-        if (is_array($input) && ! array_is_list($input)) {
-            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
-        }
-
         if (is_string($input) && ! str_starts_with($input, '$')) {
             throw new InvalidArgumentException('Argument $input can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
+        if (is_array($input) && ! array_is_list($input)) {
+            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }
 
         $this->input = $input;

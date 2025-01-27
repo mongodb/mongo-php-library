@@ -63,12 +63,12 @@ final class SliceOperator implements ResolvesToArray, OperatorInterface
         ResolvesToInt|int|string $n,
         Optional|ResolvesToInt|int|string $position = Optional::Undefined,
     ) {
-        if (is_array($expression) && ! array_is_list($expression)) {
-            throw new InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
-        }
-
         if (is_string($expression) && ! str_starts_with($expression, '$')) {
             throw new InvalidArgumentException('Argument $expression can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
+        }
+
+        if (is_array($expression) && ! array_is_list($expression)) {
+            throw new InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
         }
 
         $this->expression = $expression;

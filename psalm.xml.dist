@@ -17,12 +17,6 @@
         </ignoreFiles>
     </projectFiles>
 
-    <stubs>
-        <file name="stubs/BSON/Document.stub.php"/>
-        <file name="stubs/BSON/Iterator.stub.php"/>
-        <file name="stubs/BSON/PackedArray.stub.php"/>
-    </stubs>
-
     <issueHandlers>
         <!-- Class is meant to be Unserialized by the extension only -->
         <PropertyNotSetInConstructor>

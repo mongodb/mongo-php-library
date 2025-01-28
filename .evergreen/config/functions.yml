@@ -119,6 +119,10 @@ functions:
             cp -R ${PROJECT_DIRECTORY}/ $DRIVERS_TOOLS
           else
             git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git --depth 1 $DRIVERS_TOOLS
+
+            # Last working version working
+            git -C $DRIVERS_TOOLS fetch --depth=1 origin 6a0686e0194d30b0a259404839c3e8bf9be12a5b
+            git -C $DRIVERS_TOOLS checkout 6a0686e0194d30b0a259404839c3e8bf9be12a5b
           fi
           echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
 

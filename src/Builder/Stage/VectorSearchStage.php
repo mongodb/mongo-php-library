@@ -48,8 +48,8 @@ final class VectorSearchStage implements StageInterface, OperatorInterface
     /** @var int $limit Number of documents to return in the results. This value can't exceed the value of numCandidates if you specify numCandidates. */
     public readonly int $limit;
 
-    /** @var array|string $path Indexed vector type field to search. */
-    public readonly array|string $path;
+    /** @var string $path Indexed vector type field to search. */
+    public readonly string $path;
 
     /** @var BSONArray|PackedArray|array $queryVector Array of numbers that represent the query vector. The number type must match the indexed field value type. */
     public readonly PackedArray|BSONArray|array $queryVector;
@@ -69,7 +69,7 @@ final class VectorSearchStage implements StageInterface, OperatorInterface
     /**
      * @param string $index Name of the Atlas Vector Search index to use.
      * @param int $limit Number of documents to return in the results. This value can't exceed the value of numCandidates if you specify numCandidates.
-     * @param array|string $path Indexed vector type field to search.
+     * @param string $path Indexed vector type field to search.
      * @param BSONArray|PackedArray|array $queryVector Array of numbers that represent the query vector. The number type must match the indexed field value type.
      * @param Optional|bool $exact This is required if numCandidates is omitted. false to run ANN search. true to run ENN search.
      * @param Optional|QueryInterface|array $filter Any match query that compares an indexed field with a boolean, date, objectId, number (not decimals), string, or UUID to use as a pre-filter.
@@ -79,7 +79,7 @@ final class VectorSearchStage implements StageInterface, OperatorInterface
     public function __construct(
         string $index,
         int $limit,
-        array|string $path,
+        string $path,
         PackedArray|BSONArray|array $queryVector,
         Optional|bool $exact = Optional::Undefined,
         Optional|QueryInterface|array $filter = Optional::Undefined,

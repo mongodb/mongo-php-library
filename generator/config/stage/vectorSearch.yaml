@@ -22,7 +22,7 @@ arguments:
     -
         name: path
         type:
-            - searchPath
+            - string
         description: |
             Indexed vector type field to search.
     -

@@ -73,7 +73,7 @@ tests:
                                     function(state, numCopies) {
                                         return { count: state.count + 1, sum: state.sum + numCopies }
                                     }
-                            accumulateArgs: [ "$copies" ],
+                            accumulateArgs: [ "$copies" ]
                             merge:
                                 $code: |-
                                     function(state1, state2) {

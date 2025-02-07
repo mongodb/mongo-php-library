@@ -6,6 +6,7 @@ use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use PHPUnit\Framework\Attributes\TestWith;
 
 use function iterator_to_array;
 
@@ -18,7 +19,9 @@ class BuilderDatabaseFunctionalTest extends FunctionalTestCase
         parent::tearDown();
     }
 
-    public function testAggregate(): void
+    #[TestWith([true])]
+    #[TestWith([false])]
+    public function testAggregate(bool $pipelineAsArray): void
     {
         $this->skipIfServerVersion('<', '6.0.0', '$documents stage is not supported');
 
@@ -33,14 +36,18 @@ class BuilderDatabaseFunctionalTest extends FunctionalTestCase
                 buckets: 2,
             ),
         );
-        // Extract the list of stages for arg type restriction
-        $pipeline = iterator_to_array($pipeline);
+
+        if ($pipelineAsArray) {
+            $pipeline = iterator_to_array($pipeline);
+        }
 
         $results = $this->database->aggregate($pipeline)->toArray();
         $this->assertCount(2, $results);
     }
 
-    public function testWatch(): void
+    #[TestWith([true])]
+    #[TestWith([false])]
+    public function testWatch(bool $pipelineAsArray): void
     {
         $this->skipIfChangeStreamIsNotSupported();
 
@@ -51,8 +58,10 @@ class BuilderDatabaseFunctionalTest extends FunctionalTestCase
         $pipeline = new Pipeline(
             Stage::match(operationType: Query::eq('insert')),
         );
-        // Extract the list of stages for arg type restriction
-        $pipeline = iterator_to_array($pipeline);
+
+        if ($pipelineAsArray) {
+            $pipeline = iterator_to_array($pipeline);
+        }
 
         $changeStream = $this->database->watch($pipeline);
         $this->database->selectCollection($this->getCollectionName())->insertOne(['x' => 3]);

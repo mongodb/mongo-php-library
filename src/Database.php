@@ -188,16 +188,16 @@ class Database
      * and $listLocalSessions. Requires MongoDB >= 3.6
      *
      * @see Aggregate::__construct() for supported options
-     * @param array $pipeline Aggregation pipeline
-     * @param array $options  Command options
+     * @param array|Pipeline $pipeline Aggregation pipeline
+     * @param array          $options  Command options
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function aggregate(array $pipeline, array $options = []): CursorInterface
+    public function aggregate(array|Pipeline $pipeline, array $options = []): CursorInterface
     {
-        if (is_builder_pipeline($pipeline)) {
+        if (is_array($pipeline) && is_builder_pipeline($pipeline)) {
             $pipeline = new Pipeline(...$pipeline);
         }
 
@@ -582,13 +582,13 @@ class Database
      * Create a change stream for watching changes to the database.
      *
      * @see Watch::__construct() for supported options
-     * @param array $pipeline Aggregation pipeline
-     * @param array $options  Command options
+     * @param array|Pipeline $pipeline Aggregation pipeline
+     * @param array          $options  Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function watch(array $pipeline = [], array $options = []): ChangeStream
+    public function watch(array|Pipeline $pipeline = [], array $options = []): ChangeStream
     {
-        if (is_builder_pipeline($pipeline)) {
+        if (is_array($pipeline) && is_builder_pipeline($pipeline)) {
             $pipeline = new Pipeline(...$pipeline);
         }
 

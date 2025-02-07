@@ -334,7 +334,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             'admin',
             new Command(['getParameter' => 1, 'featureCompatibilityVersion' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY),
+            ['readPreference' => $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)],
         );
 
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
@@ -357,7 +357,7 @@ abstract class FunctionalTestCase extends TestCase
         $buildInfo = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['buildInfo' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY),
+            ['readPreference' => $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)],
         )->toArray()[0];
 
         if (isset($buildInfo->version) && is_string($buildInfo->version)) {
@@ -372,7 +372,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['serverStatus' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY),
+            ['readPreference' => $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)],
         );
 
         $result = current($cursor->toArray());

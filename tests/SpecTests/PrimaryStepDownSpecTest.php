@@ -270,7 +270,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $cursor = $server->executeCommand(
             $this->getDatabaseName(),
             new Command(['serverStatus' => 1]),
-            new ReadPreference(ReadPreference::PRIMARY),
+            ['readPreference' => new ReadPreference(ReadPreference::PRIMARY)],
         );
 
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);

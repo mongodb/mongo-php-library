@@ -66,13 +66,14 @@ jobs:
         with:
           python-version: '3.13'
 
-      - id: setup-mongodb
-        uses: mongodb-labs/drivers-evergreen-tools@master
+      - name: "Setup MongoDB"
+        id: setup-mongodb
+        uses: ./tests/drivers-evergreen-tools
         with:
           version: ${{ matrix.mongodb-version }}
           topology: ${{ matrix.topology }}
 
-      - name: "Setup"
+      - name: "Setup PHP"
         uses: "./.github/actions/setup"
         with:
           php-version: ${{ matrix.php-version }}

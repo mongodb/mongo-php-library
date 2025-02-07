@@ -4,7 +4,7 @@ functions:
     - command: git.get_project
       params:
         directory: "src"
-    # Make an evergreen exapanstion file with dynamic values
+    # Make an evergreen expansion file with dynamic values
     - command: shell.exec
       params:
         working_dir: "src"
@@ -16,7 +16,7 @@ functions:
              CURRENT_VERSION=latest
           fi
           
-          export DRIVERS_TOOLS="$(pwd)/../drivers-tools"
+          export DRIVERS_TOOLS="$(pwd)/tests/drivers-evergreen-tools"
           export PROJECT_DIRECTORY="$(pwd)"
           
           # Python has cygwin path problems on Windows. Detect prospective mongo-orchestration home directory
@@ -111,15 +111,10 @@ functions:
   "prepare resources":
     - command: shell.exec
       params:
+        working_dir: src
         script: |
           ${PREPARE_SHELL}
-          rm -rf $DRIVERS_TOOLS
-          if [ "${project}" = "drivers-tools" ]; then
-            # If this was a patch build, doing a fresh clone would not actually test the patch
-            cp -R ${PROJECT_DIRECTORY}/ $DRIVERS_TOOLS
-          else
-            git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git --depth 1 $DRIVERS_TOOLS
-          fi
+          git submodule update --init
           echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
 
   "upload test results":

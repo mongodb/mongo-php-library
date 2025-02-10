@@ -98,7 +98,7 @@ class BulkWrite implements Executable
      *
      * Supported options for the bulk write operation:
      *
-     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *  * builderEncoder (MongoDB\Codec\Encoder): Encoder for query and
      *    aggregation builders. If not given, the default encoder will be used.
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to

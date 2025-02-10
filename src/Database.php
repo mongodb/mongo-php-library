@@ -90,7 +90,7 @@ class Database
      *
      * Supported options:
      *
-     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *  * builderEncoder (MongoDB\Codec\Encoder): Encoder for query and
      *    aggregation builders. If not given, the default encoder will be used.
      *
      *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to

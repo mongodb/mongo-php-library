@@ -92,7 +92,7 @@ class Client
      *
      * Supported driver-specific options:
      *
-     *  * builderEncoder (MongoDB\Builder\Encoder): Encoder for query and
+     *  * builderEncoder (MongoDB\Codec\Encoder): Encoder for query and
      *    aggregation builders. If not given, the default encoder will be used.
      *
      *  * typeMap (array): Default type map for cursors and BSON documents.

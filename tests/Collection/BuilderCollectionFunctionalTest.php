@@ -8,8 +8,6 @@ use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
 use PHPUnit\Framework\Attributes\TestWith;
 
-use function iterator_to_array;
-
 class BuilderCollectionFunctionalTest extends FunctionalTestCase
 {
     public function setUp(): void
@@ -24,15 +22,15 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
     public function testAggregate(bool $pipelineAsArray): void
     {
         $this->collection->insertMany([['x' => 10], ['x' => 10], ['x' => 10]]);
-        $pipeline = new Pipeline(
+        $pipeline = [
             Stage::bucketAuto(
                 groupBy: Expression::intFieldPath('x'),
                 buckets: 2,
             ),
-        );
+        ];
 
-        if ($pipelineAsArray) {
-            $pipeline = iterator_to_array($pipeline);
+        if (! $pipelineAsArray) {
+            $pipeline = new Pipeline(...$pipeline);
         }
 
         $results = $this->collection->aggregate($pipeline)->toArray();
@@ -272,12 +270,12 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
         }
 
-        $pipeline = new Pipeline(
+        $pipeline = [
             Stage::match(operationType: Query::eq('insert')),
-        );
+        ];
 
-        if ($pipelineAsArray) {
-            $pipeline = iterator_to_array($pipeline);
+        if (! $pipelineAsArray) {
+            $pipeline = new Pipeline(...$pipeline);
         }
 
         $changeStream = $this->collection->watch($pipeline);

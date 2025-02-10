@@ -8,8 +8,6 @@ use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
 use PHPUnit\Framework\Attributes\TestWith;
 
-use function iterator_to_array;
-
 class BuilderDatabaseFunctionalTest extends FunctionalTestCase
 {
     public function tearDown(): void
@@ -25,7 +23,7 @@ class BuilderDatabaseFunctionalTest extends FunctionalTestCase
     {
         $this->skipIfServerVersion('<', '6.0.0', '$documents stage is not supported');
 
-        $pipeline = new Pipeline(
+        $pipeline = [
             Stage::documents([
                 ['x' => 1],
                 ['x' => 2],
@@ -35,10 +33,10 @@ class BuilderDatabaseFunctionalTest extends FunctionalTestCase
                 groupBy: Expression::intFieldPath('x'),
                 buckets: 2,
             ),
-        );
+        ];
 
-        if ($pipelineAsArray) {
-            $pipeline = iterator_to_array($pipeline);
+        if (! $pipelineAsArray) {
+            $pipeline = new Pipeline(...$pipeline);
         }
 
         $results = $this->database->aggregate($pipeline)->toArray();
@@ -55,12 +53,12 @@ class BuilderDatabaseFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
         }
 
-        $pipeline = new Pipeline(
+        $pipeline = [
             Stage::match(operationType: Query::eq('insert')),
-        );
+        ];
 
-        if ($pipelineAsArray) {
-            $pipeline = iterator_to_array($pipeline);
+        if (! $pipelineAsArray) {
+            $pipeline = new Pipeline(...$pipeline);
         }
 
         $changeStream = $this->database->watch($pipeline);

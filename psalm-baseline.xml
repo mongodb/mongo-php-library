@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+<files psalm-version="6.5.1@3f17a6b24a2dbe543e21408c2b19108cf6a355ef">
   <file src="examples/atlas_search.php">
     <MixedArgument>
       <code><![CDATA[$document['name']]]></code>
@@ -398,11 +398,6 @@
       <code><![CDATA[$this->current()]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/Model/CodecCursor.php">
-    <TooManyArguments>
-      <code><![CDATA[getId]]></code>
-    </TooManyArguments>
-  </file>
   <file src="src/Model/CollectionInfoCommandIterator.php">
     <DeprecatedInterface>
       <code><![CDATA[CollectionInfoCommandIterator]]></code>
@@ -754,9 +749,6 @@
       <code><![CDATA[$options['writeConcern']]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <MixedInferredReturnType>
-      <code><![CDATA[array|object|null]]></code>
-    </MixedInferredReturnType>
     <MixedMethodCall>
       <code><![CDATA[decode]]></code>
       <code><![CDATA[isInTransaction]]></code>
@@ -772,9 +764,6 @@
     <MixedAssignment>
       <code><![CDATA[$document]]></code>
     </MixedAssignment>
-    <MixedInferredReturnType>
-      <code><![CDATA[array|object|null]]></code>
-    </MixedInferredReturnType>
     <MixedReturnStatement>
       <code><![CDATA[$document === false ? null : $document]]></code>
       <code><![CDATA[$document === false ? null : $document]]></code>
@@ -922,9 +911,6 @@
     <MixedAssignment>
       <code><![CDATA[$this->postBatchResumeToken]]></code>
     </MixedAssignment>
-    <MixedInferredReturnType>
-      <code><![CDATA[array|object|null]]></code>
-    </MixedInferredReturnType>
     <MixedPropertyFetch>
       <code><![CDATA[$reply->cursor->firstBatch]]></code>
       <code><![CDATA[$reply->cursor->postBatchResumeToken]]></code>
@@ -963,10 +949,6 @@
       <code><![CDATA[$typeMap['fieldPaths'][$fieldPath]]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <MixedInferredReturnType>
-      <code><![CDATA[array|object|null]]></code>
-      <code><![CDATA[array|object|null]]></code>
-    </MixedInferredReturnType>
     <MixedReturnStatement>
       <code><![CDATA[$collectionInfo['options']['encryptedFields'] ?? null]]></code>
       <code><![CDATA[$collectionInfo['options']['encryptedFields'] ?? null]]></code>

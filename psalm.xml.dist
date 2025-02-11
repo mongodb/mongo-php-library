@@ -2,6 +2,8 @@
 <psalm
     errorLevel="1"
     errorBaseline="psalm-baseline.xml"
+    ignoreInternalFunctionFalseReturn="true"
+    ignoreInternalFunctionNullReturn="true"
     resolveFromConfigFile="true"
     findUnusedBaselineEntry="true"
     findUnusedCode="false"

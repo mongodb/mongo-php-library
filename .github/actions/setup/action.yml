@@ -49,7 +49,5 @@ runs:
     - name: Install dependencies with Composer
       uses: ramsey/composer-install@3.0.0
       with:
-        # Revert when psalm supports PHP 8.4
-        # composer-options: "--no-suggest"
-        composer-options: "--no-suggest ${{ inputs.php-version == '8.4' && '--ignore-platform-req=php+' || '' }}"
+        composer-options: "--no-suggest"
         working-directory: "${{ inputs.working-directory }}"

@@ -52,17 +52,17 @@
                     }
                 },
                 "encode": {
-                    "$comment": "Specifies how operator parameters are encoded.",
-                    "$comment": "array: parameters are encoded as an array of values in the order they are defined by the spec",
-                    "$comment": "object: parameters are encoded as an object with keys matching the parameter names",
-                    "$comment": "single: get the single parameter value",
-                    "$comment": "group: specific for $group stage",
+                    "$comment": [
+                        "Specifies how operator parameters are encoded.",
+                        "array: parameters are encoded as an array of values in the order they are defined by the spec",
+                        "object: parameters are encoded as an object with keys matching the parameter names",
+                        "single: get the single parameter value"
+                    ],
                     "type": "string",
                     "enum": [
                         "array",
                         "object",
-                        "single",
-                        "search"
+                        "single"
                     ]
                 },
                 "description": {

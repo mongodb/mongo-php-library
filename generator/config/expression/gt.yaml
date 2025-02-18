@@ -14,7 +14,7 @@ arguments:
     -
         name: expression2
         type:
-            - expression
+            - expression # lack of backreferral is an issue here
 tests:
     -
         name: 'Example'

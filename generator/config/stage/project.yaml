@@ -11,7 +11,7 @@ arguments:
         name: specification
         type:
             - expression
-        variadic: object
+        variadic: object # XXX: This should somehow allow explicit typings for { fieldName: 1|0 }
 tests:
     -
         name: 'Include Specific Fields in Output Documents'

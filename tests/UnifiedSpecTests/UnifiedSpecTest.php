@@ -43,7 +43,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/replaceOne-sort' => 'Sort for replace operations is not supported (PHPLIB-1492)',
         'crud/updateOne-sort' => 'Sort for update operations is not supported (PHPLIB-1492)',
         'crud/bypassDocumentValidation' => 'bypassDocumentValidation is handled by libmongoc (PHPLIB-1576)',
-        'crud/distinct-hint' => 'Hint for distinct operations is not supported (PHPLIB-1582)',
     ];
 
     /** @var array<string, string> */

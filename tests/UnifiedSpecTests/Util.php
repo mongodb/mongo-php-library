@@ -98,7 +98,7 @@ final class Util
             'deleteMany' => ['let', 'filter', 'session', 'collation', 'hint', 'comment'],
             'deleteOne' => ['let', 'filter', 'session', 'collation', 'hint', 'comment'],
             'findOneAndDelete' => ['let', 'filter', 'session', 'projection', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'sort', 'update', 'upsert', 'comment'],
-            'distinct' => ['fieldName', 'filter', 'session', 'collation', 'maxTimeMS', 'comment'],
+            'distinct' => ['fieldName', 'filter', 'session', 'collation', 'maxTimeMS', 'comment', 'hint'],
             'drop' => ['session', 'comment'],
             'dropSearchIndex' => ['name'],
             'find' => ['let', 'filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],

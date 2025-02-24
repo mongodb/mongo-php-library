@@ -217,6 +217,16 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
+    #[DataProvider('provideInvalidDocumentValues')]
+    public function testReplaceOneSortOptionTypeCheck($sort): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Expected \$operations\[0\]\["replaceOne"\]\[2\]\["sort"\] to have type "document" \(array or object\) but found ".+"/');
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [['x' => 1], ['y' => 1], ['sort' => $sort]]],
+        ]);
+    }
+
     #[DataProvider('provideInvalidBooleanValues')]
     public function testReplaceOneUpsertOptionTypeCheck($upsert): void
     {
@@ -322,6 +332,15 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
+    public function testUpdateManyProhibitsSortOption(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('"sort" option cannot be used with $operations[0]["updateMany"]');
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => [['x' => 1], ['$set' => ['y' => 1]], ['sort' => ['z' => 1]]]],
+        ]);
+    }
+
     #[DataProvider('provideInvalidBooleanValues')]
     public function testUpdateManyUpsertOptionTypeCheck($upsert): void
     {
@@ -407,6 +426,16 @@ class BulkWriteTest extends TestCase
         $this->expectExceptionMessageMatches('/Expected \$operations\[0\]\["updateOne"\]\[2\]\["collation"\] to have type "document" \(array or object\) but found ".+"/');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_ONE => [['x' => 1], ['$set' => ['x' => 1]], ['collation' => $collation]]],
+        ]);
+    }
+
+    #[DataProvider('provideInvalidDocumentValues')]
+    public function testUpdateOneSortOptionTypeCheck($sort): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Expected \$operations\[0\]\["updateOne"\]\[2\]\["sort"\] to have type "document" \(array or object\) but found ".+"/');
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => [['x' => 1], ['$set' => ['y' => 1]], ['sort' => $sort]]],
         ]);
     }
 

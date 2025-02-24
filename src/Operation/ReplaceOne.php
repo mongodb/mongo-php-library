@@ -74,6 +74,12 @@ class ReplaceOne implements Executable
      *    Parameters can then be accessed as variables in an aggregate
      *    expression context (e.g. "$$var").
      *
+     *   * sort (document): Determines which document the operation modifies if
+     *     the query selects multiple documents.
+     *
+     *     This is not supported for server versions < 8.0 and will result in an
+     *     exception at execution time if used.
+     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      * @param string       $databaseName   Database name

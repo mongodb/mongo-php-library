@@ -37,11 +37,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         // mongoc_cluster_stream_for_server does not retry handshakes (CDRIVER-4532, PHPLIB-1033, PHPLIB-1042)
         'retryable-reads/retryable reads handshake failures' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures' => 'Handshakes are not retried (CDRIVER-4532)',
-        // sort option for update operations is not supported (PHPLIB-1492)
-        'crud/BulkWrite replaceOne-sort' => 'Sort for replace operations is not supported (PHPLIB-1492)',
-        'crud/BulkWrite updateOne-sort' => 'Sort for update operations is not supported (PHPLIB-1492)',
-        'crud/replaceOne-sort' => 'Sort for replace operations is not supported (PHPLIB-1492)',
-        'crud/updateOne-sort' => 'Sort for update operations is not supported (PHPLIB-1492)',
         'crud/bypassDocumentValidation' => 'bypassDocumentValidation is handled by libmongoc (PHPLIB-1576)',
     ];
 

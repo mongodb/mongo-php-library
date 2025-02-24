@@ -149,6 +149,14 @@ class Update implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
         }
 
+        if (isset($options['sort']) && ! is_document($options['sort'])) {
+            throw InvalidArgumentException::expectedDocumentType('"sort" option', $options['sort']);
+        }
+
+        if (isset($options['sort']) && $options['multi']) {
+            throw new InvalidArgumentException('"sort" option cannot be used with multi-document updates');
+        }
+
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
             unset($options['bypassDocumentValidation']);
         }
@@ -270,8 +278,10 @@ class Update implements Executable, Explainable
             }
         }
 
-        if (isset($this->options['collation'])) {
-            $updateOptions['collation'] = (object) $this->options['collation'];
+        foreach (['collation', 'sort'] as $option) {
+            if (isset($this->options[$option])) {
+                $updateOptions[$option] = (object) $this->options[$option];
+            }
         }
 
         return $updateOptions;

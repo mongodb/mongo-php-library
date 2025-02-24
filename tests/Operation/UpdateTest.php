@@ -40,6 +40,7 @@ class UpdateTest extends TestCase
             'collation' => self::getInvalidDocumentValues(),
             'hint' => self::getInvalidHintValues(),
             'multi' => self::getInvalidBooleanValues(),
+            'sort' => self::getInvalidDocumentValues(),
             'session' => self::getInvalidSessionValues(),
             'upsert' => self::getInvalidBooleanValues(),
             'writeConcern' => self::getInvalidWriteConcernValues(),
@@ -53,6 +54,13 @@ class UpdateTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('"multi" option cannot be true unless $update has update operator(s) or non-empty pipeline');
         new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update, ['multi' => true]);
+    }
+
+    public function testConstructorMultiOptionProhibitsSortOption(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('"sort" option cannot be used with multi-document updates');
+        new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['$set' => ['x' => 2]], ['multi' => true, 'sort' => ['x' => 1]]);
     }
 
     public function testExplainableCommandDocument(): void

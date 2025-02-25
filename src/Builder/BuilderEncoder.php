@@ -53,10 +53,10 @@ final class BuilderEncoder implements Encoder
         DateTimeInterface::class => DateTimeEncoder::class,
     ];
 
-    /** @var array<class-string, ExpressionEncoder|null> */
+    /** @var array<class-string, Encoder|null> */
     private array $cachedEncoders = [];
 
-    /** @param array<class-string, class-string<ExpressionEncoder>> $customEncoders */
+    /** @param array<class-string, Encoder> $customEncoders */
     public function __construct(private readonly array $customEncoders = [])
     {
     }
@@ -82,7 +82,7 @@ final class BuilderEncoder implements Encoder
         return $encoder->encode($value);
     }
 
-    private function getEncoderFor(object $value): ExpressionEncoder|null
+    private function getEncoderFor(object $value): Encoder|null
     {
         $valueClass = $value::class;
         if (array_key_exists($valueClass, $this->cachedEncoders)) {
@@ -93,13 +93,22 @@ final class BuilderEncoder implements Encoder
 
         // First attempt: match class name exactly
         if (isset($encoderList[$valueClass])) {
-            return $this->cachedEncoders[$valueClass] = new $encoderList[$valueClass]($this);
+            $encoder = $encoderList[$valueClass];
+            if (is_string($encoder)) {
+                $encoder = new $encoder($this);
+            }
+
+            return $this->cachedEncoders[$valueClass] = $encoder;
         }
 
         // Second attempt: catch child classes
-        foreach ($encoderList as $className => $encoderClass) {
+        foreach ($encoderList as $className => $encoder) {
             if ($value instanceof $className) {
-                return $this->cachedEncoders[$valueClass] = new $encoderClass($this);
+                if (is_string($encoder)) {
+                    $encoder = new $encoder($this);
+                }
+
+                return $this->cachedEncoders[$valueClass] = $encoder;
             }
         }
 

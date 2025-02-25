@@ -15,8 +15,11 @@ use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Type\FieldPathInterface;
 use MongoDB\Builder\Type\Sort;
 use MongoDB\Builder\Variable;
+use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -377,6 +380,47 @@ class BuilderEncoderTest extends TestCase
         ];
 
         $this->assertSamePipeline($expected, $pipeline);
+    }
+
+    public function testCustomEncoder(): void
+    {
+        $customEncoders = [
+            FieldPathInterface::class => new class implements Encoder {
+                use EncodeIfSupported;
+
+                public function canEncode(mixed $value): bool
+                {
+                    return $value instanceof FieldPathInterface;
+                }
+
+                public function encode(mixed $value)
+                {
+                    return '$prefix.' . $value->name;
+                }
+            },
+        ];
+        $codec = new BuilderEncoder($customEncoders);
+
+        $pipeline = new Pipeline(
+            Stage::project(
+                threeFavorites: Expression::slice(
+                    Expression::arrayFieldPath('items'),
+                    n: 3,
+                ),
+            ),
+        );
+
+        $expected = [
+            [
+                '$project' => [
+                    'threeFavorites' => [
+                        '$slice' => ['$prefix.items', 3],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline, $codec);
     }
 
     /** @param list<array<string, mixed>> $expected */

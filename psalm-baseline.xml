@@ -41,6 +41,11 @@
       <code><![CDATA[stdClass]]></code>
     </MoreSpecificReturnType>
   </file>
+  <file src="src/Builder/BuilderEncoder.php">
+    <MixedReturnStatement>
+      <code><![CDATA[$encoder->encode($value)]]></code>
+    </MixedReturnStatement>
+  </file>
   <file src="src/Builder/Encoder/AbstractExpressionEncoder.php">
     <MixedAssignment>
       <code><![CDATA[$val]]></code>

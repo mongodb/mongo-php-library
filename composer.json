@@ -13,7 +13,7 @@
         "php": "^8.1",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-mongodb": "^1.20.0",
+        "ext-mongodb": "^1.21.0",
         "composer-runtime-api": "^2.0",
         "psr/log": "^1.1.4|^2|^3",
         "symfony/polyfill-php80": "^1.27",

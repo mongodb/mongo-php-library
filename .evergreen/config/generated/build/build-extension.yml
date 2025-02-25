@@ -7,6 +7,9 @@ tasks:
         vars:
           PHP_VERSION: "8.4"
       - func: "compile extension"
+        # TODO: remove once 1.21.0 is released
+        vars:
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.4-lowest"
     tags: ["build", "php8.4", "lowest", "pr", "tag"]
@@ -16,7 +19,9 @@ tasks:
           PHP_VERSION: "8.4"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "1.20.0"
+          # TODO: change to "EXTENSION_VERSION: 1.21.0" once 1.21.0 is released
+          # EXTENSION_VERSION: "1.21.0"
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.4-next-stable"
     tags: ["build", "php8.4", "next-stable", "pr", "tag"]
@@ -26,7 +31,9 @@ tasks:
           PHP_VERSION: "8.4"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v1.20"
+          # TODO: change to "v1.21" once 1.21.0 is released
+          # EXTENSION_BRANCH: "v1.21"
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.4-next-minor"
     tags: ["build", "php8.4", "next-minor"]
@@ -45,6 +52,9 @@ tasks:
         vars:
           PHP_VERSION: "8.3"
       - func: "compile extension"
+        # TODO: remove once 1.21.0 is released
+        vars:
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.3-lowest"
     tags: ["build", "php8.3", "lowest", "pr", "tag"]
@@ -54,7 +64,9 @@ tasks:
           PHP_VERSION: "8.3"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "1.20.0"
+          # TODO: change to "EXTENSION_VERSION: 1.21.0" once 1.21.0 is released
+          # EXTENSION_VERSION: "1.21.0"
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.3-next-stable"
     tags: ["build", "php8.3", "next-stable", "pr", "tag"]
@@ -64,7 +76,9 @@ tasks:
           PHP_VERSION: "8.3"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v1.20"
+          # TODO: change to "v1.21" once 1.21.0 is released
+          # EXTENSION_BRANCH: "v1.21"
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.3-next-minor"
     tags: ["build", "php8.3", "next-minor"]
@@ -83,6 +97,9 @@ tasks:
         vars:
           PHP_VERSION: "8.2"
       - func: "compile extension"
+        # TODO: remove once 1.21.0 is released
+        vars:
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.2-lowest"
     tags: ["build", "php8.2", "lowest", "pr", "tag"]
@@ -92,7 +109,9 @@ tasks:
           PHP_VERSION: "8.2"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "1.20.0"
+          # TODO: change to "EXTENSION_VERSION: 1.21.0" once 1.21.0 is released
+          # EXTENSION_VERSION: "1.21.0"
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.2-next-stable"
     tags: ["build", "php8.2", "next-stable", "pr", "tag"]
@@ -102,7 +121,9 @@ tasks:
           PHP_VERSION: "8.2"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v1.20"
+          # TODO: change to "v1.21" once 1.21.0 is released
+          # EXTENSION_BRANCH: "v1.21"
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.2-next-minor"
     tags: ["build", "php8.2", "next-minor"]
@@ -121,6 +142,9 @@ tasks:
         vars:
           PHP_VERSION: "8.1"
       - func: "compile extension"
+        # TODO: remove once 1.21.0 is released
+        vars:
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.1-lowest"
     tags: ["build", "php8.1", "lowest", "pr", "tag"]
@@ -130,7 +154,9 @@ tasks:
           PHP_VERSION: "8.1"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "1.20.0"
+          # TODO: change to "EXTENSION_VERSION: 1.21.0" once 1.21.0 is released
+          # EXTENSION_VERSION: "1.21.0"
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.1-next-stable"
     tags: ["build", "php8.1", "next-stable", "pr", "tag"]
@@ -140,7 +166,9 @@ tasks:
           PHP_VERSION: "8.1"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v1.20"
+          # TODO: change to "v1.21" once 1.21.0 is released
+          # EXTENSION_BRANCH: "v1.21"
+          EXTENSION_BRANCH: "v1.x"
       - func: "upload extension"
   - name: "build-php-8.1-next-minor"
     tags: ["build", "php8.1", "next-minor"]

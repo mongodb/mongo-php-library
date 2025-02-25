@@ -8,6 +8,7 @@ use LogicException;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
@@ -16,13 +17,14 @@ use function property_exists;
 use function sprintf;
 
 /**
- * @template-extends AbstractExpressionEncoder<stdClass, QueryObject>
+ * @template-implements Encoder<stdClass, QueryObject>
  * @internal
  */
-final class QueryEncoder extends AbstractExpressionEncoder
+final class QueryEncoder implements Encoder
 {
     /** @template-use EncodeIfSupported<stdClass, QueryObject> */
     use EncodeIfSupported;
+    use RecursiveEncode;
 
     public function canEncode(mixed $value): bool
     {

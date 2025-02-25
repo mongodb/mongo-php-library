@@ -9,7 +9,6 @@ use MongoDB\BSON\Type;
 use MongoDB\Builder\Encoder\CombinedFieldQueryEncoder;
 use MongoDB\Builder\Encoder\DateTimeEncoder;
 use MongoDB\Builder\Encoder\DictionaryEncoder;
-use MongoDB\Builder\Encoder\ExpressionEncoder;
 use MongoDB\Builder\Encoder\FieldPathEncoder;
 use MongoDB\Builder\Encoder\OperatorEncoder;
 use MongoDB\Builder\Encoder\OutputWindowEncoder;
@@ -33,6 +32,7 @@ use stdClass;
 
 use function array_key_exists;
 use function is_object;
+use function is_string;
 
 /** @template-implements Encoder<Type|stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
 final class BuilderEncoder implements Encoder
@@ -40,7 +40,7 @@ final class BuilderEncoder implements Encoder
     /** @template-use EncodeIfSupported<Type|stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
     use EncodeIfSupported;
 
-    /** @var array<class-string, class-string<ExpressionEncoder>> */
+    /** @var array<class-string, class-string<Encoder>> */
     private array $defaultEncoders = [
         Pipeline::class => PipelineEncoder::class,
         Variable::class => VariableEncoder::class,

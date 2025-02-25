@@ -424,9 +424,8 @@ class BuilderEncoderTest extends TestCase
     }
 
     /** @param list<array<string, mixed>> $expected */
-    private static function assertSamePipeline(array $expected, Pipeline $pipeline): void
+    private static function assertSamePipeline(array $expected, Pipeline $pipeline, $codec = new BuilderEncoder()): void
     {
-        $codec = new BuilderEncoder();
         $actual = $codec->encode($pipeline);
 
         // Normalize with BSON round-trip

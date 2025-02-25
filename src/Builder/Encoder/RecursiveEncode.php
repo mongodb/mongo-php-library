@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Encoder;
 
-use MongoDB\BSON\Type;
 use MongoDB\Builder\BuilderEncoder;
 use stdClass;
 
 use function get_object_vars;
 use function is_array;
 
-/**
- * @template BSONType of Type|stdClass|array|string|int
- * @template NativeType
- * @template-implements ExpressionEncoder<BSONType, NativeType>
- * @internal
- */
-abstract class AbstractExpressionEncoder implements ExpressionEncoder
+trait RecursiveEncode
 {
     final public function __construct(protected readonly BuilderEncoder $encoder)
     {
@@ -33,7 +26,7 @@ abstract class AbstractExpressionEncoder implements ExpressionEncoder
      *
      * @template T
      */
-    final protected function recursiveEncode(mixed $value): mixed
+    private function recursiveEncode(mixed $value): mixed
     {
         if (is_array($value)) {
             foreach ($value as $key => $val) {

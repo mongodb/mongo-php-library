@@ -7,6 +7,7 @@ namespace MongoDB\Builder\Encoder;
 use LogicException;
 use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
@@ -17,13 +18,14 @@ use function is_object;
 use function sprintf;
 
 /**
- * @template-extends AbstractExpressionEncoder<stdClass, CombinedFieldQuery>
+ * @template-implements Encoder<stdClass, CombinedFieldQuery>
  * @internal
  */
-final class CombinedFieldQueryEncoder extends AbstractExpressionEncoder
+final class CombinedFieldQueryEncoder implements Encoder
 {
     /** @template-use EncodeIfSupported<stdClass, CombinedFieldQuery> */
     use EncodeIfSupported;
+    use RecursiveEncode;
 
     public function canEncode(mixed $value): bool
     {

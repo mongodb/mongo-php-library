@@ -6,13 +6,14 @@ namespace MongoDB\Builder\Encoder;
 
 use MongoDB\Builder\Type\FieldPathInterface;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 
 /**
- * @template-extends AbstractExpressionEncoder<string, FieldPathInterface>
+ * @template-implements Encoder<string, FieldPathInterface>
  * @internal
  */
-final class FieldPathEncoder extends AbstractExpressionEncoder
+final class FieldPathEncoder implements Encoder
 {
     /** @template-use EncodeIfSupported<string, FieldPathInterface> */
     use EncodeIfSupported;

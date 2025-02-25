@@ -6,13 +6,14 @@ namespace MongoDB\Builder\Encoder;
 
 use MongoDB\Builder\Expression\Variable;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 
 /**
- * @template-extends AbstractExpressionEncoder<string, Variable>
+ * @template-implements Encoder<string, Variable>
  * @internal
  */
-final class VariableEncoder extends AbstractExpressionEncoder
+final class VariableEncoder implements Encoder
 {
     /** @template-use EncodeIfSupported<string, Variable> */
     use EncodeIfSupported;

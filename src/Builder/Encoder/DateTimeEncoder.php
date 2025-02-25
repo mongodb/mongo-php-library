@@ -7,13 +7,14 @@ namespace MongoDB\Builder\Encoder;
 use DateTimeInterface;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 
 /**
- * @template-extends AbstractExpressionEncoder<UTCDateTime, DateTimeInterface>
+ * @template-implements Encoder<UTCDateTime, DateTimeInterface>
  * @internal
  */
-final class DateTimeEncoder extends AbstractExpressionEncoder
+final class DateTimeEncoder implements Encoder
 {
     /** @template-use EncodeIfSupported<UTCDateTime, DateTimeInterface> */
     use EncodeIfSupported;

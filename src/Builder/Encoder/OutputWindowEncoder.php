@@ -9,6 +9,7 @@ use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\OutputWindow;
 use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
@@ -18,13 +19,14 @@ use function MongoDB\is_first_key_operator;
 use function sprintf;
 
 /**
- * @template-extends AbstractExpressionEncoder<stdClass, OutputWindow>
+ * @template-implements Encoder<stdClass, OutputWindow>
  * @internal
  */
-final class OutputWindowEncoder extends AbstractExpressionEncoder
+final class OutputWindowEncoder implements Encoder
 {
     /** @template-use EncodeIfSupported<stdClass, OutputWindow> */
     use EncodeIfSupported;
+    use RecursiveEncode;
 
     public function canEncode(mixed $value): bool
     {

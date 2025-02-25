@@ -6,14 +6,15 @@ namespace MongoDB\Builder\Encoder;
 
 use MongoDB\Builder\Type\DictionaryInterface;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
 /**
- * @template-extends AbstractExpressionEncoder<string|int|array|stdClass, DictionaryInterface>
+ * @template-implements Encoder<string|int|array|stdClass, DictionaryInterface>
  * @internal
  */
-final class DictionaryEncoder extends AbstractExpressionEncoder
+final class DictionaryEncoder implements Encoder
 {
     /** @template-use EncodeIfSupported<string|int|array|stdClass, DictionaryInterface> */
     use EncodeIfSupported;

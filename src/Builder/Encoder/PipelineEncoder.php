@@ -6,16 +6,18 @@ namespace MongoDB\Builder\Encoder;
 
 use MongoDB\Builder\Pipeline;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 
 /**
- * @template-extends AbstractExpressionEncoder<list<mixed>, Pipeline>
+ * @template-implements Encoder<list<mixed>, Pipeline>
  * @internal
  */
-final class PipelineEncoder extends AbstractExpressionEncoder
+final class PipelineEncoder implements Encoder
 {
     /** @template-use EncodeIfSupported<list<mixed>, Pipeline> */
     use EncodeIfSupported;
+    use RecursiveEncode;
 
     /** @psalm-assert-if-true Pipeline $value */
     public function canEncode(mixed $value): bool
@@ -32,7 +34,7 @@ final class PipelineEncoder extends AbstractExpressionEncoder
 
         $encoded = [];
         foreach ($value->getIterator() as $stage) {
-            $encoded[] = $this->encoder->encodeIfSupported($stage);
+            $encoded[] = $this->recursiveEncode($stage);
         }
 
         return $encoded;

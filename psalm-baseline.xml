@@ -46,13 +46,6 @@
       <code><![CDATA[$encoder->encode($value)]]></code>
     </MixedReturnStatement>
   </file>
-  <file src="src/Builder/Encoder/AbstractExpressionEncoder.php">
-    <MixedAssignment>
-      <code><![CDATA[$val]]></code>
-      <code><![CDATA[$val]]></code>
-      <code><![CDATA[$value[$key]]]></code>
-    </MixedAssignment>
-  </file>
   <file src="src/Builder/Encoder/CombinedFieldQueryEncoder.php">
     <MixedAssignment>
       <code><![CDATA[$filter]]></code>
@@ -102,6 +95,13 @@
     <MixedAssignment>
       <code><![CDATA[$subValue]]></code>
       <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Builder/Encoder/RecursiveEncode.php">
+    <MixedAssignment>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$value[$key]]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Builder/Query.php">

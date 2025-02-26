@@ -18,6 +18,7 @@ final class DateTimeEncoder extends AbstractExpressionEncoder
     /** @template-use EncodeIfSupported<UTCDateTime, DateTimeInterface> */
     use EncodeIfSupported;
 
+    /** @psalm-assert-if-true DateTimeInterface $value */
     public function canEncode(mixed $value): bool
     {
         return $value instanceof DateTimeInterface;

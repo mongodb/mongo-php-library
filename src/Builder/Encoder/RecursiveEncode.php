@@ -11,6 +11,7 @@ use WeakReference;
 use function get_object_vars;
 use function is_array;
 
+/** @internal */
 trait RecursiveEncode
 {
     /** @param WeakReference<Encoder> $encoder */
@@ -46,6 +47,13 @@ trait RecursiveEncode
             return $value;
         }
 
+        /**
+         * If the BuilderEncoder instance is removed from the memory, the
+         * instances of the classes using this trait will be removed as well.
+         * Therefore, the weak reference will never return null.
+         *
+         * @psalm-suppress PossiblyNullReference
+         */
         return $this->encoder->get()->encodeIfSupported($value);
     }
 }

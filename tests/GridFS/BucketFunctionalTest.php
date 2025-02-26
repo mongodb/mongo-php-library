@@ -62,7 +62,6 @@ class BucketFunctionalTest extends FunctionalTestCase
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000),
-            'disableMD5' => true,
         ]);
     }
 
@@ -79,7 +78,6 @@ class BucketFunctionalTest extends FunctionalTestCase
             'bucketName' => self::getInvalidStringValues(true),
             'chunkSizeBytes' => self::getInvalidIntegerValues(true),
             'codec' => self::getInvalidDocumentCodecValues(),
-            'disableMD5' => self::getInvalidBooleanValues(true),
             'readConcern' => self::getInvalidReadConcernValues(),
             'readPreference' => self::getInvalidReadPreferenceValues(),
             'typeMap' => self::getInvalidArrayValues(),
@@ -810,44 +808,14 @@ class BucketFunctionalTest extends FunctionalTestCase
             [
                 'projection' => [
                     'length' => 1,
-                    'md5' => 1,
                     '_id' => 0,
                 ],
             ],
         );
 
-        $expected = [
-            'length' => 0,
-            'md5' => 'd41d8cd98f00b204e9800998ecf8427e',
-        ];
+        $expected = ['length' => 0];
 
         $this->assertSameDocument($expected, $fileDocument);
-    }
-
-    public function testDisableMD5(): void
-    {
-        $options = ['disableMD5' => true];
-        $id = $this->bucket->uploadFromStream('filename', self::createStream('data'), $options);
-
-        $fileDocument = $this->filesCollection->findOne(
-            ['_id' => $id],
-        );
-
-        $this->assertArrayNotHasKey('md5', $fileDocument);
-    }
-
-    public function testDisableMD5OptionInConstructor(): void
-    {
-        $options = ['disableMD5' => true];
-
-        $this->bucket = new Bucket($this->manager, $this->getDatabaseName(), $options);
-        $id = $this->bucket->uploadFromStream('filename', self::createStream('data'));
-
-        $fileDocument = $this->filesCollection->findOne(
-            ['_id' => $id],
-        );
-
-        $this->assertArrayNotHasKey('md5', $fileDocument);
     }
 
     public function testUploadingFirstFileCreatesIndexes(): void
@@ -926,7 +894,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
             $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
             $gridfs = $database->selectGridFSBucket();
-            $stream = $gridfs->openUploadStream('hello.txt', ['disableMD5' => true]);
+            $stream = $gridfs->openUploadStream('hello.txt');
             fwrite($stream, 'Hello MongoDB!');
             PHP;
 
@@ -1027,7 +995,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertArrayHasKey('filename', $context);
         $this->assertSame('filename', $context['filename']);
         $this->assertArrayHasKey('options', $context);
-        $this->assertSame(['chunkSizeBytes' => 261120, 'disableMD5' => false], $context['options']);
+        $this->assertSame(['chunkSizeBytes' => 261120], $context['options']);
     }
 
     /**

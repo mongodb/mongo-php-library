@@ -509,10 +509,6 @@ final class Context
             assertIsInt($options['chunkSizeBytes']);
         }
 
-        if (array_key_exists('disableMD5', $options)) {
-            assertIsBool($options['disableMD5']);
-        }
-
         return Util::prepareCommonOptions($options);
     }
 

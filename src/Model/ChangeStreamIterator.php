@@ -17,7 +17,6 @@
 
 namespace MongoDB\Model;
 
-use Iterator;
 use IteratorIterator;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
@@ -30,7 +29,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\UnexpectedValueException;
-use ReturnTypeWillChange;
 
 use function assert;
 use function count;
@@ -49,9 +47,9 @@ use function MongoDB\is_document;
  *
  * @internal
  * @template TValue of array|object
- * @template-extends IteratorIterator<int, TValue, CursorInterface<int, TValue>&Iterator<int, TValue>>
+ * @template-extends IteratorIterator<int, TValue, CursorInterface<TValue>>
  */
-class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
+final class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {
     private int $batchPosition = 0;
 
@@ -67,28 +65,25 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.current
-     * @return array|object|null
      * @psalm-return TValue|null
      */
-    #[ReturnTypeWillChange]
-    public function current()
+    public function current(): array|object|null
     {
         return $this->valid() ? parent::current() : null;
     }
 
     /**
-     * Necessary to let psalm know that we're always expecting a cursor as inner
-     * iterator. This could be side-stepped due to the class not being final,
-     * but it's very much an invalid use-case. This method can be dropped in 2.0
-     * once the class is final.
+     * This method is necessary as psalm does not properly set the return type
+     * of IteratorIterator::getInnerIterator to the templated iterator
      *
-     * @return CursorInterface<int, TValue>&Iterator<int, TValue>
+     * @see https://github.com/vimeo/psalm/pull/11100.
+     *
+     * @return CursorInterface<TValue>
      */
-    final public function getInnerIterator(): Iterator
+    public function getInnerIterator(): CursorInterface
     {
         $cursor = parent::getInnerIterator();
         assert($cursor instanceof CursorInterface);
-        assert($cursor instanceof Iterator);
 
         return $cursor;
     }
@@ -99,10 +94,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * Null may be returned if no change documents have been iterated and the
      * server did not include a postBatchResumeToken in its aggregate or getMore
      * command response.
-     *
-     * @return array|object|null
      */
-    public function getResumeToken()
+    public function getResumeToken(): array|object|null
     {
         return $this->resumeToken;
     }
@@ -115,12 +108,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         return $this->server;
     }
 
-    /**
-     * @see https://php.net/iteratoriterator.key
-     * @return int|null
-     */
-    #[ReturnTypeWillChange]
-    public function key()
+    /** @see https://php.net/iteratoriterator.key */
+    public function key(): ?int
     {
         return $this->valid() ? parent::key() : null;
     }
@@ -173,18 +162,10 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @internal
-     * @psalm-param CursorInterface<int, TValue>&Iterator<int, TValue> $cursor
+     * @psalm-param CursorInterface<TValue> $cursor
      */
     public function __construct(CursorInterface $cursor, int $firstBatchSize, array|object|null $initialResumeToken, private ?object $postBatchResumeToken = null)
     {
-        if (! $cursor instanceof Iterator) {
-            throw InvalidArgumentException::invalidType(
-                '$cursor',
-                $cursor,
-                CursorInterface::class . '&' . Iterator::class,
-            );
-        }
-
         if (isset($initialResumeToken) && ! is_document($initialResumeToken)) {
             throw InvalidArgumentException::expectedDocumentType('$initialResumeToken', $initialResumeToken);
         }
@@ -238,11 +219,10 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * Extracts the resume token (i.e. "_id" field) from a change document.
      *
      * @param array|object $document Change document
-     * @return array|object
      * @throws InvalidArgumentException
      * @throws ResumeTokenException if the resume token is not found or invalid
      */
-    private function extractResumeToken(array|object $document)
+    private function extractResumeToken(array|object $document): array|object
     {
         if (! is_document($document)) {
             throw InvalidArgumentException::expectedDocumentType('$document', $document);

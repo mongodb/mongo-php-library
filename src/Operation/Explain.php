@@ -34,10 +34,8 @@ use function is_string;
  *
  * @see \MongoDB\Collection::explain()
  * @see https://mongodb.com/docs/manual/reference/command/explain/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class Explain implements Executable
+final class Explain
 {
     public const VERBOSITY_ALL_PLANS = 'allPlansExecution';
     public const VERBOSITY_EXEC_STATS = 'executionStats';
@@ -88,12 +86,10 @@ class Explain implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return array|object
      * @throws UnsupportedException if the server does not support explaining the operation
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 

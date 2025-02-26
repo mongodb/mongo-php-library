@@ -2,8 +2,8 @@
 
 namespace MongoDB\Tests\Operation;
 
+use Iterator;
 use MongoDB\Model\DatabaseInfo;
-use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Tests\CommandObserver;
@@ -30,7 +30,7 @@ class ListDatabasesFunctionalTest extends FunctionalTestCase
             },
         );
 
-        $this->assertInstanceOf(DatabaseInfoIterator::class, $databases);
+        $this->assertInstanceOf(Iterator::class, $databases);
 
         foreach ($databases as $database) {
             $this->assertInstanceOf(DatabaseInfo::class, $database);
@@ -65,7 +65,7 @@ class ListDatabasesFunctionalTest extends FunctionalTestCase
         $operation = new ListDatabases(['filter' => ['name' => $this->getDatabaseName()]]);
         $databases = $operation->execute($server);
 
-        $this->assertInstanceOf(DatabaseInfoIterator::class, $databases);
+        $this->assertInstanceOf(Iterator::class, $databases);
 
         $this->assertCount(1, $databases);
 

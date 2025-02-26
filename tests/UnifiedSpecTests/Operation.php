@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use Error;
-use MongoDB\BSON\Javascript;
 use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
@@ -526,19 +525,8 @@ final class Operation
                 );
 
             case 'mapReduce':
-                assertArrayHasKey('map', $args);
-                assertArrayHasKey('reduce', $args);
-                assertArrayHasKey('out', $args);
-                assertInstanceOf(Javascript::class, $args['map']);
-                assertInstanceOf(Javascript::class, $args['reduce']);
-                assertThat($args['out'], logicalOr(new IsType('string'), new IsType('array'), new IsType('object')));
-
-                return iterator_to_array($collection->mapReduce(
-                    $args['map'],
-                    $args['reduce'],
-                    $args['out'],
-                    array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1]),
-                ));
+                Assert::markTestSkipped('mapReduce operation is not supported');
+                break;
 
             case 'rename':
                 assertArrayHasKey('to', $args);

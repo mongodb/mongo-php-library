@@ -64,11 +64,10 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
             ['encryptedFields' => $input],
         );
 
-        $operation->createDataKeys(
+        $encryptedFieldsOutput = $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $encryptedFieldsOutput,
         );
 
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
@@ -95,11 +94,10 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
             ['encryptedFields' => $input],
         );
 
-        $operation->createDataKeys(
+        $encryptedFieldsOutput = $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $encryptedFieldsOutput,
         );
 
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
@@ -126,11 +124,10 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
             ['encryptedFields' => $input],
         );
 
-        $operation->createDataKeys(
+        $encryptedFieldsOutput = $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $encryptedFieldsOutput,
         );
 
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
@@ -159,11 +156,10 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
             ['encryptedFields' => $originalEncryptedFields],
         );
 
-        $operation->createDataKeys(
+        $modifiedEncryptedFields = $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $modifiedEncryptedFields,
         );
 
         $this->assertSame($originalField, $originalEncryptedFields->fields[0]);
@@ -181,11 +177,10 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
             ['encryptedFields' => $input],
         );
 
-        $operation->createDataKeys(
+        $modifiedEncryptedFields = $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $modifiedEncryptedFields,
         );
 
         $this->assertInstanceOf(Binary::class, $modifiedEncryptedFields['fields'][0]['keyId'] ?? null);

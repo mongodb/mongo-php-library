@@ -6,8 +6,7 @@ use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
-
-use function iterator_to_array;
+use PHPUnit\Framework\Attributes\TestWith;
 
 class BuilderCollectionFunctionalTest extends FunctionalTestCase
 {
@@ -18,17 +17,21 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
         $this->collection->insertMany([['x' => 1], ['x' => 2], ['x' => 2]]);
     }
 
-    public function testAggregate(): void
+    #[TestWith([true])]
+    #[TestWith([false])]
+    public function testAggregate(bool $pipelineAsArray): void
     {
         $this->collection->insertMany([['x' => 10], ['x' => 10], ['x' => 10]]);
-        $pipeline = new Pipeline(
+        $pipeline = [
             Stage::bucketAuto(
                 groupBy: Expression::intFieldPath('x'),
                 buckets: 2,
             ),
-        );
-        // Extract the list of stages for arg type restriction
-        $pipeline = iterator_to_array($pipeline);
+        ];
+
+        if (! $pipelineAsArray) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
 
         $results = $this->collection->aggregate($pipeline)->toArray();
         $this->assertCount(2, $results);
@@ -257,7 +260,9 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals(3, $result[0]->x);
     }
 
-    public function testWatch(): void
+    #[TestWith([true])]
+    #[TestWith([false])]
+    public function testWatch(bool $pipelineAsArray): void
     {
         $this->skipIfChangeStreamIsNotSupported();
 
@@ -265,11 +270,13 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
         }
 
-        $pipeline = new Pipeline(
+        $pipeline = [
             Stage::match(operationType: Query::eq('insert')),
-        );
-        // Extract the list of stages for arg type restriction
-        $pipeline = iterator_to_array($pipeline);
+        ];
+
+        if (! $pipelineAsArray) {
+            $pipeline = new Pipeline(...$pipeline);
+        }
 
         $changeStream = $this->collection->watch($pipeline);
         $this->collection->insertOne(['x' => 3]);

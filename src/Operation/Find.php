@@ -17,7 +17,6 @@
 
 namespace MongoDB\Operation;
 
-use Iterator;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -34,9 +33,7 @@ use function assert;
 use function is_array;
 use function is_bool;
 use function is_integer;
-use function is_object;
 use function is_string;
-use function MongoDB\document_to_array;
 use function MongoDB\is_document;
 
 /**
@@ -45,10 +42,8 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::find()
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class Find implements Executable, Explainable
+final class Find implements Explainable
 {
     public const NON_TAILABLE = 1;
     public const TAILABLE = 2;
@@ -92,27 +87,14 @@ class Find implements Executable, Explainable
      *  * maxAwaitTimeMS (integer): The maxium amount of time for the server to wait
      *    on new documents to satisfy a query, if cursorType is TAILABLE_AWAIT.
      *
-     *  * maxScan (integer): Maximum number of documents or index keys to scan
-     *    when executing the query.
-     *
-     *    This option has been deprecated since version 1.4.
-     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
-     *    run. If "$maxTimeMS" also exists in the modifiers document, this
-     *    option will take precedence.
+     *    run.
      *
      *  * min (document): The inclusive upper bound for a specific index.
-     *
-     *  * modifiers (document): Meta operators that modify the output or
-     *    behavior of a query. Use of these operators is deprecated in favor of
-     *    named options.
      *
      *  * noCursorTimeout (boolean): The server normally times out idle cursors
      *    after an inactivity period (10 minutes) to prevent excess memory use.
      *    Set this option to prevent that.
-     *
-     *  * oplogReplay (boolean): Internal replication use only. The driver
-     *    should not set this. This option is deprecated as of MongoDB 4.4.
      *
      *  * projection (document): Limits the fields to return for the matching
      *    document.
@@ -132,14 +114,7 @@ class Find implements Executable, Explainable
      *
      *  * skip (integer): The number of documents to skip before returning.
      *
-     *  * snapshot (boolean): Prevents the cursor from returning a document more
-     *    than once because of an intervening write operation.
-     *
-     *    This options has been deprecated since version 1.4.
-     *
-     *  * sort (document): The order in which to return matching documents. If
-     *    "$orderby" also exists in the modifiers document, this option will
-     *    take precedence.
+     *  * sort (document): The order in which to return matching documents.
      *
      *  * let (document): Map of parameter names and values. Values must be
      *    constant or closed expressions that do not reference document fields.
@@ -211,10 +186,6 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $this->options['maxAwaitTimeMS'], 'integer');
         }
 
-        if (isset($this->options['maxScan']) && ! is_integer($this->options['maxScan'])) {
-            throw InvalidArgumentException::invalidType('"maxScan" option', $this->options['maxScan'], 'integer');
-        }
-
         if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
@@ -223,16 +194,8 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentType('"min" option', $this->options['min']);
         }
 
-        if (isset($this->options['modifiers']) && ! is_document($this->options['modifiers'])) {
-            throw InvalidArgumentException::expectedDocumentType('"modifiers" option', $this->options['modifiers']);
-        }
-
         if (isset($this->options['noCursorTimeout']) && ! is_bool($this->options['noCursorTimeout'])) {
             throw InvalidArgumentException::invalidType('"noCursorTimeout" option', $this->options['noCursorTimeout'], 'boolean');
-        }
-
-        if (isset($this->options['oplogReplay']) && ! is_bool($this->options['oplogReplay'])) {
-            throw InvalidArgumentException::invalidType('"oplogReplay" option', $this->options['oplogReplay'], 'boolean');
         }
 
         if (isset($this->options['projection']) && ! is_document($this->options['projection'])) {
@@ -263,10 +226,6 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"skip" option', $this->options['skip'], 'integer');
         }
 
-        if (isset($this->options['snapshot']) && ! is_bool($this->options['snapshot'])) {
-            throw InvalidArgumentException::invalidType('"snapshot" option', $this->options['snapshot'], 'boolean');
-        }
-
         if (isset($this->options['sort']) && ! is_document($this->options['sort'])) {
             throw InvalidArgumentException::expectedDocumentType('"sort" option', $this->options['sort']);
         }
@@ -291,12 +250,10 @@ class Find implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return CursorInterface&Iterator
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): CursorInterface
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['readConcern'])) {
@@ -320,9 +277,8 @@ class Find implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = ['find' => $this->collectionName, 'filter' => (object) $this->filter];
 
@@ -334,28 +290,6 @@ class Find implements Executable, Explainable
 
         // maxAwaitTimeMS is a Query level option so should not be considered here
         unset($options['maxAwaitTimeMS']);
-
-        $modifierFallback = [
-            ['allowPartialResults', 'partial'],
-            ['comment', '$comment'],
-            ['hint', '$hint'],
-            ['maxScan', '$maxScan'],
-            ['max', '$max'],
-            ['maxTimeMS', '$maxTimeMS'],
-            ['min', '$min'],
-            ['returnKey', '$returnKey'],
-            ['showRecordId', '$showDiskLoc'],
-            ['sort', '$orderby'],
-            ['snapshot', '$snapshot'],
-        ];
-
-        foreach ($modifierFallback as $modifier) {
-            if (! isset($options[$modifier[0]]) && isset($options['modifiers'][$modifier[1]])) {
-                $options[$modifier[0]] = $options['modifiers'][$modifier[1]];
-            }
-        }
-
-        unset($options['modifiers']);
 
         return $cmd + $options;
     }
@@ -401,7 +335,7 @@ class Find implements Executable, Explainable
             }
         }
 
-        foreach (['allowDiskUse', 'allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'] as $option) {
+        foreach (['allowDiskUse', 'allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxAwaitTimeMS', 'maxTimeMS', 'noCursorTimeout', 'projection', 'readConcern', 'returnKey', 'showRecordId', 'skip', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }
@@ -411,12 +345,6 @@ class Find implements Executable, Explainable
             if (isset($this->options[$option])) {
                 $options[$option] = (object) $this->options[$option];
             }
-        }
-
-        if (! empty($this->options['modifiers'])) {
-            /** @psalm-var array|object */
-            $modifiers = $this->options['modifiers'];
-            $options['modifiers'] = is_object($modifiers) ? document_to_array($modifiers) : $modifiers;
         }
 
         // Ensure no cursor is left behind when limit == batchSize by increasing batchSize

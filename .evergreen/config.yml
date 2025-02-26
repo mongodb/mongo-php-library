@@ -71,5 +71,3 @@ include:
   - filename: .evergreen/config/generated/test/require-api-version.yml
   - filename: .evergreen/config/generated/test/csfle.yml
   - filename: .evergreen/config/generated/test-variant/modern-php-full.yml
-  - filename: .evergreen/config/generated/test-variant/phpc.yml
-  - filename: .evergreen/config/generated/test-variant/lowest.yml

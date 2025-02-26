@@ -36,10 +36,8 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::countDocuments()
  * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst#countdocuments
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class CountDocuments implements Executable
+final class CountDocuments
 {
     private array $aggregateOptions;
 
@@ -105,13 +103,11 @@ class CountDocuments implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return integer
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): int
     {
         $cursor = $this->aggregate->execute($server);
 

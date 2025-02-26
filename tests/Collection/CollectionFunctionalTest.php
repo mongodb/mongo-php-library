@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Collection;
 
 use Closure;
-use MongoDB\BSON\Javascript;
 use MongoDB\Codec\Encoder;
 use MongoDB\Collection;
 use MongoDB\Database;
@@ -14,11 +13,9 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use TypeError;
 
 use function array_filter;
@@ -28,7 +25,6 @@ use function iterator_to_array;
 use function json_encode;
 use function str_contains;
 use function usort;
-use function version_compare;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -257,8 +253,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['x' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->drop();
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->drop();
         $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
@@ -334,8 +329,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['_id' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->rename($toCollectionName, null, ['dropTarget' => true]);
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->rename($toCollectionName, null, ['dropTarget' => true]);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName);
 
@@ -363,8 +357,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['_id' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->rename($toCollectionName, $toDatabaseName);
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->rename($toCollectionName, $toDatabaseName);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName, $toDatabaseName);
 
@@ -421,35 +414,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
-    }
-
-    #[Group('matrix-testing-exclude-server-4.4-driver-4.0')]
-    #[Group('matrix-testing-exclude-server-4.4-driver-4.2')]
-    #[Group('matrix-testing-exclude-server-5.0-driver-4.0')]
-    #[Group('matrix-testing-exclude-server-5.0-driver-4.2')]
-    public function testMapReduce(): void
-    {
-        $this->createFixtures(3);
-
-        $map = new Javascript('function() { emit(1, this.x); }');
-        $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
-        $out = ['inline' => 1];
-
-        $result = $this->assertDeprecated(
-            fn () => $this->collection->mapReduce($map, $reduce, $out),
-        );
-
-        $this->assertInstanceOf(MapReduceResult::class, $result);
-        $expected = [
-            [ '_id' => 1.0, 'value' => 66.0 ],
-        ];
-
-        $this->assertSameDocuments($expected, $result);
-
-        if (version_compare($this->getServerVersion(), '4.3.0', '<')) {
-            $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
-            $this->assertNotEmpty($result->getCounts());
-        }
     }
 
     public static function collectionMethodClosures()
@@ -661,19 +625,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
                         ['session' => $session] + $options
                     );
                 }, 'r'
-            ],
-            */
-
-            /* Disabled, as it's illegal to use mapReduce command in transactions
-            'mapReduce' => [
-                function($collection, $session, $options = []) {
-                    $collection->mapReduce(
-                        new \MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }'),
-                        new \MongoDB\BSON\Javascript('function(key, values) { return Array.sum(values) }'),
-                        ['inline' => 1],
-                        ['session' => $session] + $options
-                    );
-                }, 'rw'
             ],
             */
 

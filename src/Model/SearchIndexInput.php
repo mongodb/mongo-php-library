@@ -34,7 +34,7 @@ use function MongoDB\is_document;
  * @see https://github.com/mongodb/specifications/blob/master/source/index-management/index-management.rst#search-indexes
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
  */
-class SearchIndexInput implements Serializable
+final class SearchIndexInput implements Serializable
 {
     /**
      * @param array{definition: array|object, name?: string, type?: string} $index Search index specification

@@ -45,7 +45,6 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
     {
         return self::createOptionDataProvider([
             'chunkSizeBytes' => self::getInvalidIntegerValues(true),
-            'disableMD5' => self::getInvalidBooleanValues(true),
             'metadata' => self::getInvalidDocumentValues(),
         ]);
     }
@@ -71,32 +70,5 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
 
         $stream->close();
         $this->assertSame(1536, $stream->getSize());
-    }
-
-    #[DataProvider('provideInputDataAndExpectedMD5')]
-    public function testWriteBytesCalculatesMD5($input, $expectedMD5): void
-    {
-        $stream = new WritableStream($this->collectionWrapper, 'filename');
-        $stream->writeBytes($input);
-        $stream->close();
-
-        $fileDocument = $this->filesCollection->findOne(
-            ['_id' => $stream->getFile()->_id],
-            ['projection' => ['md5' => 1, '_id' => 0]],
-        );
-
-        $this->assertSameDocument(['md5' => $expectedMD5], $fileDocument);
-    }
-
-    public static function provideInputDataAndExpectedMD5()
-    {
-        return [
-            ['', 'd41d8cd98f00b204e9800998ecf8427e'],
-            ['foobar', '3858f62230ac3c915f300c664312c63f'],
-            [str_repeat('foobar', 43520), '88ff0e5fcb0acb27947d736b5d69cb73'],
-            [str_repeat('foobar', 43521), '8ff86511c95a06a611842ceb555d8454'],
-            [str_repeat('foobar', 87040), '45bfa1a9ec36728ee7338d15c5a30c13'],
-            [str_repeat('foobar', 87041), '95e78f624f8e745bcfd2d11691fa601e'],
-        ];
     }
 }

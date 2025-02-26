@@ -58,8 +58,9 @@ $allFiles[] = generateConfigs('tasks', 'test', 'mongodbVersion', 'csfle.yml', $c
 
 // Test variants
 $allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'modern-php-full.yml', $supportedPhpVersions);
-$allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'phpc.yml', [$latestPhpVersion]);
-$allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'lowest.yml', [$lowestPhpVersion]);
+// TODO: Re-enable when 2.0.0 is released
+// $allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'phpc.yml', [$latestPhpVersion]);
+// $allFiles[] = generateConfigs('buildvariants', 'test-variant', 'phpVersion', 'lowest.yml', [$lowestPhpVersion]);
 
 echo "Generated config. Use the following list to import files:\n";
 echo implode("\n", array_map('getImportConfig', $allFiles)) . "\n";

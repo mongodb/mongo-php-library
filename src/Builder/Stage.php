@@ -22,9 +22,9 @@ final class Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
      *
-     * @param QueryInterface|FieldQueryInterface|Type|stdClass|array<array-key, mixed>|bool|float|int|string|DateTimeInterface|null ...$queries The query predicates to match
+     * @param DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array<array-key, mixed>|bool|float|int|string|null ...$queries The query predicates to match
      */
-    public static function match(QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|DateTimeInterface|null ...$queries): MatchStage
+    public static function match(DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null ...$queries): MatchStage
     {
         // Override the generated method to allow variadic arguments
         return self::generatedMatch($queries);

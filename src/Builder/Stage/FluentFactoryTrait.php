@@ -48,10 +48,10 @@ trait FluentFactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
      *
-     * @param QueryInterface|FieldQueryInterface|Type|stdClass|array<array-key, mixed>|bool|float|int|string|DateTimeInterface|null ...$queries The query predicates to match
+     * @param DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array<array-key, mixed>|bool|float|int|string|null ...$queries The query predicates to match
      */
     public function match(
-        QueryInterface|FieldQueryInterface|Type|stdClass|DateTimeInterface|array|string|int|float|bool|null ...$queries,
+        DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array|string|int|float|bool|null ...$queries,
     ): static {
         $this->pipeline[] = Stage::match(...$queries);
 

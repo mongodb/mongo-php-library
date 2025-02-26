@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Builder;
 
 use DateTimeInterface;
-use MongoDB\BSON\UTCDateTime;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Encoder\CombinedFieldQueryEncoder;
 use MongoDB\Builder\Encoder\DateTimeEncoder;
 use MongoDB\Builder\Encoder\DictionaryEncoder;
@@ -34,10 +34,10 @@ use stdClass;
 use function array_key_exists;
 use function is_object;
 
-/** @template-implements Encoder<stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
+/** @template-implements Encoder<Type|stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
 final class BuilderEncoder implements Encoder
 {
-    /** @template-use EncodeIfSupported<stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
+    /** @template-use EncodeIfSupported<Type|stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
     use EncodeIfSupported;
 
     /** @var array<class-string, class-string<ExpressionEncoder>> */
@@ -71,7 +71,7 @@ final class BuilderEncoder implements Encoder
         return (bool) $this->getEncoderFor($value)?->canEncode($value);
     }
 
-    public function encode(mixed $value): stdClass|array|string|int|UTCDateTime
+    public function encode(mixed $value): Type|stdClass|array|string|int
     {
         $encoder = $this->getEncoderFor($value);
 

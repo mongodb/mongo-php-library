@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Encoder;
 
-use MongoDB\BSON\UTCDateTime;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\BuilderEncoder;
 use stdClass;
 
@@ -12,7 +12,7 @@ use function get_object_vars;
 use function is_array;
 
 /**
- * @template BSONType of stdClass|array|string|int|UTCDateTime
+ * @template BSONType of Type|stdClass|array|string|int
  * @template NativeType
  * @template-implements ExpressionEncoder<BSONType, NativeType>
  * @internal
@@ -26,6 +26,7 @@ abstract class AbstractExpressionEncoder implements ExpressionEncoder
     /**
      * Nested arrays and objects must be encoded recursively.
      *
+     * @psalm-template T
      * @psalm-param T $value
      *
      * @psalm-return (T is stdClass ? stdClass : (T is array ? array : mixed))

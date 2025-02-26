@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Type;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
@@ -25,7 +26,7 @@ final class QueryObject implements QueryInterface
 {
     public readonly array $queries;
 
-    /** @param array<QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $queries */
+    /** @param array<DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $queries */
     public static function create(array $queries): QueryInterface
     {
         // We don't wrap a single query in a QueryObject
@@ -36,7 +37,7 @@ final class QueryObject implements QueryInterface
         return new self($queries);
     }
 
-    /** @param array<QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $queriesOrArrayOfQueries */
+    /** @param array<DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $queriesOrArrayOfQueries */
     private function __construct(array $queriesOrArrayOfQueries)
     {
         // If the first element is an array and not an operator, we assume variadic arguments were not used

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
@@ -42,22 +43,22 @@ final class SwitchOperator implements ResolvesToAny, OperatorInterface
     public readonly PackedArray|BSONArray|array $branches;
 
     /**
-     * @var Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default The path to take if no branch case expression evaluates to true.
+     * @var Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default The path to take if no branch case expression evaluates to true.
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
-    public readonly Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default;
+    public readonly Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default;
 
     /**
      * @param BSONArray|PackedArray|array $branches An array of control branch documents. Each branch is a document with the following fields:
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default The path to take if no branch case expression evaluates to true.
+     * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $default The path to take if no branch case expression evaluates to true.
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
     public function __construct(
         PackedArray|BSONArray|array $branches,
-        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
+        Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
     ) {
         if (is_array($branches) && ! array_is_list($branches)) {
             throw new InvalidArgumentException('Expected $branches argument to be a list, got an associative array.');

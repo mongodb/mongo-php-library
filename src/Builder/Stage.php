@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Stage\MatchStage;
 use MongoDB\Builder\Type\FieldQueryInterface;
@@ -21,9 +22,9 @@ final class Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
      *
-     * @param QueryInterface|FieldQueryInterface|Type|stdClass|array<array-key,mixed>|bool|float|int|string|null ...$queries The query predicates to match
+     * @param QueryInterface|FieldQueryInterface|Type|stdClass|array<array-key, mixed>|bool|float|int|string|DateTimeInterface|null ...$queries The query predicates to match
      */
-    public static function match(QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null ...$queries): MatchStage
+    public static function match(QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|DateTimeInterface|null ...$queries): MatchStage
     {
         // Override the generated method to allow variadic arguments
         return self::generatedMatch($queries);

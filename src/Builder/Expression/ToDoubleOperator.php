@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -27,14 +28,15 @@ final class ToDoubleOperator implements ResolvesToDouble, OperatorInterface
     public const NAME = '$toDouble';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
-    public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression)
-    {
+    public function __construct(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
+    ) {
         $this->expression = $expression;
     }
 }

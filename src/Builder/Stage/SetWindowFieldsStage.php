@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Stage;
 
+use DateTimeInterface;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
@@ -40,19 +41,19 @@ final class SetWindowFieldsStage implements StageInterface, OperatorInterface
      */
     public readonly Document|Serializable|stdClass|array $output;
 
-    /** @var Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection. */
-    public readonly Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $partitionBy;
+    /** @var Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection. */
+    public readonly Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $partitionBy;
 
     /**
      * @param Document|Serializable|array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
      * @param Document|Serializable|array|stdClass $output Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
      * A field can contain dots to specify embedded document fields and array fields. The semantics for the embedded document dotted notation in the $setWindowFields stage are the same as the $addFields and $set stages.
-     * @param Optional|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
+     * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
      */
     public function __construct(
         Document|Serializable|stdClass|array $sortBy,
         Document|Serializable|stdClass|array $output,
-        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $partitionBy = Optional::Undefined,
+        Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $partitionBy = Optional::Undefined,
     ) {
         $this->sortBy = $sortBy;
         $this->output = $output;

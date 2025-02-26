@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
@@ -25,13 +26,13 @@ final class LiteralOperator implements ResolvesToAny, OperatorInterface
     public const NAME = '$literal';
     public const PROPERTIES = ['value' => 'value'];
 
-    /** @var Type|array|bool|float|int|null|stdClass|string $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression. */
-    public readonly Type|stdClass|array|bool|float|int|null|string $value;
+    /** @var DateTimeInterface|Type|array|bool|float|int|null|stdClass|string $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression. */
+    public readonly DateTimeInterface|Type|stdClass|array|bool|float|int|null|string $value;
 
     /**
-     * @param Type|array|bool|float|int|null|stdClass|string $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression.
+     * @param DateTimeInterface|Type|array|bool|float|int|null|stdClass|string $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression.
      */
-    public function __construct(Type|stdClass|array|bool|float|int|null|string $value)
+    public function __construct(DateTimeInterface|Type|stdClass|array|bool|float|int|null|string $value)
     {
         $this->value = $value;
     }

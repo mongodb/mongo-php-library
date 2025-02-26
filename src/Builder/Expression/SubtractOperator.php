@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\UTCDateTime;
@@ -30,19 +31,19 @@ final class SubtractOperator implements ResolvesToInt, ResolvesToLong, ResolvesT
     public const NAME = '$subtract';
     public const PROPERTIES = ['expression1' => 'expression1', 'expression2' => 'expression2'];
 
-    /** @var Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression1 */
-    public readonly Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression1;
+    /** @var DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression1 */
+    public readonly DateTimeInterface|Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression1;
 
-    /** @var Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression2 */
-    public readonly Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression2;
+    /** @var DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression2 */
+    public readonly DateTimeInterface|Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression2;
 
     /**
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression1
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression2
+     * @param DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression1
+     * @param DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $expression2
      */
     public function __construct(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression1,
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression2,
+        DateTimeInterface|Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression1,
+        DateTimeInterface|Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int|string $expression2,
     ) {
         if (is_string($expression1) && ! str_starts_with($expression1, '$')) {
             throw new InvalidArgumentException('Argument $expression1 can be an expression, field paths and variable names must be prefixed by "$" or "$$".');

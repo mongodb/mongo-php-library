@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Accumulator;
 
+use DateTimeInterface;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
@@ -43,18 +44,18 @@ final class BottomNAccumulator implements AccumulatorInterface, WindowInterface,
     /** @var Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort. */
     public readonly Document|Serializable|stdClass|array $sortBy;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression. */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression. */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output;
 
     /**
      * @param ResolvesToInt|int|string $n Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public function __construct(
         ResolvesToInt|int|string $n,
         Document|Serializable|stdClass|array $sortBy,
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
     ) {
         if (is_string($n) && ! str_starts_with($n, '$')) {
             throw new InvalidArgumentException('Argument $n can be an expression, field paths and variable names must be prefixed by "$" or "$$".');

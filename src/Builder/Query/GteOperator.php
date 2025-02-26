@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\FieldQueryInterface;
@@ -26,13 +27,13 @@ final class GteOperator implements FieldQueryInterface, OperatorInterface
     public const NAME = '$gte';
     public const PROPERTIES = ['value' => 'value'];
 
-    /** @var Type|array|bool|float|int|null|stdClass|string $value */
-    public readonly Type|stdClass|array|bool|float|int|null|string $value;
+    /** @var DateTimeInterface|Type|array|bool|float|int|null|stdClass|string $value */
+    public readonly DateTimeInterface|Type|stdClass|array|bool|float|int|null|string $value;
 
     /**
-     * @param Type|array|bool|float|int|null|stdClass|string $value
+     * @param DateTimeInterface|Type|array|bool|float|int|null|stdClass|string $value
      */
-    public function __construct(Type|stdClass|array|bool|float|int|null|string $value)
+    public function __construct(DateTimeInterface|Type|stdClass|array|bool|float|int|null|string $value)
     {
         $this->value = $value;
     }

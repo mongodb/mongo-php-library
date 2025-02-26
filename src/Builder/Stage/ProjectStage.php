@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Stage;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -30,14 +31,15 @@ final class ProjectStage implements StageInterface, OperatorInterface
     public const NAME = '$project';
     public const PROPERTIES = ['specification' => 'specification'];
 
-    /** @var stdClass<ExpressionInterface|Type|array|bool|float|int|null|stdClass|string> $specification */
+    /** @var stdClass<DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string> $specification */
     public readonly stdClass $specification;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$specification
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$specification
      */
-    public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$specification)
-    {
+    public function __construct(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$specification,
+    ) {
         if (\count($specification) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $specification, got %d.', 1, \count($specification)));
         }

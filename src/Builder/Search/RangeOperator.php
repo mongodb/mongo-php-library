@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Search;
 
+use DateTimeInterface;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
@@ -44,35 +45,35 @@ final class RangeOperator implements SearchOperatorInterface, OperatorInterface
     /** @var array|string $path */
     public readonly array|string $path;
 
-    /** @var Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt */
-    public readonly Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt;
+    /** @var Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt */
+    public readonly Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt;
 
-    /** @var Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte */
-    public readonly Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte;
+    /** @var Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte */
+    public readonly Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte;
 
-    /** @var Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt */
-    public readonly Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt;
+    /** @var Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt */
+    public readonly Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt;
 
-    /** @var Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte */
-    public readonly Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte;
+    /** @var Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte */
+    public readonly Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte;
 
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
 
     /**
      * @param array|string $path
-     * @param Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt
-     * @param Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte
-     * @param Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt
-     * @param Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte
+     * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt
+     * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte
+     * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt
+     * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
         array|string $path,
-        Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt = Optional::Undefined,
-        Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte = Optional::Undefined,
-        Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt = Optional::Undefined,
-        Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte = Optional::Undefined,
+        Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt = Optional::Undefined,
+        Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte = Optional::Undefined,
+        Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt = Optional::Undefined,
+        Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {
         $this->path = $path;

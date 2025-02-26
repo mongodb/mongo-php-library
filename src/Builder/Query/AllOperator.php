@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\FieldQueryInterface;
@@ -29,15 +30,16 @@ final class AllOperator implements FieldQueryInterface, OperatorInterface
     public const NAME = '$all';
     public const PROPERTIES = ['value' => 'value'];
 
-    /** @var list<FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string> $value */
+    /** @var list<DateTimeInterface|FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string> $value */
     public readonly array $value;
 
     /**
-     * @param FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string ...$value
+     * @param DateTimeInterface|FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string ...$value
      * @no-named-arguments
      */
-    public function __construct(Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$value)
-    {
+    public function __construct(
+        DateTimeInterface|Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$value,
+    ) {
         if (\count($value) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $value, got %d.', 1, \count($value)));
         }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Stage;
 
+use DateTimeInterface;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
@@ -36,8 +37,8 @@ final class BucketAutoStage implements StageInterface, OperatorInterface
         'granularity' => 'granularity',
     ];
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes. */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $groupBy;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes. */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $groupBy;
 
     /** @var int $buckets A positive 32-bit integer that specifies the number of buckets into which input documents are grouped. */
     public readonly int $buckets;
@@ -55,7 +56,7 @@ final class BucketAutoStage implements StageInterface, OperatorInterface
     public readonly Optional|string $granularity;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * @param int $buckets A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
      * @param Optional|Document|Serializable|array|stdClass $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
      * The default count field is not included in the output document when output is specified. Explicitly specify the count expression as part of the output document to include it.
@@ -63,7 +64,7 @@ final class BucketAutoStage implements StageInterface, OperatorInterface
      * Available only if the all groupBy values are numeric and none of them are NaN.
      */
     public function __construct(
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $groupBy,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $groupBy,
         int $buckets,
         Optional|Document|Serializable|stdClass|array $output = Optional::Undefined,
         Optional|string $granularity = Optional::Undefined,

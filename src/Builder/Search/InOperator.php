@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Search;
 
+use DateTimeInterface;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
@@ -38,20 +39,20 @@ final class InOperator implements SearchOperatorInterface, OperatorInterface
     /** @var array|string $path */
     public readonly array|string $path;
 
-    /** @var BSONArray|PackedArray|Type|array|bool|float|int|null|stdClass|string $value */
-    public readonly PackedArray|Type|BSONArray|stdClass|array|bool|float|int|null|string $value;
+    /** @var BSONArray|DateTimeInterface|PackedArray|Type|array|bool|float|int|null|stdClass|string $value */
+    public readonly DateTimeInterface|PackedArray|Type|BSONArray|stdClass|array|bool|float|int|null|string $value;
 
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
 
     /**
      * @param array|string $path
-     * @param BSONArray|PackedArray|Type|array|bool|float|int|null|stdClass|string $value
+     * @param BSONArray|DateTimeInterface|PackedArray|Type|array|bool|float|int|null|stdClass|string $value
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
         array|string $path,
-        PackedArray|Type|BSONArray|stdClass|array|bool|float|int|null|string $value,
+        DateTimeInterface|PackedArray|Type|BSONArray|stdClass|array|bool|float|int|null|string $value,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {
         $this->path = $path;

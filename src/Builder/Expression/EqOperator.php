@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -26,19 +27,19 @@ final class EqOperator implements ResolvesToBool, OperatorInterface
     public const NAME = '$eq';
     public const PROPERTIES = ['expression1' => 'expression1', 'expression2' => 'expression2'];
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1 */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1 */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2 */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2 */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression1
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression2
      */
     public function __construct(
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ) {
         $this->expression1 = $expression1;
         $this->expression2 = $expression2;

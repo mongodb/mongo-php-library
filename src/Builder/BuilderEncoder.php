@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder;
 
+use DateTimeInterface;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encoder\CombinedFieldQueryEncoder;
+use MongoDB\Builder\Encoder\DateTimeEncoder;
 use MongoDB\Builder\Encoder\DictionaryEncoder;
 use MongoDB\Builder\Encoder\ExpressionEncoder;
 use MongoDB\Builder\Encoder\FieldPathEncoder;
@@ -47,6 +50,7 @@ final class BuilderEncoder implements Encoder
         QueryObject::class => QueryEncoder::class,
         OutputWindow::class => OutputWindowEncoder::class,
         OperatorInterface::class => OperatorEncoder::class,
+        DateTimeInterface::class => DateTimeEncoder::class,
     ];
 
     /** @var array<class-string, ExpressionEncoder|null> */
@@ -67,7 +71,7 @@ final class BuilderEncoder implements Encoder
         return (bool) $this->getEncoderFor($value)?->canEncode($value);
     }
 
-    public function encode(mixed $value): stdClass|array|string|int
+    public function encode(mixed $value): stdClass|array|string|int|UTCDateTime
     {
         $encoder = $this->getEncoderFor($value);
 

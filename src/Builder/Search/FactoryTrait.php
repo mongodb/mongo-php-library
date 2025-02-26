@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Search;
 
+use DateTimeInterface;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
@@ -99,12 +100,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/
      * @param array|string $path
-     * @param Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value
+     * @param Binary|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function equals(
         array|string $path,
-        Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value,
+        DateTimeInterface|Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): EqualsOperator {
         return new EqualsOperator($path, $value, $score);
@@ -185,12 +186,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/in/
      * @param array|string $path
-     * @param BSONArray|PackedArray|Type|array|bool|float|int|null|stdClass|string $value
+     * @param BSONArray|DateTimeInterface|PackedArray|Type|array|bool|float|int|null|stdClass|string $value
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function in(
         array|string $path,
-        PackedArray|Type|BSONArray|stdClass|array|bool|float|int|null|string $value,
+        DateTimeInterface|PackedArray|Type|BSONArray|stdClass|array|bool|float|int|null|string $value,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): InOperator {
         return new InOperator($path, $value, $score);
@@ -217,13 +218,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/near/
      * @param array|string $path
-     * @param Decimal128|Document|GeometryInterface|Int64|Serializable|UTCDateTime|array|float|int|stdClass $origin
+     * @param DateTimeInterface|Decimal128|Document|GeometryInterface|Int64|Serializable|UTCDateTime|array|float|int|stdClass $origin
      * @param Decimal128|Int64|float|int $pivot
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function near(
         array|string $path,
-        Decimal128|Document|Int64|Serializable|UTCDateTime|GeometryInterface|stdClass|array|float|int $origin,
+        DateTimeInterface|Decimal128|Document|Int64|Serializable|UTCDateTime|GeometryInterface|stdClass|array|float|int $origin,
         Decimal128|Int64|float|int $pivot,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): NearOperator {
@@ -266,18 +267,18 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/range/
      * @param array|string $path
-     * @param Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt
-     * @param Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte
-     * @param Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt
-     * @param Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte
+     * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt
+     * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte
+     * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt
+     * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public static function range(
         array|string $path,
-        Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt = Optional::Undefined,
-        Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte = Optional::Undefined,
-        Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt = Optional::Undefined,
-        Optional|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte = Optional::Undefined,
+        Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt = Optional::Undefined,
+        Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gte = Optional::Undefined,
+        Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt = Optional::Undefined,
+        Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ): RangeOperator {
         return new RangeOperator($path, $gt, $gte, $lt, $lte, $score);

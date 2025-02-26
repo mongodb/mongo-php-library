@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
@@ -42,8 +43,8 @@ final class IndexOfArrayOperator implements ResolvesToInt, OperatorInterface
      */
     public readonly PackedArray|ResolvesToArray|BSONArray|array|string $array;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $search */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $search;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $search */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $search;
 
     /**
      * @var Optional|ResolvesToInt|int|string $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
@@ -61,7 +62,7 @@ final class IndexOfArrayOperator implements ResolvesToInt, OperatorInterface
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $array Can be any valid expression as long as it resolves to an array.
      * If the array expression resolves to a value of null or refers to a field that is missing, $indexOfArray returns null.
      * If the array expression does not resolve to an array or null nor refers to a missing field, $indexOfArray returns an error.
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $search
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $search
      * @param Optional|ResolvesToInt|int|string $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
      * @param Optional|ResolvesToInt|int|string $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
@@ -69,7 +70,7 @@ final class IndexOfArrayOperator implements ResolvesToInt, OperatorInterface
      */
     public function __construct(
         PackedArray|ResolvesToArray|BSONArray|array|string $array,
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $search,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $search,
         Optional|ResolvesToInt|int|string $start = Optional::Undefined,
         Optional|ResolvesToInt|int|string $end = Optional::Undefined,
     ) {

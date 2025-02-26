@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Accumulator;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Type\AccumulatorInterface;
@@ -35,18 +36,18 @@ final class FirstNAccumulator implements AccumulatorInterface, WindowInterface, 
     public const NAME = '$firstN';
     public const PROPERTIES = ['input' => 'input', 'n' => 'n'];
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements. */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements. */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input;
 
     /** @var ResolvesToInt|int|string $n A positive integral expression that is either a constant or depends on the _id value for $group. */
     public readonly ResolvesToInt|int|string $n;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements.
      * @param ResolvesToInt|int|string $n A positive integral expression that is either a constant or depends on the _id value for $group.
      */
     public function __construct(
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
         ResolvesToInt|int|string $n,
     ) {
         $this->input = $input;

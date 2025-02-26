@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\FieldQueryInterface;
@@ -26,14 +27,15 @@ final class NotOperator implements FieldQueryInterface, OperatorInterface
     public const NAME = '$not';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string $expression */
-    public readonly Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string $expression;
+    /** @var DateTimeInterface|FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string $expression */
+    public readonly DateTimeInterface|Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /**
-     * @param FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string $expression
+     * @param DateTimeInterface|FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
-    public function __construct(Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string $expression)
-    {
+    public function __construct(
+        DateTimeInterface|Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string $expression,
+    ) {
         $this->expression = $expression;
     }
 }

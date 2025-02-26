@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Stage;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -31,14 +32,15 @@ final class SortStage implements StageInterface, OperatorInterface
     public const NAME = '$sort';
     public const PROPERTIES = ['sort' => 'sort'];
 
-    /** @var stdClass<ExpressionInterface|Sort|Type|array|bool|float|int|null|stdClass|string> $sort */
+    /** @var stdClass<DateTimeInterface|ExpressionInterface|Sort|Type|array|bool|float|int|null|stdClass|string> $sort */
     public readonly stdClass $sort;
 
     /**
-     * @param ExpressionInterface|Sort|Type|array|bool|float|int|null|stdClass|string ...$sort
+     * @param DateTimeInterface|ExpressionInterface|Sort|Type|array|bool|float|int|null|stdClass|string ...$sort
      */
-    public function __construct(Type|ExpressionInterface|Sort|stdClass|array|bool|float|int|null|string ...$sort)
-    {
+    public function __construct(
+        DateTimeInterface|Type|ExpressionInterface|Sort|stdClass|array|bool|float|int|null|string ...$sort,
+    ) {
         if (\count($sort) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $sort, got %d.', 1, \count($sort)));
         }

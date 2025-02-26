@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
@@ -38,20 +39,20 @@ final class MapOperator implements ResolvesToArray, OperatorInterface
     /** @var BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to an array. */
     public readonly PackedArray|ResolvesToArray|BSONArray|array|string $input;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as. */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as. */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in;
 
     /** @var Optional|ResolvesToString|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this. */
     public readonly Optional|ResolvesToString|string $as;
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to an array.
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
      * @param Optional|ResolvesToString|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      */
     public function __construct(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
         Optional|ResolvesToString|string $as = Optional::Undefined,
     ) {
         if (is_string($input) && ! str_starts_with($input, '$')) {

@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type;
@@ -26,7 +27,7 @@ $bsonTypes = [
     'binData' => ['string', BSON\Binary::class],
     'objectId' => [BSON\ObjectId::class],
     'bool' => ['bool'],
-    'date' => [BSON\UTCDateTime::class],
+    'date' => [BSON\UTCDateTime::class, DateTimeInterface::class],
     'null' => ['null'],
     'regex' => [BSON\Regex::class],
     'javascript' => ['string', BSON\Javascript::class],
@@ -37,7 +38,7 @@ $bsonTypes = [
 ];
 
 // "any" accepts all the BSON types. No generic "object" or "mixed"
-$bsonTypes['any'] = ['bool', 'int', 'float', 'string', 'array', 'null', stdClass::class, BSON\Type::class];
+$bsonTypes['any'] = ['bool', 'int', 'float', 'string', 'array', 'null', stdClass::class, BSON\Type::class, DateTimeInterface::class];
 
 // "number" accepts all the numeric types
 $bsonTypes['number'] = ['int', 'float', BSON\Int64::class, BSON\Decimal128::class];

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -34,16 +35,16 @@ final class CaseOperator implements SwitchBranchInterface, OperatorInterface
     /** @var ResolvesToBool|bool|string $case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here. */
     public readonly ResolvesToBool|bool|string $case;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then Can be any valid expression. */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then Can be any valid expression. */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then;
 
     /**
      * @param ResolvesToBool|bool|string $case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then Can be any valid expression.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $then Can be any valid expression.
      */
     public function __construct(
         ResolvesToBool|bool|string $case,
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then,
     ) {
         if (is_string($case) && ! str_starts_with($case, '$')) {
             throw new InvalidArgumentException('Argument $case can be an expression, field paths and variable names must be prefixed by "$" or "$$".');

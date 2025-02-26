@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Builder;
 
+use DateTime;
+use DateTimeImmutable;
 use Generator;
 use MongoDB\BSON\Document;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Expression;
@@ -330,6 +333,45 @@ class BuilderEncoderTest extends TestCase
                         'then' => '$$PRUNE',
                         'else' => '$$DESCEND',
                     ],
+                ],
+            ],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline);
+    }
+
+    public function testDateTimeEncoding(): void
+    {
+        $dateTimeImmutable = new DateTimeImmutable();
+        $dateTime = DateTime::createFromImmutable($dateTimeImmutable);
+        $utcDateTime = new UTCDateTime($dateTime);
+
+        $pipeline = new Pipeline(
+            Stage::match(
+                utc: $utcDateTime,
+                mutable: $dateTime,
+                immutable: $dateTimeImmutable,
+            ),
+            Stage::addFields(
+                utc: Expression::dateToString($utcDateTime),
+                mutable: Expression::dateToString($dateTime),
+                immutable: Expression::dateToString($dateTimeImmutable),
+            ),
+        );
+
+        $expected = [
+            [
+                '$match' => [
+                    'utc' => $utcDateTime,
+                    'mutable' => $utcDateTime,
+                    'immutable' => $utcDateTime,
+                ],
+            ],
+            [
+                '$addFields' => [
+                    'utc' => ['$dateToString' => ['date' => $utcDateTime]],
+                    'mutable' => ['$dateToString' => ['date' => $utcDateTime]],
+                    'immutable' => ['$dateToString' => ['date' => $utcDateTime]],
                 ],
             ],
         ];

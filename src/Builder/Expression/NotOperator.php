@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -26,14 +27,14 @@ final class NotOperator implements ResolvesToBool, OperatorInterface
     public const NAME = '$not';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|null|stdClass|string $expression */
-    public readonly Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
+    /** @var DateTimeInterface|ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|null|stdClass|string $expression */
+    public readonly DateTimeInterface|Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /**
-     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|null|stdClass|string $expression
+     * @param DateTimeInterface|ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|null|stdClass|string $expression
      */
     public function __construct(
-        Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
+        DateTimeInterface|Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ) {
         $this->expression = $expression;
     }

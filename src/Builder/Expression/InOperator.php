@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
@@ -34,18 +35,18 @@ final class InOperator implements ResolvesToBool, OperatorInterface
     public const NAME = '$in';
     public const PROPERTIES = ['expression' => 'expression', 'array' => 'array'];
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression. */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression. */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /** @var BSONArray|PackedArray|ResolvesToArray|array|string $array Any valid expression that resolves to an array. */
     public readonly PackedArray|ResolvesToArray|BSONArray|array|string $array;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression Any valid expression expression.
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $array Any valid expression that resolves to an array.
      */
     public function __construct(
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
         PackedArray|ResolvesToArray|BSONArray|array|string $array,
     ) {
         $this->expression = $expression;

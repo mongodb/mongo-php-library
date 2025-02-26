@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Timestamp;
@@ -33,8 +34,8 @@ final class DateSubtractOperator implements ResolvesToDate, OperatorInterface
     public const NAME = '$dateSubtract';
     public const PROPERTIES = ['startDate' => 'startDate', 'unit' => 'unit', 'amount' => 'amount', 'timezone' => 'timezone'];
 
-    /** @var ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
-    public readonly ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $startDate;
+    /** @var DateTimeInterface|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
+    public readonly DateTimeInterface|ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $startDate;
 
     /** @var ResolvesToString|TimeUnit|string $unit The unit used to measure the amount of time added to the startDate. */
     public readonly ResolvesToString|TimeUnit|string $unit;
@@ -46,13 +47,13 @@ final class DateSubtractOperator implements ResolvesToDate, OperatorInterface
     public readonly Optional|ResolvesToString|string $timezone;
 
     /**
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param DateTimeInterface|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ResolvesToString|TimeUnit|string $unit The unit used to measure the amount of time added to the startDate.
      * @param Int64|ResolvesToInt|ResolvesToLong|int|string $amount
      * @param Optional|ResolvesToString|string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public function __construct(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $startDate,
+        DateTimeInterface|ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $startDate,
         ResolvesToString|TimeUnit|string $unit,
         Int64|ResolvesToInt|ResolvesToLong|int|string $amount,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,

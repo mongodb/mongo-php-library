@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\FieldQueryInterface;
@@ -30,14 +31,14 @@ final class ElemMatchOperator implements FieldQueryInterface, OperatorInterface
     public const NAME = '$elemMatch';
     public const PROPERTIES = ['query' => 'query'];
 
-    /** @var FieldQueryInterface|QueryInterface|Type|array|bool|float|int|null|stdClass|string $query */
-    public readonly Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query;
+    /** @var DateTimeInterface|FieldQueryInterface|QueryInterface|Type|array|bool|float|int|null|stdClass|string $query */
+    public readonly DateTimeInterface|Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query;
 
     /**
-     * @param FieldQueryInterface|QueryInterface|Type|array|bool|float|int|null|stdClass|string $query
+     * @param DateTimeInterface|FieldQueryInterface|QueryInterface|Type|array|bool|float|int|null|stdClass|string $query
      */
     public function __construct(
-        Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query,
+        DateTimeInterface|Type|FieldQueryInterface|QueryInterface|stdClass|array|bool|float|int|null|string $query,
     ) {
         if (is_array($query)) {
             $query = QueryObject::create($query);

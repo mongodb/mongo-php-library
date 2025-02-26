@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\ObjectId;
@@ -41,8 +42,8 @@ final class DateTruncOperator implements ResolvesToDate, OperatorInterface
         'startOfWeek' => 'startOfWeek',
     ];
 
-    /** @var ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
-    public readonly ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date;
+    /** @var DateTimeInterface|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
+    public readonly DateTimeInterface|ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date;
 
     /**
      * @var ResolvesToString|TimeUnit|string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
@@ -66,7 +67,7 @@ final class DateTruncOperator implements ResolvesToDate, OperatorInterface
     public readonly Optional|string $startOfWeek;
 
     /**
-     * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+     * @param DateTimeInterface|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ResolvesToString|TimeUnit|string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
      * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
@@ -76,7 +77,7 @@ final class DateTruncOperator implements ResolvesToDate, OperatorInterface
      * unit is week. Defaults to Sunday.
      */
     public function __construct(
-        ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
+        DateTimeInterface|ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
         ResolvesToString|TimeUnit|string $unit,
         Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $binSize = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,

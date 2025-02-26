@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Search;
 
+use DateTimeInterface;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
@@ -36,20 +37,20 @@ final class EqualsOperator implements SearchOperatorInterface, OperatorInterface
     /** @var array|string $path */
     public readonly array|string $path;
 
-    /** @var Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value */
-    public readonly Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value;
+    /** @var Binary|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value */
+    public readonly DateTimeInterface|Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value;
 
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
 
     /**
      * @param array|string $path
-     * @param Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value
+     * @param Binary|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value
      * @param Optional|Document|Serializable|array|stdClass $score
      */
     public function __construct(
         array|string $path,
-        Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value,
+        DateTimeInterface|Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
     ) {
         $this->path = $path;

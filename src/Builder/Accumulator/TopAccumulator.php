@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Accumulator;
 
+use DateTimeInterface;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
@@ -35,16 +36,16 @@ final class TopAccumulator implements AccumulatorInterface, OperatorInterface
     /** @var Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort. */
     public readonly Document|Serializable|stdClass|array $sortBy;
 
-    /** @var ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression. */
-    public readonly Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output;
+    /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression. */
+    public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output;
 
     /**
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the group and can be any expression.
      */
     public function __construct(
         Document|Serializable|stdClass|array $sortBy,
-        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
     ) {
         $this->sortBy = $sortBy;
         $this->output = $output;

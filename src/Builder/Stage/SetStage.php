@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Stage;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -31,14 +32,15 @@ final class SetStage implements StageInterface, OperatorInterface
     public const NAME = '$set';
     public const PROPERTIES = ['field' => 'field'];
 
-    /** @var stdClass<ExpressionInterface|Type|array|bool|float|int|null|stdClass|string> $field */
+    /** @var stdClass<DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string> $field */
     public readonly stdClass $field;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$field
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$field
      */
-    public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$field)
-    {
+    public function __construct(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$field,
+    ) {
         if (\count($field) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $field, got %d.', 1, \count($field)));
         }

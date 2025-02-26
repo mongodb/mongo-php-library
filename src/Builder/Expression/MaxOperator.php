@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
@@ -30,15 +31,16 @@ final class MaxOperator implements ResolvesToAny, OperatorInterface
     public const NAME = '$max';
     public const PROPERTIES = ['expression' => 'expression'];
 
-    /** @var list<ExpressionInterface|Type|array|bool|float|int|null|stdClass|string> $expression */
+    /** @var list<DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string> $expression */
     public readonly array $expression;
 
     /**
-     * @param ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$expression
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string ...$expression
      * @no-named-arguments
      */
-    public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression)
-    {
+    public function __construct(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
+    ) {
         if (\count($expression) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Encoder;
 
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\BuilderEncoder;
 use stdClass;
 
@@ -11,7 +12,7 @@ use function get_object_vars;
 use function is_array;
 
 /**
- * @template BSONType of stdClass|array|string|int
+ * @template BSONType of stdClass|array|string|int|UTCDateTime
  * @template NativeType
  * @template-implements ExpressionEncoder<BSONType, NativeType>
  * @internal

@@ -11,7 +11,7 @@ tasks:
         vars:
           EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
-# TODO: re-enable once 2.0.0 is released
+  # TODO: re-enable once 2.0.0 is released
 #  - name: "build-php-8.4-lowest"
 #    tags: ["build", "php8.4", "lowest", "pr", "tag"]
 #    commands:
@@ -42,7 +42,6 @@ tasks:
 #        vars:
 #          EXTENSION_BRANCH: "v2.x"
 #      - func: "upload extension"
-
   - name: "build-php-8.3"
     tags: ["build", "php8.3", "stable", "pr", "tag"]
     commands:
@@ -54,7 +53,7 @@ tasks:
         vars:
           EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
-# TODO: re-enable once 2.0.0 is released
+  # TODO: re-enable once 2.0.0 is released
 #  - name: "build-php-8.3-lowest"
 #    tags: ["build", "php8.3", "lowest", "pr", "tag"]
 #    commands:
@@ -96,7 +95,7 @@ tasks:
         vars:
           EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
-# TODO: re-enable once 2.0.0 is released
+  # TODO: re-enable once 2.0.0 is released
 #  - name: "build-php-8.2-lowest"
 #    tags: ["build", "php8.2", "lowest", "pr", "tag"]
 #    commands:
@@ -138,7 +137,7 @@ tasks:
         vars:
           EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
-# TODO: re-enable once 2.0.0 is released
+  # TODO: re-enable once 2.0.0 is released
 #  - name: "build-php-8.1-lowest"
 #    tags: ["build", "php8.1", "lowest", "pr", "tag"]
 #    commands:

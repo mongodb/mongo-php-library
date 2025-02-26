@@ -53,7 +53,7 @@ final class QueryEncoder implements Encoder
                     throw new LogicException(sprintf('Duplicate key "%s" in query object', $key));
                 }
 
-                $result->{$key} = $this->encoder->encodeIfSupported($value);
+                $result->{$key} = $this->recursiveEncode($value);
             }
         }
 

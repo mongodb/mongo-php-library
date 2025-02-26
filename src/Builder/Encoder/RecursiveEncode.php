@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Encoder;
 
-use MongoDB\Builder\BuilderEncoder;
+use MongoDB\Codec\Encoder;
 use stdClass;
+use WeakReference;
 
 use function get_object_vars;
 use function is_array;
 
 trait RecursiveEncode
 {
-    final public function __construct(protected readonly BuilderEncoder $encoder)
+    /** @param WeakReference<Encoder> $encoder */
+    final public function __construct(private readonly WeakReference $encoder)
     {
     }
 
@@ -44,6 +46,6 @@ trait RecursiveEncode
             return $value;
         }
 
-        return $this->encoder->encodeIfSupported($value);
+        return $this->encoder->get()->encodeIfSupported($value);
     }
 }

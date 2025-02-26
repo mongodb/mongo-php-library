@@ -29,10 +29,10 @@ use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
+use WeakReference;
 
 use function array_key_exists;
 use function is_object;
-use function is_string;
 
 /** @template-implements Encoder<Type|stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
 final class BuilderEncoder implements Encoder
@@ -40,25 +40,28 @@ final class BuilderEncoder implements Encoder
     /** @template-use EncodeIfSupported<Type|stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
     use EncodeIfSupported;
 
-    /** @var array<class-string, class-string<Encoder>> */
-    private array $defaultEncoders = [
-        Pipeline::class => PipelineEncoder::class,
-        Variable::class => VariableEncoder::class,
-        DictionaryInterface::class => DictionaryEncoder::class,
-        FieldPathInterface::class => FieldPathEncoder::class,
-        CombinedFieldQuery::class => CombinedFieldQueryEncoder::class,
-        QueryObject::class => QueryEncoder::class,
-        OutputWindow::class => OutputWindowEncoder::class,
-        OperatorInterface::class => OperatorEncoder::class,
-        DateTimeInterface::class => DateTimeEncoder::class,
-    ];
+    /** @var array<class-string, Encoder> */
+    private array $encoders;
 
     /** @var array<class-string, Encoder|null> */
     private array $cachedEncoders = [];
 
-    /** @param array<class-string, Encoder> $customEncoders */
-    public function __construct(private readonly array $customEncoders = [])
+    /** @param array<class-string, Encoder> $encoders */
+    public function __construct(array $encoders = [])
     {
+        $self = WeakReference::create($this);
+
+        $this->encoders = $encoders + [
+            Pipeline::class => new PipelineEncoder($self),
+            Variable::class => new VariableEncoder(),
+            DictionaryInterface::class => new DictionaryEncoder(),
+            FieldPathInterface::class => new FieldPathEncoder(),
+            CombinedFieldQuery::class => new CombinedFieldQueryEncoder($self),
+            QueryObject::class => new QueryEncoder($self),
+            OutputWindow::class => new OutputWindowEncoder($self),
+            OperatorInterface::class => new OperatorEncoder($self),
+            DateTimeInterface::class => new DateTimeEncoder(),
+        ];
     }
 
     /** @psalm-assert-if-true object $value */
@@ -89,25 +92,14 @@ final class BuilderEncoder implements Encoder
             return $this->cachedEncoders[$valueClass];
         }
 
-        $encoderList = $this->customEncoders + $this->defaultEncoders;
-
         // First attempt: match class name exactly
-        if (isset($encoderList[$valueClass])) {
-            $encoder = $encoderList[$valueClass];
-            if (is_string($encoder)) {
-                $encoder = new $encoder($this);
-            }
-
-            return $this->cachedEncoders[$valueClass] = $encoder;
+        if (isset($this->encoders[$valueClass])) {
+            return $this->cachedEncoders[$valueClass] = $this->encoders[$valueClass];
         }
 
         // Second attempt: catch child classes
-        foreach ($encoderList as $className => $encoder) {
+        foreach ($this->encoders as $className => $encoder) {
             if ($value instanceof $className) {
-                if (is_string($encoder)) {
-                    $encoder = new $encoder($this);
-                }
-
                 return $this->cachedEncoders[$valueClass] = $encoder;
             }
         }

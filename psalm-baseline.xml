@@ -248,6 +248,8 @@
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
+      <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
+      <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
     </InvalidReturnType>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$value]]></code>

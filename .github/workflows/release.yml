@@ -57,7 +57,9 @@ jobs:
       - name: "Store version numbers in env variables"
         run: |
           echo RELEASE_VERSION=${{ inputs.version }} >> $GITHUB_ENV
+          echo RELEASE_VERSION_WITHOUT_STABILITY=$(echo ${{ inputs.version }} | awk -F- '{print $1}') >> $GITHUB_ENV
           echo RELEASE_BRANCH=v$(echo ${{ inputs.version }} | cut -d '.' -f-2) >> $GITHUB_ENV
+          echo DEVELOPMENT_BRANCH=v$(echo ${{ inputs.version }} | cut -d '.' -f-1).x >> $GITHUB_ENV
 
       - name: "Ensure release tag does not already exist"
         run: |
@@ -66,15 +68,34 @@ jobs:
             exit 1
           fi
 
-      - name: "Fail if branch names don't match"
-        if: ${{ github.ref_name != env.RELEASE_BRANCH }}
+      # For patch releases (A.B.C where C != 0), we expect the release to be
+      # triggered from the vA.B release branch
+      - name: "Fail if patch release is created from wrong release branch"
+        if: ${{ !endsWith(env.RELEASE_VERSION_WITHOUT_STABILITY, '.0') && env.RELEASE_BRANCH != github.ref_name }}
         run: |
           echo '❌ Release failed due to branch mismatch: expected ${{ inputs.version }} to be released from ${{ env.RELEASE_BRANCH }}, got ${{ github.ref_name }}' >> $GITHUB_STEP_SUMMARY
+          exit 1
+
+      # For non-patch releases (A.B.C where C == 0), we expect the release to
+      # be triggered from the vA.x development branch or the vA.B release branch.
+      # This includes pre-releases (e.g. alpha, beta, rc)
+      - name: "Fail if non-patch release is created from wrong release branch"
+        if: ${{ endsWith(env.RELEASE_VERSION_WITHOUT_STABILITY, '.0') && env.RELEASE_BRANCH != github.ref_name && env.DEVELOPMENT_BRANCH != github.ref_name }}
+        run: |
+          echo '❌ Release failed due to branch mismatch: expected ${{ inputs.version }} to be released from ${{ env.RELEASE_BRANCH }} or ${{ env.DEVELOPMENT_BRANCH }}, got ${{ github.ref_name }}' >> $GITHUB_STEP_SUMMARY
           exit 1
 
       #
       # Preliminary checks done - commence the release process
       #
+
+      # Create the new release branch if we're releasing from the vA.x
+      # development branch
+      - name: "Create new release branch"
+        if: ${{ github.ref_name != env.RELEASE_BRANCH }}
+        run: |
+          git checkout -b ${{ env.RELEASE_BRANCH }}
+          git push origin ${{ env.RELEASE_BRANCH }}
 
       - name: "Set up drivers-github-tools"
         uses: mongodb-labs/drivers-github-tools/setup@v2
@@ -90,7 +111,7 @@ jobs:
           EOL
 
       - name: "Create draft release"
-        run: echo "RELEASE_URL=$(gh release create ${{ inputs.version }} --target ${{ github.ref_name }} --title "${{ inputs.version }}" --notes-file release-message --draft)" >> "$GITHUB_ENV"
+        run: echo "RELEASE_URL=$(gh release create ${{ inputs.version }} --target ${{ env.RELEASE_BRANCH }} --title "${{ inputs.version }}" --notes-file release-message --draft)" >> "$GITHUB_ENV"
 
       - name: "Create release tag"
         uses: mongodb-labs/drivers-github-tools/tag-version@v2

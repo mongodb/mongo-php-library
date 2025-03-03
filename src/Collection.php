@@ -753,6 +753,16 @@ class Collection
         return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
+    public function getBuilderEncoder(): BuilderEncoder
+    {
+        return $this->builderEncoder;
+    }
+
+    public function getCodec(): ?DocumentCodec
+    {
+        return $this->codec;
+    }
+
     /**
      * Return the collection name.
      */

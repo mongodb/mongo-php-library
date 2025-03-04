@@ -20,6 +20,9 @@
     </projectFiles>
 
     <stubs>
+        <file name="stubs/Driver/BulkWriteCommand.stub.php"/>
+        <file name="stubs/Driver/BulkWriteCommandException.stub.php"/>
+        <file name="stubs/Driver/BulkWriteCommandResult.stub.php"/>
         <file name="stubs/Driver/Cursor.stub.php"/>
         <file name="stubs/Driver/CursorInterface.stub.php"/>
         <file name="stubs/Driver/WriteResult.stub.php"/>

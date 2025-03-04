@@ -34,5 +34,8 @@
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.x"
+          # TODO: replace with "v2.x" once mongodb/mongo-php-driver#1790 is merged
+          # EXTENSION_BRANCH: "v2.x"
+          EXTENSION_REPO: "https://github.com/jmikola/mongo-php-driver.git"
+          EXTENSION_BRANCH: "2.x-bulkwrite"
       - func: "upload extension"

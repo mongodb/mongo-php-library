@@ -24,6 +24,8 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Codec\Encoder;
+use MongoDB\Driver\BulkWriteCommand;
+use MongoDB\Driver\BulkWriteCommandResult;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -39,6 +41,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\DatabaseInfo;
+use MongoDB\Operation\ClientBulkWrite;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
@@ -187,6 +190,32 @@ class Client
     final public function addSubscriber(Subscriber $subscriber): void
     {
         $this->manager->addSubscriber($subscriber);
+    }
+
+    /**
+     * Executes multiple write operations.
+     *
+     * @see ClientBulkWrite::__construct() for supported options
+     * @param string $databaseName Database name
+     * @param array  $options      Additional options
+     * @throws UnsupportedException if options are unsupported on the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function bulkWrite(BulkWriteCommand|BulkWriteCommandBuilder $bulk, array $options = []): ?BulkWriteCommandResult
+    {
+        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        if ($bulk instanceof BulkWriteCommandBuilder) {
+            $bulk = $bulk->bulkWriteCommand;
+        }
+
+        $operation = new ClientBulkWrite($bulk, $options);
+        $server = select_server_for_write($this->manager, $options);
+
+        return $operation->execute($server);
     }
 
     /**

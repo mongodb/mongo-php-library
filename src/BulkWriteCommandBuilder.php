@@ -26,16 +26,18 @@ use function is_array;
 use function is_bool;
 use function is_string;
 
-class BulkWriteCommandBuilder
+readonly class BulkWriteCommandBuilder
 {
-    private BulkWriteCommand $bulkWriteCommand;
-
     private function __construct(
+        public BulkWriteCommand $bulkWriteCommand,
         private string $namespace,
         private Encoder $builderEncoder,
         private ?DocumentCodec $codec,
-        array $options,
     ) {
+    }
+
+    public static function createWithCollection(Collection $collection, array $options): self
+    {
         $options += ['ordered' => true];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
@@ -54,26 +56,22 @@ class BulkWriteCommandBuilder
             throw InvalidArgumentException::invalidType('"verboseResults" option', $options['verboseResults'], 'boolean');
         }
 
-        $this->bulkWriteCommand = new BulkWriteCommand($options);
-    }
-
-    public static function createWithCollection(Collection $collection, array $options): self
-    {
         return new self(
+            new BulkWriteCommand($options),
             $collection->getNamespace(),
             $collection->getBuilderEncoder(),
             $collection->getCodec(),
-            $options,
         );
     }
 
     public function withCollection(Collection $collection): self
     {
-        $this->namespace = $collection->getNamespace();
-        $this->builderEncoder = $collection->getBuilderEncoder();
-        $this->codec = $collection->getCodec();
-
-        return $this;
+        return new self(
+            $this->bulkWriteCommand,
+            $collection->getNamespace(),
+            $collection->getBuilderEncoder(),
+            $collection->getCodec(),
+        );
     }
 
     public function deleteOne(array|object $filter, ?array $options = null): self

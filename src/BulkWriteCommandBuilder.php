@@ -20,6 +20,7 @@ namespace MongoDB;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Codec\Encoder;
 use MongoDB\Driver\BulkWriteCommand;
+use MongoDB\Driver\Manager;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function is_array;
@@ -30,6 +31,7 @@ readonly class BulkWriteCommandBuilder
 {
     private function __construct(
         public BulkWriteCommand $bulkWriteCommand,
+        private Manager $manager,
         private string $namespace,
         private Encoder $builderEncoder,
         private ?DocumentCodec $codec,
@@ -58,6 +60,7 @@ readonly class BulkWriteCommandBuilder
 
         return new self(
             new BulkWriteCommand($options),
+            $collection->getManager(),
             $collection->getNamespace(),
             $collection->getBuilderEncoder(),
             $collection->getCodec(),
@@ -66,8 +69,18 @@ readonly class BulkWriteCommandBuilder
 
     public function withCollection(Collection $collection): self
     {
+        /* Prohibit mixing Collections associated with different Manager
+         * objects. This is not technically necessary, since the Collection is
+         * only used to derive a namespace and encoding options; however, it
+         * may prevent a user from inadvertently mixing writes destined for
+         * different deployments. */
+        if ($this->manager !== $collection->getManager()) {
+            throw new InvalidArgumentException('$collection is associated with a different MongoDB\Driver\Manager');
+        }
+
         return new self(
             $this->bulkWriteCommand,
+            $this->manager,
             $collection->getNamespace(),
             $collection->getBuilderEncoder(),
             $collection->getCodec(),

@@ -718,7 +718,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $session->startTransaction();
 
         $this->expectException(UnsupportedException::class);
-        $this->expectExceptionMessage('"writeConcern" option cannot be specified within a transaction');
+        $this->expectExceptionMessage('Cannot set write concern after starting a transaction');
 
         try {
             call_user_func($method, $this->collection, $session, ['writeConcern' => new WriteConcern(1)]);
@@ -738,7 +738,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $session->startTransaction();
 
         $this->expectException(UnsupportedException::class);
-        $this->expectExceptionMessage('"readConcern" option cannot be specified within a transaction');
+        $this->expectExceptionMessage('Cannot set read concern after starting a transaction');
 
         try {
             call_user_func($method, $this->collection, $session, ['readConcern' => new ReadConcern(ReadConcern::LOCAL)]);

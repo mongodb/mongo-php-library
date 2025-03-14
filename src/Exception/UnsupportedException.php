@@ -47,7 +47,7 @@ class UnsupportedException extends RuntimeException
      */
     public static function readConcernNotSupportedInTransaction(): self
     {
-        return new self('The "readConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.');
+        return new self('Cannot set read concern after starting a transaction. Instead, specify the "readConcern" option when starting the transaction.');
     }
 
     /**
@@ -57,6 +57,6 @@ class UnsupportedException extends RuntimeException
      */
     public static function writeConcernNotSupportedInTransaction(): self
     {
-        return new self('The "writeConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.');
+        return new self('Cannot set write concern after starting a transaction. Instead, specify the "writeConcern" option when starting the transaction.');
     }
 }

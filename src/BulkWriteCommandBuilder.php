@@ -27,7 +27,7 @@ use function is_array;
 use function is_bool;
 use function is_string;
 
-readonly class BulkWriteCommandBuilder
+final readonly class BulkWriteCommandBuilder
 {
     private function __construct(
         public BulkWriteCommand $bulkWriteCommand,

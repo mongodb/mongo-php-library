@@ -58,6 +58,7 @@ final class Util
             'loop' => ['operations', 'storeErrorsAsEntity', 'storeFailuresAsEntity', 'storeSuccessesAsEntity', 'storeIterationsAsEntity'],
         ],
         Client::class => [
+            'clientBulkWrite' => ['models', 'bypassDocumentValidation', 'comment', 'let', 'ordered', 'session', 'verboseResults', 'writeConcern'],
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS', 'showExpandedEvents'],
             'listDatabaseNames' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
             'listDatabases' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],

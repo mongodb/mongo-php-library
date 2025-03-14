@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use MongoDB\Driver\Exception\BulkWriteCommandException;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ExecutionTimeoutException;
@@ -12,6 +13,7 @@ use PHPUnit\Framework\Assert;
 use stdClass;
 use Throwable;
 
+use function count;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertCount;
@@ -56,13 +58,17 @@ final class ExpectedError
 
     private ?string $codeName = null;
 
-    private ?Matches $matchesResultDocument = null;
+    private ?Matches $matchesErrorResponse = null;
 
     private array $includedLabels = [];
 
     private array $excludedLabels = [];
 
     private ?ExpectedResult $expectedResult = null;
+
+    private ?array $writeErrors = null;
+
+    private ?array $writeConcernErrors = null;
 
     public function __construct(?stdClass $o, EntityMap $entityMap)
     {
@@ -102,7 +108,7 @@ final class ExpectedError
 
         if (isset($o->errorResponse)) {
             assertIsObject($o->errorResponse);
-            $this->matchesResultDocument = new Matches($o->errorResponse, $entityMap);
+            $this->matchesErrorResponse = new Matches($o->errorResponse, $entityMap);
         }
 
         if (isset($o->errorLabelsContain)) {
@@ -119,6 +125,24 @@ final class ExpectedError
 
         if (property_exists($o, 'expectResult')) {
             $this->expectedResult = new ExpectedResult($o, $entityMap);
+        }
+
+        if (isset($o->writeErrors)) {
+            assertIsObject($o->writeErrors);
+            assertContainsOnly('object', (array) $o->writeErrors);
+
+            foreach ($o->writeErrors as $i => $writeError) {
+                $this->writeErrors[$i] = new Matches($writeError, $entityMap);
+            }
+        }
+
+        if (isset($o->writeConcernErrors)) {
+            assertIsArray($o->writeConcernErrors);
+            assertContainsOnly('object', $o->writeConcernErrors);
+
+            foreach ($o->writeConcernErrors as $i => $writeConcernError) {
+                $this->writeConcernErrors[$i] = new Matches($writeConcernError, $entityMap);
+            }
         }
     }
 
@@ -159,15 +183,21 @@ final class ExpectedError
             $this->assertCodeName($e);
         }
 
-        if (isset($this->matchesResultDocument)) {
-            assertThat($e, logicalOr(isInstanceOf(CommandException::class), isInstanceOf(BulkWriteException::class)));
+        if (isset($this->matchesErrorResponse)) {
+            assertThat($e, logicalOr(
+                isInstanceOf(CommandException::class),
+                isInstanceOf(BulkWriteException::class),
+                isInstanceOf(BulkWriteCommandException::class),
+            ));
 
             if ($e instanceof CommandException) {
-                assertThat($e->getResultDocument(), $this->matchesResultDocument, 'CommandException result document matches');
+                assertThat($e->getResultDocument(), $this->matchesErrorResponse, 'CommandException result document matches expected errorResponse');
+            } elseif ($e instanceof BulkWriteCommandException) {
+                assertThat($e->getErrorReply(), $this->matchesErrorResponse, 'BulkWriteCommandException error reply matches expected errorResponse');
             } elseif ($e instanceof BulkWriteException) {
                 $writeErrors = $e->getWriteResult()->getErrorReplies();
                 assertCount(1, $writeErrors);
-                assertThat($writeErrors[0], $this->matchesResultDocument, 'BulkWriteException result document matches');
+                assertThat($writeErrors[0], $this->matchesErrorResponse, 'BulkWriteException first error reply matches expected errorResponse');
             }
         }
 
@@ -184,16 +214,34 @@ final class ExpectedError
         }
 
         if (isset($this->expectedResult)) {
-            assertInstanceOf(BulkWriteException::class, $e);
-            $this->expectedResult->assert($e->getWriteResult());
+            assertThat($e, logicalOr(
+                isInstanceOf(BulkWriteException::class),
+                isInstanceOf(BulkWriteCommandException::class),
+            ));
+
+            if ($e instanceof BulkWriteCommandException) {
+                $this->expectedResult->assert($e->getPartialResult());
+            } elseif ($e instanceof BulkWriteException) {
+                $this->expectedResult->assert($e->getWriteResult());
+            }
+        }
+
+        if (isset($this->writeErrors)) {
+            assertInstanceOf(BulkWriteCommandException::class, $e);
+            $this->assertWriteErrors($e->getWriteErrors());
+        }
+
+        if (isset($this->writeConcernErrors)) {
+            assertInstanceOf(BulkWriteCommandException::class, $e);
+            $this->assertWriteConcernErrors($e->getWriteConcernErrors());
         }
     }
 
     private function assertIsClientError(Throwable $e): void
     {
-        /* Note: BulkWriteException may proxy a previous exception. Unwrap it
-         * to check the original error. */
-        if ($e instanceof BulkWriteException && $e->getPrevious() !== null) {
+        /* Note: BulkWriteException and BulkWriteCommandException may proxy a
+         * previous exception. Unwrap it to check the original error. */
+        if (($e instanceof BulkWriteException || $e instanceof BulkWriteCommandException) && $e->getPrevious() !== null) {
             $e = $e->getPrevious();
         }
 
@@ -229,5 +277,48 @@ final class ExpectedError
 
         assertObjectHasProperty('codeName', $result);
         assertSame($this->codeName, $result->codeName);
+    }
+
+    private function assertWriteErrors(array $writeErrors): void
+    {
+        assertCount(count($this->writeErrors), $writeErrors);
+
+        foreach ($this->writeErrors as $i => $matchesWriteError) {
+            assertArrayHasKey($i, $writeErrors);
+            $writeError = $writeErrors[$i];
+
+            // Not required by the spec test, but asserts PHPC correctness
+            assertSame((int) $i, $writeError->getIndex());
+
+            /* Convert the WriteError into a document for matching. These
+             * field names are derived from the CRUD spec. */
+            $writeErrorDocument = [
+                'code' => $writeError->getCode(),
+                'message' => $writeError->getMessage(),
+                'details' => $writeError->getInfo(),
+            ];
+
+            assertThat($writeErrorDocument, $matchesWriteError);
+        }
+    }
+
+    private function assertWriteConcernErrors(array $writeConcernErrors): void
+    {
+        assertCount(count($this->writeConcernErrors), $writeConcernErrors);
+
+        foreach ($this->writeConcernErrors as $i => $matchesWriteConcernError) {
+            assertArrayHasKey($i, $writeConcernErrors);
+            $writeConcernError = $writeConcernErrors[$i];
+
+            /* Convert the WriteConcernError into a document for matching.
+             * These field names are derived from the CRUD spec. */
+            $writeConcernErrorDocument = [
+                'code' => $writeConcernError->getCode(),
+                'message' => $writeConcernError->getMessage(),
+                'details' => $writeConcernError->getInfo(),
+            ];
+
+            assertThat($writeConcernErrorDocument, $matchesWriteConcernError);
+        }
     }
 }

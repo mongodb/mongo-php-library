@@ -5,6 +5,7 @@ namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 use LogicException;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
 use MongoDB\Model\BSONArray;
@@ -457,8 +458,14 @@ class Matches extends Constraint
             return self::prepare($bson->bsonSerialize());
         }
 
-        /* Serializable has already been handled, so any remaining instances of
-         * Type will not serialize as BSON arrays or objects */
+        // Recurse on the PHP representation of Document and PackedArray types
+        if ($bson instanceof Document || $bson instanceof PackedArray) {
+            return self::prepare($bson->toPHP());
+        }
+
+        /* Serializable, Document, and PackedArray have already been handled.
+         * Any remaining Type instances will not serialize as BSON arrays or
+         * objects. */
         if ($bson instanceof Type) {
             return $bson;
         }

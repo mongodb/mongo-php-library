@@ -7,6 +7,7 @@ use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
+use MongoDB\Driver\BulkWriteCommand;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Server;
@@ -87,10 +88,7 @@ final class Operation
             'assertNumberConnectionsCheckedOut' => 'PHP does not implement CMAP',
             'createEntities' => 'createEntities is not implemented (PHPC-1760)',
         ],
-        Client::class => [
-            'clientBulkWrite' => 'clientBulkWrite is not implemented (PHPLIB-847)',
-            'listDatabaseObjects' => 'listDatabaseObjects is not implemented',
-        ],
+        Client::class => ['listDatabaseObjects' => 'listDatabaseObjects is not implemented'],
         Cursor::class => ['iterateOnce' => 'iterateOnce is not implemented (PHPC-1760)'],
         Database::class => [
             'createCommandCursor' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
@@ -257,6 +255,18 @@ final class Operation
         Util::assertArgumentsBySchema(Client::class, $this->name, $args);
 
         switch ($this->name) {
+            case 'clientBulkWrite':
+                assertArrayHasKey('models', $args);
+                assertIsArray($args['models']);
+
+                // Options for BulkWriteCommand and Server::executeBulkWriteCommand() will be mixed
+                $options = array_diff_key($args, ['models' => 1]);
+
+                return $client->bulkWrite(
+                    self::prepareBulkWriteCommand($args['models'], $options),
+                    $options,
+                );
+
             case 'createChangeStream':
                 assertArrayHasKey('pipeline', $args);
                 assertIsArray($args['pipeline']);
@@ -1001,6 +1011,82 @@ final class Operation
         Assert::markTestSkipped($skipReason);
     }
 
+    private static function prepareBulkWriteCommand(array $models, array $options): BulkWriteCommand
+    {
+        $bulk = new BulkWriteCommand($options);
+
+        foreach ($models as $model) {
+            $model = (array) $model;
+            assertCount(1, $model);
+
+            $type = key($model);
+            $args = current($model);
+            assertIsObject($args);
+            $args = (array) $args;
+
+            assertArrayHasKey('namespace', $args);
+            assertIsString($args['namespace']);
+
+            switch ($type) {
+                case 'deleteMany':
+                case 'deleteOne':
+                    assertArrayHasKey('filter', $args);
+                    assertInstanceOf(stdClass::class, $args['filter']);
+
+                    $bulk->{$type}(
+                        $args['namespace'],
+                        $args['filter'],
+                        array_diff_key($args, ['namespace' => 1, 'filter' => 1]),
+                    );
+                    break;
+
+                case 'insertOne':
+                    assertArrayHasKey('document', $args);
+                    assertInstanceOf(stdClass::class, $args['document']);
+
+                    $bulk->insertOne(
+                        $args['namespace'],
+                        $args['document'],
+                    );
+                    break;
+
+                case 'replaceOne':
+                    assertArrayHasKey('filter', $args);
+                    assertArrayHasKey('replacement', $args);
+                    assertInstanceOf(stdClass::class, $args['filter']);
+                    assertInstanceOf(stdClass::class, $args['replacement']);
+
+                    $bulk->replaceOne(
+                        $args['namespace'],
+                        $args['filter'],
+                        $args['replacement'],
+                        array_diff_key($args, ['namespace' => 1, 'filter' => 1, 'replacement' => 1]),
+                    );
+                    break;
+
+                case 'updateMany':
+                case 'updateOne':
+                    assertArrayHasKey('filter', $args);
+                    assertArrayHasKey('update', $args);
+                    assertInstanceOf(stdClass::class, $args['filter']);
+                    assertThat($args['update'], logicalOr(new IsType('array'), new IsType('object')));
+
+                    $bulk->{$type}(
+                        $args['namespace'],
+                        $args['filter'],
+                        $args['update'],
+                        array_diff_key($args, ['namespace' => 1, 'filter' => 1, 'update' => 1]),
+                    );
+                    break;
+
+                default:
+                    Assert::fail('Unsupported bulk write model: ' . $type);
+            }
+        }
+
+        return $bulk;
+    }
+
     private static function prepareBulkWriteRequest(stdClass $request): array
     {
         $request = (array) $request;
@@ -1026,6 +1112,7 @@ final class Operation
 
             case 'insertOne':
                 assertArrayHasKey('document', $args);
+                assertInstanceOf(stdClass::class, $args['document']);
 
                 return ['insertOne' => [$args['document']]];
 

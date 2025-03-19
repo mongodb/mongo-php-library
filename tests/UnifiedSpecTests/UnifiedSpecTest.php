@@ -29,6 +29,8 @@ class UnifiedSpecTest extends FunctionalTestCase
      * @var array<string, string>
      */
     private static array $incompleteTestGroups = [
+        // Spec tests for named KMS providers depends on unimplemented functionality from UTF schema 1.18
+        'client-side-encryption/namedKMS' => 'UTF schema 1.18 is not supported (PHPLIB-1328)',
         // Many load balancer tests use CMAP events and/or assertNumberConnectionsCheckedOut
         'load-balancers/cursors are correctly pinned to connections for load-balanced clusters' => 'PHPC does not implement CMAP',
         'load-balancers/transactions are correctly pinned to connections for load-balanced clusters' => 'PHPC does not implement CMAP',

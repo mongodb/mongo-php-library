@@ -79,6 +79,12 @@ final class ExpectedResult
 
     private static function prepareBulkWriteCommandResult(BulkWriteCommandResult $result): array
     {
+        $retval = ['acknowledged' => $result->isAcknowledged()];
+
+        if (! $retval['acknowledged']) {
+            return $retval;
+        }
+
         $retval = [
             'deletedCount' => $result->getDeletedCount(),
             'insertedCount' => $result->getInsertedCount(),

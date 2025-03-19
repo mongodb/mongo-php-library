@@ -67,24 +67,21 @@ final readonly class BulkWriteCommandBuilder
         );
     }
 
-    public function withCollection(Collection $collection): self
+    public function deleteMany(array|object $filter, ?array $options = null): self
     {
-        /* Prohibit mixing Collections associated with different Manager
-         * objects. This is not technically necessary, since the Collection is
-         * only used to derive a namespace and encoding options; however, it
-         * may prevent a user from inadvertently mixing writes destined for
-         * different deployments. */
-        if ($this->manager !== $collection->getManager()) {
-            throw new InvalidArgumentException('$collection is associated with a different MongoDB\Driver\Manager');
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
+
+        if (isset($options['collation']) && ! is_document($options['collation'])) {
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
-        return new self(
-            $this->bulkWriteCommand,
-            $this->manager,
-            $collection->getNamespace(),
-            $collection->getBuilderEncoder(),
-            $collection->getCodec(),
-        );
+        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_document($options['hint'])) {
+            throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $options['hint']);
+        }
+
+        $this->bulkWriteCommand->deleteMany($this->namespace, $filter, $options);
+
+        return $this;
     }
 
     public function deleteOne(array|object $filter, ?array $options = null): self
@@ -100,23 +97,6 @@ final readonly class BulkWriteCommandBuilder
         }
 
         $this->bulkWriteCommand->deleteOne($this->namespace, $filter, $options);
-
-        return $this;
-    }
-
-    public function deleteMany(array|object $filter, ?array $options = null): self
-    {
-        $filter = $this->builderEncoder->encodeIfSupported($filter);
-
-        if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
-        }
-
-        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_document($options['hint'])) {
-            throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $options['hint']);
-        }
-
-        $this->bulkWriteCommand->deleteMany($this->namespace, $filter, $options);
 
         return $this;
     }
@@ -175,6 +155,36 @@ final readonly class BulkWriteCommandBuilder
         return $this;
     }
 
+    public function updateMany(array|object $filter, array|object $update, ?array $options = null): self
+    {
+        $filter = $this->builderEncoder->encodeIfSupported($filter);
+        $update = $this->builderEncoder->encodeIfSupported($update);
+
+        if (! is_first_key_operator($update) && ! is_pipeline($update)) {
+            throw new InvalidArgumentException('Expected update operator(s) or non-empty pipeline for $update');
+        }
+
+        if (isset($options['arrayFilters']) && ! is_array($options['arrayFilters'])) {
+            throw InvalidArgumentException::invalidType('"arrayFilters" option', $options['arrayFilters'], 'array');
+        }
+
+        if (isset($options['collation']) && ! is_document($options['collation'])) {
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
+        }
+
+        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_document($options['hint'])) {
+            throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $options['hint']);
+        }
+
+        if (isset($options['upsert']) && ! is_bool($options['upsert'])) {
+            throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
+        }
+
+        $this->bulkWriteCommand->updateMany($this->namespace, $filter, $update, $options);
+
+        return $this;
+    }
+
     public function updateOne(array|object $filter, array|object $update, ?array $options = null): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
@@ -209,33 +219,23 @@ final readonly class BulkWriteCommandBuilder
         return $this;
     }
 
-    public function updateMany(array|object $filter, array|object $update, ?array $options = null): self
+    public function withCollection(Collection $collection): self
     {
-        $filter = $this->builderEncoder->encodeIfSupported($filter);
-        $update = $this->builderEncoder->encodeIfSupported($update);
-
-        if (! is_first_key_operator($update) && ! is_pipeline($update)) {
-            throw new InvalidArgumentException('Expected update operator(s) or non-empty pipeline for $update');
+        /* Prohibit mixing Collections associated with different Manager
+         * objects. This is not technically necessary, since the Collection is
+         * only used to derive a namespace and encoding options; however, it
+         * may prevent a user from inadvertently mixing writes destined for
+         * different deployments. */
+        if ($this->manager !== $collection->getManager()) {
+            throw new InvalidArgumentException('$collection is associated with a different MongoDB\Driver\Manager');
         }
 
-        if (isset($options['arrayFilters']) && ! is_array($options['arrayFilters'])) {
-            throw InvalidArgumentException::invalidType('"arrayFilters" option', $options['arrayFilters'], 'array');
-        }
-
-        if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
-        }
-
-        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_document($options['hint'])) {
-            throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $options['hint']);
-        }
-
-        if (isset($options['upsert']) && ! is_bool($options['upsert'])) {
-            throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
-        }
-
-        $this->bulkWriteCommand->updateMany($this->namespace, $filter, $update, $options);
-
-        return $this;
+        return new self(
+            $this->bulkWriteCommand,
+            $this->manager,
+            $collection->getNamespace(),
+            $collection->getBuilderEncoder(),
+            $collection->getCodec(),
+        );
     }
 }

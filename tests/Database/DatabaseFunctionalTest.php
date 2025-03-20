@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Database;
 
 use MongoDB\BSON\PackedArray;
+use MongoDB\Codec\Encoder;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
@@ -50,6 +51,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     public static function provideInvalidConstructorOptions()
     {
         return self::createOptionDataProvider([
+            'builderEncoder' => self::getInvalidObjectValues(),
             'readConcern' => self::getInvalidReadConcernValues(),
             'readPreference' => self::getInvalidReadPreferenceValues(),
             'typeMap' => self::getInvalidArrayValues(),
@@ -370,6 +372,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     public function testWithOptionsInheritsOptions(): void
     {
         $databaseOptions = [
+            'builderEncoder' => $this->createMock(Encoder::class),
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array'],
@@ -382,19 +385,16 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
         $this->assertSame($this->manager, $debug['manager']);
         $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
-        $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
-        $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
-        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getModeString());
-        $this->assertIsArray($debug['typeMap']);
-        $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
-        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+
+        foreach ($databaseOptions as $key => $value) {
+            $this->assertSame($value, $debug[$key]);
+        }
     }
 
     public function testWithOptionsPassesOptions(): void
     {
         $databaseOptions = [
+            'builderEncoder' => $this->createMock(Encoder::class),
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array'],
@@ -404,13 +404,8 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $clone = $this->database->withOptions($databaseOptions);
         $debug = $clone->__debugInfo();
 
-        $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
-        $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
-        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getModeString());
-        $this->assertIsArray($debug['typeMap']);
-        $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
-        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+        foreach ($databaseOptions as $key => $value) {
+            $this->assertSame($value, $debug[$key]);
+        }
     }
 }

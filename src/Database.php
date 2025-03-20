@@ -680,6 +680,7 @@ class Database
     public function withOptions(array $options = [])
     {
         $options += [
+            'builderEncoder' => $this->builderEncoder,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
             'typeMap' => $this->typeMap,

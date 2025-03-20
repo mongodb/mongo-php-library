@@ -77,6 +77,22 @@ class CollectionFunctionalTest extends FunctionalTestCase
         ]);
     }
 
+    public function testGetBuilderEncoder(): void
+    {
+        $collectionOptions = ['builderEncoder' => $this->createMock(Encoder::class)];
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
+
+        $this->assertSame($collectionOptions['builderEncoder'], $collection->getBuilderEncoder());
+    }
+
+    public function testGetCodec(): void
+    {
+        $collectionOptions = ['codec' => $this->createMock(DocumentCodec::class)];
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
+
+        $this->assertSame($collectionOptions['codec'], $collection->getCodec());
+    }
+
     public function testGetManager(): void
     {
         $this->assertSame($this->manager, $this->collection->getManager());

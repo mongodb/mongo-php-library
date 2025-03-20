@@ -753,7 +753,7 @@ class Collection
         return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
-    public function getBuilderEncoder(): BuilderEncoder
+    public function getBuilderEncoder(): Encoder
     {
         return $this->builderEncoder;
     }

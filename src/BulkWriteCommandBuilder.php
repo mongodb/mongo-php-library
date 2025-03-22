@@ -38,7 +38,7 @@ final readonly class BulkWriteCommandBuilder
     ) {
     }
 
-    public static function createWithCollection(Collection $collection, array $options): self
+    public static function createWithCollection(Collection $collection, array $options = []): self
     {
         $options += ['ordered' => true];
 
@@ -67,7 +67,7 @@ final readonly class BulkWriteCommandBuilder
         );
     }
 
-    public function deleteMany(array|object $filter, ?array $options = null): self
+    public function deleteMany(array|object $filter, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
 
@@ -84,7 +84,7 @@ final readonly class BulkWriteCommandBuilder
         return $this;
     }
 
-    public function deleteOne(array|object $filter, ?array $options = null): self
+    public function deleteOne(array|object $filter, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
 
@@ -113,7 +113,7 @@ final readonly class BulkWriteCommandBuilder
         return $this;
     }
 
-    public function replaceOne(array|object $filter, array|object $replacement, ?array $options = null): self
+    public function replaceOne(array|object $filter, array|object $replacement, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
 
@@ -155,7 +155,7 @@ final readonly class BulkWriteCommandBuilder
         return $this;
     }
 
-    public function updateMany(array|object $filter, array|object $update, ?array $options = null): self
+    public function updateMany(array|object $filter, array|object $update, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
         $update = $this->builderEncoder->encodeIfSupported($update);
@@ -185,7 +185,7 @@ final readonly class BulkWriteCommandBuilder
         return $this;
     }
 
-    public function updateOne(array|object $filter, array|object $update, ?array $options = null): self
+    public function updateOne(array|object $filter, array|object $update, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
         $update = $this->builderEncoder->encodeIfSupported($update);

@@ -30,10 +30,12 @@ use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertIsBool;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertJson;
+use function PHPUnit\Framework\assertLessThanOrEqual;
 use function PHPUnit\Framework\assertMatchesRegularExpression;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertStringStartsWith;
 use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\containsOnly;
 use function PHPUnit\Framework\isInstanceOf;
 use function PHPUnit\Framework\isType;
@@ -348,6 +350,14 @@ class Matches extends Constraint
             $lsid = $this->entityMap->getLogicalSessionId($operator['$$sessionLsid']);
 
             $this->assertEquals(self::prepare($lsid), $actual, $keyPath);
+
+            return;
+        }
+
+        if ($name === '$$lte') {
+            assertTrue(self::isNumeric($operator['$$lte']), '$$lte requires number');
+            assertTrue(self::isNumeric($actual), '$actual operand for $$lte should be a number');
+            assertLessThanOrEqual($operator['$$lte'], $actual);
 
             return;
         }

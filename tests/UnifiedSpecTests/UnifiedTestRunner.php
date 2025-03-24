@@ -58,7 +58,7 @@ final class UnifiedTestRunner
     /**
      * Support for the following schema versions is incomplete:
      *
-     *   - 1.9: Only createEntities operation is implemented
+     *   - 1.9: collectionOrDatabaseOptions.timeoutMS and expectedError.isTimeoutError are not implemented
      *   - 1.10: Not implemented
      *   - 1.11: Not implemented, but CMAP is not applicable
      *   - 1.13: Only $$matchAsDocument and $$matchAsRoot is implemented

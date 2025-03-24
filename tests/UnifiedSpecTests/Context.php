@@ -492,6 +492,10 @@ final class Context
 
     private static function prepareCollectionOrDatabaseOptions(array $options): array
     {
+        if (array_key_exists('timeoutMS', $options)) {
+            Assert::markTestIncomplete('CSOT is not yet implemented (PHPC-1760)');
+        }
+
         Util::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
 
         return Util::prepareCommonOptions($options);

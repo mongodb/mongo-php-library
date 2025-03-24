@@ -81,6 +81,10 @@ final class ExpectedError
             $this->isClientError = $o->isClientError;
         }
 
+        if (property_exists($o, 'isTimeoutError')) {
+            Assert::markTestIncomplete('CSOT is not yet implemented (PHPC-1760)');
+        }
+
         if (isset($o->errorContains)) {
             assertIsString($o->errorContains);
             $this->messageContains = $o->errorContains;

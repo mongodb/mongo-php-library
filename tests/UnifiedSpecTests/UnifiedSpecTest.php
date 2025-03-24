@@ -53,9 +53,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
-        // CSOT is not yet implemented (PHPC-1760)
-        'valid-pass/collectionData-createOptions: collection is created with the correct options' => 'CSOT is not yet implemented (PHPC-1760)',
-        'valid-pass/operator-lte: special lte matching operator' => 'CSOT is not yet implemented (PHPC-1760)',
         // libmongoc always adds readConcern to aggregate command
         'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
         // Uses an invalid object name

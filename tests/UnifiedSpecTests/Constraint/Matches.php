@@ -4,6 +4,7 @@ namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 
 use LogicException;
 use MongoDB\BSON\Document;
+use MongoDB\BSON\Int64;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
 use MongoDB\Model\BSONArray;

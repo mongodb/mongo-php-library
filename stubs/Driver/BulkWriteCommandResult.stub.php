@@ -42,18 +42,6 @@ final class BulkWriteCommandResult
     {
     }
 
-    final public function getWriteErrors(): array
-    {
-    }
-
-    final public function getWriteConcernErrors(): array
-    {
-    }
-
-    final public function getErrorReply(): ?Document
-    {
-    }
-
     final public function isAcknowledged(): bool
     {
     }

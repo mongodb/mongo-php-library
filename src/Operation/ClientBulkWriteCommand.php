@@ -78,7 +78,7 @@ final class ClientBulkWriteCommand
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server): ?BulkWriteCommandResult
+    public function execute(Server $server): BulkWriteCommandResult
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {

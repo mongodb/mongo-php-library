@@ -202,7 +202,7 @@ class Client
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      * @see ClientBulkWriteCommand::__construct() for supported options
      */
-    public function bulkWrite(BulkWriteCommand|ClientBulkWrite $bulk, array $options = []): ?BulkWriteCommandResult
+    public function bulkWrite(BulkWriteCommand|ClientBulkWrite $bulk, array $options = []): BulkWriteCommandResult
     {
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;

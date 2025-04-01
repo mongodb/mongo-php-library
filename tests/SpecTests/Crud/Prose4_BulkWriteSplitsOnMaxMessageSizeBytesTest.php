@@ -2,7 +2,7 @@
 
 namespace MongoDB\Tests\SpecTests\Crud;
 
-use MongoDB\BulkWriteCommandBuilder;
+use MongoDB\ClientBulkWrite;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
@@ -36,7 +36,7 @@ class Prose4_BulkWriteSplitsOnMaxMessageSizeBytesTest extends FunctionalTestCase
         $document = ['a' => str_repeat('b', $maxBsonObjectSize - 500)];
 
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
-        $bulkWrite = BulkWriteCommandBuilder::createWithCollection($collection);
+        $bulkWrite = ClientBulkWrite::createWithCollection($collection);
 
         for ($i = 0; $i < $numModels; ++$i) {
             $bulkWrite->insertOne($document);

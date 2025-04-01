@@ -2,7 +2,7 @@
 
 namespace MongoDB\Tests\SpecTests\Crud;
 
-use MongoDB\BulkWriteCommandBuilder;
+use MongoDB\ClientBulkWrite;
 use MongoDB\Driver\Exception\BulkWriteCommandException;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
@@ -39,7 +39,7 @@ class Prose6_BulkWriteHandlesWriteErrorsAcrossBatchesTest extends FunctionalTest
         $collection->drop();
         $collection->insertOne(['_id' => 1]);
 
-        $bulkWrite = BulkWriteCommandBuilder::createWithCollection($collection, ['ordered' => true]);
+        $bulkWrite = ClientBulkWrite::createWithCollection($collection, ['ordered' => true]);
 
         for ($i = 0; $i < $maxWriteBatchSize + 1; ++$i) {
             $bulkWrite->insertOne(['_id' => 1]);
@@ -68,7 +68,7 @@ class Prose6_BulkWriteHandlesWriteErrorsAcrossBatchesTest extends FunctionalTest
         $collection->drop();
         $collection->insertOne(['_id' => 1]);
 
-        $bulkWrite = BulkWriteCommandBuilder::createWithCollection($collection, ['ordered' => false]);
+        $bulkWrite = ClientBulkWrite::createWithCollection($collection, ['ordered' => false]);
 
         for ($i = 0; $i < $maxWriteBatchSize + 1; ++$i) {
             $bulkWrite->insertOne(['_id' => 1]);

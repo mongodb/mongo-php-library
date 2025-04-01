@@ -41,7 +41,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\DatabaseInfo;
-use MongoDB\Operation\ClientBulkWrite;
+use MongoDB\Operation\ClientBulkWriteCommand;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
@@ -193,26 +193,26 @@ class Client
     }
 
     /**
-     * Executes multiple write operations.
+     * Executes multiple write operations across multiple namespaces.
      *
-     * @see ClientBulkWrite::__construct() for supported options
-     * @param string $databaseName Database name
-     * @param array  $options      Additional options
+     * @param BulkWriteCommand|ClientBulkWrite $bulk    Assembled bulk write command or builder
+     * @param array                            $options Additional options
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     * @see ClientBulkWriteCommand::__construct() for supported options
      */
-    public function bulkWrite(BulkWriteCommand|BulkWriteCommandBuilder $bulk, array $options = []): ?BulkWriteCommandResult
+    public function bulkWrite(BulkWriteCommand|ClientBulkWrite $bulk, array $options = []): ?BulkWriteCommandResult
     {
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        if ($bulk instanceof BulkWriteCommandBuilder) {
+        if ($bulk instanceof ClientBulkWrite) {
             $bulk = $bulk->bulkWriteCommand;
         }
 
-        $operation = new ClientBulkWrite($bulk, $options);
+        $operation = new ClientBulkWriteCommand($bulk, $options);
         $server = select_server_for_write($this->manager, $options);
 
         return $operation->execute($server);

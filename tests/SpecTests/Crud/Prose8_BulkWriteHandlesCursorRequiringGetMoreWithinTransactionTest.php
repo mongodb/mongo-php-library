@@ -2,7 +2,7 @@
 
 namespace MongoDB\Tests\SpecTests\Crud;
 
-use MongoDB\BulkWriteCommandBuilder;
+use MongoDB\ClientBulkWrite;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
@@ -35,7 +35,7 @@ class Prose8_BulkWriteHandlesCursorRequiringGetMoreWithinTransactionTest extends
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $collection->drop();
 
-        $bulkWrite = BulkWriteCommandBuilder::createWithCollection($collection, ['verboseResults' => true]);
+        $bulkWrite = ClientBulkWrite::createWithCollection($collection, ['verboseResults' => true]);
         $bulkWrite->updateOne(
             ['_id' => str_repeat('a', (int) ($maxBsonObjectSize / 2))],
             ['$set' => ['x' => 1]],

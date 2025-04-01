@@ -34,7 +34,7 @@ use function count;
  *
  * @see \MongoDB\Client::bulkWrite()
  */
-final class ClientBulkWrite
+final class ClientBulkWriteCommand
 {
     /**
      * Constructs a client-level bulk write operation.

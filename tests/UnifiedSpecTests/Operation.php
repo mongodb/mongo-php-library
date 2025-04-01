@@ -259,7 +259,7 @@ final class Operation
                 assertArrayHasKey('models', $args);
                 assertIsArray($args['models']);
 
-                // Options for BulkWriteCommand and Server::executeBulkWriteCommand() will be mixed
+                // Options for ClientBulkWriteCommand and Server::executeBulkWriteCommand() will be mixed
                 $options = array_diff_key($args, ['models' => 1]);
 
                 return $client->bulkWrite(

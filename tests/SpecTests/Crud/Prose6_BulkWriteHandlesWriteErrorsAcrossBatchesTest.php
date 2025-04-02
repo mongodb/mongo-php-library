@@ -35,8 +35,8 @@ class Prose6_BulkWriteHandlesWriteErrorsAcrossBatchesTest extends FunctionalTest
         $maxWriteBatchSize = $this->getPrimaryServer()->getInfo()['maxWriteBatchSize'] ?? null;
         self::assertIsInt($maxWriteBatchSize);
 
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
-        $collection->drop();
         $collection->insertOne(['_id' => 1]);
 
         $bulkWrite = ClientBulkWrite::createWithCollection($collection, ['ordered' => true]);
@@ -64,8 +64,8 @@ class Prose6_BulkWriteHandlesWriteErrorsAcrossBatchesTest extends FunctionalTest
         $maxWriteBatchSize = $this->getPrimaryServer()->getInfo()['maxWriteBatchSize'] ?? null;
         self::assertIsInt($maxWriteBatchSize);
 
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
-        $collection->drop();
         $collection->insertOne(['_id' => 1]);
 
         $bulkWrite = ClientBulkWrite::createWithCollection($collection, ['ordered' => false]);

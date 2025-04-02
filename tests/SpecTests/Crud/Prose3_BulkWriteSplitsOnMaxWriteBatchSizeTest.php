@@ -29,6 +29,7 @@ class Prose3_BulkWriteSplitsOnMaxWriteBatchSizeTest extends FunctionalTestCase
         $maxWriteBatchSize = $this->getPrimaryServer()->getInfo()['maxWriteBatchSize'] ?? null;
         self::assertIsInt($maxWriteBatchSize);
 
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $bulkWrite = ClientBulkWrite::createWithCollection($collection);
 

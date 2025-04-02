@@ -42,6 +42,7 @@ class Prose5_BulkWriteCollectsWriteConcernErrorsAcrossBatchesTest extends Functi
             ],
         ]);
 
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $bulkWrite = ClientBulkWrite::createWithCollection($collection);
 

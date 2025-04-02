@@ -43,8 +43,8 @@ class Prose9_BulkWriteHandlesGetMoreErrorTest extends FunctionalTestCase
             ],
         ]);
 
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
-        $collection->drop();
 
         $bulkWrite = ClientBulkWrite::createWithCollection($collection, ['verboseResults' => true]);
         $bulkWrite->updateOne(

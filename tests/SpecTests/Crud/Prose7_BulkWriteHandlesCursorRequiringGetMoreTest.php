@@ -31,8 +31,8 @@ class Prose7_BulkWriteHandlesCursorRequiringGetMoreTest extends FunctionalTestCa
         $maxBsonObjectSize = $this->getPrimaryServer()->getInfo()['maxBsonObjectSize'] ?? null;
         self::assertIsInt($maxBsonObjectSize);
 
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
-        $collection->drop();
 
         $bulkWrite = ClientBulkWrite::createWithCollection($collection, ['verboseResults' => true]);
         $bulkWrite->updateOne(

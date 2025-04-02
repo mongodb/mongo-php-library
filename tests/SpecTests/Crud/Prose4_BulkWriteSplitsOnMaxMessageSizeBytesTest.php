@@ -35,6 +35,7 @@ class Prose4_BulkWriteSplitsOnMaxMessageSizeBytesTest extends FunctionalTestCase
         $numModels = (int) ($maxMessageSizeBytes / $maxBsonObjectSize + 1);
         $document = ['a' => str_repeat('b', $maxBsonObjectSize - 500)];
 
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $bulkWrite = ClientBulkWrite::createWithCollection($collection);
 

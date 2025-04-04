@@ -59,16 +59,16 @@ final class ClientBulkWriteCommand
             throw new InvalidArgumentException('$bulkWriteCommand is empty');
         }
 
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
+        if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $this->options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
+        if (isset($this->options['writeConcern']) && $this->options['writeConcern']->isDefault()) {
+            unset($this->options['writeConcern']);
         }
     }
 

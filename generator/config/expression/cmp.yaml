@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $cmp
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/
 type:
     - resolvesToInt
 encode: array
@@ -17,8 +17,8 @@ arguments:
             - expression
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/#example
         pipeline:
             -
                 $project:
@@ -26,6 +26,24 @@ tests:
                     qty: 1
                     cmpTo250:
                         $cmp:
-                            - '$qty'
+                            - $qty
                             - 250
                     _id: 0
+        schema:
+            inventory:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                description:
+                    types:
+                        -
+                            bsonType: String
+                qty:
+                    types:
+                        -
+                            bsonType: Number

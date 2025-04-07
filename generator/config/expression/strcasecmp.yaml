@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $strcasecmp
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/
 type:
     - resolvesToInt
 encode: array
@@ -17,13 +17,13 @@ arguments:
             - resolvesToString
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/#example
         pipeline:
             -
                 $project:
                     item: 1
                     comparisonResult:
                         $strcasecmp:
-                            - '$quarter'
-                            - '13q4'
+                            - $quarter
+                            - 13q4

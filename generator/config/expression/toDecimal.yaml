@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toDecimal
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/
 type:
     - resolvesToDecimal
 encode: single
@@ -14,10 +14,10 @@ arguments:
             - expression
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/#example
         pipeline:
             -
                 $addFields:
                     convertedPrice:
-                        $toDecimal: '$price'
+                        $toDecimal: $price

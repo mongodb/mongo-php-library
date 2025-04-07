@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $centerSphere
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/
 type:
     - geometry
 encode: single

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $case
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
 type:
     - switchBranch
 encode: object

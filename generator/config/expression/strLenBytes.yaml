@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $strLenBytes
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/
 type:
     - resolvesToInt
 encode: single
@@ -13,11 +13,11 @@ arguments:
             - resolvesToString
 tests:
     -
-        name: 'Single-Byte and Multibyte Character Set'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/#single-byte-and-multibyte-character-set'
+        name: Single-Byte and Multibyte Character Set
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/#single-byte-and-multibyte-character-set
         pipeline:
             -
                 $project:
                     name: 1
                     length:
-                        $strLenBytes: '$name'
+                        $strLenBytes: $name

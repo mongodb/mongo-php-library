@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $rtrim
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/
 type:
     - resolvesToString
 encode: object
@@ -24,12 +24,12 @@ arguments:
             If unspecified, $ltrim removes whitespace characters, including the null character.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/#example
         pipeline:
             -
                 $project:
                     item: 1
                     description:
                         $rtrim:
-                            input: '$description'
+                            input: $description

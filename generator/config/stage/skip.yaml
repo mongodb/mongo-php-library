@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $skip
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/
 type:
     - stage
 encode: single
@@ -13,8 +13,8 @@ arguments:
             - int
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/#example
         pipeline:
             -
                 $skip: 5

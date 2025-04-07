@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $concatArrays
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/
 type:
     - resolvesToArray
 encode: single
@@ -14,12 +14,32 @@ arguments:
         variadic: array
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/#example
         pipeline:
             -
                 $project:
                     items:
                         $concatArrays:
-                            - '$instock'
-                            - '$ordered'
+                            - $instock
+                            - $ordered
+        schema:
+            warehouses:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                instock:
+                    types:
+                        -
+                            bsonType: Array
+                            types:
+                                -
+                                    bsonType: String
+                ordered:
+                    types:
+                        -
+                            bsonType: Array
+                            types:
+                                -
+                                    bsonType: String

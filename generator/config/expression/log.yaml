@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $log
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/
 type:
     - resolvesToDouble
 encode: array
@@ -21,8 +21,8 @@ arguments:
             Any valid expression as long as it resolves to a positive number greater than 1.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/#example
         pipeline:
             -
                 $project:
@@ -32,5 +32,5 @@ tests:
                                 - 1
                                 -
                                     $log:
-                                        - '$int'
+                                        - $int
                                         - 2

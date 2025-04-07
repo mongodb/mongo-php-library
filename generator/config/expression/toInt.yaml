@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toInt
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/
 type:
     - resolvesToInt
 encode: single
@@ -14,10 +14,10 @@ arguments:
             - expression
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/#example
         pipeline:
             -
                 $addFields:
                     convertedQty:
-                        $toInt: '$qty'
+                        $toInt: $qty

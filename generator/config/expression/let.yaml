@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $let
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/
 type:
     - resolvesToAny
 encode: object
@@ -11,7 +11,7 @@ arguments:
     -
         name: vars
         type:
-            - object # of expression
+            - object
         description: |
             Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
             The variable assignments have no meaning outside the in expression, not even within the vars block itself.
@@ -23,8 +23,8 @@ arguments:
             The expression to evaluate.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/#example
         pipeline:
             -
                 $project:
@@ -33,14 +33,14 @@ tests:
                             vars:
                                 total:
                                     $add:
-                                        - '$price'
-                                        - '$tax'
+                                        - $price
+                                        - $tax
                                 discounted:
                                     $cond:
-                                        if: '$applyDiscount'
+                                        if: $applyDiscount
                                         then: 0.9
                                         else: 1
                             in:
                                 $multiply:
-                                    - '$$total'
-                                    - '$$discounted'
+                                    - $$total
+                                    - $$discounted

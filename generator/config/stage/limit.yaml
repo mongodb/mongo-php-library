@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $limit
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/
 type:
     - stage
 encode: single
@@ -13,8 +13,8 @@ arguments:
             - int
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/#example
         pipeline:
             -
                 $limit: 5

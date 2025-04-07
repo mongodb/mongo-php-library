@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $indexOfCP
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/
 type:
     - resolvesToInt
 encode: array
@@ -39,12 +39,12 @@ arguments:
             If unspecified, the ending index position for the search is the end of the string.
 tests:
     -
-        name: 'Examples'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/#examples'
+        name: Examples
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/#examples
         pipeline:
             -
                 $project:
                     cpLocation:
                         $indexOfCP:
-                            - '$item'
-                            - 'foo'
+                            - $item
+                            - foo

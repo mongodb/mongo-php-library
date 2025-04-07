@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $trunc
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/
 type:
     - resolvesToString
 encode: array
@@ -23,12 +23,12 @@ arguments:
             Can be any valid expression that resolves to an integer between -20 and 100, exclusive. e.g. -20 < place < 100. Defaults to 0.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/#example
         pipeline:
             -
                 $project:
                     truncatedValue:
                         $trunc:
-                            - '$value'
+                            - $value
                             - 1

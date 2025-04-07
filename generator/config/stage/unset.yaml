@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $unset
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/
 type:
     - stage
 encode: single
@@ -15,28 +15,26 @@ arguments:
         variadic: array
 tests:
     -
-        name: 'Remove a Single Field'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-a-single-field'
-        pipeline:
-            -
-                # The example in the docs uses the short syntax whereas
-                # the aggregation builder always uses the equivalent array syntax.
-                # $unset: 'copies'
-                $unset: ['copies']
-    -
-        name: 'Remove Top-Level Fields'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-top-level-fields'
+        name: Remove a Single Field
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-a-single-field
         pipeline:
             -
                 $unset:
-                    - 'isbn'
-                    - 'copies'
+                    - copies
     -
-        name: 'Remove Embedded Fields'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-embedded-fields'
+        name: Remove Top-Level Fields
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-top-level-fields
         pipeline:
             -
                 $unset:
-                    - 'isbn'
-                    - 'author.first'
-                    - 'copies.warehouse'
+                    - isbn
+                    - copies
+    -
+        name: Remove Embedded Fields
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-embedded-fields
+        pipeline:
+            -
+                $unset:
+                    - isbn
+                    - author.first
+                    - copies.warehouse

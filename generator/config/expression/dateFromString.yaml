@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $dateFromString
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/
 type:
     - resolvesToDate
 encode: object
@@ -46,35 +46,82 @@ arguments:
             If you do not specify onNull and dateString is null or missing, then $dateFromString outputs null.
 tests:
     -
-        name: 'Converting Dates'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#converting-dates'
+        name: Converting Dates
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#converting-dates
         pipeline:
             -
                 $project:
                     date:
                         $dateFromString:
-                            dateString: '$date'
-                            timezone: 'America/New_York'
+                            dateString: $date
+                            timezone: America/New_York
+        schema:
+            logmessages:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                date:
+                    types:
+                        -
+                            bsonType: String
+                timezone:
+                    types:
+                        -
+                            bsonType: String
+                message:
+                    types:
+                        -
+                            bsonType: String
     -
-        name: 'onError'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onerror'
+        name: onError
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onerror
         pipeline:
             -
                 $project:
                     date:
                         $dateFromString:
-                            dateString: '$date'
-                            timezone: '$timezone'
-                            onError: '$date'
+                            dateString: $date
+                            timezone: $timezone
+                            onError: $date
+        schema:
+            TestCollection:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                date:
+                    types:
+                        -
+                            bsonType: String
+                timezone:
+                    types:
+                        -
+                            bsonType: String
     -
-        name: 'onNull'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onnull'
+        name: onNull
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onnull
         pipeline:
             -
                 $project:
                     date:
                         $dateFromString:
-                            dateString: '$date'
-                            timezone: '$timezone'
-                            onNull: !bson_utcdatetime 0
-
+                            dateString: $date
+                            timezone: $timezone
+                            onNull: 1999-12-31T23:00:00.000Z
+        schema:
+            TestCollection:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                date:
+                    types:
+                        -
+                            bsonType: String
+                        -
+                            bsonType: 'Null'
+                timezone:
+                    types:
+                        -
+                            bsonType: String

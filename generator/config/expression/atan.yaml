@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $atan
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -18,8 +18,8 @@ arguments:
             By default $atan returns values as a double. $atan can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/#example
         pipeline:
             -
                 $addFields:
@@ -27,5 +27,23 @@ tests:
                         $radiansToDegrees:
                             $atan:
                                 $divide:
-                                    - '$side_b'
-                                    - '$side_a'
+                                    - $side_b
+                                    - $side_a
+        schema:
+            TestCollection:
+                _id:
+                    types:
+                        -
+                            bsonType: ObjectId
+                side_a:
+                    types:
+                        -
+                            bsonType: Decimal128
+                side_b:
+                    types:
+                        -
+                            bsonType: Decimal128
+                hypotenuse:
+                    types:
+                        -
+                            bsonType: Decimal128

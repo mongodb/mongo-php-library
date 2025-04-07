@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $abs
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/
 type:
     - resolvesToNumber
 encode: single
@@ -13,13 +13,27 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/#example
         pipeline:
             -
                 $project:
                     delta:
                         $abs:
                             $subtract:
-                                - '$startTemp'
-                                - '$endTemp'
+                                - $startTemp
+                                - $endTemp
+        schema:
+            temperatureChange:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                startTemp:
+                    types:
+                        -
+                            bsonType: Number
+                endTemp:
+                    types:
+                        -
+                            bsonType: Number

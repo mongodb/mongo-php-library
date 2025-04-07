@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $shardedDataDistribution
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/
 type:
     - stage
 encode: object
@@ -9,8 +9,8 @@ description: |
     New in MongoDB 6.0.3.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/#examples'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/#examples
         pipeline:
             -
                 $shardedDataDistribution: {}

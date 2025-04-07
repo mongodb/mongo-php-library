@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $stdDevSamp
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
 type:
     - resolvesToDouble
 encode: single

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $gte
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/
 type:
     - resolvesToBool
 encode: array
@@ -17,8 +17,8 @@ arguments:
             - expression
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/#example
         pipeline:
             -
                 $project:
@@ -26,6 +26,6 @@ tests:
                     qty: 1
                     qtyGte250:
                         $gte:
-                            - '$qty'
+                            - $qty
                             - 250
                     _id: 0

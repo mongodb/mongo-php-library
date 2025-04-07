@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $exists
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/exists/
 type:
     - fieldQuery
 encode: single
@@ -14,24 +14,26 @@ arguments:
         default: true
 tests:
     -
-        name: 'Exists and Not Equal To'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/#exists-and-not-equal-to'
+        name: Exists and Not Equal To
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/exists/#exists-and-not-equal-to
         pipeline:
             -
                 $match:
                     qty:
                         $exists: true
-                        $nin: [5, 15]
+                        $nin:
+                            - 5
+                            - 15
     -
-        name: 'Null Values'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/#null-values'
+        name: Null Values
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/exists/#null-values
         pipeline:
             -
                 $match:
                     qty:
                         $exists: true
     -
-        name: 'Missing Field'
+        name: Missing Field
         pipeline:
             -
                 $match:

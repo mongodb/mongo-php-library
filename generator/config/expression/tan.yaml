@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $tan
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -17,8 +17,8 @@ arguments:
             By default $tan returns values as a double. $tan can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/#example
         pipeline:
             -
                 $addFields:
@@ -26,5 +26,5 @@ tests:
                         $multiply:
                             -
                                 $tan:
-                                    $degreesToRadians: '$angle_a'
-                            - '$side_a'
+                                    $degreesToRadians: $angle_a
+                            - $side_a

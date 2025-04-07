@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $or
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/or/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/or/
 type:
     - query
 encode: single
@@ -15,8 +15,8 @@ arguments:
         variadicMin: 1
 tests:
     -
-        name: '$or Clauses'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/or/#-or-clauses-and-indexes'
+        name: $or Clauses
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/or/#-or-clauses-and-indexes
         pipeline:
             -
                 $match:
@@ -26,10 +26,9 @@ tests:
                                 $lt: 20
                         -
                             price: 10
-
     -
-        name: 'Error Handling'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/or/#error-handling'
+        name: Error Handling
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/or/#error-handling
         pipeline:
             -
                 $match:
@@ -43,5 +42,5 @@ tests:
                                     -
                                         $divide:
                                             - 1
-                                            - '$x'
+                                            - $x
                                     - 3

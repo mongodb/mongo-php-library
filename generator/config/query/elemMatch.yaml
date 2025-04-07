@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $elemMatch
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
 type:
     - fieldQuery
 encode: single
@@ -14,8 +14,8 @@ arguments:
             - fieldQuery
 tests:
     -
-        name: 'Element Match'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#element-match'
+        name: Element Match
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#element-match
         pipeline:
             -
                 $match:
@@ -24,28 +24,28 @@ tests:
                             $gte: 80
                             $lt: 85
     -
-        name: 'Array of Embedded Documents'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#array-of-embedded-documents'
+        name: Array of Embedded Documents
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#array-of-embedded-documents
         pipeline:
             -
                 $match:
                     results:
                         $elemMatch:
-                            product: 'xyz'
+                            product: xyz
                             score:
                                 $gte: 8
     -
-        name: 'Single Query Condition'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#single-query-condition'
+        name: Single Query Condition
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#single-query-condition
         pipeline:
             -
                 $match:
                     results:
                         $elemMatch:
                             product:
-                                $ne: 'xyz'
+                                $ne: xyz
     -
-        name: 'Using $or with $elemMatch'
+        name: Using $or with $elemMatch
         pipeline:
             -
                 $match:
@@ -59,7 +59,7 @@ tests:
                                     score:
                                         $lt: 5
     -
-        name: 'Single field operator'
+        name: Single field operator
         pipeline:
             -
                 $match:

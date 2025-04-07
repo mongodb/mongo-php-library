@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $asinh
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -18,11 +18,21 @@ arguments:
             By default $asinh returns values as a double. $asinh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/#example
         pipeline:
             -
                 $addFields:
                     y-coordinate:
                         $radiansToDegrees:
-                            $asinh: '$x-coordinate'
+                            $asinh: $x-coordinate
+        schema:
+            TestCollection:
+                _id:
+                    types:
+                        -
+                            bsonType: ObjectId
+                x-coordinate:
+                    types:
+                        -
+                            bsonType: Decimal128

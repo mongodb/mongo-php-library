@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $collStats
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/
 type:
     - stage
 encode: object
@@ -20,39 +20,39 @@ arguments:
     -
         name: count
         type:
-            - object # empty object
+            - object
         optional: true
     -
         name: queryExecStats
         type:
-            - object # empty object
+            - object
         optional: true
 tests:
     -
-        name: 'latencyStats Document'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#latencystats-document'
+        name: latencyStats Document
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#latencystats-document
         pipeline:
             -
                 $collStats:
                     latencyStats:
                         histograms: true
     -
-        name: 'storageStats Document'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#storagestats-document'
+        name: storageStats Document
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#storagestats-document
         pipeline:
             -
                 $collStats:
                     storageStats: {}
     -
-        name: 'count Field'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#count-field'
+        name: count Field
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#count-field
         pipeline:
             -
                 $collStats:
                     count: {}
     -
-        name: 'queryExecStats Document'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#queryexecstats-document'
+        name: queryExecStats Document
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#queryexecstats-document
         pipeline:
             -
                 $collStats:

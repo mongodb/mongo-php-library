@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $shift
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/
 type:
     - window
 encode: object
@@ -34,32 +34,84 @@ arguments:
             If you do not specify a default expression, $shift returns null for documents whose positions are outside of the implicit $setWindowFields stage window.
 tests:
     -
-        name: 'Shift Using a Positive Integer'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-positive-integer'
+        name: Shift Using a Positive Integer
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-positive-integer
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         quantity: -1
                     output:
                         shiftQuantityForState:
                             $shift:
-                                output: '$quantity'
+                                output: $quantity
                                 by: 1
-                                default: 'Not available'
+                                default: Not available
+        schema:
+            cakeSales:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                type:
+                    types:
+                        -
+                            bsonType: String
+                orderDate:
+                    types:
+                        -
+                            bsonType: Date
+                state:
+                    types:
+                        -
+                            bsonType: String
+                price:
+                    types:
+                        -
+                            bsonType: Number
+                quantity:
+                    types:
+                        -
+                            bsonType: Number
     -
-        name: 'Shift Using a Negative Integer'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-negative-integer'
+        name: Shift Using a Negative Integer
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-negative-integer
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         quantity: -1
                     output:
                         shiftQuantityForState:
                             $shift:
-                                output: '$quantity'
+                                output: $quantity
                                 by: -1
-                                default: 'Not available'
+                                default: Not available
+        schema:
+            cakeSales:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                type:
+                    types:
+                        -
+                            bsonType: String
+                orderDate:
+                    types:
+                        -
+                            bsonType: Date
+                state:
+                    types:
+                        -
+                            bsonType: String
+                price:
+                    types:
+                        -
+                            bsonType: Number
+                quantity:
+                    types:
+                        -
+                            bsonType: Number

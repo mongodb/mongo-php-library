@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $arrayElemAt
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/
 type:
     - resolvesToAny
 encode: array
@@ -17,17 +17,34 @@ arguments:
             - resolvesToInt
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/#example
         pipeline:
             -
                 $project:
                     name: 1
                     first:
                         $arrayElemAt:
-                            - '$favorites'
+                            - $favorites
                             - 0
                     last:
                         $arrayElemAt:
-                            - '$favorites'
+                            - $favorites
                             - -1
+        schema:
+            TestCollection:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                name:
+                    types:
+                        -
+                            bsonType: String
+                favorites:
+                    types:
+                        -
+                            bsonType: Array
+                            types:
+                                -
+                                    bsonType: String

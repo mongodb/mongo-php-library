@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $derivative
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/
 type:
     - window
 encode: object
@@ -23,25 +23,39 @@ arguments:
             If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/#example
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$truckID'
+                    partitionBy: $truckID
                     sortBy:
                         timeStamp: 1
                     output:
                         truckAverageSpeed:
                             $derivative:
-                                input: '$miles'
-                                unit: 'hour'
+                                input: $miles
+                                unit: hour
                             window:
                                 range:
                                     - -30
                                     - 0
-                                unit: 'second'
+                                unit: second
             -
                 $match:
                     truckAverageSpeed:
                         $gt: 50
+        schema:
+            deliveryFleet:
+                truckID:
+                    types:
+                        -
+                            bsonType: String
+                timeStamp:
+                    types:
+                        -
+                            bsonType: Date
+                miles:
+                    types:
+                        -
+                            bsonType: Number

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toDate
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/
 type:
     - resolvesToDate
 encode: single
@@ -14,13 +14,13 @@ arguments:
             - expression
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/#example
         pipeline:
             -
                 $addFields:
                     convertedDate:
-                        $toDate: '$order_date'
+                        $toDate: $order_date
             -
                 $sort:
                     convertedDate: 1

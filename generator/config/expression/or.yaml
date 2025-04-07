@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $or
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/
 type:
     - resolvesToBool
 encode: single
@@ -15,8 +15,8 @@ arguments:
         variadic: array
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/#example
         pipeline:
             -
                 $project:
@@ -25,9 +25,9 @@ tests:
                         $or:
                             -
                                 $gt:
-                                    - '$qty'
+                                    - $qty
                                     - 250
                             -
                                 $lt:
-                                    - '$qty'
+                                    - $qty
                                     - 200

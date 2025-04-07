@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $isoDayOfWeek
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/
 type:
     - resolvesToInt
 encode: object
@@ -24,15 +24,13 @@ arguments:
             The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/#example
         pipeline:
             -
                 $project:
                     _id: 0
-                    name: '$name'
+                    name: $name
                     dayOfWeek:
-                        # Example uses the short form, the builder always generates the verbose form
-                        # $isoDayOfWeek: '$birthday'
                         $isoDayOfWeek:
-                            date: '$birthday'
+                            date: $birthday

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $searchMeta
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/
 type:
     - stage
 encode: object
@@ -23,7 +23,6 @@ arguments:
             - string
         description: |
             Name of the Atlas Search index to use. If omitted, defaults to default.
-
     -
         name: count
         optional: true
@@ -33,100 +32,97 @@ arguments:
             Document that specifies the count options for retrieving a count of the results.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#example
         pipeline:
             -
                 $searchMeta:
                     range:
-                        path: 'year'
+                        path: year
                         gte: 1998
                         lt: 1999
                     count:
-                        type: 'total'
-
+                        type: total
     -
-        name: 'Year Facet'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/facet/#example-1'
-        pipeline:
-            - $searchMeta:
-                  facet:
-                      operator:
-                          range:
-                              path: 'year'
-                              gte: 1980
-                              lte: 2000
-                      facets:
-                          yearFacet:
-                              type: 'number'
-                              path: 'year'
-                              boundaries:
-                                  - 1980
-                                  - 1990
-                                  - 2000
-                              default: 'other'
-
-    -
-        name: 'Date Facet'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/facet/#example-2'
+        name: Year Facet
+        link: https://www.mongodb.com/docs/atlas/atlas-search/facet/#example-1
         pipeline:
             -
                 $searchMeta:
                     facet:
                         operator:
                             range:
-                                path: 'released'
-                                gte: !bson_utcdatetime '2000-01-01T00:00:00.000Z'
-                                lte: !bson_utcdatetime '2015-01-31T00:00:00.000Z'
+                                path: year
+                                gte: 1980
+                                lte: 2000
                         facets:
                             yearFacet:
-                                type: 'date'
-                                path: 'released'
+                                type: number
+                                path: year
                                 boundaries:
-                                    - !bson_utcdatetime '2000-01-01'
-                                    - !bson_utcdatetime '2005-01-01'
-                                    - !bson_utcdatetime '2010-01-01'
-                                    - !bson_utcdatetime '2015-01-01'
-                                default: 'other'
-
+                                    - 1980
+                                    - 1990
+                                    - 2000
+                                default: other
     -
-        name: 'Metadata Results'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/facet/#examples'
+        name: Date Facet
+        link: https://www.mongodb.com/docs/atlas/atlas-search/facet/#example-2
         pipeline:
             -
                 $searchMeta:
                     facet:
                         operator:
                             range:
-                                path: 'released'
-                                gte: !bson_utcdatetime '2000-01-01T00:00:00.000Z'
-                                lte: !bson_utcdatetime '2015-01-31T00:00:00.000Z'
+                                path: released
+                                gte: 2000-01-01T00:00:00.000Z
+                                lte: 2015-01-31T00:00:00.000Z
+                        facets:
+                            yearFacet:
+                                type: date
+                                path: released
+                                boundaries:
+                                    - 2000-01-01T00:00:00.000Z
+                                    - 2005-01-01T00:00:00.000Z
+                                    - 2010-01-01T00:00:00.000Z
+                                    - 2015-01-01T00:00:00.000Z
+                                default: other
+    -
+        name: Metadata Results
+        link: https://www.mongodb.com/docs/atlas/atlas-search/facet/#examples
+        pipeline:
+            -
+                $searchMeta:
+                    facet:
+                        operator:
+                            range:
+                                path: released
+                                gte: 2000-01-01T00:00:00.000Z
+                                lte: 2015-01-31T00:00:00.000Z
                         facets:
                             directorsFacet:
-                                type: 'string'
-                                path: 'directors'
+                                type: string
+                                path: directors
                                 numBuckets: 7
                             yearFacet:
-                                type: 'number'
-                                path: 'year'
+                                type: number
+                                path: year
                                 boundaries:
                                     - 2000
                                     - 2005
                                     - 2010
                                     - 2015
-
     -
-        name: 'Autocomplete Bucket Results through Facet Queries'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#bucket-results-through-facet-queries'
+        name: Autocomplete Bucket Results through Facet Queries
+        link: https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#bucket-results-through-facet-queries
         pipeline:
             -
                 $searchMeta:
                     facet:
                         operator:
                             autocomplete:
-                                path: 'title'
-                                query: 'Gravity'
+                                path: title
+                                query: Gravity
                         facets:
                             titleFacet:
-                                type: 'string'
-                                path: 'title'
+                                type: string
+                                path: title

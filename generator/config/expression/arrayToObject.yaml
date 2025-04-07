@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $arrayToObject
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/
 type:
     - resolvesToObject
 encode: array
@@ -13,38 +13,98 @@ arguments:
             - resolvesToArray
 tests:
     -
-        name: '$arrayToObject Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/#-arraytoobject--example'
+        name: $arrayToObject Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/#-arraytoobject--example
         pipeline:
             -
                 $project:
                     item: 1
                     dimensions:
-                        # Example uses the short form, the builder always generates the verbose form
-                        # $arrayToObject: '$dimensions'
                         $arrayToObject:
-                            - '$dimensions'
+                            - $dimensions
+        schema:
+            inventory:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                dimensions:
+                    types:
+                        -
+                            bsonType: Array
+                            types:
+                                -
+                                    bsonType: Array
+                                    types:
+                                        -
+                                            bsonType: String
+                                        -
+                                            bsonType: Number
+                                -
+                                    bsonType: Document
+                                    fields:
+                                        k:
+                                            types:
+                                                -
+                                                    bsonType: String
+                                        v:
+                                            types:
+                                                -
+                                                    bsonType: Number
+                                                -
+                                                    bsonType: String
     -
-        name: '$objectToArray and $arrayToObject Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/#-objecttoarray----arraytoobject-example'
+        name: $objectToArray and $arrayToObject Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/#-objecttoarray----arraytoobject-example
         pipeline:
             -
                 $addFields:
                     instock:
-                        $objectToArray: '$instock'
+                        $objectToArray: $instock
             -
                 $addFields:
                     instock:
                         $concatArrays:
-                            - '$instock'
+                            - $instock
                             -
                                 -
-                                    k: 'total'
+                                    k: total
                                     v:
                                         $sum:
-                                            - '$instock.v'
+                                            - $instock.v
             -
                 $addFields:
                     instock:
                         $arrayToObject:
-                            - '$instock'
+                            - $instock
+        schema:
+            inventory:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                instock:
+                    types:
+                        -
+                            bsonType: Document
+                            fields:
+                                warehouse1:
+                                    types:
+                                        -
+                                            bsonType: Number
+                                warehouse2:
+                                    types:
+                                        -
+                                            bsonType: Number
+                                warehouse3:
+                                    types:
+                                        -
+                                            bsonType: Number

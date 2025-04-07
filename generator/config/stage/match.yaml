@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $match
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
 type:
     - stage
 encode: single
@@ -13,15 +13,15 @@ arguments:
             - query
 tests:
     -
-        name: 'Equality Match'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#equality-match'
+        name: Equality Match
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#equality-match
         pipeline:
             -
                 $match:
-                    author: 'dave'
+                    author: dave
     -
-        name: 'Perform a Count'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#perform-a-count'
+        name: Perform a Count
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#perform-a-count
         pipeline:
             -
                 $match:
@@ -35,6 +35,6 @@ tests:
                                 $gte: 1000
             -
                 $group:
-                    _id: ~
+                    _id: null
                     count:
                         $sum: 1

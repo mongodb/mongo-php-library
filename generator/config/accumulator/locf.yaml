@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $locf
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
 type:
     - window
 encode: single
@@ -15,8 +15,8 @@ arguments:
             - expression
 tests:
     -
-        name: 'Fill Missing Values with the Last Observed Value'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/#fill-missing-values-with-the-last-observed-value'
+        name: Fill Missing Values with the Last Observed Value
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/#fill-missing-values-with-the-last-observed-value
         pipeline:
             -
                 $setWindowFields:
@@ -24,4 +24,14 @@ tests:
                         time: 1
                     output:
                         price:
-                            $locf: '$price'
+                            $locf: $price
+        schema:
+            stock:
+                time:
+                    types:
+                        -
+                            bsonType: Date
+                price:
+                    types:
+                        -
+                            bsonType: Number

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: text
-link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/'
+link: https://www.mongodb.com/docs/atlas/atlas-search/text/
 type:
     - searchOperator
 encode: object
@@ -25,7 +25,7 @@ arguments:
         name: matchCriteria
         optional: true
         type:
-            - string # "any" | "all"
+            - string
     -
         name: synonyms
         optional: true
@@ -38,29 +38,29 @@ arguments:
             - searchScore
 tests:
     -
-        name: 'Basic'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/#basic-example'
+        name: Basic
+        link: https://www.mongodb.com/docs/atlas/atlas-search/text/#basic-example
         pipeline:
             -
                 $search:
                     text:
-                        path: 'title'
-                        query: 'surfer'
+                        path: title
+                        query: surfer
             -
                 $project:
                     _id: 0
                     title: 1
                     score:
-                        $meta: 'searchScore'
+                        $meta: searchScore
     -
-        name: 'Fuzzy Default'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples'
+        name: Fuzzy Default
+        link: https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples
         pipeline:
             -
                 $search:
                     text:
-                        path: 'title'
-                        query: 'naw yark'
+                        path: title
+                        query: naw yark
                         fuzzy: {}
             -
                 $limit: 10
@@ -69,17 +69,16 @@ tests:
                     _id: 0
                     title: 1
                     score:
-                        $meta: 'searchScore'
-
+                        $meta: searchScore
     -
-        name: 'Fuzzy maxExpansions'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples'
+        name: Fuzzy maxExpansions
+        link: https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples
         pipeline:
             -
                 $search:
                     text:
-                        path: 'title'
-                        query: 'naw yark'
+                        path: title
+                        query: naw yark
                         fuzzy:
                             maxEdits: 1
                             maxExpansions: 100
@@ -90,17 +89,16 @@ tests:
                     _id: 0
                     title: 1
                     score:
-                        $meta: 'searchScore'
-
+                        $meta: searchScore
     -
-        name: 'Fuzzy prefixLength'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples'
+        name: Fuzzy prefixLength
+        link: https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples
         pipeline:
             -
                 $search:
                     text:
-                        path: 'title'
-                        query: 'naw yark'
+                        path: title
+                        query: naw yark
                         fuzzy:
                             maxEdits: 1
                             prefixLength: 2
@@ -111,19 +109,18 @@ tests:
                     _id: 1
                     title: 1
                     score:
-                        $meta: 'searchScore'
-
+                        $meta: searchScore
     -
-        name: 'Match any Using equivalent Mapping'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/#match-any-using-equivalent-mapping'
+        name: Match any Using equivalent Mapping
+        link: https://www.mongodb.com/docs/atlas/atlas-search/text/#match-any-using-equivalent-mapping
         pipeline:
             -
                 $search:
                     text:
-                        path: 'plot'
-                        query: 'attire'
-                        synonyms: 'my_synonyms'
-                        matchCriteria: 'any'
+                        path: plot
+                        query: attire
+                        synonyms: my_synonyms
+                        matchCriteria: any
             -
                 $limit: 5
             -
@@ -132,19 +129,18 @@ tests:
                     plot: 1
                     title: 1
                     score:
-                        $meta: 'searchScore'
-
+                        $meta: searchScore
     -
-        name: 'Match any Using explicit Mapping'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/#match-any-using-explicit-mapping'
+        name: Match any Using explicit Mapping
+        link: https://www.mongodb.com/docs/atlas/atlas-search/text/#match-any-using-explicit-mapping
         pipeline:
             -
                 $search:
                     text:
-                        path: 'plot'
-                        query: 'boat race'
-                        synonyms: 'my_synonyms'
-                        matchCriteria: 'any'
+                        path: plot
+                        query: boat race
+                        synonyms: my_synonyms
+                        matchCriteria: any
             -
                 $limit: 10
             -
@@ -153,19 +149,18 @@ tests:
                     plot: 1
                     title: 1
                     score:
-                        $meta: 'searchScore'
-
+                        $meta: searchScore
     -
-        name: 'Match all Using Synonyms'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/#match-all-using-synonyms'
+        name: Match all Using Synonyms
+        link: https://www.mongodb.com/docs/atlas/atlas-search/text/#match-all-using-synonyms
         pipeline:
             -
                 $search:
                     text:
-                        path: 'plot'
-                        query: 'automobile race'
-                        matchCriteria: 'all'
-                        synonyms: 'my_synonyms'
+                        path: plot
+                        query: automobile race
+                        matchCriteria: all
+                        synonyms: my_synonyms
             -
                 $limit: 20
             -
@@ -174,21 +169,20 @@ tests:
                     plot: 1
                     title: 1
                     score:
-                        $meta: 'searchScore'
-
+                        $meta: searchScore
     -
-        name: 'Wildcard Path'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/text/'
+        name: Wildcard Path
+        link: https://www.mongodb.com/docs/atlas/atlas-search/text/
         pipeline:
             -
                 $search:
                     text:
                         path:
                             wildcard: '*'
-                        query: 'surfer'
+                        query: surfer
             -
                 $project:
                     _id: 0
                     title: 1
                     score:
-                        $meta: 'searchScore'
+                        $meta: searchScore

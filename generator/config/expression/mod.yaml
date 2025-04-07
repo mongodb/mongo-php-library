@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $mod
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/
 type:
     - resolvesToInt
 encode: array
@@ -19,12 +19,12 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/#example
         pipeline:
             -
                 $project:
                     remainder:
                         $mod:
-                            - '$hours'
-                            - '$tasks'
+                            - $hours
+                            - $tasks

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $ln
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/
 type:
     - resolvesToDouble
 encode: single
@@ -16,11 +16,11 @@ arguments:
             Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/#example
         pipeline:
             -
                 $project:
-                    x: '$year'
-                    y:
-                        $ln: '$sales'
+                    x: $year
+                    'y':
+                        $ln: $sales

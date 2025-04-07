@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $nor
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/nor/
 type:
     - query
 encode: single
@@ -15,8 +15,8 @@ arguments:
         variadicMin: 1
 tests:
     -
-        name: 'Query with Two Expressions'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-query-with-two-expressions'
+        name: Query with Two Expressions
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-query-with-two-expressions
         pipeline:
             -
                 $match:
@@ -26,8 +26,8 @@ tests:
                         -
                             sale: true
     -
-        name: 'Additional Comparisons'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and-additional-comparisons'
+        name: Additional Comparisons
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and-additional-comparisons
         pipeline:
             -
                 $match:
@@ -40,8 +40,8 @@ tests:
                         -
                             sale: true
     -
-        name: '$nor and $exists'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and--exists'
+        name: $nor and $exists
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and--exists
         pipeline:
             -
                 $match:

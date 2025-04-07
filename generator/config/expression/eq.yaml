@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $eq
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/
 type:
     - resolvesToBool
 encode: array
@@ -17,8 +17,8 @@ arguments:
             - expression
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/#example
         pipeline:
             -
                 $project:
@@ -26,6 +26,24 @@ tests:
                     qty: 1
                     qtyEq250:
                         $eq:
-                            - '$qty'
+                            - $qty
                             - 250
                     _id: 0
+        schema:
+            inventory:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                description:
+                    types:
+                        -
+                            bsonType: String
+                qty:
+                    types:
+                        -
+                            bsonType: Number

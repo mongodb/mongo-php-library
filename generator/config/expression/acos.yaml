@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $acos
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -18,8 +18,8 @@ arguments:
             By default $acos returns values as a double. $acos can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/#example
         pipeline:
             -
                 $addFields:
@@ -27,5 +27,23 @@ tests:
                         $radiansToDegrees:
                             $acos:
                                 $divide:
-                                    - '$side_b'
-                                    - '$hypotenuse'
+                                    - $side_b
+                                    - $hypotenuse
+        schema:
+            TestCollection:
+                _id:
+                    types:
+                        -
+                            bsonType: ObjectId
+                side_a:
+                    types:
+                        -
+                            bsonType: Decimal128
+                side_b:
+                    types:
+                        -
+                            bsonType: Decimal128
+                hypotenuse:
+                    types:
+                        -
+                            bsonType: Decimal128

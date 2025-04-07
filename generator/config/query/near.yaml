@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $near
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/near/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/near/
 type:
     - fieldQuery
 encode: object
@@ -28,15 +28,15 @@ arguments:
             Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
 tests:
     -
-        name: 'Query on GeoJSON Data'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/near/#query-on-geojson-data'
+        name: Query on GeoJSON Data
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/near/#query-on-geojson-data
         pipeline:
             -
                 $match:
                     location:
                         $near:
                             $geometry:
-                                type: 'Point'
+                                type: Point
                                 coordinates:
                                     - -73.9667
                                     - 40.78

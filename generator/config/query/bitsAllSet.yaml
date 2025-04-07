@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bitsAllSet
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/
 type:
     - fieldQuery
 encode: single
@@ -12,27 +12,34 @@ arguments:
         type:
             - int
             - binData
-            - array # of int
+            - array
 tests:
     -
-        name: 'Bit Position Array'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#bit-position-array'
+        name: Bit Position Array
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#bit-position-array
         pipeline:
             -
                 $match:
                     a:
-                        $bitsAllSet: [1, 5]
+                        $bitsAllSet:
+                            - 1
+                            - 5
     -
-        name: 'Integer Bitmask'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#integer-bitmask'
+        name: Integer Bitmask
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#integer-bitmask
         pipeline:
-            - $match:
-                  a:
-                      $bitsAllSet: 50
+            -
+                $match:
+                    a:
+                        $bitsAllSet: 50
     -
-        name: 'BinData Bitmask'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#bindata-bitmask'
+        name: BinData Bitmask
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#bindata-bitmask
         pipeline:
-            - $match:
-                  a:
-                      $bitsAllSet: !bson_binary 'MA=='
+            -
+                $match:
+                    a:
+                        $bitsAllSet:
+                            sub_type: 0
+                            buffer: !!binary AAAA
+                            position: 0

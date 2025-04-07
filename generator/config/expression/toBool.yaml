@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toBool
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/
 type:
     - resolvesToBool
 encode: single
@@ -14,8 +14,8 @@ arguments:
             - expression
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/#example
         pipeline:
             -
                 $addFields:
@@ -25,17 +25,17 @@ tests:
                                 -
                                     case:
                                         $eq:
-                                            - '$shipped'
+                                            - $shipped
                                             - 'false'
                                     then: false
                                 -
                                     case:
                                         $eq:
-                                            - '$shipped'
+                                            - $shipped
                                             - ''
                                     then: false
                             default:
-                                $toBool: '$shipped'
+                                $toBool: $shipped
             -
                 $match:
                     convertedShippedFlag: false

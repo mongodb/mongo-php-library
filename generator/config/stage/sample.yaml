@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $sample
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
 type:
     - stage
 encode: object
@@ -15,8 +15,8 @@ arguments:
             The number of documents to randomly select.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/#example
         pipeline:
             -
                 $sample:

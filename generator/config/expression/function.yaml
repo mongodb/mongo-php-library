@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $function
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
 type:
     - resolvesToAny
 encode: object
@@ -29,8 +29,8 @@ arguments:
         default: js
 tests:
     -
-        name: 'Usage Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-1--usage-example'
+        name: Usage Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-1--usage-example
         pipeline:
             -
                 $addFields:
@@ -42,8 +42,8 @@ tests:
                                         return hex_md5(name) == "15b0a220baa16331e8d80e15367677ad"
                                     }
                             args:
-                                - '$name'
-                            lang: 'js'
+                                - $name
+                            lang: js
                     message:
                         $function:
                             body:
@@ -53,12 +53,12 @@ tests:
                                         return `Hello ${name}. Your total score is ${total}.`
                                     }
                             args:
-                                - '$name'
-                                - '$scores'
-                            lang: 'js'
+                                - $name
+                                - $scores
+                            lang: js
     -
-        name: 'Alternative to $where'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-2--alternative-to--where'
+        name: Alternative to $where
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-2--alternative-to--where
         pipeline:
             -
                 $match:
@@ -70,5 +70,5 @@ tests:
                                         return hex_md5(name) == "15b0a220baa16331e8d80e15367677ad";
                                     }
                             args:
-                                - '$name'
-                            lang: 'js'
+                                - $name
+                            lang: js

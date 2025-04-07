@@ -1,8 +1,8 @@
 # $schema: ../schema.json
 name: $zip
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/
 type:
-    - resolvesToArray # of array
+    - resolvesToArray
 encode: object
 description: |
     Merge two arrays together.
@@ -10,7 +10,7 @@ arguments:
     -
         name: inputs
         type:
-            - resolvesToArray # of array
+            - resolvesToArray
         description: |
             An array of expressions that resolve to arrays. The elements of these input arrays combine to form the arrays of the output array.
             If any of the inputs arrays resolves to a value of null or refers to a missing field, $zip returns null.
@@ -34,8 +34,8 @@ arguments:
             If specifying a non-empty defaults, you must specify a default for each input array or else $zip will return an error.
 tests:
     -
-        name: 'Matrix Transposition'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/#matrix-transposition'
+        name: Matrix Transposition
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/#matrix-transposition
         pipeline:
             -
                 $project:
@@ -45,19 +45,19 @@ tests:
                             inputs:
                                 -
                                     $arrayElemAt:
-                                        - '$matrix'
+                                        - $matrix
                                         - 0
                                 -
                                     $arrayElemAt:
-                                        - '$matrix'
+                                        - $matrix
                                         - 1
                                 -
                                     $arrayElemAt:
-                                        - '$matrix'
+                                        - $matrix
                                         - 2
     -
-        name: 'Filtering and Preserving Indexes'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/#filtering-and-preserving-indexes'
+        name: Filtering and Preserving Indexes
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/#filtering-and-preserving-indexes
         pipeline:
             -
                 $project:
@@ -67,21 +67,21 @@ tests:
                             input:
                                 $zip:
                                     inputs:
-                                        - '$pages'
+                                        - $pages
                                         -
                                             $range:
                                                 - 0
                                                 -
-                                                    $size: '$pages'
-                            as: 'pageWithIndex'
+                                                    $size: $pages
+                            as: pageWithIndex
                             cond:
                                 $let:
                                     vars:
                                         page:
                                             $arrayElemAt:
-                                                - '$$pageWithIndex'
+                                                - $$pageWithIndex
                                                 - 0
                                     in:
                                         $gte:
-                                            - '$$page.reviews'
+                                            - $$page.reviews
                                             - 1

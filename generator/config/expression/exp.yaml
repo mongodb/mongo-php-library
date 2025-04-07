@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $exp
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/
 type:
     - resolvesToDouble
 encode: single
@@ -13,13 +13,27 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/#example
         pipeline:
             -
                 $project:
                     effectiveRate:
                         $subtract:
                             -
-                                $exp: '$interestRate'
+                                $exp: $interestRate
                             - 1
+        schema:
+            accounts:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                interestRate:
+                    types:
+                        -
+                            bsonType: Number
+                presentValue:
+                    types:
+                        -
+                            bsonType: Number

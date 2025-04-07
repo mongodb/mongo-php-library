@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $indexOfArray
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/
 type:
     - resolvesToInt
 encode: array
@@ -37,12 +37,12 @@ arguments:
             If unspecified, the ending index position for the search is the end of the string.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/#example
         pipeline:
             -
                 $project:
                     index:
                         $indexOfArray:
-                            - '$items'
+                            - $items
                             - 2

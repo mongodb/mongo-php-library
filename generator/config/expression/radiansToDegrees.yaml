@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $radiansToDegrees
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -14,14 +14,14 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/#example
         pipeline:
             -
                 $addFields:
                     angle_a_deg:
-                        $radiansToDegrees: '$angle_a'
+                        $radiansToDegrees: $angle_a
                     angle_b_deg:
-                        $radiansToDegrees: '$angle_b'
+                        $radiansToDegrees: $angle_b
                     angle_c_deg:
-                        $radiansToDegrees: '$angle_c'
+                        $radiansToDegrees: $angle_c

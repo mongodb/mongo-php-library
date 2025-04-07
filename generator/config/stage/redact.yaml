@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $redact
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
 type:
     - stage
 encode: single
@@ -13,8 +13,8 @@ arguments:
             - expression
 tests:
     -
-        name: 'Evaluate Access at Every Document Level'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#evaluate-access-at-every-document-level'
+        name: Evaluate Access at Every Document Level
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#evaluate-access-at-every-document-level
         pipeline:
             -
                 $match:
@@ -27,26 +27,26 @@ tests:
                                 -
                                     $size:
                                         $setIntersection:
-                                            - '$tags'
+                                            - $tags
                                             -
-                                                - 'STLW'
-                                                - 'G'
+                                                - STLW
+                                                - G
                                 - 0
-                        then: '$$DESCEND'
-                        else: '$$PRUNE'
+                        then: $$DESCEND
+                        else: $$PRUNE
     -
-        name: 'Exclude All Fields at a Given Level'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#exclude-all-fields-at-a-given-level'
+        name: Exclude All Fields at a Given Level
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#exclude-all-fields-at-a-given-level
         pipeline:
             -
                 $match:
-                    status: 'A'
+                    status: A
             -
                 $redact:
                     $cond:
                         if:
                             $eq:
-                                - '$level'
+                                - $level
                                 - 5
-                        then: '$$PRUNE'
-                        else: '$$DESCEND'
+                        then: $$PRUNE
+                        else: $$DESCEND

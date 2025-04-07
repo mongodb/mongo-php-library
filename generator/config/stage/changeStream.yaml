@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $changeStream
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/
 type:
     - stage
 encode: object
@@ -59,8 +59,8 @@ arguments:
             Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/#examples'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/#examples
         pipeline:
             -
                 $changeStream: {}

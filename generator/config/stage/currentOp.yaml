@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $currentOp
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/
 type:
     - stage
 encode: object
@@ -34,8 +34,8 @@ arguments:
         optional: true
 tests:
     -
-        name: 'Inactive Sessions'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#inactive-sessions'
+        name: Inactive Sessions
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#inactive-sessions
         pipeline:
             -
                 $currentOp:
@@ -47,8 +47,8 @@ tests:
                     transaction:
                         $exists: true
     -
-        name: 'Sampled Queries'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#sampled-queries'
+        name: Sampled Queries
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#sampled-queries
         pipeline:
             -
                 $currentOp:
@@ -56,4 +56,4 @@ tests:
                     localOps: true
             -
                 $match:
-                    desc: 'query analyzer'
+                    desc: query analyzer

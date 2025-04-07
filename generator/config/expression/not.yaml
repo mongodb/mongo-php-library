@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $not
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/
 type:
     - resolvesToBool
 encode: array
@@ -14,8 +14,8 @@ arguments:
             - resolvesToBool
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/#example
         pipeline:
             -
                 $project:
@@ -24,5 +24,5 @@ tests:
                         $not:
                             -
                                 $gt:
-                                    - '$qty'
+                                    - $qty
                                     - 250

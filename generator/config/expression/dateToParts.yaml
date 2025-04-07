@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $dateToParts
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/
 type:
     - resolvesToObject
 encode: object
@@ -31,19 +31,41 @@ arguments:
             If set to true, modifies the output document to use ISO week date fields. Defaults to false.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/#example
         pipeline:
             -
                 $project:
                     date:
                         $dateToParts:
-                            date: '$date'
+                            date: $date
                     date_iso:
                         $dateToParts:
-                            date: '$date'
+                            date: $date
                             iso8601: true
                     date_timezone:
                         $dateToParts:
-                            date: '$date'
-                            timezone: 'America/New_York'
+                            date: $date
+                            timezone: America/New_York
+        schema:
+            sales:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                price:
+                    types:
+                        -
+                            bsonType: Number
+                quantity:
+                    types:
+                        -
+                            bsonType: Number
+                date:
+                    types:
+                        -
+                            bsonType: Date

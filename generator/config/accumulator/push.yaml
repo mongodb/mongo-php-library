@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $push
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/
 type:
     - accumulator
     - window
@@ -15,8 +15,8 @@ arguments:
             - expression
 tests:
     -
-        name: 'Use in $group Stage'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/#use-in--group-stage'
+        name: Use in $group Stage
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/#use-in--group-stage
         pipeline:
             -
                 $sort:
@@ -26,30 +26,76 @@ tests:
                 $group:
                     _id:
                         day:
-                            # Example uses the short form, the builder always generates the verbose form
-                            # $dayOfYear: '$date'
                             $dayOfYear:
-                                date: '$date'
+                                date: $date
                         year:
-                            # Example uses the short form, the builder always generates the verbose form
-                            # $year: '$date'
                             $year:
-                                date: '$date'
+                                date: $date
                     itemsSold:
                         $push:
-                            item: '$item'
-                            quantity: '$quantity'
+                            item: $item
+                            quantity: $quantity
+        schema:
+            sales:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                price:
+                    types:
+                        -
+                            bsonType: Number
+                quantity:
+                    types:
+                        -
+                            bsonType: Number
+                date:
+                    types:
+                        -
+                            bsonType: Date
     -
-        name: 'Use in $setWindowFields Stage'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/#use-in--setwindowfields-stage'
+        name: Use in $setWindowFields Stage
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/#use-in--setwindowfields-stage
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         orderDate: 1
                     output:
                         quantitiesForState:
-                            $push: '$quantity'
+                            $push: $quantity
                             window:
-                                documents: ['unbounded', 'current']
+                                documents:
+                                    - unbounded
+                                    - current
+        schema:
+            cakeSales:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                type:
+                    types:
+                        -
+                            bsonType: String
+                orderDate:
+                    types:
+                        -
+                            bsonType: Date
+                state:
+                    types:
+                        -
+                            bsonType: String
+                price:
+                    types:
+                        -
+                            bsonType: Number
+                quantity:
+                    types:
+                        -
+                            bsonType: Number

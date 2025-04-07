@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $floor
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/
 type:
     - resolvesToInt
 encode: single
@@ -13,11 +13,11 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/#example
         pipeline:
             -
                 $project:
                     value: 1
                     floorValue:
-                        $floor: '$value'
+                        $floor: $value

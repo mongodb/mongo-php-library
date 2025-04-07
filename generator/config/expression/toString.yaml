@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toString
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/
 type:
     - resolvesToString
 encode: single
@@ -14,13 +14,13 @@ arguments:
             - expression
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/#example
         pipeline:
             -
                 $addFields:
                     convertedZipCode:
-                        $toString: '$zipcode'
+                        $toString: $zipcode
             -
                 $sort:
                     convertedZipCode: 1

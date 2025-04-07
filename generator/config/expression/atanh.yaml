@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $atanh
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -18,11 +18,21 @@ arguments:
             By default $atanh returns values as a double. $atanh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/#example
         pipeline:
             -
                 $addFields:
                     y-coordinate:
                         $radiansToDegrees:
-                            $atanh: '$x-coordinate'
+                            $atanh: $x-coordinate
+        schema:
+            TestCollection:
+                _id:
+                    types:
+                        -
+                            bsonType: ObjectId
+                x-coordinate:
+                    types:
+                        -
+                            bsonType: Decimal128

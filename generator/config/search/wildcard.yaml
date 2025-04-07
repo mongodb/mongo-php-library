@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: wildcard
-link: 'https://www.mongodb.com/docs/atlas/atlas-search/wildcard/'
+link: https://www.mongodb.com/docs/atlas/atlas-search/wildcard/
 type:
     - searchOperator
 encode: object
@@ -27,13 +27,13 @@ arguments:
             - searchScore
 tests:
     -
-        name: 'Wildcard Path'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/wildcard/#index-definition'
+        name: Wildcard Path
+        link: https://www.mongodb.com/docs/atlas/atlas-search/wildcard/#index-definition
         pipeline:
             -
                 $search:
                     wildcard:
-                        query: 'Wom?n *'
+                        query: Wom?n *
                         path:
                             wildcard: '*'
             -
@@ -42,16 +42,15 @@ tests:
                 $project:
                     _id: 0
                     title: 1
-
     -
-        name: 'Escape Character Example'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/wildcard/#escape-character-example'
+        name: Escape Character Example
+        link: https://www.mongodb.com/docs/atlas/atlas-search/wildcard/#escape-character-example
         pipeline:
             -
                 $search:
                     wildcard:
                         query: '*\?'
-                        path: 'title'
+                        path: title
             -
                 $limit: 5
             -

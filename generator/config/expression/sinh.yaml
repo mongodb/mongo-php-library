@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $sinh
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -17,11 +17,11 @@ arguments:
             By default $sinh returns values as a double. $sinh can also return values as a 128-bit decimal if the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/#example
         pipeline:
             -
                 $addFields:
                     sinh_output:
                         $sinh:
-                            $degreesToRadians: '$angle'
+                            $degreesToRadians: $angle

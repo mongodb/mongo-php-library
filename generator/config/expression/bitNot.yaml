@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bitNot
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/
 type:
     - resolvesToInt
     - resolvesToLong
@@ -16,10 +16,24 @@ arguments:
             - resolvesToLong
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/#example
         pipeline:
             -
                 $project:
                     result:
-                        $bitNot: '$a'
+                        $bitNot: $a
+        schema:
+            switches:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                a:
+                    types:
+                        -
+                            bsonType: Int32
+                b:
+                    types:
+                        -
+                            bsonType: Int32

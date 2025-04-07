@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $accumulator
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
 type:
     - accumulator
 encode: object
@@ -52,15 +52,14 @@ arguments:
             - string
         description: |
             The language used in the $accumulator code.
-
 tests:
     -
-        name: 'Use $accumulator to Implement the $avg Operator'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/#use--accumulator-to-implement-the--avg-operator'
+        name: Use $accumulator to Implement the $avg Operator
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/#use--accumulator-to-implement-the--avg-operator
         pipeline:
             -
                 $group:
-                    _id: '$author'
+                    _id: $author
                     avgCopies:
                         $accumulator:
                             init:
@@ -73,7 +72,8 @@ tests:
                                     function(state, numCopies) {
                                         return { count: state.count + 1, sum: state.sum + numCopies }
                                     }
-                            accumulateArgs: [ "$copies" ]
+                            accumulateArgs:
+                                - $copies
                             merge:
                                 $code: |-
                                     function(state1, state2) {
@@ -87,16 +87,33 @@ tests:
                                     function(state) {
                                         return (state.sum / state.count)
                                     }
-                            lang: 'js'
-
+                            lang: js
+        schema:
+            books:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                title:
+                    types:
+                        -
+                            bsonType: String
+                author:
+                    types:
+                        -
+                            bsonType: String
+                copies:
+                    types:
+                        -
+                            bsonType: Number
     -
-        name: 'Use initArgs to Vary the Initial State by Group'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/#use-initargs-to-vary-the-initial-state-by-group'
+        name: Use initArgs to Vary the Initial State by Group
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/#use-initargs-to-vary-the-initial-state-by-group
         pipeline:
             -
                 $group:
                     _id:
-                        city: '$city'
+                        city: $city
                     restaurants:
                         $accumulator:
                             init:
@@ -105,8 +122,8 @@ tests:
                                         return { max: city === userProfileCity ? 3 : 1, restaurants: [] }
                                     }
                             initArgs:
-                                - '$city'
-                                - 'Bettles'
+                                - $city
+                                - Bettles
                             accumulate:
                                 $code: |-
                                     function(state, restaurantName) {
@@ -115,7 +132,8 @@ tests:
                                         }
                                         return state;
                                     }
-                            accumulateArgs: ['$name']
+                            accumulateArgs:
+                                - $name
                             merge:
                                 $code: |-
                                     function(state1, state2) {
@@ -129,4 +147,22 @@ tests:
                                     function(state) {
                                         return state.restaurants
                                     }
-                            lang: 'js'
+                            lang: js
+        schema:
+            restaurants:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                name:
+                    types:
+                        -
+                            bsonType: String
+                city:
+                    types:
+                        -
+                            bsonType: String
+                cuisine:
+                    types:
+                        -
+                            bsonType: String

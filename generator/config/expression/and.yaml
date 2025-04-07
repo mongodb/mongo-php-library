@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $and
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/
 type:
     - resolvesToBool
 encode: single
@@ -18,8 +18,8 @@ arguments:
         variadic: array
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/#example
         pipeline:
             -
                 $project:
@@ -29,9 +29,27 @@ tests:
                         $and:
                             -
                                 $gt:
-                                    - '$qty'
+                                    - $qty
                                     - 100
                             -
                                 $lt:
-                                    - '$qty'
+                                    - $qty
                                     - 250
+        schema:
+            inventory:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                description:
+                    types:
+                        -
+                            bsonType: String
+                qty:
+                    types:
+                        -
+                            bsonType: Number

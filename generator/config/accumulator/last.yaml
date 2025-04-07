@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $last
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
 type:
     - accumulator
     - window
@@ -15,8 +15,8 @@ arguments:
             - expression
 tests:
     -
-        name: 'Use in $group Stage'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/'
+        name: Use in $group Stage
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
         pipeline:
             -
                 $sort:
@@ -24,22 +24,49 @@ tests:
                     date: 1
             -
                 $group:
-                    _id: '$item'
+                    _id: $item
                     lastSalesDate:
-                        $last: '$date'
+                        $last: $date
+        schema: '// TODO: No schema found in docs'
     -
-        name: 'Use in $setWindowFields Stage'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--setwindowfields-stage'
+        name: Use in $setWindowFields Stage
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--setwindowfields-stage
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         orderDate: 1
                     output:
                         lastOrderTypeForState:
-                            $last: '$type'
+                            $last: $type
                             window:
                                 documents:
-                                    - 'current'
-                                    - 'unbounded'
+                                    - current
+                                    - unbounded
+        schema:
+            cakeSales:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                type:
+                    types:
+                        -
+                            bsonType: String
+                orderDate:
+                    types:
+                        -
+                            bsonType: Date
+                state:
+                    types:
+                        -
+                            bsonType: String
+                price:
+                    types:
+                        -
+                            bsonType: Number
+                quantity:
+                    types:
+                        -
+                            bsonType: Number

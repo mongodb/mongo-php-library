@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $log10
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/
 type:
     - resolvesToDouble
 encode: single
@@ -15,8 +15,8 @@ arguments:
             Any valid expression as long as it resolves to a non-negative number.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/#example
         pipeline:
             -
                 $project:
@@ -24,4 +24,4 @@ tests:
                         $multiply:
                             - -1
                             -
-                                $log10: '$H3O'
+                                $log10: $H3O

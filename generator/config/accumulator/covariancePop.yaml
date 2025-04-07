@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $covariancePop
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/
 type:
     - window
 encode: array
@@ -18,24 +18,48 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/#example
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         orderDate: 1
                     output:
                         covariancePopForState:
                             $covariancePop:
                                 -
-                                    # Example uses the short form, the builder always generates the verbose form
-                                    # $year: '$orderDate'
                                     $year:
-                                        date: '$orderDate'
-                                - '$quantity'
+                                        date: $orderDate
+                                - $quantity
                             window:
                                 documents:
-                                    - 'unbounded'
-                                    - 'current'
+                                    - unbounded
+                                    - current
+        schema:
+            cakeSales:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                type:
+                    types:
+                        -
+                            bsonType: String
+                orderDate:
+                    types:
+                        -
+                            bsonType: Date
+                state:
+                    types:
+                        -
+                            bsonType: String
+                price:
+                    types:
+                        -
+                            bsonType: Number
+                quantity:
+                    types:
+                        -
+                            bsonType: Number

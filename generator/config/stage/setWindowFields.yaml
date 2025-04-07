@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $setWindowFields
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
 type:
     - stage
 encode: object
@@ -30,115 +30,128 @@ arguments:
         optional: true
 tests:
     -
-        name: 'Use Documents Window to Obtain Cumulative Quantity for Each State'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-quantity-for-each-state'
+        name: Use Documents Window to Obtain Cumulative Quantity for Each State
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-quantity-for-each-state
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         orderDate: 1
                     output:
                         cumulativeQuantityForState:
-                            $sum: '$quantity'
+                            $sum: $quantity
                             window:
-                                documents: ['unbounded', 'current']
+                                documents:
+                                    - unbounded
+                                    - current
     -
-        name: 'Use Documents Window to Obtain Cumulative Quantity for Each Year'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-quantity-for-each-year'
+        name: Use Documents Window to Obtain Cumulative Quantity for Each Year
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-quantity-for-each-year
         pipeline:
             -
                 $setWindowFields:
                     partitionBy:
-                        # $year: '$orderDate'
                         $year:
-                            date: '$orderDate'
+                            date: $orderDate
                     sortBy:
                         orderDate: 1
                     output:
                         cumulativeQuantityForYear:
-                            $sum: '$quantity'
+                            $sum: $quantity
                             window:
-                                documents: ['unbounded', 'current']
+                                documents:
+                                    - unbounded
+                                    - current
     -
-        name: 'Use Documents Window to Obtain Moving Average Quantity for Each Year'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-moving-average-quantity-for-each-year'
+        name: Use Documents Window to Obtain Moving Average Quantity for Each Year
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-moving-average-quantity-for-each-year
         pipeline:
             -
                 $setWindowFields:
                     partitionBy:
-                        # $year: '$orderDate'
                         $year:
-                            date: '$orderDate'
+                            date: $orderDate
                     sortBy:
                         orderDate: 1
                     output:
                         averageQuantity:
-                            $avg: '$quantity'
+                            $avg: $quantity
                             window:
-                                documents: [-1, 0]
+                                documents:
+                                    - -1
+                                    - 0
     -
-        name: 'Use Documents Window to Obtain Cumulative and Maximum Quantity for Each Year'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-and-maximum-quantity-for-each-year'
+        name: Use Documents Window to Obtain Cumulative and Maximum Quantity for Each Year
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-and-maximum-quantity-for-each-year
         pipeline:
             -
                 $setWindowFields:
                     partitionBy:
-                        # $year: '$orderDate'
                         $year:
-                            date: '$orderDate'
+                            date: $orderDate
                     sortBy:
                         orderDate: 1
                     output:
                         cumulativeQuantityForYear:
-                            $sum: '$quantity'
+                            $sum: $quantity
                             window:
-                                documents: ['unbounded', 'current']
+                                documents:
+                                    - unbounded
+                                    - current
                         maximumQuantityForYear:
-                            $max: '$quantity'
+                            $max: $quantity
                             window:
-                                documents: ['unbounded', 'unbounded']
+                                documents:
+                                    - unbounded
+                                    - unbounded
     -
-        name: 'Range Window Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#range-window-example'
+        name: Range Window Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#range-window-example
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         price: 1
                     output:
                         quantityFromSimilarOrders:
-                            $sum: '$quantity'
+                            $sum: $quantity
                             window:
-                                range: [-10, 10]
+                                range:
+                                    - -10
+                                    - 10
     -
-        name: 'Use a Time Range Window with a Positive Upper Bound'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-a-time-range-window-with-a-positive-upper-bound'
+        name: Use a Time Range Window with a Positive Upper Bound
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-a-time-range-window-with-a-positive-upper-bound
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         orderDate: 1
                     output:
                         recentOrders:
-                            $push: '$orderDate'
+                            $push: $orderDate
                             window:
-                                range: ['unbounded', 10]
-                                unit: 'month'
+                                range:
+                                    - unbounded
+                                    - 10
+                                unit: month
     -
-        name: 'Use a Time Range Window with a Negative Upper Bound'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-a-time-range-window-with-a-negative-upper-bound'
+        name: Use a Time Range Window with a Negative Upper Bound
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-a-time-range-window-with-a-negative-upper-bound
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: '$state'
+                    partitionBy: $state
                     sortBy:
                         orderDate: 1
                     output:
                         recentOrders:
-                            $push: '$orderDate'
+                            $push: $orderDate
                             window:
-                                range: ['unbounded', -10]
-                                unit: 'month'
+                                range:
+                                    - unbounded
+                                    - -10
+                                unit: month

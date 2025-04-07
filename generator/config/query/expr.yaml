@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $expr
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/expr/
 type:
     - query
 encode: single
@@ -13,18 +13,18 @@ arguments:
             - expression
 tests:
     -
-        name: 'Compare Two Fields from A Single Document'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/#compare-two-fields-from-a-single-document'
+        name: Compare Two Fields from A Single Document
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/expr/#compare-two-fields-from-a-single-document
         pipeline:
             -
                 $match:
                     $expr:
                         $gt:
-                            - '$spent'
-                            - '$budget'
+                            - $spent
+                            - $budget
     -
-        name: 'Using $expr With Conditional Statements'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/#using--expr-with-conditional-statements'
+        name: Using $expr With Conditional Statements
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/expr/#using--expr-with-conditional-statements
         pipeline:
             -
                 $match:
@@ -34,14 +34,14 @@ tests:
                                 $cond:
                                     if:
                                         $gte:
-                                            - '$qty'
+                                            - $qty
                                             - 100
                                     then:
                                         $multiply:
-                                            - '$price'
+                                            - $price
                                             - 0.5
                                     else:
                                         $multiply:
-                                            - '$price'
+                                            - $price
                                             - 0.75
                             - 5

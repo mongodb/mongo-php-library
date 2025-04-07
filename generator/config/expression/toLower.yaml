@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toLower
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/
 type:
     - resolvesToString
 encode: single
@@ -13,12 +13,12 @@ arguments:
             - resolvesToString
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/#example
         pipeline:
             -
                 $project:
                     item:
-                        $toLower: '$item'
+                        $toLower: $item
                     description:
-                        $toLower: '$description'
+                        $toLower: $description

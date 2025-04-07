@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $jsonSchema
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/'
+link: https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/
 type:
     - query
 encode: single
@@ -13,27 +13,27 @@ arguments:
             - object
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#syntax'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#syntax
         pipeline:
             -
                 $match:
                     $jsonSchema:
                         required:
-                            - 'name'
-                            - 'major'
-                            - 'gpa'
-                            - 'address'
+                            - name
+                            - major
+                            - gpa
+                            - address
                         properties:
                             name:
-                                bsonType: 'string'
-                                description: 'must be a string and is required'
+                                bsonType: string
+                                description: must be a string and is required
                             address:
-                                bsonType: 'object'
+                                bsonType: object
                                 required:
-                                    - 'zipcode'
+                                    - zipcode
                                 properties:
                                     street:
-                                        bsonType: 'string'
+                                        bsonType: string
                                     zipcode:
-                                        bsonType: 'string'
+                                        bsonType: string

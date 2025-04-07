@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $project
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
 type:
     - stage
 encode: single
@@ -11,19 +11,19 @@ arguments:
         name: specification
         type:
             - expression
-        variadic: object # XXX: This should somehow allow explicit typings for { fieldName: 1|0 }
+        variadic: object
 tests:
     -
-        name: 'Include Specific Fields in Output Documents'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-in-output-documents'
+        name: Include Specific Fields in Output Documents
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-in-output-documents
         pipeline:
             -
                 $project:
                     title: 1
                     author: 1
     -
-        name: 'Suppress id Field in the Output Documents'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#suppress-_id-field-in-the-output-documents'
+        name: Suppress id Field in the Output Documents
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#suppress-_id-field-in-the-output-documents
         pipeline:
             -
                 $project:
@@ -31,15 +31,15 @@ tests:
                     title: 1
                     author: 1
     -
-        name: 'Exclude Fields from Output Documents'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-output-documents'
+        name: Exclude Fields from Output Documents
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-output-documents
         pipeline:
             -
                 $project:
                     lastModified: 0
     -
-        name: 'Exclude Fields from Embedded Documents'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-embedded-documents'
+        name: Exclude Fields from Embedded Documents
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-embedded-documents
         pipeline:
             -
                 $project:
@@ -51,8 +51,8 @@ tests:
                         first: 0
                     lastModified: 0
     -
-        name: 'Conditionally Exclude Fields'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#conditionally-exclude-fields'
+        name: Conditionally Exclude Fields
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#conditionally-exclude-fields
         pipeline:
             -
                 $project:
@@ -64,12 +64,12 @@ tests:
                             if:
                                 $eq:
                                     - ''
-                                    - '$author.middle'
-                            then: '$$REMOVE'
-                            else: '$author.middle'
+                                    - $author.middle
+                            then: $$REMOVE
+                            else: $author.middle
     -
-        name: 'Include Specific Fields from Embedded Documents'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-from-embedded-documents'
+        name: Include Specific Fields from Embedded Documents
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-from-embedded-documents
         pipeline:
             -
                 $project:
@@ -79,8 +79,8 @@ tests:
                     stop:
                         title: 1
     -
-        name: 'Include Computed Fields'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-computed-fields'
+        name: Include Computed Fields
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-computed-fields
         pipeline:
             -
                 $project:
@@ -88,37 +88,37 @@ tests:
                     isbn:
                         prefix:
                             $substr:
-                                - '$isbn'
+                                - $isbn
                                 - 0
                                 - 3
                         group:
                             $substr:
-                                - '$isbn'
+                                - $isbn
                                 - 3
                                 - 2
                         publisher:
                             $substr:
-                                - '$isbn'
+                                - $isbn
                                 - 5
                                 - 4
                         title:
                             $substr:
-                                - '$isbn'
+                                - $isbn
                                 - 9
                                 - 3
                         checkDigit:
                             $substr:
-                                - '$isbn'
+                                - $isbn
                                 - 12
                                 - 1
-                    lastName: '$author.last'
-                    copiesSold: '$copies'
+                    lastName: $author.last
+                    copiesSold: $copies
     -
-        name: 'Project New Array Fields'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#project-new-array-fields'
+        name: Project New Array Fields
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#project-new-array-fields
         pipeline:
             -
                 $project:
                     myArray:
-                        - '$x'
-                        - '$y'
+                        - $x
+                        - $y

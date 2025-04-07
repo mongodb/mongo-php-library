@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $dateToString
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/
 type:
     - resolvesToString
 encode: object
@@ -40,42 +40,64 @@ arguments:
             If unspecified, $dateToString returns null if the date is null or missing.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/#example
         pipeline:
             -
                 $project:
                     yearMonthDayUTC:
                         $dateToString:
                             format: '%Y-%m-%d'
-                            date: '$date'
+                            date: $date
                     timewithOffsetNY:
                         $dateToString:
                             format: '%H:%M:%S:%L%z'
-                            date: '$date'
-                            timezone: 'America/New_York'
+                            date: $date
+                            timezone: America/New_York
                     timewithOffset430:
                         $dateToString:
                             format: '%H:%M:%S:%L%z'
-                            date: '$date'
+                            date: $date
                             timezone: '+04:30'
                     minutesOffsetNY:
                         $dateToString:
                             format: '%Z'
-                            date: '$date'
-                            timezone: 'America/New_York'
+                            date: $date
+                            timezone: America/New_York
                     minutesOffset430:
                         $dateToString:
                             format: '%Z'
-                            date: '$date'
+                            date: $date
                             timezone: '+04:30'
                     abbreviated_month:
                         $dateToString:
                             format: '%b'
-                            date: '$date'
+                            date: $date
                             timezone: '+04:30'
                     full_month:
                         $dateToString:
                             format: '%B'
-                            date: '$date'
+                            date: $date
                             timezone: '+04:30'
+        schema:
+            sales:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                price:
+                    types:
+                        -
+                            bsonType: Number
+                quantity:
+                    types:
+                        -
+                            bsonType: Number
+                date:
+                    types:
+                        -
+                            bsonType: Date

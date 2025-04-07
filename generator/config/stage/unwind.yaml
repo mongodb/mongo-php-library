@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $unwind
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
 type:
     - stage
 encode: object
@@ -31,65 +31,59 @@ arguments:
             The default value is false.
 tests:
     -
-        name: 'Unwind Array'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-array'
+        name: Unwind Array
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-array
         pipeline:
             -
-                # Example uses the short form, the builder always generates the verbose form
-                # $unwind: '$sizes'
                 $unwind:
-                    path: '$sizes'
+                    path: $sizes
     -
-        name: 'preserveNullAndEmptyArrays'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#preservenullandemptyarrays'
+        name: preserveNullAndEmptyArrays
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#preservenullandemptyarrays
         pipeline:
             -
                 $unwind:
-                    path: '$sizes'
+                    path: $sizes
                     preserveNullAndEmptyArrays: true
     -
-        name: 'includeArrayIndex'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#includearrayindex'
+        name: includeArrayIndex
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#includearrayindex
         pipeline:
             -
                 $unwind:
-                    path: '$sizes'
-                    includeArrayIndex: 'arrayIndex'
+                    path: $sizes
+                    includeArrayIndex: arrayIndex
     -
-        name: 'Group by Unwound Values'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#group-by-unwound-values'
+        name: Group by Unwound Values
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#group-by-unwound-values
         pipeline:
             -
                 $unwind:
-                    path: '$sizes'
+                    path: $sizes
                     preserveNullAndEmptyArrays: true
             -
                 $group:
-                    _id: '$sizes'
+                    _id: $sizes
                     averagePrice:
-                        $avg: '$price'
+                        $avg: $price
             -
                 $sort:
                     averagePrice: -1
     -
-        name: 'Unwind Embedded Arrays'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-embedded-arrays'
+        name: Unwind Embedded Arrays
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-embedded-arrays
         pipeline:
             -
-                # Example uses the short form, the builder always generates the verbose form
-                # $unwind: '$items'
                 $unwind:
-                    path: '$items'
+                    path: $items
             -
-                # Example uses the short form, the builder always generates the verbose form
-                # $unwind: '$items.tags'
                 $unwind:
-                    path: '$items.tags'
+                    path: $items.tags
             -
                 $group:
-                    _id: '$items.tags'
+                    _id: $items.tags
                     totalSalesAmount:
                         $sum:
                             $multiply:
-                                - '$items.price'
-                                - '$items.quantity'
+                                - $items.price
+                                - $items.quantity

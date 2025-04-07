@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $geoNear
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
 type:
     - stage
 encode: object
@@ -78,84 +78,84 @@ arguments:
             Default: false.
 tests:
     -
-        name: 'Maximum Distance'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#maximum-distance'
+        name: Maximum Distance
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#maximum-distance
         pipeline:
             -
                 $geoNear:
                     near:
-                        type: 'Point'
+                        type: Point
                         coordinates:
                             - -73.99279
                             - 40.719296
-                    distanceField: 'dist.calculated'
+                    distanceField: dist.calculated
                     maxDistance: 2
                     query:
-                        category: 'Parks'
-                    includeLocs: 'dist.location'
+                        category: Parks
+                    includeLocs: dist.location
                     spherical: true
     -
-        name: 'Minimum Distance'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#minimum-distance'
+        name: Minimum Distance
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#minimum-distance
         pipeline:
             -
                 $geoNear:
                     near:
-                        type: 'Point'
+                        type: Point
                         coordinates:
                             - -73.99279
                             - 40.719296
-                    distanceField: 'dist.calculated'
+                    distanceField: dist.calculated
                     minDistance: 2
                     query:
-                        category: 'Parks'
-                    includeLocs: 'dist.location'
+                        category: Parks
+                    includeLocs: dist.location
                     spherical: true
     -
-        name: 'with the let option'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-the-let-option'
+        name: with the let option
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-the-let-option
         pipeline:
             -
                 $geoNear:
-                    near: '$$pt'
-                    distanceField: 'distance'
+                    near: $$pt
+                    distanceField: distance
                     maxDistance: 2
                     query:
-                        category: 'Parks'
-                    includeLocs: 'dist.location'
+                        category: Parks
+                    includeLocs: dist.location
                     spherical: true
     -
-        name: 'with Bound let Option'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-bound-let-option'
+        name: with Bound let Option
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-bound-let-option
         pipeline:
             -
                 $lookup:
-                    from: 'places'
+                    from: places
                     let:
-                        pt: '$location'
+                        pt: $location
                     pipeline:
                         -
                             $geoNear:
-                                near: '$$pt'
-                                distanceField: 'distance'
-                    as: 'joinedField'
+                                near: $$pt
+                                distanceField: distance
+                    as: joinedField
             -
                 $match:
-                    name: 'Sara D. Roosevelt Park'
+                    name: Sara D. Roosevelt Park
     -
-        name: 'Specify Which Geospatial Index to Use'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#specify-which-geospatial-index-to-use'
+        name: Specify Which Geospatial Index to Use
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#specify-which-geospatial-index-to-use
         pipeline:
             -
                 $geoNear:
                     near:
-                        type: 'Point'
+                        type: Point
                         coordinates:
                             - -73.98142
                             - 40.71782
-                    key: 'location'
-                    distanceField: 'dist.calculated'
+                    key: location
+                    distanceField: dist.calculated
                     query:
-                        category: 'Parks'
+                        category: Parks
             -
                 $limit: 5

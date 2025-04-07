@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $convert
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/
 type:
     - resolvesToAny
 encode: object
@@ -35,26 +35,27 @@ arguments:
             If unspecified, $convert returns null if the input is null or missing.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/#example
         pipeline:
             -
                 $addFields:
                     convertedPrice:
                         $convert:
-                            input: '$price'
-                            to: 'decimal'
-                            onError: 'Error'
-                            onNull: !bson_decimal128 '0'
+                            input: $price
+                            to: decimal
+                            onError: Error
+                            onNull:
+                                bytes: !!binary AAAAAAAAAAAAAAAAAABAMA==
                     convertedQty:
                         $convert:
-                            input: '$qty'
-                            to: 'int'
+                            input: $qty
+                            to: int
                             onError:
                                 $concat:
                                     - 'Could not convert '
                                     -
-                                        $toString: '$qty'
+                                        $toString: $qty
                                     - ' to type integer.'
                             onNull: 0
             -
@@ -66,17 +67,39 @@ tests:
                                     case:
                                         $eq:
                                             -
-                                                $type: '$convertedPrice'
-                                            - 'string'
-                                    then: 'NaN'
+                                                $type: $convertedPrice
+                                            - string
+                                    then: NaN
                                 -
                                     case:
                                         $eq:
                                             -
-                                                $type: '$convertedQty'
-                                            - 'string'
-                                    then: 'NaN'
+                                                $type: $convertedQty
+                                            - string
+                                    then: NaN
                             default:
                                 $multiply:
-                                    - '$convertedPrice'
-                                    - '$convertedQty'
+                                    - $convertedPrice
+                                    - $convertedQty
+        schema:
+            orders:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                item:
+                    types:
+                        -
+                            bsonType: String
+                qty:
+                    types:
+                        -
+                            bsonType: Number
+                price:
+                    types:
+                        -
+                            bsonType: Decimal128
+                        -
+                            bsonType: Number
+                        -
+                            bsonType: String

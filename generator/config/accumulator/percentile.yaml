@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $percentile
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
 type:
     - accumulator
     - window
@@ -25,7 +25,7 @@ arguments:
     -
         name: p
         type:
-            - resolvesToArray # of resolvesToNumber
+            - resolvesToArray
         description: |
             $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
             $percentile returns results in the same order as the elements in p.
@@ -37,48 +37,100 @@ arguments:
             The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
 tests:
     -
-        name: 'Calculate a Single Value as an Accumulator'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#calculate-a-single-value-as-an-accumulator'
+        name: Calculate a Single Value as an Accumulator
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#calculate-a-single-value-as-an-accumulator
         pipeline:
             -
                 $group:
-                    _id: ~
+                    _id: null
                     test01_percentiles:
                         $percentile:
-                            input: '$test01'
+                            input: $test01
                             p:
                                 - 0.95
-                            method: 'approximate'
+                            method: approximate
+        schema:
+            testScores:
+                studentId:
+                    types:
+                        -
+                            bsonType: String
+                test01:
+                    types:
+                        -
+                            bsonType: Number
+                test02:
+                    types:
+                        -
+                            bsonType: Number
+                test03:
+                    types:
+                        -
+                            bsonType: Number
     -
-        name: 'Calculate Multiple Values as an Accumulator'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#calculate-multiple-values-as-an-accumulator'
+        name: Calculate Multiple Values as an Accumulator
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#calculate-multiple-values-as-an-accumulator
         pipeline:
             -
                 $group:
-                    _id: ~
+                    _id: null
                     test01_percentiles:
                         $percentile:
-                            input: '$test01'
-                            p: [0.5, 0.75, 0.9, 0.95]
-                            method: 'approximate'
+                            input: $test01
+                            p:
+                                - 0.5
+                                - 0.75
+                                - 0.9
+                                - 0.95
+                            method: approximate
                     test02_percentiles:
                         $percentile:
-                            input: '$test02'
-                            p: [0.5, 0.75, 0.9, 0.95]
-                            method: 'approximate'
+                            input: $test02
+                            p:
+                                - 0.5
+                                - 0.75
+                                - 0.9
+                                - 0.95
+                            method: approximate
                     test03_percentiles:
                         $percentile:
-                            input: '$test03'
-                            p: [0.5, 0.75, 0.9, 0.95]
-                            method: 'approximate'
+                            input: $test03
+                            p:
+                                - 0.5
+                                - 0.75
+                                - 0.9
+                                - 0.95
+                            method: approximate
                     test03_percent_alt:
                         $percentile:
-                            input: '$test03'
-                            p: [0.9, 0.5, 0.75, 0.95]
-                            method: 'approximate'
+                            input: $test03
+                            p:
+                                - 0.9
+                                - 0.5
+                                - 0.75
+                                - 0.95
+                            method: approximate
+        schema:
+            testScores:
+                studentId:
+                    types:
+                        -
+                            bsonType: String
+                test01:
+                    types:
+                        -
+                            bsonType: Number
+                test02:
+                    types:
+                        -
+                            bsonType: Number
+                test03:
+                    types:
+                        -
+                            bsonType: Number
     -
-        name: 'Use $percentile in a $setWindowField Stage'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#use-operatorname-in-a--setwindowfield-stage'
+        name: Use $percentile in a $setWindowField Stage
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#use-operatorname-in-a--setwindowfield-stage
         pipeline:
             -
                 $setWindowFields:
@@ -87,10 +139,10 @@ tests:
                     output:
                         test01_95percentile:
                             $percentile:
-                                input: '$test01'
+                                input: $test01
                                 p:
                                     - 0.95
-                                method: 'approximate'
+                                method: approximate
                             window:
                                 range:
                                     - -3
@@ -100,3 +152,21 @@ tests:
                     _id: 0
                     studentId: 1
                     test01_95percentile: 1
+        schema:
+            testScores:
+                studentId:
+                    types:
+                        -
+                            bsonType: String
+                test01:
+                    types:
+                        -
+                            bsonType: Number
+                test02:
+                    types:
+                        -
+                            bsonType: Number
+                test03:
+                    types:
+                        -
+                            bsonType: Number

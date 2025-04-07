@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: in
-link: 'https://www.mongodb.com/docs/atlas/atlas-search/in/'
+link: https://www.mongodb.com/docs/atlas/atlas-search/in/
 type:
     - searchOperator
 encode: object
@@ -15,7 +15,7 @@ arguments:
         name: value
         type:
             - any
-            - array # of any
+            - array
     -
         name: score
         optional: true
@@ -23,31 +23,30 @@ arguments:
             - searchScore
 tests:
     -
-        name: 'Single Value Field Match'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/in/#examples'
+        name: Single Value Field Match
+        link: https://www.mongodb.com/docs/atlas/atlas-search/in/#examples
         pipeline:
             -
                 $search:
                     in:
-                        path: 'birthdate'
+                        path: birthdate
                         value:
-                            - !bson_utcdatetime '1977-03-02T02:20:31.000+00:00'
-                            - !bson_utcdatetime '1977-03-01T00:00:00.000+00:00'
-                            - !bson_utcdatetime '1977-05-06T21:57:35.000+00:00'
+                            - 1977-03-02T02:20:31.000Z
+                            - 1977-03-01T00:00:00.000Z
+                            - 1977-05-06T21:57:35.000Z
             -
                 $project:
                     _id: 0
                     name: 1
                     birthdate: 1
-
     -
-        name: 'Array Value Field Match'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/in/#examples'
+        name: Array Value Field Match
+        link: https://www.mongodb.com/docs/atlas/atlas-search/in/#examples
         pipeline:
             -
                 $search:
                     in:
-                        path: 'accounts'
+                        path: accounts
                         value:
                             - 371138
                             - 371139
@@ -57,10 +56,9 @@ tests:
                     _id: 0
                     name: 1
                     accounts: 1
-
     -
-        name: 'Compound Query Match'
-        link: 'https://www.mongodb.com/docs/atlas/atlas-search/in/#examples'
+        name: Compound Query Match
+        link: https://www.mongodb.com/docs/atlas/atlas-search/in/#examples
         pipeline:
             -
                 $search:
@@ -68,17 +66,19 @@ tests:
                         must:
                             -
                                 in:
-                                    path: 'name'
+                                    path: name
                                     value:
-                                        - 'james sanchez'
-                                        - 'jennifer lawrence'
+                                        - james sanchez
+                                        - jennifer lawrence
                         should:
                             -
                                 in:
-                                    path: '_id'
+                                    path: _id
                                     value:
-                                        - !bson_objectId '5ca4bbcea2dd94ee58162a72'
-                                        - !bson_objectId '5ca4bbcea2dd94ee58162a91'
+                                        -
+                                            buffer: !!binary XKS7zqLdlO5YFipy
+                                        -
+                                            buffer: !!binary XKS7zqLdlO5YFiqR
             -
                 $limit: 5
             -
@@ -86,4 +86,4 @@ tests:
                     _id: 1
                     name: 1
                     score:
-                        $meta: 'searchScore'
+                        $meta: searchScore

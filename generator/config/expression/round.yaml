@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $round
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/
 type:
     - resolvesToInt
     - resolvesToDouble
@@ -26,17 +26,17 @@ arguments:
             Can be any valid expression that resolves to an integer between -20 and 100, exclusive.
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/#example
         pipeline:
             -
                 $project:
                     roundedValue:
                         $round:
-                            - '$value'
+                            - $value
                             - 1
     -
-        name: 'Round Average Rating'
+        name: Round Average Rating
         pipeline:
             -
                 $project:
@@ -46,5 +46,5 @@ tests:
                                 $round:
                                     -
                                         $avg:
-                                            - '$averageRating'
+                                            - $averageRating
                                     - 2

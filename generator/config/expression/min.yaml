@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $min
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/
 type:
     - resolvesToAny
 encode: single
@@ -15,21 +15,18 @@ arguments:
         variadic: array
 tests:
     -
-        name: 'Use in $project Stage'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--project-stage'
+        name: Use in $project Stage
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--project-stage
         pipeline:
             -
                 $project:
                     quizMin:
-                        # Example uses the short form, the builder always generates the verbose form
-                        # $min: '$quizzes'
                         $min:
-                            - '$quizzes'
+                            - $quizzes
                     labMin:
-                        # $min: '$labs'
                         $min:
-                            - '$labs'
+                            - $labs
                     examMin:
                         $min:
-                            - '$final'
-                            - '$midterm'
+                            - $final
+                            - $midterm

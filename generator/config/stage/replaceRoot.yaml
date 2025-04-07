@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $replaceRoot
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/
 type:
     - stage
 encode: object
@@ -13,8 +13,8 @@ arguments:
             - resolvesToObject
 tests:
     -
-        name: 'with an Embedded Document Field'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-an-embedded-document-field'
+        name: with an Embedded Document Field
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-an-embedded-document-field
         pipeline:
             -
                 $replaceRoot:
@@ -25,38 +25,36 @@ tests:
                                 cats: 0
                                 birds: 0
                                 fish: 0
-                            - '$pets'
+                            - $pets
     -
-        name: 'with a Document Nested in an Array'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-document-nested-in-an-array'
+        name: with a Document Nested in an Array
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-document-nested-in-an-array
         pipeline:
             -
-                # The builder uses the verbose form of the $unwind operator
-                # $unwind: '$grades'
                 $unwind:
-                    path: '$grades'
+                    path: $grades
             -
                 $match:
                     grades.grade:
                         $gte: 90
             -
                 $replaceRoot:
-                    newRoot: '$grades'
+                    newRoot: $grades
     -
-        name: 'with a newly created document'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-newly-created-document'
+        name: with a newly created document
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-newly-created-document
         pipeline:
             -
                 $replaceRoot:
                     newRoot:
                         full_name:
                             $concat:
-                                - '$first_name'
+                                - $first_name
                                 - ' '
-                                - '$last_name'
+                                - $last_name
     -
-        name: 'with a New Document Created from $$ROOT and a Default Document'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-new-document-created-from---root-and-a-default-document'
+        name: with a New Document Created from $$ROOT and a Default Document
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-new-document-created-from---root-and-a-default-document
         pipeline:
             -
                 $replaceRoot:
@@ -68,4 +66,4 @@ tests:
                                 email: ''
                                 cell: ''
                                 home: ''
-                            - '$$ROOT'
+                            - $$ROOT

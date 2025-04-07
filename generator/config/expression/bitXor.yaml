@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bitXor
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/
 type:
     - resolvesToInt
     - resolvesToLong
@@ -17,12 +17,26 @@ arguments:
         variadic: array
 tests:
     -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/#example'
+        name: Example
+        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/#example
         pipeline:
             -
                 $project:
                     result:
                         $bitXor:
-                            - '$a'
-                            - '$b'
+                            - $a
+                            - $b
+        schema:
+            switches:
+                _id:
+                    types:
+                        -
+                            bsonType: Number
+                a:
+                    types:
+                        -
+                            bsonType: Int32
+                b:
+                    types:
+                        -
+                            bsonType: Int32

@@ -53,7 +53,11 @@ final class ClientBulkWriteCommand
      * @param array            $options          Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(private BulkWriteCommand $bulkWriteCommand, private array $options = [])
+    public function __construct(
+        private BulkWriteCommand $bulkWriteCommand,
+        /** @param array{session: ?Session, writeConcern: ?WriteConcern} */
+        private array $options = [],
+    )
     {
         if (count($bulkWriteCommand) === 0) {
             throw new InvalidArgumentException('$bulkWriteCommand is empty');

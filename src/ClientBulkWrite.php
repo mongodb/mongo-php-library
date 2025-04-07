@@ -17,12 +17,15 @@
 
 namespace MongoDB;
 
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Codec\Encoder;
 use MongoDB\Driver\BulkWriteCommand;
 use MongoDB\Driver\Manager;
 use MongoDB\Exception\InvalidArgumentException;
 
+use stdClass;
 use function is_array;
 use function is_bool;
 use function is_string;
@@ -33,6 +36,7 @@ final readonly class ClientBulkWrite
         public BulkWriteCommand $bulkWriteCommand,
         private Manager $manager,
         private string $namespace,
+        /** @psalm-var Encoder<array|stdClass|Document|PackedArray, mixed> */
         private Encoder $builderEncoder,
         private ?DocumentCodec $codec,
     ) {
@@ -108,6 +112,7 @@ final readonly class ClientBulkWrite
         }
 
         // Capture the document's _id, which may have been generated, in an optional output variable
+        /** @var mixed */
         $id = $this->bulkWriteCommand->insertOne($this->namespace, $document);
 
         return $this;

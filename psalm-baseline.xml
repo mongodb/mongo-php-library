@@ -235,6 +235,12 @@
       <code><![CDATA[$pipeline]]></code>
     </PossiblyInvalidArgument>
   </file>
+  <file src="src/ClientBulkWrite.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$document]]></code>
+      <code><![CDATA[$replacement]]></code>
+    </PossiblyInvalidArgument>
+  </file>
   <file src="src/Codec/EncodeIfSupported.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$value]]></code>
@@ -544,6 +550,14 @@
       <code><![CDATA[$args[2]]]></code>
       <code><![CDATA[$args[2]]]></code>
     </MixedOperand>
+  </file>
+  <file src="src/Operation/ClientBulkWriteCommand.php">
+    <MixedMethodCall>
+      <code><![CDATA[isInTransaction]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[$server->executeBulkWriteCommand($this->bulkWriteCommand, $options)]]></code>
+    </MixedReturnStatement>
   </file>
   <file src="src/Operation/Count.php">
     <MixedAssignment>

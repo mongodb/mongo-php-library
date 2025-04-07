@@ -753,6 +753,7 @@ class Collection
         return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
+    /** @psalm-return Encoder<array|stdClass|Document|PackedArray, mixed> */
     public function getBuilderEncoder(): Encoder
     {
         return $this->builderEncoder;

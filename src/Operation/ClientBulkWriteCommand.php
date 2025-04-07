@@ -57,8 +57,7 @@ final class ClientBulkWriteCommand
         private BulkWriteCommand $bulkWriteCommand,
         /** @param array{session: ?Session, writeConcern: ?WriteConcern} */
         private array $options = [],
-    )
-    {
+    ) {
         if (count($bulkWriteCommand) === 0) {
             throw new InvalidArgumentException('$bulkWriteCommand is empty');
         }

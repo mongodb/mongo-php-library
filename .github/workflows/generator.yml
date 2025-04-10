@@ -16,7 +16,7 @@ env:
   DRIVER_VERSION: "mongodb/mongo-php-driver@v1.21"
 
 jobs:
-  psalm:
+  diff:
     name: "Diff check"
     runs-on: "ubuntu-22.04"
 

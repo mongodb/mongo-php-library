@@ -42,7 +42,7 @@ jobs:
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "sharded_cluster"
-          - os: "ubuntu-22.04"
+          - os: "ubuntu-24.04"
             php-version: "8.1"
             mongodb-version: "8.0"
             topology: "server"

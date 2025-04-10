@@ -24,7 +24,7 @@ runs:
       with:
         php-version: ${{ inputs.php-version }}
         extensions: "mongodb-${{ inputs.driver-version }}"
-        key: "extcache-v1"
+        key: "extcache-${{ inputs.driver-version }}"
 
     - name: Cache extensions
       uses: actions/cache@v4

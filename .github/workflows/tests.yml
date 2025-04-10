@@ -30,7 +30,7 @@ jobs:
           - "8.3"
           - "8.4"
         mongodb-version:
-          - "4.4"
+          - "6.0"
         topology:
           - "server"
         include:
@@ -44,15 +44,15 @@ jobs:
             topology: "sharded_cluster"
           - os: "ubuntu-22.04"
             php-version: "8.1"
-            mongodb-version: "5.0"
+            mongodb-version: "8.0"
             topology: "server"
-          - os: "ubuntu-22.04"
+          - os: "ubuntu-24.04"
             php-version: "8.1"
-            mongodb-version: "4.4"
+            mongodb-version: "8.0"
             topology: "replica_set"
-          - os: "ubuntu-22.04"
+          - os: "ubuntu-24.04"
             php-version: "8.1"
-            mongodb-version: "4.4"
+            mongodb-version: "8.0"
             topology: "sharded_cluster"
 
     steps:

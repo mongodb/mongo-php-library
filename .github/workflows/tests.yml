@@ -23,7 +23,7 @@ jobs:
       fail-fast: true
       matrix:
         os:
-          - "ubuntu-20.04"
+          - "ubuntu-22.04"
         php-version:
           - "8.1"
           - "8.2"
@@ -34,23 +34,23 @@ jobs:
         topology:
           - "server"
         include:
-          - os: "ubuntu-20.04"
+          - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "replica_set"
-          - os: "ubuntu-20.04"
+          - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "sharded_cluster"
-          - os: "ubuntu-20.04"
+          - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "5.0"
             topology: "server"
-          - os: "ubuntu-20.04"
+          - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "4.4"
             topology: "replica_set"
-          - os: "ubuntu-20.04"
+          - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "4.4"
             topology: "sharded_cluster"

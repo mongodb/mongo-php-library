@@ -62,7 +62,7 @@ class EnvironmentProvider implements ProviderInterface
         $buildInfo = $manager->executeCommand(
             Utils::getDatabaseName(),
             new Command(['buildInfo' => 1]),
-            new ReadPreference(ReadPreference::PRIMARY),
+            ['readPreference' => new ReadPreference(ReadPreference::PRIMARY)],
         )->toArray()[0];
 
         return [

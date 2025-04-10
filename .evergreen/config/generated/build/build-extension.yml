@@ -7,6 +7,8 @@ tasks:
         vars:
           PHP_VERSION: "8.4"
       - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "v1.21"
       - func: "upload extension"
   - name: "build-php-8.4-lowest"
     tags: ["build", "php8.4", "lowest", "pr", "tag"]
@@ -17,16 +19,6 @@ tasks:
       - func: "compile extension"
         vars:
           EXTENSION_VERSION: "1.21.0"
-      - func: "upload extension"
-  - name: "build-php-8.4-next-stable"
-    tags: ["build", "php8.4", "next-stable", "pr", "tag"]
-    commands:
-      - func: "locate PHP binaries"
-        vars:
-          PHP_VERSION: "8.4"
-      - func: "compile extension"
-        vars:
-          EXTENSION_BRANCH: "v1.21"
       - func: "upload extension"
   - name: "build-php-8.4-next-minor"
     tags: ["build", "php8.4", "next-minor"]
@@ -45,6 +37,8 @@ tasks:
         vars:
           PHP_VERSION: "8.3"
       - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "v1.21"
       - func: "upload extension"
   - name: "build-php-8.3-lowest"
     tags: ["build", "php8.3", "lowest", "pr", "tag"]
@@ -55,16 +49,6 @@ tasks:
       - func: "compile extension"
         vars:
           EXTENSION_VERSION: "1.21.0"
-      - func: "upload extension"
-  - name: "build-php-8.3-next-stable"
-    tags: ["build", "php8.3", "next-stable", "pr", "tag"]
-    commands:
-      - func: "locate PHP binaries"
-        vars:
-          PHP_VERSION: "8.3"
-      - func: "compile extension"
-        vars:
-          EXTENSION_BRANCH: "v1.21"
       - func: "upload extension"
   - name: "build-php-8.3-next-minor"
     tags: ["build", "php8.3", "next-minor"]
@@ -83,6 +67,8 @@ tasks:
         vars:
           PHP_VERSION: "8.2"
       - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "v1.21"
       - func: "upload extension"
   - name: "build-php-8.2-lowest"
     tags: ["build", "php8.2", "lowest", "pr", "tag"]
@@ -93,16 +79,6 @@ tasks:
       - func: "compile extension"
         vars:
           EXTENSION_VERSION: "1.21.0"
-      - func: "upload extension"
-  - name: "build-php-8.2-next-stable"
-    tags: ["build", "php8.2", "next-stable", "pr", "tag"]
-    commands:
-      - func: "locate PHP binaries"
-        vars:
-          PHP_VERSION: "8.2"
-      - func: "compile extension"
-        vars:
-          EXTENSION_BRANCH: "v1.21"
       - func: "upload extension"
   - name: "build-php-8.2-next-minor"
     tags: ["build", "php8.2", "next-minor"]
@@ -121,6 +97,8 @@ tasks:
         vars:
           PHP_VERSION: "8.1"
       - func: "compile extension"
+        vars:
+          EXTENSION_BRANCH: "v1.21"
       - func: "upload extension"
   - name: "build-php-8.1-lowest"
     tags: ["build", "php8.1", "lowest", "pr", "tag"]
@@ -131,16 +109,6 @@ tasks:
       - func: "compile extension"
         vars:
           EXTENSION_VERSION: "1.21.0"
-      - func: "upload extension"
-  - name: "build-php-8.1-next-stable"
-    tags: ["build", "php8.1", "next-stable", "pr", "tag"]
-    commands:
-      - func: "locate PHP binaries"
-        vars:
-          PHP_VERSION: "8.1"
-      - func: "compile extension"
-        vars:
-          EXTENSION_BRANCH: "v1.21"
       - func: "upload extension"
   - name: "build-php-8.1-next-minor"
     tags: ["build", "php8.1", "next-minor"]

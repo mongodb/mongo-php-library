@@ -18,7 +18,7 @@ env:
 jobs:
   phpcs:
     name: "phpcs"
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-24.04"
 
     steps:
       - name: "Checkout"
@@ -36,7 +36,7 @@ jobs:
 
   rector:
     name: "Rector"
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-24.04"
 
     steps:
       - name: "Checkout"

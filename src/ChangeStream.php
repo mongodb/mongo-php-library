@@ -94,7 +94,7 @@ class ChangeStream implements Iterator
 
     public function getCursorId(): Int64
     {
-        return $this->iterator->getInnerIterator()->getId();
+        return $this->iterator->getInnerIterator()->getId(true);
     }
 
     /**

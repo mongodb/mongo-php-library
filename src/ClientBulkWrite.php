@@ -30,15 +30,15 @@ use function is_array;
 use function is_bool;
 use function is_string;
 
-final readonly class ClientBulkWrite
+final class ClientBulkWrite
 {
     private function __construct(
-        public BulkWriteCommand $bulkWriteCommand,
-        private Manager $manager,
-        private string $namespace,
+        public readonly BulkWriteCommand $bulkWriteCommand,
+        private readonly Manager $manager,
+        private readonly string $namespace,
         /** @psalm-var Encoder<array|stdClass|Document|PackedArray, mixed> */
-        private Encoder $builderEncoder,
-        private ?DocumentCodec $codec,
+        private readonly Encoder $builderEncoder,
+        private readonly ?DocumentCodec $codec,
     ) {
     }
 

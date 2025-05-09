@@ -8,6 +8,7 @@ use MongoDB\BulkWriteResult;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
@@ -264,6 +265,12 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $this->collection->findOneAndReplace(['_id' => 1], TestObject::createForFixture(1), $options);
     }
 
+    public function testFindOneAndReplaceWithArray(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+        $this->collection->findOneAndReplace(['_id' => 1], ['foo' => 'bar']);
+    }
+
     public static function provideFindOptions(): Generator
     {
         yield 'Default codec' => [
@@ -413,6 +420,12 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expected, $this->collection->find([], $options)->toArray());
     }
 
+    public function testInsertManyWithArray(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+        $this->collection->insertMany([['foo' => 'bar']]);
+    }
+
     public static function provideInsertOneOptions(): Generator
     {
         yield 'Default codec' => [
@@ -450,6 +463,12 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         }
 
         $this->assertEquals($expected, $this->collection->findOne([], $options));
+    }
+
+    public function testInsertOneWithArray(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+        $this->collection->insertOne(['foo' => 'bar']);
     }
 
     public static function provideReplaceOneOptions(): Generator
@@ -499,7 +518,13 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
 
         $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
-        $this->collection->replaceOne(['_id' => 1], ['foo' => 'bar'], $options);
+        $this->collection->replaceOne(['_id' => 1], (object) ['foo' => 'bar'], $options);
+    }
+
+    public function testReplaceOneWithArray(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+        $this->collection->replaceOne(['_id' => 1], ['foo' => 'bar']);
     }
 
     /**

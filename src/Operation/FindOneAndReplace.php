@@ -172,7 +172,7 @@ final class FindOneAndReplace implements Explainable
 
     private function validateReplacement(array|object $replacement, ?DocumentCodec $codec): array|object
     {
-        if ($codec && is_object($replacement)) {
+        if ($codec) {
             if (! is_object($replacement)) {
                 throw UnsupportedValueException::invalidEncodableValue($replacement);
             }

@@ -470,6 +470,10 @@
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
@@ -726,9 +730,6 @@
     <MixedAssignment>
       <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$replacement]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/FindOneAndUpdate.php">
     <MixedAssignment>
@@ -745,9 +746,6 @@
     <MixedMethodCall>
       <code><![CDATA[isInTransaction]]></code>
     </MixedMethodCall>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$document]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/InsertOne.php">
     <MixedAssignment>
@@ -759,9 +757,6 @@
     <MixedMethodCall>
       <code><![CDATA[isInTransaction]]></code>
     </MixedMethodCall>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$document]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/ListIndexes.php">
     <MixedAssignment>
@@ -788,11 +783,6 @@
     <MixedMethodCall>
       <code><![CDATA[isInTransaction]]></code>
     </MixedMethodCall>
-  </file>
-  <file src="src/Operation/ReplaceOne.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$replacement]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/Update.php">
     <MixedArgument>

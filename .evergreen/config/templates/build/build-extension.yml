@@ -24,7 +24,7 @@
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.0"
+          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-next-minor"
     tags: ["build", "php%phpVersion%", "next-minor"]

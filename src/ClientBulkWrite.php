@@ -24,6 +24,7 @@ use MongoDB\Codec\Encoder;
 use MongoDB\Driver\BulkWriteCommand;
 use MongoDB\Driver\Manager;
 use MongoDB\Exception\InvalidArgumentException;
+use NoDiscard;
 use stdClass;
 
 use function is_array;
@@ -42,6 +43,7 @@ final class ClientBulkWrite
     ) {
     }
 
+    #[NoDiscard]
     public static function createWithCollection(Collection $collection, array $options = []): self
     {
         $options += ['ordered' => true];
@@ -224,6 +226,7 @@ final class ClientBulkWrite
         return $this;
     }
 
+    #[NoDiscard]
     public function withCollection(Collection $collection): self
     {
         /* Prohibit mixing Collections associated with different Manager

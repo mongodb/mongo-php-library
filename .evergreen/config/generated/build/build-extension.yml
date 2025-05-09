@@ -36,10 +36,7 @@ tasks:
           PHP_VERSION: "8.4"
       - func: "compile extension"
         vars:
-          # TODO: replace with "v2.x" once mongodb/mongo-php-driver#1790 is merged
-          # EXTENSION_BRANCH: "v2.x"
-          EXTENSION_REPO: "https://github.com/jmikola/mongo-php-driver.git"
-          EXTENSION_BRANCH: "2.x-bulkwrite"
+          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
   - name: "build-php-8.3"
     tags: ["build", "php8.3", "stable", "pr", "tag"]
@@ -77,10 +74,7 @@ tasks:
           PHP_VERSION: "8.3"
       - func: "compile extension"
         vars:
-          # TODO: replace with "v2.x" once mongodb/mongo-php-driver#1790 is merged
-          # EXTENSION_BRANCH: "v2.x"
-          EXTENSION_REPO: "https://github.com/jmikola/mongo-php-driver.git"
-          EXTENSION_BRANCH: "2.x-bulkwrite"
+          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
   - name: "build-php-8.2"
     tags: ["build", "php8.2", "stable", "pr", "tag"]
@@ -118,10 +112,7 @@ tasks:
           PHP_VERSION: "8.2"
       - func: "compile extension"
         vars:
-          # TODO: replace with "v2.x" once mongodb/mongo-php-driver#1790 is merged
-          # EXTENSION_BRANCH: "v2.x"
-          EXTENSION_REPO: "https://github.com/jmikola/mongo-php-driver.git"
-          EXTENSION_BRANCH: "2.x-bulkwrite"
+          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
   - name: "build-php-8.1"
     tags: ["build", "php8.1", "stable", "pr", "tag"]
@@ -159,8 +150,5 @@ tasks:
           PHP_VERSION: "8.1"
       - func: "compile extension"
         vars:
-          # TODO: replace with "v2.x" once mongodb/mongo-php-driver#1790 is merged
-          # EXTENSION_BRANCH: "v2.x"
-          EXTENSION_REPO: "https://github.com/jmikola/mongo-php-driver.git"
-          EXTENSION_BRANCH: "2.x-bulkwrite"
+          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"

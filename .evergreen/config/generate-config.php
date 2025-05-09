@@ -1,4 +1,4 @@
-#!/bin/env php
+#!/usr/bin/env php
 <?php
 
 // Supported PHP versions. Add new versions to the beginning of the list
@@ -9,9 +9,7 @@ $supportedPhpVersions = [
     '8.1',
 ];
 
-// TODO: use max() once PHP 8.4 is stable
-//$latestPhpVersion = max($supportedPhpVersions);
-$latestPhpVersion = '8.3';
+$latestPhpVersion = max($supportedPhpVersions);
 $lowestPhpVersion = min($supportedPhpVersions);
 
 // Supported MongoDB versions. Add new versions after "rapid"

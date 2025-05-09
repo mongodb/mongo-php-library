@@ -25,6 +25,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\InsertOneResult;
 
 use function is_bool;
@@ -157,7 +158,11 @@ final class InsertOne
 
     private function validateDocument(array|object $document, ?DocumentCodec $codec): array|object
     {
-        if ($codec && is_object($document)) {
+        if ($codec) {
+            if (! is_object($document)) {
+                throw UnsupportedValueException::invalidEncodableValue($document);
+            }
+
             $document = $codec->encode($document);
         } elseif (! is_document($document)) {
             throw InvalidArgumentException::expectedDocumentType('$document', $document);

@@ -22,6 +22,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Exception\UnsupportedValueException;
 
 use function array_key_exists;
 use function is_integer;
@@ -172,6 +173,10 @@ final class FindOneAndReplace implements Explainable
     private function validateReplacement(array|object $replacement, ?DocumentCodec $codec): array|object
     {
         if ($codec && is_object($replacement)) {
+            if (! is_object($replacement)) {
+                throw UnsupportedValueException::invalidEncodableValue($replacement);
+            }
+
             $replacement = $codec->encode($replacement);
         } elseif (! is_document($replacement)) {
             throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);

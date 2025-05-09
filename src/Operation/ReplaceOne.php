@@ -22,6 +22,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\UpdateResult;
 
 use function is_object;
@@ -120,7 +121,11 @@ final class ReplaceOne
 
     private function validateReplacement(array|object $replacement, ?DocumentCodec $codec): array|object
     {
-        if ($codec && is_object($replacement)) {
+        if ($codec) {
+            if (! is_object($replacement)) {
+                throw UnsupportedValueException::invalidEncodableValue($replacement);
+            }
+
             $replacement = $codec->encode($replacement);
         } elseif (! is_document($replacement)) {
             throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);

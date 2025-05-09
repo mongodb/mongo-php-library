@@ -25,6 +25,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\InsertManyResult;
 
 use function array_is_list;
@@ -190,7 +191,11 @@ final class InsertMany
         }
 
         foreach ($documents as $i => $document) {
-            if ($codec && is_object($document)) {
+            if ($codec) {
+                if (! is_object($document)) {
+                    throw UnsupportedValueException::invalidEncodableValue($document);
+                }
+
                 $documents[$i] = $codec->encode($document);
             } elseif (! is_document($document)) {
                 throw InvalidArgumentException::expectedDocumentType(sprintf('$documents[%d]', $i), $document);

@@ -28,6 +28,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Exception\UnsupportedValueException;
 
 use function array_is_list;
 use function array_key_exists;
@@ -306,7 +307,11 @@ final class BulkWrite
                 case self::INSERT_ONE:
                     // $args[0] was already validated above. Since DocumentCodec::encode will always return a Document
                     // instance, there is no need to re-validate the returned value here.
-                    if ($codec && is_object($args[0])) {
+                    if ($codec) {
+                        if (! is_object($args[0])) {
+                            throw UnsupportedValueException::invalidEncodableValue($args[0]);
+                        }
+
                         $operations[$i][$type][0] = $codec->encode($args[0]);
                     }
 
@@ -341,7 +346,11 @@ final class BulkWrite
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
 
-                    if ($codec && is_object($args[1])) {
+                    if ($codec) {
+                        if (! is_object($args[1])) {
+                            throw UnsupportedValueException::invalidEncodableValue($args[1]);
+                        }
+
                         $operations[$i][$type][1] = $codec->encode($args[1]);
                     }
 

@@ -112,7 +112,7 @@ final readonly class ClientBulkWrite
         }
 
         // Capture the document's _id, which may have been generated, in an optional output variable
-        /** @var mixed */
+        /** @var mixed $id */
         $id = $this->bulkWriteCommand->insertOne($this->namespace, $document);
 
         return $this;

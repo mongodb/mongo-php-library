@@ -24,6 +24,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\UpdateResult;
 
+use function is_object;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
@@ -119,11 +120,9 @@ final class ReplaceOne
 
     private function validateReplacement(array|object $replacement, ?DocumentCodec $codec): array|object
     {
-        if ($codec) {
+        if ($codec && is_object($replacement)) {
             $replacement = $codec->encode($replacement);
-        }
-
-        if (! is_document($replacement)) {
+        } elseif (! is_document($replacement)) {
             throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);
         }
 

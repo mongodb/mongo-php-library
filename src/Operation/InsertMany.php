@@ -29,6 +29,7 @@ use MongoDB\InsertManyResult;
 
 use function array_is_list;
 use function is_bool;
+use function is_object;
 use function MongoDB\is_document;
 use function sprintf;
 
@@ -189,11 +190,9 @@ final class InsertMany
         }
 
         foreach ($documents as $i => $document) {
-            if ($codec) {
-                $document = $documents[$i] = $codec->encode($document);
-            }
-
-            if (! is_document($document)) {
+            if ($codec && is_object($document)) {
+                $documents[$i] = $codec->encode($document);
+            } elseif (! is_document($document)) {
                 throw InvalidArgumentException::expectedDocumentType(sprintf('$documents[%d]', $i), $document);
             }
         }

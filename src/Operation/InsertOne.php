@@ -28,6 +28,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\InsertOneResult;
 
 use function is_bool;
+use function is_object;
 use function MongoDB\is_document;
 
 /**
@@ -156,11 +157,9 @@ final class InsertOne
 
     private function validateDocument(array|object $document, ?DocumentCodec $codec): array|object
     {
-        if ($codec) {
+        if ($codec && is_object($document)) {
             $document = $codec->encode($document);
-        }
-
-        if (! is_document($document)) {
+        } elseif (! is_document($document)) {
             throw InvalidArgumentException::expectedDocumentType('$document', $document);
         }
 

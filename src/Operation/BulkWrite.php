@@ -35,6 +35,7 @@ use function count;
 use function current;
 use function is_array;
 use function is_bool;
+use function is_object;
 use function key;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
@@ -305,7 +306,7 @@ final class BulkWrite
                 case self::INSERT_ONE:
                     // $args[0] was already validated above. Since DocumentCodec::encode will always return a Document
                     // instance, there is no need to re-validate the returned value here.
-                    if ($codec) {
+                    if ($codec && is_object($args[0])) {
                         $operations[$i][$type][0] = $codec->encode($args[0]);
                     }
 
@@ -340,7 +341,7 @@ final class BulkWrite
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
 
-                    if ($codec) {
+                    if ($codec && is_object($args[1])) {
                         $operations[$i][$type][1] = $codec->encode($args[1]);
                     }
 

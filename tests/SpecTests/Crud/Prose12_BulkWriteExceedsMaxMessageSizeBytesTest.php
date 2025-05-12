@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\SpecTests\Crud;
 
 use MongoDB\ClientBulkWrite;
-use MongoDB\Driver\Exception\BulkWriteCommandException;
 use MongoDB\Driver\Exception\InvalidArgumentException;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 
@@ -41,12 +40,8 @@ class Prose12_BulkWriteExceedsMaxMessageSizeBytesTest extends FunctionalTestCase
         try {
             $client->bulkWrite($bulkWrite);
             self::fail('Exception was not thrown');
-        } catch (BulkWriteCommandException $e) {
-            /* Note: although the client-side error occurs on the first operation, libmongoc still populates the partial
-             * result (see: CDRIVER-5969). This causes PHPC to proxy the underlying InvalidArgumentException behind
-             * BulkWriteCommandException. Until this is addressed, unwrap the error and check the partial result. */
-            self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
-            self::assertSame(0, $e->getPartialResult()->getInsertedCount());
+        } catch (InvalidArgumentException $e) {
+            self::assertStringContainsString('unable to send document', $e->getMessage());
         }
     }
 
@@ -65,12 +60,8 @@ class Prose12_BulkWriteExceedsMaxMessageSizeBytesTest extends FunctionalTestCase
         try {
             $client->bulkWrite($bulkWrite);
             self::fail('Exception was not thrown');
-        } catch (BulkWriteCommandException $e) {
-            /* Note: although the client-side error occurs on the first operation, libmongoc still populates the partial
-             * result (see: CDRIVER-5969). This causes PHPC to proxy the underlying InvalidArgumentException behind
-             * BulkWriteCommandException. Until this is addressed, unwrap the error and check the partial result. */
-            self::assertInstanceOf(InvalidArgumentException::class, $e->getPrevious());
-            self::assertSame(0, $e->getPartialResult()->getInsertedCount());
+        } catch (InvalidArgumentException $e) {
+            self::assertStringContainsString('unable to send document', $e->getMessage());
         }
     }
 }

@@ -88,7 +88,7 @@ final class ClientBulkWriteCommand
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $options = array_filter($this->options, fn ($value) => isset($value));
+        $options = array_filter($this->options, fn ($value) => $value !== null);
 
         return $server->executeBulkWriteCommand($this->bulkWriteCommand, $options);
     }

@@ -85,7 +85,7 @@ abstract class FunctionalTestCase extends TestCase
         return new Client(
             $uri ?? static::getUri(),
             static::appendAuthenticationOptions($options),
-            static::appendServerApiOption($driverOptions),
+            static::appendDriverOptions($driverOptions),
         );
     }
 
@@ -94,7 +94,7 @@ abstract class FunctionalTestCase extends TestCase
         return new Manager(
             $uri ?? static::getUri(),
             static::appendAuthenticationOptions($options),
-            static::appendServerApiOption($driverOptions),
+            static::appendDriverOptions($driverOptions),
         );
     }
 
@@ -603,8 +603,12 @@ abstract class FunctionalTestCase extends TestCase
         return $options;
     }
 
-    private static function appendServerApiOption(array $driverOptions): array
+    private static function appendDriverOptions(array $driverOptions): array
     {
+        if (isset($driverOptions['autoEncryption']) && getenv('CRYPT_SHARED_LIB_PATH')) {
+            $driverOptions['autoEncryption']['extraOptions']['cryptSharedLibPath'] = getenv('CRYPT_SHARED_LIB_PATH');
+        }
+
         if (getenv('API_VERSION') && ! isset($driverOptions['serverApi'])) {
             $driverOptions['serverApi'] = new ServerApi(getenv('API_VERSION'));
         }

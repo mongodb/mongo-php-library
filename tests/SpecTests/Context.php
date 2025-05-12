@@ -105,11 +105,6 @@ final class Context
 
                 $autoEncryptionOptions['tlsOptions']->kmip = self::getKmsTlsOptions();
             }
-
-            // Intentionally ignore empty values for CRYPT_SHARED_LIB_PATH
-            if (getenv('CRYPT_SHARED_LIB_PATH')) {
-                $autoEncryptionOptions['extraOptions']['cryptSharedLibPath'] = getenv('CRYPT_SHARED_LIB_PATH');
-            }
         }
 
         if (isset($test->outcome->collection->name)) {

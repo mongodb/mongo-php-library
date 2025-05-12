@@ -27,15 +27,6 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $this->skipIfClientSideEncryptionIsNotSupported();
     }
 
-    public static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client
-    {
-        if (isset($driverOptions['autoEncryption']) && getenv('CRYPT_SHARED_LIB_PATH')) {
-            $driverOptions['autoEncryption']['extraOptions']['cryptSharedLibPath'] = getenv('CRYPT_SHARED_LIB_PATH');
-        }
-
-        return parent::createTestClient($uri, $options, $driverOptions);
-    }
-
     protected static function getAWSCredentials(): array
     {
         return [

@@ -10,6 +10,7 @@ tasks:
   - name: "test-serverless"
     tags: ["serverless"]
     exec_timeout_secs: 10800
+    patch_only: true
     commands:
       - func: "start kms servers"
       - func: "set aws temp creds"
@@ -18,6 +19,7 @@ tasks:
   - name: "test-serverless-proxy"
     tags: ["serverless"]
     exec_timeout_secs: 10800
+    patch_only: true
     commands:
       - func: "start kms servers"
       - func: "set aws temp creds"

@@ -87,8 +87,6 @@ class Collection implements Stringable
         'root' => BSONDocument::class,
     ];
 
-    private const WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE = 8;
-
     /** @psalm-var Encoder<array|stdClass|Document|PackedArray, mixed> */
     private readonly Encoder $builderEncoder;
 
@@ -236,23 +234,16 @@ class Collection implements Stringable
         $hasWriteStage = is_last_pipeline_operator_write($pipeline);
 
         $options = $this->inheritReadPreference($options);
-
-        $server = $hasWriteStage
-            ? select_server_for_aggregate_write_stage($this->manager, $options)
-            : select_server($this->manager, $options);
-
-        /* MongoDB 4.2 and later supports a read concern when an $out stage is
-         * being used, but earlier versions do not.
-         */
-        if (! $hasWriteStage || server_supports_feature($server, self::WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE)) {
-            $options = $this->inheritReadConcern($options);
-        }
-
+        $options = $this->inheritReadConcern($options);
         $options = $this->inheritCodecOrTypeMap($options);
 
         if ($hasWriteStage) {
             $options = $this->inheritWriteOptions($options);
         }
+
+        $server = $hasWriteStage
+            ? select_server_for_aggregate_write_stage($this->manager, $options)
+            : select_server($this->manager, $options);
 
         $operation = new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
 

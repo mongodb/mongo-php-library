@@ -66,8 +66,6 @@ class Database implements Stringable
         'root' => BSONDocument::class,
     ];
 
-    private const WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE = 8;
-
     /** @psalm-var Encoder<array|stdClass|Document|PackedArray, mixed> */
     private readonly Encoder $builderEncoder;
 
@@ -229,8 +227,7 @@ class Database implements Stringable
          */
         if (
             ! isset($options['readConcern']) &&
-            ! is_in_transaction($options) &&
-            ( ! $hasWriteStage || server_supports_feature($server, self::WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE))
+            ! is_in_transaction($options)
         ) {
             $options['readConcern'] = $this->readConcern;
         }

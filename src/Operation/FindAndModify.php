@@ -55,8 +55,6 @@ final class FindAndModify implements Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 9;
 
-    private const WIRE_VERSION_FOR_UNSUPPORTED_OPTION_SERVER_SIDE_ERROR = 8;
-
     private array $options;
 
     /**
@@ -227,12 +225,6 @@ final class FindAndModify implements Explainable
      */
     public function execute(Server $server): array|object|null
     {
-        /* Server versions >= 4.2.0 raise errors for unsupported update options.
-         * For previous versions, the CRUD spec requires a client-side error. */
-        if (isset($this->options['hint']) && ! server_supports_feature($server, self::WIRE_VERSION_FOR_UNSUPPORTED_OPTION_SERVER_SIDE_ERROR)) {
-            throw UnsupportedException::hintNotSupported();
-        }
-
         /* CRUD spec requires a client-side error when using "hint" with an
          * unacknowledged write concern on an unsupported server. */
         if (

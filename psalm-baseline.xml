@@ -813,9 +813,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/Update.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['writeConcern']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['bypassDocumentValidation']]]></code>
       <code><![CDATA[$options[$option]]]></code>

@@ -79,6 +79,7 @@ use function is_array;
 use function is_bool;
 use function strlen;
 
+/** @phpstan-import-type OperationType from BulkWrite */
 class Collection implements Stringable
 {
     private const DEFAULT_TYPE_MAP = [
@@ -253,12 +254,13 @@ class Collection implements Stringable
     /**
      * Executes multiple write operations.
      *
-     * @see BulkWrite::__construct() for supported options
-     * @param array[] $operations List of write operations
-     * @param array   $options    Command options
+     * @param list<array{deleteMany: list<array|object>}|array{deleteOne: list<array|object>}|array{insertOne: list<array|object>}|array{replaceOne: list<array|object>}|array{updateMany: list<array|object>}|array{updateOne: list<array|object>}> $operations List of write operations
+     * @psalm-param list<OperationType> $operations List of write operations
+     * @param array                                                                                                                                                                                                                                  $options    Command options
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     * @see BulkWrite::__construct() for supported options
      */
     public function bulkWrite(array $operations, array $options = []): BulkWriteResult
     {

@@ -438,95 +438,16 @@
   </file>
   <file src="src/Operation/BulkWrite.php">
     <MixedArgument>
-      <code><![CDATA[$args]]></code>
-      <code><![CDATA[$args]]></code>
-      <code><![CDATA[$args]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[2]]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]['upsert']]]></code>
-      <code><![CDATA[$args[2]['upsert']]]></code>
-      <code><![CDATA[$args[2]['upsert']]]></code>
-      <code><![CDATA[$args[2]['upsert']]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]['limit']]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]['multi']]]></code>
-      <code><![CDATA[$args[2]['multi']]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][2]]]></code>
-      <code><![CDATA[$operations[$i][$type][2]]]></code>
-    </MixedArrayAssignment>
     <MixedAssignment>
-      <code><![CDATA[$args]]></code>
-      <code><![CDATA[$args]]></code>
       <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
       <code><![CDATA[$insertedIds[$i]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][2]]]></code>
-      <code><![CDATA[$operations[$i][$type][2]]]></code>
+      <code><![CDATA[$operation[$type][0]]]></code>
+      <code><![CDATA[$operation[$type][0]]]></code>
+      <code><![CDATA[$operation[$type][0]]]></code>
+      <code><![CDATA[$operation[$type][1]]]></code>
       <code><![CDATA[$options[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
       <code><![CDATA[$options['writeConcern']]]></code>
@@ -534,10 +455,23 @@
     <MixedMethodCall>
       <code><![CDATA[isInTransaction]]></code>
     </MixedMethodCall>
-    <MixedOperand>
+    <NullArgument>
+      <code><![CDATA[$type]]></code>
+    </NullArgument>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[1]]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[1]]]></code>
+    </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-    </MixedOperand>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/Operation/ClientBulkWriteCommand.php">
     <MixedMethodCall>

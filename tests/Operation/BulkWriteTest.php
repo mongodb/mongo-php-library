@@ -41,6 +41,15 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
+    public function testEmptyOperation(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected one element in $operation[0], actually: 0');
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [],
+        ]);
+    }
+
     public function testUnknownOperation(): void
     {
         $this->expectException(InvalidArgumentException::class);

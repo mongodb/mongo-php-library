@@ -307,8 +307,6 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
     public function testAggregate(): void
     {
-        $this->skipIfServerVersion('<', '4.0.0', 'Explaining aggregate command requires server version >= 4.0');
-
         $this->createFixtures(3);
 
         // Use a $sort stage to ensure the aggregate does not get optimised to a query

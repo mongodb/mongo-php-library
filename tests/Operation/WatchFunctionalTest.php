@@ -6,7 +6,6 @@ use Closure;
 use Generator;
 use Iterator;
 use MongoDB\BSON\Document;
-use MongoDB\BSON\TimestampInterface;
 use MongoDB\ChangeStream;
 use MongoDB\Codec\DecodeIfSupported;
 use MongoDB\Codec\DocumentCodec;
@@ -109,44 +108,6 @@ class WatchFunctionalTest extends FunctionalTestCase
     /**
      * Prose test 1: "ChangeStream must continuously track the last seen
      * resumeToken"
-     */
-    #[DataProvider('provideCodecOptions')]
-    public function testGetResumeToken(array $options, Closure $getIdentifier): void
-    {
-        $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken is supported');
-
-        $operation = new Watch(
-            $this->manager,
-            $this->getDatabaseName(),
-            $this->getCollectionName(),
-            [],
-            $options + $this->defaultOptions,
-        );
-        $changeStream = $operation->execute($this->getPrimaryServer());
-
-        $changeStream->rewind();
-        $this->assertFalse($changeStream->valid());
-        $this->assertNull($changeStream->getResumeToken());
-
-        $this->insertDocument(['x' => 1]);
-        $this->insertDocument(['x' => 2]);
-
-        $this->advanceCursorUntilValid($changeStream);
-        $this->assertSameDocument($getIdentifier($changeStream->current()), $changeStream->getResumeToken());
-
-        $changeStream->next();
-        $this->assertTrue($changeStream->valid());
-        $this->assertSameDocument($getIdentifier($changeStream->current()), $changeStream->getResumeToken());
-
-        $this->insertDocument(['x' => 3]);
-
-        $this->advanceCursorUntilValid($changeStream);
-        $this->assertSameDocument($getIdentifier($changeStream->current()), $changeStream->getResumeToken());
-    }
-
-    /**
-     * Prose test 1: "ChangeStream must continuously track the last seen
-     * resumeToken"
      *
      * Prose test 11:
      * For a ChangeStream under these conditions:
@@ -165,8 +126,6 @@ class WatchFunctionalTest extends FunctionalTestCase
     #[DataProvider('provideCodecOptions')]
     public function testGetResumeTokenWithPostBatchResumeToken(array $options, Closure $getIdentifier): void
     {
-        $this->skipIfServerVersion('<', '4.0.7', 'postBatchResumeToken is not supported');
-
         $operation = new Watch(
             $this->manager,
             $this->getDatabaseName(),
@@ -267,8 +226,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testResumeBeforeReceivingAnyResultsIncludesPostBatchResumeToken(): void
     {
-        $this->skipIfServerVersion('<', '4.0.7', 'postBatchResumeToken is not supported');
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
 
         $events = [];
@@ -328,79 +285,6 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertObjectHasProperty('$changeStream', $command->pipeline[0]);
         $this->assertObjectHasProperty('resumeAfter', $command->pipeline[0]->{'$changeStream'});
         $this->assertEquals($expectedResumeToken, $command->pipeline[0]->{'$changeStream'}->resumeAfter);
-    }
-
-    /**
-     * Prose test 9: "$changeStream stage for ChangeStream against a server
-     * >=4.0 and <4.0.7 that has not received any results yet MUST include a
-     * startAtOperationTime option when resuming a changestream."
-     */
-    public function testResumeBeforeReceivingAnyResultsIncludesStartAtOperationTime(): void
-    {
-        $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken takes precedence over startAtOperationTime');
-
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
-
-        $events = [];
-
-        (new CommandObserver())->observe(
-            function () use ($operation, &$changeStream): void {
-                $changeStream = $operation->execute($this->getPrimaryServer());
-            },
-            function (array $event) use (&$events): void {
-                $events[] = $event;
-            },
-        );
-
-        $this->assertCount(1, $events);
-        $this->assertSame('aggregate', $events[0]['started']->getCommandName());
-        $reply = $events[0]['succeeded']->getReply();
-        $this->assertObjectHasProperty('operationTime', $reply);
-        $operationTime = $reply->operationTime;
-        $this->assertInstanceOf(TimestampInterface::class, $operationTime);
-
-        $this->assertFalse($changeStream->valid());
-        $this->forceChangeStreamResume();
-
-        $this->assertNoCommandExecuted(function () use ($changeStream): void {
-            $changeStream->rewind();
-        });
-
-        $events = [];
-
-        (new CommandObserver())->observe(
-            function () use ($changeStream): void {
-                $changeStream->next();
-            },
-            function (array $event) use (&$events): void {
-                $events[] = $event;
-            },
-        );
-
-        $this->assertCount(3, $events);
-
-        $this->assertSame('getMore', $events[0]['started']->getCommandName());
-        $this->assertArrayHasKey('failed', $events[0]);
-
-        $this->assertSame('aggregate', $events[1]['started']->getCommandName());
-        $this->assertStartAtOperationTime($operationTime, $events[1]['started']->getCommand());
-        $this->assertArrayHasKey('succeeded', $events[1]);
-
-        // Original cursor is freed immediately after the change stream resumes
-        $this->assertSame('killCursors', $events[2]['started']->getCommandName());
-        $this->assertArrayHasKey('succeeded', $events[2]);
-
-        $this->assertFalse($changeStream->valid());
-    }
-
-    private function assertStartAtOperationTime(TimestampInterface $expectedOperationTime, stdClass $command): void
-    {
-        $this->assertObjectHasProperty('pipeline', $command);
-        $this->assertIsArray($command->pipeline);
-        $this->assertArrayHasKey(0, $command->pipeline);
-        $this->assertObjectHasProperty('$changeStream', $command->pipeline[0]);
-        $this->assertObjectHasProperty('startAtOperationTime', $command->pipeline[0]->{'$changeStream'});
-        $this->assertEquals($expectedOperationTime, $command->pipeline[0]->{'$changeStream'}->startAtOperationTime);
     }
 
     public function testRewindMultipleTimesWithResults(): void
@@ -1319,8 +1203,6 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testErrorDuringAggregateCommandDoesNotCauseResume(): void
     {
-        $this->skipIfServerVersion('<', '4.0.0', 'failCommand is not supported');
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
 
         $commandCount = 0;
@@ -1383,39 +1265,6 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test 12
-     * For a ChangeStream under these conditions:
-     * - Running against a server <4.0.7.
-     * - The batch is empty or has been iterated to the last document.
-     * Expected result:
-     * - getResumeToken must return the _id of the last document returned if one exists.
-     * - getResumeToken must return resumeAfter from the initial aggregate if the option was specified.
-     * - If resumeAfter was not specified, the getResumeToken result must be empty.
-     */
-    public function testGetResumeTokenReturnsOriginalResumeTokenOnEmptyBatch(): void
-    {
-        $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken is supported');
-
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
-        $changeStream = $operation->execute($this->getPrimaryServer());
-
-        $this->assertNull($changeStream->getResumeToken());
-
-        $this->insertDocument(['x' => 1]);
-
-        $changeStream->next();
-        $this->assertTrue($changeStream->valid());
-        $resumeToken = $changeStream->getResumeToken();
-        $this->assertSame($resumeToken, $changeStream->current()->_id);
-
-        $options = ['resumeAfter' => $resumeToken] + $this->defaultOptions;
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
-        $changeStream = $operation->execute($this->getPrimaryServer());
-
-        $this->assertSame($resumeToken, $changeStream->getResumeToken());
-    }
-
-    /**
      * Prose test 14
      * For a ChangeStream under these conditions:
      *  - The batch is not empty.
@@ -1429,7 +1278,6 @@ class WatchFunctionalTest extends FunctionalTestCase
     #[DataProvider('provideCodecOptions')]
     public function testResumeTokenBehaviour(array $options, Closure $getIdentifier): void
     {
-        $this->skipIfServerVersion('<', '4.1.1', 'Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
         $this->skipIfIsShardedCluster('Resume token behaviour can\'t be reliably tested on sharded clusters.');
 
         $operation = new Watch(

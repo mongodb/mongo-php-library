@@ -215,10 +215,6 @@ abstract class FunctionalTestCase extends TestCase
      */
     public function configureFailPoint(array|stdClass $command, ?Server $server = null): void
     {
-        if (! $this->isFailCommandSupported()) {
-            $this->markTestSkipped('failCommand is only supported on mongod >= 4.0.0 and mongos >= 4.1.5.');
-        }
-
         if (! $this->isFailCommandEnabled()) {
             $this->markTestSkipped('The enableTestCommands parameter is not enabled.');
         }
@@ -512,15 +508,7 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         if ($this->isShardedCluster()) {
-            if (version_compare($this->getFeatureCompatibilityVersion(), '4.2', '<')) {
-                $this->markTestSkipped('Transactions are only supported on FCV 4.2 or higher');
-            }
-
-            return;
-        }
-
-        if (version_compare($this->getFeatureCompatibilityVersion(), '4.0', '<')) {
-            $this->markTestSkipped('Transactions are only supported on FCV 4.0 or higher');
+            $this->markTestSkipped('Transactions are only supported on FCV 4.2 or higher');
         }
 
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
@@ -696,16 +684,6 @@ abstract class FunctionalTestCase extends TestCase
         $uri = implode('', $parts);
 
         return $uri;
-    }
-
-    /**
-     * Checks if the failCommand command is supported on this server version
-     */
-    private function isFailCommandSupported(): bool
-    {
-        $minVersion = $this->isShardedCluster() ? '4.1.5' : '4.0.0';
-
-        return version_compare($this->getServerVersion(), $minVersion, '>=');
     }
 
     /**

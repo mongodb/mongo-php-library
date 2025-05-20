@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bsonSize
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/'
 type:
     - resolvesToInt
 encode: single
@@ -14,170 +14,35 @@ arguments:
             - resolvesToNull
 tests:
     -
-        name: Return Sizes of Documents
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-sizes-of-documents
+        name: 'Return Sizes of Documents'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-sizes-of-documents'
         pipeline:
             -
                 $project:
                     name: 1
                     object_size:
-                        $bsonSize: $$ROOT
-        schema:
-            employees:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                name:
-                    types:
-                        -
-                            bsonType: String
-                email:
-                    types:
-                        -
-                            bsonType: String
-                position:
-                    types:
-                        -
-                            bsonType: String
-                current_task:
-                    types:
-                        -
-                            bsonType: Document
-                            fields:
-                                project_id:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                project_name:
-                                    types:
-                                        -
-                                            bsonType: String
-                                project_duration:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                hours:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                notes:
-                                    types:
-                                        -
-                                            bsonType: String
-                        -
-                            bsonType: 'Null'
+                        $bsonSize: '$$ROOT'
     -
-        name: Return Combined Size of All Documents in a Collection
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-combined-size-of-all-documents-in-a-collection
+        name: 'Return Combined Size of All Documents in a Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-combined-size-of-all-documents-in-a-collection'
         pipeline:
             -
                 $group:
-                    _id: null
+                    _id: ~
                     combined_object_size:
                         $sum:
-                            $bsonSize: $$ROOT
-        schema:
-            employees:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                name:
-                    types:
-                        -
-                            bsonType: String
-                email:
-                    types:
-                        -
-                            bsonType: String
-                position:
-                    types:
-                        -
-                            bsonType: String
-                current_task:
-                    types:
-                        -
-                            bsonType: Document
-                            fields:
-                                project_id:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                project_name:
-                                    types:
-                                        -
-                                            bsonType: String
-                                project_duration:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                hours:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                notes:
-                                    types:
-                                        -
-                                            bsonType: String
-                        -
-                            bsonType: 'Null'
+                            $bsonSize: '$$ROOT'
     -
-        name: Return Document with Largest Specified Field
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-document-with-largest-specified-field
+        name: 'Return Document with Largest Specified Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/#return-document-with-largest-specified-field'
         pipeline:
             -
                 $project:
-                    name: $name
+                    name: '$name'
                     task_object_size:
-                        $bsonSize: $current_task
+                        $bsonSize: '$current_task'
             -
                 $sort:
                     task_object_size: -1
             -
                 $limit: 1
-        schema:
-            employees:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                name:
-                    types:
-                        -
-                            bsonType: String
-                email:
-                    types:
-                        -
-                            bsonType: String
-                position:
-                    types:
-                        -
-                            bsonType: String
-                current_task:
-                    types:
-                        -
-                            bsonType: Document
-                            fields:
-                                project_id:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                project_name:
-                                    types:
-                                        -
-                                            bsonType: String
-                                project_duration:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                hours:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                notes:
-                                    types:
-                                        -
-                                            bsonType: String
-                        -
-                            bsonType: 'Null'

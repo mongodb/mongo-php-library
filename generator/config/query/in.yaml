@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $in
-link: https://www.mongodb.com/docs/manual/reference/operator/query/in/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/'
 type:
     - fieldQuery
 encode: single
@@ -10,29 +10,23 @@ arguments:
     -
         name: value
         type:
-            - array
+            - array # of expression
 tests:
     -
-        name: Use the $in Operator to Match Values in an Array
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-to-match-values
+        name: 'Use the $in Operator to Match Values in an Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-to-match-values'
         pipeline:
             -
                 $match:
                     tags:
-                        $in:
-                            - home
-                            - school
+                        $in: ['home', 'school']
     -
-        name: Use the $in Operator with a Regular Expression
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-with-a-regular-expression
+        name: 'Use the $in Operator with a Regular Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-with-a-regular-expression'
         pipeline:
             -
                 $match:
                     tags:
                         $in:
-                            -
-                                pattern: ^be
-                                options: ''
-                            -
-                                pattern: ^st
-                                options: ''
+                            - !bson_regex '^be'
+                            - !bson_regex '^st'

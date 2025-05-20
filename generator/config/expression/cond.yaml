@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $cond
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/'
 type:
     - resolvesToAny
 encode: object
@@ -21,8 +21,8 @@ arguments:
             - expression
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/#example'
         pipeline:
             -
                 $project:
@@ -31,21 +31,7 @@ tests:
                         $cond:
                             if:
                                 $gte:
-                                    - $qty
+                                    - '$qty'
                                     - 250
                             then: 30
                             else: 20
-        schema:
-            TestCollection:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                item:
-                    types:
-                        -
-                            bsonType: String
-                qty:
-                    types:
-                        -
-                            bsonType: Number

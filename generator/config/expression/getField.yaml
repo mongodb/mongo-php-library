@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $getField
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/'
 type:
     - resolvesToAny
 encode: object
@@ -25,20 +25,22 @@ arguments:
             A valid expression that contains the field for which you want to return a value. input must resolve to an object, missing, null, or undefined. If omitted, defaults to the document currently being processed in the pipeline ($$CURRENT).
 tests:
     -
-        name: Query Fields that Contain Periods
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-contain-periods--.-
+        name: 'Query Fields that Contain Periods'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-contain-periods--.-'
         pipeline:
             -
                 $match:
                     $expr:
                         $gt:
                             -
+                                # Example uses the short form, the builder always generates the verbose form
+                                # $getField: 'price.usd'
                                 $getField:
-                                    field: price.usd
+                                    field: 'price.usd'
                             - 200
     -
-        name: Query Fields that Start with a Dollar Sign
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-start-with-a-dollar-sign----
+        name: 'Query Fields that Start with a Dollar Sign'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-start-with-a-dollar-sign----'
         pipeline:
             -
                 $match:
@@ -46,12 +48,14 @@ tests:
                         $gt:
                             -
                                 $getField:
+                                    # Example uses the short form, the builder always generates the verbose form
+                                    # $literal: '$price'
                                     field:
-                                        $literal: $price
+                                        $literal: '$price'
                             - 200
     -
-        name: Query a Field in a Sub-document
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-a-field-in-a-sub-document
+        name: 'Query a Field in a Sub-document'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-a-field-in-a-sub-document'
         pipeline:
             -
                 $match:
@@ -60,6 +64,6 @@ tests:
                             -
                                 $getField:
                                     field:
-                                        $literal: $small
-                                    input: $quantity
+                                        $literal: '$small'
+                                    input: '$quantity'
                             - 20

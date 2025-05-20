@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $setIsSubset
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/'
 type:
     - resolvesToBool
 encode: array
@@ -17,8 +17,8 @@ arguments:
             - resolvesToArray
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/#example'
         pipeline:
             -
                 $project:
@@ -26,6 +26,7 @@ tests:
                     flowerFieldB: 1
                     AisSubset:
                         $setIsSubset:
-                            - $flowerFieldA
-                            - $flowerFieldB
+                            - '$flowerFieldA'
+                            - '$flowerFieldB'
                     _id: 0
+

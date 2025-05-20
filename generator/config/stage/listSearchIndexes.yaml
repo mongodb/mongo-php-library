@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $listSearchIndexes
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/'
 type:
     - stage
 encode: object
@@ -23,22 +23,22 @@ arguments:
             The name of the index to return information about.
 tests:
     -
-        name: Return All Search Indexes
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-all-search-indexes
+        name: 'Return All Search Indexes'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-all-search-indexes'
         pipeline:
             -
                 $listSearchIndexes: {}
     -
-        name: Return a Single Search Index by Name
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-a-single-search-index-by-name
+        name: 'Return a Single Search Index by Name'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-a-single-search-index-by-name'
         pipeline:
             -
                 $listSearchIndexes:
-                    name: synonym-mappings
+                    name: 'synonym-mappings'
     -
-        name: Return a Single Search Index by id
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-a-single-search-index-by-id
+        name: 'Return a Single Search Index by id'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-a-single-search-index-by-id'
         pipeline:
             -
                 $listSearchIndexes:
-                    id: 6524096020da840844a4c4a7
+                    id: '6524096020da840844a4c4a7'

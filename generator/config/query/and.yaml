@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $and
-link: https://www.mongodb.com/docs/manual/reference/operator/query/and/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/'
 type:
     - query
 encode: single
@@ -15,8 +15,8 @@ arguments:
         variadicMin: 1
 tests:
     -
-        name: AND Queries With Multiple Expressions Specifying the Same Field
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-field
+        name: 'AND Queries With Multiple Expressions Specifying the Same Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-field'
         pipeline:
             -
                 $match:
@@ -28,8 +28,8 @@ tests:
                             price:
                                 $exists: true
     -
-        name: AND Queries With Multiple Expressions Specifying the Same Operator
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-operator
+        name: 'AND Queries With Multiple Expressions Specifying the Same Operator'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-operator'
         pipeline:
             -
                 $match:

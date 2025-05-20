@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $asin
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/'
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -18,8 +18,8 @@ arguments:
             By default $asin returns values as a double. $asin can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/#example'
         pipeline:
             -
                 $addFields:
@@ -27,23 +27,5 @@ tests:
                         $radiansToDegrees:
                             $asin:
                                 $divide:
-                                    - $side_a
-                                    - $hypotenuse
-        schema:
-            TestCollection:
-                _id:
-                    types:
-                        -
-                            bsonType: ObjectId
-                side_a:
-                    types:
-                        -
-                            bsonType: Decimal128
-                side_b:
-                    types:
-                        -
-                            bsonType: Decimal128
-                hypotenuse:
-                    types:
-                        -
-                            bsonType: Decimal128
+                                    - '$side_a'
+                                    - '$hypotenuse'

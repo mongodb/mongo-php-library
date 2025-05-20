@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: near
-link: https://www.mongodb.com/docs/atlas/atlas-search/near/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/near/'
 type:
     - searchOperator
 encode: object
@@ -28,14 +28,14 @@ arguments:
             - searchScore
 tests:
     -
-        name: Number
-        link: https://www.mongodb.com/docs/atlas/atlas-search/near/#number-example
+        name: 'Number'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/near/#number-example'
         pipeline:
             -
                 $search:
-                    index: runtimes
+                    index: 'runtimes'
                     near:
-                        path: runtime
+                        path: 'runtime'
                         origin: 279
                         pivot: 2
             -
@@ -46,17 +46,18 @@ tests:
                     title: 1
                     runtime: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: Date
-        link: https://www.mongodb.com/docs/atlas/atlas-search/near/#date-example
+        name: 'Date'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/near/#date-example'
         pipeline:
             -
                 $search:
-                    index: releaseddate
+                    index: 'releaseddate'
                     near:
-                        path: released
-                        origin: 1915-09-13T00:00:00.000Z
+                        path: 'released'
+                        origin: !bson_utcdatetime '1915-09-13T00:00:00.000+00:00'
                         pivot: 7776000000
             -
                 $limit: 3
@@ -66,21 +67,22 @@ tests:
                     title: 1
                     released: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: GeoJSON Point
-        link: https://www.mongodb.com/docs/atlas/atlas-search/near/#geojson-point-examples
+        name: 'GeoJSON Point'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/near/#geojson-point-examples'
         pipeline:
             -
                 $search:
                     near:
                         origin:
-                            type: Point
+                            type: 'Point'
                             coordinates:
                                 - -8.61308
                                 - 41.1413
                         pivot: 1000
-                        path: address.location
+                        path: 'address.location'
             -
                 $limit: 3
             -
@@ -89,27 +91,28 @@ tests:
                     name: 1
                     address: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: Compound
-        link: https://www.mongodb.com/docs/atlas/atlas-search/near/#compound-example
+        name: 'Compound'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/near/#compound-example'
         pipeline:
             -
                 $search:
                     compound:
                         must:
                             text:
-                                query: Apartment
-                                path: property_type
+                                query: 'Apartment'
+                                path: 'property_type'
                         should:
                             near:
                                 origin:
-                                    type: Point
+                                    type: 'Point'
                                     coordinates:
                                         - 114.15027
                                         - 22.28158
                                 pivot: 1000
-                                path: address.location
+                                path: 'address.location'
             -
                 $limit: 3
             -
@@ -118,4 +121,4 @@ tests:
                     property_type: 1
                     address: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'

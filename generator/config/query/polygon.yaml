@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $polygon
-link: https://www.mongodb.com/docs/manual/reference/operator/query/polygon/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/polygon/'
 type:
     - geometry
 encode: single

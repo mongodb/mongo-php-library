@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $dateAdd
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/'
 type:
     - resolvesToDate
 encode: object
@@ -35,42 +35,34 @@ arguments:
             The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
 tests:
     -
-        name: Add a Future Date
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#add-a-future-date
+        name: 'Add a Future Date'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#add-a-future-date'
         pipeline:
             -
                 $project:
                     expectedDeliveryDate:
                         $dateAdd:
-                            startDate: $purchaseDate
-                            unit: day
+                            startDate: '$purchaseDate'
+                            unit: 'day'
                             amount: 3
             -
+                # Example uses the short form, the builder always generates the verbose form
+                # $merge: 'shipping'
                 $merge:
-                    into: shipping
-        schema:
-            shipping:
-                custId:
-                    types:
-                        -
-                            bsonType: Number
-                purchaseDate:
-                    types:
-                        -
-                            bsonType: Date
+                    into: 'shipping'
     -
-        name: Filter on a Date Range
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#filter-on-a-date-range
+        name: 'Filter on a Date Range'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#filter-on-a-date-range'
         pipeline:
             -
                 $match:
                     $expr:
                         $gt:
-                            - $deliveryDate
+                            - '$deliveryDate'
                             -
                                 $dateAdd:
-                                    startDate: $purchaseDate
-                                    unit: day
+                                    startDate: '$purchaseDate'
+                                    unit: 'day'
                                     amount: 5
             -
                 $project:
@@ -79,24 +71,14 @@ tests:
                     purchased:
                         $dateToString:
                             format: '%Y-%m-%d'
-                            date: $purchaseDate
+                            date: '$purchaseDate'
                     delivery:
                         $dateToString:
                             format: '%Y-%m-%d'
-                            date: $deliveryDate
-        schema:
-            shipping:
-                custId:
-                    types:
-                        -
-                            bsonType: Number
-                purchaseDate:
-                    types:
-                        -
-                            bsonType: Date
+                            date: '$deliveryDate'
     -
-        name: Adjust for Daylight Savings Time
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#adjust-for-daylight-savings-time
+        name: 'Adjust for Daylight Savings Time'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#adjust-for-daylight-savings-time'
         pipeline:
             -
                 $project:
@@ -105,61 +87,47 @@ tests:
                     start:
                         $dateToString:
                             format: '%Y-%m-%d %H:%M'
-                            date: $login
+                            date: '$login'
                     days:
                         $dateToString:
                             format: '%Y-%m-%d %H:%M'
                             date:
                                 $dateAdd:
-                                    startDate: $login
-                                    unit: day
+                                    startDate: '$login'
+                                    unit: 'day'
                                     amount: 1
-                                    timezone: $location
+                                    timezone: '$location'
                     hours:
                         $dateToString:
                             format: '%Y-%m-%d %H:%M'
                             date:
                                 $dateAdd:
-                                    startDate: $login
-                                    unit: hour
+                                    startDate: '$login'
+                                    unit: 'hour'
                                     amount: 24
-                                    timezone: $location
+                                    timezone: '$location'
                     startTZInfo:
                         $dateToString:
                             format: '%Y-%m-%d %H:%M'
-                            date: $login
-                            timezone: $location
+                            date: '$login'
+                            timezone: '$location'
                     daysTZInfo:
                         $dateToString:
                             format: '%Y-%m-%d %H:%M'
                             date:
                                 $dateAdd:
-                                    startDate: $login
-                                    unit: day
+                                    startDate: '$login'
+                                    unit: 'day'
                                     amount: 1
-                                    timezone: $location
-                            timezone: $location
+                                    timezone: '$location'
+                            timezone: '$location'
                     hoursTZInfo:
                         $dateToString:
                             format: '%Y-%m-%d %H:%M'
                             date:
                                 $dateAdd:
-                                    startDate: $login
-                                    unit: hour
+                                    startDate: '$login'
+                                    unit: 'hour'
                                     amount: 24
-                                    timezone: $location
-                            timezone: $location
-        schema:
-            billing:
-                location:
-                    types:
-                        -
-                            bsonType: String
-                login:
-                    types:
-                        -
-                            bsonType: Date
-                logout:
-                    types:
-                        -
-                            bsonType: Date
+                                    timezone: '$location'
+                            timezone: '$location'

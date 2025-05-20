@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $last
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/'
 type:
     - resolvesToAny
 encode: single
@@ -13,9 +13,9 @@ arguments:
             - resolvesToArray
 tests:
     -
-        name: Use in $addFields Stage
+        name: 'Use in $addFields Stage'
         pipeline:
             -
                 $addFields:
                     lastItem:
-                        $last: $items
+                        $last: '$items'

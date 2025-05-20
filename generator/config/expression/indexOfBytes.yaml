@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $indexOfBytes
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfBytes/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfBytes/'
 type:
     - resolvesToInt
 encode: array
@@ -39,12 +39,12 @@ arguments:
             If unspecified, the ending index position for the search is the end of the string.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfBytes/#examples
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfBytes/#examples'
         pipeline:
             -
                 $project:
                     byteLocation:
                         $indexOfBytes:
-                            - $item
-                            - foo
+                            - '$item'
+                            - 'foo'

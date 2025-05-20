@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $firstN
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/'
 type:
     - accumulator
     - window
@@ -24,122 +24,99 @@ arguments:
             A positive integral expression that is either a constant or depends on the _id value for $group.
 tests:
     -
-        name: Find the First Three Player Scores for a Single Game
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#find-the-first-three-player-scores-for-a-single-game
+        name: 'Null and Missing Values'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#null-and-missing-values'
+        pipeline:
+            -
+                $documents:
+                    -
+                        playerId: 'PlayerA'
+                        gameId: 'G1'
+                        score: 1
+                    -
+                        playerId: 'PlayerB'
+                        gameId: 'G1'
+                        score: 2
+                    -
+                        playerId: 'PlayerC'
+                        gameId: 'G1'
+                        score: 3
+                    -
+                        playerId: 'PlayerD'
+                        gameId: 'G1'
+                    -
+                        playerId: 'PlayerE'
+                        gameId: 'G1'
+                        score: ~
+            -
+                $group:
+                    _id: '$gameId'
+                    firstFiveScores:
+                        $firstN:
+                            input: '$score'
+                            n: 5
+    -
+        name: 'Find the First Three Player Scores for a Single Game'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#find-the-first-three-player-scores-for-a-single-game'
         pipeline:
             -
                 $match:
-                    gameId: G1
+                    gameId: 'G1'
             -
                 $group:
-                    _id: $gameId
+                    _id: '$gameId'
                     firstThreeScores:
                         $firstN:
                             input:
-                                - $playerId
-                                - $score
-                            'n': 3
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number
+                                - '$playerId'
+                                - '$score'
+                            n: 3
     -
-        name: Finding the First Three Player Scores Across Multiple Games
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#finding-the-first-three-player-scores-across-multiple-games
+        name: 'Finding the First Three Player Scores Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#finding-the-first-three-player-scores-across-multiple-games'
         pipeline:
             -
                 $group:
-                    _id: $gameId
+                    _id: '$gameId'
                     playerId:
                         $firstN:
                             input:
-                                - $playerId
-                                - $score
-                            'n': 3
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number
+                                - '$playerId'
+                                - '$score'
+                            n: 3
     -
-        name: Using $sort With $firstN
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#using--sort-with--firstn
+        name: 'Using $sort With $firstN'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#using--sort-with--firstn'
         pipeline:
             -
                 $sort:
                     score: -1
             -
                 $group:
-                    _id: $gameId
+                    _id: '$gameId'
                     playerId:
                         $firstN:
                             input:
-                                - $playerId
-                                - $score
-                            'n': 3
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number
+                                - '$playerId'
+                                - '$score'
+                            n: 3
     -
-        name: Computing n Based on the Group Key for $group
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#computing-n-based-on-the-group-key-for--group
+        name: 'Computing n Based on the Group Key for $group'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#computing-n-based-on-the-group-key-for--group'
         pipeline:
             -
                 $group:
                     _id:
-                        gameId: $gameId
+                        gameId: '$gameId'
                     gamescores:
                         $firstN:
-                            input: $score
-                            'n':
+                            input: '$score'
+                            n:
                                 $cond:
                                     if:
                                         $eq:
-                                            - $gameId
-                                            - G2
+                                            - '$gameId'
+                                            - 'G2'
                                     then: 1
                                     else: 3
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number
+

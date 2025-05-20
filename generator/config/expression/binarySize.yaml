@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $binarySize
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/'
 type:
     - resolvesToInt
 encode: single
@@ -15,25 +15,11 @@ arguments:
             - resolvesToNull
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/#example'
         pipeline:
             -
                 $project:
-                    name: $name
+                    name: '$name'
                     imageSize:
-                        $binarySize: $binary
-        schema:
-            images:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                name:
-                    types:
-                        -
-                            bsonType: String
-                binary:
-                    types:
-                        -
-                            bsonType: Binary
+                        $binarySize: '$binary'

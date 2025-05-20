@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $rand
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/'
 type:
     - resolvesToDouble
 encode: object
@@ -8,8 +8,8 @@ description: |
     Returns a random float between 0 and 1
 tests:
     -
-        name: Generate Random Data Points
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#generate-random-data-points
+        name: 'Generate Random Data Points'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#generate-random-data-points'
         pipeline:
             -
                 $set:
@@ -21,13 +21,15 @@ tests:
             -
                 $set:
                     amount:
-                        $floor: $amount
+                        $floor: '$amount'
             -
+                # Example uses the short form, the builder always generates the verbose form
+                # $merge: 'donors'
                 $merge:
-                    into: donors
+                    into: 'donors'
     -
-        name: Select Random Items From a Collection
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#select-random-items-from-a-collection
+        name: 'Select Random Items From a Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#select-random-items-from-a-collection'
         pipeline:
             -
                 $match:

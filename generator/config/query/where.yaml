@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $where
-link: https://www.mongodb.com/docs/manual/reference/operator/query/where/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/where/'
 type:
     - query
 encode: single
@@ -13,8 +13,8 @@ arguments:
             - javascript
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/where/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/where/#example'
         pipeline:
             -
                 $match:
@@ -32,6 +32,5 @@ tests:
                                     function(name) {
                                         return hex_md5(name) == "9b53e667f30cd329dca1ec9e6a83e994";
                                     }
-                            args:
-                                - $name
-                            lang: js
+                            args: ['$name']
+                            lang: 'js'

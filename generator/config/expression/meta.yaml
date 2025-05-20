@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $meta
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/'
 type:
     - resolvesToAny
 encode: single
@@ -13,27 +13,27 @@ arguments:
             - string
 tests:
     -
-        name: textScore
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---textscore-
+        name: 'textScore'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---textscore-'
         pipeline:
             -
                 $match:
                     $text:
-                        $search: cake
+                        $search: 'cake'
             -
                 $group:
                     _id:
-                        $meta: textScore
+                        $meta: 'textScore'
                     count:
                         $sum: 1
     -
-        name: indexKey
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---indexkey-
+        name: 'indexKey'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---indexkey-'
         pipeline:
             -
                 $match:
-                    type: apparel
+                    type: 'apparel'
             -
                 $addFields:
                     idxKey:
-                        $meta: indexKey
+                        $meta: 'indexKey'

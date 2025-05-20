@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $linearFill
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/'
 type:
     - window
 encode: single
@@ -15,8 +15,8 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: Fill Missing Values with Linear Interpolation
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#fill-missing-values-with-linear-interpolation
+        name: 'Fill Missing Values with Linear Interpolation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#fill-missing-values-with-linear-interpolation'
         pipeline:
             -
                 $setWindowFields:
@@ -24,20 +24,10 @@ tests:
                         time: 1
                     output:
                         price:
-                            $linearFill: $price
-        schema:
-            stock:
-                time:
-                    types:
-                        -
-                            bsonType: Date
-                price:
-                    types:
-                        -
-                            bsonType: Number
+                            $linearFill: '$price'
     -
-        name: Use Multiple Fill Methods in a Single Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#use-multiple-fill-methods-in-a-single-stage
+        name: 'Use Multiple Fill Methods in a Single Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#use-multiple-fill-methods-in-a-single-stage'
         pipeline:
             -
                 $setWindowFields:
@@ -45,16 +35,6 @@ tests:
                         time: 1
                     output:
                         linearFillPrice:
-                            $linearFill: $price
+                            $linearFill: '$price'
                         locfPrice:
-                            $locf: $price
-        schema:
-            stock:
-                time:
-                    types:
-                        -
-                            bsonType: Date
-                price:
-                    types:
-                        -
-                            bsonType: Number
+                            $locf: '$price'

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: phrase
-link: https://www.mongodb.com/docs/atlas/atlas-search/phrase/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/phrase/'
 type:
     - searchOperator
 encode: object
@@ -15,7 +15,7 @@ arguments:
         name: query
         type:
             - string
-            - array
+            - array # of string
     -
         name: slop
         optional: true
@@ -33,14 +33,14 @@ arguments:
             - searchScore
 tests:
     -
-        name: Single Phrase
-        link: https://www.mongodb.com/docs/atlas/atlas-search/phrase/#single-phrase-example
+        name: 'Single Phrase'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/phrase/#single-phrase-example'
         pipeline:
             -
                 $search:
                     phrase:
-                        path: title
-                        query: new york
+                        path: 'title'
+                        query: 'new york'
             -
                 $limit: 10
             -
@@ -48,18 +48,19 @@ tests:
                     _id: 0
                     title: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: Multiple Phrase
-        link: https://www.mongodb.com/docs/atlas/atlas-search/phrase/#multiple-phrases-example
+        name: 'Multiple Phrase'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/phrase/#multiple-phrases-example'
         pipeline:
             -
                 $search:
                     phrase:
-                        path: title
+                        path: 'title'
                         query:
-                            - the man
-                            - the moon
+                            - 'the man'
+                            - 'the moon'
             -
                 $limit: 10
             -
@@ -67,34 +68,36 @@ tests:
                     _id: 0
                     title: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: Phrase Slop
-        link: https://www.mongodb.com/docs/atlas/atlas-search/phrase/#slop-example
+        name: 'Phrase Slop'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/phrase/#slop-example'
         pipeline:
             -
                 $search:
                     phrase:
-                        path: title
-                        query: men women
+                        path: 'title'
+                        query: 'men women'
                         slop: 5
             -
                 $project:
                     _id: 0
                     title: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: Phrase Synonyms
-        link: https://www.mongodb.com/docs/atlas/atlas-search/phrase/#synonyms-example
+        name: 'Phrase Synonyms'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/phrase/#synonyms-example'
         pipeline:
             -
                 $search:
                     phrase:
-                        path: plot
-                        query: automobile race
+                        path: 'plot'
+                        query: 'automobile race'
                         slop: 5
-                        synonyms: my_synonyms
+                        synonyms: 'my_synonyms'
             -
                 $limit: 5
             -
@@ -103,4 +106,4 @@ tests:
                     plot: 1
                     title: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'

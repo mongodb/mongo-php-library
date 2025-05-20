@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $week
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/'
 type:
     - resolvesToInt
 encode: object
@@ -24,11 +24,13 @@ arguments:
             The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/#example'
         pipeline:
             -
                 $project:
                     week:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $week: '$date'
                         $week:
-                            date: $date
+                            date: '$date'

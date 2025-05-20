@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toObjectId
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/'
 type:
     - resolvesToObjectId
 encode: single
@@ -14,13 +14,13 @@ arguments:
             - expression
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/#example'
         pipeline:
             -
                 $addFields:
                     convertedId:
-                        $toObjectId: $_id
+                        $toObjectId: '$_id'
             -
                 $sort:
                     convertedId: -1

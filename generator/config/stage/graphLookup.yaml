@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $graphLookup
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/'
 type:
     - stage
 encode: object
@@ -62,47 +62,47 @@ arguments:
             A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
 tests:
     -
-        name: Within a Single Collection
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#within-a-single-collection
+        name: 'Within a Single Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#within-a-single-collection'
         pipeline:
             -
                 $graphLookup:
-                    from: employees
-                    startWith: $reportsTo
-                    connectFromField: reportsTo
-                    connectToField: name
-                    as: reportingHierarchy
+                    from: 'employees'
+                    startWith: '$reportsTo'
+                    connectFromField: 'reportsTo'
+                    connectToField: 'name'
+                    as: 'reportingHierarchy'
     -
-        name: Across Multiple Collections
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#across-multiple-collections
+        name: 'Across Multiple Collections'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#across-multiple-collections'
         pipeline:
             -
                 $graphLookup:
-                    from: airports
-                    startWith: $nearestAirport
-                    connectFromField: connects
-                    connectToField: airport
+                    from: 'airports'
+                    startWith: '$nearestAirport'
+                    connectFromField: 'connects'
+                    connectToField: 'airport'
                     maxDepth: 2
-                    depthField: numConnections
-                    as: destinations
+                    depthField: 'numConnections'
+                    as: 'destinations'
     -
-        name: With a Query Filter
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#with-a-query-filter
+        name: 'With a Query Filter'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#with-a-query-filter'
         pipeline:
             -
                 $match:
-                    name: Tanya Jordan
+                    name: 'Tanya Jordan'
             -
                 $graphLookup:
-                    from: people
-                    startWith: $friends
-                    connectFromField: friends
-                    connectToField: name
-                    as: golfers
+                    from: 'people'
+                    startWith: '$friends'
+                    connectFromField: 'friends'
+                    connectToField: 'name'
+                    as: 'golfers'
                     restrictSearchWithMatch:
-                        hobbies: golf
+                        hobbies: 'golf'
             -
                 $project:
                     name: 1
                     friends: 1
-                    connections who play golf: $golfers.name
+                    connections who play golf: '$golfers.name'

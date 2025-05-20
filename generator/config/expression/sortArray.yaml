@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $sortArray
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/'
 type:
     - resolvesToArray
 encode: object
@@ -25,45 +25,45 @@ arguments:
             The document specifies a sort ordering.
 tests:
     -
-        name: Sort on a Field
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-a-field
+        name: 'Sort on a Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-a-field'
         pipeline:
             -
                 $project:
                     _id: 0
                     result:
                         $sortArray:
-                            input: $team
+                            input: '$team'
                             sortBy:
                                 name: 1
     -
-        name: Sort on a Subfield
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-a-subfield
+        name: 'Sort on a Subfield'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-a-subfield'
         pipeline:
             -
                 $project:
                     _id: 0
                     result:
                         $sortArray:
-                            input: $team
+                            input: '$team'
                             sortBy:
                                 address.city: -1
     -
-        name: Sort on Multiple Fields
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-multiple-fields
+        name: 'Sort on Multiple Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-multiple-fields'
         pipeline:
             -
                 $project:
                     _id: 0
                     result:
                         $sortArray:
-                            input: $team
+                            input: '$team'
                             sortBy:
                                 age: -1
                                 name: 1
     -
-        name: Sort an Array of Integers
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-an-array-of-integers
+        name: 'Sort an Array of Integers'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-an-array-of-integers'
         pipeline:
             -
                 $project:
@@ -79,8 +79,8 @@ tests:
                                 - 5
                             sortBy: 1
     -
-        name: Sort on Mixed Type Fields
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-mixed-type-fields
+        name: 'Sort on Mixed Type Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-mixed-type-fields'
         pipeline:
             -
                 $project:
@@ -91,19 +91,18 @@ tests:
                                 - 20
                                 - 4
                                 -
-                                    a: Free
+                                    a: 'Free'
                                 - 6
                                 - 21
                                 - 5
-                                - Gratis
+                                - 'Gratis'
                                 -
-                                    a: null
+                                    a: ~
                                 -
                                     a:
                                         sale: true
                                         price: 19
+                                - !bson_decimal128 '10.23'
                                 -
-                                    bytes: !!binary AQAAAAAAAAAAAAAAAABAMA==
-                                -
-                                    a: On sale
+                                    a: 'On sale'
                             sortBy: 1

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $atan2
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/'
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -22,31 +22,13 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/#example'
         pipeline:
             -
                 $addFields:
                     angle_a:
                         $radiansToDegrees:
                             $atan2:
-                                - $side_b
-                                - $side_a
-        schema:
-            TestCollection:
-                _id:
-                    types:
-                        -
-                            bsonType: ObjectId
-                side_a:
-                    types:
-                        -
-                            bsonType: Decimal128
-                side_b:
-                    types:
-                        -
-                            bsonType: Decimal128
-                hypotenuse:
-                    types:
-                        -
-                            bsonType: Decimal128
+                                - '$side_b'
+                                - '$side_a'

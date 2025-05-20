@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $first
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/'
 type:
     - accumulator
     - window
@@ -15,8 +15,8 @@ arguments:
             - expression
 tests:
     -
-        name: Use in $group Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--group-stage
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--group-stage'
         pipeline:
             -
                 $sort:
@@ -24,70 +24,22 @@ tests:
                     date: 1
             -
                 $group:
-                    _id: $item
+                    _id: '$item'
                     firstSale:
-                        $first: $date
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                item:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
-                date:
-                    types:
-                        -
-                            bsonType: Date
+                        $first: '$date'
     -
-        name: Use in $setWindowFields Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--setwindowfields-stage
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--setwindowfields-stage'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $state
+                    partitionBy: '$state'
                     sortBy:
                         orderDate: 1
                     output:
                         firstOrderTypeForState:
-                            $first: $type
+                            $first: '$type'
                             window:
                                 documents:
-                                    - unbounded
-                                    - current
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
+                                    - 'unbounded'
+                                    - 'current'

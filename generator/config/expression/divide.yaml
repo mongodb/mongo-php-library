@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $divide
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/'
 type:
     - resolvesToDouble
 encode: array
@@ -19,31 +19,13 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/#examples
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/#example'
         pipeline:
             -
                 $project:
                     city: 1
                     workdays:
                         $divide:
-                            - $hours
+                            - '$hours'
                             - 8
-        schema:
-            conferencePlanning:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                city:
-                    types:
-                        -
-                            bsonType: String
-                hours:
-                    types:
-                        -
-                            bsonType: Number
-                tasks:
-                    types:
-                        -
-                            bsonType: Number

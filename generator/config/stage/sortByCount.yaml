@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $sortByCount
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/'
 type:
     - stage
 encode: single
@@ -13,11 +13,13 @@ arguments:
             - expression
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/#example'
         pipeline:
             -
+                # The builder uses the verbose form of the $unwind operator
+                # $unwind: '$tags'
                 $unwind:
-                    path: $tags
+                    path: '$tags'
             -
-                $sortByCount: $tags
+                $sortByCount: '$tags'

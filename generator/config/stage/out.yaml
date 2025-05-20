@@ -1,14 +1,13 @@
 # $schema: ../schema.json
 name: $out
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/'
 type:
     - stage
 encode: single
 description: |
     Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the last stage in the pipeline.
 arguments:
-    -
-        name: coll
+    -   name: coll
         type:
             - string
             - outCollection
@@ -16,26 +15,26 @@ arguments:
             Target database name to write documents from $out to.
 tests:
     -
-        name: Output to Same Database
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-same-database
+        name: 'Output to Same Database'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-same-database'
         pipeline:
             -
                 $group:
-                    _id: $author
+                    _id: '$author'
                     books:
-                        $push: $title
+                        $push: '$title'
             -
-                $out: authors
+                $out: 'authors'
     -
-        name: Output to a Different Database
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-a-different-database
+        name: 'Output to a Different Database'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-a-different-database'
         pipeline:
             -
                 $group:
-                    _id: $author
+                    _id: '$author'
                     books:
-                        $push: $title
+                        $push: '$title'
             -
                 $out:
-                    db: reporting
-                    coll: authors
+                    db: 'reporting'
+                    coll: 'authors'

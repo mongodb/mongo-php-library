@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bottomN
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/'
 type:
     - accumulator
     - window
@@ -30,98 +30,56 @@ arguments:
             Represents the output for each element in the group and can be any expression.
 tests:
     -
-        name: Find the Three Lowest Scores
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#find-the-three-lowest-scores
+        name: 'Find the Three Lowest Scores'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#find-the-three-lowest-scores'
         pipeline:
             -
                 $match:
-                    gameId: G1
+                    gameId: 'G1'
             -
                 $group:
-                    _id: $gameId
+                    _id: '$gameId'
                     playerId:
                         $bottomN:
                             output:
-                                - $playerId
-                                - $score
+                                - '$playerId'
+                                - '$score'
                             sortBy:
                                 score: -1
-                            'n': 3
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number
+                            n: 3
     -
-        name: Finding the Three Lowest Score Documents Across Multiple Games
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#finding-the-three-lowest-score-documents-across-multiple-games
+        name: 'Finding the Three Lowest Score Documents Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#finding-the-three-lowest-score-documents-across-multiple-games'
         pipeline:
             -
                 $group:
-                    _id: $gameId
+                    _id: '$gameId'
                     playerId:
                         $bottomN:
                             output:
-                                - $playerId
-                                - $score
+                                - '$playerId'
+                                - '$score'
                             sortBy:
                                 score: -1
-                            'n': 3
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number
+                            n: 3
     -
-        name: Computing n Based on the Group Key for $group
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#computing-n-based-on-the-group-key-for--group
+        name: 'Computing n Based on the Group Key for $group'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#computing-n-based-on-the-group-key-for--group'
         pipeline:
             -
                 $group:
                     _id:
-                        gameId: $gameId
+                        gameId: '$gameId'
                     gamescores:
                         $bottomN:
-                            output: $score
-                            'n':
+                            output: '$score'
+                            n:
                                 $cond:
                                     if:
                                         $eq:
-                                            - $gameId
-                                            - G2
+                                            - '$gameId'
+                                            - 'G2'
                                     then: 1
                                     else: 3
                             sortBy:
                                 score: -1
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number

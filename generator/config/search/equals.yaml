@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: equals
-link: https://www.mongodb.com/docs/atlas/atlas-search/equals/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/equals/'
 type:
     - searchOperator
 encode: object
@@ -28,75 +28,77 @@ arguments:
             - searchScore
 tests:
     -
-        name: Boolean
-        link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#boolean-examples
+        name: 'Boolean'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/equals/#boolean-examples'
         pipeline:
             -
                 $search:
                     equals:
-                        path: verified_user
+                        path: 'verified_user'
                         value: true
             -
                 $project:
                     name: 1
                     _id: 0
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: ObjectId
-        link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#objectid-example
+        name: 'ObjectId'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/equals/#objectid-example'
         pipeline:
             -
                 $search:
                     equals:
-                        path: teammates
-                        value:
-                            buffer: !!binary WpQnZIsL7r62lYmh
+                        path: 'teammates'
+                        value: !bson_objectId '5a9427648b0beebeb69589a1'
+
     -
-        name: Date
-        link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#date-example
+        name: 'Date'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/equals/#date-example'
         pipeline:
             -
                 $search:
                     equals:
-                        path: account_created
-                        value: 2022-05-04T05:01:08.000Z
+                        path: 'account_created'
+                        value: !bson_utcdatetime '2022-05-04T05:01:08.000+00:00'
+
     -
-        name: Number
-        link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#number-example
+        name: 'Number'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/equals/#number-example'
         pipeline:
             -
                 $search:
                     equals:
-                        path: employee_number
+                        path: 'employee_number'
                         value: 259
+
     -
-        name: String
-        link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#string-example
+        name: 'String'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/equals/#string-example'
         pipeline:
             -
                 $search:
                     equals:
-                        path: name
-                        value: jim hall
+                        path: 'name'
+                        value: 'jim hall'
+
     -
-        name: UUID
-        link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#uuid-example
+        name: 'UUID'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/equals/#uuid-example'
         pipeline:
             -
                 $search:
                     equals:
-                        path: uuid
-                        value:
-                            sub_type: 4
-                            buffer: !!binary +sMiYLURTGmEhaK+W33ang==
-                            position: 16
+                        path: 'uuid'
+                        value: !bson_uuid 'fac32260-b511-4c69-8485-a2be5b7dda9e'
+
     -
         name: 'Null'
-        link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#null-example
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/equals/#null-example'
         pipeline:
             -
                 $search:
                     equals:
-                        path: job_title
-                        value: null
+                        path: 'job_title'
+                        value: ~

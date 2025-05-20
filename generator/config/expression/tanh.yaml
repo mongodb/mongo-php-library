@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $tanh
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/'
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -17,11 +17,11 @@ arguments:
             By default $tanh returns values as a double. $tanh can also return values as a 128-bit decimal if the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/#example'
         pipeline:
             -
                 $addFields:
                     tanh_output:
                         $tanh:
-                            $degreesToRadians: $angle
+                            $degreesToRadians: '$angle'

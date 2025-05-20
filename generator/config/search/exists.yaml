@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: exists
-link: https://www.mongodb.com/docs/atlas/atlas-search/exists/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/exists/'
 type:
     - searchOperator
 encode: object
@@ -18,24 +18,26 @@ arguments:
             - searchScore
 tests:
     -
-        name: Basic
-        link: https://www.mongodb.com/docs/atlas/atlas-search/exists/#basic-example
+        name: 'Basic'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/exists/#basic-example'
         pipeline:
             -
                 $search:
                     exists:
-                        path: type
+                        path: 'type'
+
     -
-        name: Embedded
-        link: https://www.mongodb.com/docs/atlas/atlas-search/exists/#embedded-example
+        name: 'Embedded'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/exists/#embedded-example'
         pipeline:
             -
                 $search:
                     exists:
-                        path: quantities.lemons
+                        path: 'quantities.lemons'
+
     -
-        name: Compound
-        link: https://www.mongodb.com/docs/atlas/atlas-search/exists/#compound-example
+        name: 'Compound'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/exists/#compound-example'
         pipeline:
             -
                 $search:
@@ -43,12 +45,12 @@ tests:
                         must:
                             -
                                 exists:
-                                    path: type
+                                    path: 'type'
                             -
                                 text:
-                                    query: apple
-                                    path: type
+                                    query: 'apple'
+                                    path: 'type'
                         should:
                             text:
-                                query: fuji
-                                path: description
+                                query: 'fuji'
+                                path: 'description'

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $densify
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/'
 type:
     - stage
 encode: object
@@ -10,7 +10,7 @@ arguments:
     -
         name: field
         type:
-            - string
+            - string # field name
         description: |
             The field to densify. The values of the specified field must either be all numeric values or all dates.
             Documents that do not contain the specified field continue through the pipeline unmodified.
@@ -18,7 +18,7 @@ arguments:
     -
         name: partitionByFields
         type:
-            - array
+            - array # of string
         optional: true
         description: |
             The field(s) that will be used as the partition keys.
@@ -30,27 +30,27 @@ arguments:
             Specification for range based densification.
 tests:
     -
-        name: Densify Time Series Data
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densify-time-series-data
+        name: 'Densify Time Series Data'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densify-time-series-data'
         pipeline:
             -
                 $densify:
-                    field: timestamp
+                    field: 'timestamp'
                     range:
                         step: 1
-                        unit: hour
+                        unit: 'hour'
                         bounds:
-                            - 2021-05-18T00:00:00.000Z
-                            - 2021-05-18T08:00:00.000Z
+                            - !bson_utcdatetime '2021-05-18T00:00:00.000Z'
+                            - !bson_utcdatetime '2021-05-18T08:00:00.000Z'
     -
-        name: Densifiction with Partitions
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densifiction-with-partitions
+        name: 'Densifiction with Partitions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densifiction-with-partitions'
         pipeline:
             -
                 $densify:
-                    field: altitude
+                    field: 'altitude'
                     partitionByFields:
-                        - variety
+                        - 'variety'
                     range:
-                        bounds: full
+                        bounds: 'full'
                         step: 200

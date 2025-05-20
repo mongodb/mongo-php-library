@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $geoIntersects
-link: https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/'
 type:
     - fieldQuery
 encode: object
@@ -14,60 +14,40 @@ arguments:
             - geometry
 tests:
     -
-        name: Intersects a Polygon
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#intersects-a-polygon
+        name: 'Intersects a Polygon'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#intersects-a-polygon'
         pipeline:
             -
                 $match:
                     loc:
                         $geoIntersects:
                             $geometry:
-                                type: Polygon
+                                type: 'Polygon'
                                 coordinates:
                                     -
-                                        -
-                                            - 0
-                                            - 0
-                                        -
-                                            - 3
-                                            - 6
-                                        -
-                                            - 6
-                                            - 1
-                                        -
-                                            - 0
-                                            - 0
+                                        - [ 0, 0 ]
+                                        - [ 3, 6 ]
+                                        - [ 6, 1 ]
+                                        - [ 0, 0 ]
     -
-        name: Intersects a Big Polygon
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#intersects-a--big--polygon
+        name: 'Intersects a Big Polygon'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#intersects-a--big--polygon'
         pipeline:
             -
                 $match:
                     loc:
                         $geoIntersects:
                             $geometry:
-                                type: Polygon
+                                type: 'Polygon'
                                 coordinates:
                                     -
-                                        -
-                                            - -100
-                                            - 60
-                                        -
-                                            - -100
-                                            - 0
-                                        -
-                                            - -100
-                                            - -60
-                                        -
-                                            - 100
-                                            - -60
-                                        -
-                                            - 100
-                                            - 60
-                                        -
-                                            - -100
-                                            - 60
+                                        - [ -100, 60 ]
+                                        - [ -100, 0 ]
+                                        - [ -100, -60 ]
+                                        - [ 100, -60 ]
+                                        - [ 100, 60 ]
+                                        - [ -100, 60 ]
                                 crs:
-                                    type: name
+                                    type: 'name'
                                     properties:
-                                        name: urn:x-mongodb:crs:strictwinding:EPSG:4326
+                                        name: 'urn:x-mongodb:crs:strictwinding:EPSG:4326'

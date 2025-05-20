@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $integral
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/'
 type:
     - window
 encode: object
@@ -23,35 +23,21 @@ arguments:
             If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/#example'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $powerMeterID
+                    partitionBy: '$powerMeterID'
                     sortBy:
                         timeStamp: 1
                     output:
                         powerMeterKilowattHours:
                             $integral:
-                                input: $kilowatts
-                                unit: hour
+                                input: '$kilowatts'
+                                unit: 'hour'
                             window:
                                 range:
-                                    - unbounded
-                                    - current
-                                unit: hour
-        schema:
-            powerConsumption:
-                powerMeterID:
-                    types:
-                        -
-                            bsonType: String
-                timeStamp:
-                    types:
-                        -
-                            bsonType: Date
-                kilowatts:
-                    types:
-                        -
-                            bsonType: Number
+                                    - 'unbounded'
+                                    - 'current'
+                                unit: 'hour'

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toLong
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/'
 type:
     - resolvesToLong
 encode: single
@@ -14,13 +14,13 @@ arguments:
             - expression
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/#example'
         pipeline:
             -
                 $addFields:
                     convertedQty:
-                        $toLong: $qty
+                        $toLong: '$qty'
             -
                 $sort:
                     convertedQty: -1

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $add
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/'
 type:
     - resolvesToInt
     - resolvesToLong
@@ -21,68 +21,24 @@ arguments:
             The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
 tests:
     -
-        name: Add Numbers
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/#add-numbers
+        name: 'Add Numbers'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/#add-numbers'
         pipeline:
             -
                 $project:
                     item: 1
                     total:
                         $add:
-                            - $price
-                            - $fee
-        schema:
-            TestCollection:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                item:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                fee:
-                    types:
-                        -
-                            bsonType: Number
-                date:
-                    types:
-                        -
-                            bsonType: Date
+                            - '$price'
+                            - '$fee'
     -
-        name: Perform Addition on a Date
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/#perform-addition-on-a-date
+        name: 'Perform Addition on a Date'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/#perform-addition-on-a-date'
         pipeline:
             -
                 $project:
                     item: 1
                     billing_date:
                         $add:
-                            - $date
+                            - '$date'
                             - 259200000
-        schema:
-            TestCollection:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                item:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                fee:
-                    types:
-                        -
-                            bsonType: Number
-                date:
-                    types:
-                        -
-                            bsonType: Date

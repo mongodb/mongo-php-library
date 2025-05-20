@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $ne
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/'
 type:
     - resolvesToBool
 encode: array
@@ -17,8 +17,8 @@ arguments:
             - expression
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/#example'
         pipeline:
             -
                 $project:
@@ -26,6 +26,6 @@ tests:
                     qty: 1
                     qtyNe250:
                         $ne:
-                            - $qty
+                            - '$qty'
                             - 250
                     _id: 0

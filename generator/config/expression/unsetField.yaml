@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $unsetField
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/'
 type:
     - resolvesToObject
 encode: object
@@ -22,36 +22,38 @@ arguments:
             Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
 tests:
     -
-        name: Remove Fields that Contain Periods
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-contain-periods--.-
+        name: 'Remove Fields that Contain Periods'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-contain-periods--.-'
         pipeline:
             -
                 $replaceWith:
                     $unsetField:
-                        field: price.usd
-                        input: $$ROOT
+                        field: 'price.usd'
+                        input: '$$ROOT'
     -
-        name: Remove Fields that Start with a Dollar Sign
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-start-with-a-dollar-sign----
+        name: 'Remove Fields that Start with a Dollar Sign'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-fields-that-start-with-a-dollar-sign----'
         pipeline:
             -
                 $replaceWith:
                     $unsetField:
                         field:
-                            $literal: $price
-                        input: $$ROOT
+                            $literal: '$price'
+                        input: '$$ROOT'
     -
-        name: Remove A Subfield
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-a-subfield
+        name: 'Remove A Subfield'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/#remove-a-subfield'
         pipeline:
             -
                 $replaceWith:
                     $setField:
-                        field: price
-                        input: $$ROOT
+                        field: 'price'
+                        input: '$$ROOT'
                         value:
                             $unsetField:
-                                field: euro
+                                field: 'euro'
                                 input:
+                                    # Example uses the short form, the builder always generates the verbose form
+                                    # $getField: 'price'
                                     $getField:
-                                        field: price
+                                        field: 'price'

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $anyElementTrue
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/'
 type:
     - resolvesToBool
 encode: array
@@ -13,41 +13,13 @@ arguments:
             - resolvesToArray
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/#example'
         pipeline:
             -
                 $project:
                     responses: 1
                     isAnyTrue:
                         $anyElementTrue:
-                            - $responses
+                            - '$responses'
                     _id: 0
-        schema:
-            survey:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                responses:
-                    types:
-                        -
-                            bsonType: Array
-                            types:
-                                -
-                                    bsonType: Boolean
-                                -
-                                    bsonType: Array
-                                    types:
-                                        -
-                                            bsonType: Number
-                                        -
-                                            bsonType: Boolean
-                                -
-                                    bsonType: Number
-                                -
-                                    bsonType: String
-                                -
-                                    bsonType: 'Null'
-                                -
-                                    bsonType: Undefined

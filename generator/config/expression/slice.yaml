@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $slice
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/'
 type:
     - resolvesToArray
 encode: array
@@ -23,7 +23,7 @@ arguments:
             If positive, $slice determines the starting position from the start of the array. If position is greater than the number of elements, the $slice returns an empty array.
             If negative, $slice determines the starting position from the end of the array. If the absolute value of the <position> is greater than the number of elements, the starting position is the start of the array.
     -
-        name: 'n'
+        name: "n"
         type:
             - resolvesToInt
         description: |
@@ -32,13 +32,13 @@ arguments:
             If negative, $slice returns up to the last n elements in the array. n cannot resolve to a negative number if <position> is specified.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/#example'
         pipeline:
             -
                 $project:
                     name: 1
                     threeFavorites:
                         $slice:
-                            - $favorites
+                            - '$favorites'
                             - 3

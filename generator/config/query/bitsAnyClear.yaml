@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bitsAnyClear
-link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/'
 type:
     - fieldQuery
 encode: single
@@ -12,34 +12,27 @@ arguments:
         type:
             - int
             - binData
-            - array
+            - array # of int
 tests:
     -
-        name: Bit Position Array
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bit-position-array
+        name: 'Bit Position Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bit-position-array'
         pipeline:
             -
                 $match:
                     a:
-                        $bitsAnyClear:
-                            - 1
-                            - 5
+                        $bitsAnyClear: [1, 5]
     -
-        name: Integer Bitmask
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#integer-bitmask
+        name: 'Integer Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#integer-bitmask'
         pipeline:
-            -
-                $match:
-                    a:
-                        $bitsAnyClear: 35
+            - $match:
+                  a:
+                      $bitsAnyClear: 35
     -
-        name: BinData Bitmask
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bindata-bitmask
+        name: 'BinData Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bindata-bitmask'
         pipeline:
-            -
-                $match:
-                    a:
-                        $bitsAnyClear:
-                            sub_type: 0
-                            buffer: !!binary AAAA
-                            position: 0
+            - $match:
+                  a:
+                      $bitsAnyClear: !bson_binary 'MA=='

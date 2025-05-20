@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $median
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/'
 type:
     - accumulator
     - window
@@ -27,37 +27,19 @@ arguments:
             The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
 tests:
     -
-        name: Use $median as an Accumulator
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-as-an-accumulator
+        name: 'Use $median as an Accumulator'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-as-an-accumulator'
         pipeline:
             -
                 $group:
-                    _id: null
+                    _id: ~
                     test01_median:
                         $median:
-                            input: $test01
-                            method: approximate
-        schema:
-            testScores:
-                studentId:
-                    types:
-                        -
-                            bsonType: String
-                test01:
-                    types:
-                        -
-                            bsonType: Number
-                test02:
-                    types:
-                        -
-                            bsonType: Number
-                test03:
-                    types:
-                        -
-                            bsonType: Number
+                            input: '$test01'
+                            method: 'approximate'
     -
-        name: Use $median in a $setWindowField Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-in-a--setwindowfield-stage
+        name: 'Use $median in a $setWindowField Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-in-a--setwindowfield-stage'
         pipeline:
             -
                 $setWindowFields:
@@ -66,8 +48,8 @@ tests:
                     output:
                         test01_median:
                             $median:
-                                input: $test01
-                                method: approximate
+                                input: '$test01'
+                                method: 'approximate'
                             window:
                                 range:
                                     - -3
@@ -77,21 +59,3 @@ tests:
                     _id: 0
                     studentId: 1
                     test01_median: 1
-        schema:
-            testScores:
-                studentId:
-                    types:
-                        -
-                            bsonType: String
-                test01:
-                    types:
-                        -
-                            bsonType: Number
-                test02:
-                    types:
-                        -
-                            bsonType: Number
-                test03:
-                    types:
-                        -
-                            bsonType: Number

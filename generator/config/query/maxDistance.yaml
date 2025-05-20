@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $maxDistance
-link: https://www.mongodb.com/docs/manual/reference/operator/query/maxDistance/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/maxDistance/'
 type:
     - fieldQuery
 encode: single

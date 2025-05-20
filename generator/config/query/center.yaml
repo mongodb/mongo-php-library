@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $center
-link: https://www.mongodb.com/docs/manual/reference/operator/query/center/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/center/'
 type:
     - geometry
 encode: single

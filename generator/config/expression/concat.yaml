@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $concat
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/'
 type:
     - resolvesToString
 encode: single
@@ -14,14 +14,13 @@ arguments:
         variadic: array
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/#examples
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/#examples'
         pipeline:
             -
                 $project:
                     itemDescription:
                         $concat:
-                            - $item
+                            - '$item'
                             - ' - '
-                            - $description
-        schema: '// TODO: No schema found in docs'
+                            - '$description'

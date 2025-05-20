@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bitAnd
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/'
 type:
     - resolvesToInt
     - resolvesToLong
@@ -17,51 +17,22 @@ arguments:
         variadic: array
 tests:
     -
-        name: Bitwise AND with Two Integers
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-two-integers
+        name: 'Bitwise AND with Two Integers'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-two-integers'
         pipeline:
             -
                 $project:
                     result:
                         $bitAnd:
-                            - $a
-                            - $b
-        schema:
-            switches:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                a:
-                    types:
-                        -
-                            bsonType: Int32
-                b:
-                    types:
-                        -
-                            bsonType: Int32
+                            - '$a'
+                            - '$b'
     -
-        name: Bitwise AND with a Long and Integer
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-a-long-and-integer
+        name: 'Bitwise AND with a Long and Integer'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-a-long-and-integer'
         pipeline:
             -
                 $project:
                     result:
                         $bitAnd:
-                            - $a
-                            -
-                                $numberLong: '63'
-        schema:
-            switches:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                a:
-                    types:
-                        -
-                            bsonType: Int32
-                b:
-                    types:
-                        -
-                            bsonType: Int32
+                            - '$a'
+                            - { "$numberLong": "63" }

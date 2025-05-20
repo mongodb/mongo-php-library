@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $size
-link: https://www.mongodb.com/docs/manual/reference/operator/query/size/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/size/'
 type:
     - fieldQuery
 encode: single
@@ -13,8 +13,8 @@ arguments:
             - int
 tests:
     -
-        name: Query an Array by Array Length
-        link: https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length
+        name: 'Query an Array by Array Length'
+        link: 'https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length'
         pipeline:
             -
                 $match:

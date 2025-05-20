@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $subtract
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/'
 type:
     - resolvesToInt
     - resolvesToLong
@@ -23,8 +23,8 @@ arguments:
             - resolvesToDate
 tests:
     -
-        name: Subtract Numbers
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-numbers
+        name: 'Subtract Numbers'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-numbers'
         pipeline:
             -
                 $project:
@@ -33,28 +33,28 @@ tests:
                         $subtract:
                             -
                                 $add:
-                                    - $price
-                                    - $fee
-                            - $discount
+                                    - '$price'
+                                    - '$fee'
+                            - '$discount'
     -
-        name: Subtract Two Dates
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-two-dates
+        name: 'Subtract Two Dates'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-two-dates'
         pipeline:
             -
                 $project:
                     item: 1
                     dateDifference:
                         $subtract:
-                            - $$NOW
-                            - $date
+                            - '$$NOW'
+                            - '$date'
     -
-        name: Subtract Milliseconds from a Date
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-milliseconds-from-a-date
+        name: 'Subtract Milliseconds from a Date'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/#subtract-milliseconds-from-a-date'
         pipeline:
             -
                 $project:
                     item: 1
                     dateDifference:
                         $subtract:
-                            - $date
+                            - '$date'
                             - 300000

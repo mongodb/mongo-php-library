@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: geoWithin
-link: https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/'
 type:
     - searchOperator
 encode: object
@@ -35,24 +35,20 @@ arguments:
             - searchScore
 tests:
     -
-        name: box
-        link: https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#box-example
+        name: 'box'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#box-example'
         pipeline:
             -
                 $search:
                     geoWithin:
-                        path: address.location
+                        path: 'address.location'
                         box:
                             bottomLeft:
-                                type: Point
-                                coordinates:
-                                    - 112.467
-                                    - -55.05
+                                type: 'Point'
+                                coordinates: [112.467, -55.05]
                             topRight:
-                                type: Point
-                                coordinates:
-                                    - 168
-                                    - -9.133
+                                type: 'Point'
+                                coordinates: [168, -9.133]
             -
                 $limit: 3
             -
@@ -60,21 +56,20 @@ tests:
                     _id: 0
                     name: 1
                     address: 1
+
     -
-        name: circle
-        link: https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#circle-example
+        name: 'circle'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#circle-example'
         pipeline:
             -
                 $search:
                     geoWithin:
                         circle:
                             center:
-                                type: Point
-                                coordinates:
-                                    - -73.54
-                                    - 45.54
+                                type: 'Point'
+                                coordinates: [-73.54, 45.54]
                             radius: 1600
-                        path: address.location
+                        path: 'address.location'
             -
                 $limit: 3
             -
@@ -82,30 +77,23 @@ tests:
                     _id: 0
                     name: 1
                     address: 1
+
     -
-        name: geometry
-        link: https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#geometry-examples
+        name: 'geometry'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#geometry-examples'
         pipeline:
             -
                 $search:
                     geoWithin:
                         geometry:
-                            type: Polygon
+                            type: 'Polygon'
                             coordinates:
                                 -
-                                    -
-                                        - -161.323242
-                                        - 22.512557
-                                    -
-                                        - -152.446289
-                                        - 22.065278
-                                    -
-                                        - -156.09375
-                                        - 17.811456
-                                    -
-                                        - -161.323242
-                                        - 22.512557
-                        path: address.location
+                                    - [-161.323242, 22.512557]
+                                    - [-152.446289, 22.065278]
+                                    - [-156.09375, 17.811456]
+                                    - [-161.323242, 22.512557]
+                        path: 'address.location'
             -
                 $limit: 3
             -

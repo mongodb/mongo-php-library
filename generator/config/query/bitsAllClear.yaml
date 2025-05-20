@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bitsAllClear
-link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/'
 type:
     - fieldQuery
 encode: single
@@ -12,34 +12,27 @@ arguments:
         type:
             - int
             - binData
-            - array
+            - array # of int
 tests:
     -
-        name: Bit Position Array
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bit-position-array
+        name: 'Bit Position Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bit-position-array'
         pipeline:
             -
                 $match:
                     a:
-                        $bitsAllClear:
-                            - 1
-                            - 5
+                        $bitsAllClear: [1, 5]
     -
-        name: Integer Bitmask
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#integer-bitmask
+        name: 'Integer Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#integer-bitmask'
         pipeline:
-            -
-                $match:
+            - $match:
                     a:
                         $bitsAllClear: 35
     -
-        name: BinData Bitmask
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bindata-bitmask
+        name: 'BinData Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bindata-bitmask'
         pipeline:
-            -
-                $match:
-                    a:
-                        $bitsAllClear:
-                            sub_type: 0
-                            buffer: !!binary AAAA
-                            position: 0
+            - $match:
+                  a:
+                      $bitsAllClear: !bson_binary 'IA=='

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $fill
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/'
 type:
     - stage
 encode: object
@@ -10,7 +10,7 @@ arguments:
     -
         name: partitionBy
         type:
-            - object
+            - object # of expression
             - string
         optional: true
         description: |
@@ -20,7 +20,7 @@ arguments:
     -
         name: partitionByFields
         type:
-            - array
+            - array # of string
         optional: true
         description: |
             Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
@@ -36,14 +36,14 @@ arguments:
     -
         name: output
         type:
-            - object
+            - object # of object{value:expression} or object{method:string}>
         description: |
             Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
             The object name is the name of the field to fill. The object value specifies how the field is filled.
 tests:
     -
-        name: Fill Missing Field Values with a Constant Value
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-a-constant-value
+        name: 'Fill Missing Field Values with a Constant Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-a-constant-value'
         pipeline:
             -
                 $fill:
@@ -55,8 +55,8 @@ tests:
                         sneakersSold:
                             value: 0
     -
-        name: Fill Missing Field Values with Linear Interpolation
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-linear-interpolation
+        name: 'Fill Missing Field Values with Linear Interpolation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-linear-interpolation'
         pipeline:
             -
                 $fill:
@@ -64,10 +64,10 @@ tests:
                         time: 1
                     output:
                         price:
-                            method: linear
+                            method: 'linear'
     -
-        name: Fill Missing Field Values Based on the Last Observed Value
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-based-on-the-last-observed-value
+        name: 'Fill Missing Field Values Based on the Last Observed Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-based-on-the-last-observed-value'
         pipeline:
             -
                 $fill:
@@ -75,23 +75,23 @@ tests:
                         date: 1
                     output:
                         score:
-                            method: locf
+                            method: 'locf'
     -
-        name: Fill Data for Distinct Partitions
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-data-for-distinct-partitions
+        name: 'Fill Data for Distinct Partitions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-data-for-distinct-partitions'
         pipeline:
             -
                 $fill:
                     sortBy:
                         date: 1
                     partitionBy:
-                        restaurant: $restaurant
+                        restaurant: '$restaurant'
                     output:
                         score:
-                            method: locf
+                            method: 'locf'
     -
-        name: Indicate if a Field was Populated Using $fill
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#indicate-if-a-field-was-populated-using--fill
+        name: 'Indicate if a Field was Populated Using $fill'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#indicate-if-a-field-was-populated-using--fill'
         pipeline:
             -
                 $set:
@@ -99,7 +99,7 @@ tests:
                         $ifNull:
                             -
                                 $toBool:
-                                    $toString: $score
+                                    $toString: '$score'
                             - false
             -
                 $fill:
@@ -107,4 +107,4 @@ tests:
                         date: 1
                     output:
                         score:
-                            method: locf
+                            method: 'locf'

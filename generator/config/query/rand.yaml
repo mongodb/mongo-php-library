@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $rand
-link: https://www.mongodb.com/docs/manual/reference/operator/query/rand/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/rand/'
 type:
     - resolvesToDouble
 encode: object
@@ -8,8 +8,8 @@ description: |
     Generates a random float between 0 and 1.
 tests:
     -
-        name: Select Random Items From a Collection
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/rand/#select-random-items-from-a-collection
+        name: 'Select Random Items From a Collection'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/rand/#select-random-items-from-a-collection'
         pipeline:
             -
                 $match:

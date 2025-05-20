@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $denseRank
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/'
 type:
     - window
 encode: object
@@ -9,78 +9,26 @@ description: |
     New in MongoDB 5.0.
 tests:
     -
-        name: Dense Rank Partitions by an Integer Field
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-an-integer-field
+        name: 'Dense Rank Partitions by an Integer Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-an-integer-field'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $state
+                    partitionBy: '$state'
                     sortBy:
                         quantity: -1
                     output:
                         denseRankQuantityForState:
                             $denseRank: {}
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
     -
-        name: Dense Rank Partitions by a Date Field
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-a-date-field
+        name: 'Dense Rank Partitions by a Date Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-a-date-field'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $state
+                    partitionBy: '$state'
                     sortBy:
                         orderDate: 1
                     output:
                         denseRankOrderDateForState:
                             $denseRank: {}
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number

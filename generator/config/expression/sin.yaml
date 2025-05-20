@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $sin
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/'
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -17,8 +17,8 @@ arguments:
             By default $sin returns values as a double. $sin can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/#example'
         pipeline:
             -
                 $addFields:
@@ -26,5 +26,5 @@ tests:
                         $multiply:
                             -
                                 $sin:
-                                    $degreesToRadians: $angle_a
-                            - $hypotenuse
+                                    $degreesToRadians: '$angle_a'
+                            - '$hypotenuse'

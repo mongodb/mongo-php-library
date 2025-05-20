@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $top
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/'
 type:
     - accumulator
 encode: object
@@ -24,61 +24,33 @@ arguments:
             Represents the output for each element in the group and can be any expression.
 tests:
     -
-        name: Find the Top Score
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score
+        name: 'Find the Top Score'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score'
         pipeline:
             -
                 $match:
-                    gameId: G1
+                    gameId: 'G1'
             -
                 $group:
-                    _id: $gameId
+                    _id: '$gameId'
                     playerId:
                         $top:
                             output:
-                                - $playerId
-                                - $score
+                                - '$playerId'
+                                - '$score'
                             sortBy:
                                 score: -1
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number
     -
-        name: Find the Top Score Across Multiple Games
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score-across-multiple-games
+        name: 'Find the Top Score Across Multiple Games'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score-across-multiple-games'
         pipeline:
             -
                 $group:
-                    _id: $gameId
+                    _id: '$gameId'
                     playerId:
                         $top:
                             output:
-                                - $playerId
-                                - $score
+                                - '$playerId'
+                                - '$score'
                             sortBy:
                                 score: -1
-        schema:
-            gamescores:
-                playerId:
-                    types:
-                        -
-                            bsonType: String
-                gameId:
-                    types:
-                        -
-                            bsonType: String
-                score:
-                    types:
-                        -
-                            bsonType: Number

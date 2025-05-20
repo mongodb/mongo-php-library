@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $avg
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/'
 type:
     - accumulator
     - window
@@ -15,80 +15,31 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: Use in $group Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--group-stage
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--group-stage'
         pipeline:
-            -
-                $group:
-                    _id: $item
+            - $group:
+                    _id: '$item'
                     avgAmount:
                         $avg:
                             $multiply:
-                                - $price
-                                - $quantity
+                                - '$price'
+                                - '$quantity'
                     avgQuantity:
-                        $avg: $quantity
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                item:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
-                date:
-                    types:
-                        -
-                            bsonType: Date
+                        $avg: '$quantity'
     -
-        name: Use in $setWindowFields Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--setwindowfields-stage
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--setwindowfields-stage'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $state
+                    partitionBy: '$state'
                     sortBy:
                         orderDate: 1
                     output:
                         averageQuantityForState:
-                            $avg: $quantity
+                            $avg: '$quantity'
                             window:
                                 documents:
-                                    - unbounded
-                                    - current
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
+                                    - 'unbounded'
+                                    - 'current'

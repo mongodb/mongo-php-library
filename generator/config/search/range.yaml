@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: range
-link: https://www.mongodb.com/docs/atlas/atlas-search/range/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/range/'
 type:
     - searchOperator
 encode: object
@@ -51,13 +51,13 @@ arguments:
             - searchScore
 tests:
     -
-        name: Number gte lte
-        link: https://www.mongodb.com/docs/atlas/atlas-search/range/#number-example
+        name: 'Number gte lte'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/range/#number-example'
         pipeline:
             -
                 $search:
                     range:
-                        path: runtime
+                        path: 'runtime'
                         gte: 2
                         lte: 3
             -
@@ -67,14 +67,15 @@ tests:
                     _id: 0
                     title: 1
                     runtime: 1
+
     -
-        name: Number lte
-        link: https://www.mongodb.com/docs/atlas/atlas-search/range/#number-example
+        name: 'Number lte'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/range/#number-example'
         pipeline:
             -
                 $search:
                     range:
-                        path: runtime
+                        path: 'runtime'
                         lte: 2
             -
                 $limit: 5
@@ -84,17 +85,18 @@ tests:
                     title: 1
                     runtime: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: Date
-        link: https://www.mongodb.com/docs/atlas/atlas-search/range/#date-example
+        name: 'Date'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/range/#date-example'
         pipeline:
             -
                 $search:
                     range:
-                        path: released
-                        gt: 2010-01-01T00:00:00.000Z
-                        lt: 2015-01-01T00:00:00.000Z
+                        path: 'released'
+                        gt: !bson_utcdatetime '2010-01-01T00:00:00.000Z'
+                        lt: !bson_utcdatetime '2015-01-01T00:00:00.000Z'
             -
                 $limit: 5
             -
@@ -102,33 +104,33 @@ tests:
                     _id: 0
                     title: 1
                     released: 1
+
     -
-        name: ObjectId
-        link: https://www.mongodb.com/docs/atlas/atlas-search/range/#objectid-example
+        name: 'ObjectId'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/range/#objectid-example'
         pipeline:
             -
                 $search:
                     range:
-                        path: _id
-                        gte:
-                            buffer: !!binary VzoTlvKTE8qrzkqa
-                        lte:
-                            buffer: !!binary VzoTlvKTE8qrzkrn
+                        path: '_id'
+                        gte: !bson_objectId '573a1396f29313caabce4a9a'
+                        lte: !bson_objectId '573a1396f29313caabce4ae7'
             -
                 $project:
                     _id: 1
                     title: 1
                     released: 1
+
     -
-        name: String
-        link: https://www.mongodb.com/docs/atlas/atlas-search/range/#string-example
+        name: 'String'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/range/#string-example'
         pipeline:
             -
                 $search:
                     range:
-                        path: title
-                        gt: city
-                        lt: country
+                        path: 'title'
+                        gt: 'city'
+                        lt: 'country'
             -
                 $limit: 5
             -

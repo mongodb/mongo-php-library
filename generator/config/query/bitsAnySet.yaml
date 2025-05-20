@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bitsAnySet
-link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/'
 type:
     - fieldQuery
 encode: single
@@ -12,34 +12,27 @@ arguments:
         type:
             - int
             - binData
-            - array
+            - array # of int
 tests:
     -
-        name: Bit Position Array
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bit-position-array
+        name: 'Bit Position Array'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bit-position-array'
         pipeline:
             -
                 $match:
                     a:
-                        $bitsAnySet:
-                            - 1
-                            - 5
+                        $bitsAnySet: [1, 5]
     -
-        name: Integer Bitmask
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#integer-bitmask
+        name: 'Integer Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#integer-bitmask'
         pipeline:
-            -
-                $match:
-                    a:
-                        $bitsAnySet: 35
+            - $match:
+                  a:
+                      $bitsAnySet: 35
     -
-        name: BinData Bitmask
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bindata-bitmask
+        name: 'BinData Bitmask'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bindata-bitmask'
         pipeline:
-            -
-                $match:
-                    a:
-                        $bitsAnySet:
-                            sub_type: 0
-                            buffer: !!binary AAAA
-                            position: 0
+            - $match:
+                  a:
+                      $bitsAnySet: !bson_binary 'MA=='

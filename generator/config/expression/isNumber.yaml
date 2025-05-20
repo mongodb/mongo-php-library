@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $isNumber
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/'
 type:
     - resolvesToBool
 encode: single
@@ -15,61 +15,61 @@ arguments:
             - expression
 tests:
     -
-        name: Use $isNumber to Check if a Field is Numeric
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/#use--isnumber-to-check-if-a-field-is-numeric
+        name: 'Use $isNumber to Check if a Field is Numeric'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/#use--isnumber-to-check-if-a-field-is-numeric'
         pipeline:
             -
                 $addFields:
                     isNumber:
-                        $isNumber: $reading
+                        $isNumber: '$reading'
                     hasType:
-                        $type: $reading
+                        $type: '$reading'
     -
-        name: Conditionally Modify Fields using $isNumber
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/#conditionally-modify-fields-using--isnumber
+        name: 'Conditionally Modify Fields using $isNumber'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/#conditionally-modify-fields-using--isnumber'
         pipeline:
             -
                 $addFields:
                     points:
                         $cond:
                             if:
-                                $isNumber: $grade
-                            then: $grade
+                                $isNumber: '$grade'
+                            then: '$grade'
                             else:
                                 $switch:
                                     branches:
                                         -
                                             case:
                                                 $eq:
-                                                    - $grade
-                                                    - A
+                                                    - '$grade'
+                                                    - 'A'
                                             then: 4
                                         -
                                             case:
                                                 $eq:
-                                                    - $grade
-                                                    - B
+                                                    - '$grade'
+                                                    - 'B'
                                             then: 3
                                         -
                                             case:
                                                 $eq:
-                                                    - $grade
-                                                    - C
+                                                    - '$grade'
+                                                    - 'C'
                                             then: 2
                                         -
                                             case:
                                                 $eq:
-                                                    - $grade
-                                                    - D
+                                                    - '$grade'
+                                                    - 'D'
                                             then: 1
                                         -
                                             case:
                                                 $eq:
-                                                    - $grade
-                                                    - F
+                                                    - '$grade'
+                                                    - 'F'
                                             then: 0
             -
                 $group:
-                    _id: $student_id
+                    _id: '$student_id'
                     GPA:
-                        $avg: $points
+                        $avg: '$points'

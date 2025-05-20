@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toUpper
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/'
 type:
     - resolvesToString
 encode: single
@@ -13,12 +13,12 @@ arguments:
             - resolvesToString
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/#example'
         pipeline:
             -
                 $project:
                     item:
-                        $toUpper: $item
+                        $toUpper: '$item'
                     description:
-                        $toUpper: $description
+                        $toUpper: '$description'

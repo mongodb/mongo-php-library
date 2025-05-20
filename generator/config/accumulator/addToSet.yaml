@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $addToSet
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/'
 type:
     - accumulator
     - window
@@ -13,83 +13,35 @@ arguments:
         name: expression
         type:
             - expression
+
 tests:
     -
-        name: Use in $group Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--group-stage
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--group-stage'
         pipeline:
-            -
-                $group:
-                    _id:
-                        day:
-                            $dayOfYear:
-                                date: $date
-                        year:
-                            $year:
-                                date: $date
-                    itemsSold:
-                        $addToSet: $item
-        schema:
-            sales:
+            - $group:
                 _id:
-                    types:
-                        -
-                            bsonType: Number
-                item:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
-                date:
-                    types:
-                        -
-                            bsonType: Date
+                    day:
+                        $dayOfYear:
+                            date: '$date'
+                    year:
+                        $year:
+                            date: '$date'
+                itemsSold:
+                    $addToSet: '$item'
     -
-        name: Use in $setWindowFields Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--setwindowfields-stage
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--setwindowfields-stage'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $state
+                    partitionBy: '$state'
                     sortBy:
                         orderDate: 1
                     output:
                         cakeTypesForState:
-                            $addToSet: $type
+                            $addToSet: '$type'
                             window:
                                 documents:
-                                    - unbounded
-                                    - current
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
+                                    - 'unbounded'
+                                    - 'current'

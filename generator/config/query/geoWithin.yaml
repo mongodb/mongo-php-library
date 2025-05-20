@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $geoWithin
-link: https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/'
 type:
     - fieldQuery
 encode: object
@@ -14,60 +14,40 @@ arguments:
             - geometry
 tests:
     -
-        name: Within a Polygon
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a-polygon
+        name: 'Within a Polygon'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a-polygon'
         pipeline:
             -
                 $match:
                     loc:
                         $geoWithin:
                             $geometry:
-                                type: Polygon
+                                type: 'Polygon'
                                 coordinates:
                                     -
-                                        -
-                                            - 0
-                                            - 0
-                                        -
-                                            - 3
-                                            - 6
-                                        -
-                                            - 6
-                                            - 1
-                                        -
-                                            - 0
-                                            - 0
+                                        - [ 0, 0 ]
+                                        - [ 3, 6 ]
+                                        - [ 6, 1 ]
+                                        - [ 0, 0 ]
     -
-        name: Within a Big Polygon
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a--big--polygon
+        name: 'Within a Big Polygon'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a--big--polygon'
         pipeline:
             -
                 $match:
                     loc:
                         $geoWithin:
                             $geometry:
-                                type: Polygon
+                                type: 'Polygon'
                                 coordinates:
                                     -
-                                        -
-                                            - -100
-                                            - 60
-                                        -
-                                            - -100
-                                            - 0
-                                        -
-                                            - -100
-                                            - -60
-                                        -
-                                            - 100
-                                            - -60
-                                        -
-                                            - 100
-                                            - 60
-                                        -
-                                            - -100
-                                            - 60
+                                        - [ -100, 60 ]
+                                        - [ -100, 0 ]
+                                        - [ -100, -60 ]
+                                        - [ 100, -60 ]
+                                        - [ 100, 60 ]
+                                        - [ -100, 60 ]
                                 crs:
-                                    type: name
+                                    type: 'name'
                                     properties:
-                                        name: urn:x-mongodb:crs:strictwinding:EPSG:4326
+                                        name: 'urn:x-mongodb:crs:strictwinding:EPSG:4326'

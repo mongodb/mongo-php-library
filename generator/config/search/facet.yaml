@@ -1,8 +1,8 @@
 # $schema: ../schema.json
 name: facet
-link: https://www.mongodb.com/docs/atlas/atlas-search/facet/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/facet/'
 type:
-    - searchOperator
+    - searchOperator # should be searchCollector
 encode: object
 description: |
     The facet collector groups results by values or ranges in the specified
@@ -11,7 +11,7 @@ arguments:
     -
         name: facets
         type:
-            - object
+            - object # map of facetDefinition
     -
         name: operator
         optional: true
@@ -19,21 +19,21 @@ arguments:
             - searchOperator
 tests:
     -
-        name: Facet
-        link: https://www.mongodb.com/docs/atlas/atlas-search/facet/#examples
+        name: 'Facet'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/facet/#examples'
         pipeline:
             -
                 $search:
                     facet:
                         operator:
                             near:
-                                path: released
-                                origin: 1999-07-01T00:00:00.000Z
+                                path: 'released'
+                                origin: !bson_utcdatetime '1999-07-01T00:00:00.000+00:00'
                                 pivot: 7776000000
                         facets:
                             genresFacet:
-                                type: string
-                                path: genres
+                                type: 'string'
+                                path: 'genres'
             -
                 $limit: 2
             -
@@ -45,12 +45,12 @@ tests:
                                 released: 1
                     meta:
                         -
-                            $replaceWith: $$SEARCH_META
+                            $replaceWith: '$$SEARCH_META'
                         -
                             $limit: 1
             -
                 $set:
                     meta:
                         $arrayElemAt:
-                            - $meta
+                            - '$meta'
                             - 0

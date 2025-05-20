@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $tsIncrement
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/'
 type:
     - resolvesToLong
 encode: single
@@ -14,18 +14,18 @@ arguments:
             - resolvesToTimestamp
 tests:
     -
-        name: Obtain the Incrementing Ordinal from a Timestamp Field
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/#obtain-the-incrementing-ordinal-from-a-timestamp-field
+        name: 'Obtain the Incrementing Ordinal from a Timestamp Field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/#obtain-the-incrementing-ordinal-from-a-timestamp-field'
         pipeline:
             -
                 $project:
                     _id: 0
                     saleTimestamp: 1
                     saleIncrement:
-                        $tsIncrement: $saleTimestamp
+                        $tsIncrement: '$saleTimestamp'
     -
-        name: Use $tsSecond in a Change Stream Cursor to Monitor Collection Changes
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#use--tssecond-in-a-change-stream-cursor-to-monitor-collection-changes
+        name: 'Use $tsSecond in a Change Stream Cursor to Monitor Collection Changes'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#use--tssecond-in-a-change-stream-cursor-to-monitor-collection-changes'
         pipeline:
             -
                 $match:
@@ -34,6 +34,6 @@ tests:
                             -
                                 $mod:
                                     -
-                                        $tsIncrement: $clusterTime
+                                        $tsIncrement: '$clusterTime'
                                     - 2
                             - 0

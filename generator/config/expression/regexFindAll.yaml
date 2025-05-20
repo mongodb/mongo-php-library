@@ -1,8 +1,8 @@
 # $schema: ../schema.json
 name: $regexFindAll
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/'
 type:
-    - resolvesToArray
+    - resolvesToArray # of object
 encode: object
 description: |
     Applies a regular expression (regex) to a string and returns information on the all matched substrings.
@@ -28,79 +28,72 @@ arguments:
         optional: true
 tests:
     -
-        name: $regexFindAll and Its Options
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#-regexfindall-and-its-options
+        name: '$regexFindAll and Its Options'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#-regexfindall-and-its-options'
         pipeline:
             -
                 $addFields:
                     returnObject:
                         $regexFindAll:
-                            input: $description
-                            regex:
-                                pattern: line
-                                options: ''
+                            input: '$description'
+                            regex: !bson_regex 'line'
     -
-        name: i Option
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#i-option
+        name: 'i Option'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#i-option'
         pipeline:
             -
                 $addFields:
                     returnObject:
+                        # Specify i as part of the regex type
                         $regexFindAll:
-                            input: $description
-                            regex:
-                                pattern: line
-                                options: i
+                            input: '$description'
+                            regex: !bson_regex ['line', 'i']
             -
                 $addFields:
                     returnObject:
+                        # Specify i in the options field
                         $regexFindAll:
-                            input: $description
-                            regex: line
-                            options: i
+                            input: '$description'
+                            regex: 'line'
+                            options: 'i'
             -
                 $addFields:
                     returnObject:
+                        # Mix Regex type with options field
                         $regexFindAll:
-                            input: $description
-                            regex:
-                                pattern: line
-                                options: ''
-                            options: i
+                            input: '$description'
+                            regex: !bson_regex 'line'
+                            options: 'i'
     -
-        name: Use $regexFindAll to Parse Email from String
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#use--regexfindall-to-parse-email-from-string
+        name: 'Use $regexFindAll to Parse Email from String'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#use--regexfindall-to-parse-email-from-string'
         pipeline:
             -
                 $addFields:
                     email:
                         $regexFindAll:
-                            input: $comment
-                            regex:
-                                pattern: '[a-z0-9_.+-]+@[a-z0-9_.+-]+\.[a-z0-9_.+-]+'
-                                options: i
+                            input: '$comment'
+                            regex: !bson_regex ['[a-z0-9_.+-]+@[a-z0-9_.+-]+\.[a-z0-9_.+-]+', 'i']
             -
                 $set:
-                    email: $email.match
+                    email: '$email.match'
     -
-        name: Use Captured Groupings to Parse User Name
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#use-captured-groupings-to-parse-user-name
+        name: 'Use Captured Groupings to Parse User Name'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/#use-captured-groupings-to-parse-user-name'
         pipeline:
             -
                 $addFields:
                     names:
                         $regexFindAll:
-                            input: $comment
-                            regex:
-                                pattern: ([a-z0-9_.+-]+)@[a-z0-9_.+-]+\.[a-z0-9_.+-]+
-                                options: i
+                            input: '$comment'
+                            regex: !bson_regex ['([a-z0-9_.+-]+)@[a-z0-9_.+-]+\.[a-z0-9_.+-]+', 'i']
             -
                 $set:
                     names:
                         $reduce:
-                            input: $names.captures
+                            input: '$names.captures'
                             initialValue: []
                             in:
                                 $concatArrays:
-                                    - $$value
-                                    - $$this
+                                    - '$$value'
+                                    - '$$this'

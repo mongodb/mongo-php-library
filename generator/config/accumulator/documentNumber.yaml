@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $documentNumber
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/'
 type:
     - window
 encode: object
@@ -9,40 +9,14 @@ description: |
     New in MongoDB 5.0.
 tests:
     -
-        name: Document Number for Each State
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/#document-number-for-each-state
+        name: 'Document Number for Each State'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/#document-number-for-each-state'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $state
+                    partitionBy: '$state'
                     sortBy:
                         quantity: -1
                     output:
                         documentNumberForState:
                             $documentNumber: {}
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number

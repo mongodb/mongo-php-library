@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $dayOfMonth
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/'
 type:
     - resolvesToInt
 encode: object
@@ -24,33 +24,13 @@ arguments:
             The timezone of the operation result. timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/#example'
         pipeline:
             -
                 $project:
                     day:
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $dayOfMonth: '$date'
                         $dayOfMonth:
-                            date: $date
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                item:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
-                date:
-                    types:
-                        -
-                            bsonType: Date
+                            date: '$date'

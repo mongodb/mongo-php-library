@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $count
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/'
 type:
     - accumulator
     - window
@@ -11,47 +11,21 @@ description: |
     New in MongoDB 5.0.
 tests:
     -
-        name: Use in $group Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--group-stage
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--group-stage'
         pipeline:
             -
                 $group:
-                    _id: $state
+                    _id: '$state'
                     countNumberOfDocumentsForState:
                         $count: {}
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
     -
-        name: Use in $setWindowFields Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--setwindowfields-stage
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--setwindowfields-stage'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $state
+                    partitionBy: '$state'
                     sortBy:
                         orderDate: 1
                     output:
@@ -59,31 +33,5 @@ tests:
                             $count: {}
                             window:
                                 documents:
-                                    - unbounded
-                                    - current
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
+                                    - 'unbounded'
+                                    - 'current'

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $changeStreamSplitLargeEvent
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/'
 type:
     - stage
 encode: object
@@ -9,8 +9,8 @@ description: |
     You can only use $changeStreamSplitLargeEvent in a $changeStream pipeline and it must be the final stage in the pipeline.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/#example'
         pipeline:
             -
                 $changeStreamSplitLargeEvent: {}

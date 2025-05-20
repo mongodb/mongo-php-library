@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $box
-link: https://www.mongodb.com/docs/manual/reference/operator/query/box/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/box/'
 type:
     - geometry
 encode: single

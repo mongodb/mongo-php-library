@@ -1,8 +1,8 @@
 # $schema: ../schema.json
 name: $split
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/'
 type:
-    - resolvesToArray
+    - resolvesToArray # of string
 encode: array
 description: |
     Splits a string into substrings based on a delimiter. Returns an array of substrings. If the delimiter is not found within the string, returns an array containing the original string.
@@ -21,30 +21,28 @@ arguments:
             The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/#example'
         pipeline:
             -
                 $project:
                     city_state:
                         $split:
-                            - $city
+                            - '$city'
                             - ', '
                     qty: 1
             -
                 $unwind:
-                    path: $city_state
+                    path: '$city_state'
             -
                 $match:
-                    city_state:
-                        pattern: '[A-Z]{2}'
-                        options: ''
+                    city_state: !bson_regex '[A-Z]{2}'
             -
                 $group:
                     _id:
-                        state: $city_state
+                        state: '$city_state'
                     total_qty:
-                        $sum: $qty
+                        $sum: '$qty'
             -
                 $sort:
                     total_qty: -1

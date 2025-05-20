@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: compound
-link: https://www.mongodb.com/docs/atlas/atlas-search/compound/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/compound/'
 type:
     - searchOperator
 encode: object
@@ -14,25 +14,25 @@ arguments:
         optional: true
         type:
             - searchOperator
-            - array
+            - array # of searchOperator
     -
         name: mustNot
         optional: true
         type:
             - searchOperator
-            - array
+            - array # of searchOperator
     -
         name: should
         optional: true
         type:
             - searchOperator
-            - array
+            - array # of searchOperator
     -
         name: filter
         optional: true
         type:
             - searchOperator
-            - array
+            - array # of searchOperator
     -
         name: minimumShouldMatch
         optional: true
@@ -45,8 +45,8 @@ arguments:
             - searchScore
 tests:
     -
-        name: must and mustNot
-        link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#must-and-mustnot-example
+        name: 'must and mustNot'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/compound/#must-and-mustnot-example'
         pipeline:
             -
                 $search:
@@ -54,16 +54,17 @@ tests:
                         must:
                             -
                                 text:
-                                    query: varieties
-                                    path: description
+                                    query: 'varieties'
+                                    path: 'description'
                         mustNot:
                             -
                                 text:
-                                    query: apples
-                                    path: description
+                                    query: 'apples'
+                                    path: 'description'
+
     -
-        name: must and should
-        link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#must-and-should-example
+        name: 'must and should'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/compound/#must-and-should-example'
         pipeline:
             -
                 $search:
@@ -71,20 +72,21 @@ tests:
                         must:
                             -
                                 text:
-                                    query: varieties
-                                    path: description
+                                    query: 'varieties'
+                                    path: 'description'
                         should:
                             -
                                 text:
-                                    query: Fuji
-                                    path: description
+                                    query: 'Fuji'
+                                    path: 'description'
             -
                 $project:
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: minimumShouldMatch
-        link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#minimumshouldmatch-example
+        name: 'minimumShouldMatch'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/compound/#minimumshouldmatch-example'
         pipeline:
             -
                 $search:
@@ -92,21 +94,22 @@ tests:
                         must:
                             -
                                 text:
-                                    query: varieties
-                                    path: description
+                                    query: 'varieties'
+                                    path: 'description'
                         should:
                             -
                                 text:
-                                    query: Fuji
-                                    path: description
+                                    query: 'Fuji'
+                                    path: 'description'
                             -
                                 text:
-                                    query: Golden Delicious
-                                    path: description
+                                    query: 'Golden Delicious'
+                                    path: 'description'
                         minimumShouldMatch: 1
+
     -
-        name: Filter
-        link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#filter-examples
+        name: 'Filter'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/compound/#filter-examples'
         pipeline:
             -
                 $search:
@@ -114,21 +117,22 @@ tests:
                         must:
                             -
                                 text:
-                                    query: varieties
-                                    path: description
+                                    query: 'varieties'
+                                    path: 'description'
                         should:
                             -
                                 text:
-                                    query: banana
-                                    path: description
+                                    query: 'banana'
+                                    path: 'description'
                         filter:
                             -
                                 text:
-                                    query: granny
-                                    path: description
+                                    query: 'granny'
+                                    path: 'description'
+
     -
-        name: Nested
-        link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#nested-example
+        name: 'Nested'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/compound/#nested-example'
         pipeline:
             -
                 $search:
@@ -136,17 +140,17 @@ tests:
                         should:
                             -
                                 text:
-                                    query: apple
-                                    path: type
+                                    query: 'apple'
+                                    path: 'type'
                             -
                                 compound:
                                     must:
                                         -
                                             text:
-                                                query: organic
-                                                path: category
+                                                query: 'organic'
+                                                path: 'category'
                                         -
                                             equals:
                                                 value: true
-                                                path: in_stock
+                                                path: 'in_stock'
                         minimumShouldMatch: 1

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $filter
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/'
 type:
     - resolvesToArray
 encode: object
@@ -34,226 +34,61 @@ arguments:
             If the specified limit is greater than the number of matching array elements, $filter returns all matching array elements. If the limit is null, $filter returns all matching array elements.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#examples
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#examples'
         pipeline:
             -
                 $project:
                     items:
                         $filter:
-                            input: $items
-                            as: item
+                            input: '$items'
+                            as: 'item'
                             cond:
                                 $gte:
-                                    - $$item.price
+                                    - '$$item.price'
                                     - 100
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                items:
-                    types:
-                        -
-                            bsonType: Array
-                            types:
-                                -
-                                    bsonType: Document
-                                    fields:
-                                        item_id:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        quantity:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        price:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        name:
-                                            types:
-                                                -
-                                                    bsonType: String
     -
-        name: Use the limit field
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#use-the-limit-field
+        name: 'Using the limit field'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#using-the-limit-field'
         pipeline:
             -
                 $project:
                     items:
                         $filter:
-                            input: $items
+                            input: '$items'
                             cond:
                                 $gte:
-                                    - $$item.price
+                                    - '$$item.price'
                                     - 100
-                            as: item
+                            as: 'item'
                             limit: 1
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                items:
-                    types:
-                        -
-                            bsonType: Array
-                            types:
-                                -
-                                    bsonType: Document
-                                    fields:
-                                        item_id:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        quantity:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        price:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        name:
-                                            types:
-                                                -
-                                                    bsonType: String
     -
-        name: limit Greater than Possible Matches
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#limit-greater-than-possible-matches
+        name: 'limit as a Numeric Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#limit-as-a-numeric-expression'
         pipeline:
             -
                 $project:
                     items:
                         $filter:
-                            input: $items
+                            input: '$items'
+                            cond:
+                                $lte:
+                                    - '$$item.price'
+                                    - 150
+                            as: 'item'
+                            limit: 2
+    -
+        name: 'limit Greater than Possible Matches'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#limit-greater-than-possible-matches'
+        pipeline:
+            -
+                $project:
+                    items:
+                        $filter:
+                            input: '$items'
                             cond:
                                 $gte:
-                                    - $$item.price
+                                    - '$$item.price'
                                     - 100
-                            as: item
+                            as: 'item'
                             limit: 5
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                items:
-                    types:
-                        -
-                            bsonType: Array
-                            types:
-                                -
-                                    bsonType: Document
-                                    fields:
-                                        item_id:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        quantity:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        price:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        name:
-                                            types:
-                                                -
-                                                    bsonType: String
-    -
-        name: Filter Based on String Equality Match
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#filter-based-on-string-equality-match
-        pipeline:
-            -
-                $project:
-                    items:
-                        $filter:
-                            input: $items
-                            as: item
-                            cond:
-                                $eq:
-                                    - $$item.name
-                                    - pen
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                items:
-                    types:
-                        -
-                            bsonType: Array
-                            types:
-                                -
-                                    bsonType: Document
-                                    fields:
-                                        item_id:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        quantity:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        price:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        name:
-                                            types:
-                                                -
-                                                    bsonType: String
-    -
-        name: Filter Based on Regular Expression Match
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#filter-based-on-regular-expression-match
-        pipeline:
-            -
-                $project:
-                    items:
-                        $filter:
-                            input: $items
-                            as: item
-                            cond:
-                                $regexMatch:
-                                    input: $$item.name
-                                    regex:
-                                        pattern: /^p/
-                                        options: ''
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                items:
-                    types:
-                        -
-                            bsonType: Array
-                            types:
-                                -
-                                    bsonType: Document
-                                    fields:
-                                        item_id:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        quantity:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        price:
-                                            types:
-                                                -
-                                                    bsonType: Number
-                                        name:
-                                            types:
-                                                -
-                                                    bsonType: String

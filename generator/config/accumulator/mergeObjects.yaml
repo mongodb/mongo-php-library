@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $mergeObjects
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/'
 type:
     - accumulator
 encode: single
@@ -15,54 +15,11 @@ arguments:
             Any valid expression that resolves to a document.
 tests:
     -
-        name: $mergeObjects as an Accumulator
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/#-mergeobjects-as-an-accumulator
+        name: '$mergeObjects as an Accumulator'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/#-mergeobjects-as-an-accumulator'
         pipeline:
             -
                 $group:
-                    _id: $item
+                    _id: '$item'
                     mergedSales:
-                        $mergeObjects: $quantity
-        schema:
-            sales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                year:
-                    types:
-                        -
-                            bsonType: Number
-                item:
-                    types:
-                        -
-                            bsonType: String
-                quantity:
-                    types:
-                        -
-                            bsonType: Document
-                            fields:
-                                2017Q1:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                2017Q2:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                2016Q1:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                2016Q2:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                2016Q3:
-                                    types:
-                                        -
-                                            bsonType: Number
-                                2016Q4:
-                                    types:
-                                        -
-                                            bsonType: Number
+                        $mergeObjects: '$quantity'

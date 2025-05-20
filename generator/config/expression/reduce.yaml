@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $reduce
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/'
 type:
     - resolvesToAny
 encode: object
@@ -32,46 +32,47 @@ arguments:
             - this is the variable that refers to the element being processed.
 tests:
     -
-        name: Multiplication
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#multiplication
+        name: 'Multiplication'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#multiplication'
         pipeline:
             -
                 $group:
-                    _id: $experimentId
+                    _id: '$experimentId'
                     probabilityArr:
-                        $push: $probability
+                        $push: '$probability'
             -
                 $project:
                     description: 1
                     results:
                         $reduce:
-                            input: $probabilityArr
+                            input: '$probabilityArr'
                             initialValue: 1
                             in:
                                 $multiply:
-                                    - $$value
-                                    - $$this
+                                    - '$$value'
+                                    - '$$this'
     -
-        name: Discounted Merchandise
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#discounted-merchandise
+        name: 'Discounted Merchandise'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#discounted-merchandise'
         pipeline:
             -
                 $project:
                     discountedPrice:
                         $reduce:
-                            input: $discounts
-                            initialValue: $price
+                            input: '$discounts'
+                            initialValue: '$price'
                             in:
                                 $multiply:
-                                    - $$value
+                                    - '$$value'
                                     -
                                         $subtract:
                                             - 1
-                                            - $$this
+                                            - '$$this'
     -
-        name: String Concatenation
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#string-concatenation
+        name: 'String Concatenation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#string-concatenation'
         pipeline:
+            # Filter to return only non-empty arrays
             -
                 $match:
                     hobbies:
@@ -81,53 +82,53 @@ tests:
                     name: 1
                     bio:
                         $reduce:
-                            input: $hobbies
+                            input: '$hobbies'
                             initialValue: 'My hobbies include:'
                             in:
                                 $concat:
-                                    - $$value
+                                    - '$$value'
                                     -
                                         $cond:
                                             if:
                                                 $eq:
-                                                    - $$value
+                                                    - '$$value'
                                                     - 'My hobbies include:'
                                             then: ' '
                                             else: ', '
-                                    - $$this
+                                    - '$$this'
     -
-        name: Array Concatenation
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#array-concatenation
+        name: 'Array Concatenation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#array-concatenation'
         pipeline:
             -
                 $project:
                     collapsed:
                         $reduce:
-                            input: $arr
+                            input: '$arr'
                             initialValue: []
                             in:
                                 $concatArrays:
-                                    - $$value
-                                    - $$this
+                                    - '$$value'
+                                    - '$$this'
     -
-        name: Computing a Multiple Reductions
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#computing-a-multiple-reductions
+        name: 'Computing a Multiple Reductions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#computing-a-multiple-reductions'
         pipeline:
             -
                 $project:
                     results:
                         $reduce:
-                            input: $arr
+                            input: '$arr'
                             initialValue: []
                             in:
                                 collapsed:
                                     $concatArrays:
-                                        - $$value.collapsed
-                                        - $$this
+                                        - '$$value.collapsed'
+                                        - '$$this'
                                 firstValues:
                                     $concatArrays:
-                                        - $$value.firstValues
+                                        - '$$value.firstValues'
                                         -
                                             $slice:
-                                                - $$this
+                                                - '$$this'
                                                 - 1

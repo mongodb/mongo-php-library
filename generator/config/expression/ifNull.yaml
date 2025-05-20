@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $ifNull
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/'
 type:
     - resolvesToAny
 encode: single
@@ -14,25 +14,25 @@ arguments:
         variadic: array
 tests:
     -
-        name: Single Input Expression
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#single-input-expression
+        name: 'Single Input Expression'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#single-input-expression'
         pipeline:
             -
                 $project:
                     item: 1
                     description:
                         $ifNull:
-                            - $description
-                            - Unspecified
+                            - '$description'
+                            - 'Unspecified'
     -
-        name: Multiple Input Expressions
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#multiple-input-expressions
+        name: 'Multiple Input Expressions'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#multiple-input-expressions'
         pipeline:
             -
                 $project:
                     item: 1
                     value:
                         $ifNull:
-                            - $description
-                            - $quantity
-                            - Unspecified
+                            - '$description'
+                            - '$quantity'
+                            - 'Unspecified'

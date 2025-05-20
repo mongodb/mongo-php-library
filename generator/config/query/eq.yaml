@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $eq
-link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/'
 type:
     - fieldQuery
 encode: single
@@ -13,50 +13,49 @@ arguments:
             - any
 tests:
     -
-        name: Equals a Specified Value
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-a-specified-value
+        name: 'Equals a Specified Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-a-specified-value'
         pipeline:
             -
                 $match:
                     qty:
                         $eq: 20
+
     -
-        name: Field in Embedded Document Equals a Value
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/#field-in-embedded-document-equals-a-value
+        name: 'Field in Embedded Document Equals a Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/#field-in-embedded-document-equals-a-value'
         pipeline:
             -
                 $match:
-                    item.name:
-                        $eq: ab
+                    'item.name':
+                        $eq: 'ab'
+
     -
-        name: Equals an Array Value
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-an-array-value
+        name: 'Equals an Array Value'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-an-array-value'
         pipeline:
             -
                 $match:
                     tags:
-                        $eq:
-                            - A
-                            - B
+                        $eq: ['A', 'B']
+
     -
-        name: Regex Match Behaviour
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/#regex-match-behaviour
+        name: 'Regex Match Behaviour'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/#regex-match-behaviour'
         pipeline:
             -
                 $match:
-                    company: MongoDB
+                    company: 'MongoDB'
             -
                 $match:
                     company:
-                        $eq: MongoDB
+                        $eq: 'MongoDB'
             -
                 $match:
                     company:
-                        pattern: ^MongoDB
-                        options: ''
+                        !bson_regex '^MongoDB'
             -
                 $match:
                     company:
                         $eq:
-                            pattern: ^MongoDB
-                            options: ''
+                            !bson_regex '^MongoDB'

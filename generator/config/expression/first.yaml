@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $first
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/'
 type:
     - resolvesToAny
 encode: single
@@ -13,10 +13,9 @@ arguments:
             - resolvesToArray
 tests:
     -
-        name: Use in $addFields Stage
+        name: 'Use in $addFields Stage'
         pipeline:
             -
                 $addFields:
                     firstItem:
-                        $first: $items
-        schema: '// TODO: No docs reference found'
+                        $first: '$items'

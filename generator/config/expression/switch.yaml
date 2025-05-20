@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $switch
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/'
 type:
     - resolvesToAny
 encode: object
@@ -10,7 +10,7 @@ arguments:
     -
         name: branches
         type:
-            - array
+            - array # of CaseOperator
         description: |
             An array of control branch documents. Each branch is a document with the following fields:
             - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
@@ -26,8 +26,8 @@ arguments:
             Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/#example'
         pipeline:
             -
                 $project:
@@ -39,32 +39,32 @@ tests:
                                     case:
                                         $gte:
                                             -
-                                                $avg:
-                                                    - $scores
+                                                #$avg: '$scores'
+                                                $avg: [ '$scores' ]
                                             - 90
-                                    then: Doing great!
+                                    then: 'Doing great!'
                                 -
                                     case:
                                         $and:
                                             -
                                                 $gte:
                                                     -
-                                                        $avg:
-                                                            - $scores
+                                                        #$avg: '$scores'
+                                                        $avg: [ '$scores' ]
                                                     - 80
                                             -
                                                 $lt:
                                                     -
-                                                        $avg:
-                                                            - $scores
+                                                        #$avg: '$scores'
+                                                        $avg: [ '$scores' ]
                                                     - 90
-                                    then: Doing pretty well.
+                                    then: 'Doing pretty well.'
                                 -
                                     case:
                                         $lt:
                                             -
-                                                $avg:
-                                                    - $scores
+                                                #$avg: '$scores'
+                                                $avg: [ '$scores' ]
                                             - 80
-                                    then: Needs improvement.
-                            default: No scores found.
+                                    then: 'Needs improvement.'
+                            default: 'No scores found.'

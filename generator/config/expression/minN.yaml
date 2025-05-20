@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $minN
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/'
 type:
     - resolvesToArray
 encode: object
@@ -21,12 +21,12 @@ arguments:
             An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/#example'
         pipeline:
             -
                 $addFields:
                     minScores:
                         $minN:
-                            'n': 2
-                            input: $score
+                            n: 2
+                            input: '$score'

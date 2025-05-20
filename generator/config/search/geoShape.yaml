@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: geoShape
-link: https://www.mongodb.com/docs/atlas/atlas-search/geoShape/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/geoShape/'
 type:
     - searchOperator
 encode: object
@@ -15,7 +15,7 @@ arguments:
     -
         name: relation
         type:
-            - string
+            - string # contains | disjoint | intersects | within
     -
         name: geometry
         type:
@@ -27,30 +27,22 @@ arguments:
             - searchScore
 tests:
     -
-        name: Disjoint
-        link: https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#disjoint-example
+        name: 'Disjoint'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#disjoint-example'
         pipeline:
             -
                 $search:
                     geoShape:
-                        relation: disjoint
+                        relation: 'disjoint'
                         geometry:
-                            type: Polygon
+                            type: 'Polygon'
                             coordinates:
                                 -
-                                    -
-                                        - -161.323242
-                                        - 22.512557
-                                    -
-                                        - -152.446289
-                                        - 22.065278
-                                    -
-                                        - -156.09375
-                                        - 17.811456
-                                    -
-                                        - -161.323242
-                                        - 22.512557
-                        path: address.location
+                                    - [-161.323242, 22.512557]
+                                    - [-152.446289, 22.065278]
+                                    - [-156.09375, 17.811456]
+                                    - [-161.323242, 22.512557]
+                        path: 'address.location'
             -
                 $limit: 3
             -
@@ -59,59 +51,36 @@ tests:
                     name: 1
                     address: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: Intersect
-        link: https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#intersects-example
+        name: 'Intersect'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#intersects-example'
         pipeline:
             -
                 $search:
                     geoShape:
-                        relation: intersects
+                        relation: 'intersects'
                         geometry:
-                            type: MultiPolygon
+                            type: 'MultiPolygon'
                             coordinates:
                                 -
                                     -
-                                        -
-                                            - 2.16942
-                                            - 41.40082
-                                        -
-                                            - 2.17963
-                                            - 41.40087
-                                        -
-                                            - 2.18146
-                                            - 41.39716
-                                        -
-                                            - 2.15533
-                                            - 41.40686
-                                        -
-                                            - 2.14596
-                                            - 41.38475
-                                        -
-                                            - 2.17519
-                                            - 41.41035
-                                        -
-                                            - 2.16942
-                                            - 41.40082
+                                        - [2.16942, 41.40082]
+                                        - [2.17963, 41.40087]
+                                        - [2.18146, 41.39716]
+                                        - [2.15533, 41.40686]
+                                        - [2.14596, 41.38475]
+                                        - [2.17519, 41.41035]
+                                        - [2.16942, 41.40082]
                                 -
                                     -
-                                        -
-                                            - 2.16365
-                                            - 41.39416
-                                        -
-                                            - 2.16963
-                                            - 41.39726
-                                        -
-                                            - 2.15395
-                                            - 41.38005
-                                        -
-                                            - 2.17935
-                                            - 41.43038
-                                        -
-                                            - 2.16365
-                                            - 41.39416
-                        path: address.location
+                                        - [2.16365, 41.39416]
+                                        - [2.16963, 41.39726]
+                                        - [2.15395, 41.38005]
+                                        - [2.17935, 41.43038]
+                                        - [2.16365, 41.39416]
+                        path: 'address.location'
             -
                 $limit: 3
             -
@@ -120,44 +89,29 @@ tests:
                     name: 1
                     address: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'
+
     -
-        name: Within
-        link: https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#within-example
+        name: 'Within'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#within-example'
         pipeline:
             -
                 $search:
                     geoShape:
-                        relation: within
+                        relation: 'within'
                         geometry:
-                            type: Polygon
+                            type: 'Polygon'
                             coordinates:
                                 -
-                                    -
-                                        - -74.3994140625
-                                        - 40.5305017757
-                                    -
-                                        - -74.7290039063
-                                        - 40.5805846641
-                                    -
-                                        - -74.7729492188
-                                        - 40.9467136651
-                                    -
-                                        - -74.0698242188
-                                        - 41.1290213475
-                                    -
-                                        - -73.65234375
-                                        - 40.9964840144
-                                    -
-                                        - -72.6416015625
-                                        - 40.9467136651
-                                    -
-                                        - -72.3559570313
-                                        - 40.7971774152
-                                    -
-                                        - -74.3994140625
-                                        - 40.5305017757
-                        path: address.location
+                                    - [-74.3994140625, 40.5305017757]
+                                    - [-74.7290039063, 40.5805846641]
+                                    - [-74.7729492188, 40.9467136651]
+                                    - [-74.0698242188, 41.1290213475]
+                                    - [-73.65234375, 40.9964840144]
+                                    - [-72.6416015625, 40.9467136651]
+                                    - [-72.3559570313, 40.7971774152]
+                                    - [-74.3994140625, 40.5305017757]
+                        path: 'address.location'
             -
                 $limit: 3
             -
@@ -166,4 +120,4 @@ tests:
                     name: 1
                     address: 1
                     score:
-                        $meta: searchScore
+                        $meta: 'searchScore'

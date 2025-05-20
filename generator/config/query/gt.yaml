@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $gt
-link: https://www.mongodb.com/docs/manual/reference/operator/query/gt/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/gt/'
 type:
     - fieldQuery
 encode: single
@@ -13,8 +13,8 @@ arguments:
             - any
 tests:
     -
-        name: Match Document Fields
-        link: https://www.mongodb.com/docs/manual/reference/operator/query/gt/#match-document-fields
+        name: 'Match Document Fields'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/query/gt/#match-document-fields'
         pipeline:
             -
                 $match:

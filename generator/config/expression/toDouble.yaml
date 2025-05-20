@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toDouble
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/'
 type:
     - resolvesToDouble
 encode: single
@@ -14,14 +14,14 @@ arguments:
             - expression
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/#example'
         pipeline:
             -
                 $addFields:
                     degrees:
                         $toDouble:
                             $substrBytes:
-                                - $temp
+                                - '$temp'
                                 - 0
                                 - 4

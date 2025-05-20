@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $degreesToRadians
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/'
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -17,28 +17,14 @@ arguments:
             By default $degreesToRadians returns values as a double. $degreesToRadians can also return values as a 128-bit decimal as long as the <expression> resolves to a 128-bit decimal value.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/#example'
         pipeline:
             -
                 $addFields:
                     angle_a_rad:
-                        $degreesToRadians: $angle_a
+                        $degreesToRadians: '$angle_a'
                     angle_b_rad:
-                        $degreesToRadians: $angle_b
+                        $degreesToRadians: '$angle_b'
                     angle_c_rad:
-                        $degreesToRadians: $angle_c
-        schema:
-            TestCollection:
-                angle_a:
-                    types:
-                        -
-                            bsonType: Decimal128
-                angle_b:
-                    types:
-                        -
-                            bsonType: Decimal128
-                angle_c:
-                    types:
-                        -
-                            bsonType: Decimal128
+                        $degreesToRadians: '$angle_c'

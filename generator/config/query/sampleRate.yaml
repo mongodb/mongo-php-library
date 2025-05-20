@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $sampleRate
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/'
 type:
     - query
 encode: single
@@ -16,11 +16,11 @@ arguments:
             For example, a sample rate of 0.33 selects roughly one document in three.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/#examples
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/#examples'
         pipeline:
             -
                 $match:
                     $sampleRate: 0.33
             -
-                $count: numMatches
+                $count: 'numMatches'

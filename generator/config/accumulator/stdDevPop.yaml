@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $stdDevPop
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/'
 type:
     - accumulator
     - window
@@ -16,71 +16,25 @@ arguments:
             - resolvesToNumber
 tests:
     -
-        name: Use in $group Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--group-stage
+        name: 'Use in $group Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--group-stage'
         pipeline:
             -
                 $group:
-                    _id: $quiz
+                    _id: '$quiz'
                     stdDev:
-                        $stdDevPop: $score
-        schema:
-            users:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                name:
-                    types:
-                        -
-                            bsonType: String
-                quiz:
-                    types:
-                        -
-                            bsonType: Number
-                score:
-                    types:
-                        -
-                            bsonType: Number
+                        $stdDevPop: '$score'
     -
-        name: Use in $setWindowFields Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--setwindowfields-stage
+        name: 'Use in $setWindowFields Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--setwindowfields-stage'
         pipeline:
             -
                 $setWindowFields:
-                    partitionBy: $state
+                    partitionBy: '$state'
                     sortBy:
                         orderDate: 1
                     output:
                         stdDevPopQuantityForState:
-                            $stdDevPop: $quantity
+                            $stdDevPop: '$quantity'
                             window:
-                                documents:
-                                    - unbounded
-                                    - current
-        schema:
-            cakeSales:
-                _id:
-                    types:
-                        -
-                            bsonType: Number
-                type:
-                    types:
-                        -
-                            bsonType: String
-                orderDate:
-                    types:
-                        -
-                            bsonType: Date
-                state:
-                    types:
-                        -
-                            bsonType: String
-                price:
-                    types:
-                        -
-                            bsonType: Number
-                quantity:
-                    types:
-                        -
-                            bsonType: Number
+                                documents: ['unbounded', 'current']

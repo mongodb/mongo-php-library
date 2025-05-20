@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $replaceOne
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/'
 type:
     - resolvesToString
 encode: object
@@ -31,13 +31,13 @@ arguments:
             The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/#example'
         pipeline:
             -
                 $project:
                     item:
                         $replaceOne:
-                            input: $item
-                            find: blue paint
-                            replacement: red paint
+                            input: '$item'
+                            find: 'blue paint'
+                            replacement: 'red paint'

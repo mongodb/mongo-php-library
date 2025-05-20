@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $isArray
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/'
 type:
     - resolvesToBool
 encode: array
@@ -13,8 +13,8 @@ arguments:
             - expression
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/#example'
         pipeline:
             -
                 $project:
@@ -22,14 +22,15 @@ tests:
                         $cond:
                             if:
                                 $and:
+                                    # Example uses the short form, the builder always generates the verbose form
                                     -
                                         $isArray:
-                                            - $instock
+                                            - '$instock'
                                     -
                                         $isArray:
-                                            - $ordered
+                                            - '$ordered'
                             then:
                                 $concatArrays:
-                                    - $instock
-                                    - $ordered
-                            else: One or more fields is not an array.
+                                    - '$instock'
+                                    - '$ordered'
+                            else: 'One or more fields is not an array.'

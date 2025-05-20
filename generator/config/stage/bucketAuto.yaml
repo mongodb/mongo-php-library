@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $bucketAuto
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/'
 type:
     - stage
 encode: object
@@ -22,7 +22,7 @@ arguments:
     -
         name: output
         type:
-            - object
+            - object # of Accumulator
         optional: true
         description: |
             A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
@@ -37,10 +37,10 @@ arguments:
             Available only if the all groupBy values are numeric and none of them are NaN.
 tests:
     -
-        name: Single Facet Aggregation
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/#single-facet-aggregation
+        name: 'Single Facet Aggregation'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/#single-facet-aggregation'
         pipeline:
             -
                 $bucketAuto:
-                    groupBy: $price
+                    groupBy: '$price'
                     buckets: 4

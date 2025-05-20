@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $lt
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/'
 type:
     - resolvesToBool
 encode: array
@@ -17,8 +17,8 @@ arguments:
             - expression
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/#example'
         pipeline:
             -
                 $project:
@@ -26,6 +26,6 @@ tests:
                     qty: 1
                     qtyLt250:
                         $lt:
-                            - $qty
+                            - '$qty'
                             - 250
                     _id: 0

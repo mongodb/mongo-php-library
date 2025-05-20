@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $vectorSearch
-link: https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/
+link: 'https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/'
 type:
     - stage
 encode: object
@@ -28,7 +28,7 @@ arguments:
     -
         name: queryVector
         type:
-            - array
+            - array # of numbers
         description: |
             Array of numbers that represent the query vector. The number type must match the indexed field value type.
     -
@@ -53,19 +53,17 @@ arguments:
         description: |
             This field is required if exact is false or omitted.
             Number of nearest neighbors to use during the search. Value must be less than or equal to (<=) 10000. You can't specify a number less than the number of documents to return (limit).
+
 tests:
     -
-        name: ANN Basic
-        link: https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#ann-examples
+        name: 'ANN Basic'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#ann-examples'
         pipeline:
             -
                 $vectorSearch:
-                    index: vector_index
-                    path: plot_embedding
-                    queryVector:
-                        - -0.0016261312
-                        - -0.028070757
-                        - -0.011342932
+                    index: 'vector_index'
+                    path: 'plot_embedding'
+                    queryVector: [-0.0016261312, -0.028070757, -0.011342932] # skip other numbers, not relevant to the test
                     numCandidates: 150
                     limit: 10
             -
@@ -74,24 +72,22 @@ tests:
                     plot: 1
                     title: 1
                     score:
-                        $meta: vectorSearchScore
+                        $meta: 'vectorSearchScore'
+
     -
-        name: ANN Filter
-        link: https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#ann-examples
+        name: 'ANN Filter'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#ann-examples'
         pipeline:
             -
                 $vectorSearch:
-                    index: vector_index
-                    path: plot_embedding
+                    index: 'vector_index'
+                    path: 'plot_embedding'
                     filter:
                         $and:
                             -
                                 year:
                                     $lt: 1975
-                    queryVector:
-                        - 0.02421053
-                        - -0.022372592
-                        - -0.006231137
+                    queryVector: [0.02421053, -0.022372592, -0.006231137] # skip other numbers, not relevant to the test
                     numCandidates: 150
                     limit: 10
             -
@@ -101,19 +97,17 @@ tests:
                     plot: 1
                     year: 1
                     score:
-                        $meta: vectorSearchScore
+                        $meta: 'vectorSearchScore'
+
     -
-        name: ENN
-        link: https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#enn-examples
+        name: 'ENN'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#enn-examples'
         pipeline:
             -
                 $vectorSearch:
-                    index: vector_index
-                    path: plot_embedding
-                    queryVector:
-                        - -0.006954097
-                        - -0.009932499
-                        - -0.001311474
+                    index: 'vector_index'
+                    path: 'plot_embedding'
+                    queryVector: [-0.006954097, -0.009932499, -0.001311474] # skip other numbers, not relevant to the test
                     exact: true
                     limit: 10
             -
@@ -122,4 +116,4 @@ tests:
                     plot: 1
                     title: 1
                     score:
-                        $meta: vectorSearchScore
+                        $meta: 'vectorSearchScore'

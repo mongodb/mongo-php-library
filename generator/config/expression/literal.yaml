@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $literal
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/literal/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/literal/'
 type:
     - resolvesToAny
 encode: single

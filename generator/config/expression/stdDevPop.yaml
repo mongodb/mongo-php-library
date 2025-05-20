@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $stdDevPop
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/'
 type:
     - resolvesToDouble
 encode: single
@@ -16,11 +16,12 @@ arguments:
         variadic: array
 tests:
     -
-        name: Use in $project Stage
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--project-stage
+        name: 'Use in $project Stage'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--project-stage'
         pipeline:
             -
                 $project:
                     stdDev:
-                        $stdDevPop:
-                            - $scores.score
+                        # Example uses the short form, the builder always generates the verbose form
+                        # $stdDevPop: '$scores.score'
+                        $stdDevPop: ['$scores.score']

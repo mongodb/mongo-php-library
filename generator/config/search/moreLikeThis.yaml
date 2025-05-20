@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: moreLikeThis
-link: https://www.mongodb.com/docs/atlas/atlas-search/moreLikeThis/
+link: 'https://www.mongodb.com/docs/atlas/atlas-search/moreLikeThis/'
 type:
     - searchOperator
 encode: object
@@ -13,7 +13,7 @@ arguments:
         name: like
         type:
             - object
-            - array
+            - array # of object
     -
         name: score
         optional: true
@@ -21,15 +21,15 @@ arguments:
             - searchScore
 tests:
     -
-        name: Single Document with Multiple Fields
-        link: https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-1--single-document-with-multiple-fields
+        name: 'Single Document with Multiple Fields'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-1--single-document-with-multiple-fields'
         pipeline:
             -
                 $search:
                     moreLikeThis:
                         like:
-                            title: The Godfather
-                            genres: action
+                            title: 'The Godfather'
+                            genres: 'action'
             -
                 $limit: 5
             -
@@ -38,9 +38,10 @@ tests:
                     title: 1
                     released: 1
                     genres: 1
+
     -
-        name: Input Document Excluded in Results
-        link: https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-2--input-document-excluded-in-results
+        name: 'Input Document Excluded in Results'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-2--input-document-excluded-in-results'
         pipeline:
             -
                 $search:
@@ -49,18 +50,16 @@ tests:
                             -
                                 moreLikeThis:
                                     like:
-                                        _id:
-                                            buffer: !!binary VzoTlvKTE8qrzkqa
+                                        _id: !bson_objectId '573a1396f29313caabce4a9a'
                                         genres:
-                                            - Crime
-                                            - Drama
-                                        title: The Godfather
+                                            - 'Crime'
+                                            - 'Drama'
+                                        title: 'The Godfather'
                         mustNot:
                             -
                                 equals:
-                                    path: _id
-                                    value:
-                                        buffer: !!binary VzoTlvKTE8qrzkqa
+                                    path: '_id'
+                                    value: !bson_objectId '573a1396f29313caabce4a9a'
             -
                 $limit: 5
             -
@@ -69,9 +68,10 @@ tests:
                     title: 1
                     released: 1
                     genres: 1
+
     -
-        name: Multiple Analyzers
-        link: https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-3--multiple-analyzers
+        name: 'Multiple Analyzers'
+        link: 'https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-3--multiple-analyzers'
         pipeline:
             -
                 $search:
@@ -80,18 +80,16 @@ tests:
                             -
                                 moreLikeThis:
                                     like:
-                                        _id:
-                                            buffer: !!binary VzoTlvKTE8qrzkqa
+                                        _id: !bson_objectId '573a1396f29313caabce4a9a'
                                         genres:
-                                            - Crime
-                                            - Drama
-                                        title: The Godfather
+                                            - 'Crime'
+                                            - 'Drama'
+                                        title: 'The Godfather'
                         mustNot:
                             -
                                 equals:
-                                    path: _id
-                                    value:
-                                        buffer: !!binary VzoTlPKTE8qrzenv
+                                    path: '_id'
+                                    value: !bson_objectId '573a1394f29313caabcde9ef'
             -
                 $limit: 10
             -

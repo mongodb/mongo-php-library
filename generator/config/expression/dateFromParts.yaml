@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $dateFromParts
-link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/'
 type:
     - resolvesToDate
 encode: object
@@ -86,8 +86,8 @@ arguments:
             The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
 tests:
     -
-        name: Example
-        link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/#example
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/#example'
         pipeline:
             -
                 $project:
@@ -111,5 +111,4 @@ tests:
                             hour: 23
                             minute: 46
                             second: 12
-                            timezone: America/New_York
-        schema: '// TODO: No schema found in docs'
+                            timezone: 'America/New_York'

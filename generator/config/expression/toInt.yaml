@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toInt
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/
 type:
     - resolvesToInt
 encode: single
@@ -8,16 +8,13 @@ description: |
     Converts value to an integer.
     New in MongoDB 4.0.
 arguments:
-    -
-        name: expression
-        type:
-            - expression
+    - name: expression
+      type:
+          - expression
 tests:
-    -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/#example'
-        pipeline:
-            -
-                $addFields:
-                    convertedQty:
-                        $toInt: '$qty'
+    - name: Example
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/#example
+      pipeline:
+          - $addFields:
+                convertedQty:
+                    $toInt: $qty

@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $radiansToDegrees
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/
 type:
     - resolvesToDouble
     - resolvesToDecimal
@@ -8,20 +8,17 @@ encode: single
 description: |
     Converts a value from radians to degrees.
 arguments:
-    -
-        name: expression
-        type:
-            - resolvesToNumber
+    - name: expression
+      type:
+          - resolvesToNumber
 tests:
-    -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/#example'
-        pipeline:
-            -
-                $addFields:
-                    angle_a_deg:
-                        $radiansToDegrees: '$angle_a'
-                    angle_b_deg:
-                        $radiansToDegrees: '$angle_b'
-                    angle_c_deg:
-                        $radiansToDegrees: '$angle_c'
+    - name: Example
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/#example
+      pipeline:
+          - $addFields:
+                angle_a_deg:
+                    $radiansToDegrees: $angle_a
+                angle_b_deg:
+                    $radiansToDegrees: $angle_b
+                angle_c_deg:
+                    $radiansToDegrees: $angle_c

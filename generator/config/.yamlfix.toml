@@ -1,0 +1,8 @@
+allow_duplicate_keys = false
+comments_min_spaces_from_content = 1
+sequence_style = "block_style"
+indent_mapping = 4
+indent_offset = 4
+indent_sequence = 6
+none_representation = "~"
+explicit_start = false

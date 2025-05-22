@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toLong
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/
 type:
     - resolvesToLong
 encode: single
@@ -8,19 +8,15 @@ description: |
     Converts value to a long.
     New in MongoDB 4.0.
 arguments:
-    -
-        name: expression
-        type:
-            - expression
+    - name: expression
+      type:
+          - expression
 tests:
-    -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/#example'
-        pipeline:
-            -
-                $addFields:
-                    convertedQty:
-                        $toLong: '$qty'
-            -
-                $sort:
-                    convertedQty: -1
+    - name: Example
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/#example
+      pipeline:
+          - $addFields:
+                convertedQty:
+                    $toLong: $qty
+          - $sort:
+                convertedQty: -1

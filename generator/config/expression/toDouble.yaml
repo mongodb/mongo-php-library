@@ -1,6 +1,6 @@
 # $schema: ../schema.json
 name: $toDouble
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/'
+link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/
 type:
     - resolvesToDouble
 encode: single
@@ -8,20 +8,17 @@ description: |
     Converts value to a double.
     New in MongoDB 4.0.
 arguments:
-    -
-        name: expression
-        type:
-            - expression
+    - name: expression
+      type:
+          - expression
 tests:
-    -
-        name: 'Example'
-        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/#example'
-        pipeline:
-            -
-                $addFields:
-                    degrees:
-                        $toDouble:
-                            $substrBytes:
-                                - '$temp'
-                                - 0
-                                - 4
+    - name: Example
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/#example
+      pipeline:
+          - $addFields:
+                degrees:
+                    $toDouble:
+                        $substrBytes:
+                            - $temp
+                            - 0
+                            - 4

@@ -34,6 +34,17 @@ tests:
                             - $score
                         sortBy:
                             score: -1
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Find the Top Score Across Multiple Games
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score-across-multiple-games
       pipeline:
@@ -46,3 +57,14 @@ tests:
                             - $score
                         sortBy:
                             score: -1
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number

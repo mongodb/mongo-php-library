@@ -18,6 +18,26 @@ tests:
                 output:
                     rankQuantityForState:
                         $rank: {}
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Rank Partitions by a Date Field
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/#rank-partitions-by-a-date-field
       pipeline:
@@ -28,3 +48,23 @@ tests:
                 output:
                     rankOrderDateForState:
                         $rank: {}
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number

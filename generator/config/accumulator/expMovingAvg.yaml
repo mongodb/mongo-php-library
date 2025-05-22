@@ -39,6 +39,17 @@ tests:
                         $expMovingAvg:
                             input: $price
                             N: 2
+      schema:
+          stockPrices:
+              stock:
+                  types:
+                      - bsonType: String
+              date:
+                  types:
+                      - bsonType: Date
+              price:
+                  types:
+                      - bsonType: Number
     - name: Exponential Moving Average Using alpha
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/#exponential-moving-average-using-alpha
       pipeline:
@@ -51,3 +62,14 @@ tests:
                         $expMovingAvg:
                             input: $price
                             alpha: 0.75
+      schema:
+          stockPrices:
+              stock:
+                  types:
+                      - bsonType: String
+              date:
+                  types:
+                      - bsonType: Date
+              price:
+                  types:
+                      - bsonType: Number

@@ -26,6 +26,23 @@ tests:
                             date: $date
                 itemsSold:
                     $addToSet: $item
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: Date
     - name: Use in $setWindowFields Stage
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--setwindowfields-stage
       pipeline:
@@ -40,3 +57,23 @@ tests:
                             documents:
                                 - unbounded
                                 - current
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number

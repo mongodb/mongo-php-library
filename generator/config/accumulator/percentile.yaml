@@ -41,6 +41,20 @@ tests:
                         p:
                             - 0.95
                         method: approximate
+      schema:
+          testScores:
+              studentId:
+                  types:
+                      - bsonType: String
+              test01:
+                  types:
+                      - bsonType: Number
+              test02:
+                  types:
+                      - bsonType: Number
+              test03:
+                  types:
+                      - bsonType: Number
     - name: Calculate Multiple Values as an Accumulator
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#calculate-multiple-values-as-an-accumulator
       pipeline:
@@ -82,6 +96,20 @@ tests:
                             - 0.75
                             - 0.95
                         method: approximate
+      schema:
+          testScores:
+              studentId:
+                  types:
+                      - bsonType: String
+              test01:
+                  types:
+                      - bsonType: Number
+              test02:
+                  types:
+                      - bsonType: Number
+              test03:
+                  types:
+                      - bsonType: Number
     - name: Use $percentile in a $setWindowField Stage
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#use-operatorname-in-a--setwindowfield-stage
       pipeline:
@@ -103,3 +131,17 @@ tests:
                 _id: 0
                 studentId: 1
                 test01_95percentile: 1
+      schema:
+          testScores:
+              studentId:
+                  types:
+                      - bsonType: String
+              test01:
+                  types:
+                      - bsonType: Number
+              test02:
+                  types:
+                      - bsonType: Number
+              test03:
+                  types:
+                      - bsonType: Number

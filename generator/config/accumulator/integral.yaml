@@ -37,3 +37,14 @@ tests:
                                 - unbounded
                                 - current
                             unit: hour
+      schema:
+          powerConsumption:
+              powerMeterID:
+                  types:
+                      - bsonType: String
+              timeStamp:
+                  types:
+                      - bsonType: Date
+              kilowatts:
+                  types:
+                      - bsonType: Number

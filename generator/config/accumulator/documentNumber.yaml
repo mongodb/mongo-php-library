@@ -18,3 +18,23 @@ tests:
                 output:
                     documentNumberForState:
                         $documentNumber: {}
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number

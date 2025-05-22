@@ -33,6 +33,20 @@ tests:
                     $median:
                         input: $test01
                         method: approximate
+      schema:
+          testScores:
+              studentId:
+                  types:
+                      - bsonType: String
+              test01:
+                  types:
+                      - bsonType: Number
+              test02:
+                  types:
+                      - bsonType: Number
+              test03:
+                  types:
+                      - bsonType: Number
     - name: Use $median in a $setWindowField Stage
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-in-a--setwindowfield-stage
       pipeline:
@@ -52,3 +66,17 @@ tests:
                 _id: 0
                 studentId: 1
                 test01_median: 1
+      schema:
+          testScores:
+              studentId:
+                  types:
+                      - bsonType: String
+              test01:
+                  types:
+                      - bsonType: Number
+              test02:
+                  types:
+                      - bsonType: Number
+              test03:
+                  types:
+                      - bsonType: Number

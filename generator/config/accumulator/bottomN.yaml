@@ -41,6 +41,17 @@ tests:
                         sortBy:
                             score: -1
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Finding the Three Lowest Score Documents Across Multiple Games
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#finding-the-three-lowest-score-documents-across-multiple-games
       pipeline:
@@ -54,6 +65,17 @@ tests:
                         sortBy:
                             score: -1
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Computing n Based on the Group Key for $group
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#computing-n-based-on-the-group-key-for--group
       pipeline:
@@ -73,3 +95,14 @@ tests:
                                 else: 3
                         sortBy:
                             score: -1
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number

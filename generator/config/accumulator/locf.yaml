@@ -22,3 +22,11 @@ tests:
                 output:
                     price:
                         $locf: $price
+      schema:
+          stock:
+              time:
+                  types:
+                      - bsonType: Date
+              price:
+                  types:
+                      - bsonType: Number

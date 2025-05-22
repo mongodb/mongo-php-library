@@ -14,7 +14,7 @@ arguments:
           - expression
 tests:
     - name: Use in $group Stage
-      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--group-stage
       pipeline:
           - $sort:
                 item: 1
@@ -23,6 +23,23 @@ tests:
                 _id: $item
                 lastSalesDate:
                     $last: $date
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              date:
+                  types:
+                      - bsonType: Date
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Use in $setWindowFields Stage
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--setwindowfields-stage
       pipeline:
@@ -37,3 +54,23 @@ tests:
                             documents:
                                 - current
                                 - unbounded
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number

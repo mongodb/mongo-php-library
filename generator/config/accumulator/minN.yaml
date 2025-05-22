@@ -32,6 +32,17 @@ tests:
                             - $score
                             - $playerId
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Finding the Minimum Three Documents Across Multiple Games
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#finding-the-minimum-three-documents-across-multiple-games
       pipeline:
@@ -43,6 +54,17 @@ tests:
                             - $score
                             - $playerId
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Computing n Based on the Group Key for $group
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#computing-n-based-on-the-group-key-for--group
       pipeline:
@@ -62,3 +84,14 @@ tests:
                                         - G2
                                 then: 1
                                 else: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number

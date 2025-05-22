@@ -40,3 +40,14 @@ tests:
           - $match:
                 truckAverageSpeed:
                     $gt: 50
+      schema:
+          deliveryFleet:
+              truckID:
+                  types:
+                      - bsonType: String
+              timeStamp:
+                  types:
+                      - bsonType: Date
+              miles:
+                  types:
+                      - bsonType: Number

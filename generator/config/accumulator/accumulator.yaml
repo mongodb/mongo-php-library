@@ -79,6 +79,20 @@ tests:
                                     return (state.sum / state.count)
                                 }
                         lang: js
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
     - name: Use initArgs to Vary the Initial State by Group
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/#use-initargs-to-vary-the-initial-state-by-group
       pipeline:
@@ -119,3 +133,17 @@ tests:
                                     return state.restaurants
                                 }
                         lang: js
+      schema:
+          restaurants:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              city:
+                  types:
+                      - bsonType: String
+              cuisine:
+                  types:
+                      - bsonType: String

@@ -32,6 +32,17 @@ tests:
                             - $score
                             - $playerId
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Finding the Maximum Three Scores Across Multiple Games
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/#finding-the-maximum-three-scores-across-multiple-games
       pipeline:
@@ -43,6 +54,17 @@ tests:
                             - $score
                             - $playerId
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Computing n Based on the Group Key for $group
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/#computing-n-based-on-the-group-key-for--group
       pipeline:
@@ -62,3 +84,14 @@ tests:
                                         - G2
                                 then: 1
                                 else: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number

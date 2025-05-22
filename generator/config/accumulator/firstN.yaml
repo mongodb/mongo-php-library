@@ -45,6 +45,18 @@ tests:
                     $firstN:
                         input: $score
                         n: 5
+      schema:
+          TestCollection:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
+                      - bsonType: 'Null'
     - name: Find the First Three Player Scores for a Single Game
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#find-the-first-three-player-scores-for-a-single-game
       pipeline:
@@ -58,6 +70,17 @@ tests:
                             - $playerId
                             - $score
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Finding the First Three Player Scores Across Multiple Games
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#finding-the-first-three-player-scores-across-multiple-games
       pipeline:
@@ -69,6 +92,17 @@ tests:
                             - $playerId
                             - $score
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Using $sort With $firstN
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#using--sort-with--firstn
       pipeline:
@@ -82,6 +116,17 @@ tests:
                             - $playerId
                             - $score
                         n: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Computing n Based on the Group Key for $group
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#computing-n-based-on-the-group-key-for--group
       pipeline:
@@ -99,3 +144,14 @@ tests:
                                         - G2
                                 then: 1
                                 else: 3
+      schema:
+          gamescores:
+              playerId:
+                  types:
+                      - bsonType: String
+              gameId:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number

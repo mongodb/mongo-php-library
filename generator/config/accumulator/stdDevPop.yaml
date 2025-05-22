@@ -21,6 +21,20 @@ tests:
                 _id: $quiz
                 stdDev:
                     $stdDevPop: $score
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              quiz:
+                  types:
+                      - bsonType: Number
+              score:
+                  types:
+                      - bsonType: Number
     - name: Use in $setWindowFields Stage
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--setwindowfields-stage
       pipeline:
@@ -35,3 +49,23 @@ tests:
                             documents:
                                 - unbounded
                                 - current
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number

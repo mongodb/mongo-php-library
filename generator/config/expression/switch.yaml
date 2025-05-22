@@ -55,3 +55,16 @@ tests:
                                       - 80
                               then: Needs improvement.
                         default: No scores found.
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              scores:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number

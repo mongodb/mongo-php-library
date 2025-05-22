@@ -20,3 +20,14 @@ tests:
                         $subtract:
                             - $startTemp
                             - $endTemp
+      schema:
+          temperatureChange:
+              _id:
+                  types:
+                      - bsonType: Number
+              startTemp:
+                  types:
+                      - bsonType: Number
+              endTemp:
+                  types:
+                      - bsonType: Number

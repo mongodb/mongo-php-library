@@ -28,3 +28,11 @@ tests:
                 yearNumber:
                     $isoWeekYear:
                         date: $date
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: Date

@@ -40,3 +40,17 @@ tests:
                             $multiply:
                                 - $$total
                                 - $$discounted
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              price:
+                  types:
+                      - bsonType: Number
+              tax:
+                  types:
+                      - bsonType: Number
+              applyDiscount:
+                  types:
+                      - bsonType: Boolean

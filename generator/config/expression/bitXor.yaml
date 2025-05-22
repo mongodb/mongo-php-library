@@ -23,3 +23,14 @@ tests:
                     $bitXor:
                         - $a
                         - $b
+      schema:
+          switches:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Int32
+              b:
+                  types:
+                      - bsonType: Int32

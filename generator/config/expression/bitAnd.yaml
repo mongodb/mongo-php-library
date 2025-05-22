@@ -23,6 +23,17 @@ tests:
                     $bitAnd:
                         - $a
                         - $b
+      schema:
+          switches:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Int32
+              b:
+                  types:
+                      - bsonType: Int32
     - name: Bitwise AND with a Long and Integer
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/#bitwise-and-with-a-long-and-integer
       pipeline:
@@ -31,3 +42,14 @@ tests:
                     $bitAnd:
                         - $a
                         - $numberLong: '63'
+      schema:
+          switches:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Int32
+              b:
+                  types:
+                      - bsonType: Int32

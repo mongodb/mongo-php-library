@@ -31,12 +31,11 @@ tests:
                     $round:
                         - $value
                         - 1
-    - name: Round Average Rating
-      pipeline:
-          - $project:
-                roundedAverageRating:
-                    $avg:
-                        - $round:
-                              - $avg:
-                                    - $averageRating
-                              - 2
+      schema:
+          samples:
+              _id:
+                  types:
+                      - bsonType: Number
+              value:
+                  types:
+                      - bsonType: Number

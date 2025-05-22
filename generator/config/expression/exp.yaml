@@ -19,3 +19,14 @@ tests:
                     $subtract:
                         - $exp: $interestRate
                         - 1
+      schema:
+          accounts:
+              _id:
+                  types:
+                      - bsonType: Number
+              interestRate:
+                  types:
+                      - bsonType: Number
+              presentValue:
+                  types:
+                      - bsonType: Number

@@ -23,6 +23,24 @@ tests:
                         - $flowerFieldA
                         - $flowerFieldB
                 _id: 0
+      schema:
+          flowers:
+              _id:
+                  types:
+                      - bsonType: Number
+              flowerFieldA:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              flowerFieldB:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+                            - bsonType: Array
+                              types:
+                                  - bsonType: String
     - name: Retrieve Documents for Roles Granted to the Current User
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/#retrieve-documents-for-roles-granted-to-the-current-user
       pipeline:
@@ -34,3 +52,27 @@ tests:
                                     - $allowedRoles
                                     - $$USER_ROLES.role
                               - []
+      schema:
+          budget:
+              _id:
+                  types:
+                      - bsonType: Int32
+              allowedRoles:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              comment:
+                  types:
+                      - bsonType: String
+              yearlyBudget:
+                  types:
+                      - bsonType: Double
+              cloudBudget:
+                  types:
+                      - bsonType: Double
+                      - bsonType: Undefined
+              salesEventsBudget:
+                  types:
+                      - bsonType: Double
+                      - bsonType: Undefined

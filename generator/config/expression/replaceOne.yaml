@@ -36,3 +36,11 @@ tests:
                         input: $item
                         find: blue paint
                         replacement: red paint
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String

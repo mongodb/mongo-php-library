@@ -25,3 +25,17 @@ tests:
                         - $qty
                         - 250
                 _id: 0
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number

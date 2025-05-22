@@ -27,3 +27,16 @@ tests:
                     $in:
                         - bananas
                         - $in_stock
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              location:
+                  types:
+                      - bsonType: String
+              in_stock:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

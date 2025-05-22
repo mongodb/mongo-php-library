@@ -24,3 +24,14 @@ tests:
                         - $tan:
                               $degreesToRadians: $angle_a
                         - $side_a
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              angle_a:
+                  types:
+                      - bsonType: Decimal128
+              side_a:
+                  types:
+                      - bsonType: Decimal128

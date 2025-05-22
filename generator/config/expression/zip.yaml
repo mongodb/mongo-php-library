@@ -47,6 +47,15 @@ tests:
                             - $arrayElemAt:
                                   - $matrix
                                   - 2
+      schema:
+          matrices:
+              matrix:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Array
+                              types:
+                                  - bsonType: Number
     - name: Filtering and Preserving Indexes
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/#filtering-and-preserving-indexes
       pipeline:
@@ -73,3 +82,20 @@ tests:
                                     $gte:
                                         - $$page.reviews
                                         - 1
+      schema:
+          pages:
+              category:
+                  types:
+                      - bsonType: String
+              pages:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  title:
+                                      types:
+                                          - bsonType: String
+                                  reviews:
+                                      types:
+                                          - bsonType: Number

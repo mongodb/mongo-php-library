@@ -48,6 +48,20 @@ tests:
                     $dateFromString:
                         dateString: $date
                         timezone: America/New_York
+      schema:
+          logmessages:
+              _id:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: String
+              timezone:
+                  types:
+                      - bsonType: String
+              message:
+                  types:
+                      - bsonType: String
     - name: onError
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onerror
       pipeline:
@@ -57,6 +71,17 @@ tests:
                         dateString: $date
                         timezone: $timezone
                         onError: $date
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: String
+              timezone:
+                  types:
+                      - bsonType: String
     - name: onNull
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/#onnull
       pipeline:
@@ -66,3 +91,15 @@ tests:
                         dateString: $date
                         timezone: $timezone
                         onNull: !bson_utcdatetime '0'
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: String
+                      - bsonType: 'Null'
+              timezone:
+                  types:
+                      - bsonType: String

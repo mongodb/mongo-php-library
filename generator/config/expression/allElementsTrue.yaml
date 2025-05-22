@@ -20,3 +20,21 @@ tests:
                     $allElementsTrue:
                         - $responses
                 _id: 0
+      schema:
+          survey:
+              _id:
+                  types:
+                      - bsonType: Number
+              responses:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Boolean
+                            - bsonType: Array
+                              types:
+                                  - bsonType: Number
+                                  - bsonType: Boolean
+                            - bsonType: Number
+                            - bsonType: String
+                            - bsonType: 'Null'
+                            - bsonType: Undefined

@@ -18,3 +18,11 @@ tests:
                 name: 1
                 length:
                     $strLenCP: $name
+      schema:
+          food:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String

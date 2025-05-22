@@ -23,6 +23,17 @@ tests:
                     $bitOr:
                         - $a
                         - $b
+      schema:
+          switches:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Int32
+              b:
+                  types:
+                      - bsonType: Int32
     - name: Bitwise OR with a Long and Integer
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/#bitwise-or-with-a-long-and-integer
       pipeline:
@@ -31,3 +42,14 @@ tests:
                     $bitOr:
                         - $a
                         - $numberLong: '63'
+      schema:
+          switches:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Int32
+              b:
+                  types:
+                      - bsonType: Int32

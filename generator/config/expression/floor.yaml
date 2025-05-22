@@ -18,3 +18,11 @@ tests:
                 value: 1
                 floorValue:
                     $floor: $value
+      schema:
+          samples:
+              _id:
+                  types:
+                      - bsonType: Number
+              value:
+                  types:
+                      - bsonType: Number

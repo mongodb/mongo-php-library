@@ -27,3 +27,24 @@ tests:
                     $min:
                         - $final
                         - $midterm
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              quizzes:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+              labs:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+              final:
+                  types:
+                      - bsonType: Number
+              midterm:
+                  types:
+                      - bsonType: Number

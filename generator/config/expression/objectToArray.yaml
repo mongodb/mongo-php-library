@@ -20,6 +20,27 @@ tests:
                 item: 1
                 dimensions:
                     $objectToArray: $dimensions
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              dimensions:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            l:
+                                types:
+                                    - bsonType: Number
+                            w:
+                                types:
+                                    - bsonType: Number
+                            uom:
+                                types:
+                                    - bsonType: String
     - name: $objectToArray to Sum Nested Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/#-objecttoarray-to-sum-nested-fields
       pipeline:
@@ -32,3 +53,24 @@ tests:
                 _id: $warehouses.k
                 total:
                     $sum: $warehouses.v
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              instock:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            warehouse1:
+                                types:
+                                    - bsonType: Number
+                            warehouse2:
+                                types:
+                                    - bsonType: Number
+                            warehouse3:
+                                types:
+                                    - bsonType: Number

@@ -54,6 +54,26 @@ tests:
                         binSize: 2
                         timezone: America/Los_Angeles
                         startOfWeek: Monday
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Truncate Order Dates and Obtain Quantity Sum in a $group Pipeline Stage
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/#truncate-order-dates-and-obtain-quantity-sum-in-a--group-pipeline-stage
       pipeline:
@@ -66,3 +86,23 @@ tests:
                             binSize: 6
                 sumQuantity:
                     $sum: $quantity
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number

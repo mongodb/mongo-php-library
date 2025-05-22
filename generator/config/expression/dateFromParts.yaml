@@ -99,3 +99,8 @@ tests:
                         minute: 46
                         second: 12
                         timezone: America/New_York
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: ObjectId

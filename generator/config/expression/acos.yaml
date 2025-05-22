@@ -26,3 +26,17 @@ tests:
                             $divide:
                                 - $side_b
                                 - $hypotenuse
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              side_a:
+                  types:
+                      - bsonType: Decimal128
+              side_b:
+                  types:
+                      - bsonType: Decimal128
+              hypotenuse:
+                  types:
+                      - bsonType: Decimal128

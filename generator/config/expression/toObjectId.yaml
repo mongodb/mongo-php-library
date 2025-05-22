@@ -20,3 +20,15 @@ tests:
                     $toObjectId: $_id
           - $sort:
                 convertedId: -1
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: String
+                      - bsonType: ObjectId
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number

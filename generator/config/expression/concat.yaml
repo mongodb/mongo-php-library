@@ -13,7 +13,7 @@ arguments:
       variadic: array
 tests:
     - name: Example
-      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/#examples
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/#example
       pipeline:
           - $project:
                 itemDescription:
@@ -21,3 +21,18 @@ tests:
                         - $item
                         - ' - '
                         - $description
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              quarter:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+                      - bsonType: 'Null'

@@ -20,3 +20,14 @@ tests:
           - $project:
                 result:
                     $bitNot: $a
+      schema:
+          switches:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Int32
+              b:
+                  types:
+                      - bsonType: Int32

@@ -40,3 +40,19 @@ tests:
                     $indexOfArray:
                         - $items
                         - 2
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              items:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+                            - bsonType: 'Null'
+                            - bsonType: String
+                      - bsonType: 'Null'
+              amount:
+                  types:
+                      - bsonType: Number

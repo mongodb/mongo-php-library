@@ -22,3 +22,11 @@ tests:
                 tanh_output:
                     $tanh:
                         $degreesToRadians: $angle
+      schema:
+          trigonometry:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              angle:
+                  types:
+                      - bsonType: Decimal128

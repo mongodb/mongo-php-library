@@ -38,3 +38,14 @@ tests:
                     $sum: $qty
           - $sort:
                 total_qty: -1
+      schema:
+          deliveries:
+              _id:
+                  types:
+                      - bsonType: Number
+              city:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number

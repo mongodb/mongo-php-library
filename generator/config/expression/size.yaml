@@ -26,3 +26,20 @@ tests:
                         then:
                             $size: $colors
                         else: NA
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              colors:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+                      - bsonType: String

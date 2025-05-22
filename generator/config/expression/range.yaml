@@ -35,3 +35,14 @@ tests:
                         - 0
                         - $distance
                         - 25
+      schema:
+          distances:
+              _id:
+                  types:
+                      - bsonType: Number
+              city:
+                  types:
+                      - bsonType: String
+              distance:
+                  types:
+                      - bsonType: Number

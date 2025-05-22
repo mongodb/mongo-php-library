@@ -36,6 +36,13 @@ tests:
                             $add:
                                 - $$grade
                                 - 2
+      schema:
+          grades:
+              quizzes:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
     - name: Truncate Each Array Element
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/#truncate-each-array-element
       pipeline:
@@ -48,6 +55,16 @@ tests:
                         in:
                             $trunc:
                                 - $$decimalValue
+      schema:
+          deliveries:
+              city:
+                  types:
+                      - bsonType: String
+              distances:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
     - name: Convert Celsius Temperatures to Fahrenheit
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/#convert-celsius-temperatures-to-fahrenheit
       pipeline:
@@ -62,3 +79,13 @@ tests:
                                       - $$tempInCelsius
                                       - 1.8
                                 - 32
+      schema:
+          temperatures:
+              date:
+                  types:
+                      - bsonType: Date
+              tempsC:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number

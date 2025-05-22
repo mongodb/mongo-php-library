@@ -20,3 +20,16 @@ tests:
                     $toLong: $qty
           - $sort:
                 convertedQty: -1
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: String
+                      - bsonType: Int32
+                      - bsonType: Long

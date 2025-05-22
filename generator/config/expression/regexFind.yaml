@@ -32,6 +32,14 @@ tests:
                     $regexFind:
                         input: $description
                         regex: !bson_regex line
+      schema:
+          products:
+              _id:
+                  types:
+                      - bsonType: Number
+              description:
+                  types:
+                      - bsonType: String
     - name: i Option
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/#i-option
       pipeline:
@@ -54,3 +62,11 @@ tests:
                         input: $description
                         regex: !bson_regex line
                         options: i
+      schema:
+          products:
+              _id:
+                  types:
+                      - bsonType: Number
+              description:
+                  types:
+                      - bsonType: String

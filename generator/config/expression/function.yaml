@@ -51,6 +51,19 @@ tests:
                             - $name
                             - $scores
                         lang: js
+      schema:
+          players:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              scores:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
     - name: Alternative to $where
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/#example-2--alternative-to--where
       pipeline:
@@ -65,3 +78,16 @@ tests:
                         args:
                             - $name
                         lang: js
+      schema:
+          players:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              scores:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number

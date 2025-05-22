@@ -20,3 +20,21 @@ tests:
                     $toDate: $order_date
           - $sort:
                 convertedDate: 1
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              price:
+                  types:
+                      - bsonType: Number
+              order_date:
+                  types:
+                      - bsonType: Date
+                      - bsonType: String

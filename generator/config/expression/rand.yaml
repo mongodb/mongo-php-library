@@ -20,6 +20,17 @@ tests:
                     $floor: $amount
           - $merge:
                 into: donors
+      schema:
+          donors:
+              donorId:
+                  types:
+                      - bsonType: Number
+              amount:
+                  types:
+                      - bsonType: Number
+              frequency:
+                  types:
+                      - bsonType: Number
     - name: Select Random Items From a Collection
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/#select-random-items-from-a-collection
       pipeline:
@@ -34,3 +45,17 @@ tests:
                 _id: 0
                 name: 1
                 registered: 1
+      schema:
+          voters:
+              name:
+                  types:
+                      - bsonType: String
+              voterId:
+                  types:
+                      - bsonType: Number
+              district:
+                  types:
+                      - bsonType: Number
+              registered:
+                  types:
+                      - bsonType: Boolean

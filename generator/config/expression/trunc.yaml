@@ -28,3 +28,11 @@ tests:
                     $trunc:
                         - $value
                         - 1
+      schema:
+          samples:
+              _id:
+                  types:
+                      - bsonType: Number
+              value:
+                  types:
+                      - bsonType: Number

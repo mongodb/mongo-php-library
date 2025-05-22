@@ -24,3 +24,14 @@ tests:
                         - $sin:
                               $degreesToRadians: $angle_a
                         - $hypotenuse
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              angle_a:
+                  types:
+                      - bsonType: Decimal128
+              hypotenuse:
+                  types:
+                      - bsonType: Decimal128

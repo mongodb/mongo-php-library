@@ -31,3 +31,17 @@ tests:
                         - $$ROOT
           - $project:
                 fromItems: 0
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              ordered:
+                  types:
+                      - bsonType: Number

@@ -16,3 +16,4 @@ tests:
           - $addFields:
                 lastItem:
                     $last: $items
+      schema: '// TODO: No docs reference found'

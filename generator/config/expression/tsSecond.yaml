@@ -20,9 +20,31 @@ tests:
                 saleTimestamp: 1
                 saleSeconds:
                     $tsSecond: $saleTimestamp
+      schema:
+          stockSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              symbol:
+                  types:
+                      - bsonType: String
+              saleTimestamp:
+                  types:
+                      - bsonType: Timestamp
     - name: Use $tsSecond in a Change Stream Cursor to Monitor Collection Changes
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/#use--tssecond-in-a-change-stream-cursor-to-monitor-collection-changes
       pipeline:
           - $addFields:
                 clusterTimeSeconds:
                     $tsSecond: $clusterTime
+      schema:
+          stockSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              symbol:
+                  types:
+                      - bsonType: String
+              saleTimestamp:
+                  types:
+                      - bsonType: Timestamp

@@ -22,3 +22,11 @@ tests:
                 sinh_output:
                     $sinh:
                         $degreesToRadians: $angle
+      schema:
+          trigonometry:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              angle:
+                  types:
+                      - bsonType: Decimal128

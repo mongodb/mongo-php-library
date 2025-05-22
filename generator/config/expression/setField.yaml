@@ -35,6 +35,20 @@ tests:
                     value: $price
           - $unset:
                 - price
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              qty:
+                  types:
+                      - bsonType: Number
     - name: Add Fields that Start with a Dollar Sign
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#add-fields-that-start-with-a-dollar-sign----
       pipeline:
@@ -46,6 +60,20 @@ tests:
                     value: $price
           - $unset:
                 - price
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              qty:
+                  types:
+                      - bsonType: Number
     - name: Update Fields that Contain Periods
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#update-fields-that-contain-periods--.-
       pipeline:
@@ -56,6 +84,20 @@ tests:
                     field: price.usd
                     input: $$ROOT
                     value: 49.99
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              price.usd:
+                  types:
+                      - bsonType: Number
     - name: Update Fields that Start with a Dollar Sign
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#update-fields-that-start-with-a-dollar-sign----
       pipeline:
@@ -67,6 +109,20 @@ tests:
                         $literal: $price
                     input: $$ROOT
                     value: 49.99
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              $price:
+                  types:
+                      - bsonType: Number
     - name: Remove Fields that Contain Periods
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#remove-fields-that-contain-periods--.-
       pipeline:
@@ -75,6 +131,20 @@ tests:
                     field: price.usd
                     input: $$ROOT
                     value: $$REMOVE
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              price.usd:
+                  types:
+                      - bsonType: Number
     - name: Remove Fields that Start with a Dollar Sign
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/#remove-fields-that-start-with-a-dollar-sign----
       pipeline:
@@ -84,3 +154,17 @@ tests:
                         $literal: $price
                     input: $$ROOT
                     value: $$REMOVE
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              qty:
+                  types:
+                      - bsonType: Number

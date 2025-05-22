@@ -21,3 +21,23 @@ tests:
                 stdDev:
                     $stdDevPop:
                         - $scores.score
+      schema:
+          quizzes:
+              _id:
+                  types:
+                      - bsonType: Number
+              scores:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  name:
+                                      types:
+                                          - bsonType: String
+                                  score:
+                                      types:
+                                          - bsonType: Number
+                                  quiz:
+                                      types:
+                                          - bsonType: Number

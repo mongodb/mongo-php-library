@@ -46,3 +46,17 @@ tests:
                             - 0.5
                             - 0.95
                         method: approximate
+      schema:
+          testScores:
+              studentId:
+                  types:
+                      - bsonType: String
+              test01:
+                  types:
+                      - bsonType: Number
+              test02:
+                  types:
+                      - bsonType: Number
+              test03:
+                  types:
+                      - bsonType: Number

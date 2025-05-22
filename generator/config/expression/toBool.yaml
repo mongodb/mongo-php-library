@@ -33,3 +33,19 @@ tests:
                             $toBool: $shipped
           - $match:
                 convertedShippedFlag: false
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              shipped:
+                  types:
+                      - bsonType: String
+                      - bsonType: Number
+                      - bsonType: Boolean

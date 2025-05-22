@@ -26,3 +26,15 @@ tests:
                     $maxN:
                         n: 2
                         input: $score
+      schema:
+          scores:
+              playerId:
+                  types:
+                      - bsonType: Number
+              score:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+                            - bsonType: 'Null'
+                            - bsonType: String

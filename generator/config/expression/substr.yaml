@@ -36,3 +36,18 @@ tests:
                         - $quarter
                         - 2
                         - -1
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              quarter:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+                      - bsonType: 'Null'

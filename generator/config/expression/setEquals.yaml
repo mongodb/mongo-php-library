@@ -23,3 +23,18 @@ tests:
                     $setEquals:
                         - $cakes
                         - $cupcakes
+      schema:
+          bakeryOrders:
+              _id:
+                  types:
+                      - bsonType: Number
+              cakes:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              cupcakes:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

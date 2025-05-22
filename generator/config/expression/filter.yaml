@@ -41,8 +41,31 @@ tests:
                             $gte:
                                 - $$item.price
                                 - 100
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              items:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  item_id:
+                                      types:
+                                          - bsonType: Number
+                                  quantity:
+                                      types:
+                                          - bsonType: Number
+                                  price:
+                                      types:
+                                          - bsonType: Number
+                                  name:
+                                      types:
+                                          - bsonType: String
     - name: Using the limit field
-      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#using-the-limit-field
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#use-the-limit-field
       pipeline:
           - $project:
                 items:
@@ -54,19 +77,29 @@ tests:
                                 - 100
                         as: item
                         limit: 1
-    - name: limit as a Numeric Expression
-      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#limit-as-a-numeric-expression
-      pipeline:
-          - $project:
-                items:
-                    $filter:
-                        input: $items
-                        cond:
-                            $lte:
-                                - $$item.price
-                                - 150
-                        as: item
-                        limit: 2
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              items:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  item_id:
+                                      types:
+                                          - bsonType: Number
+                                  quantity:
+                                      types:
+                                          - bsonType: Number
+                                  price:
+                                      types:
+                                          - bsonType: Number
+                                  name:
+                                      types:
+                                          - bsonType: String
     - name: limit Greater than Possible Matches
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#limit-greater-than-possible-matches
       pipeline:
@@ -80,3 +113,26 @@ tests:
                                 - 100
                         as: item
                         limit: 5
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              items:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  item_id:
+                                      types:
+                                          - bsonType: Number
+                                  quantity:
+                                      types:
+                                          - bsonType: Number
+                                  price:
+                                      types:
+                                          - bsonType: Number
+                                  name:
+                                      types:
+                                          - bsonType: String

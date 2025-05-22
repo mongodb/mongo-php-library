@@ -31,6 +31,20 @@ tests:
                         - $getField:
                               field: price.usd
                         - 200
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price.usd:
+                  types:
+                      - bsonType: Number
+              qty:
+                  types:
+                      - bsonType: Number
     - name: Query Fields that Start with a Dollar Sign
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-fields-that-start-with-a-dollar-sign----
       pipeline:
@@ -41,6 +55,20 @@ tests:
                               field:
                                   $literal: $price
                         - 200
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              $price:
+                  types:
+                      - bsonType: Number
+              qty:
+                  types:
+                      - bsonType: Number
     - name: Query a Field in a Sub-document
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/#query-a-field-in-a-sub-document
       pipeline:
@@ -52,3 +80,27 @@ tests:
                                   $literal: $small
                               input: $quantity
                         - 20
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price.usd:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $large:
+                                types:
+                                    - bsonType: Number
+                            $medium:
+                                types:
+                                    - bsonType: Number
+                            $small:
+                                types:
+                                    - bsonType: Number

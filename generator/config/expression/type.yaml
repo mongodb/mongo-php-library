@@ -17,3 +17,27 @@ tests:
           - $project:
                 a:
                     $type: $a
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Number
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+                      - bsonType: Document
+                        fields:
+                            a:
+                                types:
+                                    - bsonType: String
+                            b:
+                                types:
+                                    - bsonType: String
+                            c:
+                                types:
+                                    - bsonType: String
+                      - bsonType: String
+                      - bsonType: Long

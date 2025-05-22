@@ -22,3 +22,14 @@ tests:
                             - $temp
                             - 0
                             - 4
+      schema:
+          weather:
+              _id:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: Date
+              temp:
+                  types:
+                      - bsonType: String

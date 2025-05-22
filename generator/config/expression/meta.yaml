@@ -22,6 +22,14 @@ tests:
                     $meta: textScore
                 count:
                     $sum: 1
+      schema:
+          articles:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
     - name: indexKey
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/#-meta---indexkey-
       pipeline:
@@ -30,3 +38,17 @@ tests:
           - $addFields:
                 idxKey:
                     $meta: indexKey
+      schema:
+          orders:
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String

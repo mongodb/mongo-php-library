@@ -20,3 +20,16 @@ tests:
                 name: 1
                 reverseFavorites:
                     $reverseArray: $favorites
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              favorites:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

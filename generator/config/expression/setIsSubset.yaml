@@ -25,3 +25,21 @@ tests:
                         - $flowerFieldA
                         - $flowerFieldB
                 _id: 0
+      schema:
+          flowers:
+              _id:
+                  types:
+                      - bsonType: Number
+              flowerFieldA:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              flowerFieldB:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+                            - bsonType: Array
+                              types:
+                                  - bsonType: String

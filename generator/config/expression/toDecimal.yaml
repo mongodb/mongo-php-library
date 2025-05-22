@@ -18,3 +18,19 @@ tests:
           - $addFields:
                 convertedPrice:
                     $toDecimal: $price
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              price:
+                  types:
+                      - bsonType: Number
+                      - bsonType: Decimal128
+                      - bsonType: String

@@ -42,3 +42,15 @@ tests:
                     $indexOfBytes:
                         - $item
                         - foo
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+                      - bsonType: 'Null'
+              amount:
+                  types:
+                      - bsonType: Number

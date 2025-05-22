@@ -20,3 +20,11 @@ tests:
                 value: 1
                 ceilingValue:
                     $ceil: $value
+      schema:
+          samples:
+              _id:
+                  types:
+                      - bsonType: Number
+              value:
+                  types:
+                      - bsonType: Number

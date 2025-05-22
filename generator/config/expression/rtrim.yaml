@@ -29,3 +29,18 @@ tests:
                 description:
                     $rtrim:
                         input: $description
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              quarter:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+                      - bsonType: 'Null'

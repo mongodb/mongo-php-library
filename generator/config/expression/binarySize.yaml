@@ -20,3 +20,14 @@ tests:
                 name: $name
                 imageSize:
                     $binarySize: $binary
+      schema:
+          images:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              binary:
+                  types:
+                      - bsonType: Binary

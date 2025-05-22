@@ -32,6 +32,14 @@ tests:
                     $regexMatch:
                         input: $description
                         regex: !bson_regex line
+      schema:
+          products:
+              _id:
+                  types:
+                      - bsonType: Number
+              description:
+                  types:
+                      - bsonType: String
     - name: i Option
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#i-option
       pipeline:
@@ -54,6 +62,14 @@ tests:
                         input: $description
                         regex: !bson_regex line
                         options: i
+      schema:
+          products:
+              _id:
+                  types:
+                      - bsonType: Number
+              description:
+                  types:
+                      - bsonType: String
     - name: Use $regexMatch to Check Email Address
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/#use--regexmatch-to-check-email-address
       pipeline:
@@ -68,3 +84,11 @@ tests:
                                     - i
                         then: Employee
                         else: External
+      schema:
+          feedback:
+              _id:
+                  types:
+                      - bsonType: Number
+              comment:
+                  types:
+                      - bsonType: String

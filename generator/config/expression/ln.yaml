@@ -21,3 +21,14 @@ tests:
                 x: $year
                 y:
                     $ln: $sales
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              year:
+                  types:
+                      - bsonType: String
+              sales:
+                  types:
+                      - bsonType: Number

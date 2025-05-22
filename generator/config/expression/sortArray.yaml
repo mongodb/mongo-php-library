@@ -32,6 +32,30 @@ tests:
                         input: $team
                         sortBy:
                             name: 1
+      schema:
+          engineers:
+              team:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  name:
+                                      types:
+                                          - bsonType: String
+                                  age:
+                                      types:
+                                          - bsonType: Number
+                                  address:
+                                      types:
+                                          - bsonType: Document
+                                            fields:
+                                                street:
+                                                    types:
+                                                        - bsonType: String
+                                                city:
+                                                    types:
+                                                        - bsonType: String
     - name: Sort on a Subfield
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-a-subfield
       pipeline:
@@ -42,6 +66,30 @@ tests:
                         input: $team
                         sortBy:
                             address.city: -1
+      schema:
+          engineers:
+              team:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  name:
+                                      types:
+                                          - bsonType: String
+                                  age:
+                                      types:
+                                          - bsonType: Number
+                                  address:
+                                      types:
+                                          - bsonType: Document
+                                            fields:
+                                                street:
+                                                    types:
+                                                        - bsonType: String
+                                                city:
+                                                    types:
+                                                        - bsonType: String
     - name: Sort on Multiple Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-multiple-fields
       pipeline:
@@ -53,6 +101,30 @@ tests:
                         sortBy:
                             age: -1
                             name: 1
+      schema:
+          engineers:
+              team:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  name:
+                                      types:
+                                          - bsonType: String
+                                  age:
+                                      types:
+                                          - bsonType: Number
+                                  address:
+                                      types:
+                                          - bsonType: Document
+                                            fields:
+                                                street:
+                                                    types:
+                                                        - bsonType: String
+                                                city:
+                                                    types:
+                                                        - bsonType: String
     - name: Sort an Array of Integers
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-an-array-of-integers
       pipeline:
@@ -68,6 +140,30 @@ tests:
                             - 12
                             - 5
                         sortBy: 1
+      schema:
+          engineers:
+              team:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  name:
+                                      types:
+                                          - bsonType: String
+                                  age:
+                                      types:
+                                          - bsonType: Number
+                                  address:
+                                      types:
+                                          - bsonType: Document
+                                            fields:
+                                                street:
+                                                    types:
+                                                        - bsonType: String
+                                                city:
+                                                    types:
+                                                        - bsonType: String
     - name: Sort on Mixed Type Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-on-mixed-type-fields
       pipeline:
@@ -90,3 +186,27 @@ tests:
                             - !bson_decimal128 '10.23'
                             - a: On sale
                         sortBy: 1
+      schema:
+          engineers:
+              team:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  name:
+                                      types:
+                                          - bsonType: String
+                                  age:
+                                      types:
+                                          - bsonType: Number
+                                  address:
+                                      types:
+                                          - bsonType: Document
+                                            fields:
+                                                street:
+                                                    types:
+                                                        - bsonType: String
+                                                city:
+                                                    types:
+                                                        - bsonType: String

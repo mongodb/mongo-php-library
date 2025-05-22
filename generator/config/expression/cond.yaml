@@ -30,3 +30,14 @@ tests:
                                 - 250
                         then: 30
                         else: 20
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number

@@ -30,3 +30,14 @@ tests:
                 weekNumber:
                     $isoWeek:
                         date: $date
+      schema:
+          deliveries:
+              _id:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: Date
+              city:
+                  types:
+                      - bsonType: String

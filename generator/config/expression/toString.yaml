@@ -20,3 +20,18 @@ tests:
                     $toString: $zipcode
           - $sort:
                 convertedZipCode: 1
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              zipcode:
+                  types:
+                      - bsonType: Number
+                      - bsonType: String

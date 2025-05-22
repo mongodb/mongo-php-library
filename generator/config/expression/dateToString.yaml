@@ -73,3 +73,20 @@ tests:
                         format: '%B'
                         date: $date
                         timezone: +04:30
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: Date

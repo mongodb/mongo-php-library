@@ -21,3 +21,11 @@ tests:
                     $multiply:
                         - -1
                         - $log10: $H3O
+      schema:
+          samples:
+              _id:
+                  types:
+                      - bsonType: Number
+              H3O:
+                  types:
+                      - bsonType: Number

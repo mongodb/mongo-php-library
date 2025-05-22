@@ -28,3 +28,18 @@ tests:
                                 - $instock
                                 - $ordered
                         else: One or more fields is not an array.
+      schema:
+          warehouses:
+              _id:
+                  types:
+                      - bsonType: Number
+              instock:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              ordered:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

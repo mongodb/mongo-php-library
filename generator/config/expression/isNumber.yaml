@@ -21,6 +21,21 @@ tests:
                     $isNumber: $reading
                 hasType:
                     $type: $reading
+      schema:
+          sensors:
+              _id:
+                  types:
+                      - bsonType: Number
+              reading:
+                  types:
+                      - bsonType: Decimal128
+                      - bsonType: Long
+                      - bsonType: Int32
+                      - bsonType: Number
+                      - bsonType: String
+                      - bsonType: Array
+                        types:
+                            - bsonType: Decimal128
     - name: Conditionally Modify Fields using $isNumber
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/#conditionally-modify-fields-using--isnumber
       pipeline:
@@ -62,3 +77,18 @@ tests:
                 _id: $student_id
                 GPA:
                     $avg: $points
+      schema:
+          grades:
+              student_id:
+                  types:
+                      - bsonType: Number
+              class_id:
+                  types:
+                      - bsonType: String
+              class_desc:
+                  types:
+                      - bsonType: String
+              grade:
+                  types:
+                      - bsonType: String
+                      - bsonType: Number

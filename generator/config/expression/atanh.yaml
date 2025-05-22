@@ -23,3 +23,11 @@ tests:
                 y-coordinate:
                     $radiansToDegrees:
                         $atanh: $x-coordinate
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              x-coordinate:
+                  types:
+                      - bsonType: Decimal128

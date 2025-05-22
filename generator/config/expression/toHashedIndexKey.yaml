@@ -21,3 +21,8 @@ tests:
           - $addFields:
                 hashedVal:
                     $toHashedIndexKey: $val
+      schema:
+          TestCollection:
+              val:
+                  types:
+                      - bsonType: String

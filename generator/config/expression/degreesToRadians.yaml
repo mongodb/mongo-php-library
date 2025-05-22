@@ -25,3 +25,14 @@ tests:
                     $degreesToRadians: $angle_b
                 angle_c_rad:
                     $degreesToRadians: $angle_c
+      schema:
+          TestCollection:
+              angle_a:
+                  types:
+                      - bsonType: Decimal128
+              angle_b:
+                  types:
+                      - bsonType: Decimal128
+              angle_c:
+                  types:
+                      - bsonType: Decimal128

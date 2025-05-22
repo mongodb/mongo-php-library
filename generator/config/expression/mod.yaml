@@ -24,3 +24,17 @@ tests:
                     $mod:
                         - $hours
                         - $tasks
+      schema:
+          conferencePlanning:
+              _id:
+                  types:
+                      - bsonType: Number
+              city:
+                  types:
+                      - bsonType: String
+              hours:
+                  types:
+                      - bsonType: Number
+              tasks:
+                  types:
+                      - bsonType: Number

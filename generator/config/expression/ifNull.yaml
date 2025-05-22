@@ -21,6 +21,21 @@ tests:
                     $ifNull:
                         - $description
                         - Unspecified
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+                      - bsonType: 'Null'
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Multiple Input Expressions
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/#multiple-input-expressions
       pipeline:
@@ -31,3 +46,18 @@ tests:
                         - $description
                         - $quantity
                         - Unspecified
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+                      - bsonType: 'Null'
+              quantity:
+                  types:
+                      - bsonType: Number

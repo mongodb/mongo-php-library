@@ -19,6 +19,31 @@ tests:
                 dimensions:
                     $arrayToObject:
                         - $dimensions
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              dimensions:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Array
+                              types:
+                                  - bsonType: String
+                                  - bsonType: Number
+                            - bsonType: Document
+                              fields:
+                                  k:
+                                      types:
+                                          - bsonType: String
+                                  v:
+                                      types:
+                                          - bsonType: Number
+                                          - bsonType: String
     - name: $objectToArray and $arrayToObject Example
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/#-objecttoarray----arraytoobject-example
       pipeline:
@@ -37,3 +62,24 @@ tests:
                 instock:
                     $arrayToObject:
                         - $instock
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              instock:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            warehouse1:
+                                types:
+                                    - bsonType: Number
+                            warehouse2:
+                                types:
+                                    - bsonType: Number
+                            warehouse3:
+                                types:
+                                    - bsonType: Number

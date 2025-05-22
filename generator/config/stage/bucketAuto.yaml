@@ -19,7 +19,7 @@ arguments:
           A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
     - name: output
       type:
-          - object   # of Accumulator
+          - object
       optional: true
       description: |
           A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.

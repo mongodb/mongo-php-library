@@ -26,7 +26,5 @@ tests:
       pipeline:
           - $project:
                 week:
-                        # Example uses the short form, the builder always generates the verbose form
-                        # $week: '$date'
                     $week:
                         date: $date

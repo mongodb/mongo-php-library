@@ -9,7 +9,7 @@ description: |
 arguments:
     - name: branches
       type:
-          - array   # of CaseOperator
+          - array
       description: |
           An array of control branch documents. Each branch is a document with the following fields:
           - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
@@ -33,7 +33,6 @@ tests:
                         branches:
                             - case:
                                   $gte:
-                                                #$avg: '$scores'
                                       - $avg:
                                             - $scores
                                       - 90
@@ -41,19 +40,16 @@ tests:
                             - case:
                                   $and:
                                       - $gte:
-                                                        #$avg: '$scores'
                                             - $avg:
                                                   - $scores
                                             - 80
                                       - $lt:
-                                                        #$avg: '$scores'
                                             - $avg:
                                                   - $scores
                                             - 90
                               then: Doing pretty well.
                             - case:
                                   $lt:
-                                                #$avg: '$scores'
                                       - $avg:
                                             - $scores
                                       - 80

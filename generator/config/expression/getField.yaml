@@ -28,8 +28,6 @@ tests:
           - $match:
                 $expr:
                     $gt:
-                                # Example uses the short form, the builder always generates the verbose form
-                                # $getField: 'price.usd'
                         - $getField:
                               field: price.usd
                         - 200
@@ -40,8 +38,6 @@ tests:
                 $expr:
                     $gt:
                         - $getField:
-                                    # Example uses the short form, the builder always generates the verbose form
-                                    # $literal: '$price'
                               field:
                                   $literal: $price
                         - 200

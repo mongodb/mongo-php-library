@@ -39,8 +39,6 @@ tests:
                         startDate: $purchaseDate
                         unit: day
                         amount: 3
-                # Example uses the short form, the builder always generates the verbose form
-                # $merge: 'shipping'
           - $merge:
                 into: shipping
     - name: Filter on a Date Range

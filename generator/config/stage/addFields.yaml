@@ -19,12 +19,9 @@ tests:
       pipeline:
           - $addFields:
                 totalHomework:
-                        # The example renders a single value, but the builder generates an array for consistency
-                        # $sum: '$homework'
                     $sum:
                         - $homework
                 totalQuiz:
-                        # $sum: '$quiz'
                     $sum:
                         - $quiz
           - $addFields:
@@ -52,4 +49,4 @@ tests:
                 homework:
                     $concatArrays:
                         - $homework
-                        - [7]
+                        -     - 7

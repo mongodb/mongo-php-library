@@ -9,7 +9,7 @@ description: |
 arguments:
     - name: value
       type:
-          - array   # of expression
+          - array
 tests:
     - name: Select on Unmatching Documents
       link: https://www.mongodb.com/docs/manual/reference/operator/query/nin/#select-on-unmatching-documents

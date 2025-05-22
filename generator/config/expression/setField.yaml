@@ -33,8 +33,6 @@ tests:
                     field: price.usd
                     input: $$ROOT
                     value: $price
-                # Example uses the short form, the builder always generates the verbose form
-                # $unset: 'price'
           - $unset:
                 - price
     - name: Add Fields that Start with a Dollar Sign
@@ -46,8 +44,6 @@ tests:
                         $literal: $price
                     input: $$ROOT
                     value: $price
-                # Example uses the short form, the builder always generates the verbose form
-                # $unset: 'price'
           - $unset:
                 - price
     - name: Update Fields that Contain Periods

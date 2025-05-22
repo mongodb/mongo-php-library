@@ -21,7 +21,7 @@ arguments:
     - name: matchCriteria
       optional: true
       type:
-          - string   # "any" | "all"
+          - string
     - name: synonyms
       optional: true
       type:

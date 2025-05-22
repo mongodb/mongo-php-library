@@ -9,7 +9,7 @@ description: |
 arguments:
     - name: documents
       type:
-          - resolvesToArray   # of object
+          - resolvesToArray
       description: |
           $documents accepts any valid expression that resolves to an array of objects. This includes:
           - system variables, such as $$NOW or $$SEARCH_META
@@ -21,9 +21,9 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/#test-a-pipeline-stage
       pipeline:
           - $documents:
-                - {x: 10}
-                - {x: 2}
-                - {x: 5}
+                - x: 10
+                - x: 2
+                - x: 5
           - $bucketAuto:
                 groupBy: $x
                 buckets: 4

@@ -17,7 +17,7 @@ arguments:
     - name: 'on'
       type:
           - string
-          - array   # of string
+          - array
       optional: true
       description: |
           Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
@@ -117,8 +117,8 @@ tests:
       pipeline:
           - $match:
                 date:
-                    $gte: !bson_utcdatetime '2019-05-07'
-                    $lt: !bson_utcdatetime '2019-05-08'
+                    $gte: !bson_utcdatetime '2019-05-07T00:00:00.000Z'
+                    $lt: !bson_utcdatetime '2019-05-08T00:00:00.000Z'
           - $project:
                 _id:
                     $dateToString:

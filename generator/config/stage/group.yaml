@@ -51,8 +51,8 @@ tests:
       pipeline:
           - $match:
                 date:
-                    $gte: !bson_utcdatetime '2014-01-01'
-                    $lt: !bson_utcdatetime '2015-01-01'
+                    $gte: !bson_utcdatetime '2014-01-01T00:00:00.000Z'
+                    $lt: !bson_utcdatetime '2015-01-01T00:00:00.000Z'
           - $group:
                 _id:
                     $dateToString:
@@ -99,6 +99,5 @@ tests:
                     $push: $$ROOT
           - $addFields:
                 totalCopies:
-                        # $sum: '$books.copies'
                     $sum:
                         - $books.copies

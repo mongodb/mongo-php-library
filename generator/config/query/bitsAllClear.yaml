@@ -11,7 +11,7 @@ arguments:
       type:
           - int
           - binData
-          - array   # of int
+          - array
 tests:
     - name: Bit Position Array
       link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bit-position-array
@@ -32,4 +32,4 @@ tests:
       pipeline:
           - $match:
                 a:
-                    $bitsAllClear: !bson_binary 'IA=='
+                    $bitsAllClear: !bson_binary IA==

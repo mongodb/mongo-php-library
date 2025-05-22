@@ -46,7 +46,7 @@ tests:
                 index: releaseddate
                 near:
                     path: released
-                    origin: !bson_utcdatetime '1915-09-13T00:00:00.000+00:00'
+                    origin: !bson_utcdatetime '1915-09-13T00:00:00.000Z'
                     pivot: 7776000000
           - $limit: 3
           - $project:

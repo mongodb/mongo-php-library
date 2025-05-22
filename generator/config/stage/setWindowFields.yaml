@@ -45,7 +45,6 @@ tests:
       pipeline:
           - $setWindowFields:
                 partitionBy:
-                        # $year: '$orderDate'
                     $year:
                         date: $orderDate
                 sortBy:
@@ -62,7 +61,6 @@ tests:
       pipeline:
           - $setWindowFields:
                 partitionBy:
-                        # $year: '$orderDate'
                     $year:
                         date: $orderDate
                 sortBy:
@@ -80,7 +78,6 @@ tests:
       pipeline:
           - $setWindowFields:
                 partitionBy:
-                        # $year: '$orderDate'
                     $year:
                         date: $orderDate
                 sortBy:

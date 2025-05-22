@@ -10,7 +10,7 @@ arguments:
     - name: specification
       type:
           - expression
-      variadic: object   # XXX: This should somehow allow explicit typings for { fieldName: 1|0 }
+      variadic: object
 tests:
     - name: Include Specific Fields in Output Documents
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-in-output-documents

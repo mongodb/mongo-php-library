@@ -12,7 +12,7 @@ arguments:
     - name: like
       type:
           - object
-          - array   # of object
+          - array
     - name: score
       optional: true
       type:
@@ -40,7 +40,7 @@ tests:
                     must:
                         - moreLikeThis:
                               like:
-                                  _id: !bson_objectId '573a1396f29313caabce4a9a'
+                                  _id: !bson_objectId 573a1396f29313caabce4a9a
                                   genres:
                                       - Crime
                                       - Drama
@@ -48,7 +48,7 @@ tests:
                     mustNot:
                         - equals:
                               path: _id
-                              value: !bson_objectId '573a1396f29313caabce4a9a'
+                              value: !bson_objectId 573a1396f29313caabce4a9a
           - $limit: 5
           - $project:
                 _id: 1
@@ -63,7 +63,7 @@ tests:
                     should:
                         - moreLikeThis:
                               like:
-                                  _id: !bson_objectId '573a1396f29313caabce4a9a'
+                                  _id: !bson_objectId 573a1396f29313caabce4a9a
                                   genres:
                                       - Crime
                                       - Drama
@@ -71,7 +71,7 @@ tests:
                     mustNot:
                         - equals:
                               path: _id
-                              value: !bson_objectId '573a1394f29313caabcde9ef'
+                              value: !bson_objectId 573a1394f29313caabcde9ef
           - $limit: 10
           - $project:
                 title: 1

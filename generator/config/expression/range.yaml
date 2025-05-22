@@ -2,7 +2,7 @@
 name: $range
 link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/range/
 type:
-    - resolvesToArray # of int
+    - resolvesToArray
 encode: array
 description: |
     Outputs an array containing a sequence of integers according to user-defined inputs.

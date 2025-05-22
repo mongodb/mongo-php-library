@@ -42,14 +42,14 @@ tests:
           - $search:
                 equals:
                     path: teammates
-                    value: !bson_objectId '5a9427648b0beebeb69589a1'
+                    value: !bson_objectId 5a9427648b0beebeb69589a1
     - name: Date
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#date-example
       pipeline:
           - $search:
                 equals:
                     path: account_created
-                    value: !bson_utcdatetime '2022-05-04T05:01:08.000+00:00'
+                    value: !bson_utcdatetime '2022-05-04T05:01:08.000Z'
     - name: Number
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#number-example
       pipeline:
@@ -70,7 +70,7 @@ tests:
           - $search:
                 equals:
                     path: uuid
-                    value: !bson_uuid 'fac32260-b511-4c69-8485-a2be5b7dda9e'
+                    value: !bson_uuid fac32260-b511-4c69-8485-a2be5b7dda9e
     - name: 'Null'
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#null-example
       pipeline:

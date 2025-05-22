@@ -17,8 +17,6 @@ tests:
           - $project:
                 item: 1
                 dimensions:
-                        # Example uses the short form, the builder always generates the verbose form
-                        # $arrayToObject: '$dimensions'
                     $arrayToObject:
                         - $dimensions
     - name: $objectToArray and $arrayToObject Example

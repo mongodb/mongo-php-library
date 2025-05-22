@@ -16,7 +16,7 @@ tests:
       pipeline:
           - $match:
                 sku:
-                    $regex: !bson_regex '789$'
+                    $regex: !bson_regex 789$
     - name: Perform Case-Insensitive Regular Expression Match
       link: https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-case-insensitive-regular-expression-match
       pipeline:

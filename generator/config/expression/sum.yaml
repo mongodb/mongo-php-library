@@ -19,12 +19,9 @@ tests:
       pipeline:
           - $project:
                 quizTotal:
-                        # Example uses the short form, the builder always generates the verbose form
-                        # $sum: '$quizzes'
                     $sum:
                         - $quizzes
                 labTotal:
-                        # $sum: '$labs'
                     $sum:
                         - $labs
                 examTotal:

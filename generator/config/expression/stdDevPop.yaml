@@ -19,7 +19,5 @@ tests:
       pipeline:
           - $project:
                 stdDev:
-                        # Example uses the short form, the builder always generates the verbose form
-                        # $stdDevPop: '$scores.score'
                     $stdDevPop:
                         - $scores.score

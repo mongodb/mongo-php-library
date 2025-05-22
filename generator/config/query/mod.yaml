@@ -28,7 +28,7 @@ tests:
           - $match:
                 qty:
                     $mod:
-                        - 4.0
+                        - 4
                         - 0
           - $match:
                 qty:

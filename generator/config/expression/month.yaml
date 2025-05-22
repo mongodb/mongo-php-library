@@ -26,7 +26,5 @@ tests:
       pipeline:
           - $project:
                 month:
-                        # Example uses the short form, the builder always generates the verbose form
-                        # $month: '$date'
                     $month:
                         date: $date

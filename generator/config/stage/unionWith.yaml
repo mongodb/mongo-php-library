@@ -48,14 +48,10 @@ tests:
     - name: Report 2 Aggregated Sales by Items
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/#report-2--aggregated-sales-by-items
       pipeline:
-                # Example uses the short form, the builder always generates the verbose form
-                # $unionWith: 'sales_2018'
           - $unionWith:
                 coll: sales_2018
-                # $unionWith: 'sales_2019'
           - $unionWith:
                 coll: sales_2019
-                # $unionWith: 'sales_2020'
           - $unionWith:
                 coll: sales_2020
           - $group:

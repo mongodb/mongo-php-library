@@ -90,8 +90,8 @@ tests:
           - $search:
                 range:
                     path: _id
-                    gte: !bson_objectId '573a1396f29313caabce4a9a'
-                    lte: !bson_objectId '573a1396f29313caabce4ae7'
+                    gte: !bson_objectId 573a1396f29313caabce4a9a
+                    lte: !bson_objectId 573a1396f29313caabce4ae7
           - $project:
                 _id: 1
                 title: 1

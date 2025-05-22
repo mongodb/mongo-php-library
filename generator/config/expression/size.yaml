@@ -21,8 +21,6 @@ tests:
                 numberOfColors:
                     $cond:
                         if:
-                                # Example uses the short form, the builder always generates the verbose form
-                                # $isArray: '$colors'
                             $isArray:
                                 - $colors
                         then:

@@ -13,7 +13,6 @@ arguments:
       description: |
           Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields.
 tests:
-    # "$objectToArray and $arrayToObject Example" omitted as it's already in arrayToObject.yaml
     - name: $objectToArray Example
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/#-objecttoarray-example
       pipeline:
@@ -27,8 +26,6 @@ tests:
           - $project:
                 warehouses:
                     $objectToArray: $instock
-                # Example uses the short form, the builder always generates the verbose form
-                # $unwind: '$warehouses'
           - $unwind:
                 path: $warehouses
           - $group:

@@ -16,5 +16,4 @@ arguments:
     - name: then
       type:
           - expression
-      description: |-
-          Can be any valid expression.
+      description: Can be any valid expression.

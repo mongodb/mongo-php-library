@@ -30,8 +30,6 @@ tests:
     - name: Unwind Array
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-array
       pipeline:
-                # Example uses the short form, the builder always generates the verbose form
-                # $unwind: '$sizes'
           - $unwind:
                 path: $sizes
     - name: preserveNullAndEmptyArrays
@@ -61,12 +59,8 @@ tests:
     - name: Unwind Embedded Arrays
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-embedded-arrays
       pipeline:
-                # Example uses the short form, the builder always generates the verbose form
-                # $unwind: '$items'
           - $unwind:
                 path: $items
-                # Example uses the short form, the builder always generates the verbose form
-                # $unwind: '$items.tags'
           - $unwind:
                 path: $items.tags
           - $group:

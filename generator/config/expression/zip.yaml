@@ -2,14 +2,14 @@
 name: $zip
 link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/
 type:
-    - resolvesToArray # of array
+    - resolvesToArray
 encode: object
 description: |
     Merge two arrays together.
 arguments:
     - name: inputs
       type:
-          - resolvesToArray   # of array
+          - resolvesToArray
       description: |
           An array of expressions that resolve to arrays. The elements of these input arrays combine to form the arrays of the output array.
           If any of the inputs arrays resolves to a value of null or refers to a missing field, $zip returns null.

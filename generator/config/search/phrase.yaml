@@ -13,7 +13,7 @@ arguments:
     - name: query
       type:
           - string
-          - array   # of string
+          - array
     - name: slop
       optional: true
       type:

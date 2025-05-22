@@ -62,7 +62,6 @@ tests:
     - name: String Concatenation
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#string-concatenation
       pipeline:
-            # Filter to return only non-empty arrays
           - $match:
                 hobbies:
                     $gt: []

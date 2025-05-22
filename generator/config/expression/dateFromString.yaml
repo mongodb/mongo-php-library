@@ -65,4 +65,4 @@ tests:
                     $dateFromString:
                         dateString: $date
                         timezone: $timezone
-                        onNull: !bson_utcdatetime 0
+                        onNull: !bson_utcdatetime '0'

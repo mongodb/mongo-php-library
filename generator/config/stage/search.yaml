@@ -24,8 +24,6 @@ arguments:
     - name: highlight
       optional: true
       type:
-            # @todo support "highlight" type object
-            # https://www.mongodb.com/docs/atlas/atlas-search/highlighting/
           - object
       description: |
           Specifies the highlighting options for displaying search terms in their original context.
@@ -86,7 +84,7 @@ tests:
           - $search:
                 near:
                     path: released
-                    origin: !bson_utcdatetime '2011-09-01T00:00:00.000+00:00'
+                    origin: !bson_utcdatetime '2011-09-01T00:00:00.000Z'
                     pivot: 7776000000
           - $project:
                 _id: 0
@@ -174,7 +172,7 @@ tests:
           - $search:
                 near:
                     path: released
-                    origin: !bson_utcdatetime '2011-09-01T00:00:00.000+00:00'
+                    origin: !bson_utcdatetime '2011-09-01T00:00:00.000Z'
                     pivot: 7776000000
                 count:
                     type: total

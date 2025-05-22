@@ -40,7 +40,7 @@ tests:
                 company:
                     $eq: MongoDB
           - $match:
-                company: !bson_regex '^MongoDB'
+                company: !bson_regex ^MongoDB
           - $match:
                 company:
-                    $eq: !bson_regex '^MongoDB'
+                    $eq: !bson_regex ^MongoDB

@@ -12,7 +12,7 @@ arguments:
           - expression
     - name: expression2
       type:
-          - expression   # lack of backreferral is an issue here
+          - expression
 tests:
     - name: Example
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/#example

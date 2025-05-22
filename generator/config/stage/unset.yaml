@@ -16,9 +16,6 @@ tests:
     - name: Remove a Single Field
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-a-single-field
       pipeline:
-                # The example in the docs uses the short syntax whereas
-                # the aggregation builder always uses the equivalent array syntax.
-                # $unset: 'copies'
           - $unset:
                 - copies
     - name: Remove Top-Level Fields

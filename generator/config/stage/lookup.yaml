@@ -29,7 +29,7 @@ arguments:
           Specifies the field from the documents in the from collection. $lookup performs an equality match on the foreignField to the localField from the input documents. If a document in the from collection does not contain the foreignField, the $lookup treats the value as null for matching purposes.
     - name: let
       type:
-          - object   # of expression
+          - object
       optional: true
       description: |
           Specifies variables to use in the pipeline stages. Use the variable expressions to access the fields from the joined collection's documents that are input to the pipeline.

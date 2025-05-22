@@ -14,8 +14,6 @@ tests:
     - name: Example
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/#example
       pipeline:
-                # The builder uses the verbose form of the $unwind operator
-                # $unwind: '$tags'
           - $unwind:
                 path: $tags
           - $sortByCount: $tags

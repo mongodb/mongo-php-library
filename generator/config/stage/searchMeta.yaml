@@ -72,10 +72,10 @@ tests:
                             type: date
                             path: released
                             boundaries:
-                                - !bson_utcdatetime '2000-01-01'
-                                - !bson_utcdatetime '2005-01-01'
-                                - !bson_utcdatetime '2010-01-01'
-                                - !bson_utcdatetime '2015-01-01'
+                                - !bson_utcdatetime '2000-01-01T00:00:00.000Z'
+                                - !bson_utcdatetime '2005-01-01T00:00:00.000Z'
+                                - !bson_utcdatetime '2010-01-01T00:00:00.000Z'
+                                - !bson_utcdatetime '2015-01-01T00:00:00.000Z'
                             default: other
     - name: Metadata Results
       link: https://www.mongodb.com/docs/atlas/atlas-search/facet/#examples

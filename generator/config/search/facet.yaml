@@ -2,7 +2,7 @@
 name: facet
 link: https://www.mongodb.com/docs/atlas/atlas-search/facet/
 type:
-    - searchOperator # should be searchCollector
+    - searchOperator
 encode: object
 description: |
     The facet collector groups results by values or ranges in the specified
@@ -10,7 +10,7 @@ description: |
 arguments:
     - name: facets
       type:
-          - object   # map of facetDefinition
+          - object
     - name: operator
       optional: true
       type:
@@ -24,7 +24,7 @@ tests:
                     operator:
                         near:
                             path: released
-                            origin: !bson_utcdatetime '1999-07-01T00:00:00.000+00:00'
+                            origin: !bson_utcdatetime '1999-07-01T00:00:00.000Z'
                             pivot: 7776000000
                     facets:
                         genresFacet:

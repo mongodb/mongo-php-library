@@ -13,7 +13,7 @@ arguments:
     - name: value
       type:
           - any
-          - array   # of any
+          - array
     - name: score
       optional: true
       type:
@@ -26,9 +26,9 @@ tests:
                 in:
                     path: birthdate
                     value:
-                        - !bson_utcdatetime '1977-03-02T02:20:31.000+00:00'
-                        - !bson_utcdatetime '1977-03-01T00:00:00.000+00:00'
-                        - !bson_utcdatetime '1977-05-06T21:57:35.000+00:00'
+                        - !bson_utcdatetime '1977-03-02T02:20:31.000Z'
+                        - !bson_utcdatetime '1977-03-01T00:00:00.000Z'
+                        - !bson_utcdatetime '1977-05-06T21:57:35.000Z'
           - $project:
                 _id: 0
                 name: 1
@@ -62,8 +62,8 @@ tests:
                         - in:
                               path: _id
                               value:
-                                  - !bson_objectId '5ca4bbcea2dd94ee58162a72'
-                                  - !bson_objectId '5ca4bbcea2dd94ee58162a91'
+                                  - !bson_objectId 5ca4bbcea2dd94ee58162a72
+                                  - !bson_objectId 5ca4bbcea2dd94ee58162a91
           - $limit: 5
           - $project:
                 _id: 1

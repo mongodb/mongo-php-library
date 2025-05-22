@@ -46,8 +46,6 @@ tests:
                         input: $distances
                         as: decimalValue
                         in:
-                                # Example uses the short form, the builder always generates the verbose form
-                                # $trunc: '$$decimalValue'
                             $trunc:
                                 - $$decimalValue
     - name: Convert Celsius Temperatures to Fahrenheit

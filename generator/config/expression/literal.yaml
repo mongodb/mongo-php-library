@@ -10,5 +10,5 @@ arguments:
     - name: value
       type:
           - any
-      description: |-
-          If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression.
+      description: If the value is an expression, $literal does not evaluate the expression
+          but instead returns the unparsed expression.

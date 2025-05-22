@@ -9,14 +9,14 @@ description: |
 arguments:
     - name: field
       type:
-          - string   # field name
+          - string
       description: |
           The field to densify. The values of the specified field must either be all numeric values or all dates.
           Documents that do not contain the specified field continue through the pipeline unmodified.
           To specify a <field> in an embedded document or in an array, use dot notation.
     - name: partitionByFields
       type:
-          - array   # of string
+          - array
       optional: true
       description: |
           The field(s) that will be used as the partition keys.

@@ -4,7 +4,7 @@ link: https://www.mongodb.com/docs/atlas/atlas-search/queryString/
 type:
     - searchOperator
 encode: object
-description: |
+description: ''
 arguments:
     - name: defaultPath
       type:
@@ -12,9 +12,6 @@ arguments:
     - name: query
       type:
           - string
-# The various example from the doc are variations of the "query" parameter
-# this is not pertinent for testing the aggregation builder, unless we create
-# a queryString builder.
 tests:
     - name: Boolean Operator Queries
       link: https://www.mongodb.com/docs/atlas/atlas-search/queryString/#boolean-operator-queries

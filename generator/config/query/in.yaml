@@ -9,7 +9,7 @@ description: |
 arguments:
     - name: value
       type:
-          - array   # of expression
+          - array
 tests:
     - name: Use the $in Operator to Match Values in an Array
       link: https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-to-match-values
@@ -25,5 +25,5 @@ tests:
           - $match:
                 tags:
                     $in:
-                        - !bson_regex '^be'
-                        - !bson_regex '^st'
+                        - !bson_regex ^be
+                        - !bson_regex ^st

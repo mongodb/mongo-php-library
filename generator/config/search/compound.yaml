@@ -51,6 +51,23 @@ tests:
                         - text:
                               query: apples
                               path: description
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              category:
+                  types:
+                      - bsonType: String
+              in_stock:
+                  types:
+                      - bsonType: Boolean
     - name: must and should
       link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#must-and-should-example
       pipeline:
@@ -67,6 +84,23 @@ tests:
           - $project:
                 score:
                     $meta: searchScore
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              category:
+                  types:
+                      - bsonType: String
+              in_stock:
+                  types:
+                      - bsonType: Boolean
     - name: minimumShouldMatch
       link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#minimumshouldmatch-example
       pipeline:
@@ -84,6 +118,23 @@ tests:
                               query: Golden Delicious
                               path: description
                     minimumShouldMatch: 1
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              category:
+                  types:
+                      - bsonType: String
+              in_stock:
+                  types:
+                      - bsonType: Boolean
     - name: Filter
       link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#filter-examples
       pipeline:
@@ -101,6 +152,23 @@ tests:
                         - text:
                               query: granny
                               path: description
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              category:
+                  types:
+                      - bsonType: String
+              in_stock:
+                  types:
+                      - bsonType: Boolean
     - name: Nested
       link: https://www.mongodb.com/docs/atlas/atlas-search/compound/#nested-example
       pipeline:
@@ -119,3 +187,20 @@ tests:
                                         value: true
                                         path: in_stock
                     minimumShouldMatch: 1
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              category:
+                  types:
+                      - bsonType: String
+              in_stock:
+                  types:
+                      - bsonType: Boolean

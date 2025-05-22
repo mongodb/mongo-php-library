@@ -21,12 +21,60 @@ tests:
           - $search:
                 exists:
                     path: type
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              quantities:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            lemons:
+                                types:
+                                    - bsonType: Number
+                            oranges:
+                                types:
+                                    - bsonType: Number
+                            grapefruit:
+                                types:
+                                    - bsonType: Number
     - name: Embedded
       link: https://www.mongodb.com/docs/atlas/atlas-search/exists/#embedded-example
       pipeline:
           - $search:
                 exists:
                     path: quantities.lemons
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              quantities:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            lemons:
+                                types:
+                                    - bsonType: Number
+                            oranges:
+                                types:
+                                    - bsonType: Number
+                            grapefruit:
+                                types:
+                                    - bsonType: Number
     - name: Compound
       link: https://www.mongodb.com/docs/atlas/atlas-search/exists/#compound-example
       pipeline:
@@ -42,3 +90,27 @@ tests:
                         text:
                             query: fuji
                             path: description
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
+              quantities:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            lemons:
+                                types:
+                                    - bsonType: Number
+                            oranges:
+                                types:
+                                    - bsonType: Number
+                            grapefruit:
+                                types:
+                                    - bsonType: Number

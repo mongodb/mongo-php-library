@@ -51,6 +51,403 @@ tests:
                 _id: 0
                 name: 1
                 address: 1
+      schema:
+          listingsAndReviews: &ref_0
+              _id:
+                  types:
+                      - bsonType: String
+              listing_url:
+                  types:
+                      - bsonType: String
+              name:
+                  types:
+                      - bsonType: String
+              summary:
+                  types:
+                      - bsonType: String
+              interaction:
+                  types:
+                      - bsonType: String
+              house_rules:
+                  types:
+                      - bsonType: String
+              property_type:
+                  types:
+                      - bsonType: String
+              room_type:
+                  types:
+                      - bsonType: String
+              bed_type:
+                  types:
+                      - bsonType: String
+              minimum_nights:
+                  types:
+                      - bsonType: String
+              maximum_nights:
+                  types:
+                      - bsonType: String
+              cancellation_policy:
+                  types:
+                      - bsonType: String
+              last_scraped:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $date:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberLong:
+                                              types:
+                                                  - bsonType: String
+              calendar_last_scraped:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $date:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberLong:
+                                              types:
+                                                  - bsonType: String
+              first_review:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $date:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberLong:
+                                              types:
+                                                  - bsonType: String
+              last_review:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $date:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberLong:
+                                              types:
+                                                  - bsonType: String
+              accommodates:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
+              bedrooms:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
+              beds:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
+              number_of_reviews:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
+              bathrooms:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberDecimal:
+                                types:
+                                    - bsonType: String
+              amenities:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              price:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberDecimal:
+                                types:
+                                    - bsonType: String
+              security_deposit:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberDecimal:
+                                types:
+                                    - bsonType: String
+              cleaning_fee:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberDecimal:
+                                types:
+                                    - bsonType: String
+              extra_people:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberDecimal:
+                                types:
+                                    - bsonType: String
+              guests_included:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberDecimal:
+                                types:
+                                    - bsonType: String
+              images:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            thumbnail_url:
+                                types:
+                                    - bsonType: String
+                            medium_url:
+                                types:
+                                    - bsonType: String
+                            picture_url:
+                                types:
+                                    - bsonType: String
+                            xl_picture_url:
+                                types:
+                                    - bsonType: String
+              host:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            host_id:
+                                types:
+                                    - bsonType: String
+                            host_url:
+                                types:
+                                    - bsonType: String
+                            host_name:
+                                types:
+                                    - bsonType: String
+                            host_location:
+                                types:
+                                    - bsonType: String
+                            host_about:
+                                types:
+                                    - bsonType: String
+                            host_response_time:
+                                types:
+                                    - bsonType: String
+                            host_thumbnail_url:
+                                types:
+                                    - bsonType: String
+                            host_picture_url:
+                                types:
+                                    - bsonType: String
+                            host_neighbourhood:
+                                types:
+                                    - bsonType: String
+                            host_response_rate:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            host_is_superhost:
+                                types:
+                                    - bsonType: Boolean
+                            host_has_profile_pic:
+                                types:
+                                    - bsonType: Boolean
+                            host_identity_verified:
+                                types:
+                                    - bsonType: Boolean
+                            host_listings_count:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            host_total_listings_count:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            host_verifications:
+                                types:
+                                    - bsonType: Array
+                                      types:
+                                          - bsonType: String
+              address:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            street:
+                                types:
+                                    - bsonType: String
+                            suburb:
+                                types:
+                                    - bsonType: String
+                            government_area:
+                                types:
+                                    - bsonType: String
+                            market:
+                                types:
+                                    - bsonType: String
+                            country:
+                                types:
+                                    - bsonType: String
+                            country_code:
+                                types:
+                                    - bsonType: String
+                            location:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          type:
+                                              types:
+                                                  - bsonType: String
+                                          coordinates:
+                                              types:
+                                                  - bsonType: Array
+                                                    types:
+                                                        - bsonType: Document
+                                                          fields:
+                                                              $numberDouble:
+                                                                  types:
+                                                                      - bsonType: String
+                                          is_location_exact:
+                                              types:
+                                                  - bsonType: Boolean
+              availability:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            availability_30:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            availability_60:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            availability_90:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            availability_365:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+              review_scores:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            review_scores_accuracy:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            review_scores_cleanliness:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            review_scores_checkin:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            review_scores_communication:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            review_scores_location:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            review_scores_value:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            review_scores_rating:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+              reviews:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  _id:
+                                      types:
+                                          - bsonType: String
+                                  date:
+                                      types:
+                                          - bsonType: Document
+                                            fields:
+                                                $date:
+                                                    types:
+                                                        - bsonType: Document
+                                                          fields:
+                                                              $numberLong:
+                                                                  types:
+                                                                      - bsonType: String
+                                  listing_id:
+                                      types:
+                                          - bsonType: String
+                                  reviewer_id:
+                                      types:
+                                          - bsonType: String
+                                  reviewer_name:
+                                      types:
+                                          - bsonType: String
+                                  comments:
+                                      types:
+                                          - bsonType: String
     - name: circle
       link: https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#circle-example
       pipeline:
@@ -69,6 +466,8 @@ tests:
                 _id: 0
                 name: 1
                 address: 1
+      schema:
+          listingsAndReviews: *ref_0
     - name: geometry
       link: https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#geometry-examples
       pipeline:
@@ -91,3 +490,5 @@ tests:
                 _id: 0
                 name: 1
                 address: 1
+      schema:
+          listingsAndReviews: *ref_0

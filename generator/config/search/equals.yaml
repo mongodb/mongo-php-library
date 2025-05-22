@@ -36,6 +36,48 @@ tests:
                 _id: 0
                 score:
                     $meta: searchScore
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              name:
+                  types:
+                      - bsonType: String
+              verified_user:
+                  types:
+                      - bsonType: Boolean
+              account:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            new_user:
+                                types:
+                                    - bsonType: Boolean
+                            active_user:
+                                types:
+                                    - bsonType: Boolean
+              teammates:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: ObjectId
+              region:
+                  types:
+                      - bsonType: String
+              account_created:
+                  types:
+                      - bsonType: Date
+              employee_number:
+                  types:
+                      - bsonType: Number
+              uuid:
+                  types:
+                      - bsonType: Binary
+              job_title:
+                  types:
+                      - bsonType: 'Null'
+                      - bsonType: String
     - name: ObjectId
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#objectid-example
       pipeline:
@@ -43,6 +85,48 @@ tests:
                 equals:
                     path: teammates
                     value: !bson_objectId 5a9427648b0beebeb69589a1
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              name:
+                  types:
+                      - bsonType: String
+              verified_user:
+                  types:
+                      - bsonType: Boolean
+              account:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            new_user:
+                                types:
+                                    - bsonType: Boolean
+                            active_user:
+                                types:
+                                    - bsonType: Boolean
+              teammates:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: ObjectId
+              region:
+                  types:
+                      - bsonType: String
+              account_created:
+                  types:
+                      - bsonType: Date
+              employee_number:
+                  types:
+                      - bsonType: Number
+              uuid:
+                  types:
+                      - bsonType: Binary
+              job_title:
+                  types:
+                      - bsonType: 'Null'
+                      - bsonType: String
     - name: Date
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#date-example
       pipeline:
@@ -50,6 +134,48 @@ tests:
                 equals:
                     path: account_created
                     value: !bson_utcdatetime '2022-05-04T05:01:08.000Z'
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              name:
+                  types:
+                      - bsonType: String
+              verified_user:
+                  types:
+                      - bsonType: Boolean
+              account:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            new_user:
+                                types:
+                                    - bsonType: Boolean
+                            active_user:
+                                types:
+                                    - bsonType: Boolean
+              teammates:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: ObjectId
+              region:
+                  types:
+                      - bsonType: String
+              account_created:
+                  types:
+                      - bsonType: Date
+              employee_number:
+                  types:
+                      - bsonType: Number
+              uuid:
+                  types:
+                      - bsonType: Binary
+              job_title:
+                  types:
+                      - bsonType: 'Null'
+                      - bsonType: String
     - name: Number
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#number-example
       pipeline:
@@ -57,6 +183,48 @@ tests:
                 equals:
                     path: employee_number
                     value: 259
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              name:
+                  types:
+                      - bsonType: String
+              verified_user:
+                  types:
+                      - bsonType: Boolean
+              account:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            new_user:
+                                types:
+                                    - bsonType: Boolean
+                            active_user:
+                                types:
+                                    - bsonType: Boolean
+              teammates:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: ObjectId
+              region:
+                  types:
+                      - bsonType: String
+              account_created:
+                  types:
+                      - bsonType: Date
+              employee_number:
+                  types:
+                      - bsonType: Number
+              uuid:
+                  types:
+                      - bsonType: Binary
+              job_title:
+                  types:
+                      - bsonType: 'Null'
+                      - bsonType: String
     - name: String
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#string-example
       pipeline:
@@ -64,6 +232,48 @@ tests:
                 equals:
                     path: name
                     value: jim hall
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              name:
+                  types:
+                      - bsonType: String
+              verified_user:
+                  types:
+                      - bsonType: Boolean
+              account:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            new_user:
+                                types:
+                                    - bsonType: Boolean
+                            active_user:
+                                types:
+                                    - bsonType: Boolean
+              teammates:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: ObjectId
+              region:
+                  types:
+                      - bsonType: String
+              account_created:
+                  types:
+                      - bsonType: Date
+              employee_number:
+                  types:
+                      - bsonType: Number
+              uuid:
+                  types:
+                      - bsonType: Binary
+              job_title:
+                  types:
+                      - bsonType: 'Null'
+                      - bsonType: String
     - name: UUID
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#uuid-example
       pipeline:
@@ -71,6 +281,48 @@ tests:
                 equals:
                     path: uuid
                     value: !bson_uuid fac32260-b511-4c69-8485-a2be5b7dda9e
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              name:
+                  types:
+                      - bsonType: String
+              verified_user:
+                  types:
+                      - bsonType: Boolean
+              account:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            new_user:
+                                types:
+                                    - bsonType: Boolean
+                            active_user:
+                                types:
+                                    - bsonType: Boolean
+              teammates:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: ObjectId
+              region:
+                  types:
+                      - bsonType: String
+              account_created:
+                  types:
+                      - bsonType: Date
+              employee_number:
+                  types:
+                      - bsonType: Number
+              uuid:
+                  types:
+                      - bsonType: Binary
+              job_title:
+                  types:
+                      - bsonType: 'Null'
+                      - bsonType: String
     - name: 'Null'
       link: https://www.mongodb.com/docs/atlas/atlas-search/equals/#null-example
       pipeline:
@@ -78,3 +330,45 @@ tests:
                 equals:
                     path: job_title
                     value: ~
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              name:
+                  types:
+                      - bsonType: String
+              verified_user:
+                  types:
+                      - bsonType: Boolean
+              account:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            new_user:
+                                types:
+                                    - bsonType: Boolean
+                            active_user:
+                                types:
+                                    - bsonType: Boolean
+              teammates:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: ObjectId
+              region:
+                  types:
+                      - bsonType: String
+              account_created:
+                  types:
+                      - bsonType: Date
+              employee_number:
+                  types:
+                      - bsonType: Number
+              uuid:
+                  types:
+                      - bsonType: Binary
+              job_title:
+                  types:
+                      - bsonType: 'Null'
+                      - bsonType: String

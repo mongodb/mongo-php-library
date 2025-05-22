@@ -12,8 +12,26 @@ arguments:
           - any
 tests:
     - name: Match Document Fields
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/ne/#match-document-fields
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/ne/#match-document-fields-that-are-not-equal
       pipeline:
           - $match:
                 quantity:
                     $ne: 20
+      schema:
+          inventory:
+              item:
+                  types:
+                      - bsonType: String
+              quantity:
+                  types:
+                      - bsonType: Number
+              carrier:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            name:
+                                types:
+                                    - bsonType: String
+                            fee:
+                                types:
+                                    - bsonType: Number

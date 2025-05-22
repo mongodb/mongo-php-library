@@ -34,3 +34,24 @@ tests:
                                     bsonType: string
                                 zipcode:
                                     bsonType: string
+      schema:
+          TestCollection:
+              name:
+                  types:
+                      - bsonType: String
+              major:
+                  types:
+                      - bsonType: String
+              gpa:
+                  types:
+                      - bsonType: Double
+              address:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            street:
+                                types:
+                                    - bsonType: String
+                            zipcode:
+                                types:
+                                    - bsonType: String

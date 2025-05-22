@@ -21,6 +21,34 @@ tests:
                         - appliance
                         - school
                         - book
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              code:
+                  types:
+                      - bsonType: String
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  size:
+                                      types:
+                                          - bsonType: String
+                                  num:
+                                      types:
+                                          - bsonType: Number
+                                  color:
+                                      types:
+                                          - bsonType: String
     - name: Use $all with $elemMatch
       link: https://www.mongodb.com/docs/manual/reference/operator/query/all/#use--all-with--elemmatch
       pipeline:
@@ -34,3 +62,31 @@ tests:
                         - $elemMatch:
                               num: 100
                               color: green
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              code:
+                  types:
+                      - bsonType: String
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  size:
+                                      types:
+                                          - bsonType: String
+                                  num:
+                                      types:
+                                          - bsonType: Number
+                                  color:
+                                      types:
+                                          - bsonType: String

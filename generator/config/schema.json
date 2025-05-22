@@ -331,6 +331,7 @@
                         "Double",
                         "Int32",
                         "Int64",
+                        "Long",
                         "MaxKey",
                         "MinKey",
                         "Null",

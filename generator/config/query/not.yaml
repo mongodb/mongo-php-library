@@ -18,9 +18,31 @@ tests:
                 price:
                     $not:
                         $gt: 1.99
+      schema:
+          inventory:
+              price:
+                  types:
+                      - bsonType: Double
+              qty:
+                  types:
+                      - bsonType: Int32
+              sale:
+                  types:
+                      - bsonType: Boolean
     - name: Regular Expressions
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/not/#-not-and-regular-expressions
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/not/#regular-expressions
       pipeline:
           - $match:
                 price:
                     $not: !bson_regex ^p.*
+      schema:
+          inventory:
+              price:
+                  types:
+                      - bsonType: Double
+              qty:
+                  types:
+                      - bsonType: Int32
+              sale:
+                  types:
+                      - bsonType: Boolean

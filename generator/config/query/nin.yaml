@@ -19,6 +19,19 @@ tests:
                     $nin:
                         - 5
                         - 15
+      schema:
+          inventory:
+              item:
+                  types:
+                      - bsonType: String
+              quantity:
+                  types:
+                      - bsonType: Number
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Select on Elements Not in an Array
       link: https://www.mongodb.com/docs/manual/reference/operator/query/nin/#select-on-elements-not-in-an-array
       pipeline:
@@ -26,3 +39,16 @@ tests:
                 tags:
                     $nin:
                         - school
+      schema:
+          inventory:
+              item:
+                  types:
+                      - bsonType: String
+              quantity:
+                  types:
+                      - bsonType: Number
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

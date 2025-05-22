@@ -17,3 +17,21 @@ tests:
           - $match:
                 qty:
                     $lt: 20
+      schema:
+          inventory:
+              item:
+                  types:
+                      - bsonType: String
+              quantity:
+                  types:
+                      - bsonType: Number
+              carrier:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            name:
+                                types:
+                                    - bsonType: String
+                            fee:
+                                types:
+                                    - bsonType: Number

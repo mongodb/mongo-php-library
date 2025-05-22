@@ -36,8 +36,25 @@ tests:
                 zipCode:
                     $type:
                         - number
+      schema:
+          addressBook:
+              _id:
+                  types:
+                      - bsonType: Number
+              address:
+                  types:
+                      - bsonType: String
+              zipCode:
+                  types:
+                      - bsonType: String
+                      - bsonType: Number
+                      - bsonType: Long
+                      - bsonType: Int32
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Querying by Multiple Data Type
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-multiple-data-type
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-multiple-data-types
       pipeline:
           - $match:
                 zipCode:
@@ -49,6 +66,23 @@ tests:
                     $type:
                         - string
                         - double
+      schema:
+          addressBook:
+              _id:
+                  types:
+                      - bsonType: Number
+              address:
+                  types:
+                      - bsonType: String
+              zipCode:
+                  types:
+                      - bsonType: String
+                      - bsonType: Number
+                      - bsonType: Long
+                      - bsonType: Int32
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Querying by MinKey and MaxKey
       link: https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-minkey-and-maxkey
       pipeline:
@@ -60,6 +94,23 @@ tests:
                 zipCode:
                     $type:
                         - maxKey
+      schema:
+          addressBook:
+              _id:
+                  types:
+                      - bsonType: Number
+              address:
+                  types:
+                      - bsonType: String
+              zipCode:
+                  types:
+                      - bsonType: String
+                      - bsonType: Number
+                      - bsonType: Long
+                      - bsonType: Int32
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Querying by Array Type
       link: https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-array-type
       pipeline:
@@ -67,3 +118,18 @@ tests:
                 zipCode:
                     $type:
                         - array
+      schema:
+          sensorReading:
+              _id:
+                  types:
+                      - bsonType: Number
+              readings:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+                            - bsonType: Array
+                              types:
+                                  - bsonType: String
+                                  - bsonType: Number
+                      - bsonType: Number

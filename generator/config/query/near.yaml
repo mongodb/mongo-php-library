@@ -37,3 +37,17 @@ tests:
                                 - 40.78
                         $minDistance: 1000
                         $maxDistance: 5000
+      schema:
+          places:
+              location:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            type:
+                                types:
+                                    - bsonType: String
+                            coordinates:
+                                types:
+                                    - bsonType: Array
+                                      types:
+                                          - bsonType: Double

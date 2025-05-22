@@ -34,32 +34,68 @@ arguments:
           Text searches against earlier versions of the text index are inherently diacritic sensitive and cannot be diacritic insensitive. As such, the $diacriticSensitive option has no effect with earlier versions of the text index.
 tests:
     - name: Search for a Single Word
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#-text-with-a-single-word
       pipeline:
           - $match:
                 $text:
                     $search: coffee
-    - name: Match Any of the Search Terms
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word
-      pipeline:
-          - $match:
-                $text:
-                    $search: bake coffee cake
-    - name: Search a Different Language
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-a-different-language
+      schema:
+          articles:
+              _id:
+                  types:
+                      - bsonType: Number
+              subject:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              views:
+                  types:
+                      - bsonType: Number
+    - name: Query a Different Language
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#query-a-different-language
       pipeline:
           - $match:
                 $text:
                     $search: leche
                     $language: es
+      schema:
+          articles:
+              _id:
+                  types:
+                      - bsonType: Number
+              subject:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              views:
+                  types:
+                      - bsonType: Number
     - name: Case and Diacritic Insensitive Search
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#case-and-diacritic-insensitive-search
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#case-and-diacritic-insensitivity
       pipeline:
           - $match:
                 $text:
                     $search: сы́рники CAFÉS
+      schema:
+          articles:
+              _id:
+                  types:
+                      - bsonType: Number
+              subject:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              views:
+                  types:
+                      - bsonType: Number
     - name: Perform Case Sensitive Search
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#case-sensitivity
       pipeline:
           - $match:
                 $text:
@@ -69,15 +105,43 @@ tests:
                 $text:
                     $search: \"Café Con Leche\"
                     $caseSensitive: true
+      schema:
+          articles:
+              _id:
+                  types:
+                      - bsonType: Number
+              subject:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              views:
+                  types:
+                      - bsonType: Number
     - name: Diacritic Sensitive Search
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#diacritic-sensitivity
       pipeline:
           - $match:
                 $text:
                     $search: CAFÉ
                     $diacriticSensitive: true
+      schema:
+          articles:
+              _id:
+                  types:
+                      - bsonType: Number
+              subject:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              views:
+                  types:
+                      - bsonType: Number
     - name: Text Search Score Examples
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/text/#relevance-score-examples
       pipeline:
           - $match:
                 $text:
@@ -90,3 +154,17 @@ tests:
                 score:
                     $meta: textScore
           - $limit: 5
+      schema:
+          articles:
+              _id:
+                  types:
+                      - bsonType: Number
+              subject:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              views:
+                  types:
+                      - bsonType: Number

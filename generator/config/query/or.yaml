@@ -21,6 +21,17 @@ tests:
                     - quantity:
                           $lt: 20
                     - price: 10
+      schema:
+          inventory:
+              price:
+                  types:
+                      - bsonType: Double
+              qty:
+                  types:
+                      - bsonType: Int32
+              sale:
+                  types:
+                      - bsonType: Boolean
     - name: Error Handling
       link: https://www.mongodb.com/docs/manual/reference/operator/query/or/#error-handling
       pipeline:
@@ -34,3 +45,8 @@ tests:
                                     - 1
                                     - $x
                               - 3
+      schema:
+          example:
+              x:
+                  types:
+                      - bsonType: Int32

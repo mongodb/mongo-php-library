@@ -17,12 +17,64 @@ tests:
           - $match:
                 qty:
                     $eq: 20
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            name:
+                                types:
+                                    - bsonType: String
+                            code:
+                                types:
+                                    - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+                            - bsonType: Array
+                              types:
+                                  - bsonType: String
     - name: Field in Embedded Document Equals a Value
       link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/#field-in-embedded-document-equals-a-value
       pipeline:
           - $match:
                 item.name:
                     $eq: ab
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            name:
+                                types:
+                                    - bsonType: String
+                            code:
+                                types:
+                                    - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+                            - bsonType: Array
+                              types:
+                                  - bsonType: String
     - name: Equals an Array Value
       link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-an-array-value
       pipeline:
@@ -31,6 +83,32 @@ tests:
                     $eq:
                         - A
                         - B
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            name:
+                                types:
+                                    - bsonType: String
+                            code:
+                                types:
+                                    - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+                            - bsonType: Array
+                              types:
+                                  - bsonType: String
     - name: Regex Match Behaviour
       link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/#regex-match-behaviour
       pipeline:
@@ -44,3 +122,29 @@ tests:
           - $match:
                 company:
                     $eq: !bson_regex ^MongoDB
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            name:
+                                types:
+                                    - bsonType: String
+                            code:
+                                types:
+                                    - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+                            - bsonType: Array
+                              types:
+                                  - bsonType: String

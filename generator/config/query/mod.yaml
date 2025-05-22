@@ -22,6 +22,17 @@ tests:
                     $mod:
                         - 4
                         - 0
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
     - name: Floating Point Arguments
       link: https://www.mongodb.com/docs/manual/reference/operator/query/mod/#floating-point-arguments
       pipeline:
@@ -40,3 +51,14 @@ tests:
                     $mod:
                         - 4.99
                         - 0
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number

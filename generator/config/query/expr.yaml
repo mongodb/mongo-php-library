@@ -19,8 +19,22 @@ tests:
                     $gt:
                         - $spent
                         - $budget
+      schema:
+          monthlyBudget:
+              _id:
+                  types:
+                      - bsonType: Number
+              category:
+                  types:
+                      - bsonType: String
+              budget:
+                  types:
+                      - bsonType: Number
+              spent:
+                  types:
+                      - bsonType: Number
     - name: Using $expr With Conditional Statements
-      link: https://www.mongodb.com/docs/manual/reference/operator/query/expr/#using--expr-with-conditional-statements
+      link: https://www.mongodb.com/docs/manual/reference/operator/query/expr/#use--expr-with-conditional-statements
       pipeline:
           - $match:
                 $expr:
@@ -39,3 +53,17 @@ tests:
                                       - $price
                                       - 0.75
                         - 5
+      schema:
+          monthlyBudget:
+              _id:
+                  types:
+                      - bsonType: Number
+              category:
+                  types:
+                      - bsonType: String
+              budget:
+                  types:
+                      - bsonType: Number
+              spent:
+                  types:
+                      - bsonType: Number

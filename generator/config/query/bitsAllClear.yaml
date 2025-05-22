@@ -21,15 +21,51 @@ tests:
                     $bitsAllClear:
                         - 1
                         - 5
+      schema:
+          collection:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Number
+                      - bsonType: Binary
+              binaryValueofA:
+                  types:
+                      - bsonType: String
     - name: Integer Bitmask
       link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#integer-bitmask
       pipeline:
           - $match:
                 a:
                     $bitsAllClear: 35
+      schema:
+          collection:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Number
+                      - bsonType: Binary
+              binaryValueofA:
+                  types:
+                      - bsonType: String
     - name: BinData Bitmask
       link: https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bindata-bitmask
       pipeline:
           - $match:
                 a:
                     $bitsAllClear: !bson_binary IA==
+      schema:
+          collection:
+              _id:
+                  types:
+                      - bsonType: Number
+              a:
+                  types:
+                      - bsonType: Number
+                      - bsonType: Binary
+              binaryValueofA:
+                  types:
+                      - bsonType: String

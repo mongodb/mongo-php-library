@@ -21,14 +21,29 @@ tests:
                     $nin:
                         - 5
                         - 15
+      schema:
+          inventory:
+              qty:
+                  types:
+                      - bsonType: Int32
+                      - bsonType: Undefined
     - name: Null Values
       link: https://www.mongodb.com/docs/manual/reference/operator/query/exists/#null-values
       pipeline:
           - $match:
                 qty:
                     $exists: true
-    - name: Missing Field
-      pipeline:
-          - $match:
-                qty:
-                    $exists: false
+      schema:
+          spices:
+              saffron:
+                  types:
+                      - bsonType: Number
+                      - bsonType: 'Null'
+              cinnamon:
+                  types:
+                      - bsonType: Number
+                      - bsonType: 'Null'
+              mustard:
+                  types:
+                      - bsonType: Number
+                      - bsonType: 'Null'

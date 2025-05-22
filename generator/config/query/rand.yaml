@@ -20,3 +20,17 @@ tests:
                 _id: 0
                 name: 1
                 registered: 1
+      schema:
+          voters:
+              name:
+                  types:
+                      - bsonType: String
+              voterId:
+                  types:
+                      - bsonType: Number
+              district:
+                  types:
+                      - bsonType: Number
+              registered:
+                  types:
+                      - bsonType: Boolean

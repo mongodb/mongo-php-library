@@ -31,3 +31,17 @@ tests:
                         args:
                             - $name
                         lang: js
+      schema:
+          players:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              username:
+                  types:
+                      - bsonType: String
+              first_login:
+                  types:
+                      - bsonType: String

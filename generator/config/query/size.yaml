@@ -17,3 +17,14 @@ tests:
           - $match:
                 tags:
                     $size: 3
+      schema:
+          inventory:
+              price:
+                  types:
+                      - bsonType: Double
+              qty:
+                  types:
+                      - bsonType: Int32
+              sale:
+                  types:
+                      - bsonType: Boolean

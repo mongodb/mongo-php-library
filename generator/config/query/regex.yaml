@@ -17,6 +17,17 @@ tests:
           - $match:
                 sku:
                     $regex: !bson_regex 789$
+      schema:
+          products:
+              _id:
+                  types:
+                      - bsonType: Number
+              sku:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String
     - name: Perform Case-Insensitive Regular Expression Match
       link: https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-case-insensitive-regular-expression-match
       pipeline:
@@ -25,3 +36,14 @@ tests:
                     $regex: !bson_regex
                         - ^ABC
                         - i
+      schema:
+          products:
+              _id:
+                  types:
+                      - bsonType: Number
+              sku:
+                  types:
+                      - bsonType: String
+              description:
+                  types:
+                      - bsonType: String

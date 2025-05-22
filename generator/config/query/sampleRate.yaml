@@ -20,3 +20,8 @@ tests:
           - $match:
                 $sampleRate: 0.33
           - $count: numMatches
+      schema:
+          collection:
+              _id:
+                  types:
+                      - bsonType: ObjectId

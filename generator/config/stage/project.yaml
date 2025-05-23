@@ -18,6 +18,30 @@ tests:
           - $project:
                 title: 1
                 author: 1
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
     - name: Suppress id Field in the Output Documents
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#suppress-_id-field-in-the-output-documents
       pipeline:
@@ -25,11 +49,62 @@ tests:
                 _id: 0
                 title: 1
                 author: 1
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
     - name: Exclude Fields from Output Documents
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-output-documents
       pipeline:
           - $project:
                 lastModified: 0
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
+              lastModified:
+                  types:
+                      - bsonType: String
     - name: Exclude Fields from Embedded Documents
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-embedded-documents
       pipeline:
@@ -40,6 +115,33 @@ tests:
                 author:
                     first: 0
                 lastModified: 0
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
+              lastModified:
+                  types:
+                      - bsonType: String
     - name: Conditionally Exclude Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#conditionally-exclude-fields
       pipeline:
@@ -55,6 +157,36 @@ tests:
                                 - $author.middle
                         then: $$REMOVE
                         else: $author.middle
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+                            middle:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
+              lastModified:
+                  types:
+                      - bsonType: String
     - name: Include Specific Fields from Embedded Documents
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-from-embedded-documents
       pipeline:
@@ -63,6 +195,40 @@ tests:
           - $project:
                 stop:
                     title: 1
+      schema:
+          bookmarks:
+              _id:
+                  types:
+                      - bsonType: Number
+              user:
+                  types:
+                      - bsonType: String
+              stop:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            title:
+                                types:
+                                    - bsonType: String
+                            author:
+                                types:
+                                    - bsonType: String
+                            page:
+                                types:
+                                    - bsonType: Number
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  title:
+                                      types:
+                                          - bsonType: String
+                                  author:
+                                      types:
+                                          - bsonType: String
+                                  page:
+                                      types:
+                                          - bsonType: Number
     - name: Include Computed Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-computed-fields
       pipeline:
@@ -96,6 +262,30 @@ tests:
                             - 1
                 lastName: $author.last
                 copiesSold: $copies
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
     - name: Project New Array Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#project-new-array-fields
       pipeline:
@@ -103,3 +293,14 @@ tests:
                 myArray:
                     - $x
                     - $y
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              x:
+                  types:
+                      - bsonType: Number
+              y:
+                  types:
+                      - bsonType: Number

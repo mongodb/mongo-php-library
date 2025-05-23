@@ -63,6 +63,26 @@ tests:
           - $match:
                 count:
                     $gt: 3
+      schema:
+          artists:
+              _id:
+                  types:
+                      - bsonType: Number
+              last_name:
+                  types:
+                      - bsonType: String
+              first_name:
+                  types:
+                      - bsonType: String
+              year_born:
+                  types:
+                      - bsonType: Number
+              year_died:
+                  types:
+                      - bsonType: Number
+              nationality:
+                  types:
+                      - bsonType: String
     - name: Use $bucket with $facet to Bucket by Multiple Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/#use--bucket-with--facet-to-bucket-by-multiple-fields
       pipeline:
@@ -100,3 +120,20 @@ tests:
                                   $push:
                                       title: $title
                                       year: $year
+      schema:
+          artwork:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              artist:
+                  types:
+                      - bsonType: String
+              year:
+                  types:
+                      - bsonType: Number
+              price:
+                  types:
+                      - bsonType: Decimal128

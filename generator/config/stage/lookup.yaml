@@ -55,6 +55,20 @@ tests:
                 localField: item
                 foreignField: sku
                 as: inventory_docs
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Use $lookup with an Array
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with-an-array
       pipeline:
@@ -63,6 +77,24 @@ tests:
                 localField: enrollmentlist
                 foreignField: name
                 as: enrollee_info
+      schema:
+          classes:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              enrollmentlist:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              days:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Use $lookup with $mergeObjects
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with--mergeobjects
       pipeline:
@@ -80,6 +112,20 @@ tests:
                         - $$ROOT
           - $project:
                 fromItems: 0
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Perform Multiple Joins and a Correlated Subquery with $lookup
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-multiple-joins-and-a-correlated-subquery-with--lookup
       pipeline:
@@ -102,6 +148,7 @@ tests:
                           stock_item: 0
                           _id: 0
                 as: stockdata
+      schema: '// TODO: No schema found in docs'
     - name: Perform an Uncorrelated Subquery with $lookup
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-an-uncorrelated-subquery-with--lookup
       pipeline:
@@ -118,6 +165,20 @@ tests:
                     - $replaceRoot:
                           newRoot: $date
                 as: holidays
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Perform a Concise Correlated Subquery with $lookup
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-a-concise-correlated-subquery-with--lookup
       pipeline:
@@ -134,3 +195,21 @@ tests:
                                   - $$orders_drink
                                   - $beverages
                 as: matches
+      schema:
+          restaurants:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              food:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              beverages:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

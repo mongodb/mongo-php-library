@@ -33,7 +33,7 @@ arguments:
           - bool
       description: |
           Parallelize search across segments on dedicated search nodes.
-          If you don't have separate search nodes on your cluster, 
+          If you don't have separate search nodes on your cluster,
           Atlas Search ignores this flag. If omitted, defaults to false.
     - name: count
       optional: true
@@ -79,7 +79,7 @@ arguments:
           Document that specifies the tracking option to retrieve analytics information on the search terms.
 tests:
     - name: Example
-      link: https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#aggregation-variable
+      link: https://www.mongodb.com/docs/atlas/atlas-search/aggregation-stages/search/#aggregation-variable
       pipeline:
           - $search:
                 near:
@@ -96,6 +96,143 @@ tests:
                 meta:
                     - $replaceWith: $$SEARCH_META
                     - $limit: 1
+      schema:
+          movies: &ref_0
+              _id:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $oid:
+                                types:
+                                    - bsonType: String
+              title:
+                  types:
+                      - bsonType: String
+              year:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
+              runtime:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
+              released:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $date:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberLong:
+                                              types:
+                                                  - bsonType: String
+              poster:
+                  types:
+                      - bsonType: String
+              plot:
+                  types:
+                      - bsonType: String
+              fullplot:
+                  types:
+                      - bsonType: String
+              lastupdated:
+                  types:
+                      - bsonType: String
+              type:
+                  types:
+                      - bsonType: String
+              directors:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              imdb:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            rating:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberDouble:
+                                              types:
+                                                  - bsonType: String
+                            votes:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            id:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+              cast:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              countries:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              genres:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              tomatoes:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            viewer:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          rating:
+                                              types:
+                                                  - bsonType: Document
+                                                    fields:
+                                                        $numberDouble:
+                                                            types:
+                                                                - bsonType: String
+                                          numReviews:
+                                              types:
+                                                  - bsonType: Document
+                                                    fields:
+                                                        $numberInt:
+                                                            types:
+                                                                - bsonType: String
+                            lastUpdated:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $date:
+                                              types:
+                                                  - bsonType: Document
+                                                    fields:
+                                                        $numberLong:
+                                                            types:
+                                                                - bsonType: String
+              num_mflix_comments:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
     - name: Date Search and Sort
       link: https://www.mongodb.com/docs/atlas/atlas-search/sort/#date-search-and-sort
       pipeline:
@@ -111,6 +248,8 @@ tests:
                 _id: 0
                 title: 1
                 released: 1
+      schema:
+          movies: *ref_0
     - name: Number Search and Sort
       link: https://www.mongodb.com/docs/atlas/atlas-search/sort/#number-search-and-sort
       pipeline:
@@ -125,6 +264,8 @@ tests:
                 _id: 0
                 title: 1
                 awards.wins: 1
+      schema:
+          movies: *ref_0
     - name: Sort by score
       link: https://www.mongodb.com/docs/atlas/atlas-search/sort/#sort-by-score
       pipeline:
@@ -142,6 +283,8 @@ tests:
                 title: 1
                 score:
                     $meta: searchScore
+      schema:
+          movies: *ref_0
     - name: Paginate results after a token
       link: https://www.mongodb.com/docs/atlas/atlas-search/paginate-results/#search-after-the-reference-point
       pipeline:
@@ -154,6 +297,8 @@ tests:
                         $meta: searchScore
                     released: 1
                 searchAfter: CMtJGgYQuq+ngwgaCSkAjBYH7AAAAA==
+      schema:
+          movies: *ref_0
     - name: Paginate results before a token
       link: https://www.mongodb.com/docs/atlas/atlas-search/paginate-results/#search-before-the-reference-point
       pipeline:
@@ -166,6 +311,8 @@ tests:
                         $meta: searchScore
                     released: 1
                 searchBefore: CJ6kARoGELqvp4MIGgkpACDA3U8BAAA=
+      schema:
+          movies: *ref_0
     - name: Count results
       link: https://www.mongodb.com/docs/atlas/atlas-search/counting/#count-results
       pipeline:
@@ -181,6 +328,8 @@ tests:
                 title: 1
                 released: 1
           - $limit: 2
+      schema:
+          movies: *ref_0
     - name: Track Search terms
       link: https://www.mongodb.com/docs/atlas/atlas-search/tracking/#examples
       pipeline:
@@ -194,6 +343,8 @@ tests:
           - $project:
                 _id: 0
                 title: 1
+      schema:
+          movies: *ref_0
     - name: Return Stored Source Fields
       link: https://www.mongodb.com/docs/atlas/atlas-search/return-stored-source/#examples
       pipeline:
@@ -213,3 +364,5 @@ tests:
                 localField: _id
                 foreignField: _id
                 as: document
+      schema:
+          movies: *ref_0

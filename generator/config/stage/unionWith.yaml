@@ -45,6 +45,17 @@ tests:
                 _id: 1
                 store: 1
                 item: 1
+      schema:
+          sales_2017:
+              store:
+                  types:
+                      - bsonType: String
+              item:
+                  types:
+                      - bsonType: String
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Report 2 Aggregated Sales by Items
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/#report-2--aggregated-sales-by-items
       pipeline:
@@ -60,3 +71,14 @@ tests:
                     $sum: $quantity
           - $sort:
                 total: -1
+      schema:
+          sales_2017:
+              store:
+                  types:
+                      - bsonType: String
+              item:
+                  types:
+                      - bsonType: String
+              quantity:
+                  types:
+                      - bsonType: Number

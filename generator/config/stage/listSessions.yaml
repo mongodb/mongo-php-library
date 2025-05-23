@@ -25,6 +25,11 @@ tests:
       pipeline:
           - $listSessions:
                 allUsers: true
+      schema:
+          TestCollection: &ref_0
+              _id:
+                  types:
+                      - bsonType: ObjectId
     - name: List All Sessions for the Specified Users
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/#list-all-sessions-for-the-specified-users
       pipeline:
@@ -32,7 +37,11 @@ tests:
                 users:
                     - user: myAppReader
                       db: test
+      schema:
+          TestCollection: *ref_0
     - name: List All Sessions for the Current User
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/#list-all-sessions-for-the-current-user
       pipeline:
           - $listSessions: {}
+      schema:
+          TestCollection: *ref_0

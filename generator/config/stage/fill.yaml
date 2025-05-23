@@ -48,6 +48,20 @@ tests:
                         value: 0
                     sneakersSold:
                         value: 0
+      schema:
+          dailySales:
+              date:
+                  types:
+                      - bsonType: Date
+              bootsSold:
+                  types:
+                      - bsonType: Number
+              sandalsSold:
+                  types:
+                      - bsonType: Number
+              sneakersSold:
+                  types:
+                      - bsonType: Number
     - name: Fill Missing Field Values with Linear Interpolation
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-linear-interpolation
       pipeline:
@@ -57,6 +71,14 @@ tests:
                 output:
                     price:
                         method: linear
+      schema:
+          stock:
+              time:
+                  types:
+                      - bsonType: Date
+              price:
+                  types:
+                      - bsonType: Number
     - name: Fill Missing Field Values Based on the Last Observed Value
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-based-on-the-last-observed-value
       pipeline:
@@ -66,6 +88,14 @@ tests:
                 output:
                     score:
                         method: locf
+      schema:
+          restaurantReviews:
+              date:
+                  types:
+                      - bsonType: Date
+              score:
+                  types:
+                      - bsonType: Number
     - name: Fill Data for Distinct Partitions
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-data-for-distinct-partitions
       pipeline:
@@ -77,6 +107,17 @@ tests:
                 output:
                     score:
                         method: locf
+      schema:
+          restaurantReviewsMultiple:
+              date:
+                  types:
+                      - bsonType: Date
+              restaurant:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: Indicate if a Field was Populated Using $fill
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#indicate-if-a-field-was-populated-using--fill
       pipeline:
@@ -92,3 +133,11 @@ tests:
                 output:
                     score:
                         method: locf
+      schema:
+          restaurantReviews:
+              date:
+                  types:
+                      - bsonType: Date
+              score:
+                  types:
+                      - bsonType: Number

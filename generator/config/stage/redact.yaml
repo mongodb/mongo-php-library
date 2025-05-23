@@ -28,6 +28,49 @@ tests:
                             - 0
                     then: $$DESCEND
                     else: $$PRUNE
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              year:
+                  types:
+                      - bsonType: Number
+              subsections:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  subtitle:
+                                      types:
+                                          - bsonType: String
+                                  tags:
+                                      types:
+                                          - bsonType: Array
+                                            types:
+                                                - bsonType: String
+                                  content:
+                                      types:
+                                          - bsonType: String
+                                          - bsonType: Document
+                                            fields:
+                                                text:
+                                                    types:
+                                                        - bsonType: String
+                                                tags:
+                                                    types:
+                                                        - bsonType: Array
+                                                          types:
+                                                              - bsonType: String
     - name: Exclude All Fields at a Given Level
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#exclude-all-fields-at-a-given-level
       pipeline:
@@ -41,3 +84,46 @@ tests:
                             - 5
                     then: $$PRUNE
                     else: $$DESCEND
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              year:
+                  types:
+                      - bsonType: Number
+              subsections:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  subtitle:
+                                      types:
+                                          - bsonType: String
+                                  tags:
+                                      types:
+                                          - bsonType: Array
+                                            types:
+                                                - bsonType: String
+                                  content:
+                                      types:
+                                          - bsonType: String
+                                          - bsonType: Document
+                                            fields:
+                                                text:
+                                                    types:
+                                                        - bsonType: String
+                                                tags:
+                                                    types:
+                                                        - bsonType: Array
+                                                          types:
+                                                              - bsonType: String

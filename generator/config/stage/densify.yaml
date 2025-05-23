@@ -37,8 +37,26 @@ tests:
                     bounds:
                         - !bson_utcdatetime '2021-05-18T00:00:00.000Z'
                         - !bson_utcdatetime '2021-05-18T08:00:00.000Z'
+      schema:
+          weather:
+              metadata:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            sensorId:
+                                types:
+                                    - bsonType: Number
+                            type:
+                                types:
+                                    - bsonType: String
+              timestamp:
+                  types:
+                      - bsonType: Date
+              temp:
+                  types:
+                      - bsonType: Number
     - name: Densifiction with Partitions
-      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densifiction-with-partitions
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densification-with-partitions
       pipeline:
           - $densify:
                 field: altitude
@@ -47,3 +65,17 @@ tests:
                 range:
                     bounds: full
                     step: 200
+      schema:
+          coffee:
+              altitude:
+                  types:
+                      - bsonType: Number
+              variety:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
+              price:
+                  types:
+                      - bsonType: Number

@@ -19,6 +19,17 @@ tests:
           - $sort:
                 age: -1
                 posts: 1
+      schema:
+          users: &ref_0
+              age:
+                  types:
+                      - bsonType: Int32
+              posts:
+                  types:
+                      - bsonType: Int32
+              name:
+                  types:
+                      - bsonType: String
     - name: Text Score Metadata Sort
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/#text-score-metadata-sort
       pipeline:
@@ -29,3 +40,5 @@ tests:
                 score:
                     $meta: textScore
                 posts: -1
+      schema:
+          users: *ref_0

@@ -27,6 +27,11 @@ tests:
           - $bucketAuto:
                 groupBy: $x
                 buckets: 4
+      schema:
+          TestCollection:
+              x:
+                  types:
+                      - bsonType: Number
     - name: Use a $documents Stage in a $lookup Stage
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/#use-a--documents-stage-in-a--lookup-stage
       pipeline:
@@ -41,3 +46,11 @@ tests:
                             name: Palo Alto, CA
                           - zip_id: 10019
                             name: New York, NY
+      schema:
+          locations:
+              zip:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String

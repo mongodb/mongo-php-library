@@ -30,16 +30,66 @@ tests:
                         - $totalHomework
                         - $totalQuiz
                         - $extraCredit
+      schema:
+          scores:
+              _id:
+                  types:
+                      - bsonType: Number
+              student:
+                  types:
+                      - bsonType: String
+              homework:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+              quiz:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+              extraCredit:
+                  types:
+                      - bsonType: Number
     - name: Adding Fields to an Embedded Document
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#adding-fields-to-an-embedded-document
       pipeline:
           - $addFields:
                 specs.fuel_type: unleaded
+      schema:
+          vehicles:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              specs:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            doors:
+                                types:
+                                    - bsonType: Number
+                            wheels:
+                                types:
+                                    - bsonType: Number
     - name: Overwriting an existing field
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#overwriting-an-existing-field
       pipeline:
           - $addFields:
                 cats: 20
+      schema:
+          animals:
+              _id:
+                  types:
+                      - bsonType: Number
+              dogs:
+                  types:
+                      - bsonType: Number
+              cats:
+                  types:
+                      - bsonType: Number
     - name: Add Element to an Array
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#add-element-to-an-array
       pipeline:
@@ -50,3 +100,24 @@ tests:
                     $concatArrays:
                         - $homework
                         -     - 7
+      schema:
+          scores:
+              _id:
+                  types:
+                      - bsonType: Number
+              student:
+                  types:
+                      - bsonType: String
+              homework:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+              quiz:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+              extraCredit:
+                  types:
+                      - bsonType: Number

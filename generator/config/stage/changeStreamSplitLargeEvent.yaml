@@ -12,3 +12,11 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/#example
       pipeline:
           - $changeStreamSplitLargeEvent: {}
+      schema:
+          myCollection:
+              _id:
+                  types:
+                      - bsonType: Int32
+              largeField:
+                  types:
+                      - bsonType: String

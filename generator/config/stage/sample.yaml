@@ -14,7 +14,21 @@ arguments:
           The number of documents to randomly select.
 tests:
     - name: Example
-      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/#example
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/#examples
       pipeline:
           - $sample:
                 size: 3
+      schema:
+          users:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              q1:
+                  types:
+                      - bsonType: Boolean
+              q2:
+                  types:
+                      - bsonType: Boolean

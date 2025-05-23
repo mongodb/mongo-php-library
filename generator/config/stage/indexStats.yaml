@@ -11,3 +11,20 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/#example
       pipeline:
           - $indexStats: {}
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String

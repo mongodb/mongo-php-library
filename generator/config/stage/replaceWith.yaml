@@ -22,6 +22,30 @@ tests:
                       birds: 0
                       fish: 0
                     - $pets
+      schema:
+          people:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              age:
+                  types:
+                      - bsonType: Number
+              pets:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            dogs:
+                                types:
+                                    - bsonType: Number
+                            cats:
+                                types:
+                                    - bsonType: Number
+                            fish:
+                                types:
+                                    - bsonType: Number
     - name: a Document Nested in an Array
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-document-nested-in-an-array
       pipeline:
@@ -31,6 +55,29 @@ tests:
                 grades.grade:
                     $gte: 90
           - $replaceWith: $grades
+      schema:
+          students:
+              _id:
+                  types:
+                      - bsonType: Number
+              grades:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  test:
+                                      types:
+                                          - bsonType: Number
+                                  grade:
+                                      types:
+                                          - bsonType: Number
+                                  mean:
+                                      types:
+                                          - bsonType: Number
+                                  std:
+                                      types:
+                                          - bsonType: Number
     - name: a Newly Created Document
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-newly-created-document
       pipeline:
@@ -45,6 +92,26 @@ tests:
                         - $quantity
                 status: Complete
                 asofDate: $$NOW
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
+              date:
+                  types:
+                      - bsonType: Date
+              status:
+                  types:
+                      - bsonType: String
     - name: a New Document Created from $$ROOT and a Default Document
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-new-document-created-from---root-and-a-default-document
       pipeline:
@@ -56,3 +123,17 @@ tests:
                       cell: ''
                       home: ''
                     - $$ROOT
+      schema:
+          contacts:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              email:
+                  types:
+                      - bsonType: String
+              cell:
+                  types:
+                      - bsonType: String

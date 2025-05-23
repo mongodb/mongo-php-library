@@ -38,3 +38,33 @@ tests:
           - $bucketAuto:
                 groupBy: $price
                 buckets: 4
+      schema:
+          artwork:
+              _id:
+                  types:
+                      - bsonType: Int32
+              title:
+                  types:
+                      - bsonType: String
+              artist:
+                  types:
+                      - bsonType: String
+              year:
+                  types:
+                      - bsonType: Int32
+              price:
+                  types:
+                      - bsonType: Decimal128
+              dimensions:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            height:
+                                types:
+                                    - bsonType: Int32
+                            width:
+                                types:
+                                    - bsonType: Int32
+                            units:
+                                types:
+                                    - bsonType: String

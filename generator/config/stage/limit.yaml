@@ -15,3 +15,8 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/#example
       pipeline:
           - $limit: 5
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId

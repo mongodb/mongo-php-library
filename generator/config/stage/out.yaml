@@ -22,6 +22,20 @@ tests:
                 books:
                     $push: $title
           - $out: authors
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
     - name: Output to a Different Database
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-a-different-database
       pipeline:
@@ -32,3 +46,17 @@ tests:
           - $out:
                 db: reporting
                 coll: authors
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number

@@ -30,18 +30,29 @@ tests:
           - $collStats:
                 latencyStats:
                     histograms: true
+      schema:
+          TestCollection: &ref_0
+              _id:
+                  types:
+                      - bsonType: ObjectId
     - name: storageStats Document
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#storagestats-document
       pipeline:
           - $collStats:
                 storageStats: {}
+      schema:
+          TestCollection: *ref_0
     - name: count Field
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#count-field
       pipeline:
           - $collStats:
                 count: {}
+      schema:
+          TestCollection: *ref_0
     - name: queryExecStats Document
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#queryexecstats-document
       pipeline:
           - $collStats:
                 queryExecStats: {}
+      schema:
+          TestCollection: *ref_0

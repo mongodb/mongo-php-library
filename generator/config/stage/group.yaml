@@ -28,11 +28,45 @@ tests:
                 _id: ~
                 count:
                     $count: {}
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Int32
+              date:
+                  types:
+                      - bsonType: Date
     - name: Retrieve Distinct Values
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#retrieve-distinct-values
       pipeline:
           - $group:
                 _id: $item
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Int32
+              date:
+                  types:
+                      - bsonType: Date
     - name: Group by Item Having
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-by-item-having
       pipeline:
@@ -46,6 +80,23 @@ tests:
           - $match:
                 totalSaleAmount:
                     $gte: 100
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Int32
+              date:
+                  types:
+                      - bsonType: Date
     - name: Calculate Count Sum and Average
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#calculate-count--sum--and-average
       pipeline:
@@ -69,6 +120,23 @@ tests:
                     $sum: 1
           - $sort:
                 totalSaleAmount: -1
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Int32
+              date:
+                  types:
+                      - bsonType: Date
     - name: Group by null
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-by-null
       pipeline:
@@ -83,6 +151,23 @@ tests:
                     $avg: $quantity
                 count:
                     $sum: 1
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Int32
+              date:
+                  types:
+                      - bsonType: Date
     - name: Pivot Data
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#pivot-data
       pipeline:
@@ -90,6 +175,20 @@ tests:
                 _id: $author
                 books:
                     $push: $title
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Number
     - name: Group Documents by author
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-documents-by-author
       pipeline:
@@ -101,3 +200,20 @@ tests:
                 totalCopies:
                     $sum:
                         - $books.copies
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Int32
+              date:
+                  types:
+                      - bsonType: Date

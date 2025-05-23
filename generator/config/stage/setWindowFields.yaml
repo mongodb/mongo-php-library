@@ -40,6 +40,26 @@ tests:
                             documents:
                                 - unbounded
                                 - current
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Use Documents Window to Obtain Cumulative Quantity for Each Year
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-quantity-for-each-year
       pipeline:
@@ -56,6 +76,26 @@ tests:
                             documents:
                                 - unbounded
                                 - current
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Use Documents Window to Obtain Moving Average Quantity for Each Year
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-moving-average-quantity-for-each-year
       pipeline:
@@ -72,6 +112,26 @@ tests:
                             documents:
                                 - -1
                                 - 0
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Use Documents Window to Obtain Cumulative and Maximum Quantity for Each
           Year
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-and-maximum-quantity-for-each-year
@@ -95,6 +155,26 @@ tests:
                             documents:
                                 - unbounded
                                 - unbounded
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Range Window Example
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#range-window-example
       pipeline:
@@ -109,6 +189,26 @@ tests:
                             range:
                                 - -10
                                 - 10
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Use a Time Range Window with a Positive Upper Bound
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-a-time-range-window-with-a-positive-upper-bound
       pipeline:
@@ -124,6 +224,26 @@ tests:
                                 - unbounded
                                 - 10
                             unit: month
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number
     - name: Use a Time Range Window with a Negative Upper Bound
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-a-time-range-window-with-a-negative-upper-bound
       pipeline:
@@ -139,3 +259,23 @@ tests:
                                 - unbounded
                                 - -10
                             unit: month
+      schema:
+          cakeSales:
+              _id:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
+              orderDate:
+                  types:
+                      - bsonType: Date
+              state:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Number
+              quantity:
+                  types:
+                      - bsonType: Number

@@ -57,6 +57,23 @@ tests:
                 on: _id
                 whenMatched: replace
                 whenNotMatched: insert
+      schema:
+          salaries:
+              _id:
+                  types:
+                      - bsonType: Number
+              employee:
+                  types:
+                      - bsonType: String
+              dept:
+                  types:
+                      - bsonType: String
+              salary:
+                  types:
+                      - bsonType: Number
+              fiscal_year:
+                  types:
+                      - bsonType: Number
     - name: On-Demand Materialized View Update Replace Data
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#on-demand-materialized-view--update-replace-data
       pipeline:
@@ -76,6 +93,23 @@ tests:
                 on: _id
                 whenMatched: replace
                 whenNotMatched: insert
+      schema:
+          salaries:
+              _id:
+                  types:
+                      - bsonType: Number
+              employee:
+                  types:
+                      - bsonType: String
+              dept:
+                  types:
+                      - bsonType: String
+              salary:
+                  types:
+                      - bsonType: Number
+              fiscal_year:
+                  types:
+                      - bsonType: Number
     - name: Only Insert New Data
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#only-insert-new-data
       pipeline:
@@ -100,6 +134,23 @@ tests:
                     - dept
                     - fiscal_year
                 whenMatched: fail
+      schema:
+          salaries:
+              _id:
+                  types:
+                      - bsonType: Number
+              employee:
+                  types:
+                      - bsonType: String
+              dept:
+                  types:
+                      - bsonType: String
+              salary:
+                  types:
+                      - bsonType: Number
+              fiscal_year:
+                  types:
+                      - bsonType: Number
     - name: Merge Results from Multiple Collections
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#merge-results-from-multiple-collections
       pipeline:
@@ -112,6 +163,23 @@ tests:
                 on: _id
                 whenMatched: merge
                 whenNotMatched: insert
+      schema:
+          purchaseorders:
+              _id:
+                  types:
+                      - bsonType: Number
+              quarter:
+                  types:
+                      - bsonType: String
+              region:
+                  types:
+                      - bsonType: String
+              qty:
+                  types:
+                      - bsonType: Number
+              reportDate:
+                  types:
+                      - bsonType: Date
     - name: Use the Pipeline to Customize the Merge
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#use-the-pipeline-to-customize-the-merge
       pipeline:
@@ -140,6 +208,17 @@ tests:
                                   - $thumbsdown
                                   - $$new.thumbsdown
                 whenNotMatched: insert
+      schema:
+          votes:
+              date:
+                  types:
+                      - bsonType: Date
+              thumbsup:
+                  types:
+                      - bsonType: Number
+              thumbsdown:
+                  types:
+                      - bsonType: Number
     - name: Use Variables to Customize the Merge
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#use-variables-to-customize-the-merge
       pipeline:
@@ -150,3 +229,20 @@ tests:
                 whenMatched:
                     - $addFields:
                           salesYear: $$year
+      schema:
+          salaries:
+              _id:
+                  types:
+                      - bsonType: Number
+              employee:
+                  types:
+                      - bsonType: String
+              dept:
+                  types:
+                      - bsonType: String
+              salary:
+                  types:
+                      - bsonType: Number
+              fiscal_year:
+                  types:
+                      - bsonType: Number

@@ -32,18 +32,57 @@ tests:
       pipeline:
           - $unwind:
                 path: $sizes
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              sizes:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: preserveNullAndEmptyArrays
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#preservenullandemptyarrays
       pipeline:
           - $unwind:
                 path: $sizes
                 preserveNullAndEmptyArrays: true
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              sizes:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: includeArrayIndex
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#includearrayindex
       pipeline:
           - $unwind:
                 path: $sizes
                 includeArrayIndex: arrayIndex
+      schema:
+          inventory:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              sizes:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Group by Unwound Values
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#group-by-unwound-values
       pipeline:
@@ -56,6 +95,24 @@ tests:
                     $avg: $price
           - $sort:
                 averagePrice: -1
+      schema:
+          inventory2:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              sizes:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+                      - bsonType: String
+                      - bsonType: 'Null'
     - name: Unwind Embedded Arrays
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-embedded-arrays
       pipeline:
@@ -70,3 +127,28 @@ tests:
                         $multiply:
                             - $items.price
                             - $items.quantity
+      schema:
+          sales:
+              _id:
+                  types:
+                      - bsonType: String
+              items:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  name:
+                                      types:
+                                          - bsonType: String
+                                  tags:
+                                      types:
+                                          - bsonType: Array
+                                            types:
+                                                - bsonType: String
+                                  price:
+                                      types:
+                                          - bsonType: Decimal128
+                                  quantity:
+                                      types:
+                                          - bsonType: Int32

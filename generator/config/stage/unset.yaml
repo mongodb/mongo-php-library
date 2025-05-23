@@ -18,12 +18,78 @@ tests:
       pipeline:
           - $unset:
                 - copies
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  warehouse:
+                                      types:
+                                          - bsonType: String
+                                  qty:
+                                      types:
+                                          - bsonType: Number
     - name: Remove Top-Level Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-top-level-fields
       pipeline:
           - $unset:
                 - isbn
                 - copies
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  warehouse:
+                                      types:
+                                          - bsonType: String
+                                  qty:
+                                      types:
+                                          - bsonType: Number
     - name: Remove Embedded Fields
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-embedded-fields
       pipeline:
@@ -31,3 +97,36 @@ tests:
                 - isbn
                 - author.first
                 - copies.warehouse
+      schema:
+          books:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              isbn:
+                  types:
+                      - bsonType: String
+              author:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            last:
+                                types:
+                                    - bsonType: String
+                            first:
+                                types:
+                                    - bsonType: String
+              copies:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Document
+                              fields:
+                                  warehouse:
+                                      types:
+                                          - bsonType: String
+                                  qty:
+                                      types:
+                                          - bsonType: Number

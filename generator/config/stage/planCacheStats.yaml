@@ -11,9 +11,43 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/#return-information-for-all-entries-in-the-query-cache
       pipeline:
           - $planCacheStats: {}
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String
     - name: Find Cache Entry Details for a Query Hash
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/#find-cache-entry-details-for-a-query-hash
       pipeline:
           - $planCacheStats: {}
           - $match:
                 planCacheKey: B1435201
+      schema:
+          orders:
+              _id:
+                  types:
+                      - bsonType: Number
+              item:
+                  types:
+                      - bsonType: String
+              price:
+                  types:
+                      - bsonType: Decimal128
+              quantity:
+                  types:
+                      - bsonType: Number
+              type:
+                  types:
+                      - bsonType: String

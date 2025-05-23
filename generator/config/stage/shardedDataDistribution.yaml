@@ -12,3 +12,8 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/#examples
       pipeline:
           - $shardedDataDistribution: {}
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId

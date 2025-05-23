@@ -62,6 +62,17 @@ tests:
                 connectFromField: reportsTo
                 connectToField: name
                 as: reportingHierarchy
+      schema:
+          employees:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              reportsTo:
+                  types:
+                      - bsonType: String
     - name: Across Multiple Collections
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#across-multiple-collections
       pipeline:
@@ -73,6 +84,19 @@ tests:
                 maxDepth: 2
                 depthField: numConnections
                 as: destinations
+      schema:
+          airports:
+              _id:
+                  types:
+                      - bsonType: Number
+              airport:
+                  types:
+                      - bsonType: String
+              connects:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: With a Query Filter
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#with-a-query-filter
       pipeline:
@@ -90,3 +114,21 @@ tests:
                 name: 1
                 friends: 1
                 connections who play golf: $golfers.name
+      schema:
+          people:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              friends:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              hobbies:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

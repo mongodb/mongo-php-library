@@ -16,6 +16,20 @@ tests:
       pipeline:
           - $match:
                 author: dave
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              author:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
+              views:
+                  types:
+                      - bsonType: Number
     - name: Perform a Count
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#perform-a-count
       pipeline:
@@ -30,3 +44,17 @@ tests:
                 _id: ~
                 count:
                     $sum: 1
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId
+              author:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
+              views:
+                  types:
+                      - bsonType: Number

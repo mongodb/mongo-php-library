@@ -83,6 +83,26 @@ tests:
                     category: Parks
                 includeLocs: dist.location
                 spherical: true
+      schema:
+          places:
+              name:
+                  types:
+                      - bsonType: String
+              location:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            type:
+                                types:
+                                    - bsonType: String
+                            coordinates:
+                                types:
+                                    - bsonType: Array
+                                      types:
+                                          - bsonType: Number
+              category:
+                  types:
+                      - bsonType: String
     - name: Minimum Distance
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#minimum-distance
       pipeline:
@@ -98,6 +118,26 @@ tests:
                     category: Parks
                 includeLocs: dist.location
                 spherical: true
+      schema:
+          places:
+              name:
+                  types:
+                      - bsonType: String
+              location:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            type:
+                                types:
+                                    - bsonType: String
+                            coordinates:
+                                types:
+                                    - bsonType: Array
+                                      types:
+                                          - bsonType: Number
+              category:
+                  types:
+                      - bsonType: String
     - name: with the let option
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-the-let-option
       pipeline:
@@ -109,6 +149,26 @@ tests:
                     category: Parks
                 includeLocs: dist.location
                 spherical: true
+      schema:
+          places:
+              name:
+                  types:
+                      - bsonType: String
+              location:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            type:
+                                types:
+                                    - bsonType: String
+                            coordinates:
+                                types:
+                                    - bsonType: Array
+                                      types:
+                                          - bsonType: Number
+              category:
+                  types:
+                      - bsonType: String
     - name: with Bound let Option
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-bound-let-option
       pipeline:
@@ -123,6 +183,26 @@ tests:
                 as: joinedField
           - $match:
                 name: Sara D. Roosevelt Park
+      schema:
+          places:
+              name:
+                  types:
+                      - bsonType: String
+              location:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            type:
+                                types:
+                                    - bsonType: String
+                            coordinates:
+                                types:
+                                    - bsonType: Array
+                                      types:
+                                          - bsonType: Number
+              category:
+                  types:
+                      - bsonType: String
     - name: Specify Which Geospatial Index to Use
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#specify-which-geospatial-index-to-use
       pipeline:
@@ -137,3 +217,31 @@ tests:
                 query:
                     category: Parks
           - $limit: 5
+      schema:
+          places:
+              _id:
+                  types:
+                      - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              location:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            type:
+                                types:
+                                    - bsonType: String
+                            coordinates:
+                                types:
+                                    - bsonType: Array
+                                      types:
+                                          - bsonType: Number
+              legacy:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: Number
+              category:
+                  types:
+                      - bsonType: String

@@ -12,8 +12,27 @@ arguments:
           - expression
 tests:
     - name: Example
-      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/#example
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/#examples
       pipeline:
           - $unwind:
                 path: $tags
           - $sortByCount: $tags
+      schema:
+          exhibits:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              artist:
+                  types:
+                      - bsonType: String
+              year:
+                  types:
+                      - bsonType: Number
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

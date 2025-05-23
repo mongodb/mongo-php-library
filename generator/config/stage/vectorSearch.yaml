@@ -65,6 +65,17 @@ tests:
                 title: 1
                 score:
                     $meta: vectorSearchScore
+      schema:
+          TestCollection:
+              plot:
+                  types:
+                      - bsonType: String
+              title:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: ANN Filter
       link: https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#ann-examples
       pipeline:
@@ -88,8 +99,19 @@ tests:
                 year: 1
                 score:
                     $meta: vectorSearchScore
+      schema:
+          TestCollection:
+              plot:
+                  types:
+                      - bsonType: String
+              title:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number
     - name: ENN
-      link: https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#enn-examples
+      link: https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#enn-example
       pipeline:
           - $vectorSearch:
                 index: vector_index
@@ -106,3 +128,14 @@ tests:
                 title: 1
                 score:
                     $meta: vectorSearchScore
+      schema:
+          TestCollection:
+              plot:
+                  types:
+                      - bsonType: String
+              title:
+                  types:
+                      - bsonType: String
+              score:
+                  types:
+                      - bsonType: Number

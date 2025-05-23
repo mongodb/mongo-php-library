@@ -38,6 +38,11 @@ tests:
                 active: false
                 transaction:
                     $exists: true
+      schema:
+          TestCollection: &ref_0
+              _id:
+                  types:
+                      - bsonType: ObjectId
     - name: Sampled Queries
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#sampled-queries
       pipeline:
@@ -46,3 +51,5 @@ tests:
                 localOps: true
           - $match:
                 desc: query analyzer
+      schema:
+          TestCollection: *ref_0

@@ -42,3 +42,25 @@ tests:
                     - $bucketAuto:
                           groupBy: $year
                           buckets: 4
+      schema:
+          artwork:
+              _id:
+                  types:
+                      - bsonType: Number
+              title:
+                  types:
+                      - bsonType: String
+              artist:
+                  types:
+                      - bsonType: String
+              year:
+                  types:
+                      - bsonType: Number
+              price:
+                  types:
+                      - bsonType: Decimal128
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

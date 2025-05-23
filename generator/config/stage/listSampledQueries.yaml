@@ -16,8 +16,15 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/#list-sampled-queries-for-all-collections
       pipeline:
           - $listSampledQueries: {}
+      schema:
+          TestCollection: &ref_0
+              _id:
+                  types:
+                      - bsonType: ObjectId
     - name: List Sampled Queries for A Specific Collection
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/#list-sampled-queries-for-a-specific-collection
       pipeline:
           - $listSampledQueries:
                 namespace: social.post
+      schema:
+          TestCollection: *ref_0

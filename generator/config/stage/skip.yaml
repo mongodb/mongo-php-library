@@ -12,6 +12,11 @@ arguments:
           - int
 tests:
     - name: Example
-      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/#example
+      link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/#examples
       pipeline:
           - $skip: 5
+      schema:
+          TestCollection:
+              _id:
+                  types:
+                      - bsonType: ObjectId

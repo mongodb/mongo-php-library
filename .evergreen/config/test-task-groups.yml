@@ -8,6 +8,9 @@ task_groups:
       - func: "locate PHP binaries"
       - func: "fetch extension"
       - func: "install composer"
+      - command: ec2.assume_role
+        params:
+          role_arn: ${aws_test_secrets_role}
       - command: subprocess.exec
         params:
           working_dir: src

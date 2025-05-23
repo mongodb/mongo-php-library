@@ -5,9 +5,6 @@
         vars:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
-        # TODO: Remove vars to switch to latest stable version when 2.1.0 is releeased
-        vars:
-          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-lowest"
     tags: ["build", "php%phpVersion%", "lowest", "pr", "tag"]
@@ -16,10 +13,6 @@
         vars:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
-        vars:
-          # TODO: Switch to 2.1.0 when it is released
-          # EXTENSION_VERSION: "2.0.0"
-          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-next-stable"
     tags: ["build", "php%phpVersion%", "next-stable", "pr", "tag"]
@@ -28,10 +21,6 @@
         vars:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
-        vars:
-          # TODO: Switch to v2.1 when 2.1.0 is released
-          # EXTENSION_VERSION: "v2.1"
-          EXTENSION_BRANCH: "v2.x"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-next-minor"
     tags: ["build", "php%phpVersion%", "next-minor"]

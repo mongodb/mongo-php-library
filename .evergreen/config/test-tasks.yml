@@ -25,6 +25,9 @@ tasks:
 
   - name: "test-atlas-data-lake"
     commands:
+      - command: ec2.assume_role
+        params:
+          role_arn: ${aws_test_secrets_role}
       - func: "bootstrap mongohoused"
       - func: "run atlas data lake test"
 

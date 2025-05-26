@@ -18,11 +18,9 @@ tests:
       pipeline:
           - $project:
                 quizAvg:
-                    $avg:
-                        - $quizzes
+                    $avg: $quizzes
                 labAvg:
-                    $avg:
-                        - $labs
+                    $avg: $labs
                 examAvg:
                     $avg:
                         - $final

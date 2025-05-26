@@ -10,7 +10,7 @@ description: |
 arguments:
     - name: field
       type:
-          - fieldPath
+          - unprefixedFieldPath
       variadic: array
 tests:
     - name: Remove a Single Field

@@ -12,7 +12,7 @@ description: |
 arguments:
     - name: input
       type:
-          - resolvesToArray
+          - expression
       description: |
           An expression that resolves to the array from which to return n elements.
     - name: n

@@ -22,6 +22,14 @@ arguments:
     - name: in
       type:
           - expression
+          - expressionMap
+      syntheticVariables:
+          - name: this
+            description: |
+                The variable that represents the cumulative value of the expression.
+          - name: value
+            description: |
+                The variable that refers to the element being processed.
       description: |
           A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
           During evaluation of the in expression, two variables will be available:

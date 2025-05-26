@@ -79,6 +79,9 @@ tests:
               purchaseDate:
                   types:
                       - bsonType: Date
+              deliveryDate:
+                  types:
+                      - bsonType: Date
     - name: Adjust for Daylight Savings Time
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#adjust-for-daylight-savings-time
       pipeline:

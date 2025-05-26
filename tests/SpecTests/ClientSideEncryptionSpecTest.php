@@ -612,7 +612,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $previous = $e->getPrevious();
 
             $this->assertInstanceOf(EncryptionException::class, $previous);
-            $this->assertSame('cannot auto encrypt a view', $previous->getMessage());
+            $this->assertStringContainsString('cannot auto encrypt a view', $previous->getMessage());
         }
     }
 

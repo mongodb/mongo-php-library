@@ -21,7 +21,7 @@ tests:
                 $sampleRate: 0.33
           - $count: numMatches
       schema:
-          collection:
+          TestCollection:
               _id:
                   types:
                       - bsonType: ObjectId

@@ -30,8 +30,8 @@ tests:
                                       -     - 0
                                             - 0
       schema:
-          places:
-              loc:
+          places: &ref_0
+              location:
                   types:
                       - bsonType: Document
                         fields:
@@ -42,11 +42,7 @@ tests:
                                 types:
                                     - bsonType: Array
                                       types:
-                                          - bsonType: Array
-                                            types:
-                                                - bsonType: Array
-                                                  types:
-                                                      - bsonType: Double
+                                          - bsonType: Double
     - name: Within a Big Polygon
       link: https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a--big--polygon
       pipeline:
@@ -73,20 +69,4 @@ tests:
                                 properties:
                                     name: urn:x-mongodb:crs:strictwinding:EPSG:4326
       schema:
-          places:
-              loc:
-                  types:
-                      - bsonType: Document
-                        fields:
-                            type:
-                                types:
-                                    - bsonType: String
-                            coordinates:
-                                types:
-                                    - bsonType: Array
-                                      types:
-                                          - bsonType: Array
-                                            types:
-                                                - bsonType: Array
-                                                  types:
-                                                      - bsonType: Double
+          places: *ref_0

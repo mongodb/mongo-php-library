@@ -23,10 +23,16 @@ tests:
                         - 15
       schema:
           inventory:
+              price:
+                  types:
+                      - bsonType: Double
               qty:
                   types:
                       - bsonType: Int32
                       - bsonType: Undefined
+              sale:
+                  types:
+                      - bsonType: Boolean
     - name: Null Values
       link: https://www.mongodb.com/docs/manual/reference/operator/query/exists/#null-values
       pipeline:

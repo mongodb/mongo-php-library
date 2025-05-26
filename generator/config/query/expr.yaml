@@ -54,16 +54,16 @@ tests:
                                       - 0.75
                         - 5
       schema:
-          monthlyBudget:
+          supplies:
               _id:
                   types:
                       - bsonType: Number
-              category:
+              item:
                   types:
                       - bsonType: String
-              budget:
+              qty:
                   types:
-                      - bsonType: Number
-              spent:
+                      - bsonType: Int32
+              price:
                   types:
-                      - bsonType: Number
+                      - bsonType: Decimal128

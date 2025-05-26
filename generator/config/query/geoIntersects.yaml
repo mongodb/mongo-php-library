@@ -30,7 +30,7 @@ tests:
                                       -     - 0
                                             - 0
       schema:
-          places:
+          places: &ref_0
               loc:
                   types:
                       - bsonType: Document
@@ -73,20 +73,4 @@ tests:
                                 properties:
                                     name: urn:x-mongodb:crs:strictwinding:EPSG:4326
       schema:
-          places:
-              loc:
-                  types:
-                      - bsonType: Document
-                        fields:
-                            type:
-                                types:
-                                    - bsonType: String
-                            coordinates:
-                                types:
-                                    - bsonType: Array
-                                      types:
-                                          - bsonType: Array
-                                            types:
-                                                - bsonType: Array
-                                                  types:
-                                                      - bsonType: Double
+          places: *ref_0

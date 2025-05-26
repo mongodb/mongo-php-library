@@ -67,22 +67,18 @@ tests:
                         - string
                         - double
       schema:
-          addressBook:
+          grades:
               _id:
                   types:
                       - bsonType: Number
-              address:
+              name:
                   types:
                       - bsonType: String
-              zipCode:
+              classAverage:
                   types:
                       - bsonType: String
                       - bsonType: Number
-                      - bsonType: Long
                       - bsonType: Int32
-                      - bsonType: Array
-                        types:
-                            - bsonType: String
     - name: Querying by MinKey and MaxKey
       link: https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-minkey-and-maxkey
       pipeline:

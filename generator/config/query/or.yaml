@@ -29,6 +29,7 @@ tests:
               qty:
                   types:
                       - bsonType: Int32
+                      - bsonType: Undefined
               sale:
                   types:
                       - bsonType: Boolean

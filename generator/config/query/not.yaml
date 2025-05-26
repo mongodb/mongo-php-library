@@ -19,13 +19,14 @@ tests:
                     $not:
                         $gt: 1.99
       schema:
-          inventory:
+          inventory: &ref_0
               price:
                   types:
                       - bsonType: Double
               qty:
                   types:
                       - bsonType: Int32
+                      - bsonType: Undefined
               sale:
                   types:
                       - bsonType: Boolean
@@ -36,13 +37,4 @@ tests:
                 price:
                     $not: !bson_regex ^p.*
       schema:
-          inventory:
-              price:
-                  types:
-                      - bsonType: Double
-              qty:
-                  types:
-                      - bsonType: Int32
-              sale:
-                  types:
-                      - bsonType: Boolean
+          inventory: *ref_0

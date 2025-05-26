@@ -21,13 +21,14 @@ tests:
                     - price: 1.99
                     - sale: true
       schema:
-          inventory:
+          inventory: &ref_0
               price:
                   types:
                       - bsonType: Double
               qty:
                   types:
                       - bsonType: Int32
+                      - bsonType: Undefined
               sale:
                   types:
                       - bsonType: Boolean
@@ -41,16 +42,7 @@ tests:
                           $lt: 20
                     - sale: true
       schema:
-          inventory:
-              price:
-                  types:
-                      - bsonType: Double
-              qty:
-                  types:
-                      - bsonType: Int32
-              sale:
-                  types:
-                      - bsonType: Boolean
+          inventory: *ref_0
     - name: $nor and $exists
       link: https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and--exists
       pipeline:
@@ -63,13 +55,4 @@ tests:
                     - sale:
                           $exists: false
       schema:
-          inventory:
-              price:
-                  types:
-                      - bsonType: Double
-              qty:
-                  types:
-                      - bsonType: Int32
-              sale:
-                  types:
-                      - bsonType: Boolean
+          inventory: *ref_0

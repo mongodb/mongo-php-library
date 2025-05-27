@@ -24,9 +24,10 @@ jobs:
 
       - name: Create pull request
         id: create-pull-request
-        uses: alcaeus/automatic-merge-up-action@main
+        uses: alcaeus/automatic-merge-up-action@1.0.0
         with:
           ref: ${{ github.ref_name }}
           branchNamePattern: 'v<major>.<minor>'
           devBranchNamePattern: 'v<major>.x'
+          ignoredBranches: ${{ vars.IGNORED_MERGE_UP_BRANCHES }}
           enableAutoMerge: true

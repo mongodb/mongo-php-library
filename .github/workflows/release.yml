@@ -89,7 +89,7 @@ jobs:
       - name: "Create and push new release branch for non-patch release"
         if: ${{ endsWith(env.RELEASE_VERSION_WITHOUT_STABILITY, '.0') && env.DEV_BRANCH == github.ref_name }}
         run: |
-          echo '🆕 Creating new release branch ${RELEASE_BRANCH} from ${{ github.ref_name }}' >> $GITHUB_STEP_SUMMARY
+          echo '🆕 Creating new release branch ${{ env.RELEASE_BRANCH }} from ${{ github.ref_name }}' >> $GITHUB_STEP_SUMMARY
           git checkout -b ${RELEASE_BRANCH}
           git push origin ${RELEASE_BRANCH}
 

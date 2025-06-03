@@ -27,9 +27,18 @@ tests:
                   types:
                       - bsonType: Int32
                       - bsonType: Undefined
+              quantity:
+                  types:
+                      - bsonType: Int32
+                      - bsonType: Undefined
               sale:
                   types:
                       - bsonType: Boolean
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Regular Expressions
       link: https://www.mongodb.com/docs/manual/reference/operator/query/not/#regular-expressions
       pipeline:

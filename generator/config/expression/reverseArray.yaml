@@ -21,7 +21,7 @@ tests:
                 reverseFavorites:
                     $reverseArray: $favorites
       schema:
-          TestCollection:
+          users:
               _id:
                   types:
                       - bsonType: Number

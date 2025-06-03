@@ -22,7 +22,7 @@ tests:
                 y:
                     $ln: $sales
       schema:
-          TestCollection:
+          sales:
               _id:
                   types:
                       - bsonType: Number

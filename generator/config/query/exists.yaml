@@ -30,9 +30,18 @@ tests:
                   types:
                       - bsonType: Int32
                       - bsonType: Undefined
+              quantity:
+                  types:
+                      - bsonType: Int32
+                      - bsonType: Undefined
               sale:
                   types:
                       - bsonType: Boolean
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Null Values
       link: https://www.mongodb.com/docs/manual/reference/operator/query/exists/#null-values
       pipeline:

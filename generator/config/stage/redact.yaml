@@ -29,7 +29,7 @@ tests:
                     then: $$DESCEND
                     else: $$PRUNE
       schema:
-          TestCollection:
+          forecasts:
               _id:
                   types:
                       - bsonType: Number
@@ -85,7 +85,7 @@ tests:
                     then: $$PRUNE
                     else: $$DESCEND
       schema:
-          TestCollection:
+          forecasts:
               _id:
                   types:
                       - bsonType: Number

@@ -28,7 +28,7 @@ tests:
                         - $favorites
                         - -1
       schema:
-          TestCollection:
+          users:
               _id:
                   types:
                       - bsonType: Number

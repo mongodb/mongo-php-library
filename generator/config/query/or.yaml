@@ -37,6 +37,11 @@ tests:
               sale:
                   types:
                       - bsonType: Boolean
+              tags:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
     - name: Error Handling
       link: https://www.mongodb.com/docs/manual/reference/operator/query/or/#error-handling
       pipeline:

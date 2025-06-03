@@ -41,7 +41,7 @@ tests:
                                 - $$total
                                 - $$discounted
       schema:
-          TestCollection:
+          sales:
               _id:
                   types:
                       - bsonType: Number

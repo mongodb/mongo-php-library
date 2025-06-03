@@ -31,7 +31,7 @@ tests:
                                         - $p1.x
                                   - 2
       schema:
-          TestCollection:
+          points:
               _id:
                   types:
                       - bsonType: Number

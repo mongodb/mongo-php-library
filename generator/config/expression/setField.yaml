@@ -162,9 +162,9 @@ tests:
               item:
                   types:
                       - bsonType: String
-              price:
+              qty:
                   types:
                       - bsonType: Number
-              qty:
+              $price:
                   types:
                       - bsonType: Number

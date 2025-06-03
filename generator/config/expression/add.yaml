@@ -29,7 +29,7 @@ tests:
                         - $price
                         - $fee
       schema:
-          TestCollection:
+          sales:
               _id:
                   types:
                       - bsonType: Number
@@ -55,7 +55,7 @@ tests:
                         - $date
                         - 259200000
       schema:
-          TestCollection:
+          sales:
               _id:
                   types:
                       - bsonType: Number

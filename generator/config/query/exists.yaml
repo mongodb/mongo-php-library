@@ -22,7 +22,7 @@ tests:
                         - 5
                         - 15
       schema:
-          inventory:
+          inventory: &ref_0
               price:
                   types:
                       - bsonType: Double
@@ -40,16 +40,4 @@ tests:
                 qty:
                     $exists: true
       schema:
-          spices:
-              saffron:
-                  types:
-                      - bsonType: Number
-                      - bsonType: 'Null'
-              cinnamon:
-                  types:
-                      - bsonType: Number
-                      - bsonType: 'Null'
-              mustard:
-                  types:
-                      - bsonType: Number
-                      - bsonType: 'Null'
+          inventory: *ref_0

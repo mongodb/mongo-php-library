@@ -15,7 +15,7 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/query/gte/#match-document-fields
       pipeline:
           - $match:
-                qty:
+                quantity:
                     $gte: 20
       schema:
           inventory:

@@ -29,7 +29,7 @@ tests:
                       - bsonType: Double
               qty:
                   types:
-                      - bsonType: Int32
+                      - bsonType: Double
                       - bsonType: Undefined
               sale:
                   types:

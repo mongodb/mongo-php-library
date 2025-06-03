@@ -15,7 +15,7 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/query/lte/#match-document-fields
       pipeline:
           - $match:
-                qty:
+                quantity:
                     $lte: 20
       schema:
           inventory:

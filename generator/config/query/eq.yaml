@@ -9,7 +9,7 @@ description: |
 arguments:
     - name: value
       type:
-          - any
+          - expression
 tests:
     - name: Equals a Specified Value
       link: https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-a-specified-value
@@ -123,28 +123,10 @@ tests:
                 company:
                     $eq: !bson_regex ^MongoDB
       schema:
-          inventory:
+          companies:
               _id:
                   types:
-                      - bsonType: Number
-              item:
+                      - bsonType: Int32
+              company:
                   types:
-                      - bsonType: Document
-                        fields:
-                            name:
-                                types:
-                                    - bsonType: String
-                            code:
-                                types:
-                                    - bsonType: String
-              qty:
-                  types:
-                      - bsonType: Number
-              tags:
-                  types:
-                      - bsonType: Array
-                        types:
-                            - bsonType: String
-                            - bsonType: Array
-                              types:
-                                  - bsonType: String
+                      - bsonType: String

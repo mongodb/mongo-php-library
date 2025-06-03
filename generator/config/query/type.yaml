@@ -57,12 +57,12 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-multiple-data-types
       pipeline:
           - $match:
-                zipCode:
+                classAverage:
                     $type:
                         - 2
                         - 1
           - $match:
-                zipCode:
+                classAverage:
                     $type:
                         - string
                         - double
@@ -111,7 +111,7 @@ tests:
       link: https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-array-type
       pipeline:
           - $match:
-                zipCode:
+                readings:
                     $type:
                         - array
       schema:

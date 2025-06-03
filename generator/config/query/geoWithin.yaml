@@ -31,7 +31,7 @@ tests:
                                             - 0
       schema:
           places: &ref_0
-              location:
+              loc:
                   types:
                       - bsonType: Document
                         fields:
@@ -42,7 +42,11 @@ tests:
                                 types:
                                     - bsonType: Array
                                       types:
-                                          - bsonType: Double
+                                          - bsonType: Array
+                                            types:
+                                                - bsonType: Array
+                                                  types:
+                                                      - bsonType: Double
     - name: Within a Big Polygon
       link: https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a--big--polygon
       pipeline:

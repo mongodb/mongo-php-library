@@ -30,6 +30,10 @@ tests:
                   types:
                       - bsonType: Int32
                       - bsonType: Undefined
+              quantity:
+                  types:
+                      - bsonType: Int32
+                      - bsonType: Undefined
               sale:
                   types:
                       - bsonType: Boolean

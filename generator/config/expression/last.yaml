@@ -16,4 +16,10 @@ tests:
           - $addFields:
                 lastItem:
                     $last: $items
-      schema: '// TODO: No docs reference found'
+      schema:
+          collection:
+              items:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String

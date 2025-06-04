@@ -15,7 +15,6 @@ use PHPUnit\Framework\Attributes\Group;
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/retryable-writes/tests/README.md
  */
-#[Group('serverless')]
 class Prose3_ReturnOriginalErrorTest extends FunctionalTestCase
 {
     public const NOT_WRITABLE_PRIMARY = 10107;

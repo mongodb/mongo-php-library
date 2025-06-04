@@ -131,7 +131,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideChangeStreamsTests')]
-    #[Group('serverless')]
     public function testChangeStreams(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -144,7 +143,6 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     #[DataProvider('provideClientSideEncryptionTests')]
     #[Group('csfle')]
-    #[Group('serverless')]
     public function testClientSideEncryption(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -156,7 +154,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideCollectionManagementTests')]
-    #[Group('serverless')]
     public function testCollectionManagement(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -168,7 +165,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideCommandMonitoringTests')]
-    #[Group('serverless')]
     public function testCommandMonitoring(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -180,7 +176,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideCrudTests')]
-    #[Group('serverless')]
     public function testCrud(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -192,7 +187,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideGridFSTests')]
-    #[Group('serverless')]
     public function testGridFS(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -204,7 +198,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideLoadBalancers')]
-    #[Group('serverless')]
     public function testLoadBalancers(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -227,7 +220,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideRetryableReadsTests')]
-    #[Group('serverless')]
     public function testRetryableReads(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -239,7 +231,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideRetryableWritesTests')]
-    #[Group('serverless')]
     public function testRetryableWrites(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -251,7 +242,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideRunCommandTests')]
-    #[Group('serverless')]
     public function testRunCommand(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -263,7 +253,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideSessionsTests')]
-    #[Group('serverless')]
     public function testSessions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -275,7 +264,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideTransactionsTests')]
-    #[Group('serverless')]
     public function testTransactions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -298,7 +286,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     #[DataProvider('provideVersionedApiTests')]
-    #[Group('serverless')]
     #[Group('versioned-api')]
     public function testVersionedApi(UnifiedTestCase $test): void
     {

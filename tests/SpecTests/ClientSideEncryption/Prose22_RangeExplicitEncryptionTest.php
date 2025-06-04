@@ -30,7 +30,6 @@ use function is_int;
  * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#22-range-explicit-encryption
  */
 #[Group('csfle')]
-#[Group('serverless')]
 class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 {
     private ?ClientEncryption $clientEncryption = null;

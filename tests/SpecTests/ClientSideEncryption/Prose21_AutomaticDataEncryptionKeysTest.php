@@ -21,7 +21,6 @@ use function base64_decode;
  * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#automatic-data-encryption-keys
  */
 #[Group('csfle')]
-#[Group('serverless')]
 class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
 {
     public const SERVER_ERROR_TYPEMISMATCH = 14;

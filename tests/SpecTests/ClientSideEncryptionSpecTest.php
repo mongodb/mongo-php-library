@@ -53,7 +53,6 @@ use const JSON_THROW_ON_ERROR;
  * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption
  */
 #[Group('csfle')]
-#[Group('serverless')]
 class ClientSideEncryptionSpecTest extends FunctionalTestCase
 {
     public const LOCAL_MASTERKEY = 'Mng0NCt4ZHVUYUJCa1kxNkVyNUR1QURhZ2h2UzR2d2RrZzh0cFBwM3R6NmdWMDFBMUN3YkQ5aXRRMkhGRGdQV09wOGVNYUMxT2k3NjZKelhaQmRCZGJkTXVyZG9uSjFk';

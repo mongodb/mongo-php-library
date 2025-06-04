@@ -87,7 +87,7 @@ final class UnifiedTestRunner
          *
          * Atlas Data Lake also does not support killAllSessions.
          */
-        if ($this->isServerless() || FunctionalTestCase::isAtlas($internalClientUri) || $this->isAtlasDataLake()) {
+        if (FunctionalTestCase::isAtlas($internalClientUri) || $this->isAtlasDataLake()) {
             $this->allowKillAllSessions = false;
         }
 
@@ -247,7 +247,6 @@ final class UnifiedTestRunner
                 $this->getTopology(),
                 $this->serverParameterHelper,
                 $this->isAuthenticated(),
-                $this->isServerless(),
                 $this->isClientSideEncryptionSupported(),
             ];
         }
@@ -316,10 +315,6 @@ final class UnifiedTestRunner
 
     /**
      * Return whether the connection is authenticated.
-     *
-     * Note: if the connectionStatus command is not portable for serverless, it
-     * may be necessary to rewrite this to instead inspect the connection string
-     * or consult an environment variable, as is done in libmongoc.
      */
     private function isAuthenticated(): bool
     {
@@ -351,16 +346,6 @@ final class UnifiedTestRunner
         }
 
         return FunctionalTestCase::isCryptSharedLibAvailable() || FunctionalTestCase::isMongocryptdAvailable();
-    }
-
-    /**
-     * Return whether serverless (i.e. proxy as mongos) is being utilized.
-     */
-    private function isServerless(): bool
-    {
-        $isServerless = getenv('MONGODB_IS_SERVERLESS');
-
-        return $isServerless !== false ? filter_var($isServerless, FILTER_VALIDATE_BOOLEAN) : false;
     }
 
     /**
@@ -530,7 +515,7 @@ final class UnifiedTestRunner
             $context->setUrisForUseMultipleMongoses($singleMongosUri, $multiMongosUri);
         }
 
-        if ($this->getPrimaryServer()->getType() === Server::TYPE_LOAD_BALANCER && ! $this->isServerless()) {
+        if ($this->getPrimaryServer()->getType() === Server::TYPE_LOAD_BALANCER) {
             $singleMongosUri = getenv('MONGODB_SINGLE_MONGOS_LB_URI');
             $multiMongosUri = getenv('MONGODB_MULTI_MONGOS_LB_URI');
 

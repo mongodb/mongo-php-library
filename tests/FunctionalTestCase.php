@@ -420,16 +420,6 @@ abstract class FunctionalTestCase extends TestCase
         return $this->getPrimaryServer()->getType() == Server::TYPE_STANDALONE;
     }
 
-    /**
-     * Return whether serverless (i.e. proxy as mongos) is being utilized.
-     */
-    protected static function isServerless(): bool
-    {
-        $isServerless = getenv('MONGODB_IS_SERVERLESS');
-
-        return $isServerless !== false ? filter_var($isServerless, FILTER_VALIDATE_BOOLEAN) : false;
-    }
-
     protected function isShardedCluster()
     {
         $type = $this->getPrimaryServer()->getType();

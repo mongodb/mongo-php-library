@@ -277,12 +277,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             return true;
         }
 
-        return match ($serverlessMode) {
-            self::SERVERLESS_ALLOW => true,
-            self::SERVERLESS_FORBID => ! static::isServerless(),
-            self::SERVERLESS_REQUIRE => static::isServerless(),
-            default => throw new UnexpectedValueException(sprintf('Invalid serverless requirement "%s" found.', $serverlessMode)),
-        };
+        return $serverlessMode !== self::SERVERLESS_REQUIRE;
     }
 
     /**

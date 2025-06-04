@@ -104,7 +104,7 @@ class RunOnRequirement
         }
     }
 
-    public function isSatisfied(string $serverVersion, string $topology, ServerParameterHelper $serverParameters, bool $isAuthenticated, bool $isServerless, bool $isClientSideEncryptionSupported): bool
+    public function isSatisfied(string $serverVersion, string $topology, ServerParameterHelper $serverParameters, bool $isAuthenticated, bool $isClientSideEncryptionSupported): bool
     {
         if (isset($this->minServerVersion) && version_compare($serverVersion, $this->minServerVersion, '<')) {
             return false;
@@ -131,14 +131,8 @@ class RunOnRequirement
             return false;
         }
 
-        if (isset($this->serverless)) {
-            if (! $isServerless && $this->serverless === self::SERVERLESS_REQUIRE) {
-                return false;
-            }
-
-            if ($isServerless && $this->serverless === self::SERVERLESS_FORBID) {
-                return false;
-            }
+        if (isset($this->serverless) && $this->serverless === self::SERVERLESS_REQUIRE) {
+            return false;
         }
 
         if (isset($this->csfle) && $isClientSideEncryptionSupported !== $this->csfle) {

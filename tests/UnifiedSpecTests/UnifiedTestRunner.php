@@ -20,7 +20,6 @@ use UnexpectedValueException;
 use function call_user_func;
 use function count;
 use function explode;
-use function filter_var;
 use function gc_collect_cycles;
 use function getenv;
 use function implode;
@@ -40,8 +39,6 @@ use function strlen;
 use function strpos;
 use function substr_replace;
 use function version_compare;
-
-use const FILTER_VALIDATE_BOOLEAN;
 
 /**
  * Unified test runner.

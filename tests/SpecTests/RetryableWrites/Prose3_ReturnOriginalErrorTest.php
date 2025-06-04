@@ -8,7 +8,6 @@ use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Prose test 3: Return Original Error

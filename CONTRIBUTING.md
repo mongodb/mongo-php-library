@@ -35,8 +35,7 @@ The `phpunit.xml.dist` file is used as the default configuration file for the
 test suite. In addition to various PHPUnit options, it defines environment
 variables such as `MONGODB_URI` and `MONGODB_DATABASE`. You may customize
 this configuration by creating your own `phpunit.xml` file based on the
-`phpunit.xml.dist` file we provide. To run the tests in serverless mode, set the
-`MONGODB_IS_SERVERLESS` environment variable to `on`.
+`phpunit.xml.dist` file we provide.
 
 To run tests against a cluster that requires authentication, either include the
 credentials in the connection string (i.e. `MONGODB_URI`) or set the
@@ -65,12 +64,6 @@ The following environment variable is used for [stable API testing](https://gith
    [`MongoDB\Driver\ServerApi`](https://www.php.net/manual/en/mongodb-driver-serverapi.construct.php),
    which will then be specified as the `serverApi` driver option for clients
    created by the test suite.
-
-The following environment variable is used for [serverless testing](https://github.com/mongodb/specifications/blob/master/source/serverless-testing/README.rst):
-
- * `MONGODB_IS_SERVERLESS`: Specify a true boolean string
-   (see: [`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php))
-   if `MONGODB_URI` points to a serverless instance. Defaults to false.
 
 The following environment variables are used for [load balancer testing](https://github.com/mongodb/specifications/blob/master/source/load-balancers/tests/README.rst):
 

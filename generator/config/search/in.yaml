@@ -35,6 +35,9 @@ tests:
                 birthdate: 1
       schema:
           customers: &ref_0
+              _id:
+                  types:
+                      - bsonType: ObjectId
               username:
                   types:
                       - bsonType: String

@@ -24,7 +24,7 @@ arguments:
     - name: highlight
       optional: true
       type:
-          - object
+          - searchHighlight
       description: |
           Specifies the highlighting options for displaying search terms in their original context.
     - name: concurrent

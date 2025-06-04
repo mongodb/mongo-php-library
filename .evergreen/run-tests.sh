@@ -102,10 +102,6 @@ case "$TESTS" in
       php vendor/bin/phpunit $PHPUNIT_OPTS --group versioned-api
       ;;
 
-   serverless)
-      php vendor/bin/phpunit $PHPUNIT_OPTS --group serverless
-      ;;
-
    *)
       php vendor/bin/phpunit $PHPUNIT_OPTS
       ;;

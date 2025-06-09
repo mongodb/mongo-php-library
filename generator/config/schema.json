@@ -288,7 +288,11 @@
                         }
                     }
                 }
-            }
+            },
+            "required": [
+                "name",
+                "pipeline"
+            ]
         },
         "SimplifiedSchemaType": {
             "anyOf": [

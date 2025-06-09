@@ -115,6 +115,7 @@
                             "query",
                             "fieldQuery",
                             "pipeline",
+                            "untypedPipeline",
                             "window",
                             "expression",
                             "expressionMap",

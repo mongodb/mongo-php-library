@@ -100,16 +100,142 @@ tests:
                 score:
                     $meta: vectorSearchScore
       schema:
-          TestCollection:
-              plot:
+          movies:
+              _id:
                   types:
-                      - bsonType: String
+                      - bsonType: Document
+                        fields:
+                            $oid:
+                                types:
+                                    - bsonType: String
               title:
                   types:
                       - bsonType: String
-              score:
+              year:
                   types:
-                      - bsonType: Number
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
+              runtime:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
+              released:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $date:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberLong:
+                                              types:
+                                                  - bsonType: String
+              poster:
+                  types:
+                      - bsonType: String
+              plot:
+                  types:
+                      - bsonType: String
+              fullplot:
+                  types:
+                      - bsonType: String
+              lastupdated:
+                  types:
+                      - bsonType: String
+              type:
+                  types:
+                      - bsonType: String
+              directors:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              imdb:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            rating:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberDouble:
+                                              types:
+                                                  - bsonType: String
+                            votes:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+                            id:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $numberInt:
+                                              types:
+                                                  - bsonType: String
+              cast:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              countries:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              genres:
+                  types:
+                      - bsonType: Array
+                        types:
+                            - bsonType: String
+              tomatoes:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            viewer:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          rating:
+                                              types:
+                                                  - bsonType: Document
+                                                    fields:
+                                                        $numberDouble:
+                                                            types:
+                                                                - bsonType: String
+                                          numReviews:
+                                              types:
+                                                  - bsonType: Document
+                                                    fields:
+                                                        $numberInt:
+                                                            types:
+                                                                - bsonType: String
+                            lastUpdated:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          $date:
+                                              types:
+                                                  - bsonType: Document
+                                                    fields:
+                                                        $numberLong:
+                                                            types:
+                                                                - bsonType: String
+              num_mflix_comments:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            $numberInt:
+                                types:
+                                    - bsonType: String
     - name: ENN
       link: https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#enn-example
       pipeline:

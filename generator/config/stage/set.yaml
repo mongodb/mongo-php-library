@@ -125,8 +125,7 @@ tests:
       pipeline:
           - $set:
                 quizAverage:
-                    $avg:
-                        - $quiz
+                    $avg: $quiz
       schema:
           scores:
               _id:

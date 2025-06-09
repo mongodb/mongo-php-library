@@ -15,7 +15,7 @@ arguments:
           The collection or view whose pipeline results you wish to include in the result set.
     - name: pipeline
       type:
-          - pipeline
+          - untypedPipeline
       optional: true
       description: |
           An aggregation pipeline to apply to the specified coll.

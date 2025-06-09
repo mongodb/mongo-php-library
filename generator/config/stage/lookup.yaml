@@ -35,7 +35,7 @@ arguments:
           Specifies variables to use in the pipeline stages. Use the variable expressions to access the fields from the joined collection's documents that are input to the pipeline.
     - name: pipeline
       type:
-          - pipeline
+          - untypedPipeline
       optional: true
       description: |
           Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].

@@ -10,6 +10,7 @@ arguments:
     - name: specification
       type:
           - expression
+          - expressionMap
       variadic: object
 tests:
     - name: Include Specific Fields in Output Documents

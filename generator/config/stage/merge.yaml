@@ -30,7 +30,7 @@ arguments:
     - name: whenMatched
       type:
           - whenMatched
-          - pipeline
+          - untypedPipeline
       optional: true
       description: |
           The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).

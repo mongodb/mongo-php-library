@@ -166,19 +166,18 @@ tests:
                           newRoot: $date
                 as: holidays
       schema:
-          orders:
+          absences:
               _id:
                   types:
                       - bsonType: Number
-              item:
+              student:
                   types:
                       - bsonType: String
-              price:
+              sickdays:
                   types:
-                      - bsonType: Number
-              quantity:
-                  types:
-                      - bsonType: Number
+                      - bsonType: Array
+                        types:
+                            - bsonType: Date
     - name: Perform a Concise Correlated Subquery with $lookup
       link: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-a-concise-correlated-subquery-with--lookup
       pipeline:

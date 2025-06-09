@@ -85,45 +85,60 @@ tests:
                     then: $$PRUNE
                     else: $$DESCEND
       schema:
-          forecasts:
+          accounts:
               _id:
                   types:
                       - bsonType: Number
-              title:
-                  types:
-                      - bsonType: String
-              tags:
-                  types:
-                      - bsonType: Array
-                        types:
-                            - bsonType: String
-              year:
+              level:
                   types:
                       - bsonType: Number
-              subsections:
+              acct_id:
                   types:
-                      - bsonType: Array
-                        types:
-                            - bsonType: Document
-                              fields:
-                                  subtitle:
+                      - bsonType: String
+              cc:
+                  types:
+                      - bsonType: Document
+                        fields:
+                            level:
+                                types:
+                                    - bsonType: Number
+                            type:
+                                types:
+                                    - bsonType: String
+                            num:
+                                types:
+                                    - bsonType: Number
+                            exp_date:
+                                types:
+                                    - bsonType: Date
+                            billing_addr:
+                                types:
+                                    - bsonType: Document
+                                      fields:
+                                          level:
+                                              types:
+                                                  - bsonType: Number
+                                          addr1:
+                                              types:
+                                                  - bsonType: String
+                                          city:
+                                              types:
+                                                  - bsonType: String
+                            shipping_addr:
+                                types:
+                                    - bsonType: Array
                                       types:
-                                          - bsonType: String
-                                  tags:
-                                      types:
-                                          - bsonType: Array
-                                            types:
-                                                - bsonType: String
-                                  content:
-                                      types:
-                                          - bsonType: String
                                           - bsonType: Document
                                             fields:
-                                                text:
+                                                level:
+                                                    types:
+                                                        - bsonType: Number
+                                                addr1:
                                                     types:
                                                         - bsonType: String
-                                                tags:
+                                                city:
                                                     types:
-                                                        - bsonType: Array
-                                                          types:
-                                                              - bsonType: String
+                                                        - bsonType: String
+              status:
+                  types:
+                      - bsonType: String

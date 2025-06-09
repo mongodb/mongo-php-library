@@ -91,22 +91,56 @@ tests:
                     $type:
                         - maxKey
       schema:
-          addressBook:
+          restaurants:
               _id:
                   types:
                       - bsonType: Number
               address:
                   types:
-                      - bsonType: String
-              zipCode:
+                      - bsonType: Document
+                        fields:
+                            building:
+                                types:
+                                    - bsonType: String
+                            coord:
+                                types:
+                                    - bsonType: Array
+                                      types:
+                                          - bsonType: Number
+                            street:
+                                types:
+                                    - bsonType: String
+                            zipcode:
+                                types:
+                                    - bsonType: String
+              borough:
                   types:
                       - bsonType: String
-                      - bsonType: Number
-                      - bsonType: Long
-                      - bsonType: Int32
+              cuisine:
+                  types:
+                      - bsonType: String
+              grades:
+                  types:
                       - bsonType: Array
                         types:
-                            - bsonType: String
+                            - bsonType: Document
+                              fields:
+                                  date:
+                                      types:
+                                          - bsonType: Date
+                                  grade:
+                                      types:
+                                          - bsonType: String
+                                          - bsonType: MinKey
+                                  score:
+                                      types:
+                                          - bsonType: Number
+              name:
+                  types:
+                      - bsonType: String
+              restaurant_id:
+                  types:
+                      - bsonType: String
     - name: Querying by Array Type
       link: https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-array-type
       pipeline:

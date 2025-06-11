@@ -41,7 +41,7 @@ tests:
                 result:
                     $bitAnd:
                         - $a
-                        - $numberLong: '63'
+                        - !bson_int64 '63'
       schema:
           switches:
               _id:

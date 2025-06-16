@@ -131,6 +131,14 @@ class CollectionInfo implements ArrayAccess
     }
 
     /**
+     * Determines whether the collection is a view.
+     */
+    public function isView(): bool
+    {
+        return $this->getType() === 'view';
+    }
+
+    /**
      * Check whether a field exists in the collection information.
      *
      * @see https://php.net/arrayaccess.offsetexists

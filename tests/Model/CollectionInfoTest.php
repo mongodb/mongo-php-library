@@ -10,7 +10,7 @@ class CollectionInfoTest extends TestCase
 {
     public function testGetBasicInformation(): void
     {
-        $info = new CollectionInfo([
+        $viewInfo = new CollectionInfo([
             'name' => 'foo',
             'type' => 'view',
             'options' => ['capped' => true, 'size' => 1_048_576],
@@ -18,20 +18,27 @@ class CollectionInfoTest extends TestCase
             'idIndex' => ['idIndex' => true], // Dummy option
         ]);
 
-        $this->assertSame('foo', $info->getName());
-        $this->assertSame('foo', $info['name']);
+        $this->assertSame('foo', $viewInfo->getName());
+        $this->assertSame('foo', $viewInfo['name']);
 
-        $this->assertSame('view', $info->getType());
-        $this->assertSame('view', $info['type']);
+        $this->assertTrue($viewInfo->isView());
+        $this->assertSame('view', $viewInfo['type']);
 
-        $this->assertSame(['capped' => true, 'size' => 1_048_576], $info->getOptions());
-        $this->assertSame(['capped' => true, 'size' => 1_048_576], $info['options']);
+        $this->assertSame(['capped' => true, 'size' => 1_048_576], $viewInfo->getOptions());
+        $this->assertSame(['capped' => true, 'size' => 1_048_576], $viewInfo['options']);
 
-        $this->assertSame(['readOnly' => true], $info->getInfo());
-        $this->assertSame(['readOnly' => true], $info['info']);
+        $this->assertSame(['readOnly' => true], $viewInfo->getInfo());
+        $this->assertSame(['readOnly' => true], $viewInfo['info']);
 
-        $this->assertSame(['idIndex' => true], $info->getIdIndex());
-        $this->assertSame(['idIndex' => true], $info['idIndex']);
+        $this->assertSame(['idIndex' => true], $viewInfo->getIdIndex());
+        $this->assertSame(['idIndex' => true], $viewInfo['idIndex']);
+
+        $collectionInfo = new CollectionInfo([
+            'name' => 'bar',
+            'type' => 'collection',
+        ]);
+
+        $this->assertFalse($collectionInfo->isView());
     }
 
     public function testMissingFields(): void

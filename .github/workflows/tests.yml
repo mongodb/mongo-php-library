@@ -83,6 +83,23 @@ jobs:
           php-ini-values: "zend.assertions=1"
 
       - name: "Run PHPUnit"
-        run: "vendor/bin/phpunit"
+        run: "vendor/bin/phpunit --configuration phpunit.evergreen.xml"
         env:
+          XDEBUG_MODE: "coverage"
           MONGODB_URI: ${{ steps.setup-mongodb.outputs.cluster-uri }}
+
+      - name: "Upload coverage report"
+        uses: codecov/codecov-action@v5
+        with:
+          disable_search: true
+          files: coverage.xml
+          flags: "${{ matrix.mongodb-version }}-${{ matrix.topology }}"
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test results to Codecov
+        uses: codecov/test-results-action@v1
+        with:
+          disable_search: true
+          files: test-results.xml
+          flags: "${{ matrix.mongodb-version }}-${{ matrix.topology }}"
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -25,6 +25,18 @@
         </testsuite>
     </testsuites>
 
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </source>
+
+    <coverage>
+        <report>
+            <clover outputFile="coverage.xml" />
+        </report>
+    </coverage>
+
     <logging>
         <junit outputFile="test-results.xml" />
     </logging>

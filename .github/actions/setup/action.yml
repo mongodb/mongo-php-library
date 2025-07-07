@@ -23,7 +23,7 @@ runs:
       uses: shivammathur/cache-extensions@v1
       with:
         php-version: ${{ inputs.php-version }}
-        extensions: "mongodb-${{ inputs.driver-version }}"
+        extensions: "xdebug,mongodb-${{ inputs.driver-version }}"
         key: "extcache-${{ inputs.driver-version }}"
 
     - name: Cache extensions
@@ -37,7 +37,7 @@ runs:
       uses: shivammathur/setup-php@v2
       with:
         coverage: none
-        extensions: "mongodb-${{ inputs.driver-version }}"
+        extensions: "xdebug,mongodb-${{ inputs.driver-version }}"
         php-version: "${{ inputs.php-version }}"
         tools: cs2pr
         ini-values: "${{ inputs.php-ini-values }}"

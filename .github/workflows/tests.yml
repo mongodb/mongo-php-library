@@ -83,7 +83,7 @@ jobs:
           php-ini-values: "zend.assertions=1"
 
       - name: "Run PHPUnit"
-        run: "vendor/bin/phpunit --configuration phpunit.evergreen.xml"
+        run: "vendor/bin/phpunit --configuration phpunit.evergreen.xml --coverage-clover coverage.xml"
         env:
           XDEBUG_MODE: "coverage"
           MONGODB_URI: ${{ steps.setup-mongodb.outputs.cluster-uri }}

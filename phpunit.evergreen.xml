@@ -31,12 +31,6 @@
         </include>
     </source>
 
-    <coverage>
-        <report>
-            <clover outputFile="coverage.xml" />
-        </report>
-    </coverage>
-
     <logging>
         <junit outputFile="test-results.xml" />
     </logging>

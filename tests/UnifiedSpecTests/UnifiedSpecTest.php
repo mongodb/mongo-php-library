@@ -13,6 +13,7 @@ use PHPUnit\Framework\Warning;
 use function array_flip;
 use function glob;
 use function str_starts_with;
+use function strtolower;
 
 /**
  * Unified test format spec tests.
@@ -135,7 +136,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         foreach (self::$incompleteTestGroups as $testGroup => $reason) {
-            if (str_starts_with($this->dataDescription(), $testGroup)) {
+            if (str_starts_with(strtolower($this->dataDescription()), strtolower($testGroup))) {
                 $this->markTestIncomplete($reason);
             }
         }

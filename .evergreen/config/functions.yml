@@ -126,6 +126,21 @@ functions:
     - command: attach.results
       params:
         file_location: "${DRIVERS_TOOLS}/results.json"
+    - command: shell.exec
+      params:
+        working_dir: src
+        script: |
+          ${PREPARE_SHELL}
+          curl -Os https://cli.codecov.io/latest/linux/codecov
+          sudo chmod +x codecov
+          [[ -f test-results.xml ]] && \
+            ./codecov upload-process \
+              --report-type test_results \
+              --disable-search \
+              --fail-on-error \
+              --token ${CODECOV_TOKEN} \
+              --file test-results.xml || \
+              echo "Skipping codecov test result upload due to error"
 
   "bootstrap mongo-orchestration":
     - command: shell.exec

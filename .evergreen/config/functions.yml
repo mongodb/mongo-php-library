@@ -139,6 +139,7 @@ functions:
               --disable-search \
               --fail-on-error \
               --token ${CODECOV_TOKEN} \
+              --flag "${MONGODB_VERSION}-${TOPOLOGY}" \
               --file test-results.xml || \
               echo "Skipping codecov test result upload due to error"
 

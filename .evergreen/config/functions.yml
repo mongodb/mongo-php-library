@@ -158,6 +158,13 @@ functions:
           LOAD_BALANCER=${LOAD_BALANCER} \
           REQUIRE_API_VERSION=${REQUIRE_API_VERSION} \
           bash ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+    - command: shell.exec
+      params:
+        script: |
+          printf "\n" >> mo-expansion.yml
+          printf "MONGODB_VERSION: '%s'\n" "${MONGODB_VERSION}" >> mo-expansion.yml
+          printf "TOPOLOGY: '%s'\n" "${TOPOLOGY}" >> mo-expansion.yml
+          cat mo-expansion.yml
     # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:

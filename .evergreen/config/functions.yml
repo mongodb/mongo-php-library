@@ -131,19 +131,21 @@ functions:
         working_dir: src
         script: |
           ${PREPARE_SHELL}
-          curl -Os https://cli.codecov.io/latest/linux/codecov
-          curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
-          shasum -a 256 -c codecov.SHA256SUM
-          sudo chmod +x codecov
-          [[ -f test-results.xml ]] && \
+          if [ -f test-results.xml ]; then
+            curl -Os https://cli.codecov.io/latest/linux/codecov
+            curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+            shasum -a 256 -c codecov.SHA256SUM
+            sudo chmod +x codecov
             ./codecov upload-process \
               --report-type test_results \
               --disable-search \
               --fail-on-error \
               --token ${CODECOV_TOKEN} \
               --flag "${MONGODB_VERSION}-${TOPOLOGY}" \
-              --file test-results.xml || \
-              echo "Skipping codecov test result upload due to error"
+              --file test-results.xml
+          else
+            echo "Skipping codecov test result upload"
+          fi
 
   "bootstrap mongo-orchestration":
     - command: shell.exec
@@ -167,7 +169,6 @@ functions:
           printf "\n" >> mo-expansion.yml
           printf "MONGODB_VERSION: '%s'\n" "${MONGODB_VERSION}" >> mo-expansion.yml
           printf "TOPOLOGY: '%s'\n" "${TOPOLOGY}" >> mo-expansion.yml
-          cat mo-expansion.yml
     # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:

@@ -428,6 +428,16 @@ trait FactoryTrait
     }
 
     /**
+     * Returns a random object ID
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/createObjectId/
+     */
+    public static function createObjectId(): CreateObjectIdOperator
+    {
+        return new CreateObjectIdOperator();
+    }
+
+    /**
      * Adds a number of time units to a date object.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/

@@ -911,6 +911,23 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/createObjectId/#example
+     */
+    case CreateObjectIdExample = <<<'JSON'
+    [
+        {
+            "$project": {
+                "objectId": {
+                    "$createObjectId": {}
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Add a Future Date
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/#add-a-future-date

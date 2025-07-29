@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $createObjectId
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/createObjectId/'
+type:
+  - resolvesToObjectId
+encode: object
+description: |
+  Returns a random object ID
+tests:
+  -
+    name: 'Example'
+    link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/createObjectId/#example'
+    pipeline:
+      -
+        $project:
+          objectId:
+            $createObjectId: {}

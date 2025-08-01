@@ -4220,6 +4220,28 @@ enum Pipelines: string
     ]
     JSON;
 
+    /** Support regex search string */
+    case ReplaceAllSupportRegexSearchString = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$replaceAll": {
+                        "input": "123-456-7890",
+                        "find": {
+                            "$regularExpression": {
+                                "pattern": "\\d{3}",
+                                "options": ""
+                            }
+                        },
+                        "replacement": "xxx"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
     /**
      * Example
      *
@@ -5009,6 +5031,27 @@ enum Pipelines: string
             "$sort": {
                 "total_qty": {
                     "$numberInt": "-1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /** Support regex delimiter */
+    case SplitSupportRegexDelimiter = <<<'JSON'
+    [
+        {
+            "$project": {
+                "split": {
+                    "$split": [
+                        "abc",
+                        {
+                            "$regularExpression": {
+                                "pattern": "b",
+                                "options": ""
+                            }
+                        }
+                    ]
                 }
             }
         }

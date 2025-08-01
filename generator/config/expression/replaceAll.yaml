@@ -21,6 +21,7 @@ arguments:
         type:
             - resolvesToString
             - resolvesToNull
+            - resolvesToRegex
         description: |
             The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
     -
@@ -42,3 +43,13 @@ tests:
                             input: '$item'
                             find: 'blue paint'
                             replacement: 'red paint'
+    -
+        name: 'Support regex search string'
+        pipeline:
+            -
+                $project:
+                    item:
+                        $replaceAll:
+                            input: '123-456-7890'
+                            find: !bson_regex '\d{3}'
+                            replacement: 'xxx'

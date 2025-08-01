@@ -1521,12 +1521,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/
      * @param ResolvesToNull|ResolvesToString|null|string $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|null|string $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
+     * @param Regex|ResolvesToNull|ResolvesToRegex|ResolvesToString|null|string $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
      * @param ResolvesToNull|ResolvesToString|null|string $replacement The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
      */
     public static function replaceAll(
         ResolvesToNull|ResolvesToString|null|string $input,
-        ResolvesToNull|ResolvesToString|null|string $find,
+        Regex|ResolvesToNull|ResolvesToRegex|ResolvesToString|null|string $find,
         ResolvesToNull|ResolvesToString|null|string $replacement,
     ): ReplaceAllOperator {
         return new ReplaceAllOperator($input, $find, $replacement);
@@ -1767,10 +1767,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/
      * @param ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
-     * @param ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
+     * @param Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
      */
-    public static function split(ResolvesToString|string $string, ResolvesToString|string $delimiter): SplitOperator
-    {
+    public static function split(
+        ResolvesToString|string $string,
+        Regex|ResolvesToRegex|ResolvesToString|string $delimiter,
+    ): SplitOperator {
         return new SplitOperator($string, $delimiter);
     }
 

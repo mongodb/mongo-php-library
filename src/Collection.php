@@ -513,7 +513,7 @@ class Collection
 
         if (! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $this->collectionName, $this->manager)
-                ?? get_encrypted_fields_from_server($this->databaseName, $this->collectionName, $this->manager, $server);
+                ?? get_encrypted_fields_from_server($this->databaseName, $this->collectionName, $server);
         }
 
         $operation = isset($options['encryptedFields'])

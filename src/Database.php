@@ -374,7 +374,7 @@ class Database
 
         if (! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager)
-                ?? get_encrypted_fields_from_server($this->databaseName, $collectionName, $this->manager, $server);
+                ?? get_encrypted_fields_from_server($this->databaseName, $collectionName, $server);
         }
 
         $operation = isset($options['encryptedFields'])

@@ -268,7 +268,7 @@ class Database
      * collection.
      *
      * @see CreateCollection::__construct() for supported options
-     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#create-collection-helper
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.md#create-collection-helper
      * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-collections/
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

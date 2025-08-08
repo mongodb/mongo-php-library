@@ -34,7 +34,7 @@ use function array_search;
  * db.collection.createIndex() documentation.
  *
  * @see \MongoDB\Collection::listIndexes()
- * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
+ * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.md
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createIndex/
  * @template-implements ArrayAccess<string, mixed>
  */
@@ -152,7 +152,7 @@ class IndexInfo implements ArrayAccess
      * also be used to access fields that do not have a helper method.
      *
      * @see https://php.net/arrayaccess.offsetget
-     * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst#getting-full-index-information
+     * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.md#getting-full-index-information
      * @psalm-param array-key $offset
      */
     public function offsetGet(mixed $offset): mixed

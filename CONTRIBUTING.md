@@ -58,21 +58,21 @@ The test suite references the following environment variables:
    `username` URI option for clients constructed by the test suite, which will
    override any credentials in the connection string itself.
 
-The following environment variable is used for [stable API testing](https://github.com/mongodb/specifications/blob/master/source/versioned-api/tests/README.rst):
+The following environment variable is used for [stable API testing](https://github.com/mongodb/specifications/blob/master/source/versioned-api/tests/README.md):
 
  * `API_VERSION`: If defined, this value will be used to construct a
    [`MongoDB\Driver\ServerApi`](https://www.php.net/manual/en/mongodb-driver-serverapi.construct.php),
    which will then be specified as the `serverApi` driver option for clients
    created by the test suite.
 
-The following environment variables are used for [load balancer testing](https://github.com/mongodb/specifications/blob/master/source/load-balancers/tests/README.rst):
+The following environment variables are used for [load balancer testing](https://github.com/mongodb/specifications/blob/master/source/load-balancers/tests/README.md):
 
  * `MONGODB_SINGLE_MONGOS_LB_URI`: Connection string to a load balancer backed
    by a single mongos host.
  * `MONGODB_MULTI_MONGOS_LB_URI`: Connection string to a load balancer backed by
    multiple mongos hosts.
 
-The following environment variables are used for [CSFLE testing](https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst):
+The following environment variables are used for [CSFLE testing](https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md):
 
  * `AWS_ACCESS_KEY_ID`
  * `AWS_SECRET_ACCESS_KEY`

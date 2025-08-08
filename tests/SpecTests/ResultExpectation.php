@@ -328,7 +328,7 @@ final class ResultExpectation
     /**
      * Determines whether the result is actually an error expectation.
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#test-format
+     * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.md#test-format
      */
     private static function isErrorResult(mixed $result): bool
     {

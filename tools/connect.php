@@ -9,7 +9,7 @@ function getHosts(string $uri): array
     $parsed = parse_url($uri);
 
     if (isset($parsed['scheme']) && $parsed['scheme'] !== 'mongodb') {
-        // TODO: Resolve SRV records (https://github.com/mongodb/specifications/blob/master/source/initial-dns-seedlist-discovery/initial-dns-seedlist-discovery.rst)
+        // TODO: Resolve SRV records (https://github.com/mongodb/specifications/blob/master/source/initial-dns-seedlist-discovery/initial-dns-seedlist-discovery.md)
         throw new RuntimeException('Unsupported scheme: ' . $parsed['scheme']);
     }
 

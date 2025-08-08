@@ -35,7 +35,7 @@ use function sprintf;
  *
  * @internal
  * @see \MongoDB\Collection::createIndexes()
- * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
+ * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.md
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createIndex/
  */
 final class IndexInput implements Serializable

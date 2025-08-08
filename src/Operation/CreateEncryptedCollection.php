@@ -44,8 +44,8 @@ use function MongoDB\server_supports_feature;
  * @internal
  * @see \MongoDB\Database::createCollection()
  * @see \MongoDB\Database::createEncryptedCollection()
- * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#create-collection-helper
- * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#create-encrypted-collection-helper
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.md#create-collection-helper
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.md#create-encrypted-collection-helper
  * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-collections/
  */
 final class CreateEncryptedCollection

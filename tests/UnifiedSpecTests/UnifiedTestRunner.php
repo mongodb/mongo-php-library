@@ -43,7 +43,7 @@ use function version_compare;
 /**
  * Unified test runner.
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst
+ * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.md
  */
 final class UnifiedTestRunner
 {
@@ -456,7 +456,7 @@ final class UnifiedTestRunner
     /**
      * Work around potential error executing distinct on sharded clusters.
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#staledbversion-errors-on-sharded-clusters
+     * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.md#staledbversion-errors-on-sharded-clusters
      */
     private function preventStaleDbVersionError(array $operations, Context $context): void
     {

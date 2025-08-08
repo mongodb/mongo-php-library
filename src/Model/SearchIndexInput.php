@@ -31,7 +31,7 @@ use function MongoDB\is_document;
  *
  * @internal
  * @see \MongoDB\Collection::createSearchIndexes()
- * @see https://github.com/mongodb/specifications/blob/master/source/index-management/index-management.rst#search-indexes
+ * @see https://github.com/mongodb/specifications/blob/master/source/index-management/index-management.md#search-indexes
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
  */
 final class SearchIndexInput implements Serializable

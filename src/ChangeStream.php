@@ -173,7 +173,7 @@ class ChangeStream implements Iterator
     /**
      * Determines if an exception is a resumable error.
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#resumable-error
+     * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.md#resumable-error
      */
     private function isResumableError(RuntimeException $exception): bool
     {

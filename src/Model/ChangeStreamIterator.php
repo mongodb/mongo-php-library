@@ -270,7 +270,7 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
     /**
      * Perform housekeeping after an iteration event.
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#updating-the-cached-resume-token
+     * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.md#updating-the-cached-resume-token
      */
     private function onIteration(bool $incrementBatchPosition): void
     {

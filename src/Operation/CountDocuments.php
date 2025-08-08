@@ -35,7 +35,7 @@ use function MongoDB\is_document;
  * Operation for obtaining an exact count of documents in a collection
  *
  * @see \MongoDB\Collection::countDocuments()
- * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst#countdocuments
+ * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.md#countdocuments
  */
 final class CountDocuments
 {

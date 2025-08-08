@@ -30,7 +30,7 @@ use function array_key_exists;
  * collection. It provides methods to access options for the collection.
  *
  * @see \MongoDB\Database::listCollections()
- * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
+ * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.md
  * @template-implements ArrayAccess<string, mixed>
  */
 class CollectionInfo implements ArrayAccess

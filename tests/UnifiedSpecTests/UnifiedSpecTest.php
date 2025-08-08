@@ -18,7 +18,7 @@ use function strtolower;
 /**
  * Unified test format spec tests.
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst
+ * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.md
  */
 class UnifiedSpecTest extends FunctionalTestCase
 {

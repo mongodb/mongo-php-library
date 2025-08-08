@@ -201,13 +201,8 @@ function get_encrypted_fields_from_driver(string $databaseName, string $collecti
  * @see Database::dropCollection()
  * @return array|object|null
  */
-function get_encrypted_fields_from_server(string $databaseName, string $collectionName, Manager $manager, Server $server)
+function get_encrypted_fields_from_server(string $databaseName, string $collectionName, Server $server)
 {
-    // No-op if the encryptedFieldsMap autoEncryption driver option was omitted
-    if ($manager->getEncryptedFieldsMap() === null) {
-        return null;
-    }
-
     $collectionInfoIterator = (new ListCollections($databaseName, ['filter' => ['name' => $collectionName]]))->execute($server);
 
     foreach ($collectionInfoIterator as $collectionInfo) {

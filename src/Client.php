@@ -136,6 +136,10 @@ class Client
         $this->uri = $uri ?? self::DEFAULT_URI;
         $this->builderEncoder = $driverOptions['builderEncoder'] ?? new BuilderEncoder();
         $this->typeMap = $driverOptions['typeMap'];
+
+        /* Database and Collection objects may need to know whether auto
+         * encryption is enabled for dropping collections. Track this via an
+         * internal option until PHPC-2615 is implemented. */
         $this->autoEncryptionEnabled = isset($driverOptions['autoEncryption']['keyVaultNamespace']);
 
         $driverOptions = array_diff_key($driverOptions, ['builderEncoder' => 1, 'typeMap' => 1]);

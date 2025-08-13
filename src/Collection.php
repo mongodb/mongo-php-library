@@ -77,6 +77,7 @@ use function array_intersect_key;
 use function array_key_exists;
 use function current;
 use function is_array;
+use function is_bool;
 use function sprintf;
 use function strlen;
 use function trigger_error;
@@ -105,6 +106,8 @@ class Collection
     private array $typeMap;
 
     private WriteConcern $writeConcern;
+
+    private bool $autoEncryptionEnabled;
 
     /**
      * Constructs new Collection instance.
@@ -173,12 +176,17 @@ class Collection
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
+        if (isset($options['autoEncryptionEnabled']) && ! is_bool($options['autoEncryptionEnabled'])) {
+            throw InvalidArgumentException::invalidType('"autoEncryptionEnabled" option', $options['autoEncryptionEnabled'], 'boolean');
+        }
+
         $this->builderEncoder = $options['builderEncoder'] ?? new BuilderEncoder();
         $this->codec = $options['codec'] ?? null;
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
         $this->typeMap = $options['typeMap'] ?? self::DEFAULT_TYPE_MAP;
         $this->writeConcern = $options['writeConcern'] ?? $this->manager->getWriteConcern();
+        $this->autoEncryptionEnabled = $options['autoEncryptionEnabled'] ?? false;
     }
 
     /**
@@ -528,7 +536,7 @@ class Collection
 
         $server = select_server_for_write($this->manager, $options);
 
-        if (! isset($options['encryptedFields'])) {
+        if ($this->autoEncryptionEnabled && ! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $this->collectionName, $this->manager)
                 ?? get_encrypted_fields_from_server($this->databaseName, $this->collectionName, $server);
         }

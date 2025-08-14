@@ -583,9 +583,9 @@ def init_responder(issuer_cert: str, responder_cert: str, responder_key: str, fa
     global responder
     responder = OCSPResponder(issuer_cert=issuer_cert, responder_cert=responder_cert, responder_key=responder_key, fault=fault, next_update_seconds=next_update_seconds)
 
-def init(port=8080, debug=False):
-    logger.info('Launching %sserver on port %d', 'debug' if debug else '', port)
-    app.run(port=port, debug=debug)
+def init(port=8080):
+    logger.info('Launching server on port %d', port)
+    app.run(port=port, debug=False)
 
 @app.route('/', methods=['GET'])
 def _handle_root():

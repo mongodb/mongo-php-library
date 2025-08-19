@@ -35,7 +35,6 @@ use MongoDB\GridFS\Exception\LogicException;
 use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Operation\Find;
 
 use function array_intersect_key;
 use function array_key_exists;

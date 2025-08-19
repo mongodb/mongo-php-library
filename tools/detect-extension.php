@@ -5,11 +5,11 @@ function grepIniFile(string $filename, string $extension): int
     $lines = [];
 
     foreach (new SplFileObject($filename) as $i => $line) {
-        if (strpos($line, 'extension') === false) {
+        if (! str_contains($line, 'extension')) {
             continue;
         }
 
-        if (strpos($line, $extension) === false) {
+        if (! str_contains($line, $extension)) {
             continue;
         }
 

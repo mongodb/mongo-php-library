@@ -2,7 +2,7 @@
 
 function getHosts(string $uri): array
 {
-    if (strpos($uri, '://') === false) {
+    if (! str_contains($uri, '://')) {
         return [$uri];
     }
 

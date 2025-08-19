@@ -37,6 +37,18 @@ class ClientTest extends TestCase
         new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
     }
 
+    #[DoesNotPerformAssertions]
+    public function testConstructorEmptyKmsProvider(): void
+    {
+        $autoEncryptionOpts = [
+            'keyVaultClient' => new Client(static::getUri()),
+            'keyVaultNamespace' => 'default.keys',
+            'kmsProviders' => ['gcp' => []],
+        ];
+
+        new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+    }
+
     #[DataProvider('provideInvalidConstructorDriverOptions')]
     public function testConstructorDriverOptionTypeChecks(array $driverOptions, string $exception = InvalidArgumentException::class): void
     {

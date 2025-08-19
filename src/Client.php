@@ -119,12 +119,8 @@ class Client
             throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');
         }
 
-        if (isset($driverOptions['autoEncryption']['keyVaultClient'])) {
-            if ($driverOptions['autoEncryption']['keyVaultClient'] instanceof self) {
-                $driverOptions['autoEncryption']['keyVaultClient'] = $driverOptions['autoEncryption']['keyVaultClient']->manager;
-            } elseif (! $driverOptions['autoEncryption']['keyVaultClient'] instanceof Manager) {
-                throw InvalidArgumentException::invalidType('"keyVaultClient" autoEncryption option', $driverOptions['autoEncryption']['keyVaultClient'], [self::class, Manager::class]);
-            }
+        if (isset($driverOptions['autoEncryption']) && is_array($driverOptions['autoEncryption'])) {
+            $driverOptions['autoEncryption'] = $this->prepareEncryptionOptions($driverOptions['autoEncryption']);
         }
 
         if (isset($driverOptions['builderEncoder']) && ! $driverOptions['builderEncoder'] instanceof Encoder) {
@@ -213,13 +209,7 @@ class Client
      */
     public function createClientEncryption(array $options)
     {
-        if (isset($options['keyVaultClient'])) {
-            if ($options['keyVaultClient'] instanceof self) {
-                $options['keyVaultClient'] = $options['keyVaultClient']->manager;
-            } elseif (! $options['keyVaultClient'] instanceof Manager) {
-                throw InvalidArgumentException::invalidType('"keyVaultClient" option', $options['keyVaultClient'], [self::class, Manager::class]);
-            }
-        }
+        $options = $this->prepareEncryptionOptions($options);
 
         return $this->manager->createClientEncryption($options);
     }
@@ -498,5 +488,27 @@ class Client
         }
 
         return $mergedDriver;
+    }
+
+    private function prepareEncryptionOptions(array $options): array
+    {
+        if (isset($options['keyVaultClient'])) {
+            if ($options['keyVaultClient'] instanceof self) {
+                $options['keyVaultClient'] = $options['keyVaultClient']->manager;
+            } elseif (! $options['keyVaultClient'] instanceof Manager) {
+                throw InvalidArgumentException::invalidType('"keyVaultClient" option', $options['keyVaultClient'], [self::class, Manager::class]);
+            }
+        }
+
+        // The server requires an empty document for automatic credentials.
+        if (isset($options['kmsProviders']) && is_array($options['kmsProviders'])) {
+            foreach ($options['kmsProviders'] as $name => $provider) {
+                if ($provider === []) {
+                    $options['kmsProviders'][$name] = new stdClass();
+                }
+            }
+        }
+
+        return $options;
     }
 }

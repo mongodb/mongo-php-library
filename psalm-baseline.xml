@@ -231,8 +231,12 @@
       <code><![CDATA[$driverOptions['driver'] ?? []]]></code>
       <code><![CDATA[$pipeline]]></code>
     </MixedArgument>
+    <MixedArrayAssignment>
+      <code><![CDATA[$options['kmsProviders'][$name]]]></code>
+    </MixedArrayAssignment>
     <MixedAssignment>
       <code><![CDATA[$mergedDriver['platform']]]></code>
+      <code><![CDATA[$provider]]></code>
     </MixedAssignment>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$driverOptions['builderEncoder'] ?? new BuilderEncoder()]]></code>

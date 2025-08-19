@@ -430,8 +430,8 @@ function is_write_concern_acknowledged(WriteConcern $writeConcern): bool
 function server_supports_feature(Server $server, int $feature): bool
 {
     $info = $server->getInfo();
-    $maxWireVersion = isset($info['maxWireVersion']) ? (integer) $info['maxWireVersion'] : 0;
-    $minWireVersion = isset($info['minWireVersion']) ? (integer) $info['minWireVersion'] : 0;
+    $maxWireVersion = isset($info['maxWireVersion']) ? (int) $info['maxWireVersion'] : 0;
+    $minWireVersion = isset($info['minWireVersion']) ? (int) $info['minWireVersion'] : 0;
 
     return $minWireVersion <= $feature && $maxWireVersion >= $feature;
 }

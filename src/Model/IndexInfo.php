@@ -111,7 +111,7 @@ class IndexInfo implements ArrayAccess
      */
     public function getVersion()
     {
-        return (integer) $this->info['v'];
+        return (int) $this->info['v'];
     }
 
     /**

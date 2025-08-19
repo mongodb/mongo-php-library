@@ -425,7 +425,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     {
         return match ($type) {
             'DecimalNoPrecision', 'DecimalPrecision' => new Decimal128((string) $value),
-            'DoubleNoPrecision', 'DoublePrecision' => (double) $value,
+            'DoubleNoPrecision', 'DoublePrecision' => (float) $value,
             'Date' => new UTCDateTime($value),
             'Int' => $value,
             'Long' => new Int64($value),

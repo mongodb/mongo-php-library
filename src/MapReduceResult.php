@@ -104,7 +104,7 @@ class MapReduceResult implements IteratorAggregate
     public function __construct(callable $getIterator, stdClass $result)
     {
         $this->getIterator = $getIterator;
-        $this->executionTimeMS = isset($result->timeMillis) ? (integer) $result->timeMillis : 0;
+        $this->executionTimeMS = isset($result->timeMillis) ? (int) $result->timeMillis : 0;
         $this->counts = isset($result->counts) ? (array) $result->counts : [];
         $this->timing = isset($result->timing) ? (array) $result->timing : [];
     }

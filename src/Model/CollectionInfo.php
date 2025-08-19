@@ -62,7 +62,7 @@ class CollectionInfo implements ArrayAccess
     public function getCappedMax()
     {
         /* The MongoDB server might return this number as an integer or float */
-        return isset($this->info['options']['max']) ? (integer) $this->info['options']['max'] : null;
+        return isset($this->info['options']['max']) ? (int) $this->info['options']['max'] : null;
     }
 
     /**
@@ -75,7 +75,7 @@ class CollectionInfo implements ArrayAccess
     public function getCappedSize()
     {
         /* The MongoDB server might return this number as an integer or float */
-        return isset($this->info['options']['size']) ? (integer) $this->info['options']['size'] : null;
+        return isset($this->info['options']['size']) ? (int) $this->info['options']['size'] : null;
     }
 
     /**

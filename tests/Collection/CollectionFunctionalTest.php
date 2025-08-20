@@ -404,7 +404,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $rc = new ReflectionClass($clone);
         $rp = $rc->getProperty('autoEncryptionEnabled');
-        $rp->setAccessible(true);
 
         $this->assertSame(true, $rp->getValue($clone));
     }
@@ -432,7 +431,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $rc = new ReflectionClass($clone);
         $rp = $rc->getProperty('autoEncryptionEnabled');
-        $rp->setAccessible(true);
 
         $this->assertSame(true, $rp->getValue($clone));
     }

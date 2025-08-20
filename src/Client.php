@@ -47,13 +47,14 @@ use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Operation\Watch;
 use stdClass;
+use Stringable;
 use Throwable;
 
 use function array_diff_key;
 use function is_array;
 use function is_string;
 
-class Client
+class Client implements Stringable
 {
     public const DEFAULT_URI = 'mongodb://127.0.0.1/';
 

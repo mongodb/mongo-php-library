@@ -19,6 +19,7 @@ namespace MongoDB\Model;
 
 use ArrayAccess;
 use MongoDB\Exception\BadMethodCallException;
+use Stringable;
 
 use function array_key_exists;
 use function array_search;
@@ -38,7 +39,7 @@ use function array_search;
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createIndex/
  * @template-implements ArrayAccess<string, mixed>
  */
-class IndexInfo implements ArrayAccess
+class IndexInfo implements ArrayAccess, Stringable
 {
     /** @param array $info Index info */
     public function __construct(private array $info)

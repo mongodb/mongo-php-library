@@ -7,6 +7,8 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
+use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\Php80\Rector\Class_\StringableForToStringRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\Renaming\Rector\Cast\RenameCastRector;
 use Rector\Renaming\ValueObject\RenameCast;
@@ -18,11 +20,8 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
         __DIR__ . '/tools',
     ])
-    ->withPhpSets(php74: true)
+    ->withPhpSets(php80: true)
     ->withComposerBased(phpunit: true)
-    ->withRules([
-        ChangeSwitchToMatchRector::class,
-    ])
     // All classes are public API by default, unless marked with @internal.
     ->withConfiguredRule(RemoveAnnotationRector::class, ['api'])
     // Fix PHP 8.5 deprecations
@@ -41,6 +40,10 @@ return RectorConfig::configure()
         IfIssetToCoalescingRector::class,
         ChangeSwitchToMatchRector::class => [
             __DIR__ . '/tests/SpecTests/Operation.php',
+        ],
+        ClassPropertyAssignToConstructorPromotionRector::class,
+        StringableForToStringRector::class => [
+            __DIR__ . '/src/Model/IndexInput.php',
         ],
     ])
     // phpcs:enable

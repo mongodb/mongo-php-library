@@ -69,6 +69,7 @@ use MongoDB\Operation\UpdateOne;
 use MongoDB\Operation\UpdateSearchIndex;
 use MongoDB\Operation\Watch;
 use stdClass;
+use Stringable;
 
 use function array_diff_key;
 use function array_intersect_key;
@@ -78,7 +79,7 @@ use function is_array;
 use function is_bool;
 use function strlen;
 
-class Collection
+class Collection implements Stringable
 {
     private const DEFAULT_TYPE_MAP = [
         'array' => BSONArray::class,

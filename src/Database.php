@@ -51,13 +51,14 @@ use MongoDB\Operation\ModifyCollection;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\Watch;
 use stdClass;
+use Stringable;
 use Throwable;
 
 use function is_array;
 use function is_bool;
 use function strlen;
 
-class Database
+class Database implements Stringable
 {
     private const DEFAULT_TYPE_MAP = [
         'array' => BSONArray::class,

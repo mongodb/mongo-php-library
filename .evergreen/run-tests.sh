@@ -86,10 +86,6 @@ case "$TESTS" in
       php vendor/bin/phpunit $PHPUNIT_OPTS --group atlas
       ;;
 
-   atlas-data-lake)
-      php vendor/bin/phpunit $PHPUNIT_OPTS --group atlas-data-lake
-      ;;
-
    csfle)
       php vendor/bin/phpunit $PHPUNIT_OPTS --group csfle
       ;;

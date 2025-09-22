@@ -7,14 +7,6 @@ tasks:
         vars:
           TESTS: "atlas"
 
-  - name: "test-atlas-data-lake"
-    commands:
-      - command: ec2.assume_role
-        params:
-          role_arn: ${aws_test_secrets_role}
-      - func: "bootstrap mongohoused"
-      - func: "run atlas data lake test"
-
   - name: "run-benchmark"
     exec_timeout_secs: 3600
     commands:

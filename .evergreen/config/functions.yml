@@ -233,19 +233,6 @@ functions:
           TESTS=${TESTS} \
           bash ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
-  "run atlas data lake test":
-    - command: shell.exec
-      type: test
-      params:
-        working_dir: "src"
-        script: |
-          ${PREPARE_SHELL}
-          export PATH="${PHP_PATH}/bin:$PATH"
-          
-          MONGODB_URI="mongodb://mhuser:pencil@127.0.0.1:27017" \
-          TESTS="atlas-data-lake" \
-          bash ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
-
   "cleanup":
     - command: shell.exec
       params:

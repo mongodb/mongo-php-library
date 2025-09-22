@@ -16,7 +16,6 @@
       - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
       - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
       - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
-      - "test-atlas-data-lake"
 
   # Test MongoDB 5.0 and 6.0
   - name: test-debian11-php-%phpVersion%-local

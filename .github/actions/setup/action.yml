@@ -14,6 +14,10 @@ inputs:
   working-directory:
     description: "The directory where composer.json is located, if it is not in the repository root."
     required: false
+  ignore-platform-req:
+    description: "Whether to ignore platform requirements when installing dependencies with Composer."
+    required: false
+    default: "false"
 
 runs:
   using: composite
@@ -49,5 +53,5 @@ runs:
     - name: Install dependencies with Composer
       uses: ramsey/composer-install@3.0.0
       with:
-        composer-options: "--no-suggest"
+        composer-options: "--no-suggest ${{ inputs.ignore-platform-req == 'true' && '--ignore-platform-req=php+' || '' }}"
         working-directory: "${{ inputs.working-directory }}"

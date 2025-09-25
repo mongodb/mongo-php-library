@@ -80,6 +80,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           driver-version: ${{ env.DRIVER_VERSION }}
           php-ini-values: "zend.assertions=1"
+          ignore-platform-req: ${{ matrix.php-version == '8.5' && 'true' || 'false' }}
 
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit"

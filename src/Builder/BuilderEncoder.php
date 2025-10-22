@@ -32,7 +32,9 @@ use stdClass;
 use WeakReference;
 
 use function array_key_exists;
+use function is_array;
 use function is_object;
+use function iterator_to_array;
 
 /** @template-implements Encoder<Type|stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
 final class BuilderEncoder implements Encoder
@@ -46,10 +48,14 @@ final class BuilderEncoder implements Encoder
     /** @var array<class-string, Encoder|null> */
     private array $cachedEncoders = [];
 
-    /** @param array<class-string, Encoder> $encoders */
-    public function __construct(array $encoders = [])
+    /** @param iterable<class-string, Encoder> $encoders */
+    public function __construct(iterable $encoders = [])
     {
         $self = WeakReference::create($this);
+
+        if (! is_array($encoders)) {
+            $encoders = iterator_to_array($encoders);
+        }
 
         $this->encoders = $encoders + [
             Pipeline::class => new PipelineEncoder($self),

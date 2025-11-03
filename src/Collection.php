@@ -754,6 +754,7 @@ class Collection implements Stringable
     public function findOneAndUpdate(array|object $filter, array|object $update, array $options = []): array|object|null
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
+        $update = $this->builderEncoder->encodeIfSupported($update);
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritCodecOrTypeMap($options);
 

@@ -186,6 +186,20 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals(3, $result->x);
     }
 
+    public function testFindOneAndUpdateWithPipelineUpdate(): void
+    {
+        $result = $this->collection->findOneAndUpdate(
+            Query::query(x: Query::lt(2)),
+            new Pipeline(
+                Stage::set(x: 3),
+            ),
+        );
+        $this->assertEquals(1, $result->x);
+
+        $result = $this->collection->findOne(Query::query(x: Query::eq(3)));
+        $this->assertEquals(3, $result->x);
+    }
+
     public function testReplaceOne(): void
     {
         $this->collection->insertOne(['x' => 1]);

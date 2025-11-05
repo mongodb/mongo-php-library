@@ -13,6 +13,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
@@ -805,6 +806,32 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $indexes = iterator_to_array($indexes);
         $this->assertCount(1, $indexes);
         $this->assertIsArray($indexes[0]);
+    }
+
+    public function testListSearchIndexesNotSupportedException(): void
+    {
+        if (self::isAtlas()) {
+            self::markTestSkipped('Atlas Search is supported on Atlas');
+        }
+
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $this->expectException(SearchNotSupportedException::class);
+
+        $collection->listSearchIndexes();
+    }
+
+    public function testCreateSearchIndexNotSupportedException(): void
+    {
+        if (self::isAtlas()) {
+            self::markTestSkipped('Atlas Search is supported on Atlas');
+        }
+
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $this->expectException(SearchNotSupportedException::class);
+
+        $collection->createSearchIndex(['mappings' => ['dynamic' => false]], ['name' => 'test-search-index']);
     }
 
     /**

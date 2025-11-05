@@ -19,8 +19,10 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\SearchIndexInput;
 
@@ -83,7 +85,15 @@ final class CreateSearchIndexes
             $cmd['comment'] = $this->options['comment'];
         }
 
-        $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
+        try {
+            $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
+        } catch (ServerException $exception) {
+            if (SearchNotSupportedException::isSearchNotSupportedError($exception)) {
+                throw SearchNotSupportedException::create($exception);
+            }
+
+            throw $exception;
+        }
 
         /** @var object{indexesCreated: list<object{name: string}>} $result */
         $result = current($cursor->toArray());

@@ -50,8 +50,6 @@ use const PATH_SEPARATOR;
 
 abstract class FunctionalTestCase extends TestCase
 {
-    private const ATLAS_TLD = '/\.(mongodb\.net|mongodb-dev\.net)/';
-
     protected Manager $manager;
 
     private array $configuredFailPoints = [];
@@ -518,7 +516,7 @@ abstract class FunctionalTestCase extends TestCase
 
     public static function isAtlas(?string $uri = null): bool
     {
-        return preg_match(self::ATLAS_TLD, $uri ?? static::getUri());
+        return (bool) getenv('ATLAS_SUPPORTED');
     }
 
     /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/ */

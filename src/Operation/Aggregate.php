@@ -27,8 +27,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\AtlasSearchNotSupportedException;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\CodecCursor;
@@ -238,8 +238,8 @@ final class Aggregate implements Explainable
         try {
             $cursor = $this->executeCommand($server, $command);
         } catch (ServerException $exception) {
-            if (SearchNotSupportedException::isSearchNotSupportedError($exception)) {
-                throw SearchNotSupportedException::create($exception);
+            if (AtlasSearchNotSupportedException::isAtlasSearchNotSupportedError($exception)) {
+                throw AtlasSearchNotSupportedException::create($exception);
             }
 
             throw $exception;

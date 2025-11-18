@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 use function bin2hex;
-use function getenv;
 use function putenv;
 use function random_bytes;
 use function sprintf;
@@ -230,8 +229,7 @@ OUTPUT;
     #[Group('atlas')]
     public function testAtlasSearch(): void
     {
-        $uri = getenv('MONGODB_URI') ?? '';
-        if (! self::isAtlas($uri)) {
+        if (! self::isAtlas()) {
             $this->markTestSkipped('Atlas Search examples are only supported on MongoDB Atlas');
         }
 

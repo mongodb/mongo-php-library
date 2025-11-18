@@ -21,8 +21,8 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Server;
+use MongoDB\Exception\AtlasSearchNotSupportedException;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\SearchIndexInput;
 
@@ -88,8 +88,8 @@ final class CreateSearchIndexes
         try {
             $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
         } catch (ServerException $exception) {
-            if (SearchNotSupportedException::isSearchNotSupportedError($exception)) {
-                throw SearchNotSupportedException::create($exception);
+            if (AtlasSearchNotSupportedException::isAtlasSearchNotSupportedError($exception)) {
+                throw AtlasSearchNotSupportedException::create($exception);
             }
 
             throw $exception;

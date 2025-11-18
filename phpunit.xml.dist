@@ -16,6 +16,7 @@
         <ini name="zend.assertions" value="1"/>
         <env name="MONGODB_URI" value="mongodb://127.0.0.1:27017/?serverSelectionTimeoutMS=100"/>
         <env name="MONGODB_DATABASE" value="phplib_test"/>
+        <env name="ATLAS_SUPPORTED" value="0" />
     </php>
 
     <testsuites>

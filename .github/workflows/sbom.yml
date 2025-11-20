@@ -1,0 +1,112 @@
+name: Post-Merge SBOM Update
+
+on:
+  push:
+    branches:
+      - v1.21
+    paths:
+      - 'composer.json'
+      - 'composer.lock'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+env:
+  PHP_VERSION: "8.2"
+  DRIVER_VERSION: "mongodb/mongo-php-driver@v1.21"
+  SBOM_FILE: "sbom.json"
+jobs:
+  sbom:
+    name: Generate SBOM and Create PR
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: sbom-${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository (Base Branch)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup PHP environment
+        uses: ./.github/actions/setup
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          driver-version: ${{ env.DRIVER_VERSION }}
+          working-directory: '.'
+
+      - name: Generate/Update composer.lock
+        run: |
+          echo "Resolving dependencies and generating composer.lock..."
+          composer update --lock --no-install --ignore-platform-reqs
+          echo "composer.lock generated with resolved versions"
+
+      - name: Setup SBOM environment
+        uses: ./.github/actions/setup-sbom
+
+      - name: Run SBOM Generator
+        uses: ./.github/actions/sbom-update
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          working-directory: '.'
+          output-file: 'sbom.json'
+          output-format: 'json'
+
+      - name: Check for Changes in sbom.json
+        id: git_status
+        run: |
+          # Filter to remove/normalize serialNumber and timestamp fields
+          JQ_NORMALIZER='del(.serialNumber) | del(.metadata.timestamp) | walk(if type == "object" and .timestamp then .timestamp = "TIMESTAMP_NORMALIZED" else . end)'
+          
+          # Check if the base file exists in Git (to prevent errors on first commit)
+          if ! git show HEAD:$SBOM_FILE > /dev/null 2>&1; then
+              echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+              exit 0
+          fi
+          
+          # Compare the normalized committed version vs. the normalized current version
+          if diff -q \
+             <(git show HEAD:$SBOM_FILE | jq -r "$JQ_NORMALIZER") \
+             <(cat $SBOM_FILE | jq -r "$JQ_NORMALIZER"); then
+             
+             echo "HAS_CHANGES=false" >> $GITHUB_OUTPUT
+             echo "No changes detected in sbom.json"
+          else
+             echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+             echo "Changes detected in sbom.json"
+          fi
+
+      - name: Create Pull Request
+        if: steps.git_status.outputs.HAS_CHANGES == 'true'
+        uses: peter-evans/create-pull-request@b4733b9419fd47bbfa1807b15627e17cd70b5b22
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: Update SBOM after dependency changes'
+          branch: auto-update-sbom-${{ github.run_id }}
+          delete-branch: true
+          title: 'chore: Update SBOM'
+          body: |
+            ## Automated SBOM Update
+            
+            This PR was automatically generated because dependency manifest files changed.
+            
+            ### Changes
+            - Updated `sbom.json` to reflect current dependencies
+            
+            ### Verification
+            The SBOM was generated using SilkBomb v1.0.
+
+            ### Triggered by
+            - Commit: ${{ github.sha }}
+            - Workflow run: ${{ github.run_id }}
+            
+            ---
+            _This PR was created automatically by the [SBOM workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})_
+          labels: |
+            sbom
+            automated
+            dependencies

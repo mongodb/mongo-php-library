@@ -750,6 +750,9 @@ final class Operation
             case 'endSession':
                 return $session->endSession();
 
+            case 'getSnapshotTime':
+                throw new \RuntimeException('TODO: Implement getSnapshotTime');
+
             case 'startTransaction':
                 return $session->startTransaction($args);
 

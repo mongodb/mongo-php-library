@@ -128,6 +128,7 @@ final class Util
             'abortTransaction' => [],
             'commitTransaction' => [],
             'endSession' => [],
+            'getSnapshotTime' => [],
             'startTransaction' => ['maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
             'withTransaction' => ['callback', 'maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
         ],

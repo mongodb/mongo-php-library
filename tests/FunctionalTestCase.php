@@ -491,10 +491,6 @@ abstract class FunctionalTestCase extends TestCase
             $this->markTestSkipped('Transactions are not supported on standalone servers');
         }
 
-        if ($this->isShardedCluster()) {
-            $this->markTestSkipped('Transactions are only supported on FCV 4.2 or higher');
-        }
-
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
         }

@@ -231,8 +231,6 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
 
     public function testUpdateWithPipeline(): void
     {
-        $this->skipIfServerVersion('<', '4.2.0', 'Pipeline-style updates are not supported');
-
         $result = $this->collection->updateOne(
             Query::query(x: Query::lt(2)),
             new Pipeline(
@@ -259,8 +257,6 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
 
     public function testUpdateManyWithPipeline(): void
     {
-        $this->skipIfServerVersion('<', '4.2.0', 'Pipeline-style updates are not supported');
-
         $result = $this->collection->updateMany(
             Query::query(x: Query::gt(1)),
             new Pipeline(

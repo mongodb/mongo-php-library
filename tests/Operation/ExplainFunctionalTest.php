@@ -322,8 +322,6 @@ class ExplainFunctionalTest extends FunctionalTestCase
     #[DataProvider('provideVerbosityInformation')]
     public function testAggregateOptimizedToQuery($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
-        $this->skipIfServerVersion('<', '4.2.0', 'MongoDB < 4.2 does not optimize simple aggregation pipelines');
-
         $this->createFixtures(3);
 
         $pipeline = [['$match' => ['_id' => ['$ne' => 2]]]];

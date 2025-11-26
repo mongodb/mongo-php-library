@@ -54,10 +54,6 @@ class UpdateFunctionalTest extends FunctionalTestCase
     #[DataProvider('provideReplacementDocumentLikePipeline')]
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
-        if (is_array($expectedUpdate)) {
-            $this->skipIfServerVersion('<', '4.2.0', 'Pipeline-style updates are not supported');
-        }
-
         (new CommandObserver())->observe(
             function () use ($update): void {
                 $operation = new Update(
@@ -146,24 +142,6 @@ class UpdateFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasProperty('bypassDocumentValidation', $event['started']->getCommand());
             },
         );
-    }
-
-    public function testHintOptionAndUnacknowledgedWriteConcernUnsupportedClientSideError(): void
-    {
-        $this->skipIfServerVersion('>=', '4.2.0', 'hint is supported');
-
-        $operation = new Update(
-            $this->getDatabaseName(),
-            $this->getCollectionName(),
-            ['_id' => 1],
-            ['$inc' => ['x' => 1]],
-            ['hint' => '_id_', 'writeConcern' => new WriteConcern(0)],
-        );
-
-        $this->expectException(UnsupportedException::class);
-        $this->expectExceptionMessage('Hint is not supported by the server executing this operation');
-
-        $operation->execute($this->getPrimaryServer());
     }
 
     public function testUpdateOne(): void

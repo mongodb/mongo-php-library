@@ -337,12 +337,6 @@ final class UnifiedTestRunner
      */
     private function isClientSideEncryptionSupported(): bool
     {
-        /* CSFLE technically requires FCV 4.2+ but this is sufficient since we
-         * do not test on mixed-version clusters. */
-        if (version_compare($this->getServerVersion(), '4.2', '<')) {
-            return false;
-        }
-
         if (FunctionalTestCase::getModuleInfo('libmongocrypt') === 'disabled') {
             return false;
         }

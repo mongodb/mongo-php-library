@@ -9,11 +9,10 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Setup Node.js (for cdxgen)
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+    - name: Install latest Composer
+      shell: bash
+      run: curl -sS https://getcomposer.org/installer | php -- --install-dir=. --filename=composer
 
     - name: Install cdxgen
       shell: bash
-      run: npm install -g @cyclonedx/cdxgen
+      run: ./composer require --dev cyclonedx/cyclonedx-php-composer --ignore-platform-reqs

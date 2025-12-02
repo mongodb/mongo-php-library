@@ -14,7 +14,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         echo "Generating SBOM for 'php' project..."
-        cdxgen -t 'php' --json-pretty --spec-version 1.5 -o ${{ inputs.output-file }} .
+        ./composer CycloneDX:make-sbom --output-file=sbom.json --output-format=json --spec-version=1.5
 
     - name: Validate SBOM
       shell: bash

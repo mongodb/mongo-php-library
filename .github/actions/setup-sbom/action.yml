@@ -13,6 +13,10 @@ runs:
       shell: bash
       run: curl -sS https://getcomposer.org/installer | php -- --install-dir=. --filename=composer
 
-    - name: Install cdxgen
+    - name: Allow CycloneDX plugin
       shell: bash
-      run: ./composer require --dev cyclonedx/cyclonedx-php-composer --ignore-platform-reqs --no-plugins
+      run: ./composer config allow-plugins.cyclonedx/cyclonedx-php-composer true
+
+    - name: Install CycloneDX plugin
+      shell: bash
+      run: ./composer require --dev cyclonedx/cyclonedx-php-composer --ignore-platform-reqs

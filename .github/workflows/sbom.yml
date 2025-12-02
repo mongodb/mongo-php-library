@@ -86,6 +86,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'chore: Update SBOM after dependency changes'
+          add-paths: |
+            sbom.json
           branch: auto-update-sbom-${{ github.run_id }}
           delete-branch: true
           title: 'chore: Update SBOM'

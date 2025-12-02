@@ -15,4 +15,4 @@ runs:
 
     - name: Install cdxgen
       shell: bash
-      run: ./composer require --dev cyclonedx/cyclonedx-php-composer --ignore-platform-reqs
+      run: ./composer require --dev cyclonedx/cyclonedx-php-composer --ignore-platform-reqs --no-plugins

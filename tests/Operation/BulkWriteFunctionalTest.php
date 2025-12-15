@@ -18,8 +18,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use stdClass;
 
-use function is_array;
-
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
     private Collection $collection;

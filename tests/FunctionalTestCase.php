@@ -487,12 +487,18 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function skipIfTransactionsAreNotSupported(): void
     {
-        if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
-            $this->markTestSkipped('Transactions are not supported on standalone servers');
-        }
+        switch ($this->getPrimaryServer()->getType()) {
+            case Server::TYPE_STANDALONE:
+                $this->markTestSkipped('Transactions are not supported on standalone servers');
+                break;
 
-        if ($this->getServerStorageEngine() !== 'wiredTiger') {
-            $this->markTestSkipped('Transactions require WiredTiger storage engine');
+            case Server::TYPE_RS_PRIMARY:
+                // Note: mongos does not report storage engine information
+                if ($this->getServerStorageEngine() !== 'wiredTiger') {
+                    $this->markTestSkipped('Transactions require WiredTiger storage engine');
+                }
+
+                break;
         }
     }
 

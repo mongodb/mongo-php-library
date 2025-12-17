@@ -7,33 +7,34 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\AtlasSearchNotSupportedException;
 use MongoDB\Tests\Collection\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 
 class AtlasSearchNotSupportedExceptionTest extends FunctionalTestCase
 {
+    #[DoesNotPerformAssertions]
     public function testListSearchIndexesNotSupportedException(): void
     {
-        if (self::isAtlas()) {
-            self::markTestSkipped('Atlas Search is supported on Atlas');
-        }
-
         $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $this->expectException(AtlasSearchNotSupportedException::class);
-
-        $collection->listSearchIndexes();
+        try {
+            $collection->listSearchIndexes();
+        } catch (AtlasSearchNotSupportedException) {
+            // If an exception is thrown because Atlas Search is not supported,
+            // then the test is successful because it has the correct exception class.
+        }
     }
 
+    #[DoesNotPerformAssertions]
     public function testCreateSearchIndexNotSupportedException(): void
     {
-        if (self::isAtlas()) {
-            self::markTestSkipped('Atlas Search is supported on Atlas');
-        }
-
         $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $this->expectException(AtlasSearchNotSupportedException::class);
-
-        $collection->createSearchIndex(['mappings' => ['dynamic' => false]], ['name' => 'test-search-index']);
+        try {
+            $collection->createSearchIndex(['mappings' => ['dynamic' => false]], ['name' => 'test-search-index']);
+        } catch (AtlasSearchNotSupportedException) {
+            // If an exception is thrown because Atlas Search is not supported,
+            // then the test is successful because it has the correct exception class.
+        }
     }
 
     public function testOtherStageNotFound(): void

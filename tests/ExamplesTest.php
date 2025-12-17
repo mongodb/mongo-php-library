@@ -229,7 +229,7 @@ OUTPUT;
     #[Group('atlas')]
     public function testAtlasSearch(): void
     {
-        if (! self::isAtlas()) {
+        if (! $this->isAtlas()) {
             $this->markTestSkipped('Atlas Search examples are only supported on MongoDB Atlas');
         }
 

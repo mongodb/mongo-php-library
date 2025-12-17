@@ -373,9 +373,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     #[DataProvider('provideIndexManagementTests')]
     public function testIndexManagement(UnifiedTestCase $test): void
     {
-        if (self::isAtlas()) {
-            self::markTestSkipped('Search Indexes tests must run on a non-Atlas cluster');
-        }
+        $this->skipIfAtlasSearchIndexIsNotSupported();
 
         if (! self::isEnterprise()) {
             self::markTestSkipped('Specific Atlas error messages are only available on Enterprise server');

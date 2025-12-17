@@ -434,11 +434,17 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function skipIfAtlasSearchIndexIsNotSupported(): void
     {
-        if (! self::isAtlas()) {
-            self::markTestSkipped('Search Indexes are only supported on MongoDB Atlas 7.0+');
+        try {
+            $this->manager->executeReadCommand($this->getDatabaseName(), new Command([
+                'aggregate' => __METHOD__,
+                'pipeline' => [
+                    ['$search' => ['text' => ['query' => 'test', 'path' => 'field']]],
+                ],
+                'cursor' => new stdClass(),
+            ]));
+        } catch (CommandException $exception) {
+            self::markTestSkipped($exception->getMessage());
         }
-
-        $this->skipIfServerVersion('<', '7.0', 'Search Indexes are only supported on MongoDB Atlas 7.0+');
     }
 
     protected function skipIfChangeStreamIsNotSupported(): void
@@ -512,11 +518,6 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         throw new UnexpectedValueException('Could not determine server modules');
-    }
-
-    public static function isAtlas(?string $uri = null): bool
-    {
-        return (bool) getenv('ATLAS_SUPPORTED');
     }
 
     /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/ */

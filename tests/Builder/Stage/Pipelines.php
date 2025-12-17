@@ -2557,6 +2557,99 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/#examples
+     */
+    case ScoreFusionExample = <<<'JSON'
+    [
+        {
+            "$scoreFusion": {
+                "input": {
+                    "pipelines": {
+                        "searchOne": [
+                            {
+                                "$vectorSearch": {
+                                    "index": "vector_index",
+                                    "path": "plot_embedding",
+                                    "queryVector": [
+                                        {
+                                            "$numberDouble": "-0.0016261311999999999121"
+                                        },
+                                        {
+                                            "$numberDouble": "-0.028070756999999998266"
+                                        },
+                                        {
+                                            "$numberDouble": "-0.011342932000000000015"
+                                        }
+                                    ],
+                                    "numCandidates": {
+                                        "$numberInt": "150"
+                                    },
+                                    "limit": {
+                                        "$numberInt": "10"
+                                    }
+                                }
+                            }
+                        ],
+                        "searchTwo": [
+                            {
+                                "$search": {
+                                    "index": "<INDEX_NAME>",
+                                    "text": {
+                                        "query": "<QUERY_TERM>",
+                                        "path": "<FIELD_NAME>"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "normalization": "sigmoid"
+                },
+                "combination": {
+                    "method": "expression",
+                    "expression": {
+                        "$sum": [
+                            {
+                                "$multiply": [
+                                    "$$searchOne",
+                                    {
+                                        "$numberInt": "10"
+                                    }
+                                ]
+                            },
+                            "$$searchTwo"
+                        ]
+                    }
+                },
+                "scoreDetails": true
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "scoreDetails": {
+                    "$meta": "scoreDetails"
+                }
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "20"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#aggregation-variable
      */
     case SearchExample = <<<'JSON'

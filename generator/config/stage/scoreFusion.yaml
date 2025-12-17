@@ -1,16 +1,36 @@
-# $schema: ../schema.json
+# yaml-language-server: $schema=../schema.json
 name: $scoreFusion
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/'
 type:
     - stage
-encode: single
+encode: object
 description: |
-    Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. For each input document, outputs either zero documents (for the first n documents) or one document (if after the first n documents).
+    Combines multiple pipelines using relative score fusion to create hybrid search results.
 arguments:
     -
-        name: skip
+        name: input
         type:
-            - int
+            - object
+        description: |
+            An object with the following required fields:
+            - input.pipelines: Map from name to input pipeline. Each pipeline must be operating on the same collection. Minimum of one pipeline.
+            - input.normalization: Normalizes the score to the range 0 to 1 before combining the results. Value can be none, sigmoid or minMaxScaler.
+    -
+        name: combination
+        optional: true
+        type:
+            - object
+        description: |
+            An object with the following optional fields:
+            - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
+            - combination.method: Specifies method for combining scores. Value can be avg or expression. Default is avg.
+            - combination.expression: This is the custom expression that is used when combination.method is set to expression.
+    -
+        name: scoreDetails
+        type:
+            - bool
+        default: false
+        description: Set to true to include detailed scoring information.
 tests:
     -
         name: 'Example'

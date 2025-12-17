@@ -10,7 +10,11 @@ final class SearchNotSupportedException extends ServerException
     /** @internal */
     public static function create(ServerException $e): self
     {
-        $message = $e->getCode() === 31082 ? $e->getMessage() : 'Using Atlas Search Database Commands and the $listSearchIndexes aggregation stage requires additional configuration. Please connect to Atlas or an AtlasCLI local deployment to enable. For more information on how to connect, see https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs';
+        $message = $e->getCode() === 31082
+            ? $e->getMessage()
+            : 'Using Atlas Search Database Commands and the $listSearchIndexes aggregation stage requires additional configuration. '
+                . 'Please connect to Atlas or an AtlasCLI local deployment to enable. '
+                . 'For more information on how to connect, see https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs';
 
         return new self($message, $e->getCode(), $e);
     }

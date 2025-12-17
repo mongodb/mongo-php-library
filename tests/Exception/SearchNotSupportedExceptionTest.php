@@ -1,6 +1,6 @@
 <?php
 
-namespace Exception;
+namespace MongoDB\Tests\Exception;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;

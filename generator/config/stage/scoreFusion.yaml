@@ -1,0 +1,57 @@
+# $schema: ../schema.json
+name: $scoreFusion
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/'
+type:
+    - stage
+encode: single
+description: |
+    Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. For each input document, outputs either zero documents (for the first n documents) or one document (if after the first n documents).
+arguments:
+    -
+        name: skip
+        type:
+            - int
+tests:
+    -
+        name: 'Example'
+        link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/#examples'
+        pipeline:
+        -
+            $scoreFusion:
+                input:
+                    pipelines:
+                        searchOne:
+                            -
+                                $vectorSearch:
+                                    index: 'vector_index'
+                                    path: 'plot_embedding'
+                                    queryVector: [-0.0016261312, -0.028070757, -0.011342932]
+                                    numCandidates: 150
+                                    limit: 10
+                        searchTwo:
+                            -
+                                $search:
+                                    index: '<INDEX_NAME>'
+                                    text:
+                                        query: '<QUERY_TERM>'
+                                        path: '<FIELD_NAME>'
+                    normalization: 'sigmoid'
+                combination:
+                    method: 'expression'
+                    expression:
+                        $sum:
+                            -
+                                $multiply:
+                                    - '$$searchOne'
+                                    - 10
+                            - '$$searchTwo'
+                scoreDetails: true
+        -
+            $project:
+                _id: 1
+                title: 1
+                plot: 1
+                scoreDetails:
+                    $meta: 'scoreDetails'
+        -
+            $limit: 20

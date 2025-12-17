@@ -535,6 +535,27 @@ trait FactoryTrait
     }
 
     /**
+     * Combines multiple pipelines using relative score fusion to create hybrid search results.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/
+     * @param Document|Serializable|array|stdClass $input An object with the following required fields:
+     * - input.pipelines: Map from name to input pipeline. Each pipeline must be operating on the same collection. Minimum of one pipeline.
+     * - input.normalization: Normalizes the score to the range 0 to 1 before combining the results. Value can be none, sigmoid or minMaxScaler.
+     * @param bool $scoreDetails Set to true to include detailed scoring information.
+     * @param Optional|Document|Serializable|array|stdClass $combination An object with the following optional fields:
+     * - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
+     * - combination.method: Specifies method for combining scores. Value can be avg or expression. Default is avg.
+     * - combination.expression: This is the custom expression that is used when combination.method is set to expression.
+     */
+    public static function scoreFusion(
+        Document|Serializable|stdClass|array $input,
+        bool $scoreDetails = false,
+        Optional|Document|Serializable|stdClass|array $combination = Optional::Undefined,
+    ): ScoreFusionStage {
+        return new ScoreFusionStage($input, $scoreDetails, $combination);
+    }
+
+    /**
      * Performs a full-text search of the field or fields in an Atlas collection.
      * NOTE: $search is only available for MongoDB Atlas clusters, and is not available for self-managed deployments.
      *

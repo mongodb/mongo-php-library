@@ -14,6 +14,9 @@ on:
         type: "string"
 
 env:
+  PHP_VERSION: "8.2"
+  DRIVER_VERSION: "mongodb/mongo-php-driver@${{ inputs.version }}"
+  SBOM_FILE: "sbom.json"
   default-release-message: |
     The PHP team is happy to announce that version {0} of the MongoDB PHP library is now available.
 
@@ -47,12 +50,6 @@ jobs:
     steps:
       - name: "Create release output"
         run: echo '🎬 Release process for version ${{ inputs.version }} started by @${{ github.triggering_actor }}' >> $GITHUB_STEP_SUMMARY
-
-      - name: "Generate token and checkout repository"
-        uses: mongodb-labs/drivers-github-tools/secure-checkout@v3
-        with:
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: "Store version numbers in env variables"
         run: |
@@ -92,6 +89,84 @@ jobs:
           echo '🆕 Creating new release branch ${{ env.RELEASE_BRANCH }} from ${{ github.ref_name }}' >> $GITHUB_STEP_SUMMARY
           git checkout -b ${RELEASE_BRANCH}
           git push origin ${RELEASE_BRANCH}
+
+      #
+      # Preliminary checks done - generate SBOM before tagging
+      #
+      - name: Checkout repository (Base Branch)
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.base.ref || github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup PHP environment"
+        id: setup-php
+        uses: ./.github/actions/setup
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          driver-version: ${{ env.DRIVER_VERSION }}
+          working-directory: '.'
+        continue-on-error: true
+
+      - name: "Generate/Update composer.lock"
+        id: composer-lock
+        run: |
+          echo "Resolving dependencies and generating composer.lock..."
+          composer update --no-install --ignore-platform-reqs
+          echo "composer.lock generated with resolved versions"
+        continue-on-error: true
+
+      - name: "Generate SBOM"
+        id: generate-sbom
+        if: steps.composer-lock.outcome == 'success'
+        uses: ./.github/actions/update-sbom
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          working-directory: '.'
+          output-file: ${{ env.SBOM_FILE }}
+          output-format: 'json'
+        continue-on-error: true
+
+      - name: "Check for SBOM changes"
+        id: sbom_status
+        if: steps.generate-sbom.outcome == 'success'
+        run: |
+          JQ_NORMALIZER='del(.serialNumber) | del(.metadata.timestamp) | walk(if type == "object" and .timestamp then .timestamp = "TIMESTAMP_NORMALIZED" else . end)'
+
+          if ! git show HEAD:${{ env.SBOM_FILE }} > /dev/null 2>&1; then
+            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+            echo "SBOM file is new"
+            exit 0
+          fi
+
+          if diff -q \
+             <(git show HEAD:${{ env.SBOM_FILE }} | jq -r "$JQ_NORMALIZER") \
+             <(cat ${{ env.SBOM_FILE }} | jq -r "$JQ_NORMALIZER"); then
+            echo "HAS_CHANGES=false" >> $GITHUB_OUTPUT
+            echo "No changes detected in SBOM"
+          else
+            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in SBOM"
+          fi
+        continue-on-error: true
+
+      - name: "Commit SBOM changes"
+        if: steps.sbom_status.outputs.HAS_CHANGES == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.SBOM_FILE }}
+          git commit -m "chore: Update SBOM for release ${{ inputs.version }}"
+          git push
+          echo "📦 SBOM updated and committed" >> $GITHUB_STEP_SUMMARY
+        continue-on-error: true
+
+      - name: "Report SBOM status"
+        run: |
+          if [[ "${{ steps.generate-sbom.outcome }}" == "success" ]]; then
+            echo "✅ SBOM generation completed successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ SBOM generation skipped or failed - continuing with release" >> $GITHUB_STEP_SUMMARY
+          fi
 
       #
       # Preliminary checks done - commence the release process

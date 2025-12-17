@@ -1,0 +1,31 @@
+name: Generate SBOM
+description: Generates CycloneDX SBOM using CycloneDX PHP Composer plugin
+inputs:
+  output-file:
+    description: "Output filename for the SBOM"
+    required: false
+    default: "sbom.json"
+runs:
+  using: composite
+  steps:
+    - name: Allow CycloneDX plugin
+      shell: bash
+      run: composer config allow-plugins.cyclonedx/cyclonedx-php-composer true
+    - name: Install CycloneDX plugin
+      shell: bash
+      run: composer require --dev cyclonedx/cyclonedx-php-composer --ignore-platform-reqs
+    - name: Generate SBOM
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        echo "Generating SBOM for 'php' project..."
+        composer CycloneDX:make-sbom --output-file=${{ inputs.output-file }} --output-format=json --spec-version=1.5
+    - name: Validate SBOM presence
+      shell: bash
+      run: |
+        if [ ! -f "${{ inputs.output-file }}" ]; then
+          echo "Error: SBOM file not found"
+          exit 1
+        fi
+        
+        echo "SBOM file validated: ${{ inputs.output-file }}"

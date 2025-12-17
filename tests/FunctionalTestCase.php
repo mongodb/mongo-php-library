@@ -8,6 +8,7 @@ use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\CommandException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -435,14 +436,17 @@ abstract class FunctionalTestCase extends TestCase
     protected function skipIfSearchIndexIsNotSupported(): void
     {
         try {
-            $this->manager->executeReadCommand($this->getDatabaseName(), new Command([
-                'aggregate' => __METHOD__,
-                'pipeline' => [
-                    ['$search' => ['text' => ['query' => 'test', 'path' => 'field']]],
-                ],
-                'cursor' => new stdClass(),
+            $this->createCollection($this->getDatabaseName(), __METHOD__);
+            $this->manager->executeWriteCommand($this->getDatabaseName(), new Command([
+                'dropSearchIndex' => __METHOD__,
+                'name' => 'nonexistent-index',
             ]));
-        } catch (CommandException $exception) {
+        } catch (ServerException $exception) {
+            // Code 27 = Search index does not exist, which indicates that the feature is supported
+            if ($exception->getCode() === 27) {
+                return;
+            }
+
             self::markTestSkipped($exception->getMessage());
         }
     }

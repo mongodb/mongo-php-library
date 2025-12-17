@@ -21,8 +21,8 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Server;
-use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\SearchIndexInput;
 

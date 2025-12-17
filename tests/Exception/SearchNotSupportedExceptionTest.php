@@ -2,7 +2,6 @@
 
 namespace Exception;
 
-use MongoDB\Collection;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\SearchNotSupportedException;
@@ -14,7 +13,7 @@ class SearchNotSupportedExceptionTest extends FunctionalTestCase
     #[DoesNotPerformAssertions]
     public function testListSearchIndexesNotSupportedException(): void
     {
-        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+        $collection = $this->createCollection($this->getDatabaseName(), 'SearchNotSupportedException');
 
         try {
             $collection->listSearchIndexes();
@@ -27,10 +26,24 @@ class SearchNotSupportedExceptionTest extends FunctionalTestCase
     #[DoesNotPerformAssertions]
     public function testCreateSearchIndexNotSupportedException(): void
     {
-        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+        $collection = $this->createCollection($this->getDatabaseName(), 'SearchNotSupportedException');
 
         try {
             $collection->createSearchIndex(['mappings' => ['dynamic' => false]], ['name' => 'test-search-index']);
+        } catch (SearchNotSupportedException) {
+            // If an exception is thrown because Atlas Search is not supported,
+            // then the test is successful because it has the correct exception class.
+        }
+
+        try {
+            $collection->updateSearchIndex('test-search-index', ['mappings' => ['dynamic' => true]]);
+        } catch (SearchNotSupportedException) {
+            // If an exception is thrown because Atlas Search is not supported,
+            // then the test is successful because it has the correct exception class.
+        }
+
+        try {
+            $collection->dropSearchIndex('test-search-index');
         } catch (SearchNotSupportedException) {
             // If an exception is thrown because Atlas Search is not supported,
             // then the test is successful because it has the correct exception class.
@@ -39,7 +52,7 @@ class SearchNotSupportedExceptionTest extends FunctionalTestCase
 
     public function testOtherStageNotFound(): void
     {
-        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+        $collection = $this->createCollection($this->getDatabaseName(), 'SearchNotSupportedException');
 
         try {
             $collection->aggregate([

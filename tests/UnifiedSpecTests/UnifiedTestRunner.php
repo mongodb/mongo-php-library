@@ -32,6 +32,7 @@ use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotFalse;
+use function preg_match;
 use function preg_replace;
 use function sprintf;
 use function str_starts_with;

@@ -229,9 +229,7 @@ OUTPUT;
     #[Group('atlas')]
     public function testAtlasSearch(): void
     {
-        if (! $this->isAtlas()) {
-            $this->markTestSkipped('Atlas Search examples are only supported on MongoDB Atlas');
-        }
+        $this->skipIfSearchIndexIsNotSupported();
 
         $this->skipIfServerVersion('<', '7.0', 'Atlas Search examples require MongoDB 7.0 or later');
 

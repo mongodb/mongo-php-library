@@ -373,7 +373,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     #[DataProvider('provideIndexManagementTests')]
     public function testIndexManagement(UnifiedTestCase $test): void
     {
-        $this->skipIfAtlasSearchIndexIsNotSupported();
+        $this->skipIfSearchIndexIsNotSupported();
 
         if (! self::isEnterprise()) {
             self::markTestSkipped('Specific Atlas error messages are only available on Enterprise server');

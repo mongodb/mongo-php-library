@@ -31,7 +31,7 @@ class SearchIndexSpecTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->skipIfAtlasSearchIndexIsNotSupported();
+        $this->skipIfSearchIndexIsNotSupported();
     }
 
     /**

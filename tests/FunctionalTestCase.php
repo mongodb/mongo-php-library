@@ -432,7 +432,7 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    protected function skipIfAtlasSearchIndexIsNotSupported(): void
+    protected function skipIfSearchIndexIsNotSupported(): void
     {
         try {
             $this->manager->executeReadCommand($this->getDatabaseName(), new Command([

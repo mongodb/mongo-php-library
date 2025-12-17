@@ -5,7 +5,7 @@ namespace MongoDB\Exception;
 use MongoDB\Driver\Exception\ServerException;
 use Throwable;
 
-final class AtlasSearchNotSupportedException extends ServerException
+final class SearchNotSupportedException extends ServerException
 {
     /** @internal */
     public static function create(ServerException $e): self
@@ -16,7 +16,7 @@ final class AtlasSearchNotSupportedException extends ServerException
     }
 
     /** @internal */
-    public static function isAtlasSearchNotSupportedError(Throwable $e): bool
+    public static function isSearchNotSupportedError(Throwable $e): bool
     {
         if (! $e instanceof ServerException) {
             return false;

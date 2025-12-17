@@ -783,7 +783,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function testListSearchIndexesInheritTypeMap(): void
     {
-        $this->skipIfAtlasSearchIndexIsNotSupported();
+        $this->skipIfSearchIndexIsNotSupported();
 
         $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), ['typeMap' => ['root' => 'array']]);
 

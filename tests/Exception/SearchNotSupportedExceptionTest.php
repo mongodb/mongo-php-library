@@ -5,11 +5,11 @@ namespace Exception;
 use MongoDB\Collection;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
-use MongoDB\Exception\AtlasSearchNotSupportedException;
+use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Tests\Collection\FunctionalTestCase;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 
-class AtlasSearchNotSupportedExceptionTest extends FunctionalTestCase
+class SearchNotSupportedExceptionTest extends FunctionalTestCase
 {
     #[DoesNotPerformAssertions]
     public function testListSearchIndexesNotSupportedException(): void
@@ -18,7 +18,7 @@ class AtlasSearchNotSupportedExceptionTest extends FunctionalTestCase
 
         try {
             $collection->listSearchIndexes();
-        } catch (AtlasSearchNotSupportedException) {
+        } catch (SearchNotSupportedException) {
             // If an exception is thrown because Atlas Search is not supported,
             // then the test is successful because it has the correct exception class.
         }
@@ -31,7 +31,7 @@ class AtlasSearchNotSupportedExceptionTest extends FunctionalTestCase
 
         try {
             $collection->createSearchIndex(['mappings' => ['dynamic' => false]], ['name' => 'test-search-index']);
-        } catch (AtlasSearchNotSupportedException) {
+        } catch (SearchNotSupportedException) {
             // If an exception is thrown because Atlas Search is not supported,
             // then the test is successful because it has the correct exception class.
         }
@@ -47,7 +47,7 @@ class AtlasSearchNotSupportedExceptionTest extends FunctionalTestCase
             ]);
             self::fail('Expected ServerException was not thrown');
         } catch (ServerException $exception) {
-            self::assertNotInstanceOf(AtlasSearchNotSupportedException::class, $exception, $exception);
+            self::assertNotInstanceOf(SearchNotSupportedException::class, $exception, $exception);
         }
     }
 
@@ -57,7 +57,7 @@ class AtlasSearchNotSupportedExceptionTest extends FunctionalTestCase
             $this->manager->executeCommand($this->getDatabaseName(), new Command(['nonExistingCommand' => 1]));
             self::fail('Expected ServerException was not thrown');
         } catch (ServerException $exception) {
-            self::assertFalse(AtlasSearchNotSupportedException::isAtlasSearchNotSupportedError($exception));
+            self::assertFalse(SearchNotSupportedException::isSearchNotSupportedError($exception));
         }
     }
 }

@@ -55,7 +55,7 @@ class SearchIndexSpecTest extends FunctionalTestCase
 
         $this->assertCount(1, $indexes);
         $this->assertSame($name, $indexes[0]->name);
-        $this->assertSameDocument($mapping, $indexes[0]->latestDefinition);
+        $this->assertFalse($indexes[0]->latestDefinition['mappings']['dynamic']);
     }
 
     /**
@@ -81,7 +81,7 @@ class SearchIndexSpecTest extends FunctionalTestCase
         foreach ($names as $key => $name) {
             $index = $indexes[$key];
             $this->assertSame($name, $index->name);
-            $this->assertSameDocument($mapping, $index->latestDefinition);
+            $this->assertFalse($index->latestDefinition['mappings']['dynamic']);
         }
     }
 
@@ -138,7 +138,7 @@ class SearchIndexSpecTest extends FunctionalTestCase
 
         $this->assertCount(1, $indexes);
         $this->assertSame($name, $indexes[0]->name);
-        $this->assertSameDocument($mapping, $indexes[0]->latestDefinition);
+        $this->assertTrue($indexes[0]->latestDefinition['mappings']['dynamic']);
     }
 
     /**

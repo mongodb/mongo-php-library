@@ -19,44 +19,36 @@ class ScoreFusionStageTest extends PipelineTestCase
             Stage::scoreFusion(
                 input: [
                     'pipelines' => [
-                        'searchOne' => [
-                            [
-                                '$vectorSearch' => [
-                                    'index' => 'vector_index',
-                                    'path' => 'plot_embedding',
-                                    'queryVector' => [-0.0016261312, -0.028070757, -0.011342932],
-                                    'numCandidates' => 150,
-                                    'limit' => 10,
-                                ],
-                            ],
-                        ],
-                        'searchTwo' => [
-                            [
-                                '$search' => [
-                                    'index' => '<INDEX_NAME>',
-                                    'text' => [
-                                        'query' => '<QUERY_TERM>',
-                                        'path' => '<FIELD_NAME>',
-                                    ],
-                                ],
-                            ],
-                        ],
+                        'searchOne' => new Pipeline(
+                            Stage::vectorSearch(
+                                index: 'vector_index',
+                                path: 'plot_embedding',
+                                queryVector: [-0.0016261312, -0.028070757, -0.011342932],
+                                numCandidates: 150,
+                                limit: 10,
+                            ),
+                        ),
+                        'searchTwo' => new Pipeline(
+                            Stage::search(
+                                Search::text(
+                                    query: '<QUERY_TERM>',
+                                    path: '<FIELD_NAME>',
+                                ),
+                                index: '<INDEX_NAME>',
+                            ),
+                        ),
                     ],
                     'normalization' => 'sigmoid',
                 ],
                 combination: [
                     'method' => 'expression',
-                    'expression' => [
-                        '$sum' => [
-                            [
-                                '$multiply' => [
-                                    '$$searchOne',
-                                    10,
-                                ],
-                            ],
-                            '$$searchTwo',
-                        ],
-                    ],
+                    'expression' => Expression::sum(
+                        Expression::multiply(
+                            Expression::variable('searchOne'),
+                            10,
+                        ),
+                        Expression::variable('searchTwo'),
+                    ),
                 ],
                 scoreDetails: true,
             ),
@@ -64,10 +56,11 @@ class ScoreFusionStageTest extends PipelineTestCase
                 _id: 1,
                 title: 1,
                 plot: 1,
-                scoreDetails: ['$meta' => 'scoreDetails'],
+                scoreDetails: Expression::meta('scoreDetails'),
             ),
             Stage::limit(20),
         );
+
         $this->assertSamePipeline(Pipelines::ScoreFusionExample, $pipeline);
     }
 }

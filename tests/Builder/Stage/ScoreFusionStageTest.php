@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Builder\Stage;
 
+use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
+use MongoDB\Builder\Search;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\Builder\PipelineTestCase;
 

@@ -74,6 +74,13 @@ class UnifiedSpecTest extends FunctionalTestCase
         'sessions/snapshot-sessions: Aggregate operation with snapshot and snapshot time' => 'getSnapshotTime not implemented yet (PHPLIB-1725)',
         'sessions/snapshot-sessions: countDocuments operation with snapshot and snapshot time' => 'getSnapshotTime not implemented yet (PHPLIB-1725)',
         'sessions/snapshot-sessions: Mixed operation with snapshot and snapshotTime' => 'getSnapshotTime not implemented yet (PHPLIB-1725)',
+        'sessions/snapshot-sessions: Find operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
+        'sessions/snapshot-sessions: Distinct operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
+        'sessions/snapshot-sessions: Aggregate operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
+        'sessions/snapshot-sessions: countDocuments operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
+        'sessions/snapshot-sessions: Mixed operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
+        'sessions/snapshot-sessions: Write commands with snapshot session do not affect snapshot reads' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
+        'sessions/implicit sessions default causal consistency: afterClusterTime is not sent on retried read in implicit session when readConcern level is snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
     ];
 
     /** @var array<string, string> */

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.5.1@3f17a6b24a2dbe543e21408c2b19108cf6a355ef">
+<files psalm-version="6.14.2@bbd217fc98c0daa0a13aea2a7f119d03ba3fc9a0">
   <file src="examples/atlas_search.php">
     <MixedArgument>
       <code><![CDATA[$document['name']]]></code>
@@ -22,6 +22,11 @@
     <PossiblyInvalidArrayAccess>
       <code><![CDATA[$document['name']]]></code>
     </PossiblyInvalidArrayAccess>
+  </file>
+  <file src="examples/gridfs_stream.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[$id]]></code>
+    </ImplicitToStringCast>
   </file>
   <file src="examples/persistable.php">
     <LessSpecificReturnStatement>
@@ -218,6 +223,10 @@
     </UndefinedConstant>
   </file>
   <file src="src/ClientBulkWrite.php">
+    <InvalidAttribute>
+      <code><![CDATA[NoDiscard]]></code>
+      <code><![CDATA[NoDiscard]]></code>
+    </InvalidAttribute>
     <PossiblyInvalidArgument>
       <code><![CDATA[$document]]></code>
       <code><![CDATA[$replacement]]></code>
@@ -366,9 +375,6 @@
     <InvalidReturnType>
       <code><![CDATA[CursorInterface<TValue>]]></code>
     </InvalidReturnType>
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[CursorInterface<TValue>]]></code>
-    </LessSpecificImplementedReturnType>
     <MixedArgument>
       <code><![CDATA[$reply->cursor->nextBatch]]></code>
     </MixedArgument>
@@ -537,9 +543,6 @@
     <MixedMethodCall>
       <code><![CDATA[isInTransaction]]></code>
     </MixedMethodCall>
-    <MixedReturnStatement>
-      <code><![CDATA[$server->executeBulkWriteCommand($this->bulkWriteCommand, $options)]]></code>
-    </MixedReturnStatement>
   </file>
   <file src="src/Operation/Count.php">
     <MixedAssignment>

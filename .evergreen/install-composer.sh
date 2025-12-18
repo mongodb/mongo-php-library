@@ -38,9 +38,7 @@ php --ri mongodb
 
 install_composer
 
-# Remove psalm as it's not compatible with PHP 8.4: https://github.com/vimeo/psalm/pull/10928
-if [ "$PHP_VERSION" == "8.4" ]; then
-  php composer.phar remove --no-update --dev vimeo/psalm
-fi
+# Remove psalm as it's not used and it conflicts with the PHP version in use
+php composer.phar remove --no-update --dev vimeo/psalm
 
 php composer.phar update $COMPOSER_FLAGS

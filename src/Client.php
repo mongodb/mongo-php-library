@@ -46,7 +46,10 @@ use Stringable;
 
 use function array_diff_key;
 
-/** @psalm-import-type stage from Builder\Pipeline */
+/**
+ * @psalm-import-type stage from Builder\Pipeline
+ * @psalm-no-seal-properties
+ */
 class Client implements Stringable
 {
     public const DEFAULT_URI = 'mongodb://127.0.0.1/';

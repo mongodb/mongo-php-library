@@ -48,5 +48,8 @@
                 <directory name="examples" />
             </errorLevel>
         </RiskyTruthyFalsyComparison>
+
+        <MissingOverrideAttribute errorLevel="suppress" />
+        <ClassMustBeFinal errorLevel="info" />
     </issueHandlers>
 </psalm>

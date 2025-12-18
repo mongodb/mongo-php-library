@@ -58,6 +58,7 @@ use function is_array;
 use function is_bool;
 use function strlen;
 
+/** @psalm-no-seal-properties */
 class Database implements Stringable
 {
     private const DEFAULT_TYPE_MAP = [

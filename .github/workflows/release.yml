@@ -93,7 +93,7 @@ jobs:
       #
       # Preliminary checks done - setting up the environment
       #
-      
+
       - name: "Generate token and checkout repository"
         uses: mongodb-labs/drivers-github-tools/secure-checkout@v3
         with:
@@ -161,6 +161,15 @@ jobs:
           fi
         continue-on-error: true
 
+      - name: "Determine branch to merge up to"
+        id: get-next-branch
+        uses: alcaeus/automatic-merge-up-action/get-next-branch@1.0.1
+        with:
+          ref: ${{ github.ref_name }}
+          branchNamePattern: 'v<major>.<minor>'
+          devBranchNamePattern: 'v<major>.x'
+          ignoredBranches: ${{ vars.IGNORED_MERGE_UP_BRANCHES }}
+
       - name: "Commit SBOM changes"
         if: steps.sbom_status.outputs.HAS_CHANGES == 'true'
         run: |
@@ -169,6 +178,16 @@ jobs:
           git push
           echo "SBOM updated and committed" >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
+
+      - name: "Manually merge up changes"
+        if: steps.sbom_status.outputs.HAS_CHANGES == 'true' && steps.get-next-branch.outputs.hasNextBranch == 'true'
+        run: |
+          git checkout ${NEXT_BRANCH}
+          git merge --strategy=ours ${RELEASE_BRANCH}
+          git push origin ${NEXT_BRANCH}
+          git checkout ${RELEASE_BRANCH}
+        env:
+          NEXT_BRANCH: ${{ steps.get-next-branch.outputs.branchName }}
 
       - name: "Report SBOM status"
         run: |

@@ -43,9 +43,12 @@ final class SearchNotSupportedException extends ServerException
             // MongoDB 4 to 6
             40324 => match ($exception->getMessage()) {
                 'Unrecognized pipeline stage name: \'$listSearchIndexes\'' => true,
+                'Unrecognized pipeline stage name: \'$search\'' => true,
+                'Unrecognized pipeline stage name: \'$searchMeta\'' => true,
+                'Unrecognized pipeline stage name: \'$vectorSearch\'' => true,
                 default => false,
             },
-            // Not an Atlas Search error
+            // Not a Search error
             default => false,
         };
     }

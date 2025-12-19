@@ -24,6 +24,32 @@ class SearchNotSupportedExceptionTest extends FunctionalTestCase
     }
 
     #[DoesNotPerformAssertions]
+    public function testSearchStageNotSupportedException(): void
+    {
+        // The server returns an empty result if the search index does not exist.
+        // We don't need to create a search index for this test.
+        $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
+
+        try {
+            $collection->aggregate([
+                ['$search' => ['index' => 'default', 'text' => ['query' => 'test', 'path' => 'field']]],
+            ]);
+        } catch (SearchNotSupportedException) {
+            // If an exception is thrown because Atlas Search is not supported,
+            // then the test is successful because it has the correct exception class.
+        }
+
+        try {
+            $collection->aggregate([
+                ['$vectorSearch' => ['index' => 'default', 'queryVector' => [0.1, 0.2, 0.3], 'path' => 'embedding', 'numCandidates' => 5, 'limit' => 5]],
+            ]);
+        } catch (SearchNotSupportedException) {
+            // If an exception is thrown because Atlas Search is not supported,
+            // then the test is successful because it has the correct exception class.
+        }
+    }
+
+    #[DoesNotPerformAssertions]
     public function testSearchIndexManagementNotSupportedException(): void
     {
         $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());

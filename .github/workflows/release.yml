@@ -138,30 +138,8 @@ jobs:
           output-file: ${{ env.SBOM_FILE }}
         continue-on-error: true
 
-      - name: "Check for SBOM changes"
-        id: sbom_status
-        if: steps.generate-sbom.outcome == 'success'
-        run: |
-          JQ_NORMALIZER='del(.serialNumber) | del(.metadata.timestamp) | walk(if type == "object" and .timestamp then .timestamp = "TIMESTAMP_NORMALIZED" else . end)'
-
-          if ! git show HEAD:${{ env.SBOM_FILE }} > /dev/null 2>&1; then
-            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
-            echo "SBOM file is new"
-            exit 0
-          fi
-
-          if diff -q \
-             <(git show HEAD:${{ env.SBOM_FILE }} | jq -r "$JQ_NORMALIZER") \
-             <(cat ${{ env.SBOM_FILE }} | jq -r "$JQ_NORMALIZER"); then
-            echo "HAS_CHANGES=false" >> $GITHUB_OUTPUT
-            echo "No changes detected in SBOM"
-          else
-            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
-            echo "Changes detected in SBOM"
-          fi
-        continue-on-error: true
-
       - name: "Determine branch to merge up to"
+        if: steps.generate-sbom.outputs.HAS_CHANGES == 'true'
         id: get-next-branch
         uses: alcaeus/automatic-merge-up-action/get-next-branch@1.0.1
         with:
@@ -170,17 +148,8 @@ jobs:
           devBranchNamePattern: 'v<major>.x'
           ignoredBranches: ${{ vars.IGNORED_MERGE_UP_BRANCHES }}
 
-      - name: "Commit SBOM changes"
-        if: steps.sbom_status.outputs.HAS_CHANGES == 'true'
-        run: |
-          git add ${{ env.SBOM_FILE }}
-          git commit -m "chore: Update SBOM for release ${{ inputs.version }}"
-          git push
-          echo "SBOM updated and committed" >> $GITHUB_STEP_SUMMARY
-        continue-on-error: true
-
       - name: "Manually merge up changes"
-        if: steps.sbom_status.outputs.HAS_CHANGES == 'true' && steps.get-next-branch.outputs.hasNextBranch == 'true'
+        if: steps.generate-sbom.outputs.HAS_CHANGES == 'true' && steps.get-next-branch.outputs.hasNextBranch == 'true'
         run: |
           git checkout ${NEXT_BRANCH}
           git merge --strategy=ours ${RELEASE_BRANCH}
@@ -188,6 +157,15 @@ jobs:
           git checkout ${RELEASE_BRANCH}
         env:
           NEXT_BRANCH: ${{ steps.get-next-branch.outputs.branchName }}
+
+      - name: "Commit SBOM changes"
+        if: steps.generate-sbom.outputs.HAS_CHANGES == 'true'
+        run: |
+          git add ${{ env.SBOM_FILE }}
+          git commit -m "chore: Update SBOM for release ${{ inputs.version }}"
+          git push
+          echo "SBOM updated and committed" >> $GITHUB_STEP_SUMMARY
+        continue-on-error: true
 
       - name: "Report SBOM status"
         run: |

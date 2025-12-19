@@ -13,7 +13,7 @@ class SearchNotSupportedExceptionTest extends FunctionalTestCase
     #[DoesNotPerformAssertions]
     public function testListSearchIndexesNotSupportedException(): void
     {
-        $collection = $this->createCollection($this->getDatabaseName(), 'SearchNotSupportedException');
+        $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         try {
             $collection->listSearchIndexes();
@@ -24,9 +24,9 @@ class SearchNotSupportedExceptionTest extends FunctionalTestCase
     }
 
     #[DoesNotPerformAssertions]
-    public function testCreateSearchIndexNotSupportedException(): void
+    public function testSearchIndexManagementNotSupportedException(): void
     {
-        $collection = $this->createCollection($this->getDatabaseName(), 'SearchNotSupportedException');
+        $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         try {
             $collection->createSearchIndex(['mappings' => ['dynamic' => false]], ['name' => 'test-search-index']);
@@ -52,7 +52,7 @@ class SearchNotSupportedExceptionTest extends FunctionalTestCase
 
     public function testOtherStageNotFound(): void
     {
-        $collection = $this->createCollection($this->getDatabaseName(), 'SearchNotSupportedException');
+        $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         try {
             $collection->aggregate([

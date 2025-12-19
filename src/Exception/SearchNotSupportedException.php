@@ -20,13 +20,13 @@ final class SearchNotSupportedException extends ServerException
     }
 
     /** @internal */
-    public static function isSearchNotSupportedError(Throwable $e): bool
+    public static function isSearchNotSupportedError(Throwable $exception): bool
     {
-        if (! $e instanceof ServerException) {
+        if (! $exception instanceof ServerException) {
             return false;
         }
 
-        return match ($e->getCode()) {
+        return match ($exception->getCode()) {
             // MongoDB 8: Using Atlas Search Database Commands and the $listSearchIndexes aggregation stage requires additional configuration.
             31082 => true,
             // MongoDB 7: $listSearchIndexes stage is only allowed on MongoDB Atlas
@@ -34,9 +34,17 @@ final class SearchNotSupportedException extends ServerException
             // MongoDB 7-ent: Search index commands are only supported with Atlas.
             115 => true,
             // MongoDB 4 to 6, 7-community
-            59 => 'no such command: \'createSearchIndexes\'' === $e->getMessage(),
+            59 => match ($exception->getMessage()) {
+                'no such command: \'createSearchIndexes\'' => true,
+                'no such command: \'updateSearchIndex\'' => true,
+                'no such command: \'dropSearchIndex\'' => true,
+                default => false,
+            },
             // MongoDB 4 to 6
-            40324 => 'Unrecognized pipeline stage name: \'$listSearchIndexes\'' === $e->getMessage(),
+            40324 => match ($exception->getMessage()) {
+                'Unrecognized pipeline stage name: \'$listSearchIndexes\'' => true,
+                default => false,
+            },
             // Not an Atlas Search error
             default => false,
         };

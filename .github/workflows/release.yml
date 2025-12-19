@@ -91,13 +91,24 @@ jobs:
           git push origin ${RELEASE_BRANCH}
 
       #
-      # Preliminary checks done - generate SBOM before tagging
+      # Preliminary checks done - setting up the environment
       #
-      - name: Checkout repository (Base Branch)
-        uses: actions/checkout@v5
+      
+      - name: "Generate token and checkout repository"
+        uses: mongodb-labs/drivers-github-tools/secure-checkout@v3
         with:
-          ref: ${{ github.event.pull_request.base.ref || github.ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          app_id: ${{ vars.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          submodules: true
+          fetch-depth: 0
+      
+      - name: "Set up drivers-github-tools"
+        uses: mongodb-labs/drivers-github-tools/setup@v3
+        with:
+          aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
+          aws_region_name: ${{ vars.AWS_REGION_NAME }}
+          aws_secret_id: ${{ secrets.AWS_SECRET_ID }}
+
       - name: "Setup PHP environment"
         id: setup-php
         uses: ./.github/actions/setup
@@ -107,11 +118,15 @@ jobs:
           working-directory: '.'
         continue-on-error: true
 
+      #
+      # Preliminary checks and setup done - generate SBOM before tagging
+      #
+
       - name: "Generate/Update composer.lock"
         id: composer-lock
         run: |
           echo "Resolving dependencies and generating composer.lock..."
-          composer update --no-install --ignore-platform-reqs
+          composer update --no-install
           echo "composer.lock generated with resolved versions"
         continue-on-error: true
 
@@ -120,10 +135,7 @@ jobs:
         if: steps.composer-lock.outcome == 'success'
         uses: ./.github/actions/update-sbom
         with:
-          php-version: ${{ env.PHP_VERSION }}
-          working-directory: '.'
           output-file: ${{ env.SBOM_FILE }}
-          output-format: 'json'
         continue-on-error: true
 
       - name: "Check for SBOM changes"
@@ -152,33 +164,23 @@ jobs:
       - name: "Commit SBOM changes"
         if: steps.sbom_status.outputs.HAS_CHANGES == 'true'
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add ${{ env.SBOM_FILE }}
           git commit -m "chore: Update SBOM for release ${{ inputs.version }}"
           git push
-          echo "📦 SBOM updated and committed" >> $GITHUB_STEP_SUMMARY
+          echo "SBOM updated and committed" >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
 
       - name: "Report SBOM status"
         run: |
           if [[ "${{ steps.generate-sbom.outcome }}" == "success" ]]; then
-            echo "✅ SBOM generation completed successfully" >> $GITHUB_STEP_SUMMARY
+            echo "SBOM generation completed successfully" >> $GITHUB_STEP_SUMMARY
           else
-            echo "⚠️ SBOM generation skipped or failed - continuing with release" >> $GITHUB_STEP_SUMMARY
+            echo "SBOM generation skipped or failed - continuing with release" >> $GITHUB_STEP_SUMMARY
           fi
 
       #
       # Preliminary checks done - commence the release process
       #
-
-      - name: "Set up drivers-github-tools"
-        uses: mongodb-labs/drivers-github-tools/setup@v3
-        with:
-          aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
-          aws_region_name: ${{ vars.AWS_REGION_NAME }}
-          aws_secret_id: ${{ secrets.AWS_SECRET_ID }}
-
       - name: "Prepare release message"
         run: |
           cat > release-message <<'EOL'

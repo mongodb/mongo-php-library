@@ -334,6 +334,8 @@ class Prose25_LookupTest extends FunctionalTestCase
 
     public function testCase8_CsfleJoinsQeFails(): void
     {
+        $this->skipIfServerVersion('>', '8.2.0', 'Test must be updated for 8.2+ (PHPLIB-1727)');
+
         $this->skipIfServerVersion('<', '8.1.0', 'Lookup test case requires server version 8.1.0 or later');
         $this->skipIfClientSideEncryptionIsNotSupported();
 

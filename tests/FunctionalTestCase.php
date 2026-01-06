@@ -14,6 +14,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\ServerApi;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
+use MongoDB\Operation\CreateEncryptedCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\ListCollections;
 use stdClass;
@@ -258,6 +259,9 @@ abstract class FunctionalTestCase extends TestCase
      * dropped again during tearDown(). If the collection already exists, it
      * is dropped and recreated.
      *
+     * This method supports creation of encrypted collections (as indicated by
+     * the "encryptedFields" option).
+     *
      * A majority write concern is applied by default to ensure that the
      * transaction can acquire the required locks.
      * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
@@ -266,17 +270,14 @@ abstract class FunctionalTestCase extends TestCase
      */
     protected function createCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        // See: https://jira.mongodb.org/browse/PHPLIB-1145
-        if (isset($options['encryptedFields'])) {
-            throw new InvalidArgumentException('The "encryptedFields" option is not supported by createCollection(). Time to refactor!');
-        }
-
         // Pass only relevant options to drop the collection in case it already exists
         $dropOptions = array_intersect_key($options, ['writeConcern' => 1, 'encryptedFields' => 1]);
         $collection = $this->dropCollection($databaseName, $collectionName, $dropOptions);
 
         $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
-        $operation = new CreateCollection($databaseName, $collectionName, $options);
+        $operation = isset($options['encryptedFields'])
+            ? new CreateEncryptedCollection($databaseName, $collectionName, $options)
+            : new CreateCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
 
         return $collection;

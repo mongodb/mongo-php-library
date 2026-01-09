@@ -8,7 +8,7 @@
 - Focus on code quality, potential issues, and improvements not mentioned in the PR
 
 ### PHP Version and Type Requirements
-- Code must support **PHP 8.1 and newer**
+- The minimum PHP version supported is in `./composer.json`. Code must support **this version and newer**
 - Use **full type declarations** wherever possible
 - Leverage PHP 8.1+ features when appropriate (enums, readonly properties, intersection types, etc.)
 - Use **PHPDoc blocks** to supplement native types where PHP limitations exist:
@@ -22,7 +22,7 @@
 - Private/protected methods should also be fully typed
 - Use strict scalar type declarations (`declare(strict_types=1)`)
 - Prefer constructor property promotion when applicable
-- Use named arguments for better readability in complex method calls
+- Use named arguments for better readability in complex method calls to functions inside this package
 
 ### MongoDB Library Specific
 - Check for proper error handling patterns
@@ -34,7 +34,7 @@
 ### What to Flag in Reviews
 - Missing type declarations that could be added
 - Opportunities to use newer PHP features
-- Code that might not work with the minimum PHP 8.1 requirement
+- Code that might not work with the minimum PHP version requirement
 - Missing PHPDoc for complex types or generics
 - Inconsistent coding standards
 - Potential performance or security issues not mentioned in PR description

@@ -20,6 +20,9 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
         __DIR__ . '/tools',
     ])
+    // Error with StaticCallOnNonStaticToInstanceCallRector
+    // https://github.com/rectorphp/rector/issues/9608
+    ->withSkipPath(__DIR__ . '/tests/Builder/BuilderEncoderTest.php')
     ->withPhpSets(php80: true)
     ->withComposerBased(phpunit: true)
     // All classes are public API by default, unless marked with @internal.

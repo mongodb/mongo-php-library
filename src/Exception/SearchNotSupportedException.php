@@ -36,8 +36,11 @@ final class SearchNotSupportedException extends ServerException
             // MongoDB 4 to 6, 7-community
             59 => match ($exception->getMessage()) {
                 'no such command: \'createSearchIndexes\'' => true,
+                'no such command: createSearchIndexes' => true,
                 'no such command: \'updateSearchIndex\'' => true,
+                'no such command: updateSearchIndex' => true,
                 'no such command: \'dropSearchIndex\'' => true,
+                'no such command: dropSearchIndex' => true,
                 default => false,
             },
             // MongoDB 4 to 6

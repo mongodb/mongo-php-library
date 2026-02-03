@@ -15,7 +15,6 @@
       - ".replicaset .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
       - ".sharded .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
       - ".loadbalanced .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
-      - "test-atlas-data-lake"
 
   - name: test-debian12-php-%phpVersion%-phpc-next-minor
     tags: ["test", "debian", "x64", "php%phpVersion%"]

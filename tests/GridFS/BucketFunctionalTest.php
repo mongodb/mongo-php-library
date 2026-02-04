@@ -893,7 +893,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
             $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
             $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
-            $gridfs = $database->selectGridFSBucket();
+            $gridfs = $database->getGridFSBucket();
             $stream = $gridfs->openUploadStream('hello.txt');
             fwrite($stream, 'Hello MongoDB!');
             PHP;
@@ -936,7 +936,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
             $client = MongoDB\Tests\FunctionalTestCase::createTestClient();
             $database = $client->selectDatabase(getenv('MONGODB_DATABASE') ?: 'phplib_test');
-            $database->selectGridFSBucket()->registerGlobalStreamWrapperAlias('alias');
+            $database->getGridFSBucket()->registerGlobalStreamWrapperAlias('alias');
             $stream = fopen('gridfs://alias/hello.txt', 'w');
             fwrite($stream, 'Hello MongoDB!');
             PHP;

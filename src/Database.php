@@ -423,6 +423,25 @@ class Database implements Stringable
     }
 
     /**
+     * Returns a GridFS bucket instance.
+     *
+     * @see Bucket::__construct() for supported options
+     * @param array $options Bucket constructor options
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     */
+    public function getGridFSBucket(array $options = []): Bucket
+    {
+        $options += [
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
+            'writeConcern' => $this->writeConcern,
+        ];
+
+        return new Bucket($this->manager, $this->databaseName, $options);
+    }
+
+    /**
      * Return the Manager.
      */
     public function getManager(): Manager
@@ -576,14 +595,7 @@ class Database implements Stringable
      */
     public function selectGridFSBucket(array $options = []): Bucket
     {
-        $options += [
-            'readConcern' => $this->readConcern,
-            'readPreference' => $this->readPreference,
-            'typeMap' => $this->typeMap,
-            'writeConcern' => $this->writeConcern,
-        ];
-
-        return new Bucket($this->manager, $this->databaseName, $options);
+        return $this->getGridFSBucket($options);
     }
 
     /**

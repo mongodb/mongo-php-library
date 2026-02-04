@@ -476,7 +476,7 @@ final class Context
             $options = self::prepareBucketOptions((array) $o->bucketOptions);
         }
 
-        $this->entityMap->set($id, $database->selectGridFSBucket($options), $databaseId);
+        $this->entityMap->set($id, $database->getGridFSBucket($options), $databaseId);
     }
 
     private static function getEnv(string $name): string

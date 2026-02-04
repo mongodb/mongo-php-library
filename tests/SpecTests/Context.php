@@ -398,7 +398,7 @@ final class Context
 
     public function selectGridFSBucket($databaseName, $bucketName, array $bucketOptions = [])
     {
-        return $this->selectDatabase($databaseName)->selectGridFSBucket($this->prepareGridFSBucketOptions($bucketOptions, $bucketName));
+        return $this->selectDatabase($databaseName)->getGridFSBucket($this->prepareGridFSBucketOptions($bucketOptions, $bucketName));
     }
 
     private static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client

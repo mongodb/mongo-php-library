@@ -6,6 +6,9 @@ use MongoDB\ClientBulkWrite;
 use MongoDB\Driver\Exception\InvalidArgumentException;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 
+use function phpversion;
+use function version_compare;
+
 /**
  * Prose test 13: MongoClient.bulkWrite returns an error if auto-encryption is configured
  *
@@ -16,6 +19,10 @@ class Prose13_BulkWriteUnsupportedForAutoEncryptionTest extends FunctionalTestCa
     public function testErrorIfAutoEncryptionIsConfigured(): void
     {
         $this->skipIfServerVersion('<', '8.0', 'bulkWrite command is not supported');
+
+        if (version_compare(phpversion('mongodb'), '2.2', '>=')) {
+            $this->markTestSkipped('MongoDB extension 2.2.0+ supports auto encryption with bulkWrite');
+        }
 
         $this->skipIfClientSideEncryptionIsNotSupported();
 

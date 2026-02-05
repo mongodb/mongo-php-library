@@ -14,7 +14,7 @@
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "2.1.0"
+          EXTENSION_VERSION: "2.2.0"
       - func: "upload extension"
   - name: "build-php-%phpVersion%-next-stable"
     tags: ["build", "php%phpVersion%", "next-stable", "pr", "tag"]

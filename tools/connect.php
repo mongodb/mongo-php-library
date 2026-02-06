@@ -38,21 +38,17 @@ function getHostsFromSrv(string $uri): array
         throw new RuntimeException('SRV URI must contain a host');
     }
 
-    $domain = $parsed['host'];
-    $srvRecord = '_mongodb._tcp.' . $domain;
+    $srvRecord = '_mongodb._tcp.' . $parsed['host'];
 
     $records = dns_get_record($srvRecord, DNS_SRV);
     if ($records === false || count($records) === 0) {
         throw new RuntimeException('No SRV records found for ' . $srvRecord);
     }
 
-    $hosts = [];
-    foreach ($records as $record) {
-        $port = $record['port'] ?? 27017;
-        $hosts[] = $record['target'] . ':' . $port;
-    }
-
-    return $hosts;
+    return array_map(
+        static fn (array $record) => $record['target'] . ':' . ($record['port'] ?? 27017),
+        $records,
+    );
 }
 
 /** @param resource $stream */
@@ -167,7 +163,7 @@ $hosts = getHosts($uri);
 
 if (str_starts_with($uri, 'mongodb+srv://')) {
     // For mongodb+srv, SSL is always true unless explicitly set to false
-    $ssl = stripos(parse_url($uri, PHP_URL_QUERY) ?? '', 'ssl=false') !== false;
+    $ssl = stripos(parse_url($uri, PHP_URL_QUERY) ?? '', 'ssl=false') === false;
 } else {
     // For other connection strings, SSL is true if indicated
     $ssl = stripos(parse_url($uri, PHP_URL_QUERY) ?? '', 'ssl=true') !== false;

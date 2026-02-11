@@ -28,8 +28,8 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
         $this->assertEquals($indexName, $index->getName());
         $this->assertTrue($index->is2dSphere());
 
-        // MongoDB 3.2+ reports index version 3
-        $this->assertEquals(3, $index['2dsphereIndexVersion']);
+        // MongoDB 3.2+ reports index version 3, MongoDB 8.3+ reports version 4
+        $this->assertGreaterThanOrEqual(3, $index['2dsphereIndexVersion']);
     }
 
     public function testIsText(): void

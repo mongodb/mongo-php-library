@@ -19,6 +19,9 @@ class Prose4_RetryBackoffIsEnforcedTest extends FunctionalTestCase
         $client = self::createTestClient(static::getUri(true));
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
 
+        // Create collection before transaction, as MongoDB 4.2 doesn't allow creating collections in transactions
+        $collection->insertOne([]);
+
         $callback = static function (Session $session) use ($collection): void {
             $collection->insertOne([], ['session' => $session]);
         };

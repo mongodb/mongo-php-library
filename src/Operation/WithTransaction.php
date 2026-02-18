@@ -19,8 +19,13 @@ use function usleep;
 /** @internal */
 final class WithTransaction
 {
+    /** Initial backoff time in ms */
     private const BACKOFF_INITIAL = 5;
+
+    /** Maximum backoff time in ms */
     private const BACKOFF_MAX = 500;
+
+    /** Default transaction timeout in seconds */
     private const MAX_TIME = 120;
 
     /** @var callable */
@@ -117,7 +122,7 @@ final class WithTransaction
     }
 
     /**
-     * Checks if the given exception is an error that allows for retrying the connection
+     * Checks if the given exception is an error that allows for retrying the transaction
      *
      * This method is called when an error happens during the transaction callback. If the error is not retryable, or if
      * the time limit for retries has been exceeded, it re-throws the caught exception to break out of the transaction
@@ -151,7 +156,7 @@ final class WithTransaction
      * This method attempts to commit the transaction, retrying the commit if an unknown commit result was encountered.
      * If the transaction was committed successfully, it returns true. If a transient transaction error has occurred and
      * the time limit for retries has not been exceeded, it returns false to indicate that the entire transaction should
-     * be retried. If a none-retryable error is encountered, or if the time limit for retries has been exceeded, it
+     * be retried. If a non-retryable error is encountered, or if the time limit for retries has been exceeded, it
      * throws the last exception encountered to break out of the transaction loop.
      *
      * @return bool Returns true if the transaction was successfully committed, or false if the transaction should be retried

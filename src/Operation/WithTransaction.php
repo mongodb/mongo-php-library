@@ -10,9 +10,9 @@ use Throwable;
 
 use function call_user_func;
 use function floor;
-use function getrandmax;
 use function min;
-use function rand;
+use function mt_getrandmax;
+use function random_int;
 use function time;
 use function usleep;
 
@@ -209,9 +209,9 @@ final class WithTransaction
         }
 
         // Jitter is a random float from [0, 1)
-        // Since rand will return an int from 0 to getrandmax(), we can divide the result by getrandmax() + 1 to get a
-        // float in the range [0, 1)
-        return rand() / (getrandmax() + 1);
+        // Since rand will return an int from 0 to mt_getrandmax(), we can divide the result by mt_getrandmax() + 1 to
+        // get a float in the range [0, 1)
+        return random_int(0, mt_getrandmax()) / (mt_getrandmax() + 1);
     }
 
     /**

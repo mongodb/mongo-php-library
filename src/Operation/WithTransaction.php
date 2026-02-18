@@ -2,6 +2,7 @@
 
 namespace MongoDB\Operation;
 
+use Closure;
 use Exception;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Session;
@@ -24,6 +25,9 @@ final class WithTransaction
 
     /** @var callable */
     private $callback;
+
+    /** Used to inject a custom jitter generator for tests */
+    private ?Closure $jitterGenerator = null;
 
     /**
      * @see Session::startTransaction for supported transaction options
@@ -195,6 +199,10 @@ final class WithTransaction
 
     private function getJitter(): float
     {
+        if ($this->jitterGenerator) {
+            return ($this->jitterGenerator)();
+        }
+
         // Jitter is a random float from [0, 1)
         // Since rand will return an int from 0 to getrandmax(), we can divide the result by getrandmax() + 1 to get a
         // float in the range [0, 1)

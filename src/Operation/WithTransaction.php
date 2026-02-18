@@ -31,7 +31,11 @@ final class WithTransaction
     /** @var callable */
     private $callback;
 
-    /** Used to inject a custom jitter generator for tests */
+    /**
+     * Used to inject a custom jitter generator for tests
+     *
+     * @var (Closure():float)|null
+     */
     private ?Closure $jitterGenerator = null;
 
     /**

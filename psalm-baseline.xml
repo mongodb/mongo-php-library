@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.14.2@bbd217fc98c0daa0a13aea2a7f119d03ba3fc9a0">
+<files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
   <file src="examples/atlas_search.php">
     <MixedArgument>
       <code><![CDATA[$document['name']]]></code>
@@ -210,12 +210,6 @@
       <code><![CDATA[$queries[$fieldPath]]]></code>
       <code><![CDATA[$query]]></code>
     </MixedAssignment>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[count($queriesOrArrayOfQueries) === 1 &&
-            isset($queriesOrArrayOfQueries[0]) &&
-            is_array($queriesOrArrayOfQueries[0]) &&
-            count($queriesOrArrayOfQueries[0]) > 0]]></code>
-    </RedundantConditionGivenDocblockType>
     <UndefinedConstant>
       <code><![CDATA[$query::NAME]]></code>
       <code><![CDATA[$query::NAME]]></code>
@@ -759,6 +753,14 @@
       <code><![CDATA[$this->changeStreamOptions['resumeAfter']]]></code>
       <code><![CDATA[$this->changeStreamOptions['startAfter']]]></code>
     </MixedReturnStatement>
+  </file>
+  <file src="src/Operation/WithTransaction.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->getJitter() * min(self::BACKOFF_INITIAL * (1.5 ** ($transactionAttempt - 1)), self::BACKOFF_MAX)]]></code>
+      <code><![CDATA[1.5 ** ($transactionAttempt - 1)]]></code>
+      <code><![CDATA[self::BACKOFF_INITIAL * (1.5 ** ($transactionAttempt - 1))]]></code>
+      <code><![CDATA[time() + ($backoffMs / 1000)]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/UpdateResult.php">
     <MixedAssignment>

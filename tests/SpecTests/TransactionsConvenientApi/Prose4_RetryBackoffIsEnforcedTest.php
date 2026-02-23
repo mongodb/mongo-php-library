@@ -16,7 +16,7 @@ class Prose4_RetryBackoffIsEnforcedTest extends FunctionalTestCase
     {
         $this->skipIfTransactionsAreNotSupported();
 
-        $client = self::createTestClient(static::getUri(true));
+        $client = self::createTestClient(static::getUri());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
 
         // Create collection before transaction, as MongoDB 4.2 doesn't allow creating collections in transactions

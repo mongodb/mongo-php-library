@@ -47,8 +47,8 @@ class WithTransactionTest extends TestCase
         $operation = new WithTransaction(fn () => 0);
 
         $method = new ReflectionMethod($operation, 'computeBackoffMs');
-        $first = $method->invoke($operation, 5);
-        $second = $method->invoke($operation, 5);
+        $first = $method->invoke($operation, 13);
+        $second = $method->invoke($operation, 13);
 
         $this->assertNotSame($first, $second, 'computeBackoffMs() multiplies backoff with a random value');
     }

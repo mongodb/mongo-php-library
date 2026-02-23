@@ -10,10 +10,10 @@ use Throwable;
 
 use function call_user_func;
 use function floor;
+use function hrtime;
 use function min;
 use function mt_getrandmax;
 use function random_int;
-use function time;
 use function usleep;
 
 /** @internal */
@@ -73,7 +73,7 @@ final class WithTransaction
      */
     public function execute(Session $session): void
     {
-        $startTime = time();
+        $startTime = hrtime(true);
         $transactionAttempt = 0;
 
         while (true) {
@@ -226,6 +226,7 @@ final class WithTransaction
      */
     private function isTransactionTimeLimitExceeded(int $startTime, int $backoffMs = 0): bool
     {
-        return time() + ($backoffMs / 1000) - $startTime >= self::MAX_TIME;
+        // hrtime returns nanoseconds, so convert the backoff and maximum time accordingly
+        return hrtime(true) + ($backoffMs * 1e6) - $startTime >= self::MAX_TIME * 1e9;
     }
 }

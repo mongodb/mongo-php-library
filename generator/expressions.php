@@ -134,6 +134,10 @@ return $expressions + [
         'returnType' => Type\Sort::class,
         'acceptedTypes' => [Type\Sort::class],
     ],
+    'update' => [
+        'returnType' => Type\UpdateInterface::class,
+        'acceptedTypes' => [Type\UpdateInterface::class, ...$bsonTypes['object']],
+    ],
 
     // @todo add enum values
     'granularity' => [
@@ -166,6 +170,10 @@ return $expressions + [
         'acceptedTypes' => [...$bsonTypes['object']],
     ],
     'geoPoint' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
+    ],
+    'bitwiseOperation' => [
+        // {and|or|xor: [<expression>, <expression>, ...]}
         'acceptedTypes' => [...$bsonTypes['object']],
     ],
 

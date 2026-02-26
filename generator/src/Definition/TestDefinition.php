@@ -12,10 +12,12 @@ final class TestDefinition
 {
     public function __construct(
         public string $name,
-        /** @var list<object> */
-        public array $pipeline,
         public string|null $link = null,
+        /** @var list<object> */
+        public array|null $pipeline = null,
+        public array|\stdClass|null $filter = null,
+        public array|\stdClass|null $update = null,
     ) {
-        assert(array_is_list($pipeline), sprintf('Argument "%s" pipeline must be a list', $name));
+        assert(null === $this->pipeline || array_is_list($pipeline), sprintf('Argument "%s" pipeline must be a list', $name));
     }
 }

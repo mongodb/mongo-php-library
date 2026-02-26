@@ -97,6 +97,12 @@ class OperatorTestGenerator extends OperatorGenerator
         $class->setComment('Test ' . $operator->name . ' ' . basename($definition->configFiles));
 
         foreach ($operator->tests as $test) {
+            // Skip tests for update operators (they have filter/update structure)
+            // These tests are meant for pipeline operators only
+            if ($test->pipeline === null) {
+                continue;
+            }
+
             $testName = 'test' . str_replace([' ', '-'], '', ucwords(str_replace('$', '', $test->name)));
             $caseName = str_replace([' ', '-'], '', ucwords(str_replace('$', '', $operator->name . ' ' . $test->name)));
 

@@ -70,4 +70,16 @@ return [
             OperatorTestGenerator::class,
         ],
     ],
+
+    // Update Operators
+    [
+        'configFiles' => __DIR__ . '/mql-specifications/definitions/update',
+        'namespace' => 'MongoDB\\Builder\\Update',
+        'classNameSuffix' => 'Operator',
+        'generators' => [
+            OperatorClassGenerator::class,
+            OperatorFactoryGenerator::class,
+            OperatorTestGenerator::class,
+        ],
+    ],
 ];

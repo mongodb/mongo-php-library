@@ -421,12 +421,9 @@ trait FactoryTrait
     /**
      * Returns an array of scalar values that correspond to specified percentile values.
      * New in MongoDB 7.0.
-     *
      * This operator is available as an accumulator in these stages:
      * $group
-     *
      * $setWindowFields
-     *
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
@@ -545,7 +542,6 @@ trait FactoryTrait
     /**
      * Returns the top element within a group according to the specified sort order.
      * New in MongoDB 5.2.
-     *
      * Available in the $group and $setWindowFields stages.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/
@@ -562,7 +558,6 @@ trait FactoryTrait
     /**
      * Returns an aggregation of the top n fields within a group, according to the specified sort order.
      * New in MongoDB 5.2.
-     *
      * Available in the $group and $setWindowFields stages.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/

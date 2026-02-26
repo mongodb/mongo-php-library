@@ -17,6 +17,6 @@ if (!file_exists(__DIR__ . '/mql-specifications')) {
 require __DIR__ . '/vendor/autoload.php';
 
 $application = new Application();
-$application->addCommand(new GenerateCommand(dirname(__DIR__), __DIR__));
+$application->add(new GenerateCommand(__DIR__ . '/../', __DIR__));
 $application->setDefaultCommand('generate');
 $application->run();

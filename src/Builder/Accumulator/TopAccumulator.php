@@ -21,7 +21,6 @@ use stdClass;
 /**
  * Returns the top element within a group according to the specified sort order.
  * New in MongoDB 5.2.
- *
  * Available in the $group and $setWindowFields stages.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/

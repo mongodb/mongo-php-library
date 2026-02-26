@@ -1368,12 +1368,9 @@ trait FactoryTrait
     /**
      * Returns an array of scalar values that correspond to specified percentile values.
      * New in MongoDB 7.0.
-     *
      * This operator is available as an accumulator in these stages:
      * $group
-     *
      * $setWindowFields
-     *
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/

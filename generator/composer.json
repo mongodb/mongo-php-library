@@ -14,11 +14,11 @@
     },
     "require": {
         "mongodb/mongodb": "@dev",
-        "nette/php-generator": "^4.1.5",
+        "nette/php-generator": "^4.2",
         "nikic/php-parser": "^5",
-        "symfony/console": "^7",
-        "symfony/finder": "^7",
-        "symfony/yaml": "^7"
+        "symfony/console": "^7.4",
+        "symfony/finder": "^7.4",
+        "symfony/yaml": "^7.4"
     },
     "license": "Apache-2.0",
     "autoload": {

@@ -4,3 +4,6 @@
 [submodule "specifications"]
 	path = tests/specifications
 	url = https://github.com/mongodb/specifications
+[submodule "generator/mql-specifications"]
+	path = generator/mql-specifications
+	url = https://github.com/mongodb/mql-specifications

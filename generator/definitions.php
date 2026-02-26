@@ -12,7 +12,7 @@ use MongoDB\CodeGenerator\OperatorTestGenerator;
 return [
     // Aggregation Pipeline Stages
     [
-        'configFiles' => __DIR__ . '/stage',
+        'configFiles' => __DIR__ . '/mql-specifications/definitions/stage',
         'namespace' => 'MongoDB\\Builder\\Stage',
         'classNameSuffix' => 'Stage',
         'generators' => [
@@ -25,7 +25,7 @@ return [
 
     // Aggregation Pipeline Accumulator and Window Operators
     [
-        'configFiles' => __DIR__ . '/accumulator',
+        'configFiles' => __DIR__ . '/mql-specifications/definitions/accumulator',
         'namespace' => 'MongoDB\\Builder\\Accumulator',
         'classNameSuffix' => 'Accumulator',
         'generators' => [
@@ -37,7 +37,7 @@ return [
 
     // Aggregation Pipeline Expression
     [
-        'configFiles' => __DIR__ . '/expression',
+        'configFiles' => __DIR__ . '/mql-specifications/definitions/expression',
         'namespace' => 'MongoDB\\Builder\\Expression',
         'classNameSuffix' => 'Operator',
         'generators' => [
@@ -49,7 +49,7 @@ return [
 
     // Query Operators
     [
-        'configFiles' => __DIR__ . '/query',
+        'configFiles' => __DIR__ . '/mql-specifications/definitions/query',
         'namespace' => 'MongoDB\\Builder\\Query',
         'classNameSuffix' => 'Operator',
         'generators' => [
@@ -61,7 +61,7 @@ return [
 
     // Search Operators
     [
-        'configFiles' => __DIR__ . '/search',
+        'configFiles' => __DIR__ . '/mql-specifications/definitions/search',
         'namespace' => 'MongoDB\\Builder\\Search',
         'classNameSuffix' => 'Operator',
         'generators' => [

@@ -145,7 +145,7 @@ class OperatorTestGenerator extends OperatorGenerator
                 'bson_regex' => new Regex(...(array) $value),
                 'bson_int128' => new Int64($value),
                 'bson_decimal128' => new Decimal128($value),
-                'bson_utcdatetime' => new UTCDateTime(is_numeric($value) ? $value : new DateTimeImmutable($value)),
+                'bson_utcdatetime' => new UTCDateTime(is_numeric($value) ? (int) $value : new DateTimeImmutable($value)),
                 'bson_binary' => new Binary(base64_decode($value)),
                 'bson_objectId' => new ObjectId($value),
                 'bson_uuid' => new Binary(hex2bin(str_replace('-', '', $value)), Binary::TYPE_UUID),

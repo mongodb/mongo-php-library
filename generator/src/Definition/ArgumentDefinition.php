@@ -28,6 +28,7 @@ final class ArgumentDefinition
         int|null $variadicMin = null,
         public mixed $default = null,
         public bool $mergeObject = false,
+        public string $minVersion = '',
     ) {
         assert($this->optional === false || $this->default === null, 'Optional arguments cannot have a default value');
         if (is_array($type)) {

@@ -35,6 +35,7 @@ final class OperatorDefinition
         public bool $wrapObject = true,
         array $arguments = [],
         array $tests = [],
+        public string $minVersion = '',
     ) {
         $this->encode = match ($encode) {
             'single' => Encode::Single,

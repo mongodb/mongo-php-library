@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\InputStageInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
-use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Returns information on active and/or dormant operations for the MongoDB deployment. To run, use the db.aggregate() method.
@@ -19,7 +19,7 @@ use MongoDB\Builder\Type\StageInterface;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/
  * @internal
  */
-final class CurrentOpStage implements StageInterface, OperatorInterface
+final class CurrentOpStage implements InputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$currentOp';

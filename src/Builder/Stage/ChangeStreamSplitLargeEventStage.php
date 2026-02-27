@@ -10,7 +10,7 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
-use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Builder\Type\OutputStageInterface;
 
 /**
  * Splits large change stream events that exceed 16 MB into smaller fragments returned in a change stream cursor.
@@ -21,7 +21,7 @@ use MongoDB\Builder\Type\StageInterface;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/
  * @internal
  */
-final class ChangeStreamSplitLargeEventStage implements StageInterface, OperatorInterface
+final class ChangeStreamSplitLargeEventStage implements OutputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$changeStreamSplitLargeEvent';

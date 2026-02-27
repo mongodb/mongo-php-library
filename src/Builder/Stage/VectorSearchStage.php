@@ -10,11 +10,11 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\InputStageInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
-use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -29,7 +29,7 @@ use function is_array;
  * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/
  * @internal
  */
-final class VectorSearchStage implements StageInterface, OperatorInterface
+final class VectorSearchStage implements InputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$vectorSearch';

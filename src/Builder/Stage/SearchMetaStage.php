@@ -11,10 +11,10 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\InputStageInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\SearchOperatorInterface;
-use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
 /**
@@ -26,7 +26,7 @@ use stdClass;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/
  * @internal
  */
-final class SearchMetaStage implements StageInterface, OperatorInterface
+final class SearchMetaStage implements InputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$searchMeta';

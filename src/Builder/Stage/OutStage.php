@@ -12,7 +12,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
-use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Builder\Type\OutputStageInterface;
 use stdClass;
 
 /**
@@ -21,7 +21,7 @@ use stdClass;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
  * @internal
  */
-final class OutStage implements StageInterface, OperatorInterface
+final class OutStage implements OutputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
     public const NAME = '$out';

@@ -15,7 +15,7 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
-use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Builder\Type\OutputStageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -29,7 +29,7 @@ use function is_array;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
  * @internal
  */
-final class MergeStage implements StageInterface, OperatorInterface
+final class MergeStage implements OutputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$merge';

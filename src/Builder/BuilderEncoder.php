@@ -14,6 +14,7 @@ use MongoDB\Builder\Encoder\OperatorEncoder;
 use MongoDB\Builder\Encoder\OutputWindowEncoder;
 use MongoDB\Builder\Encoder\PipelineEncoder;
 use MongoDB\Builder\Encoder\QueryEncoder;
+use MongoDB\Builder\Encoder\UpdateEncoder;
 use MongoDB\Builder\Encoder\VariableEncoder;
 use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Type\CombinedFieldQuery;
@@ -59,6 +60,7 @@ final class BuilderEncoder implements Encoder
 
         $this->encoders = $encoders + [
             Pipeline::class => new PipelineEncoder($self),
+            Update::class => new UpdateEncoder($self),
             Variable::class => new VariableEncoder(),
             DictionaryInterface::class => new DictionaryEncoder(),
             FieldPathInterface::class => new FieldPathEncoder(),

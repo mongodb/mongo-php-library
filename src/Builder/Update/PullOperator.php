@@ -11,6 +11,7 @@ namespace MongoDB\Builder\Update;
 use DateTimeInterface;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\UpdateInterface;
 use MongoDB\Exception\InvalidArgumentException;
@@ -30,14 +31,15 @@ final class PullOperator implements UpdateInterface, OperatorInterface
     public const NAME = '$pull';
     public const PROPERTIES = ['field' => 'field'];
 
-    /** @var stdClass<DateTimeInterface|Type|array|bool|float|int|null|stdClass|string> $field */
+    /** @var stdClass<DateTimeInterface|FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string> $field */
     public readonly stdClass $field;
 
     /**
-     * @param DateTimeInterface|Type|array|bool|float|int|null|stdClass|string ...$field
+     * @param DateTimeInterface|FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string ...$field
      */
-    public function __construct(DateTimeInterface|Type|stdClass|array|bool|float|int|null|string ...$field)
-    {
+    public function __construct(
+        DateTimeInterface|Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$field,
+    ) {
         if (\count($field) < 1) {
             throw new InvalidArgumentException(\sprintf('Expected at least %d values for $field, got %d.', 1, \count($field)));
         }

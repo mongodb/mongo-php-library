@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Stage;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
@@ -43,8 +44,8 @@ class DensifyStageTest extends PipelineTestCase
                     step: 1,
                     unit: TimeUnit::Hour,
                     bounds: [
-                        new UTCDateTime(new DateTimeImmutable('2021-05-18T00:00:00.000Z')),
-                        new UTCDateTime(new DateTimeImmutable('2021-05-18T08:00:00.000Z')),
+                        new UTCDateTime(new DateTimeImmutable('2021-05-18T00:00:00.000Z', new DateTimeZone('UTC'))),
+                        new UTCDateTime(new DateTimeImmutable('2021-05-18T08:00:00.000Z', new DateTimeZone('UTC'))),
                     ],
                 ),
             ),

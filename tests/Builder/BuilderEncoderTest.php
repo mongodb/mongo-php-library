@@ -6,6 +6,7 @@ namespace MongoDB\Tests\Builder;
 
 use DateTime;
 use DateTimeImmutable;
+use DateTimeZone;
 use Generator;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\UTCDateTime;
@@ -345,7 +346,7 @@ class BuilderEncoderTest extends TestCase
 
     public function testDateTimeEncoding(): void
     {
-        $dateTimeImmutable = new DateTimeImmutable();
+        $dateTimeImmutable = new DateTimeImmutable('', new DateTimeZone('UTC'));
         $dateTime = DateTime::createFromImmutable($dateTimeImmutable);
         $utcDateTime = new UTCDateTime($dateTime);
 

@@ -15,6 +15,7 @@ use MongoDB\BSON\Int64;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -121,10 +122,10 @@ trait FactoryTrait
      * Removes all array elements that match a specified value or condition.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/update/pull/
-     * @param DateTimeInterface|Type|array|bool|float|int|null|stdClass|string ...$field
+     * @param DateTimeInterface|FieldQueryInterface|Type|array|bool|float|int|null|stdClass|string ...$field
      */
     public static function pull(
-        DateTimeInterface|Type|stdClass|array|bool|float|int|null|string ...$field,
+        DateTimeInterface|Type|FieldQueryInterface|stdClass|array|bool|float|int|null|string ...$field,
     ): PullOperator {
         return new PullOperator(...$field);
     }

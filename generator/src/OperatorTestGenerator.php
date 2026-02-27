@@ -18,6 +18,7 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use MongoDB\Tests\Builder\PipelineTestCase;
+use MongoDB\Tests\Builder\UpdateTestCase;
 use Nette\PhpGenerator\EnumType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
@@ -36,6 +37,7 @@ use function is_object;
 use function json_decode;
 use function json_encode;
 use function ksort;
+use function lcfirst;
 use function sprintf;
 use function str_replace;
 use function ucwords;
@@ -91,49 +93,96 @@ class OperatorTestGenerator extends OperatorGenerator
 
         $class = $namespace->getClasses()[$testClass] ?? null;
         $class ??= $namespace->addClass($testClass);
-        $namespace->addUse(PipelineTestCase::class);
-        $class->setExtends(PipelineTestCase::class);
-        $namespace->addUse(Pipeline::class);
+
+        // Determine if this is an update operator test (has filter/update) or pipeline test
+        $isUpdateTest = false;
+        foreach ($operator->tests as $test) {
+            if ($test->filter !== null && $test->update !== null) {
+                $isUpdateTest = true;
+                break;
+            }
+        }
+
+        if ($isUpdateTest) {
+            $namespace->addUse(UpdateTestCase::class);
+            $namespace->addUse('MongoDB\Builder\Update');
+            $class->setExtends(UpdateTestCase::class);
+        } else {
+            $namespace->addUse(PipelineTestCase::class);
+            $class->setExtends(PipelineTestCase::class);
+            $namespace->addUse(Pipeline::class);
+        }
+
         $class->setComment('Test ' . $operator->name . ' ' . basename($definition->configFiles));
 
         foreach ($operator->tests as $test) {
-            // Skip tests for update operators (they have filter/update structure)
-            // These tests are meant for pipeline operators only
-            if ($test->pipeline === null) {
-                continue;
-            }
-
             $testName = 'test' . str_replace([' ', '-'], '', ucwords(str_replace('$', '', $test->name)));
             $caseName = str_replace([' ', '-'], '', ucwords(str_replace('$', '', $operator->name . ' ' . $test->name)));
 
-            $pipeline = $this->convertYamlTaggedValues($test->pipeline);
+            // Handle update tests (filter + update)
+            if ($test->filter !== null && $test->update !== null) {
+                $filterAndUpdate = [
+                    'update' => $this->convertYamlTaggedValues($test->update),
+                ];
 
-            // Wrap the pipeline array into a document
-            $json = Document::fromPHP(['pipeline' => $pipeline])->toCanonicalExtendedJSON();
-            // Unwrap the pipeline array and reformat for prettier JSON
-            $json = json_encode(json_decode($json)->pipeline, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-            $case = $dataEnum->addCase($caseName, new Literal('<<<\'JSON\'' . "\n" . $json . "\n" . 'JSON'));
-            $case->setComment($test->name);
-            if ($test->link) {
-                $case->addComment('');
-                $case->addComment('@see ' . $test->link);
+                $json = Document::fromPHP($filterAndUpdate)->toCanonicalExtendedJSON();
+                $json = json_encode(json_decode($json), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                $case = $dataEnum->addCase($caseName, new Literal('<<<\'JSON\'' . "\n" . $json . "\n" . 'JSON'));
+                $case->setComment($test->name);
+                if ($test->link) {
+                    $case->addComment('');
+                    $case->addComment('@see ' . $test->link);
+                }
+
+                $caseName = self::DATA_ENUM . '::' . $caseName;
+
+                if ($class->hasMethod($testName)) {
+                    $testMethod = $class->getMethod($testName);
+                } else {
+                    $testMethod = $class->addMethod($testName);
+                    // Generate method name from operator name (remove $ prefix and convert to camelCase)
+                    $methodName = lcfirst(str_replace('$', '', $operator->name));
+                    $testMethod->setBody(<<<PHP
+                    \$update = Update::{$methodName}(/* TODO: Add arguments based on test data */);
+
+                    \$this->assertSameUpdate({$caseName}, \$update);
+                    PHP);
+                }
+
+                $testMethod->setPublic();
+                $testMethod->setReturnType(Type::Void);
             }
+            // Handle pipeline tests (skip if no pipeline - already filtered)
+            elseif ($test->pipeline !== null) {
+                $pipeline = $this->convertYamlTaggedValues($test->pipeline);
 
-            $caseName = self::DATA_ENUM . '::' . $caseName;
+                // Wrap the pipeline array into a document
+                $json = Document::fromPHP(['pipeline' => $pipeline])->toCanonicalExtendedJSON();
+                // Unwrap the pipeline array and reformat for prettier JSON
+                $json = json_encode(json_decode($json)->pipeline, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                $case = $dataEnum->addCase($caseName, new Literal('<<<\'JSON\'' . "\n" . $json . "\n" . 'JSON'));
+                $case->setComment($test->name);
+                if ($test->link) {
+                    $case->addComment('');
+                    $case->addComment('@see ' . $test->link);
+                }
 
-            if ($class->hasMethod($testName)) {
-                $testMethod = $class->getMethod($testName);
-            } else {
-                $testMethod = $class->addMethod($testName);
-                $testMethod->setBody(<<<PHP
-                \$pipeline = new Pipeline();
+                $caseName = self::DATA_ENUM . '::' . $caseName;
 
-                \$this->assertSamePipeline({$caseName}, \$pipeline);
-                PHP);
+                if ($class->hasMethod($testName)) {
+                    $testMethod = $class->getMethod($testName);
+                } else {
+                    $testMethod = $class->addMethod($testName);
+                    $testMethod->setBody(<<<PHP
+                    \$pipeline = new Pipeline();
+
+                    \$this->assertSamePipeline({$caseName}, \$pipeline);
+                    PHP);
+                }
+
+                $testMethod->setPublic();
+                $testMethod->setReturnType(Type::Void);
             }
-
-            $testMethod->setPublic();
-            $testMethod->setReturnType(Type::Void);
         }
 
         $methods = $class->getMethods();

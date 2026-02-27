@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\StageInterface;
 /**
  * Returns information about existing Atlas Search indexes on a specified collection.
  *
- * New in MongoDB 7.0.0
+ * New in MongoDB 7.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/
  * @internal

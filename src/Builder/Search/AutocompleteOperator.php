@@ -22,7 +22,7 @@ use stdClass;
  * fields that you intend to query with the autocomplete operator must be
  * indexed with the autocomplete data type in the collection's index definition.
  *
- * New in MongoDB 5.0.0
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/
  * @internal

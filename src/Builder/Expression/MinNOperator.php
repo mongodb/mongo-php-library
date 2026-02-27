@@ -22,7 +22,7 @@ use function str_starts_with;
 /**
  * Returns the n smallest values in an array. Distinct from the $minN accumulator.
  *
- * New in MongoDB 5.1.0
+ * New in MongoDB 5.1
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/
  * @internal

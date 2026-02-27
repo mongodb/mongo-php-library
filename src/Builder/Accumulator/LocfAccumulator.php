@@ -20,7 +20,7 @@ use stdClass;
  * Last observation carried forward. Sets values for null and missing fields in a window to the last non-null value for the field.
  * Available in the $setWindowFields stage.
  *
- * New in MongoDB 5.2.0
+ * New in MongoDB 5.2
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
  * @internal

@@ -19,7 +19,7 @@ use stdClass;
 /**
  * The wildcard operator enables queries which use special characters in the search string that can match any character.
  *
- * New in MongoDB 5.0.0
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/wildcard/
  * @internal

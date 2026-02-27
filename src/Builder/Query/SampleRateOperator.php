@@ -21,7 +21,7 @@ use function str_starts_with;
 /**
  * Randomly select documents at a given rate. Although the exact number of documents selected varies on each run, the quantity chosen approximates the sample rate expressed as a percentage of the total number of documents.
  *
- * New in MongoDB 5.3.0
+ * New in MongoDB 5.3
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/
  * @internal

@@ -57,7 +57,7 @@ final class DateFromStringOperator implements ResolvesToDate, OperatorInterface
      * @var Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
      * If you do not specify onNull and dateString is null or missing, then $dateFromString outputs null.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      */
     public readonly Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onNull;
 
@@ -71,7 +71,7 @@ final class DateFromStringOperator implements ResolvesToDate, OperatorInterface
      * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
      * If you do not specify onNull and dateString is null or missing, then $dateFromString outputs null.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      */
     public function __construct(
         ResolvesToString|string $dateString,

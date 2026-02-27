@@ -28,7 +28,7 @@ use function str_starts_with;
 /**
  * Returns the average rate of change within the specified window.
  *
- * New in MongoDB 5.0.0
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/
  * @internal

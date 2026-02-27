@@ -19,7 +19,7 @@ use stdClass;
 /**
  * Combines multiple pipelines using relative score fusion to create hybrid search results.
  *
- * New in MongoDB 8.0.0
+ * New in MongoDB 8.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/
  * @internal

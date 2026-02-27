@@ -21,7 +21,7 @@ use function str_starts_with;
 /**
  * Returns the size in bytes of a given document (i.e. BSON type Object) when encoded as BSON.
  *
- * New in MongoDB 4.4.0
+ * New in MongoDB 4.4
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/
  * @internal

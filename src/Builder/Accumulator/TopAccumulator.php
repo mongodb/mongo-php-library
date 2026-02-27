@@ -22,7 +22,7 @@ use stdClass;
  * Returns the top element within a group according to the specified sort order.
  * Available in the $group and $setWindowFields stages.
  *
- * New in MongoDB 5.2.0
+ * New in MongoDB 5.2
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/
  * @internal

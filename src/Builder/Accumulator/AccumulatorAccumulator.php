@@ -26,7 +26,7 @@ use function str_starts_with;
 /**
  * Defines a custom accumulator function.
  *
- * New in MongoDB 4.4.0
+ * New in MongoDB 4.4
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
  * @internal

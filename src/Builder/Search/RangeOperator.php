@@ -25,7 +25,7 @@ use stdClass;
  * The range operator supports querying and scoring numeric, date, and string values.
  * You can use this operator to find results that are within a given numeric, date, objectId, or letter (from the English alphabet) range.
  *
- * New in MongoDB 5.0.0
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/range/
  * @internal

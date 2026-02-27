@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\StageInterface;
  * Splits large change stream events that exceed 16 MB into smaller fragments returned in a change stream cursor.
  * You can only use $changeStreamSplitLargeEvent in a $changeStream pipeline and it must be the final stage in the pipeline.
  *
- * New in MongoDB 6.1.0
+ * New in MongoDB 6.1
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/
  * @internal

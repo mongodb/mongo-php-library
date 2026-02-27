@@ -22,7 +22,7 @@ use stdClass;
 /**
  * Returns the bottom element within a group according to the specified sort order.
  *
- * New in MongoDB 5.2.0
+ * New in MongoDB 5.2
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/
  * @internal

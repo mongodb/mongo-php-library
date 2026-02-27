@@ -22,7 +22,7 @@ use function str_starts_with;
 /**
  * Returns the result of an expression for the first document in an array.
  *
- * New in MongoDB 4.4.0
+ * New in MongoDB 4.4
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
  * @internal

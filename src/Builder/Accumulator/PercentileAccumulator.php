@@ -32,7 +32,7 @@ use function str_starts_with;
  * $setWindowFields
  * It is also available as an aggregation expression.
  *
- * New in MongoDB 7.0.0
+ * New in MongoDB 7.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
  * @internal

@@ -22,7 +22,7 @@ use function is_string;
 /**
  * Defines a custom function.
  *
- * New in MongoDB 4.4.0
+ * New in MongoDB 4.4
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
  * @internal

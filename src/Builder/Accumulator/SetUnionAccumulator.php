@@ -22,7 +22,7 @@ use function array_is_list;
 /**
  * Takes two or more arrays and returns an array containing the elements that appear in any input array.
  *
- * New in MongoDB 4.4.0
+ * New in MongoDB 4.4
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/
  * @internal

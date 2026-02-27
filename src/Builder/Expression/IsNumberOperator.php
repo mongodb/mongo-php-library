@@ -19,7 +19,7 @@ use stdClass;
  * Returns boolean true if the specified expression resolves to an integer, decimal, double, or long.
  * Returns boolean false if the expression resolves to any other BSON type, null, or a missing field.
  *
- * New in MongoDB 4.4.0
+ * New in MongoDB 4.4
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/
  * @internal

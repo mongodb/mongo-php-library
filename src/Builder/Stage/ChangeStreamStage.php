@@ -53,7 +53,7 @@ final class ChangeStreamStage implements StageInterface, OperatorInterface
     /**
      * @var Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      *
-     * New in MongoDB 6.0.0
+     * New in MongoDB 6.0
      */
     public readonly Optional|bool $showExpandedEvents;
 
@@ -70,7 +70,7 @@ final class ChangeStreamStage implements StageInterface, OperatorInterface
      * @param Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
      * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      *
-     * New in MongoDB 6.0.0
+     * New in MongoDB 6.0
      * @param Optional|Document|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
      * @param Optional|Timestamp|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
      */

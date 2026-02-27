@@ -101,7 +101,7 @@ trait FactoryTrait
      * @param Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
      * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      *
-     * New in MongoDB 6.0.0
+     * New in MongoDB 6.0
      * @param Optional|Document|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
      * @param Optional|Timestamp|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
      */
@@ -121,7 +121,7 @@ trait FactoryTrait
      * Splits large change stream events that exceed 16 MB into smaller fragments returned in a change stream cursor.
      * You can only use $changeStreamSplitLargeEvent in a $changeStream pipeline and it must be the final stage in the pipeline.
      *
-     * New in MongoDB 6.1.0
+     * New in MongoDB 6.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/
      */
@@ -183,7 +183,7 @@ trait FactoryTrait
     /**
      * Creates new documents in a sequence of documents where certain values in a field are missing.
      *
-     * New in MongoDB 5.1.0
+     * New in MongoDB 5.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/
      * @param string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
@@ -203,7 +203,7 @@ trait FactoryTrait
     /**
      * Returns literal documents from input values.
      *
-     * New in MongoDB 5.1.0
+     * New in MongoDB 5.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
@@ -231,7 +231,7 @@ trait FactoryTrait
     /**
      * Populates null and missing field values within documents.
      *
-     * New in MongoDB 5.3.0
+     * New in MongoDB 5.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/
      * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
@@ -366,7 +366,7 @@ trait FactoryTrait
     /**
      * Lists sampled queries for all collections or a specific collection.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/
      * @param Optional|string $namespace
@@ -380,7 +380,7 @@ trait FactoryTrait
     /**
      * Returns information about existing Atlas Search indexes on a specified collection.
      *
-     * New in MongoDB 7.0.0
+     * New in MongoDB 7.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/
      * @param Optional|string $id The id of the index to return information about.
@@ -478,7 +478,7 @@ trait FactoryTrait
     /**
      * Returns plan cache information for a collection.
      *
-     * New in MongoDB 4.4.0
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/
      */
@@ -550,7 +550,7 @@ trait FactoryTrait
     /**
      * Combines multiple pipelines using relative score fusion to create hybrid search results.
      *
-     * New in MongoDB 8.0.0
+     * New in MongoDB 8.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/
      * @param Document|Serializable|array|stdClass $input An object with the following required fields:
@@ -574,7 +574,7 @@ trait FactoryTrait
      * Performs a full-text search of the field or fields in an Atlas collection.
      * NOTE: $search is only available for MongoDB Atlas clusters, and is not available for self-managed deployments.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/
      * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator Operator to search with.  You can provide a specific operator or use
@@ -612,7 +612,7 @@ trait FactoryTrait
      * Returns different types of metadata result documents for the Atlas Search query against an Atlas collection.
      * NOTE: $searchMeta is only available for MongoDB Atlas clusters running MongoDB v4.4.9 or higher, and is not available for self-managed deployments.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/
      * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator Operator to search with.  You can provide a specific operator or use
@@ -644,7 +644,7 @@ trait FactoryTrait
     /**
      * Groups documents into windows and applies one or more operators to the documents in each window.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
      * @param Document|Serializable|array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
@@ -710,7 +710,7 @@ trait FactoryTrait
     /**
      * Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
      *
-     * New in MongoDB 4.4.0
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/
      * @param string $coll The collection or view whose pipeline results you wish to include in the result set.
@@ -758,7 +758,7 @@ trait FactoryTrait
     /**
      * The $vectorSearch stage performs an ANN or ENN search on a vector in the specified field.
      *
-     * New in MongoDB 6.0.0
+     * New in MongoDB 6.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/
      * @param string $index Name of the Atlas Vector Search index to use.

@@ -19,7 +19,7 @@ use function str_starts_with;
 /**
  * Returns the result of a bitwise not operation on a single argument or an array that contains a single int or long value.
  *
- * New in MongoDB 6.3.0
+ * New in MongoDB 6.3
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/
  * @internal

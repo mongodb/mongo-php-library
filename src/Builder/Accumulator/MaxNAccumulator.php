@@ -26,7 +26,7 @@ use function str_starts_with;
 /**
  * Returns the n largest values in an array. Distinct from the $maxN accumulator.
  *
- * New in MongoDB 5.2.0
+ * New in MongoDB 5.2
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/
  * @internal

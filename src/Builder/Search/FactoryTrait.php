@@ -35,7 +35,7 @@ trait FactoryTrait
      * fields that you intend to query with the autocomplete operator must be
      * indexed with the autocomplete data type in the collection's index definition.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/
      * @param array|string $path
@@ -59,7 +59,7 @@ trait FactoryTrait
      * Each element of a compound query is called a clause, and each clause
      * consists of one or more sub-queries.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/
      * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $must
@@ -86,7 +86,7 @@ trait FactoryTrait
      * element of an array of embedded documents. embeddedDocument can be used only
      * for queries over fields of the embeddedDocuments
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/embedded-document/
      * @param array|string $path
@@ -104,7 +104,7 @@ trait FactoryTrait
     /**
      * The equals operator checks whether a field matches a value you specify.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/
      * @param array|string $path
@@ -122,7 +122,7 @@ trait FactoryTrait
     /**
      * The exists operator tests if a path to a specified indexed field name exists in a document.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/exists/
      * @param array|string $path
@@ -139,7 +139,7 @@ trait FactoryTrait
      * The facet collector groups results by values or ranges in the specified
      * faceted fields and returns the count for each of those groups.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/
      * @param Document|Serializable|array|stdClass $facets
@@ -156,7 +156,7 @@ trait FactoryTrait
      * The geoShape operator supports querying shapes with a relation to a given
      * geometry if indexShapes is set to true in the index definition.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoShape/
      * @param array|string $path
@@ -178,7 +178,7 @@ trait FactoryTrait
      * geometry. Only points are returned, even if indexShapes value is true in
      * the index definition.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/
      * @param array|string $path
@@ -200,7 +200,7 @@ trait FactoryTrait
     /**
      * The in operator performs a search for an array of BSON values in a field.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/in/
      * @param array|string $path
@@ -220,7 +220,7 @@ trait FactoryTrait
      * The moreLikeThis operator allows you to build features for your applications
      * that display similar or alternative results based on one or more given documents.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/moreLikeThis/
      * @param BSONArray|Document|PackedArray|Serializable|array|stdClass $like
@@ -236,7 +236,7 @@ trait FactoryTrait
     /**
      * The near operator supports querying and scoring numeric, date, and GeoJSON point values.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/near/
      * @param array|string $path
@@ -256,7 +256,7 @@ trait FactoryTrait
     /**
      * The phrase operator performs search for documents containing an ordered sequence of terms using the analyzer specified in the index configuration.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/phrase/
      * @param array|string $path
@@ -276,7 +276,7 @@ trait FactoryTrait
     }
 
     /**
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/queryString/
      * @param array|string $defaultPath
@@ -291,7 +291,7 @@ trait FactoryTrait
      * The range operator supports querying and scoring numeric, date, and string values.
      * You can use this operator to find results that are within a given numeric, date, objectId, or letter (from the English alphabet) range.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/range/
      * @param array|string $path
@@ -316,7 +316,7 @@ trait FactoryTrait
      * regex interprets the query field as a regular expression.
      * regex is a term-level operator, meaning that the query field isn't analyzed.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/regex/
      * @param array|string $path
@@ -337,7 +337,7 @@ trait FactoryTrait
      * The text operator performs a full-text search using the analyzer that you specify in the index configuration.
      * If you omit an analyzer, the text operator uses the default standard analyzer.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/
      * @param array|string $path
@@ -361,7 +361,7 @@ trait FactoryTrait
     /**
      * The wildcard operator enables queries which use special characters in the search string that can match any character.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/wildcard/
      * @param array|string $path

@@ -19,7 +19,7 @@ use stdClass;
 /**
  * The exists operator tests if a path to a specified indexed field name exists in a document.
  *
- * New in MongoDB 5.0.0
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/exists/
  * @internal

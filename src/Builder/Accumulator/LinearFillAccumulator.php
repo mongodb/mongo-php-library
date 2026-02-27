@@ -23,7 +23,7 @@ use function str_starts_with;
  * Fills null and missing fields in a window using linear interpolation based on surrounding field values.
  * Available in the $setWindowFields stage.
  *
- * New in MongoDB 5.3.0
+ * New in MongoDB 5.3
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
  * @internal

@@ -24,7 +24,7 @@ use stdClass;
 /**
  * The near operator supports querying and scoring numeric, date, and GeoJSON point values.
  *
- * New in MongoDB 5.0.0
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/near/
  * @internal

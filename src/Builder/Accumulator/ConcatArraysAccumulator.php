@@ -22,6 +22,8 @@ use function array_is_list;
 /**
  * Concatenates arrays to return the concatenated array.
  *
+ * New in MongoDB 4.4.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/
  * @internal
  */

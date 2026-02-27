@@ -36,6 +36,7 @@ final class OperatorDefinition
         array $arguments = [],
         array $tests = [],
         public string $minVersion = '',
+        public \stdClass|null $syntheticVariables = null,
     ) {
         $this->encode = match ($encode) {
             'single' => Encode::Single,
@@ -72,5 +73,9 @@ final class OperatorDefinition
             static fn (object $test): TestDefinition => new TestDefinition(...get_object_vars($test)),
             array_values($tests),
         );
+
+        if ($this->minVersion && version_compare($this->minVersion, '4.4', '>=')) {
+            $this->description .= "\nNew in MongoDB {$this->minVersion}\n";
+        }
     }
 }

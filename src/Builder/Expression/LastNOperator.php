@@ -22,6 +22,8 @@ use function str_starts_with;
 /**
  * Returns a specified number of elements from the end of an array.
  *
+ * New in MongoDB 5.1.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/
  * @internal
  */

@@ -28,7 +28,8 @@ final class ArgumentDefinition
         int|null $variadicMin = null,
         public mixed $default = null,
         public bool $mergeObject = false,
-        public string $minVersion = '',
+        public string|null $minVersion = null,
+        public array|null $syntheticVariables = null,
     ) {
         assert($this->optional === false || $this->default === null, 'Optional arguments cannot have a default value');
         if (is_array($type)) {
@@ -50,6 +51,10 @@ final class ArgumentDefinition
         } else {
             $this->variadic = null;
             $this->variadicMin = null;
+        }
+
+        if ($this->minVersion && version_compare($this->minVersion, '4.4', '>=')) {
+            $this->description .= "\nNew in MongoDB {$this->minVersion}\n";
         }
     }
 }

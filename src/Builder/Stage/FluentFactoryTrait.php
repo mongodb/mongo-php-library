@@ -17,7 +17,6 @@ use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Expression\ArrayFieldPath;
-use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Pipeline;
@@ -130,7 +129,8 @@ trait FluentFactoryTrait
      * @param Optional|string $fullDocumentBeforeChange Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available.
      * @param Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
      * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
-     * New in MongoDB 6.0.
+     *
+     * New in MongoDB 6.0.0
      * @param Optional|Document|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
      * @param Optional|Timestamp|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
      */
@@ -151,6 +151,8 @@ trait FluentFactoryTrait
     /**
      * Splits large change stream events that exceed 16 MB into smaller fragments returned in a change stream cursor.
      * You can only use $changeStreamSplitLargeEvent in a $changeStream pipeline and it must be the final stage in the pipeline.
+     *
+     * New in MongoDB 6.1.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/
      */
@@ -220,6 +222,8 @@ trait FluentFactoryTrait
     /**
      * Creates new documents in a sequence of documents where certain values in a field are missing.
      *
+     * New in MongoDB 5.1.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/
      * @param string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
@@ -239,6 +243,8 @@ trait FluentFactoryTrait
 
     /**
      * Returns literal documents from input values.
+     *
+     * New in MongoDB 5.1.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
@@ -269,6 +275,8 @@ trait FluentFactoryTrait
 
     /**
      * Populates null and missing field values within documents.
+     *
+     * New in MongoDB 5.3.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/
      * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
@@ -417,6 +425,8 @@ trait FluentFactoryTrait
     /**
      * Lists sampled queries for all collections or a specific collection.
      *
+     * New in MongoDB 5.0.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/
      * @param Optional|string $namespace
      */
@@ -429,6 +439,8 @@ trait FluentFactoryTrait
 
     /**
      * Returns information about existing Atlas Search indexes on a specified collection.
+     *
+     * New in MongoDB 7.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/
      * @param Optional|string $id The id of the index to return information about.
@@ -489,7 +501,6 @@ trait FluentFactoryTrait
 
     /**
      * Writes the resulting documents of the aggregation pipeline to a collection. The stage can incorporate (insert new documents, merge documents, replace documents, keep existing documents, fail the operation, process documents with a custom update pipeline) the results into an output collection. To use the $merge stage, it must be the last stage in the pipeline.
-     * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
      * @param Document|Serializable|array|stdClass|string $into The output collection.
@@ -525,6 +536,8 @@ trait FluentFactoryTrait
 
     /**
      * Returns plan cache information for a collection.
+     *
+     * New in MongoDB 4.4.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/
      */
@@ -606,6 +619,8 @@ trait FluentFactoryTrait
     /**
      * Combines multiple pipelines using relative score fusion to create hybrid search results.
      *
+     * New in MongoDB 8.0.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/
      * @param Document|Serializable|array|stdClass $input An object with the following required fields:
      * - input.pipelines: Map from name to input pipeline. Each pipeline must be operating on the same collection. Minimum of one pipeline.
@@ -629,6 +644,8 @@ trait FluentFactoryTrait
     /**
      * Performs a full-text search of the field or fields in an Atlas collection.
      * NOTE: $search is only available for MongoDB Atlas clusters, and is not available for self-managed deployments.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/
      * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator Operator to search with.  You can provide a specific operator or use
@@ -668,6 +685,8 @@ trait FluentFactoryTrait
      * Returns different types of metadata result documents for the Atlas Search query against an Atlas collection.
      * NOTE: $searchMeta is only available for MongoDB Atlas clusters running MongoDB v4.4.9 or higher, and is not available for self-managed deployments.
      *
+     * New in MongoDB 5.0.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/
      * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator Operator to search with.  You can provide a specific operator or use
      * the compound operator to run a compound query with multiple operators.
@@ -701,7 +720,8 @@ trait FluentFactoryTrait
 
     /**
      * Groups documents into windows and applies one or more operators to the documents in each window.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
      * @param Document|Serializable|array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
@@ -721,7 +741,8 @@ trait FluentFactoryTrait
 
     /**
      * Provides data and size distribution information on sharded collections.
-     * New in MongoDB 6.0.3.
+     *
+     * New in MongoDB 6.0.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/
      */
@@ -775,7 +796,8 @@ trait FluentFactoryTrait
 
     /**
      * Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
-     * New in MongoDB 4.4.
+     *
+     * New in MongoDB 4.4.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/
      * @param string $coll The collection or view whose pipeline results you wish to include in the result set.
@@ -797,9 +819,9 @@ trait FluentFactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/
      * @no-named-arguments
-     * @param FieldPath|string ...$field
+     * @param string ...$field
      */
-    public function unset(FieldPath|string ...$field): static
+    public function unset(string ...$field): static
     {
         $this->pipeline[] = Stage::unset(...$field);
 
@@ -828,6 +850,8 @@ trait FluentFactoryTrait
 
     /**
      * The $vectorSearch stage performs an ANN or ENN search on a vector in the specified field.
+     *
+     * New in MongoDB 6.0.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/
      * @param string $index Name of the Atlas Vector Search index to use.

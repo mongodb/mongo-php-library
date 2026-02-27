@@ -24,6 +24,8 @@ use function is_array;
 /**
  * The $vectorSearch stage performs an ANN or ENN search on a vector in the specified field.
  *
+ * New in MongoDB 6.0.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/
  * @internal
  */

@@ -23,6 +23,8 @@ use stdClass;
  * Each element of a compound query is called a clause, and each clause
  * consists of one or more sub-queries.
  *
+ * New in MongoDB 5.0.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/
  * @internal
  */

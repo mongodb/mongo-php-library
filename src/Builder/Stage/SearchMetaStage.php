@@ -21,6 +21,8 @@ use stdClass;
  * Returns different types of metadata result documents for the Atlas Search query against an Atlas collection.
  * NOTE: $searchMeta is only available for MongoDB Atlas clusters running MongoDB v4.4.9 or higher, and is not available for self-managed deployments.
  *
+ * New in MongoDB 5.0.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/
  * @internal
  */

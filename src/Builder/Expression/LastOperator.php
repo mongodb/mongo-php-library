@@ -22,6 +22,8 @@ use function str_starts_with;
 /**
  * Returns the result of an expression for the last document in an array.
  *
+ * New in MongoDB 4.4.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
  * @internal
  */

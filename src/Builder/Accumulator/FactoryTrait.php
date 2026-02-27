@@ -36,7 +36,8 @@ trait FactoryTrait
 {
     /**
      * Defines a custom accumulator function.
-     * New in MongoDB 4.4.
+     *
+     * New in MongoDB 4.4.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
      * @param Javascript|string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
@@ -86,7 +87,8 @@ trait FactoryTrait
 
     /**
      * Returns the bottom element within a group according to the specified sort order.
-     * New in MongoDB 5.2: Available in the $group and $setWindowFields stages.
+     *
+     * New in MongoDB 5.2.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
@@ -101,8 +103,9 @@ trait FactoryTrait
 
     /**
      * Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer than n elements, $bottomN returns all elements in the group.
-     * New in MongoDB 5.2.
      * Available in the $group and $setWindowFields stages.
+     *
+     * New in MongoDB 5.2.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/
      * @param ResolvesToInt|int|string $n Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
@@ -120,6 +123,8 @@ trait FactoryTrait
     /**
      * Concatenates arrays to return the concatenated array.
      *
+     * New in MongoDB 4.4.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/
      * @no-named-arguments
      * @param BSONArray|PackedArray|ResolvesToArray|array|string ...$array An array of expressions that resolve to an array.
@@ -134,7 +139,8 @@ trait FactoryTrait
     /**
      * Returns the number of documents in the group or window.
      * Distinct from the $count pipeline stage.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/
      */
@@ -145,7 +151,8 @@ trait FactoryTrait
 
     /**
      * Returns the population covariance of two numeric expressions.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/
      * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression1
@@ -160,7 +167,8 @@ trait FactoryTrait
 
     /**
      * Returns the sample covariance of two numeric expressions.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/
      * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression1
@@ -175,7 +183,8 @@ trait FactoryTrait
 
     /**
      * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition. There are no gaps in the ranks. Ties receive the same rank.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/
      */
@@ -186,7 +195,8 @@ trait FactoryTrait
 
     /**
      * Returns the average rate of change within the specified window.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/
      * @param DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $input
@@ -202,7 +212,8 @@ trait FactoryTrait
 
     /**
      * Returns the position of a document (known as the document number) in the $setWindowFields stage partition. Ties result in different adjacent document numbers.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/
      */
@@ -213,7 +224,8 @@ trait FactoryTrait
 
     /**
      * Returns the exponential moving average for the numeric expression.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/
      * @param Decimal128|Int64|ResolvesToNumber|float|int|string $input
@@ -249,6 +261,8 @@ trait FactoryTrait
      * The elements returned are meaningful only if in a specified sort order.
      * If the group contains fewer than n elements, $firstN returns all elements in the group.
      *
+     * New in MongoDB 5.2.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input An expression that resolves to the array from which to return n elements.
      * @param ResolvesToInt|int|string $n A positive integral expression that is either a constant or depends on the _id value for $group.
@@ -262,7 +276,8 @@ trait FactoryTrait
 
     /**
      * Returns the approximation of the area under a curve.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
      * @param DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int|string $input
@@ -294,6 +309,8 @@ trait FactoryTrait
      * The elements returned are meaningful only if in a specified sort order.
      * If the group contains fewer than n elements, $lastN returns all elements in the group.
      *
+     * New in MongoDB 5.2.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return n elements.
      * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
@@ -308,7 +325,8 @@ trait FactoryTrait
     /**
      * Fills null and missing fields in a window using linear interpolation based on surrounding field values.
      * Available in the $setWindowFields stage.
-     * New in MongoDB 5.3.
+     *
+     * New in MongoDB 5.3.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
      * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
@@ -322,7 +340,8 @@ trait FactoryTrait
     /**
      * Last observation carried forward. Sets values for null and missing fields in a window to the last non-null value for the field.
      * Available in the $setWindowFields stage.
-     * New in MongoDB 5.2.
+     *
+     * New in MongoDB 5.2.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -349,6 +368,8 @@ trait FactoryTrait
     /**
      * Returns the n largest values in an array. Distinct from the $maxN accumulator.
      *
+     * New in MongoDB 5.2.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the maximal n elements.
      * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
@@ -362,11 +383,12 @@ trait FactoryTrait
 
     /**
      * Returns an approximation of the median, the 50th percentile, as a scalar value.
-     * New in MongoDB 7.0.
      * This operator is available as an accumulator in these stages:
      * $group
      * $setWindowFields
      * It is also available as an aggregation expression.
+     *
+     * New in MongoDB 7.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
      * @param Decimal128|Int64|ResolvesToNumber|float|int|string $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
@@ -407,6 +429,8 @@ trait FactoryTrait
     /**
      * Returns the n smallest values in an array. Distinct from the $minN accumulator.
      *
+     * New in MongoDB 5.2.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the maximal n elements.
      * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
@@ -420,11 +444,12 @@ trait FactoryTrait
 
     /**
      * Returns an array of scalar values that correspond to specified percentile values.
-     * New in MongoDB 7.0.
      * This operator is available as an accumulator in these stages:
      * $group
      * $setWindowFields
      * It is also available as an aggregation expression.
+     *
+     * New in MongoDB 7.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
      * @param Decimal128|Int64|ResolvesToNumber|float|int|string $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
@@ -455,7 +480,8 @@ trait FactoryTrait
 
     /**
      * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/
      */
@@ -466,6 +492,8 @@ trait FactoryTrait
 
     /**
      * Takes two or more arrays and returns an array containing the elements that appear in any input array.
+     *
+     * New in MongoDB 4.4.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/
      * @no-named-arguments
@@ -478,7 +506,8 @@ trait FactoryTrait
 
     /**
      * Returns the value from an expression applied to a document in a specified position relative to the current document in the $setWindowFields stage partition.
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Specifies an expression to evaluate and return in the output.
@@ -541,8 +570,9 @@ trait FactoryTrait
 
     /**
      * Returns the top element within a group according to the specified sort order.
-     * New in MongoDB 5.2.
      * Available in the $group and $setWindowFields stages.
+     *
+     * New in MongoDB 5.2.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/
      * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
@@ -557,8 +587,9 @@ trait FactoryTrait
 
     /**
      * Returns an aggregation of the top n fields within a group, according to the specified sort order.
-     * New in MongoDB 5.2.
      * Available in the $group and $setWindowFields stages.
+     *
+     * New in MongoDB 5.2.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/
      * @param ResolvesToInt|int|string $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.

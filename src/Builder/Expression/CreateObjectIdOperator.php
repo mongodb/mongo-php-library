@@ -14,6 +14,8 @@ use MongoDB\Builder\Type\OperatorInterface;
 /**
  * Returns a random object ID
  *
+ * New in MongoDB 4.4.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/createObjectId/
  * @internal
  */

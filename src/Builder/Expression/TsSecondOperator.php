@@ -18,7 +18,8 @@ use function str_starts_with;
 
 /**
  * Returns the seconds from a timestamp as a long.
- * New in MongoDB 5.1.
+ *
+ * New in MongoDB 5.1.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/
  * @internal

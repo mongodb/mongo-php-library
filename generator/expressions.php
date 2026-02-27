@@ -71,6 +71,10 @@ foreach ($bsonTypes as $name => $acceptedTypes) {
     ];
 }
 
+$expressions['unprefixedFieldPath'] = [
+    'acceptedTypes' => ['string'],
+];
+
 $expressions['resolvesToLong']['implements'] = [ResolvesToInt::class];
 $expressions['resolvesToInt']['implements'] = [ResolvesToNumber::class];
 $expressions['resolvesToDecimal']['implements'] = [ResolvesToDouble::class];

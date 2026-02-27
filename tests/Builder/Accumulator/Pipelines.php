@@ -984,7 +984,7 @@ enum Pipelines: string
     /**
      * Use in $group Stage
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--group-stage
      */
     case LastUseInGroupStage = <<<'JSON'
     [

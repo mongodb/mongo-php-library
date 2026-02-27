@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Definition;
 
+use InvalidArgumentException;
+
 use function array_is_list;
 use function assert;
 use function get_debug_type;
 use function is_array;
+use function is_object;
 use function is_string;
 use function ltrim;
 use function sprintf;
@@ -30,13 +33,17 @@ final class ArgumentDefinition
         public mixed $default = null,
         public bool $mergeObject = false,
         public string|null $minVersion = null,
-        public array|null $syntheticVariables = null,
+        mixed ...$ignoredOtherArgs,
     ) {
         assert($this->optional === false || $this->default === null, 'Optional arguments cannot have a default value');
-        if (is_array($type)) {
+        if (is_array($this->type)) {
             assert(array_is_list($type), 'Type must be a list or a single string');
-            foreach ($type as $t) {
-                assert(is_string($t), sprintf('Type must be a list of strings. Got %s', get_debug_type($type)));
+            foreach ($this->type as &$t) {
+                if (is_object($t)) {
+                    $t = $t->name ?? throw new InvalidArgumentException('Type array must have a "name" key');
+                }
+
+                assert(is_string($t), sprintf('Type must be a list of strings. Got %s', get_debug_type($t)));
             }
         }
 

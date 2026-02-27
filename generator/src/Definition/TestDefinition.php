@@ -19,6 +19,7 @@ final class TestDefinition
         public array|null $pipeline = null,
         public array|stdClass|null $filter = null,
         public array|stdClass|null $update = null,
+        mixed ...$ignoredOtherArgs,
     ) {
         assert(null === $this->pipeline || array_is_list($pipeline), sprintf('Argument "%s" pipeline must be a list', $name));
     }

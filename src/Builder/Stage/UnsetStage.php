@@ -11,6 +11,7 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Builder\Type\UpdateStageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function array_is_list;
@@ -22,7 +23,7 @@ use function array_is_list;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/
  * @internal
  */
-final class UnsetStage implements StageInterface, OperatorInterface
+final class UnsetStage implements StageInterface, UpdateStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
     public const NAME = '$unset';

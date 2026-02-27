@@ -106,7 +106,23 @@ return $expressions + [
         'returnType' => Type\StageInterface::class,
         'acceptedTypes' => [Type\StageInterface::class, ...$bsonTypes['object']],
     ],
+    'inputStage' => [
+        'returnType' => Type\InputStageInterface::class,
+        'acceptedTypes' => [Type\InputStageInterface::class, ...$bsonTypes['object']],
+    ],
+    'outputStage' => [
+        'returnType' => Type\OutputStageInterface::class,
+        'acceptedTypes' => [Type\OutputStageInterface::class, ...$bsonTypes['object']],
+    ],
+    'updateStage' => [
+        'returnType' => Type\UpdateStageInterface::class,
+        'acceptedTypes' => [Type\UpdateStageInterface::class, ...$bsonTypes['object']],
+    ],
     'pipeline' => [
+        'acceptedTypes' => [Pipeline::class, ...$bsonTypes['array']],
+    ],
+    // @todo create specific model classes factories
+    'updatePipeline' => [
         'acceptedTypes' => [Pipeline::class, ...$bsonTypes['array']],
     ],
     'variable' => [

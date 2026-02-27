@@ -1834,7 +1834,7 @@ trait FactoryTrait
      * If the values represent only a sample of a population of data from which to generalize about the population, use $stdDevSamp instead.
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
      * @no-named-arguments
@@ -1850,7 +1850,7 @@ trait FactoryTrait
      * Calculates the sample standard deviation of the input values. Use if the values encompass a sample of a population of data from which to generalize about the population. $stdDevSamp ignores non-numeric values.
      * If the values represent the entire population of data or you do not wish to generalize about a larger population, use $stdDevPop instead.
      *
-     * New in MongoDB 5.0.0
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
      * @no-named-arguments

@@ -18,5 +18,5 @@ require __DIR__ . '/vendor/autoload.php';
 
 $application = new Application();
 $application->add(new GenerateCommand(__DIR__ . '/../', __DIR__));
-$application->setDefaultCommand('generate');
+$application->setDefaultCommand('generate', true);
 $application->run();

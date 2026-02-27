@@ -11,6 +11,7 @@ use function is_array;
 use function is_string;
 use function ltrim;
 use function sprintf;
+use function version_compare;
 
 final class ArgumentDefinition
 {

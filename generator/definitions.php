@@ -11,7 +11,7 @@ use MongoDB\CodeGenerator\OperatorTestGenerator;
 
 return [
     // Aggregation Pipeline Stages
-    [
+    'stage' => [
         'configFiles' => __DIR__ . '/mql-specifications/definitions/stage',
         'namespace' => 'MongoDB\\Builder\\Stage',
         'classNameSuffix' => 'Stage',
@@ -24,7 +24,7 @@ return [
     ],
 
     // Aggregation Pipeline Accumulator and Window Operators
-    [
+    'accumulator' => [
         'configFiles' => __DIR__ . '/mql-specifications/definitions/accumulator',
         'namespace' => 'MongoDB\\Builder\\Accumulator',
         'classNameSuffix' => 'Accumulator',
@@ -36,7 +36,7 @@ return [
     ],
 
     // Aggregation Pipeline Expression
-    [
+    'expression' => [
         'configFiles' => __DIR__ . '/mql-specifications/definitions/expression',
         'namespace' => 'MongoDB\\Builder\\Expression',
         'classNameSuffix' => 'Operator',
@@ -48,7 +48,7 @@ return [
     ],
 
     // Query Operators
-    [
+    'query' => [
         'configFiles' => __DIR__ . '/mql-specifications/definitions/query',
         'namespace' => 'MongoDB\\Builder\\Query',
         'classNameSuffix' => 'Operator',
@@ -60,7 +60,7 @@ return [
     ],
 
     // Search Operators
-    [
+    'search' => [
         'configFiles' => __DIR__ . '/mql-specifications/definitions/search',
         'namespace' => 'MongoDB\\Builder\\Search',
         'classNameSuffix' => 'Operator',
@@ -72,7 +72,7 @@ return [
     ],
 
     // Update Operators
-    [
+    'update' => [
         'configFiles' => __DIR__ . '/mql-specifications/definitions/update',
         'namespace' => 'MongoDB\\Builder\\Update',
         'classNameSuffix' => 'Operator',

@@ -10,6 +10,7 @@ use MongoDB\CodeGenerator\ExpressionClassGenerator;
 use MongoDB\CodeGenerator\ExpressionFactoryGenerator;
 use MongoDB\CodeGenerator\OperatorGenerator;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -34,6 +35,7 @@ final class GenerateCommand extends Command
         $this->setName('generate');
         $this->setDescription('Generate code for mongodb/mongodb library');
         $this->setHelp('Generate code for mongodb/mongodb library');
+        $this->addArgument('selected', InputArgument::IS_ARRAY|InputArgument::OPTIONAL, 'Optional list of selected definitions to generate', [], array_keys($this->getDefinitionConfigs()));
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -41,7 +43,7 @@ final class GenerateCommand extends Command
         $output->writeln('Generating code for mongodb/mongodb library');
 
         $expressions = $this->generateExpressionClasses($output);
-        $this->generateOperatorClasses($expressions, $output);
+        $this->generateOperatorClasses($expressions, $output, $input->getArgument('selected'));
 
         return Command::SUCCESS;
     }
@@ -69,13 +71,13 @@ final class GenerateCommand extends Command
         return $definitions;
     }
 
-    /** @param array<string, ExpressionDefinition> $expressions */
-    private function generateOperatorClasses(array $expressions, OutputInterface $output): void
+    /** @param array<string, ExpressionDefinition> $expressions
+     * @param array $selected
+     */
+    private function generateOperatorClasses(array $expressions, OutputInterface $output, array $selected): void
     {
-        $config = require $this->configDir . '/definitions.php';
-        assert(is_array($config));
 
-        foreach ($config as $def) {
+        foreach ($this->getDefinitionConfigs($selected) as $def) {
             assert(is_array($def));
             $definition = new GeneratorDefinition(...$def);
 
@@ -86,5 +88,22 @@ final class GenerateCommand extends Command
                 $generator->generate($definition);
             }
         }
+    }
+
+    private function getDefinitionConfigs(array $selected = []): array
+    {
+        $config = require $this->configDir . '/definitions.php';
+        assert(is_array($config));
+
+        if ($selected) {
+            $config = array_intersect_key($config, array_fill_keys($selected, true));
+
+            if ($diff = array_diff($selected, array_keys($config))) {
+                var_dump(array_keys($config));
+                throw new \InvalidArgumentException(sprintf('Selected definitions "%s" do not exist.', implode(', ', $diff)));
+            }
+        }
+
+        return $config;
     }
 }

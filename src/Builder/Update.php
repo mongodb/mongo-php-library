@@ -18,4 +18,3 @@ final class Update
         // This class cannot be instantiated
     }
 }
-

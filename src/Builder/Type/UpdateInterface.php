@@ -12,4 +12,3 @@ namespace MongoDB\Builder\Type;
 interface UpdateInterface
 {
 }
-

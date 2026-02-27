@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator\Definition;
 
 use MongoDB\Builder\Type\Encode;
+use stdClass;
 use UnexpectedValueException;
 
 use function array_map;
@@ -14,6 +15,7 @@ use function assert;
 use function count;
 use function get_object_vars;
 use function sprintf;
+use function version_compare;
 
 final class OperatorDefinition
 {
@@ -36,7 +38,7 @@ final class OperatorDefinition
         array $arguments = [],
         array $tests = [],
         public string $minVersion = '',
-        public \stdClass|null $syntheticVariables = null,
+        public stdClass|null $syntheticVariables = null,
     ) {
         $this->encode = match ($encode) {
             'single' => Encode::Single,

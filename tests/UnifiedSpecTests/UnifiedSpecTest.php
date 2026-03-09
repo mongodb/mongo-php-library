@@ -81,6 +81,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         'sessions/snapshot-sessions: Mixed operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
         'sessions/snapshot-sessions: Write commands with snapshot session do not affect snapshot reads' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
         'sessions/implicit sessions default causal consistency: afterClusterTime is not sent on retried read in implicit session when readConcern level is snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPC-2655)',
+        // Backpressure tests rely on libmonogc
+        'transactions/backpressure-' => 'Backpressure tests rely on libmongoc (PHPLIB-1719)',
     ];
 
     /** @var array<string, string> */

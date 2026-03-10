@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Command;
 
+use InvalidArgumentException;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\ExpressionClassGenerator;
@@ -14,9 +15,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function array_diff;
+use function array_fill_keys;
+use function array_intersect_key;
 use function array_key_exists;
+use function array_keys;
 use function assert;
 use function basename;
+use function implode;
 use function is_a;
 use function is_array;
 use function sprintf;
@@ -35,7 +41,7 @@ final class GenerateCommand extends Command
         $this->setName('generate');
         $this->setDescription('Generate code for mongodb/mongodb library');
         $this->setHelp('Generate code for mongodb/mongodb library');
-        $this->addArgument('selected', InputArgument::IS_ARRAY|InputArgument::OPTIONAL, 'Optional list of selected definitions to generate', [], array_keys($this->getDefinitionConfigs()));
+        $this->addArgument('selected', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Optional list of selected definitions to generate', [], array_keys($this->getDefinitionConfigs()));
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -71,12 +77,9 @@ final class GenerateCommand extends Command
         return $definitions;
     }
 
-    /** @param array<string, ExpressionDefinition> $expressions
-     * @param array $selected
-     */
+    /** @param array<string, ExpressionDefinition> $expressions */
     private function generateOperatorClasses(array $expressions, OutputInterface $output, array $selected): void
     {
-
         foreach ($this->getDefinitionConfigs($selected) as $def) {
             assert(is_array($def));
             $definition = new GeneratorDefinition(...$def);
@@ -98,9 +101,9 @@ final class GenerateCommand extends Command
         if ($selected) {
             $config = array_intersect_key($config, array_fill_keys($selected, true));
 
-            if ($diff = array_diff($selected, array_keys($config))) {
-                var_dump(array_keys($config));
-                throw new \InvalidArgumentException(sprintf('Selected definitions "%s" do not exist.', implode(', ', $diff)));
+            $diff = array_diff($selected, array_keys($config));
+            if ($diff) {
+                throw new InvalidArgumentException(sprintf('Selected definitions "%s" do not exist.', implode(', ', $diff)));
             }
         }
 

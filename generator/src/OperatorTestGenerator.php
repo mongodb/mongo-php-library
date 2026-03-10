@@ -151,9 +151,8 @@ class OperatorTestGenerator extends OperatorGenerator
 
                 $testMethod->setPublic();
                 $testMethod->setReturnType(Type::Void);
-            }
-            // Handle pipeline tests (skip if no pipeline - already filtered)
-            elseif ($test->pipeline !== null) {
+            } elseif ($test->pipeline !== null) {
+                // Handle pipeline tests (skip if no pipeline - already filtered)
                 $pipeline = $this->convertYamlTaggedValues($test->pipeline);
 
                 // Wrap the pipeline array into a document

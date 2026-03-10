@@ -62,7 +62,7 @@ final class ArgumentDefinition
         }
 
         if ($this->minVersion && version_compare($this->minVersion, '4.4', '>=')) {
-            $this->description .= "\nNew in MongoDB {$this->minVersion}\n";
+            $this->description .= sprintf("\nNew in MongoDB %s\n", $this->minVersion);
         }
     }
 }

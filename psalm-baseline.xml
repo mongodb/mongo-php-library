@@ -108,6 +108,12 @@
       <code><![CDATA[$value[$key]]]></code>
     </MixedAssignment>
   </file>
+  <file src="src/Builder/Encoder/UpdateEncoder.php">
+    <MixedAssignment>
+      <code><![CDATA[$operator]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+  </file>
   <file src="src/Builder/Query.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$query]]></code>
@@ -216,6 +222,134 @@
       <code><![CDATA[$query::NAME]]></code>
     </UndefinedConstant>
   </file>
+  <file src="src/Builder/Update.php">
+    <MixedReturnStatement>
+      <code><![CDATA[$field->name]]></code>
+    </MixedReturnStatement>
+    <NoInterfaceProperties>
+      <code><![CDATA[$field->name]]></code>
+    </NoInterfaceProperties>
+  </file>
+  <file src="src/Builder/Update/AddToSetOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/BitOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/CurrentDateOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/IncOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/MaxOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/MinOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/MulOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/PopOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/PullAllOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/PullOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/PushOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/RenameOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/SetOnInsertOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/SetOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/UnsetOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
   <file src="src/ClientBulkWrite.php">
     <InvalidAttribute>
       <code><![CDATA[NoDiscard]]></code>
@@ -231,6 +365,7 @@
       <code><![CDATA[$value]]></code>
     </ArgumentTypeCoercion>
     <InvalidReturnType>
+      <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>

@@ -11,11 +11,12 @@ use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
+use function array_first;
+use function array_key_first;
 use function assert;
 use function count;
-use function current;
 use function get_object_vars;
-use function key;
+use function is_string;
 
 /**
  * @template-implements Encoder<array<string, mixed>, Update>
@@ -33,22 +34,24 @@ final class UpdateEncoder implements Encoder
         return $value instanceof Update;
     }
 
-    /** @return list<mixed> */
+    /** @return array<string, mixed> */
     public function encode(mixed $value): array
     {
         if (! $this->canEncode($value)) {
             throw UnsupportedValueException::invalidEncodableValue($value);
         }
 
-        assert($value instanceof Update);
-
         $encoded = [];
-        foreach ($value->update as $key => $operator) {
+        foreach ($value->update as $operator) {
             assert($operator instanceof UpdateInterface);
+
             $array = (array) $this->recursiveEncode($operator);
             assert(count($array) === 1);
-            $key = key($array);
-            $operator = current($operator);
+
+            $key = array_key_first($array);
+            $operator = array_first($array);
+
+            assert(is_string($key));
             assert($operator instanceof stdClass);
 
             if (isset($encoded[$key])) {

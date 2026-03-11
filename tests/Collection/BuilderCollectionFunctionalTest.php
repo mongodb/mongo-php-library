@@ -6,6 +6,7 @@ use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\UpdatePipeline;
 use PHPUnit\Framework\Attributes\TestWith;
 
 class BuilderCollectionFunctionalTest extends FunctionalTestCase
@@ -190,7 +191,7 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
     {
         $result = $this->collection->findOneAndUpdate(
             Query::query(x: Query::lt(2)),
-            new Pipeline(
+            new UpdatePipeline(
                 Stage::set(x: 3),
             ),
         );
@@ -233,7 +234,7 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
     {
         $result = $this->collection->updateOne(
             Query::query(x: Query::lt(2)),
-            new Pipeline(
+            new UpdatePipeline(
                 Stage::set(x: 3),
             ),
         );
@@ -259,7 +260,7 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
     {
         $result = $this->collection->updateMany(
             Query::query(x: Query::gt(1)),
-            new Pipeline(
+            new UpdatePipeline(
                 Stage::set(x: 3),
             ),
         );

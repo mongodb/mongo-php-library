@@ -60,6 +60,7 @@ final class BuilderEncoder implements Encoder
 
         $this->encoders = $encoders + [
             Pipeline::class => new PipelineEncoder($self),
+            UpdatePipeline::class => new PipelineEncoder($self),
             Update::class => new UpdateEncoder($self),
             Variable::class => new VariableEncoder(),
             DictionaryInterface::class => new DictionaryEncoder(),

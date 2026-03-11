@@ -21,6 +21,7 @@ class AddToSetOperatorTest extends UpdateTestCase
 
     public function testUseEachModifier(): void
     {
+        // @todo Use builder for $each
         $update = Update::addToSet(tags: ['$each' => ['camera', 'electronics', 'accessories']]);
 
         $this->assertSameUpdate(Pipelines::AddToSetUseEachModifier, $update);

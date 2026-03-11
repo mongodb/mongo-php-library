@@ -85,7 +85,7 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
             [
                 'updateMany' => [
                     Query::query(x: Query::gt(1)),
-                    new Update(Update::set(x: 3)),
+                    Update::set(x: 3),
                 ],
             ],
         ]);
@@ -102,7 +102,7 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
             [
                 'updateOne' => [
                     Query::query(x: Query::eq(1)),
-                    new Update(Update::set(x: 3)),
+                    Update::set(x: 3),
                 ],
             ],
         ]);
@@ -177,7 +177,7 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
     {
         $result = $this->collection->findOneAndUpdate(
             Query::query(x: Query::lt(2)),
-            new Update(Update::set(x: 3)),
+            Update::set(x: 3),
         );
         $this->assertEquals(1, $result->x);
 
@@ -219,7 +219,7 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
 
         $result = $this->collection->updateOne(
             Query::query(x: Query::lt(2)),
-            new Update(Update::set(x: 3)),
+            Update::set(x: 3),
         );
         $this->assertEquals(1, $result->getModifiedCount());
 
@@ -243,13 +243,14 @@ class BuilderCollectionFunctionalTest extends FunctionalTestCase
     {
         $result = $this->collection->updateMany(
             Query::query(x: Query::gt(1)),
-            new Update(Update::set(x: 3)),
+            new Update(Update::set(x: 3), Update::inc(y: 1)),
         );
         $this->assertEquals(2, $result->getModifiedCount());
 
         $result = $this->collection->find(Query::query(x: Query::eq(3)))->toArray();
         $this->assertCount(2, $result);
         $this->assertEquals(3, $result[0]->x);
+        $this->assertEquals(1, $result[0]->y);
     }
 
     public function testUpdateManyWithPipeline(): void

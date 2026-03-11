@@ -18,14 +18,7 @@ class CurrentDateOperatorTest extends UpdateTestCase
             Update::currentDate(...['lastModified' => true, 'cancellation.date' => ['$type' => 'timestamp']]),
             Update::set(...['cancellation.reason' => 'user request'], status: 'D'),
         );
-        /*
-        $update = new Update(
-            Update::currentDate('lastModified'),
-            Update::currentDate('cancellation.date', type: 'timestamp'),
-            Update::set('cancellation.reason', 'user request'),
-            Update::set('status', 'D'),
-        );
-        */
+
         $this->assertSameUpdate(Pipelines::CurrentDateSetCurrentDateAndTimestamp, $update);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Encoder;
 
-use MongoDB\Builder\Type\UpdateInterface;
 use MongoDB\Builder\Update;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Codec\Encoder;
@@ -43,8 +42,6 @@ final class UpdateEncoder implements Encoder
 
         $encoded = [];
         foreach ($value->update as $operator) {
-            assert($operator instanceof UpdateInterface);
-
             $array = (array) $this->recursiveEncode($operator);
             assert(count($array) === 1);
 

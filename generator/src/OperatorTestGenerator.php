@@ -198,7 +198,7 @@ class OperatorTestGenerator extends OperatorGenerator
 
             return match ($object->getTag()) {
                 'bson_regex' => new Regex(...(array) $value),
-                'bson_int128' => new Int64($value),
+                'bson_int64' => new Int64($value),
                 'bson_decimal128' => new Decimal128($value),
                 'bson_utcdatetime' => new UTCDateTime(is_numeric($value) ? (int) $value : new DateTimeImmutable($value, new DateTimeZone('UTC'))),
                 'bson_binary' => new Binary(base64_decode($value)),

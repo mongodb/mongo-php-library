@@ -86,6 +86,10 @@ return $expressions + [
         'returnType' => Type\ExpressionInterface::class,
         'acceptedTypes' => [Type\ExpressionInterface::class, ...$bsonTypes['any']],
     ],
+    'expressionMap' => [
+        // @todo Allow only maps of ExpressionInterface
+        'acceptedTypes' => [...$bsonTypes['object']],
+    ],
     'fieldQuery' => [
         'returnType' => Type\FieldQueryInterface::class,
         'acceptedTypes' => [Type\FieldQueryInterface::class, ...$bsonTypes['any']],

@@ -15,7 +15,7 @@ use MongoDB\Tests\Builder\PipelineTestCase;
  */
 class ReplaceAllOperatorTest extends PipelineTestCase
 {
-    public function testExample(): void
+    public function testReplaceUsingAString(): void
     {
         $pipeline = new Pipeline(
             Stage::project(
@@ -27,21 +27,21 @@ class ReplaceAllOperatorTest extends PipelineTestCase
             ),
         );
 
-        $this->assertSamePipeline(Pipelines::ReplaceAllExample, $pipeline);
+        $this->assertSamePipeline(Pipelines::ReplaceAllReplaceUsingAString, $pipeline);
     }
 
-    public function testSupportRegexSearchString(): void
+    public function testReplaceUsingRegex(): void
     {
         $pipeline = new Pipeline(
             Stage::project(
                 item: Expression::replaceAll(
-                    input: '123-456-7890',
-                    find: new Regex('\d{3}'),
-                    replacement: 'xxx',
+                    input: Expression::stringFieldPath('item'),
+                    find: new Regex('\bblue paint\b'),
+                    replacement: 'red paint',
                 ),
             ),
         );
 
-        $this->assertSamePipeline(Pipelines::ReplaceAllSupportRegexSearchString, $pipeline);
+        $this->assertSamePipeline(Pipelines::ReplaceAllReplaceUsingRegex, $pipeline);
     }
 }

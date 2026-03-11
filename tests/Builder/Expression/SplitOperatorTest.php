@@ -50,18 +50,4 @@ class SplitOperatorTest extends PipelineTestCase
 
         $this->assertSamePipeline(Pipelines::SplitExample, $pipeline);
     }
-
-    public function testSupportRegexDelimiter(): void
-    {
-        $pipeline = new Pipeline(
-            Stage::project(
-                split: Expression::split(
-                    string: 'abc',
-                    delimiter: new Regex('b'),
-                ),
-            ),
-        );
-
-        $this->assertSamePipeline(Pipelines::SplitSupportRegexDelimiter, $pipeline);
-    }
 }

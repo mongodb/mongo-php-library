@@ -32,25 +32,6 @@ class FilterOperatorTest extends PipelineTestCase
         $this->assertSamePipeline(Pipelines::FilterExample, $pipeline);
     }
 
-    public function testLimitAsANumericExpression(): void
-    {
-        $pipeline = new Pipeline(
-            Stage::project(
-                items: Expression::filter(
-                    input: Expression::arrayFieldPath('items'),
-                    cond: Expression::lte(
-                        Expression::variable('item.price'),
-                        150,
-                    ),
-                    as: 'item',
-                    limit: 2,
-                ),
-            ),
-        );
-
-        $this->assertSamePipeline(Pipelines::FilterLimitAsANumericExpression, $pipeline);
-    }
-
     public function testLimitGreaterThanPossibleMatches(): void
     {
         $pipeline = new Pipeline(

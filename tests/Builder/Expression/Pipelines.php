@@ -714,7 +714,7 @@ enum Pipelines: string
     /**
      * Example
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/#examples
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/#example
      */
     case ConcatExample = <<<'JSON'
     [
@@ -1772,7 +1772,7 @@ enum Pipelines: string
     /**
      * Example
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/#example
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/#examples
      */
     case DivideExample = <<<'JSON'
     [
@@ -1880,7 +1880,7 @@ enum Pipelines: string
     /**
      * Using the limit field
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#using-the-limit-field
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#use-the-limit-field
      */
     case FilterUsingTheLimitField = <<<'JSON'
     [
@@ -1900,37 +1900,6 @@ enum Pipelines: string
                         "as": "item",
                         "limit": {
                             "$numberInt": "1"
-                        }
-                    }
-                }
-            }
-        }
-    ]
-    JSON;
-
-    /**
-     * limit as a Numeric Expression
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#limit-as-a-numeric-expression
-     */
-    case FilterLimitAsANumericExpression = <<<'JSON'
-    [
-        {
-            "$project": {
-                "items": {
-                    "$filter": {
-                        "input": "$items",
-                        "cond": {
-                            "$lte": [
-                                "$$item.price",
-                                {
-                                    "$numberInt": "150"
-                                }
-                            ]
-                        },
-                        "as": "item",
-                        "limit": {
-                            "$numberInt": "2"
                         }
                     }
                 }
@@ -1986,7 +1955,7 @@ enum Pipelines: string
     /**
      * Example
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/#example
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#example
      */
     case FirstNExample = <<<'JSON'
     [
@@ -2654,7 +2623,7 @@ enum Pipelines: string
     /**
      * Example
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/#example
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#example
      */
     case LastNExample = <<<'JSON'
     [
@@ -4200,11 +4169,11 @@ enum Pipelines: string
     JSON;
 
     /**
-     * Example
+     * Replace Using a String
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/#example
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/#replace-using-a-string
      */
-    case ReplaceAllExample = <<<'JSON'
+    case ReplaceAllReplaceUsingAString = <<<'JSON'
     [
         {
             "$project": {
@@ -4220,21 +4189,25 @@ enum Pipelines: string
     ]
     JSON;
 
-    /** Support regex search string */
-    case ReplaceAllSupportRegexSearchString = <<<'JSON'
+    /**
+     * Replace Using Regex
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/#replace-using-regex
+     */
+    case ReplaceAllReplaceUsingRegex = <<<'JSON'
     [
         {
             "$project": {
                 "item": {
                     "$replaceAll": {
-                        "input": "123-456-7890",
+                        "input": "$item",
                         "find": {
                             "$regularExpression": {
-                                "pattern": "\\d{3}",
+                                "pattern": "\\bblue paint\\b",
                                 "options": ""
                             }
                         },
-                        "replacement": "xxx"
+                        "replacement": "red paint"
                     }
                 }
             }
@@ -4297,32 +4270,6 @@ enum Pipelines: string
                         "$value",
                         {
                             "$numberInt": "1"
-                        }
-                    ]
-                }
-            }
-        }
-    ]
-    JSON;
-
-    /** Round Average Rating */
-    case RoundRoundAverageRating = <<<'JSON'
-    [
-        {
-            "$project": {
-                "roundedAverageRating": {
-                    "$avg": [
-                        {
-                            "$round": [
-                                {
-                                    "$avg": [
-                                        "$averageRating"
-                                    ]
-                                },
-                                {
-                                    "$numberInt": "2"
-                                }
-                            ]
                         }
                     ]
                 }
@@ -5031,27 +4978,6 @@ enum Pipelines: string
             "$sort": {
                 "total_qty": {
                     "$numberInt": "-1"
-                }
-            }
-        }
-    ]
-    JSON;
-
-    /** Support regex delimiter */
-    case SplitSupportRegexDelimiter = <<<'JSON'
-    [
-        {
-            "$project": {
-                "split": {
-                    "$split": [
-                        "abc",
-                        {
-                            "$regularExpression": {
-                                "pattern": "b",
-                                "options": ""
-                            }
-                        }
-                    ]
                 }
             }
         }

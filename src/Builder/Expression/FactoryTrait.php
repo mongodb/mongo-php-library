@@ -1042,7 +1042,7 @@ trait FactoryTrait
      *
      * New in MongoDB 5.1
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator
      * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return n elements.
      */
@@ -1490,7 +1490,7 @@ trait FactoryTrait
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $initialValue The initial cumulative value set before in is applied to the first element of the input array.
-     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
+     * @param DateTimeInterface|Document|ExpressionInterface|Serializable|Type|array|bool|float|int|null|stdClass|string $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
      * During evaluation of the in expression, two variables will be available:
      * - value is the variable that represents the cumulative value of the expression.
      * - this is the variable that refers to the element being processed.
@@ -1498,7 +1498,7 @@ trait FactoryTrait
     public static function reduce(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $initialValue,
-        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
+        DateTimeInterface|Document|Serializable|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
     ): ReduceOperator {
         return new ReduceOperator($input, $initialValue, $in);
     }
@@ -1809,7 +1809,7 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/
      * @param ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
-     * @param Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
+     * @param Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string or a regular expression.
      */
     public static function split(
         ResolvesToString|string $string,

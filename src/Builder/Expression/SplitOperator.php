@@ -27,12 +27,12 @@ final class SplitOperator implements ResolvesToArray, OperatorInterface
     /** @var ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string. */
     public readonly ResolvesToString|string $string;
 
-    /** @var Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string. */
+    /** @var Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string or a regular expression. */
     public readonly Regex|ResolvesToRegex|ResolvesToString|string $delimiter;
 
     /**
      * @param ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
-     * @param Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
+     * @param Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string or a regular expression.
      */
     public function __construct(
         ResolvesToString|string $string,

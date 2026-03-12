@@ -52,7 +52,7 @@ final class UpdateEncoder implements Encoder
             assert($operator instanceof stdClass);
 
             if (isset($encoded[$key])) {
-                foreach (get_object_vars($encoded[$key]) as $field => $value) {
+                foreach (get_object_vars($operator) as $field => $value) {
                     $encoded[$key]->{$field} = $value;
                 }
             } else {

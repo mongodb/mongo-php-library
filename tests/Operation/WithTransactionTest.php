@@ -52,4 +52,18 @@ class WithTransactionTest extends TestCase
 
         $this->assertNotSame($first, $second, 'computeBackoffMs() multiplies backoff with a random value');
     }
+
+    public function testJitter(): void
+    {
+        $operation = new WithTransaction(fn () => 0);
+
+        $method = new ReflectionMethod($operation, 'getJitter');
+
+        // Test that the default jitter value is between 0 and 1
+        for ($i = 0; $i < 100; $i++) {
+            $jitter = $method->invoke($operation);
+            $this->assertGreaterThanOrEqual(0, $jitter);
+            $this->assertLessThanOrEqual(1, $jitter);
+        }
+    }
 }

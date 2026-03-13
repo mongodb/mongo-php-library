@@ -12,7 +12,6 @@ use function call_user_func;
 use function floor;
 use function hrtime;
 use function min;
-use function mt_getrandmax;
 use function random_int;
 use function usleep;
 
@@ -212,10 +211,9 @@ final class WithTransaction
             return ($this->jitterGenerator)();
         }
 
-        // Jitter is a random float from [0, 1)
-        // Since rand will return an int from 0 to mt_getrandmax(), we can divide the result by mt_getrandmax() + 1 to
-        // get a float in the range [0, 1)
-        return random_int(0, mt_getrandmax()) / (mt_getrandmax() + 1);
+        // Jitter is a random float from [0, 1]
+        // 2 ** 53 is the largest integer that can be represented in a float without losing precision
+        return random_int(0, 2 ** 53) / 2 ** 53;
     }
 
     /**

@@ -14,7 +14,10 @@
         "ext-mongodb": "^2.2",
         "composer-runtime-api": "^2.0",
         "psr/log": "^1.1.4|^2|^3",
-        "symfony/polyfill-php85": "^1.32"
+        "symfony/polyfill-php82": "^1.33",
+        "symfony/polyfill-php83": "^1.33",
+        "symfony/polyfill-php84": "^1.33",
+        "symfony/polyfill-php85": "^1.33"
     },
     "require-dev": {
         "doctrine/coding-standard": "^12.0",

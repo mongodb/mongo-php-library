@@ -143,7 +143,7 @@ $ composer run checks
 
 ### Coding standards
 
-The library's code is checked using [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer),
+The library's code is checked using [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer),
 which is installed as a development dependency by Composer. To check the code
 for style errors, run the `phpcs` binary:
 

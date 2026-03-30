@@ -8,6 +8,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionMethod;
 use ReflectionProperty;
 
+use function array_map;
+use function array_unique;
+use function count;
+use function implode;
+use function range;
+use function sprintf;
+
 class WithTransactionTest extends TestCase
 {
     public static function provideComputeBackoffMSValues(): Generator
@@ -46,11 +53,12 @@ class WithTransactionTest extends TestCase
     {
         $operation = new WithTransaction(fn () => 0);
 
+        // The same random number can be generated multiple times,
+        // but we should get different values across multiple calls
         $method = new ReflectionMethod($operation, 'computeBackoffMs');
-        $first = $method->invoke($operation, 13);
-        $second = $method->invoke($operation, 13);
+        $results = array_map(fn () => $method->invoke($operation, 13), range(0, 5));
 
-        $this->assertNotSame($first, $second, 'computeBackoffMs() multiplies backoff with a random value');
+        $this->assertGreaterThan(1, count(array_unique($results)), sprintf('Expected random values, got %s', implode(', ', $results)));
     }
 
     public function testJitter(): void

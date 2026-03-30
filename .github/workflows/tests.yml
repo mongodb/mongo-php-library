@@ -91,7 +91,7 @@ jobs:
           MONGODB_URI: ${{ steps.setup-mongodb.outputs.cluster-uri }}
 
       - name: "Upload coverage report"
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           disable_search: true
           files: coverage.xml

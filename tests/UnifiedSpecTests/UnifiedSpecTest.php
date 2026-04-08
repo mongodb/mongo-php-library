@@ -74,6 +74,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         'sessions/snapshot-sessions: Aggregate operation with snapshot and snapshot time' => 'getSnapshotTime not implemented yet (PHPLIB-1725, PHPC-2658)',
         'sessions/snapshot-sessions: countDocuments operation with snapshot and snapshot time' => 'getSnapshotTime not implemented yet (PHPLIB-1725, PHPC-2658)',
         'sessions/snapshot-sessions: Mixed operation with snapshot and snapshotTime' => 'getSnapshotTime not implemented yet (PHPLIB-1725, PHPC-2658)',
+        'sessions/snapshot-sessions: Aggregate operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPLIB-1725, PHPC-2658)',
+        'sessions/snapshot-sessions: Mixed operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPLIB-1725, PHPC-2658)',
         // Backpressure tests rely on libmonogc
         'transactions/backpressure-' => 'Backpressure tests rely on libmongoc (PHPLIB-1719)',
     ];

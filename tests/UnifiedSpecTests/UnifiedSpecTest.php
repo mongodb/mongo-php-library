@@ -112,10 +112,7 @@ class UnifiedSpecTest extends FunctionalTestCase
      *
      * @var array<string, string>
      */
-    private static array $incompleteLoadBalancerTests = [
-        'transactions/mongos-recovery-token: commitTransaction explicit retries include recoveryToken' => 'libmongoc omits recoveryToken for load-balanced topology (CDRIVER-4718)',
-        'transactions/pin-mongos: multiple commits' => 'libmongoc does not pin for load-balanced topology',
-    ];
+    private static array $incompleteLoadBalancerTests = ['transactions/pin-mongos: multiple commits' => 'libmongoc does not pin for load-balanced topology'];
 
     private static UnifiedTestRunner $runner;
 

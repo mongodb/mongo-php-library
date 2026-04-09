@@ -13,6 +13,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
+use MongoDB\Operation\WithTransaction;
+use ReflectionProperty;
 use stdClass;
 
 use function array_diff_key;
@@ -238,5 +240,14 @@ final class Util
         }
 
         return $options;
+    }
+
+    public static function setFixedJitter(WithTransaction $operation, float $jitter): void
+    {
+        (new ReflectionProperty($operation, 'jitterGenerator'))
+            ->setValue(
+                $operation,
+                static fn (): float => $jitter,
+            );
     }
 }

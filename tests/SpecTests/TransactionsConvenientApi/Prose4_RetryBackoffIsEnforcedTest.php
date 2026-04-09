@@ -5,6 +5,7 @@ namespace MongoDB\Tests\SpecTests\TransactionsConvenientApi;
 use MongoDB\Driver\Session;
 use MongoDB\Operation\WithTransaction;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
+use MongoDB\Tests\UnifiedSpecTests\Util;
 use ReflectionProperty;
 
 use function microtime;
@@ -29,7 +30,7 @@ class Prose4_RetryBackoffIsEnforcedTest extends FunctionalTestCase
         $operation = new WithTransaction($callback);
         $session = $client->startSession();
 
-        $this->setFixedJitter($operation, 0);
+        Util::setFixedJitter($operation, 0);
         $noBackoffTime = $this->runOperationWithTiming($operation, $session);
 
         $this->setFixedJitter($operation, 1);
@@ -46,15 +47,6 @@ class Prose4_RetryBackoffIsEnforcedTest extends FunctionalTestCase
         $operation->execute($session);
 
         return microtime(true) - $start;
-    }
-
-    private function setFixedJitter(WithTransaction $operation, float $jitter): void
-    {
-        (new ReflectionProperty($operation, 'jitterGenerator'))
-            ->setValue(
-                $operation,
-                static fn (): float => $jitter,
-            );
     }
 
     private function setUpCommitTransactionFailPoint(): void

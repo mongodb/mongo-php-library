@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 #[RequiresPhpExtension('mongodb', '>= 2.3.0dev')]
 class Prose3_OverloadErrorMaxRetryTest extends FunctionalTestCase
 {
-    private const MAX_RETRIES = 5;
+    private const MAX_RETRIES = 2;
 
     public function testOverloadErrorsAreRetriedMaxRetryTimes(): void
     {

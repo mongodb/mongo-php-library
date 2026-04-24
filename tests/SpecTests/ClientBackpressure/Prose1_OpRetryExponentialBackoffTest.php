@@ -3,13 +3,13 @@
 namespace MongoDB\Tests\SpecTests\ClientBackpressure;
 
 use MongoDB\Driver\Exception\BulkWriteException;
-use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Session;
 use MongoDB\Operation\WithTransaction;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\Util;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
+use function hrtime;
 
 /**
  * Prose test 1: Retry operation uses exponential backoff
@@ -59,7 +59,7 @@ class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
         try {
             $operation->execute($session);
             $this->fail('Expected exception was not thrown');
-        } catch (BulkWriteException $e) {
+        } catch (BulkWriteException) {
             // Expected Exception due to failCommand, ignore
         }
 

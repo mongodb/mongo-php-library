@@ -2,13 +2,14 @@
 
 namespace MongoDB\Tests\SpecTests\ClientBackpressure;
 
-use MongoDB\Driver\Exception\BulkWriteException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Session;
 use MongoDB\Operation\WithTransaction;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\Util;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
+use function abs;
 use function hrtime;
 
 /**
@@ -34,15 +35,15 @@ class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
         $session = $client->startSession();
 
         Util::setFixedJitter($operation, 0);
-        $noBackoffTime = $this->getOperationExecutionTimeMs($session, $operation);
+        $noBackoffTime = $this->getOperationExecutionTime($session, $operation);
 
         Util::setFixedJitter($operation, 1);
-        $withBackoffTime = $this->getOperationExecutionTimeMs($session, $operation);
+        $withBackoffTime = $this->getOperationExecutionTime($session, $operation);
 
-        self::assertEqualsWithDelta($noBackoffTime, $withBackoffTime, 2.1);
+        self::assertLessThan(0.3, abs($withBackoffTime - ($noBackoffTime + 0.3)));
     }
 
-    private function getOperationExecutionTimeMs(Session $session, WithTransaction $operation): float
+    private function getOperationExecutionTime(Session $session, WithTransaction $operation): float
     {
         $this->configureFailPoint([
             'configureFailPoint' => 'failCommand',
@@ -59,10 +60,11 @@ class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
         try {
             $operation->execute($session);
             $this->fail('Expected exception was not thrown');
-        } catch (BulkWriteException) {
+        } catch (ServerException) {
             // Expected Exception due to failCommand, ignore
         }
 
+        // Return duration in seconds
         return (hrtime(true) - $start) / 1e9;
     }
 }

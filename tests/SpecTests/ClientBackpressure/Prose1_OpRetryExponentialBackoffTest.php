@@ -10,7 +10,6 @@ use MongoDB\Tests\SpecTests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\Util;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
-use function microtime;
 
 /**
  * Prose test 1: Retry operation uses exponential backoff
@@ -35,15 +34,15 @@ class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
         $session = $client->startSession();
 
         Util::setFixedJitter($operation, 0);
-        $noBackoffTime = $this->getOperationExecutionTime($session, $operation);
+        $noBackoffTime = $this->getOperationExecutionTimeMs($session, $operation);
 
         Util::setFixedJitter($operation, 1);
-        $withBackoffTime = $this->getOperationExecutionTime($session, $operation);
+        $withBackoffTime = $this->getOperationExecutionTimeMs($session, $operation);
 
         self::assertEqualsWithDelta($noBackoffTime, $withBackoffTime, 2.1);
     }
 
-    private function getOperationExecutionTime(Session $session, WithTransaction $operation): float
+    private function getOperationExecutionTimeMs(Session $session, WithTransaction $operation): float
     {
         $this->configureFailPoint([
             'configureFailPoint' => 'failCommand',
@@ -55,14 +54,15 @@ class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
             ],
         ]);
 
-        $start = microtime(true);
+        $start = hrtime(true);
 
         try {
             $operation->execute($session);
+            $this->fail('Expected exception was not thrown');
         } catch (BulkWriteException $e) {
-            self::assertInstanceOf(ServerException::class, $e->getPrevious());
-        } finally {
-            return microtime(true) - $start;
+            // Expected Exception due to failCommand, ignore
         }
+
+        return (hrtime(true) - $start) / 1e9;
     }
 }

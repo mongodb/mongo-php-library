@@ -8,12 +8,14 @@ use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
  * Prose test 3: Overload Errors are Retried a Maximum of MAX_RETRIES times
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/client-backpressure/tests/README.md
  */
+#[RequiresPhpExtension('mongodb', '>= 2.3.0dev')]
 class Prose3_OverloadErrorMaxRetryTest extends FunctionalTestCase
 {
     private const MAX_RETRIES = 5;

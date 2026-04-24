@@ -8,6 +8,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Operation\WithTransaction;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\Util;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 use function microtime;
 
@@ -16,6 +17,7 @@ use function microtime;
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/client-backpressure/tests/README.md
  */
+#[RequiresPhpExtension('mongodb', '>= 2.3.0dev')]
 class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
 {
     public function testOperationRetryUsesExponentialBackoff(): void

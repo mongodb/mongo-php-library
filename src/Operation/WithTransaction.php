@@ -207,7 +207,7 @@ final class WithTransaction
 
     private function getJitter(): float
     {
-        if ($this->jitterGenerator) {
+        if ($this->jitterGenerator !== null) {
             return ($this->jitterGenerator)();
         }
 

@@ -498,12 +498,6 @@
     </MixedArgument>
   </file>
   <file src="src/Model/ChangeStreamIterator.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$cursor]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[CursorInterface<TValue>]]></code>
-    </InvalidReturnType>
     <MixedArgument>
       <code><![CDATA[$reply->cursor->nextBatch]]></code>
     </MixedArgument>

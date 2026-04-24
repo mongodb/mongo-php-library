@@ -17,6 +17,7 @@
 
 namespace MongoDB\Model;
 
+use Iterator;
 use IteratorIterator;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
@@ -78,9 +79,9 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
      *
      * @see https://github.com/vimeo/psalm/pull/11100.
      *
-     * @return CursorInterface<TValue>
+     * @return Iterator<int, TValue>&CursorInterface
      */
-    public function getInnerIterator(): CursorInterface
+    public function getInnerIterator(): Iterator&CursorInterface
     {
         $cursor = parent::getInnerIterator();
         assert($cursor instanceof CursorInterface);

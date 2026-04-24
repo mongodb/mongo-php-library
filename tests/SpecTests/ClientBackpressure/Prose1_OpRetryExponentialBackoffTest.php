@@ -23,6 +23,7 @@ class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
     public function testOperationRetryUsesExponentialBackoff(): void
     {
         $this->skipIfTransactionsAreNotSupported();
+        $this->skipIfServerVersion('<', '4.3.1', 'Test requires configureFailPoint to support errorLabels');
 
         $client = self::createTestClient();
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());

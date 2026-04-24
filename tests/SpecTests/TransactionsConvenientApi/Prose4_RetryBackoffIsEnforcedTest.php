@@ -6,7 +6,6 @@ use MongoDB\Driver\Session;
 use MongoDB\Operation\WithTransaction;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\Util;
-use ReflectionProperty;
 
 use function microtime;
 

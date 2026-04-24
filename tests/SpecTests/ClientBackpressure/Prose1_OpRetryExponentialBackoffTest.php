@@ -2,14 +2,14 @@
 
 namespace MongoDB\Tests\SpecTests\ClientBackpressure;
 
-use Exception;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Session;
 use MongoDB\Operation\WithTransaction;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\Util;
-use ReflectionException;
+
+use function microtime;
 
 /**
  * Prose test 1: Retry operation uses exponential backoff
@@ -18,10 +18,7 @@ use ReflectionException;
  */
 class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
 {
-    /**
-     * @throws ReflectionException
-     */
-    public function testOperationRetryUsesExponentialBackoff()
+    public function testOperationRetryUsesExponentialBackoff(): void
     {
         $this->skipIfTransactionsAreNotSupported();
 
@@ -44,9 +41,6 @@ class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
         self::assertEqualsWithDelta($noBackoffTime, $withBackoffTime, 2.1);
     }
 
-    /**
-     * @throws Exception
-     */
     private function getOperationExecutionTime(Session $session, WithTransaction $operation): float
     {
         $this->configureFailPoint([

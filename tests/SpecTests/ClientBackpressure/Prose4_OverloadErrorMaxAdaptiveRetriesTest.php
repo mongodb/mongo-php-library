@@ -10,19 +10,19 @@ use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 
 /**
- * Prose test 3: Overload Errors are Retried a Maximum of MAX_RETRIES times
+ * Prose test 4: Overload Errors are Retried a Maximum of maxAdaptiveRetries times when configured
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/client-backpressure/tests/README.md#test-3-overload-errors-are-retried-a-maximum-of-max_retries-times
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-backpressure/tests/README.md#test-4-overload-errors-are-retried-a-maximum-of-maxadaptiveretries-times-when-configured
  */
-class Prose3_OverloadErrorMaxRetryTest extends FunctionalTestCase
+class Prose4_OverloadErrorMaxAdaptiveRetriesTest extends FunctionalTestCase
 {
-    private const MAX_RETRIES = 2;
+    private const MAX_ADAPTIVE_RETRIES = 1;
 
-    public function testOverloadErrorsAreRetriedMaxRetryTimes(): void
+    public function testOverloadErrorsAreRetriedMaxAdaptiveRetryTimes(): void
     {
         $this->skipIfServerVersion('<', '4.3.1', 'Test requires configureFailPoint to support errorLabels');
 
-        $client = self::createTestClient();
+        $client = self::createTestClient(options: ['maxAdaptiveRetries' => self::MAX_ADAPTIVE_RETRIES]);
         $collection = $client->getCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $subscriber = new class implements CommandSubscriber {
@@ -66,6 +66,6 @@ class Prose3_OverloadErrorMaxRetryTest extends FunctionalTestCase
 
         $client->removeSubscriber($subscriber);
 
-        $this->assertSame(self::MAX_RETRIES + 1, $subscriber->findCommandsStarted);
+        $this->assertSame(self::MAX_ADAPTIVE_RETRIES + 1, $subscriber->findCommandsStarted);
     }
 }

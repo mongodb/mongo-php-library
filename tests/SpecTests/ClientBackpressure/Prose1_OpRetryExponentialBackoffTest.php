@@ -7,7 +7,6 @@ use MongoDB\Driver\Session;
 use MongoDB\Operation\WithTransaction;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\Util;
-use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 use function abs;
 use function hrtime;
@@ -15,9 +14,8 @@ use function hrtime;
 /**
  * Prose test 1: Retry operation uses exponential backoff
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/client-backpressure/tests/README.md
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-backpressure/tests/README.md#test-1-operation-retry-uses-exponential-backoff
  */
-#[RequiresPhpExtension('mongodb', '>= 2.3.0dev')]
 class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
 {
     public function testOperationRetryUsesExponentialBackoff(): void
@@ -26,7 +24,7 @@ class Prose1_OpRetryExponentialBackoffTest extends FunctionalTestCase
         $this->skipIfServerVersion('<', '4.3.1', 'Test requires configureFailPoint to support errorLabels');
 
         $client = self::createTestClient();
-        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+        $collection = $client->getCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $callback = static function (Session $session) use ($collection): void {
             $collection->insertOne(['a' => 1], ['session' => $session]);

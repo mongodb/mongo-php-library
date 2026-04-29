@@ -1732,6 +1732,19 @@ trait FactoryTrait
     }
 
     /**
+     * Returns the sigmoid of a value, defined as 1 / (1 + e^(-x)). The result is a value between 0 and 1.
+     *
+     * New in MongoDB 8.1
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sigmoid/
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $sigmoid takes any valid expression that resolves to a number.
+     */
+    public static function sigmoid(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): SigmoidOperator
+    {
+        return new SigmoidOperator($expression);
+    }
+
+    /**
      * Returns the sine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/

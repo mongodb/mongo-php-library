@@ -563,6 +563,28 @@ trait FluentFactoryTrait
     }
 
     /**
+     * Combines multiple pipelines using rank-based fusion to create hybrid search results.
+     *
+     * New in MongoDB 8.1
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rankFusion/
+     * @param Document|Serializable|array|stdClass $input An object with the following required fields:
+     * - input.pipelines: Map from name to ranked input pipeline. Each pipeline must operate on the same collection. Minimum of one pipeline.
+     * @param bool $scoreDetails Set to true to include detailed scoring information.
+     * @param Optional|Document|Serializable|array|stdClass $combination An object with the following optional fields:
+     * - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
+     */
+    public function rankFusion(
+        Document|Serializable|stdClass|array $input,
+        bool $scoreDetails = false,
+        Optional|Document|Serializable|stdClass|array $combination = Optional::Undefined,
+    ): static {
+        $this->pipeline[] = Stage::rankFusion($input, $scoreDetails, $combination);
+
+        return $this;
+    }
+
+    /**
      * Reshapes each document in the stream by restricting the content for each document based on information stored in the documents themselves. Incorporates the functionality of $project and $match. Can be used to implement field level redaction. For each input document, outputs either one or zero documents.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/

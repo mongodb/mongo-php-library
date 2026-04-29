@@ -4644,6 +4644,23 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sigmoid/#examples
+     */
+    case SigmoidExample = <<<'JSON'
+    [
+        {
+            "$set": {
+                "scaled": {
+                    "$sigmoid": "$score"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/#example
      */
     case SinExample = <<<'JSON'

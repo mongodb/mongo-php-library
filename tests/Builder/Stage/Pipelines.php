@@ -2242,6 +2242,64 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rankFusion/#examples
+     */
+    case RankFusionExample = <<<'JSON'
+    [
+        {
+            "$rankFusion": {
+                "input": {
+                    "pipelines": {
+                        "searchPlot": [
+                            {
+                                "$search": {
+                                    "index": "default",
+                                    "text": {
+                                        "query": "space",
+                                        "path": "plot"
+                                    }
+                                }
+                            }
+                        ],
+                        "searchGenre": [
+                            {
+                                "$search": {
+                                    "index": "default",
+                                    "text": {
+                                        "query": "adventure",
+                                        "path": "genres"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "combination": {
+                    "weights": {
+                        "searchPlot": {
+                            "$numberDouble": "0.5999999999999999778"
+                        },
+                        "searchGenre": {
+                            "$numberDouble": "0.4000000000000000222"
+                        }
+                    }
+                },
+                "scoreDetails": true
+            }
+        },
+        {
+            "$addFields": {
+                "scoreDetails": {
+                    "$meta": "searchScoreDetails"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Evaluate Access at Every Document Level
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#evaluate-access-at-every-document-level

@@ -2244,6 +2244,158 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Hash a Field Value
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hash/#hash-a-field-value
+     */
+    case HashHashAFieldValue = <<<'JSON'
+    [
+        {
+            "$project": {
+                "filename": {
+                    "$numberInt": "1"
+                },
+                "hash": {
+                    "$hash": {
+                        "input": "$filename",
+                        "algorithm": "sha256"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Hash a Literal String
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hash/#hash-a-literal-string
+     */
+    case HashHashALiteralString = <<<'JSON'
+    [
+        {
+            "$documents": [
+                {
+                    "val": "hello"
+                }
+            ]
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "hash": {
+                    "$hash": {
+                        "input": "$val",
+                        "algorithm": "xxh64"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Hash BinData
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hash/#hash-bindata
+     */
+    case HashHashBinData = <<<'JSON'
+    [
+        {
+            "$project": {
+                "hash": {
+                    "$hash": {
+                        "input": "$data",
+                        "algorithm": "sha256"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Null or Missing Input
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hash/#null-or-missing-input
+     */
+    case HashNullOrMissingInput = <<<'JSON'
+    [
+        {
+            "$documents": [
+                {
+                    "val": null
+                },
+                {}
+            ]
+        },
+        {
+            "$project": {
+                "hash": {
+                    "$hash": {
+                        "input": "$val",
+                        "algorithm": "sha256"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Hash a Field Value
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hexHash/#hash-a-field-value
+     */
+    case HexHashHashAFieldValue = <<<'JSON'
+    [
+        {
+            "$project": {
+                "filename": {
+                    "$numberInt": "1"
+                },
+                "hexHash": {
+                    "$hexHash": {
+                        "input": "$filename",
+                        "algorithm": "sha256"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Null or Missing Input
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hexHash/#null-or-missing-input
+     */
+    case HexHashNullOrMissingInput = <<<'JSON'
+    [
+        {
+            "$documents": [
+                {
+                    "val": null
+                },
+                {}
+            ]
+        },
+        {
+            "$project": {
+                "hexHash": {
+                    "$hexHash": {
+                        "input": "$val",
+                        "algorithm": "sha256"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/#example

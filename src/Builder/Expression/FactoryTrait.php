@@ -847,6 +847,42 @@ trait FactoryTrait
     }
 
     /**
+     * Generates and returns a binary hash value (BinData) from a UTF-8 string or binary data. Use $hash in an aggregation
+     * pipeline to compute binary hashes for storage, verification, or comparison. To get a hexadecimal string instead of
+     * binary data, use $hexHash.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hash/
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input
+     * @param string $algorithm
+     */
+    public static function hash(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
+        string $algorithm,
+    ): HashOperator {
+        return new HashOperator($input, $algorithm);
+    }
+
+    /**
+     * Generates and returns an uppercase hexadecimal string representation of a hash value from a UTF-8 string or binary
+     * data. Use $hexHash in an aggregation pipeline to compute hex-encoded hashes for storage, verification, or comparison.
+     * To get binary data instead of a hexadecimal string, use $hash.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hexHash/
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input
+     * @param string $algorithm
+     */
+    public static function hexHash(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
+        string $algorithm,
+    ): HexHashOperator {
+        return new HexHashOperator($input, $algorithm);
+    }
+
+    /**
      * Returns the hour for a date as a number between 0 and 23.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/

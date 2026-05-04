@@ -34,9 +34,7 @@ final class SigmoidOperator implements ResolvesToDouble, OperatorInterface
     /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $expression $sigmoid takes any valid expression that resolves to a number. */
     public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $expression;
 
-    /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $sigmoid takes any valid expression that resolves to a number.
-     */
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $sigmoid takes any valid expression that resolves to a number. */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $expression)
     {
         if (is_string($expression) && ! str_starts_with($expression, '$')) {

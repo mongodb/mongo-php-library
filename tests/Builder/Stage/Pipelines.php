@@ -2598,6 +2598,76 @@ enum Pipelines: string
     /**
      * Example
      *
+     * @see https://www.mongodb.com/docs/vector-search/query/aggregation-stages/rerank/#examples
+     */
+    case RerankExample = <<<'JSON'
+    [
+        {
+            "$match": {
+                "plot": {
+                    "$exists": true,
+                    "$type": [
+                        "string"
+                    ]
+                }
+            }
+        },
+        {
+            "$sort": {
+                "released": {
+                    "$numberInt": "-1"
+                }
+            }
+        },
+        {
+            "$rerank": {
+                "model": "rerank-2.5",
+                "query": {
+                    "text": "a group of heroes band together to stop a powerful enemy and save the world"
+                },
+                "numDocsToRerank": {
+                    "$numberInt": "100"
+                },
+                "path": [
+                    "title",
+                    "plot"
+                ]
+            }
+        },
+        {
+            "$addFields": {
+                "rerankScore": {
+                    "$meta": "score"
+                }
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "10"
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "rerankScore": {
+                    "$numberInt": "1"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Example
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/#example
      */
     case SampleExample = <<<'JSON'

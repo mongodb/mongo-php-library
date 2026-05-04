@@ -505,11 +505,9 @@ trait FactoryTrait
      * New in MongoDB 8.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rankFusion/
-     * @param Document|Serializable|array|stdClass $input An object with the following required fields:
-     * - input.pipelines: Map from name to ranked input pipeline. Each pipeline must operate on the same collection. Minimum of one pipeline.
+     * @param Document|Serializable|array|stdClass $input An object that specifies the pipelines to combine with rank fusion.
      * @param bool $scoreDetails Set to true to include detailed scoring information.
-     * @param Optional|Document|Serializable|array|stdClass $combination An object with the following optional fields:
-     * - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
+     * @param Optional|Document|Serializable|array|stdClass $combination An object that specifies how to combine the ranked results.
      */
     public static function rankFusion(
         Document|Serializable|stdClass|array $input,
@@ -557,6 +555,26 @@ trait FactoryTrait
     }
 
     /**
+     * Reranks documents using a Voyage AI reranking model to improve relevance scoring.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/vector-search/query/aggregation-stages/rerank/
+     * @param string $model Name of the Voyage AI reranking model to use (e.g. rerank-2.5, rerank-2.5-lite).
+     * @param Document|Serializable|array|stdClass $query Query object for reranking.
+     * @param BSONArray|PackedArray|array|string $path Field path or array of field paths to use for reranking.
+     * @param int $numDocsToRerank Maximum number of documents to send to Voyage AI for reranking. Value must be between 1 and 1000.
+     */
+    public static function rerank(
+        string $model,
+        Document|Serializable|stdClass|array $query,
+        PackedArray|BSONArray|array|string $path,
+        int $numDocsToRerank,
+    ): RerankStage {
+        return new RerankStage($model, $query, $path, $numDocsToRerank);
+    }
+
+    /**
      * Randomly selects the specified number of documents from its input.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
@@ -573,14 +591,9 @@ trait FactoryTrait
      * New in MongoDB 8.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/
-     * @param Document|Serializable|array|stdClass $input An object with the following required fields:
-     * - input.pipelines: Map from name to input pipeline. Each pipeline must be operating on the same collection. Minimum of one pipeline.
-     * - input.normalization: Normalizes the score to the range 0 to 1 before combining the results. Value can be none, sigmoid or minMaxScaler.
+     * @param Document|Serializable|array|stdClass $input An object that specifies the pipelines to combine with score fusion.
      * @param bool $scoreDetails Set to true to include detailed scoring information.
-     * @param Optional|Document|Serializable|array|stdClass $combination An object with the following optional fields:
-     * - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
-     * - combination.method: Specifies method for combining scores. Value can be avg or expression. Default is avg.
-     * - combination.expression: This is the custom expression that is used when combination.method is set to expression.
+     * @param Optional|Document|Serializable|array|stdClass $combination An object that specifies how to combine the scores.
      */
     public static function scoreFusion(
         Document|Serializable|stdClass|array $input,

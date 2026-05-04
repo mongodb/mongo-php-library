@@ -30,33 +30,19 @@ final class ScoreFusionStage implements StageInterface, OperatorInterface
     public const NAME = '$scoreFusion';
     public const PROPERTIES = ['input' => 'input', 'scoreDetails' => 'scoreDetails', 'combination' => 'combination'];
 
-    /**
-     * @var Document|Serializable|array|stdClass $input An object with the following required fields:
-     * - input.pipelines: Map from name to input pipeline. Each pipeline must be operating on the same collection. Minimum of one pipeline.
-     * - input.normalization: Normalizes the score to the range 0 to 1 before combining the results. Value can be none, sigmoid or minMaxScaler.
-     */
+    /** @var Document|Serializable|array|stdClass $input An object that specifies the pipelines to combine with score fusion. */
     public readonly Document|Serializable|stdClass|array $input;
 
     /** @var bool $scoreDetails Set to true to include detailed scoring information. */
     public readonly bool $scoreDetails;
 
-    /**
-     * @var Optional|Document|Serializable|array|stdClass $combination An object with the following optional fields:
-     * - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
-     * - combination.method: Specifies method for combining scores. Value can be avg or expression. Default is avg.
-     * - combination.expression: This is the custom expression that is used when combination.method is set to expression.
-     */
+    /** @var Optional|Document|Serializable|array|stdClass $combination An object that specifies how to combine the scores. */
     public readonly Optional|Document|Serializable|stdClass|array $combination;
 
     /**
-     * @param Document|Serializable|array|stdClass $input An object with the following required fields:
-     * - input.pipelines: Map from name to input pipeline. Each pipeline must be operating on the same collection. Minimum of one pipeline.
-     * - input.normalization: Normalizes the score to the range 0 to 1 before combining the results. Value can be none, sigmoid or minMaxScaler.
+     * @param Document|Serializable|array|stdClass $input An object that specifies the pipelines to combine with score fusion.
      * @param bool $scoreDetails Set to true to include detailed scoring information.
-     * @param Optional|Document|Serializable|array|stdClass $combination An object with the following optional fields:
-     * - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
-     * - combination.method: Specifies method for combining scores. Value can be avg or expression. Default is avg.
-     * - combination.expression: This is the custom expression that is used when combination.method is set to expression.
+     * @param Optional|Document|Serializable|array|stdClass $combination An object that specifies how to combine the scores.
      */
     public function __construct(
         Document|Serializable|stdClass|array $input,

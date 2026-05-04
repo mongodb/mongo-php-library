@@ -30,27 +30,19 @@ final class RankFusionStage implements StageInterface, OperatorInterface
     public const NAME = '$rankFusion';
     public const PROPERTIES = ['input' => 'input', 'scoreDetails' => 'scoreDetails', 'combination' => 'combination'];
 
-    /**
-     * @var Document|Serializable|array|stdClass $input An object with the following required fields:
-     * - input.pipelines: Map from name to ranked input pipeline. Each pipeline must operate on the same collection. Minimum of one pipeline.
-     */
+    /** @var Document|Serializable|array|stdClass $input An object that specifies the pipelines to combine with rank fusion. */
     public readonly Document|Serializable|stdClass|array $input;
 
     /** @var bool $scoreDetails Set to true to include detailed scoring information. */
     public readonly bool $scoreDetails;
 
-    /**
-     * @var Optional|Document|Serializable|array|stdClass $combination An object with the following optional fields:
-     * - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
-     */
+    /** @var Optional|Document|Serializable|array|stdClass $combination An object that specifies how to combine the ranked results. */
     public readonly Optional|Document|Serializable|stdClass|array $combination;
 
     /**
-     * @param Document|Serializable|array|stdClass $input An object with the following required fields:
-     * - input.pipelines: Map from name to ranked input pipeline. Each pipeline must operate on the same collection. Minimum of one pipeline.
+     * @param Document|Serializable|array|stdClass $input An object that specifies the pipelines to combine with rank fusion.
      * @param bool $scoreDetails Set to true to include detailed scoring information.
-     * @param Optional|Document|Serializable|array|stdClass $combination An object with the following optional fields:
-     * - combination.weights: Map from pipeline name to numbers (non-negative). If unspecified, default weight is 1 for each pipeline.
+     * @param Optional|Document|Serializable|array|stdClass $combination An object that specifies how to combine the ranked results.
      */
     public function __construct(
         Document|Serializable|stdClass|array $input,

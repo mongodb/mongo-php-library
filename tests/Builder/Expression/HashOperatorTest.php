@@ -22,7 +22,7 @@ class HashOperatorTest extends PipelineTestCase
             Stage::project(
                 filename: 1,
                 hash: Expression::hash(
-                    Expression::fieldPath('filename'),
+                    Expression::stringFieldPath('filename'),
                     'sha256',
                 ),
             ),

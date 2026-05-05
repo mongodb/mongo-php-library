@@ -854,11 +854,11 @@ trait FactoryTrait
      * New in MongoDB 8.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hash/
-     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input
+     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $input
      * @param string $algorithm
      */
     public static function hash(
-        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
+        Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $input,
         string $algorithm,
     ): HashOperator {
         return new HashOperator($input, $algorithm);
@@ -872,11 +872,11 @@ trait FactoryTrait
      * New in MongoDB 8.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hexHash/
-     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input
+     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $input
      * @param string $algorithm
      */
     public static function hexHash(
-        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
+        Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $input,
         string $algorithm,
     ): HexHashOperator {
         return new HexHashOperator($input, $algorithm);

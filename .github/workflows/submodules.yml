@@ -26,6 +26,6 @@ jobs:
 
     steps:
       - name: "Validate submodule commits"
-        uses: "./.github/actions/validate-submodules"
+        uses: "GromNaN/mongodb-drivers-github-tools/validate-submodules@validate-submodules"
         with:
           token: ${{ github.token }}

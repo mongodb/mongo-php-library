@@ -1,0 +1,87 @@
+name: "Submodule Validation"
+
+on:
+  merge_group:
+    paths:
+      - ".gitmodules"
+      - ".github/workflows/submodules.yml"
+      - "tests/drivers-evergreen-tools"
+      - "tests/specifications"
+      - "generator/mql-specifications"
+  pull_request:
+    branches:
+      - "v*.*"
+      - "feature/*"
+    paths:
+      - ".gitmodules"
+      - ".github/workflows/submodules.yml"
+      - "tests/drivers-evergreen-tools"
+      - "tests/specifications"
+      - "generator/mql-specifications"
+
+jobs:
+  validate-submodules:
+    name: "Validate submodule references"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v6"
+        with:
+          fetch-depth: 0
+
+      - name: "Validate submodule commits"
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eo pipefail
+          errors=0
+
+          while IFS=" " read -r key path; do
+            name="${key#submodule.}"
+            name="${name%.path}"
+
+            url=$(git config -f .gitmodules "submodule.$name.url")
+            repo=$(echo "$url" | sed 's|https://github.com/||;s|\.git$||')
+            branch=$(git config -f .gitmodules "submodule.$name.branch")
+
+            pr_sha=$(git ls-files --stage -- "$path" | awk '{print $2}')
+            base_sha=$(git ls-tree "origin/$BASE_REF" -- "$path" 2>/dev/null | awk '{print $3}' || true)
+
+            echo "::group::Checking submodule: $name"
+            printf "  Repo:        %s\n" "$repo"
+            printf "  PR commit:   %s\n" "$pr_sha"
+            printf "  Base commit: %s\n" "${base_sha:-unknown}"
+
+            # Check 1: pr_sha is on the upstream default (or configured) branch
+            # "behind" or "identical" means pr_sha is an ancestor of the branch HEAD
+            status=$(gh api "repos/$repo/compare/$branch...$pr_sha?per_page=1" --jq '.status' 2>/dev/null || echo "error")
+            if [ "$status" = "behind" ] || [ "$status" = "identical" ]; then
+              echo "  ✓ Commit is on the upstream branch"
+            else
+              echo "::error::Submodule '$name': commit $pr_sha is not on the upstream branch (status: $status)"
+              errors=$((errors + 1))
+            fi
+
+            # Check 2: pr_sha must not be older than the target branch's submodule commit
+            # "ahead" or "identical" means pr_sha is a descendant of base_sha
+            if [ -n "$base_sha" ] && [ "$base_sha" != "$pr_sha" ]; then
+              status=$(gh api "repos/$repo/compare/$base_sha...$pr_sha?per_page=1" --jq '.status' 2>/dev/null || echo "error")
+              if [ "$status" = "ahead" ] || [ "$status" = "identical" ]; then
+                printf "  ✓ Moves forward from target branch (%s → %s)\n" "${base_sha:0:8}" "${pr_sha:0:8}"
+              else
+                echo "::error::Submodule '$name' regresses: target branch has $base_sha but PR has $pr_sha (status: $status)"
+                errors=$((errors + 1))
+              fi
+            fi
+
+            echo "::endgroup::"
+          done < <(git config -f .gitmodules --get-regexp 'submodule\..*\.path')
+
+          if [ $errors -gt 0 ]; then
+            echo "::error::$errors submodule check(s) failed"
+            exit 1
+          fi
+
+          echo "All submodule checks passed"

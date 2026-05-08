@@ -198,6 +198,36 @@ trait FactoryTrait
     }
 
     /**
+     * The `hasAncestor` operator queries an `embeddedDocuments` type field specified in the `ancestorPath`. The `ancestorPath` is a parent of the field specified in the `returnScope`.
+     *
+     * New in MongoDB 8.2
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasancestor/
+     * @param array|string $ancestorPath
+     * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator
+     */
+    public static function hasAncestor(
+        array|string $ancestorPath,
+        Document|Serializable|SearchOperatorInterface|stdClass|array $operator,
+    ): HasAncestorOperator {
+        return new HasAncestorOperator($ancestorPath, $operator);
+    }
+
+    /**
+     * The `hasRoot` operator can be used to query root-level fields when you specify the `returnScope` and `returnStoredSource` options.
+     *
+     * New in MongoDB 8.2
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasroot/
+     * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator
+     */
+    public static function hasRoot(
+        Document|Serializable|SearchOperatorInterface|stdClass|array $operator,
+    ): HasRootOperator {
+        return new HasRootOperator($operator);
+    }
+
+    /**
      * The in operator performs a search for an array of BSON values in a field.
      *
      * New in MongoDB 5.0

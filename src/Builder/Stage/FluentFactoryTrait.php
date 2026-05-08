@@ -697,6 +697,7 @@ trait FluentFactoryTrait
      * @param Optional|string $searchBefore Reference point for retrieving results. searchBefore returns documents starting immediately before the specified reference point.
      * @param Optional|bool $scoreDetails Flag that specifies whether to retrieve a detailed breakdown of the score for the documents in the results. If omitted, defaults to false.
      * @param Optional|Document|Serializable|array|stdClass $sort Document that specifies the fields to sort the Atlas Search results by in ascending or descending order.
+     * @param Optional|Document|Serializable|array|stdClass $returnScope Object that sets the context of the query to the specified embedded document field. You must also specify `returnStoredSource` and set it to `true`.
      * @param Optional|bool $returnStoredSource Flag that specifies whether to perform a full document lookup on the backend database or return only stored source fields directly from Atlas Search.
      * @param Optional|Document|Serializable|array|stdClass $tracking Document that specifies the tracking option to retrieve analytics information on the search terms.
      */
@@ -710,10 +711,11 @@ trait FluentFactoryTrait
         Optional|string $searchBefore = Optional::Undefined,
         Optional|bool $scoreDetails = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $sort = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $returnScope = Optional::Undefined,
         Optional|bool $returnStoredSource = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $tracking = Optional::Undefined,
     ): static {
-        $this->pipeline[] = Stage::search($operator, $index, $highlight, $concurrent, $count, $searchAfter, $searchBefore, $scoreDetails, $sort, $returnStoredSource, $tracking);
+        $this->pipeline[] = Stage::search($operator, $index, $highlight, $concurrent, $count, $searchAfter, $searchBefore, $scoreDetails, $sort, $returnScope, $returnStoredSource, $tracking);
 
         return $this;
     }
@@ -729,13 +731,17 @@ trait FluentFactoryTrait
      * the compound operator to run a compound query with multiple operators.
      * @param Optional|string $index Name of the Atlas Search index to use. If omitted, defaults to default.
      * @param Optional|Document|Serializable|array|stdClass $count Document that specifies the count options for retrieving a count of the results.
+     * @param Optional|Document|Serializable|array|stdClass $returnScope Object that sets the context of the query to the specified embedded document field. You must also specify `returnStoredSource` and set it to `true` if your cluster MongoDB version is less than 8.2.
+     * @param Optional|bool $returnStoredSource Flag that specifies whether to perform a full document lookup on the backend database or return only stored source fields directly from Atlas Search.
      */
     public function searchMeta(
         Document|Serializable|SearchOperatorInterface|stdClass|array $operator,
         Optional|string $index = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $count = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $returnScope = Optional::Undefined,
+        Optional|bool $returnStoredSource = Optional::Undefined,
     ): static {
-        $this->pipeline[] = Stage::searchMeta($operator, $index, $count);
+        $this->pipeline[] = Stage::searchMeta($operator, $index, $count, $returnScope, $returnStoredSource);
 
         return $this;
     }

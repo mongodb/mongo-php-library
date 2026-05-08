@@ -1510,6 +1510,142 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasAncestor/#sample-query
+     */
+    case HasAncestorExample = <<<'JSON'
+    [
+        {
+            "$search": {
+                "returnStoredSource": true,
+                "returnScope": {
+                    "path": "funding_rounds.investments"
+                },
+                "hasAncestor": {
+                    "ancestorPath": "funding_rounds",
+                    "operator": {
+                        "equals": {
+                            "path": "funding_rounds.funded_year",
+                            "value": {
+                                "$numberInt": "2005"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Simple Query
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasRoot/#simple-query
+     */
+    case HasRootSimpleQuery = <<<'JSON'
+    [
+        {
+            "$search": {
+                "returnStoredSource": true,
+                "returnScope": {
+                    "path": "products"
+                },
+                "hasRoot": {
+                    "operator": {
+                        "range": {
+                            "path": "founded_year",
+                            "gte": {
+                                "$numberInt": "2005"
+                            },
+                            "lte": {
+                                "$numberInt": "2010"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Multi-Level Query
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasRoot/#multi-level-query
+     */
+    case HasRootMultiLevelQuery = <<<'JSON'
+    [
+        {
+            "$search": {
+                "returnStoredSource": true,
+                "returnScope": {
+                    "path": "funding_rounds"
+                },
+                "hasRoot": {
+                    "operator": {
+                        "text": {
+                            "path": "name",
+                            "query": "Facebook"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Compound Query
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasRoot/#compound-query
+     */
+    case HasRootCompoundQuery = <<<'JSON'
+    [
+        {
+            "$search": {
+                "compound": {
+                    "should": [
+                        {
+                            "embeddedDocument": {
+                                "path": "funding_rounds.investments",
+                                "operator": {
+                                    "wildcard": {
+                                        "path": "funding_rounds.investments.financial_org.name",
+                                        "query": "*Ventures*",
+                                        "allowAnalyzedField": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "hasRoot": {
+                                "operator": {
+                                    "wildcard": {
+                                        "path": "description",
+                                        "query": "*network*",
+                                        "allowAnalyzedField": true
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "returnScope": {
+                    "path": "funding_rounds"
+                },
+                "returnStoredSource": true
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "5"
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Single Value Field Match
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/in/#examples

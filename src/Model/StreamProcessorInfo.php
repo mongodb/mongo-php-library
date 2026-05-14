@@ -44,6 +44,30 @@ final class StreamProcessorInfo implements ArrayAccess
         return $this->info;
     }
 
+    public function getActiveRegion(): ?string
+    {
+        return isset($this->info['activeRegion']) ? (string) $this->info['activeRegion'] : null;
+    }
+
+    public function getDlq(): mixed
+    {
+        return $this->info['dlq'] ?? null;
+    }
+
+    public function getErrorCode(): ?int
+    {
+        return isset($this->info['errorCode']) ? (int) $this->info['errorCode'] : null;
+    }
+
+    /**
+     * Error message. Per spec this is always present; an empty string indicates
+     * no error has occurred.
+     */
+    public function getErrorMsg(): string
+    {
+        return (string) ($this->info['errorMsg'] ?? '');
+    }
+
     /**
      * Processor id. Optional: not returned by all server versions.
      */
@@ -52,14 +76,30 @@ final class StreamProcessorInfo implements ArrayAccess
         return isset($this->info['id']) ? (string) $this->info['id'] : null;
     }
 
+    public function getLastModifiedAt(): ?UTCDateTimeInterface
+    {
+        /** @psalm-suppress MixedAssignment */
+        $value = $this->info['lastModifiedAt'] ?? null;
+
+        return $value instanceof UTCDateTimeInterface ? $value : null;
+    }
+
+    public function getLastStateChange(): ?UTCDateTimeInterface
+    {
+        /** @psalm-suppress MixedAssignment */
+        $value = $this->info['lastStateChange'] ?? null;
+
+        return $value instanceof UTCDateTimeInterface ? $value : null;
+    }
+
+    public function getModifiedBy(): ?string
+    {
+        return isset($this->info['modifiedBy']) ? (string) $this->info['modifiedBy'] : null;
+    }
+
     public function getName(): string
     {
         return (string) $this->info['name'];
-    }
-
-    public function getState(): string
-    {
-        return (string) $this->info['state'];
     }
 
     public function getPipeline(): array
@@ -75,14 +115,9 @@ final class StreamProcessorInfo implements ArrayAccess
         return isset($this->info['pipelineVersion']) ? (int) $this->info['pipelineVersion'] : null;
     }
 
-    public function getTier(): ?string
+    public function getState(): string
     {
-        return isset($this->info['tier']) ? (string) $this->info['tier'] : null;
-    }
-
-    public function getDlq(): mixed
-    {
-        return $this->info['dlq'] ?? null;
+        return (string) $this->info['state'];
     }
 
     public function getStreamMetaFieldName(): ?string
@@ -90,19 +125,9 @@ final class StreamProcessorInfo implements ArrayAccess
         return isset($this->info['streamMetaFieldName']) ? (string) $this->info['streamMetaFieldName'] : null;
     }
 
-    public function isAutoScalingEnabled(): bool
+    public function getTier(): ?string
     {
-        return (bool) ($this->info['enableAutoScaling'] ?? false);
-    }
-
-    public function isFailoverEnabled(): bool
-    {
-        return (bool) ($this->info['failoverEnabled'] ?? false);
-    }
-
-    public function getActiveRegion(): ?string
-    {
-        return isset($this->info['activeRegion']) ? (string) $this->info['activeRegion'] : null;
+        return isset($this->info['tier']) ? (string) $this->info['tier'] : null;
     }
 
     public function getWorkspaceDefaultRegion(): ?string
@@ -110,39 +135,14 @@ final class StreamProcessorInfo implements ArrayAccess
         return isset($this->info['workspaceDefaultRegion']) ? (string) $this->info['workspaceDefaultRegion'] : null;
     }
 
-    public function getLastStateChange(): ?UTCDateTimeInterface
-    {
-        /** @psalm-suppress MixedAssignment */
-        $value = $this->info['lastStateChange'] ?? null;
-
-        return $value instanceof UTCDateTimeInterface ? $value : null;
-    }
-
-    public function getLastModifiedAt(): ?UTCDateTimeInterface
-    {
-        /** @psalm-suppress MixedAssignment */
-        $value = $this->info['lastModifiedAt'] ?? null;
-
-        return $value instanceof UTCDateTimeInterface ? $value : null;
-    }
-
-    public function getModifiedBy(): ?string
-    {
-        return isset($this->info['modifiedBy']) ? (string) $this->info['modifiedBy'] : null;
-    }
-
     public function hasStarted(): bool
     {
         return (bool) ($this->info['hasStarted'] ?? false);
     }
 
-    /**
-     * Error message. Per spec this is always present; an empty string indicates
-     * no error has occurred.
-     */
-    public function getErrorMsg(): string
+    public function isAutoScalingEnabled(): bool
     {
-        return (string) ($this->info['errorMsg'] ?? '');
+        return (bool) ($this->info['enableAutoScaling'] ?? false);
     }
 
     public function isErrorRetryable(): bool
@@ -150,9 +150,9 @@ final class StreamProcessorInfo implements ArrayAccess
         return (bool) ($this->info['errorRetryable'] ?? false);
     }
 
-    public function getErrorCode(): ?int
+    public function isFailoverEnabled(): bool
     {
-        return isset($this->info['errorCode']) ? (int) $this->info['errorCode'] : null;
+        return (bool) ($this->info['failoverEnabled'] ?? false);
     }
 
     /** @see https://php.net/arrayaccess.offsetexists */

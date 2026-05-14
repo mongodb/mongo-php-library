@@ -49,33 +49,6 @@ final class StreamProcessor
         }
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Start the processor.
-     *
-     * @see StartStreamProcessor::__construct() for supported options
-     */
-    public function start(array $options = []): void
-    {
-        $operation = new StartStreamProcessor($this->name, $options);
-        $server = select_server_for_write($this->manager, []);
-        $operation->execute($server);
-    }
-
-    /**
-     * Stop the processor. The processor remains in STOPPED state and can be restarted.
-     */
-    public function stop(): void
-    {
-        $operation = new StopStreamProcessor($this->name);
-        $server = select_server_for_write($this->manager, []);
-        $operation->execute($server);
-    }
-
     /**
      * Drop the processor permanently. A dropped processor cannot be recovered.
      */
@@ -86,17 +59,9 @@ final class StreamProcessor
         $operation->execute($server);
     }
 
-    /**
-     * Return runtime statistics for the processor.
-     *
-     * @see GetStreamProcessorStats::__construct() for supported options
-     */
-    public function stats(array $options = []): array
+    public function getName(): string
     {
-        $operation = new GetStreamProcessorStats($this->name, $options);
-        $server = select_server_for_write($this->manager, []);
-
-        return $operation->execute($server);
+        return $this->name;
     }
 
     /**
@@ -135,5 +100,40 @@ final class StreamProcessor
         $operation = new GetMoreSampleStreamProcessor($this->name, $cursorId, $getMoreOptions);
 
         return $operation->execute($server);
+    }
+
+    /**
+     * Start the processor.
+     *
+     * @see StartStreamProcessor::__construct() for supported options
+     */
+    public function start(array $options = []): void
+    {
+        $operation = new StartStreamProcessor($this->name, $options);
+        $server = select_server_for_write($this->manager, []);
+        $operation->execute($server);
+    }
+
+    /**
+     * Return runtime statistics for the processor.
+     *
+     * @see GetStreamProcessorStats::__construct() for supported options
+     */
+    public function stats(array $options = []): array
+    {
+        $operation = new GetStreamProcessorStats($this->name, $options);
+        $server = select_server_for_write($this->manager, []);
+
+        return $operation->execute($server);
+    }
+
+    /**
+     * Stop the processor. The processor remains in STOPPED state and can be restarted.
+     */
+    public function stop(): void
+    {
+        $operation = new StopStreamProcessor($this->name);
+        $server = select_server_for_write($this->manager, []);
+        $operation->execute($server);
     }
 }

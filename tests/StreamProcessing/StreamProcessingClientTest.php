@@ -2,8 +2,10 @@
 
 namespace MongoDB\Tests\StreamProcessing;
 
+use MongoDB\Driver\Manager;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\StreamProcessingClient;
+use MongoDB\StreamProcessors;
 use MongoDB\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -66,5 +68,37 @@ class StreamProcessingClientTest extends TestCase
             'mongodb://atlas-stream-x.us-east-1.a.query.mongodb.net/',
             ['tls' => false],
         );
+    }
+
+    public function testConstructorRejectsSslDisabled(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('TLS cannot be disabled');
+        new StreamProcessingClient(
+            'mongodb://atlas-stream-x.us-east-1.a.query.mongodb.net/',
+            ['ssl' => false],
+        );
+    }
+
+    public function testConstructorAcceptsWorkspaceUri(): void
+    {
+        $uri = 'mongodb://atlas-stream-x.us-east-1.a.query.mongodb.net/';
+        $client = new StreamProcessingClient($uri);
+
+        $this->assertSame($uri, (string) $client);
+        $this->assertInstanceOf(Manager::class, $client->getManager());
+        $this->assertInstanceOf(StreamProcessors::class, $client->streamProcessors());
+    }
+
+    public function testDebugInfoReturnsManagerAndUri(): void
+    {
+        $uri = 'mongodb://atlas-stream-x.us-east-1.a.query.mongodb.net/';
+        $client = new StreamProcessingClient($uri);
+
+        $debug = $client->__debugInfo();
+        $this->assertArrayHasKey('manager', $debug);
+        $this->assertArrayHasKey('uri', $debug);
+        $this->assertSame($uri, $debug['uri']);
+        $this->assertInstanceOf(Manager::class, $debug['manager']);
     }
 }

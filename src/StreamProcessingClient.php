@@ -74,20 +74,20 @@ final class StreamProcessingClient implements Stringable
         $this->manager = new Manager($uri, $uriOptions, $driverOptions);
     }
 
-    /**
-     * Return the workspace URI.
-     */
-    public function __toString(): string
-    {
-        return $this->uri;
-    }
-
     public function __debugInfo(): array
     {
         return [
             'manager' => $this->manager,
             'uri' => $this->uri,
         ];
+    }
+
+    /**
+     * Return the workspace URI.
+     */
+    public function __toString(): string
+    {
+        return $this->uri;
     }
 
     /**
@@ -99,19 +99,19 @@ final class StreamProcessingClient implements Stringable
     }
 
     /**
-     * Return a handle for managing stream processors in this workspace.
-     */
-    public function streamProcessors(): StreamProcessors
-    {
-        return new StreamProcessors($this->manager);
-    }
-
-    /**
      * Return true if the supplied URI targets an Atlas Stream Processing workspace endpoint.
      */
     public static function isWorkspaceUri(string $uri): bool
     {
         return (bool) preg_match(self::WORKSPACE_HOSTNAME_PATTERN, $uri);
+    }
+
+    /**
+     * Return a handle for managing stream processors in this workspace.
+     */
+    public function streamProcessors(): StreamProcessors
+    {
+        return new StreamProcessors($this->manager);
     }
 
     /**

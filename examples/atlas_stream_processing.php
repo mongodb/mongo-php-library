@@ -108,8 +108,9 @@ try {
             'batchSize' => 5,
         ]);
         echo '      batch cursorId=', $samples->getCursorId(), ' docs=', count($samples->getDocuments()), "\n";
+        /** @psalm-suppress MixedAssignment */
         foreach ($samples->getDocuments() as $i => $doc) {
-            echo '          [', $i, '] ', var_export($doc, true), "\n";
+            echo '          [', (int) $i, '] ', var_export($doc, true), "\n";
         }
     }
 

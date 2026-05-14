@@ -78,6 +78,7 @@ final class StartSampleStreamProcessor
         $cmd = ['startSampleStreamProcessor' => $this->name];
 
         if (isset($this->options['limit'])) {
+            /** @psalm-suppress MixedAssignment */
             $cmd['limit'] = $this->options['limit'];
         }
 

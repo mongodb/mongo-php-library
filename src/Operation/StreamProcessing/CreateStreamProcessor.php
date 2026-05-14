@@ -91,6 +91,7 @@ final class CreateStreamProcessor
 
         foreach (['dlq', 'streamMetaFieldName', 'tier', 'failover'] as $key) {
             if (isset($this->options[$key])) {
+                /** @psalm-suppress MixedAssignment */
                 $subOptions[$key] = $this->options[$key];
             }
         }

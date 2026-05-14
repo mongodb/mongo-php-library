@@ -549,12 +549,6 @@
       <code><![CDATA[stdClass]]></code>
     </MoreSpecificReturnType>
   </file>
-  <file src="src/Model/StreamProcessorInfo.php">
-    <MixedAssignment>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
-  </file>
   <file src="src/Operation/Aggregate.php">
     <MixedArgument>
       <code><![CDATA[$this->options['codec']]]></code>
@@ -862,28 +856,6 @@
       <code><![CDATA[$replacement]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="src/Operation/StreamProcessing/CreateStreamProcessor.php">
-    <MixedAssignment>
-      <code><![CDATA[$subOptions[$key]]]></code>
-    </MixedAssignment>
-  </file>
-  <file src="src/Operation/StreamProcessing/GetMoreSampleStreamProcessor.php">
-    <MixedAssignment>
-      <code><![CDATA[$batch]]></code>
-      <code><![CDATA[$cmd['batchSize']]]></code>
-    </MixedAssignment>
-  </file>
-  <file src="src/Operation/StreamProcessing/StartSampleStreamProcessor.php">
-    <MixedAssignment>
-      <code><![CDATA[$cmd['limit']]]></code>
-    </MixedAssignment>
-  </file>
-  <file src="src/Operation/StreamProcessing/StartStreamProcessor.php">
-    <MixedAssignment>
-      <code><![CDATA[$cmd['workers']]]></code>
-      <code><![CDATA[$subOptions[$key]]]></code>
-    </MixedAssignment>
-  </file>
   <file src="src/Operation/Update.php">
     <MixedAssignment>
       <code><![CDATA[$cmd['bypassDocumentValidation']]]></code>
@@ -926,13 +898,6 @@
       <code><![CDATA[self::BACKOFF_INITIAL * (1.5 ** ($transactionAttempt - 1))]]></code>
       <code><![CDATA[self::MAX_TIME * 1e9]]></code>
     </InvalidOperand>
-  </file>
-  <file src="src/StreamProcessingClient.php">
-    <MixedAssignment>
-      <code><![CDATA[$uriOptions['authSource']]]></code>
-      <code><![CDATA[$uriOptions['tls']]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
   </file>
   <file src="src/UpdateResult.php">
     <MixedAssignment>

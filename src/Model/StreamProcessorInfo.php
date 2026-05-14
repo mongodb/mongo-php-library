@@ -112,6 +112,7 @@ final class StreamProcessorInfo implements ArrayAccess
 
     public function getLastStateChange(): ?UTCDateTimeInterface
     {
+        /** @psalm-suppress MixedAssignment */
         $value = $this->info['lastStateChange'] ?? null;
 
         return $value instanceof UTCDateTimeInterface ? $value : null;
@@ -119,6 +120,7 @@ final class StreamProcessorInfo implements ArrayAccess
 
     public function getLastModifiedAt(): ?UTCDateTimeInterface
     {
+        /** @psalm-suppress MixedAssignment */
         $value = $this->info['lastModifiedAt'] ?? null;
 
         return $value instanceof UTCDateTimeInterface ? $value : null;

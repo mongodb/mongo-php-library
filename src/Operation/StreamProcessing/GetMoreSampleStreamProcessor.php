@@ -70,9 +70,13 @@ final class GetMoreSampleStreamProcessor
             throw new UnexpectedValueException('getMoreSampleStreamProcessor command did not return a cursorId');
         }
 
-        /* Dev-server deviation: some server builds use "messages" instead of
+        /**
+         * Dev-server deviation: some server builds use "messages" instead of
          * "nextBatch". Prefer the spec-defined "nextBatch" but fall back to
-         * "messages" if present. */
+         * "messages" if present.
+         *
+         * @psalm-suppress MixedAssignment
+         */
         $batch = $response['nextBatch'] ?? $response['messages'] ?? [];
         if (! is_array($batch)) {
             $batch = [];
@@ -89,6 +93,7 @@ final class GetMoreSampleStreamProcessor
         ];
 
         if (isset($this->options['batchSize'])) {
+            /** @psalm-suppress MixedAssignment */
             $cmd['batchSize'] = $this->options['batchSize'];
         }
 

@@ -109,6 +109,7 @@ final class StartStreamProcessor
         $cmd = ['startStreamProcessor' => $this->name];
 
         if (isset($this->options['workers'])) {
+            /** @psalm-suppress MixedAssignment */
             $cmd['workers'] = $this->options['workers'];
         }
 
@@ -116,6 +117,7 @@ final class StartStreamProcessor
 
         foreach (['clearCheckpoints', 'startAtOperationTime', 'tier', 'enableAutoScaling'] as $key) {
             if (isset($this->options[$key])) {
+                /** @psalm-suppress MixedAssignment */
                 $subOptions[$key] = $this->options[$key];
             }
         }

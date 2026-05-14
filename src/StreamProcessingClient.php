@@ -121,6 +121,7 @@ final class StreamProcessingClient implements Stringable
      * to "admin" but MAY be overridden by the caller.
      *
      * @throws InvalidArgumentException if the caller has explicitly disabled TLS
+     * @psalm-suppress MixedAssignment
      */
     private static function applyWorkspaceDefaults(array $uriOptions): array
     {

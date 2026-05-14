@@ -33,6 +33,9 @@ use function strtolower;
  *
  *     mongodb://atlas-stream-<workspaceId>-<suffix>.<region>.a.query.mongodb.net/
  *
+ * Atlas staging endpoints use `.a.query.mongodb-stage.net` instead; both are
+ * accepted.
+ *
  * Per the ASP spec, TLS is required and authSource defaults to "admin".
  */
 final class StreamProcessingClient implements Stringable
@@ -41,10 +44,10 @@ final class StreamProcessingClient implements Stringable
      * Pattern used to detect a workspace endpoint hostname.
      *
      * Matches hosts that start with "atlas-stream-" and end with
-     * ".a.query.mongodb.net" (case-insensitive). Either marker is sufficient
-     * for detection but both together provide a strong signal.
+     * ".a.query.mongodb.net" (production) or ".a.query.mongodb-<env>.net"
+     * (e.g. mongodb-stage.net for Atlas staging). Case-insensitive.
      */
-    private const WORKSPACE_HOSTNAME_PATTERN = '#^mongodb://[^/?]*atlas-stream-[^/?]*\.a\.query\.mongodb\.net(?::\d+)?(/|$|\?)#i';
+    private const WORKSPACE_HOSTNAME_PATTERN = '#^mongodb://[^/?]*atlas-stream-[^/?]*\.a\.query\.mongodb(?:-[a-z0-9]+)?\.net(?::\d+)?(/|$|\?)#i';
 
     private Manager $manager;
 

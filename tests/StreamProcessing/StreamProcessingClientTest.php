@@ -21,6 +21,12 @@ class StreamProcessingClientTest extends TestCase
         $this->assertTrue(StreamProcessingClient::isWorkspaceUri($uri));
     }
 
+    public function testIsWorkspaceUriDetectsStagingEndpoint(): void
+    {
+        $uri = 'mongodb://user:pass@atlas-stream-699c842ef433fe6001480b17-etif1.virginia-usa.a.query.mongodb-stage.net';
+        $this->assertTrue(StreamProcessingClient::isWorkspaceUri($uri));
+    }
+
     #[DataProvider('provideNonWorkspaceUris')]
     public function testIsWorkspaceUriRejectsOtherEndpoints(string $uri): void
     {

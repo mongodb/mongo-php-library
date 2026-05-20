@@ -168,7 +168,7 @@ use function strlen;
  *     storedSource?: SearchIndexStoredSourceShape,
  * }
  * @psalm-type SearchIndexShape = array{
- *     definition: SearchIndexDefinitionShape|VectorSearchIndexDefinitionShape,
+ *     definition: SearchIndexDefinitionShape|VectorSearchIndexDefinitionShape|object,
  *     name?: string,
  *     type?: string,
  * }
@@ -1104,9 +1104,9 @@ class Collection implements Stringable
      * Update a single Atlas Search index in the collection.
      * Only available when used against a 7.0+ Atlas cluster.
      *
-     * @param string                                                                   $name       Search index name
-     * @param SearchIndexDefinitionShape|VectorSearchIndexDefinitionShape|array|object $definition Atlas Search index definition
-     * @param array{comment?: mixed}                                                   $options    Command options
+     * @param string                                                             $name       Search index name
+     * @param SearchIndexDefinitionShape|VectorSearchIndexDefinitionShape|object $definition Atlas Search index definition
+     * @param array{comment?: mixed}                                             $options    Command options
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

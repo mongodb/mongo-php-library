@@ -18,6 +18,7 @@
 namespace MongoDB\Tests\Type;
 
 use MongoDB\Collection;
+use MongoDB\Operation\BulkWrite;
 
 /**
  * Psalm type tests for bulk write operation shapes.
@@ -25,7 +26,7 @@ use MongoDB\Collection;
  * This file is not executed by PHPUnit; it is only checked by Psalm to verify
  * that the OperationShape defined in BulkWrite is accepted by Collection::bulkWrite.
  *
- * @psalm-import-type OperationShape from \MongoDB\Operation\BulkWrite
+ * @psalm-import-type OperationShape from BulkWrite
  */
 final class BulkWriteShapes
 {

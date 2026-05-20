@@ -24,10 +24,6 @@ use MongoDB\Collection;
  *
  * This file is not executed by PHPUnit; it is only checked by Psalm to verify
  * that the array shapes defined in Collection are accepted by its methods.
- *
- * @psalm-import-type SearchIndexDefinitionShape from Collection
- * @psalm-import-type VectorSearchIndexDefinitionShape from Collection
- * @psalm-import-type SearchIndexShape from Collection
  */
 final class SearchIndexShapes
 {

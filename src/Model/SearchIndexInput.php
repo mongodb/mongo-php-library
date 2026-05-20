@@ -18,6 +18,7 @@
 namespace MongoDB\Model;
 
 use MongoDB\BSON\Serializable;
+use MongoDB\Collection;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
@@ -33,11 +34,12 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::createSearchIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/index-management/index-management.md#search-indexes
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
+ * @psalm-import-type SearchIndexShape from Collection
  */
 final class SearchIndexInput implements Serializable
 {
     /**
-     * @param array{definition: array|object, name?: string, type?: string} $index Search index specification
+     * @param SearchIndexShape $index Search index specification
      * @throws InvalidArgumentException
      */
     public function __construct(private array $index)

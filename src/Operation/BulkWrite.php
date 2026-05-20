@@ -47,7 +47,7 @@ use function sprintf;
  * @see \MongoDB\Collection::bulkWrite()
  *
  * @psalm-type Document = object|array
- * @psalm-type OperationType = array{deleteMany: array{0: Document, 1?: array}}|array{deleteOne: array{0: Document, 1?: array}}|array{insertOne: array{0: Document}}|array{replaceOne: array{0: Document, 1: Document, 2?: array}}|array{updateMany: array{0: Document, 1: Document, 2?: array}}|array{updateOne: array{0: Document, 1: Document, 2?: array}}
+ * @psalm-type OperationShape = array{deleteMany: array{0: Document, 1?: array}}|array{deleteOne: array{0: Document, 1?: array}}|array{insertOne: array{0: Document}}|array{replaceOne: array{0: Document, 1: Document, 2?: array}}|array{updateMany: array{0: Document, 1: Document, 2?: array}}|array{updateOne: array{0: Document, 1: Document, 2?: array}}
  */
 final class BulkWrite
 {
@@ -58,7 +58,7 @@ final class BulkWrite
     public const UPDATE_MANY = 'updateMany';
     public const UPDATE_ONE  = 'updateOne';
 
-    /** @psalm-var list<OperationType> */
+    /** @psalm-var list<OperationShape> */
     private array $operations;
 
     private array $options;
@@ -138,7 +138,7 @@ final class BulkWrite
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param array  $operations     List of write operations
-     * @psalm-param list<OperationType> $operations
+     * @psalm-param list<OperationShape> $operations
      * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
@@ -280,8 +280,8 @@ final class BulkWrite
     }
 
     /**
-     * @psalm-param list<OperationType> $operations
-     * @psalm-return list<OperationType>
+     * @psalm-param list<OperationShape> $operations
+     * @psalm-return list<OperationShape>
      */
     private function validateOperations(array $operations, ?DocumentCodec $codec, Encoder $builderEncoder): array
     {

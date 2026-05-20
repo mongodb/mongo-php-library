@@ -75,6 +75,13 @@ final class SearchIndexShapes
         ]);
     }
 
+    public function createSearchIndexWithDynamicFalse(Collection $collection): void
+    {
+        $collection->createSearchIndex([
+            'mappings' => ['dynamic' => false],
+        ]);
+    }
+
     /** @see https://www.mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/#create-a-vector-search-index */
     public function createVectorSearchIndex(Collection $collection): void
     {

@@ -147,7 +147,7 @@ use function strlen;
  *     analyzer?: string,
  *     analyzers?: list<SearchIndexAnalyzerShape>,
  *     searchAnalyzer?: string,
- *     mappings: array{dynamic: true} | array{dynamic?: bool, fields: array<string, SearchIndexFieldShape|list<SearchIndexFieldShape>>},
+ *     mappings: array{dynamic?: bool, fields?: array<string, SearchIndexFieldShape|list<SearchIndexFieldShape>>},
  *     storedSource?: SearchIndexStoredSourceShape,
  *     synonyms?: list<SearchIndexSynonymShape>,
  * }

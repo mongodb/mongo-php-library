@@ -161,8 +161,12 @@ $ vendor/bin/phpcbf
 
 The library uses [psalm](https://psalm.dev) to run static analysis on the code
 and ensure an additional level of type safety. New code is expected to adhere
-to level 1, with a baseline covering existing issues. To run static analysis
-checks, run the `psalm` binary:
+to level 1, with a baseline covering existing issues.
+
+Psalm array shape types defined with `@psalm-type` must be suffixed with `Shape`
+(e.g. `SearchIndexShape`, `OperationShape`).
+
+To run static analysis checks, run the `psalm` binary:
 
 ```console
 $ vendor/bin/psalm

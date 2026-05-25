@@ -81,97 +81,39 @@ use function strlen;
 
 /**
  * @psalm-import-type OperationShape from BulkWrite
- * @psalm-type SearchIndexFieldShape = array{
- *     type: 'boolean'|'date'|'dateFacet'|'objectId'|'stringFacet'|'uuid',
- * } | array{
- *     type: 'autocomplete',
- *     analyzer?: string,
- *     maxGrams?: int,
- *     minGrams?: int,
- *     tokenization?: 'edgeGram'|'rightEdgeGram'|'nGram',
- *     foldDiacritics?: bool,
- *     similarity?: array{type: 'bm25'|'boolean'|'stableTfl'},
- * } | array{
- *     type: 'document'|'embeddedDocuments',
- *     dynamic?: bool,
- *     fields: array<string, array<mixed>>,
- * } | array{
- *     type: 'geo',
- *     indexShapes?: bool,
- * } | array{
- *     type: 'number'|'numberFacet',
- *     representation?: 'int64'|'double',
- *     indexIntegers?: bool,
- *     indexDoubles?: bool,
- * } | array{
- *     type: 'token',
- *     normalizer?: 'lowercase'|'none',
- * } | array{
- *     type: 'string',
- *     analyzer?: string,
- *     searchAnalyzer?: string,
- *     indexOptions?: 'docs'|'freqs'|'positions'|'offsets',
- *     store?: bool,
- *     ignoreAbove?: int,
- *     multi?: array<string, array<string, mixed>>,
- *     norms?: 'include'|'omit',
- *     similarity?: array{type: 'bm25'|'boolean'|'stableTfl'},
- * }
- * @psalm-type SearchIndexCharFilterShape = array{
- *     type: 'icuNormalize'|'persian',
- * } | array{
- *     type: 'htmlStrip',
- *     ignoredTags?: list<string>,
- * } | array{
- *     type: 'mapping',
- *     mappings?: array<string, string>,
- * }
- * @psalm-type SearchIndexTokenFilterShape = array{type: string, ...}
- * @psalm-type SearchIndexAnalyzerShape = array{
- *     name: string,
- *     charFilters?: list<SearchIndexCharFilterShape>,
- *     tokenizer: array{type: string},
- *     tokenFilters?: list<SearchIndexTokenFilterShape>,
- * }
- * @psalm-type SearchIndexStoredSourceShape = bool | array{
- *     include: list<string>,
- * } | array{
- *     exclude: list<string>,
- * }
- * @psalm-type SearchIndexSynonymShape = array{
- *     analyzer: string,
- *     name: string,
- *     source?: array{collection: string},
- * }
- * @psalm-type SearchIndexDefinitionShape = array{
- *     analyzer?: string,
- *     analyzers?: list<SearchIndexAnalyzerShape>,
- *     searchAnalyzer?: string,
- *     mappings: array{dynamic?: bool, fields?: array<string, SearchIndexFieldShape|list<SearchIndexFieldShape>>},
- *     storedSource?: SearchIndexStoredSourceShape,
- *     synonyms?: list<SearchIndexSynonymShape>,
- * }
- * @psalm-type VectorSearchIndexFieldShape = array{
- *     type: 'vector',
- *     path: string,
- *     numDimensions: int,
- *     similarity: 'euclidean'|'cosine'|'dotProduct',
- *     quantization?: 'none'|'scalar'|'binary',
- *     indexingMethod?: 'flat'|'hnsw',
- *     hnswOptions?: array{maxEdges?: int, numEdgeCandidates?: int},
- * } | array{
- *     type: 'filter',
- *     path: string,
- * }
- * @psalm-type VectorSearchIndexDefinitionShape = array{
- *     fields: list<VectorSearchIndexFieldShape>,
- *     storedSource?: SearchIndexStoredSourceShape,
- * }
  * @psalm-type SearchIndexShape = array{
- *     definition: SearchIndexDefinitionShape|VectorSearchIndexDefinitionShape|object,
- *     name?: string,
- *     type?: string,
+ *     analyzer?: string,
+ *     analyzers?: list<array{
+ *         name: string,
+ *         charFilters?: list<array{type: 'icuNormalize'|'persian'}|array{type: 'htmlStrip', ignoredTags?: list<string>}|array{type: 'mapping', mappings?: array<string, string>}>,
+ *         tokenizer: array{type: string},
+ *         tokenFilters?: list<array{type: string, ...}>,
+ *     }>,
+ *     searchAnalyzer?: string,
+ *     mappings: array{
+ *         dynamic?: bool,
+ *         fields?: array<string,
+ *             array{type: 'boolean'|'date'|'dateFacet'|'objectId'|'stringFacet'|'uuid'} |
+ *             array{type: 'autocomplete', analyzer?: string, maxGrams?: int, minGrams?: int, tokenization?: 'edgeGram'|'rightEdgeGram'|'nGram', foldDiacritics?: bool, similarity?: array{type: 'bm25'|'boolean'|'stableTfl'}} |
+ *             array{type: 'document'|'embeddedDocuments', dynamic?: bool, fields: array<string, array<mixed>>} |
+ *             array{type: 'geo', indexShapes?: bool} |
+ *             array{type: 'number'|'numberFacet', representation?: 'int64'|'double', indexIntegers?: bool, indexDoubles?: bool} |
+ *             array{type: 'token', normalizer?: 'lowercase'|'none'} |
+ *             array{type: 'string', analyzer?: string, searchAnalyzer?: string, indexOptions?: 'docs'|'freqs'|'positions'|'offsets', store?: bool, ignoreAbove?: int, multi?: array<string, array<string, mixed>>, norms?: 'include'|'omit', similarity?: array{type: 'bm25'|'boolean'|'stableTfl'}} |
+ *             list<array{type: string, ...}>
+ *         >,
+ *     },
+ *     storedSource?: bool|array{include: list<string>}|array{exclude: list<string>},
+ *     synonyms?: list<array{analyzer: string, name: string, source?: array{collection: string}}>,
  * }
+ * @psalm-type VectorSearchIndexShape = array{
+ *     fields: list<
+ *         array{type: 'vector', path: string, numDimensions: int, similarity: 'euclidean'|'cosine'|'dotProduct', quantization?: 'none'|'scalar'|'binary', indexingMethod?: 'flat'|'hnsw', hnswOptions?: array{maxEdges?: int, numEdgeCandidates?: int}} |
+ *         array{type: 'filter', path: string}
+ *     >,
+ *     storedSource?: bool|array{include: list<string>}|array{exclude: list<string>},
+ * }
+ * @psalm-type SearchIndexSpecShape = array{definition: SearchIndexShape|VectorSearchIndexShape|object, name?: string, type?: string}
  */
 class Collection implements Stringable
 {
@@ -474,8 +416,8 @@ class Collection implements Stringable
      *
      * @see https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/
      * @see https://www.mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
-     * @param SearchIndexDefinitionShape|VectorSearchIndexDefinitionShape|object $definition Atlas Search index mapping definition
-     * @param array{comment?: mixed, name?: string, type?: string}               $options    Index and command options
+     * @param SearchIndexShape|VectorSearchIndexShape|object       $definition Atlas Search index mapping definition
+     * @param array{comment?: mixed, name?: string, type?: string} $options    Index and command options
      * @return string The name of the created search index
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -489,7 +431,7 @@ class Collection implements Stringable
         /** @psalm-var array{comment?: mixed} */
         $operationOptions = array_diff_key($options, $indexOptionKeys);
 
-        /** @psalm-var list<SearchIndexShape> */
+        /** @psalm-var list<SearchIndexSpecShape> */
         $indexes = [['definition' => $definition] + $indexOptions];
         $names = $this->createSearchIndexes($indexes, $operationOptions);
 
@@ -513,8 +455,8 @@ class Collection implements Stringable
      *
      * @see https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/
      * @see https://mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
-     * @param list<SearchIndexShape> $indexes List of search index specifications
-     * @param array{comment?: mixed} $options Command options
+     * @param list<SearchIndexSpecShape> $indexes List of search index specifications
+     * @param array{comment?: mixed}     $options Command options
      * @return string[] The names of the created search indexes
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -1104,9 +1046,9 @@ class Collection implements Stringable
      * Update a single Atlas Search index in the collection.
      * Only available when used against a 7.0+ Atlas cluster.
      *
-     * @param string                                                             $name       Search index name
-     * @param SearchIndexDefinitionShape|VectorSearchIndexDefinitionShape|object $definition Atlas Search index definition
-     * @param array{comment?: mixed}                                             $options    Command options
+     * @param string                                         $name       Search index name
+     * @param SearchIndexShape|VectorSearchIndexShape|object $definition Atlas Search index definition
+     * @param array{comment?: mixed}                         $options    Command options
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

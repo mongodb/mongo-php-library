@@ -34,12 +34,12 @@ use function MongoDB\is_document;
  * @see \MongoDB\Collection::createSearchIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/index-management/index-management.md#search-indexes
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
- * @psalm-import-type SearchIndexShape from Collection
+ * @psalm-import-type SearchIndexSpecShape from Collection
  */
 final class SearchIndexInput implements Serializable
 {
     /**
-     * @param SearchIndexShape $index Search index specification
+     * @param SearchIndexSpecShape $index Search index specification
      * @throws InvalidArgumentException
      */
     public function __construct(private array $index)

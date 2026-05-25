@@ -2,22 +2,10 @@ name: "Submodule Validation"
 
 on:
   merge_group:
-    paths:
-      - ".gitmodules"
-      - ".github/workflows/submodules.yml"
-      - "tests/drivers-evergreen-tools"
-      - "tests/specifications"
-      - "generator/mql-specifications"
   pull_request:
     branches:
       - "v*.*"
       - "feature/*"
-    paths:
-      - ".gitmodules"
-      - ".github/workflows/submodules.yml"
-      - "tests/drivers-evergreen-tools"
-      - "tests/specifications"
-      - "generator/mql-specifications"
 
 jobs:
   validate-submodules:
@@ -26,6 +14,6 @@ jobs:
 
     steps:
       - name: "Validate submodule commits"
-        uses: "mongodb-labs/drivers-github-tools/validate-submodules@main"
+        uses: "mongodb-labs/drivers-github-tools/validate-submodules@v3"
         with:
           token: ${{ github.token }}

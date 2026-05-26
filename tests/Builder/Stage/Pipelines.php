@@ -1934,7 +1934,9 @@ enum Pipelines: string
             }
         },
         {
-            "$out": "authors"
+            "$out": {
+                "coll": "authors"
+            }
         }
     ]
     JSON;
@@ -1958,6 +1960,27 @@ enum Pipelines: string
             "$out": {
                 "db": "reporting",
                 "coll": "authors"
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Output to a Time Series Collection
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-a-time-series-collection
+     */
+    case OutOutputToATimeSeriesCollection = <<<'JSON'
+    [
+        {
+            "$out": {
+                "db": "reporting",
+                "coll": "sensorData",
+                "timeseries": {
+                    "timeField": "timestamp",
+                    "metaField": "sensorId",
+                    "granularity": "hours"
+                }
             }
         }
     ]

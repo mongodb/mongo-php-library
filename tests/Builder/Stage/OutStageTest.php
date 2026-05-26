@@ -26,15 +26,27 @@ class OutStageTest extends PipelineTestCase
                     Expression::stringFieldPath('title'),
                 ),
             ),
+            Stage::out(coll: 'authors', db: 'reporting'),
+        );
+
+        $this->assertSamePipeline(Pipelines::OutOutputToADifferentDatabase, $pipeline);
+    }
+
+    public function testOutputToATimeSeriesCollection(): void
+    {
+        $pipeline = new Pipeline(
             Stage::out(
-                object(
-                    db: 'reporting',
-                    coll: 'authors',
+                coll: 'sensorData',
+                db: 'reporting',
+                timeseries: object(
+                    timeField: 'timestamp',
+                    metaField: 'sensorId',
+                    granularity: 'hours',
                 ),
             ),
         );
 
-        $this->assertSamePipeline(Pipelines::OutOutputToADifferentDatabase, $pipeline);
+        $this->assertSamePipeline(Pipelines::OutOutputToATimeSeriesCollection, $pipeline);
     }
 
     public function testOutputToSameDatabase(): void

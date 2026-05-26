@@ -191,7 +191,13 @@ OUTPUT;
             foreach ($values as $key => $value) {
                 $dataKey = $option . '_' . $key;
                 if (is_int($key)) {
-                    $dataKey .= '_' . get_debug_type($value);
+                    $suffix = get_debug_type($value);
+
+                    if (is_object($value) && preg_match('#(.*)_[0-9a-f]{8}$#', $suffix, $matches)) {
+                        $dataKey .= '_' . $matches[1];
+                    } else {
+                        $dataKey .= '_' . $suffix;
+                    }
                 }
 
                 $data[$dataKey] = [[$option => $value]];

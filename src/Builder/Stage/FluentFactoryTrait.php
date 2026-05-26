@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace MongoDB\Builder\Stage;
 
 use DateTimeInterface;
+use InvalidArgumentException;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
@@ -53,6 +54,27 @@ trait FluentFactoryTrait
         DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array|string|int|float|bool|null ...$queries,
     ): static {
         $this->pipeline[] = Stage::match(...$queries);
+
+        return $this;
+    }
+
+    /**
+     * Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the last stage in the pipeline.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
+     * @param Document|Serializable|array|stdClass|string   $coll       The output collection name. Passing a non-string value is deprecated since 2.4.
+     * @param Optional|string                               $db         The output database name. If omitted, defaults to the current database.
+     * @param Optional|Document|Serializable|array|stdClass $timeseries Specifies the configuration to use when writing to a time series collection.
+     * The timeField is required. All other fields are optional.
+     *
+     * New in MongoDB 7.0.3
+     */
+    public function out(
+        Document|Serializable|stdClass|array|string $coll,
+        Optional|string $db = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $timeseries = Optional::Undefined,
+    ): static {
+        $this->pipeline[] = Stage::out($coll, $db, $timeseries);
 
         return $this;
     }
@@ -517,27 +539,6 @@ trait FluentFactoryTrait
         Optional|string $whenNotMatched = Optional::Undefined,
     ): static {
         $this->pipeline[] = Stage::merge($into, $on, $let, $whenMatched, $whenNotMatched);
-
-        return $this;
-    }
-
-    /**
-     * Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the last stage in the pipeline.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
-     * @param string $coll The output collection name.
-     * @param Optional|string $db The output database name. If omitted, defaults to the current database.
-     * @param Optional|Document|Serializable|array|stdClass $timeseries Specifies the configuration to use when writing to a time series collection.
-     * The timeField is required. All other fields are optional.
-     *
-     * New in MongoDB 7.0.3
-     */
-    public function out(
-        string $coll,
-        Optional|string $db = Optional::Undefined,
-        Optional|Document|Serializable|stdClass|array $timeseries = Optional::Undefined,
-    ): static {
-        $this->pipeline[] = Stage::out($coll, $db, $timeseries);
 
         return $this;
     }

@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace MongoDB\Builder\Stage;
 
 use DateTimeInterface;
-use InvalidArgumentException;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;

@@ -78,6 +78,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         'sessions/snapshot-sessions: Mixed operation with snapshot' => 'Cluster time is not sent in first command sent out on single-threaded connections (PHPLIB-1725, PHPC-2658)',
         // Backpressure tests rely on libmonogc
         'transactions/backpressure-' => 'Backpressure tests rely on libmongoc (PHPLIB-1719)',
+        // Test removed in v2.x, but failing on v2.3
+        'change-streams/change-streams-nsType: nsType is present when creating timeseries' => 'Failing on MongoDB 9.0 (PHPLIB-1836)'
     ];
 
     /** @var array<string, string> */

@@ -34,6 +34,7 @@ use function fwrite;
 use function hex2bin;
 use function iterator_to_array;
 use function key;
+use function microtime;
 use function MongoDB\with_transaction;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContains;
@@ -64,6 +65,8 @@ use function strtolower;
 final class Operation
 {
     public const OBJECT_TEST_RUNNER = 'testRunner';
+
+    private const ITERATE_UNTIL_DOCUMENT_OR_ERROR_TIMEOUT = 10;
 
     private bool $isTestRunnerOperation;
 
@@ -223,26 +226,7 @@ final class Operation
 
         switch ($this->name) {
             case 'iterateUntilDocumentOrError':
-                /* Note: the first iteration should use rewind, otherwise we may
-                 * miss a document from the initial batch (possible if using a
-                 * resume token). We can infer this from a null key; however,
-                 * if a test ever calls this operation consecutively to expect
-                 * multiple errors from the same ChangeStream we will need a
-                 * different approach (e.g. examining internal hasAdvanced
-                 * property on the ChangeStream). */
-                if ($changeStream->key() === null) {
-                    $changeStream->rewind();
-
-                    if ($changeStream->valid()) {
-                        return $changeStream->current();
-                    }
-                }
-
-                do {
-                    $changeStream->next();
-                } while (! $changeStream->valid());
-
-                return $changeStream->current();
+                return $this->iterateUntilDocumentOrError($changeStream);
 
             default:
                 Assert::fail('Unsupported change stream operation: ' . $this->name);
@@ -617,31 +601,7 @@ final class Operation
                 assertFalse($this->entityMap->offsetExists($this->object));
                 break;
             case 'iterateUntilDocumentOrError':
-                /* Note: the first iteration should use rewind, otherwise we may
-                 * miss a document from the initial batch (possible if using a
-                 * resume token). We can infer this from a null key; however,
-                 * if a test ever calls this operation consecutively to expect
-                 * multiple errors from the same ChangeStream we will need a
-                 * different approach (e.g. examining internal hasAdvanced
-                 * property on the ChangeStream). */
-
-                /* Note: similar to iterateUntilDocumentOrError for ChangeStream
-                 * entities, a different approach will be needed if a test ever
-                 * calls this operation consecutively to expect multiple errors.
-                 */
-                if ($cursor->key() === null) {
-                    $cursor->rewind();
-
-                    if ($cursor->valid()) {
-                        return $cursor->current();
-                    }
-                }
-
-                do {
-                    $cursor->next();
-                } while (! $cursor->valid());
-
-                return $cursor->current();
+                return $this->iterateUntilDocumentOrError($cursor);
 
             default:
                 Assert::fail('Unsupported cursor operation: ' . $this->name);
@@ -981,6 +941,36 @@ final class Operation
             fn (IndexInfo $indexInfo) => $indexInfo->getName(),
             iterator_to_array($this->context->getInternalClient()->selectCollection($databaseName, $collectionName)->listIndexes()),
         );
+    }
+
+    private function iterateUntilDocumentOrError(ChangeStream|Cursor $cursorOrChangeStream): array|object|null
+    {
+        /* Note: the first iteration should use rewind, otherwise we may
+         * miss a document from the initial batch (possible if using a
+         * resume token). We can infer this from a null key; however,
+         * if a test ever calls this operation consecutively to expect
+         * multiple errors from the same ChangeStream we will need a
+         * different approach (e.g. examining internal hasAdvanced
+         * property on the ChangeStream). */
+        if ($cursorOrChangeStream->key() === null) {
+            $cursorOrChangeStream->rewind();
+
+            if ($cursorOrChangeStream->valid()) {
+                return $cursorOrChangeStream->current();
+            }
+        }
+
+        $start = microtime(true);
+
+        do {
+            $cursorOrChangeStream->next();
+
+            if (microtime(true) - $start > self::ITERATE_UNTIL_DOCUMENT_OR_ERROR_TIMEOUT) {
+                Assert::fail('iterateUntilDocumentOrError timed out');
+            }
+        } while (! $cursorOrChangeStream->valid());
+
+        return $cursorOrChangeStream->current();
     }
 
     private function prepareArguments(): array

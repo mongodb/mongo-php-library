@@ -4371,4 +4371,98 @@ enum Pipelines: string
         }
     ]
     JSON;
+
+    /**
+     * Nested field
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#examples
+     */
+    case VectorSearchNestedField = <<<'JSON'
+    [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "filter": {
+                    "reviews.date": {
+                        "$gte": {
+                            "$date": {
+                                "$numberLong": "946684800000"
+                            }
+                        }
+                    }
+                },
+                "parentFilter": {
+                    "address.country": {
+                        "$in": [
+                            "United States"
+                        ]
+                    },
+                    "bedrooms": {
+                        "$gte": {
+                            "$numberInt": "2"
+                        },
+                        "$lte": {
+                            "$numberInt": "3"
+                        }
+                    },
+                    "property_type": {
+                        "$in": [
+                            "House",
+                            "Apartment"
+                        ]
+                    }
+                },
+                "path": "reviews.comments_embedding",
+                "queryVector": [
+                    {
+                        "$numberDouble": "0.01074588485062122345"
+                    },
+                    {
+                        "$numberDouble": "-0.03567341342568397522"
+                    },
+                    {
+                        "$numberDouble": "-0.092984795570373535156"
+                    }
+                ],
+                "numCandidates": {
+                    "$numberInt": "100"
+                },
+                "limit": {
+                    "$numberInt": "5"
+                },
+                "nestedOptions": {
+                    "scoreMode": "avg"
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "name": {
+                    "$numberInt": "1"
+                },
+                "address": {
+                    "$numberInt": "1"
+                },
+                "neighborhood_overview": {
+                    "$numberInt": "1"
+                },
+                "bedrooms": {
+                    "$numberInt": "1"
+                },
+                "property_type": {
+                    "$numberInt": "1"
+                },
+                "reviews.comments": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    JSON;
 }

@@ -190,6 +190,7 @@
   <file src="src/Builder/Stage/VectorSearchStage.php">
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$filter]]></code>
+      <code><![CDATA[$parentFilter]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Builder/Type/CombinedFieldQuery.php">

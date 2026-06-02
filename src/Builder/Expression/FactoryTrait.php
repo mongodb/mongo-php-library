@@ -2289,6 +2289,21 @@ trait FactoryTrait
     }
 
     /**
+     * Converts a string to an object. If the value cannot be converted, $toObject errors.
+     * If the value is null or missing, $toObject returns null.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObject/
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
+     */
+    public static function toObject(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
+    ): ToObjectOperator {
+        return new ToObjectOperator($expression);
+    }
+
+    /**
      * Converts value to an ObjectId.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/

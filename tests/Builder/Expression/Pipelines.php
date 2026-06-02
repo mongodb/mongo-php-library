@@ -6144,6 +6144,26 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Convert String to Object
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObject/#convert-string-to-object
+     */
+    case ToObjectConvertStringToObject = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "parsedConfig": {
+                    "$toObject": "$config"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/#example

@@ -2192,6 +2192,21 @@ trait FactoryTrait
     }
 
     /**
+     * Converts a value to an array. If the value cannot be converted, $toArray errors.
+     * If the value is null or missing, $toArray returns null.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toArray/
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
+     */
+    public static function toArray(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
+    ): ToArrayOperator {
+        return new ToArrayOperator($expression);
+    }
+
+    /**
      * Converts value to a boolean.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/

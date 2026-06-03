@@ -5945,6 +5945,50 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Convert String to Array
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toArray/#convert-string-to-array
+     */
+    case ToArrayConvertStringToArray = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "numbers": {
+                    "$toArray": "[1, 2, 3]"
+                },
+                "documents": {
+                    "$toArray": "[{\"a\": 1}, {\"b\": 2}]"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
+     * Convert binData to Array
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toArray/#convert-bindata-to-array
+     */
+    case ToArrayConvertBinDataToArray = <<<'JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "original": "$v",
+                "asArray": {
+                    "$toArray": "$v"
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/#example

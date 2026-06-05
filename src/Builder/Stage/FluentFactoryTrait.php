@@ -641,7 +641,7 @@ trait FluentFactoryTrait
      * @param string $model Name of the Voyage AI reranking model to use (e.g. rerank-2.5, rerank-2.5-lite).
      * @param Document|Serializable|array|stdClass $query Query object for reranking.
      * @param BSONArray|PackedArray|array|string $path Field path or array of field paths to use for reranking.
-     * @param int $numDocsToRerank Maximum number of documents to send to Voyage AI for reranking. Value must be between 1 and 1000.
+     * @param int<1, 1000> $numDocsToRerank Maximum number of documents to send to Voyage AI for reranking. Value must be between 1 and 1000.
      */
     public function rerank(
         string $model,

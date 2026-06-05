@@ -35,6 +35,8 @@ final class ArgumentDefinition
         public string|null $minVersion = null,
         public int|null $minItems = null,
         public int|null $maxItems = null,
+        public int|null $valueMin = null,
+        public int|null $valueMax = null,
         mixed ...$ignoredOtherArgs,
     ) {
         assert($this->optional === false || $this->default === null, 'Optional arguments cannot have a default value');
@@ -47,6 +49,10 @@ final class ArgumentDefinition
 
                 assert(is_string($t), sprintf('Type must be a list of strings. Got %s', get_debug_type($t)));
             }
+        }
+
+        if ($valueMin !== null && $valueMax !== null) {
+            assert($valueMin <= $valueMax, 'Min value must be less than or equal to max value');
         }
 
         $this->propertyName = ltrim($this->name, '$');

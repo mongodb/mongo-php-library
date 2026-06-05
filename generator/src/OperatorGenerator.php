@@ -17,6 +17,7 @@ use stdClass;
 
 use function array_filter;
 use function array_key_exists;
+use function array_map;
 use function array_merge;
 use function array_unique;
 use function assert;
@@ -133,6 +134,15 @@ abstract class OperatorGenerator extends AbstractGenerator
         // mixed can only be used as a standalone type
         if (in_array('mixed', $nativeTypes, true)) {
             $nativeTypes = ['mixed'];
+        }
+
+        if ($arg->valueMin !== null || $arg->valueMax !== null) {
+            $min = (string) ($arg->valueMin ?? 'min');
+            $max = (string) ($arg->valueMax ?? 'max');
+            $docTypes = array_map(
+                static fn (string $type) => $type === 'int' ? sprintf('int<%s, %s>', $min, $max) : $type,
+                $docTypes,
+            );
         }
 
         usort($nativeTypes, self::sortTypesCallback(...));

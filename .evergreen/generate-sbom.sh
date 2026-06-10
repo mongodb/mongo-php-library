@@ -7,7 +7,7 @@ SERIAL_NUMBER="urn:uuid:dc42a43b-4ace-4c42-9a6e-0b9e28fdd100"
 
 echo "Installing CycloneDX PHP Composer plugin"
 composer config allow-plugins.cyclonedx/cyclonedx-php-composer true
-composer require --dev cyclonedx/cyclonedx-php-composer:5.3.0 --no-update
+composer require --dev cyclonedx/cyclonedx-php-composer:6.2.0 --no-update
 
 echo "Updating dependencies"
 # --ignore-platform-reqs: SBOM generation doesn't need to run the code, so extension

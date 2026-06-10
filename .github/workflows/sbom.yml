@@ -34,7 +34,7 @@ jobs:
 
       - name: Stash existing SBOM
         run: |
-          jq 'del(.metadata.timestamp, .version)' sbom.json > ${{ runner.temp }}/sbom.existing.json
+          jq -S 'del(.metadata.timestamp, .version)' sbom.json > ${{ runner.temp }}/sbom.existing.json
 
       - name: Generate SBOM
         run: bash .evergreen/generate-sbom.sh
@@ -52,7 +52,7 @@ jobs:
       - name: Check for SBOM changes
         id: sbom_diff
         run: |
-          jq 'del(.metadata.timestamp, .version)' sbom.json > ${{ runner.temp }}/sbom.generated.json
+          jq -S 'del(.metadata.timestamp, .version)' sbom.json > ${{ runner.temp }}/sbom.generated.json
           RESULT=$(diff --brief ${{ runner.temp }}/sbom.existing.json ${{ runner.temp }}/sbom.generated.json || true)
           echo "result=$RESULT" | tee -a $GITHUB_OUTPUT
 

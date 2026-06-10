@@ -26,10 +26,14 @@ composer CycloneDX:make-sbom \
 echo "Updating sbom.json with version tracking"
 
 CURRENT_VERSION=$(jq -r '.version // 0' sbom.json 2>/dev/null || echo 0)
-NEW_CONTENT=$(jq -S 'del(.version, .metadata.timestamp)' sbom.cdx.json)
-OLD_CONTENT=$(jq -S 'del(.version, .metadata.timestamp)' sbom.json 2>/dev/null || echo '{}')
 
-if [ "$NEW_CONTENT" = "$OLD_CONTENT" ]; then
+tmp_new=$(mktemp)
+tmp_old=$(mktemp)
+trap 'rm -f "$tmp_new" "$tmp_old"' EXIT
+jq -S 'del(.version, .metadata.timestamp)' sbom.cdx.json > "$tmp_new"
+jq -S 'del(.version, .metadata.timestamp)' sbom.json 2>/dev/null > "$tmp_old" || echo '{}' > "$tmp_old"
+
+if diff -q "$tmp_new" "$tmp_old" > /dev/null; then
   NEW_VERSION=$CURRENT_VERSION
   echo "SBOM content unchanged, keeping version ${NEW_VERSION}"
 else

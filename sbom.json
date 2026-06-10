@@ -1,85 +1,246 @@
 {
-    "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
-    "bomFormat": "CycloneDX",
-    "specVersion": "1.5",
-    "serialNumber": "urn:uuid:dc42a43b-4ace-4c42-9a6e-0b9e28fdd100",
-    "version": 1,
-    "metadata": {
-        "timestamp": "2024-05-08T09:51:01Z",
-        "tools": [
-            {
-                "name": "composer",
-                "version": "2.7.6"
-            },
-            {
-                "vendor": "cyclonedx",
-                "name": "cyclonedx-php-composer",
-                "version": "v5.2.0",
-                "externalReferences": [
-                    {
-                        "type": "distribution",
-                        "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/f3a3cdc1a9e34bf1d5748e4279a24569cbf31fed",
-                        "comment": "dist reference: f3a3cdc1a9e34bf1d5748e4279a24569cbf31fed"
-                    },
-                    {
-                        "type": "vcs",
-                        "url": "https://github.com/CycloneDX/cyclonedx-php-composer.git",
-                        "comment": "source reference: f3a3cdc1a9e34bf1d5748e4279a24569cbf31fed"
-                    },
-                    {
-                        "type": "website",
-                        "url": "https://github.com/CycloneDX/cyclonedx-php-composer/#readme",
-                        "comment": "as detected from Composer manifest 'homepage'"
-                    },
-                    {
-                        "type": "issue-tracker",
-                        "url": "https://github.com/CycloneDX/cyclonedx-php-composer/issues",
-                        "comment": "as detected from Composer manifest 'support.issues'"
-                    },
-                    {
-                        "type": "vcs",
-                        "url": "https://github.com/CycloneDX/cyclonedx-php-composer/",
-                        "comment": "as detected from Composer manifest 'support.source'"
-                    }
-                ]
-            },
-            {
-                "vendor": "cyclonedx",
-                "name": "cyclonedx-library",
-                "version": "v3.3.1",
-                "externalReferences": [
-                    {
-                        "type": "distribution",
-                        "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/cad0f92b36c85f36b3d3c11ff96002af5f20cd10",
-                        "comment": "dist reference: cad0f92b36c85f36b3d3c11ff96002af5f20cd10"
-                    },
-                    {
-                        "type": "vcs",
-                        "url": "https://github.com/CycloneDX/cyclonedx-php-library.git",
-                        "comment": "source reference: cad0f92b36c85f36b3d3c11ff96002af5f20cd10"
-                    },
-                    {
-                        "type": "website",
-                        "url": "https://github.com/CycloneDX/cyclonedx-php-library/#readme",
-                        "comment": "as detected from Composer manifest 'homepage'"
-                    },
-                    {
-                        "type": "documentation",
-                        "url": "https://cyclonedx-php-library.readthedocs.io",
-                        "comment": "as detected from Composer manifest 'support.docs'"
-                    },
-                    {
-                        "type": "issue-tracker",
-                        "url": "https://github.com/CycloneDX/cyclonedx-php-library/issues",
-                        "comment": "as detected from Composer manifest 'support.issues'"
-                    },
-                    {
-                        "type": "vcs",
-                        "url": "https://github.com/CycloneDX/cyclonedx-php-library/",
-                        "comment": "as detected from Composer manifest 'support.source'"
-                    }
-                ]
-            }
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:dc42a43b-4ace-4c42-9a6e-0b9e28fdd100",
+  "version": 2,
+  "metadata": {
+    "timestamp": "2026-06-10T16:25:52Z",
+    "tools": [
+      {
+        "name": "composer",
+        "version": "2.7.1"
+      },
+      {
+        "vendor": "cyclonedx",
+        "name": "cyclonedx-php-composer",
+        "version": "v5.3.0",
+        "externalReferences": [
+          {
+            "type": "distribution",
+            "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/50b6a15ba3a07dda1d2f9b6314c7894005bdd133",
+            "comment": "dist reference: 50b6a15ba3a07dda1d2f9b6314c7894005bdd133"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-php-composer.git",
+            "comment": "source reference: 50b6a15ba3a07dda1d2f9b6314c7894005bdd133"
+          },
+          {
+            "type": "website",
+            "url": "https://github.com/CycloneDX/cyclonedx-php-composer/#readme",
+            "comment": "as detected from Composer manifest 'homepage'"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/CycloneDX/cyclonedx-php-composer/issues",
+            "comment": "as detected from Composer manifest 'support.issues'"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-php-composer/",
+            "comment": "as detected from Composer manifest 'support.source'"
+          }
         ]
+      },
+      {
+        "vendor": "cyclonedx",
+        "name": "cyclonedx-library",
+        "version": "v3.10.0",
+        "externalReferences": [
+          {
+            "type": "distribution",
+            "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/e6bb0fca8d89f1e34755900c361061a6f5253e49",
+            "comment": "dist reference: e6bb0fca8d89f1e34755900c361061a6f5253e49"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-php-library.git",
+            "comment": "source reference: e6bb0fca8d89f1e34755900c361061a6f5253e49"
+          },
+          {
+            "type": "website",
+            "url": "https://github.com/CycloneDX/cyclonedx-php-library/#readme",
+            "comment": "as detected from Composer manifest 'homepage'"
+          },
+          {
+            "type": "documentation",
+            "url": "https://cyclonedx-php-library.readthedocs.io",
+            "comment": "as detected from Composer manifest 'support.docs'"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/CycloneDX/cyclonedx-php-library/issues",
+            "comment": "as detected from Composer manifest 'support.issues'"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/CycloneDX/cyclonedx-php-library/",
+            "comment": "as detected from Composer manifest 'support.source'"
+          }
+        ]
+      }
+    ],
+    "component": {
+      "bom-ref": "mongodb/mongodb-dev-PHPLIB-SBOM/sbom_generation_using_cyclonedx-php-composer",
+      "type": "application",
+      "name": "mongodb",
+      "version": "dev-PHPLIB-SBOM/sbom_generation_using_cyclonedx-php-composer",
+      "group": "mongodb",
+      "description": "MongoDB driver library",
+      "author": "Andreas Braun, Jeremy Mikola, Jérôme Tamarelle",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:composer/mongodb/mongodb@dev-PHPLIB-SBOM/sbom_generation_using_cyclonedx-php-composer",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://jira.mongodb.org/browse/PHPLIB",
+          "comment": "as detected from Composer manifest 'homepage'"
+        }
+      ],
+      "properties": [
+        {
+          "name": "cdx:composer:package:distReference",
+          "value": "5a3ee327d9ccc363235db26c0bd9ceeb98a3868d"
+        },
+        {
+          "name": "cdx:composer:package:sourceReference",
+          "value": "5a3ee327d9ccc363235db26c0bd9ceeb98a3868d"
+        },
+        {
+          "name": "cdx:composer:package:type",
+          "value": "library"
+        }
+      ]
     }
+  },
+  "components": [
+    {
+      "bom-ref": "psr/log-3.0.2.0",
+      "type": "library",
+      "name": "log",
+      "version": "3.0.2",
+      "group": "psr",
+      "description": "Common interface for logging libraries",
+      "author": "PHP-FIG",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:composer/psr/log@3.0.2",
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://api.github.com/repos/php-fig/log/zipball/f16e1d5863e37f8d8c2a01719f5b34baa2b714d3",
+          "comment": "dist reference: f16e1d5863e37f8d8c2a01719f5b34baa2b714d3"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/php-fig/log.git",
+          "comment": "source reference: f16e1d5863e37f8d8c2a01719f5b34baa2b714d3"
+        },
+        {
+          "type": "website",
+          "url": "https://github.com/php-fig/log",
+          "comment": "as detected from Composer manifest 'homepage'"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/php-fig/log/tree/3.0.2",
+          "comment": "as detected from Composer manifest 'support.source'"
+        }
+      ],
+      "properties": [
+        {
+          "name": "cdx:composer:package:distReference",
+          "value": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3"
+        },
+        {
+          "name": "cdx:composer:package:sourceReference",
+          "value": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3"
+        },
+        {
+          "name": "cdx:composer:package:type",
+          "value": "library"
+        }
+      ]
+    },
+    {
+      "bom-ref": "symfony/polyfill-php85-1.38.1.0",
+      "type": "library",
+      "name": "polyfill-php85",
+      "version": "v1.38.1",
+      "group": "symfony",
+      "description": "Symfony polyfill backporting some PHP 8.5+ features to lower PHP versions",
+      "author": "Nicolas Grekas, Symfony Community",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:composer/symfony/polyfill-php85@v1.38.1",
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1",
+          "comment": "dist reference: ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/symfony/polyfill-php85.git",
+          "comment": "source reference: ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1"
+        },
+        {
+          "type": "website",
+          "url": "https://symfony.com",
+          "comment": "as detected from Composer manifest 'homepage'"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/symfony/polyfill-php85/tree/v1.38.1",
+          "comment": "as detected from Composer manifest 'support.source'"
+        }
+      ],
+      "properties": [
+        {
+          "name": "cdx:composer:package:distReference",
+          "value": "ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1"
+        },
+        {
+          "name": "cdx:composer:package:sourceReference",
+          "value": "ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1"
+        },
+        {
+          "name": "cdx:composer:package:type",
+          "value": "library"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "psr/log-3.0.2.0"
+    },
+    {
+      "ref": "symfony/polyfill-php85-1.38.1.0"
+    },
+    {
+      "ref": "mongodb/mongodb-dev-PHPLIB-SBOM/sbom_generation_using_cyclonedx-php-composer",
+      "dependsOn": [
+        "psr/log-3.0.2.0",
+        "symfony/polyfill-php85-1.38.1.0"
+      ]
+    }
+  ]
 }

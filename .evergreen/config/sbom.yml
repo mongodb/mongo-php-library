@@ -1,0 +1,19 @@
+tasks:
+  - name: upload-sbom
+    tags: ["ssdlc"]
+    allowed_requesters: ["commit"]
+    exec_timeout_secs: 600
+    commands:
+      - func: "upload-sbom"
+
+buildvariants:
+  - name: sbom
+    display_name: "SBOM"
+    allowed_requesters: ["commit"]
+    stepback: false
+    paths:
+      - sbom.json
+    run_on:
+      - ubuntu2004-small
+    tasks:
+      - name: upload-sbom

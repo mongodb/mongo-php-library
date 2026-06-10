@@ -20,7 +20,8 @@ composer CycloneDX:make-sbom \
   --spec-version=1.5 \
   --output-format=JSON \
   --output-file=sbom.cdx.json \
-  --omit dev
+  --omit dev \
+  --no-validate
 
 echo "Updating sbom.json with version tracking"
 

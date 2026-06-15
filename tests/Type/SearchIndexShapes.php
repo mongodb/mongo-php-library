@@ -226,4 +226,48 @@ final class SearchIndexShapes
             ['name' => 'my_flat_index', 'type' => 'vectorSearch'],
         );
     }
+
+    /** @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-type/ */
+    public function autoEmbedVectorSearchIndex(Collection $collection): void
+    {
+        $collection->createSearchIndex(
+            [
+                'fields' => [
+                    [
+                        'type' => 'autoEmbed',
+                        'modality' => 'text',
+                        'path' => 'description',
+                        'model' => 'voyage-4',
+                    ],
+                ],
+            ],
+            ['name' => 'my_auto_embed_index', 'type' => 'vectorSearch'],
+        );
+    }
+
+    /** @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-type/ */
+    public function autoEmbedVectorSearchIndexWithOptions(Collection $collection): void
+    {
+        $collection->createSearchIndex(
+            [
+                'fields' => [
+                    [
+                        'type' => 'autoEmbed',
+                        'modality' => 'text',
+                        'path' => 'description',
+                        'model' => 'voyage-4-large',
+                        'numDimensions' => 1024,
+                        'quantization' => 'scalar',
+                        'similarity' => 'dotProduct',
+                        'indexingMethod' => 'hnsw',
+                        'hnswOptions' => [
+                            'maxEdges' => 32,
+                            'numEdgeCandidates' => 200,
+                        ],
+                    ],
+                ],
+            ],
+            ['name' => 'my_auto_embed_index', 'type' => 'vectorSearch'],
+        );
+    }
 }

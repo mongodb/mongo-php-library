@@ -4521,6 +4521,32 @@ enum Pipelines: string
     JSON;
 
     /**
+     * Replace Using Regex
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/#replace-using-regex
+     */
+    case ReplaceOneReplaceUsingRegex = <<<'JSON'
+    [
+        {
+            "$project": {
+                "item": {
+                    "$replaceOne": {
+                        "input": "$item",
+                        "find": {
+                            "$regularExpression": {
+                                "pattern": "\\bblue paint\\b",
+                                "options": ""
+                            }
+                        },
+                        "replacement": "red paint"
+                    }
+                }
+            }
+        }
+    ]
+    JSON;
+
+    /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reverseArray/#example

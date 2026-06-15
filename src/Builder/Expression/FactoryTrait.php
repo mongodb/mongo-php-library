@@ -1670,13 +1670,13 @@ trait FactoryTrait
      * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/
-     * @param ResolvesToNull|ResolvesToString|null|string $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|null|string $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|null|string $replacement The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
+     * @param ResolvesToNull|ResolvesToString|null|string $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceOne returns null.
+     * @param Regex|ResolvesToNull|ResolvesToRegex|ResolvesToString|null|string $find The string or regex to search for within the given input. Can be any valid expression that resolves to a string, a regex, or a null. If find refers to a field that is missing, $replaceOne returns null.
+     * @param ResolvesToNull|ResolvesToString|null|string $replacement The string to use to replace the first matched instance of find in input. Can be any valid expression that resolves to a string or a null.
      */
     public static function replaceOne(
         ResolvesToNull|ResolvesToString|null|string $input,
-        ResolvesToNull|ResolvesToString|null|string $find,
+        Regex|ResolvesToNull|ResolvesToRegex|ResolvesToString|null|string $find,
         ResolvesToNull|ResolvesToString|null|string $replacement,
     ): ReplaceOneOperator {
         return new ReplaceOneOperator($input, $find, $replacement);

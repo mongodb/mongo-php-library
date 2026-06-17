@@ -17,6 +17,7 @@
         "symfony/polyfill-php85": "^1.33"
     },
     "require-dev": {
+        "cyclonedx/cyclonedx-php-composer": "6.2.0",
         "doctrine/coding-standard": "^12.0",
         "phpunit/phpunit": "^10.5.35",
         "rector/rector": "^2.3.4",
@@ -59,7 +60,8 @@
     },
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "cyclonedx/cyclonedx-php-composer": true
         },
         "sort-packages": true
     }

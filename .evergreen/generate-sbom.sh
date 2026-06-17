@@ -22,27 +22,12 @@ composer CycloneDX:make-sbom \
   --output-file=sbom.cdx.json \
   --omit dev \
   --no-validate
+# --no-validate: skips the plugin's built-in schema validation. Schema validation is
+# performed separately by cyclonedx-cli (see .github/workflows/sbom.yml), which produces
+# clearer diagnostics. Silkbomb will also reject a malformed SBOM on upload.
 
-echo "Updating sbom.json with version tracking"
-
-CURRENT_VERSION=$(jq -r '.version // 0' sbom.json 2>/dev/null || echo 0)
-
-tmp_new=$(mktemp)
-tmp_old=$(mktemp)
-trap 'rm -f "$tmp_new" "$tmp_old"' EXIT
-jq -S 'del(.version, .metadata.timestamp)' sbom.cdx.json > "$tmp_new"
-jq -S 'del(.version, .metadata.timestamp)' sbom.json 2>/dev/null > "$tmp_old" || echo '{}' > "$tmp_old"
-
-if diff -q "$tmp_new" "$tmp_old" > /dev/null; then
-  NEW_VERSION=$CURRENT_VERSION
-  echo "SBOM content unchanged, keeping version ${NEW_VERSION}"
-else
-  NEW_VERSION=$((CURRENT_VERSION + 1))
-  echo "SBOM content changed, incrementing version to ${NEW_VERSION}"
-fi
-
-jq --argjson v "$NEW_VERSION" --arg serial "$SERIAL_NUMBER" \
+jq --argjson v 1 --arg serial "$SERIAL_NUMBER" \
   '.version = $v | .serialNumber = $serial' sbom.cdx.json > sbom.json
 rm sbom.cdx.json
 
-echo "Generated sbom.json (version ${NEW_VERSION})"
+echo "Generated sbom.json"

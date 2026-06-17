@@ -1,5 +1,12 @@
 version: 2
 updates:
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-type: "production"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

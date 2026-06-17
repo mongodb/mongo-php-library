@@ -3,7 +3,12 @@ tasks:
     tags: ["ssdlc"]
     allowed_requesters: ["commit"]
     exec_timeout_secs: 600
+    # pre_error_fails_task: false allows the task to proceed even if pre steps such as
+    # "fetch extension" fail. PHP and Composer (needed by generate-sbom.sh) are available
+    # from the earlier "install dependencies" and "install composer" pre steps.
+    pre_error_fails_task: false
     commands:
+      - func: "generate-sbom"
       - func: "upload-sbom"
 
 buildvariants:
@@ -12,7 +17,7 @@ buildvariants:
     allowed_requesters: ["commit"]
     stepback: false
     paths:
-      - sbom.json
+      - composer.json
     run_on:
       - ubuntu2004-small
     tasks:

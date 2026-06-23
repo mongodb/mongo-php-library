@@ -741,6 +741,65 @@ class CollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
+    public function testWriteMethodsSendAfterClusterTimeInCausallyConsistentSession(): void
+    {
+        $client = self::createTestClient();
+        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+        $session = $client->startSession();
+        $seenInsertCommands = 0;
+
+        (new CommandObserver())->observe(
+            function () use ($collection, $session): void {
+                $collection->insertOne(['_id' => 1], ['session' => $session]);
+                $collection->insertOne(['_id' => 2], ['session' => $session]);
+            },
+            function (array $event) use (&$seenInsertCommands): void {
+                if (($event['started']->getCommand()->insert ?? null) !== $this->getCollectionName()) {
+                    return;
+                }
+
+                $seenInsertCommands++;
+
+                if ($seenInsertCommands === 1) {
+                    $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
+
+                    return;
+                }
+
+                $this->assertObjectHasProperty('readConcern', $event['started']->getCommand());
+                $this->assertObjectHasProperty('afterClusterTime', $event['started']->getCommand()->readConcern);
+                $this->assertObjectNotHasProperty('level', $event['started']->getCommand()->readConcern);
+            },
+        );
+
+        $this->assertSame(2, $seenInsertCommands);
+    }
+
+    public function testWriteMethodsDoNotSendAfterClusterTimeWhenCausalConsistencyIsDisabled(): void
+    {
+        $client = self::createTestClient();
+        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+        $session = $client->startSession(['causalConsistency' => false]);
+        $seenInsertCommands = 0;
+
+        (new CommandObserver())->observe(
+            function () use ($collection, $session): void {
+                $collection->insertOne(['_id' => 1], ['session' => $session]);
+                $collection->insertOne(['_id' => 2], ['session' => $session]);
+            },
+            function (array $event) use (&$seenInsertCommands): void {
+                if (($event['started']->getCommand()->insert ?? null) !== $this->getCollectionName()) {
+                    return;
+                }
+
+                $seenInsertCommands++;
+                $this->assertObjectNotHasProperty('readConcern', $event['started']->getCommand());
+            },
+        );
+
+        $this->assertSame(2, $seenInsertCommands);
+    }
+
     #[DataProvider('collectionWriteMethodClosures')]
     public function testMethodInTransactionWithWriteConcernOption($method): void
     {

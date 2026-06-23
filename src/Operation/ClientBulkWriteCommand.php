@@ -55,7 +55,7 @@ final class ClientBulkWriteCommand
      */
     public function __construct(
         private BulkWriteCommand $bulkWriteCommand,
-        /** @param array{session: ?Session, writeConcern: ?WriteConcern} */
+        /** @param array{readConcern?: mixed, session: ?Session, writeConcern: ?WriteConcern} */
         private array $options = [],
     ) {
         if (count($bulkWriteCommand) === 0) {

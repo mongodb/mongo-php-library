@@ -13,6 +13,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;
+use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use ReflectionClass;
@@ -156,6 +157,33 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
         $this->database->dropCollection($this->getCollectionName());
         $this->assertCollectionDoesNotExist($this->getCollectionName());
+    }
+
+    public function testCreateCollectionSendsAfterClusterTimeInCausallyConsistentSession(): void
+    {
+        $client = self::createTestClient();
+        $database = $client->selectDatabase($this->getDatabaseName());
+        $session = $client->startSession();
+        $createdCollectionName = $this->getCollectionName() . '_new';
+        $seenCreateCommands = 0;
+
+        (new CommandObserver())->observe(
+            function () use ($database, $session, $createdCollectionName): void {
+                $database->selectCollection($this->getCollectionName())->insertOne(['_id' => 1], ['session' => $session]);
+                $database->createCollection($createdCollectionName, ['session' => $session]);
+            },
+            function (array $event) use (&$seenCreateCommands, $createdCollectionName): void {
+                if (($event['started']->getCommand()->create ?? null) !== $createdCollectionName) {
+                    return;
+                }
+
+                $seenCreateCommands++;
+                $this->assertObjectHasProperty('readConcern', $event['started']->getCommand());
+                $this->assertObjectHasProperty('afterClusterTime', $event['started']->getCommand()->readConcern);
+            },
+        );
+
+        $this->assertSame(1, $seenCreateCommands);
     }
 
     public function testGetSelectsCollectionAndInheritsOptions(): void

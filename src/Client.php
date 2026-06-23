@@ -173,6 +173,8 @@ class Client implements Stringable
             $options['writeConcern'] = $this->writeConcern;
         }
 
+        $options = inherit_read_concern_for_write($options);
+
         if ($bulk instanceof ClientBulkWrite) {
             $bulk = $bulk->bulkWriteCommand;
         }
@@ -212,6 +214,8 @@ class Client implements Stringable
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
+
+        $options = inherit_read_concern_for_write($options);
 
         $operation = new DropDatabase($databaseName, $options);
 
@@ -380,7 +384,11 @@ class Client implements Stringable
      */
     public function startSession(array $options = []): Session
     {
-        return $this->manager->startSession($options);
+        $session = $this->manager->startSession($options);
+
+        register_session_options($session, $options);
+
+        return $session;
     }
 
     /**

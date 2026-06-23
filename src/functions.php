@@ -24,6 +24,7 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -36,6 +37,7 @@ use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 use stdClass;
+use WeakMap;
 
 use function array_is_list;
 use function array_key_first;
@@ -551,6 +553,79 @@ function extract_session_from_options(array $options): ?Session
     }
 
     return null;
+}
+
+/**
+ * Tracks session options for sessions created through Client::startSession().
+ *
+ * @internal
+ */
+function get_session_options_by_session(): WeakMap
+{
+    static $sessionOptionsBySession;
+
+    if ($sessionOptionsBySession === null) {
+        $sessionOptionsBySession = new WeakMap();
+    }
+
+    return $sessionOptionsBySession;
+}
+
+/**
+ * Stores options for a session created through Client::startSession().
+ *
+ * @internal
+ */
+function register_session_options(Session $session, array $options): void
+{
+    $sessionOptionsBySession = get_session_options_by_session();
+    $sessionOptionsBySession[$session] = $options;
+}
+
+/**
+ * Returns whether a session should use causal consistency.
+ *
+ * Sessions default to causal consistency unless it was explicitly disabled or
+ * snapshot reads were requested when the session was created.
+ *
+ * @internal
+ */
+function is_causally_consistent_session(Session $session): bool
+{
+    $sessionOptionsBySession = get_session_options_by_session();
+    $options = $sessionOptionsBySession[$session] ?? [];
+
+    if (($options['snapshot'] ?? false) === true) {
+        return false;
+    }
+
+    return $options['causalConsistency'] ?? true;
+}
+
+/**
+ * Inherit an empty ReadConcern for writes in causally-consistent sessions so
+ * the extension can add readConcern.afterClusterTime.
+ *
+ * @internal
+ * @param array $options Command options
+ */
+function inherit_read_concern_for_write(array $options): array
+{
+    $session = extract_session_from_options($options);
+
+    if (
+        isset($options['readConcern']) ||
+        ! $session instanceof Session ||
+        $session->isInTransaction() ||
+        $session->getOperationTime() === null ||
+        ! is_causally_consistent_session($session)
+    ) {
+        return $options;
+    }
+
+    $options['readConcern'] = new ReadConcern();
+
+    return $options;
 }
 
 /**

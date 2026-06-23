@@ -1193,6 +1193,8 @@ class Collection implements Stringable
             }
         }
 
+        $options = inherit_read_concern_for_write($options);
+
         return $options;
     }
 }

@@ -51,6 +51,31 @@ class ClientFunctionalTest extends FunctionalTestCase
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
 
+    public function testDropDatabaseSendsAfterClusterTimeInCausallyConsistentSession(): void
+    {
+        $session = $this->client->startSession();
+        $collection = $this->client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+        $seenDropDatabaseCommands = 0;
+
+        (new CommandObserver())->observe(
+            function () use ($collection, $session): void {
+                $collection->insertOne(['_id' => 1], ['session' => $session]);
+                $this->client->dropDatabase($this->getDatabaseName(), ['session' => $session]);
+            },
+            function (array $event) use (&$seenDropDatabaseCommands): void {
+                if (($event['started']->getCommand()->dropDatabase ?? null) !== 1) {
+                    return;
+                }
+
+                $seenDropDatabaseCommands++;
+                $this->assertObjectHasProperty('readConcern', $event['started']->getCommand());
+                $this->assertObjectHasProperty('afterClusterTime', $event['started']->getCommand()->readConcern);
+            },
+        );
+
+        $this->assertSame(1, $seenDropDatabaseCommands);
+    }
+
     public function testListDatabases(): void
     {
         $bulkWrite = new BulkWrite();

@@ -287,6 +287,8 @@ class Database implements Stringable
             $options['writeConcern'] = $this->writeConcern;
         }
 
+        $options = inherit_read_concern_for_write($options);
+
         if (! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager);
         }
@@ -326,6 +328,8 @@ class Database implements Stringable
             $options['writeConcern'] = $this->writeConcern;
         }
 
+        $options = inherit_read_concern_for_write($options);
+
         $operation = new CreateEncryptedCollection($this->databaseName, $collectionName, $options);
         $server = select_server_for_write($this->manager, $options);
 
@@ -356,6 +360,8 @@ class Database implements Stringable
             $options['writeConcern'] = $this->writeConcern;
         }
 
+        $options = inherit_read_concern_for_write($options);
+
         $operation = new DropDatabase($this->databaseName, $options);
 
         $operation->execute($server);
@@ -378,6 +384,8 @@ class Database implements Stringable
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
+
+        $options = inherit_read_concern_for_write($options);
 
         if ($this->autoEncryptionEnabled && ! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager)

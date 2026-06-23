@@ -242,6 +242,10 @@ final class CreateCollection
             $options['session'] = $this->options['session'];
         }
 
+        if (isset($this->options['readConcern'])) {
+            $options['readConcern'] = $this->options['readConcern'];
+        }
+
         if (isset($this->options['writeConcern'])) {
             $options['writeConcern'] = $this->options['writeConcern'];
         }

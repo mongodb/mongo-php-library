@@ -30,6 +30,9 @@ class UnifiedSpecTest extends FunctionalTestCase
      * @var array<string, string>
      */
     private static array $incompleteTestGroups = [
+        // Requires afterClusterTime on writes, pending libmongoc support (DRIVERS-3274)
+        'causal-consistency/causal consistency write commands include afterClusterTime' => 'afterClusterTime is not sent on writes pending libmongoc support (PHPLIB-1834, DRIVERS-3274)',
+        'causal-consistency/causal consistency bulkWrite include afterClusterTime' => 'afterClusterTime is not sent on writes pending libmongoc support (PHPLIB-1834, DRIVERS-3274)',
         // Spec tests for named KMS providers depends on unimplemented functionality from UTF schema 1.18
         'client-side-encryption/namedKMS' => 'UTF schema 1.18 is not supported (PHPLIB-1328)',
         // Many load balancer tests use CMAP events and/or assertNumberConnectionsCheckedOut
@@ -86,6 +89,12 @@ class UnifiedSpecTest extends FunctionalTestCase
     private static array $incompleteTests = [
         // Many load balancer tests use CMAP events and/or assertNumberConnectionsCheckedOut
         'load-balancers/monitoring events include correct fields: poolClearedEvent events include serviceId' => 'PHPC does not implement CMAP',
+        // Requires afterClusterTime on writes in transactions, pending libmongoc support (DRIVERS-3274)
+        'transactions/commit: reset session state commit' => 'afterClusterTime is not sent on writes pending libmongoc support (PHPLIB-1834, DRIVERS-3274)',
+        'transactions/commit: reset session state abort' => 'afterClusterTime is not sent on writes pending libmongoc support (PHPLIB-1834, DRIVERS-3274)',
+        'transactions/retryable-writes: increment txnNumber' => 'afterClusterTime is not sent on writes pending libmongoc support (PHPLIB-1834, DRIVERS-3274)',
+        'transactions-convenient-api/callback-aborts: withTransaction still succeeds if callback aborts and runs extra op' => 'afterClusterTime is not sent on writes pending libmongoc support (PHPLIB-1834, DRIVERS-3274)',
+        'transactions-convenient-api/callback-commits: withTransaction still succeeds if callback commits and runs extra op' => 'afterClusterTime is not sent on writes pending libmongoc support (PHPLIB-1834, DRIVERS-3274)',
         // Skips dating back to legacy transaction tests
         'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
         'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on DRIVERS-2104',
@@ -148,6 +157,17 @@ class UnifiedSpecTest extends FunctionalTestCase
                 $this->markTestIncomplete($reason);
             }
         }
+    }
+
+    #[DataProvider('provideCausalConsistencyTests')]
+    public function testCausalConsistency(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public static function provideCausalConsistencyTests(): Generator
+    {
+        return self::provideTests('causal-consistency/tests', 'causal-consistency');
     }
 
     #[DataProvider('provideChangeStreamsTests')]

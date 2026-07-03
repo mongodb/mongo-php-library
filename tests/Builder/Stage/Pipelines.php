@@ -4465,4 +4465,83 @@ enum Pipelines: string
         }
     ]
     EXTENDED_JSON;
+
+    /**
+     * Automated Embedding
+     *
+     * @see https://www.mongodb.com/docs/vector-search/crud-embeddings/automated-embedding/
+     */
+    case VectorSearchAutomatedEmbedding = <<<'EXTENDED_JSON'
+    [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "path": "plot_embedding",
+                "query": "time travel",
+                "numCandidates": {
+                    "$numberInt": "150"
+                },
+                "limit": {
+                    "$numberInt": "10"
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Automated Embedding with model override
+     *
+     * @see https://www.mongodb.com/docs/vector-search/crud-embeddings/automated-embedding/
+     */
+    case VectorSearchAutomatedEmbeddingWithModelOverride = <<<'EXTENDED_JSON'
+    [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "path": "plot_embedding",
+                "query": "time travel",
+                "model": "voyage-3-lite",
+                "numCandidates": {
+                    "$numberInt": "150"
+                },
+                "limit": {
+                    "$numberInt": "10"
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 }

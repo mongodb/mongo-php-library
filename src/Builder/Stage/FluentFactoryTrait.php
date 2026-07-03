@@ -937,8 +937,8 @@ trait FluentFactoryTrait
      * @param string $index Name of the Atlas Vector Search index to use.
      * @param int $limit Number of documents to return in the results. This value can't exceed the value of numCandidates if you specify numCandidates.
      * @param string $path Indexed vector type field to search.
-     * @param BSONArray|Binary|PackedArray|array|string $queryVector Array of numbers or a BinData value that represent the query vector. The number type
-     * must match the indexed field value type.
+     * @param Optional|BSONArray|Binary|PackedArray|array|string $queryVector Array of numbers or a BinData value that represents the query vector. The number type
+     * must match the indexed field value type. Required if `query` is not specified.
      * @param Optional|bool $exact This is required if numCandidates is omitted. false to run ANN search. true to run ENN search.
      * @param Optional|QueryInterface|array $filter Any match query that compares an indexed field with a boolean, date, objectId, number, string, or UUID to use as a pre-filter.
      * @param Optional|int $numCandidates This field is required if exact is false or omitted.
@@ -946,20 +946,33 @@ trait FluentFactoryTrait
      * @param Optional|bool $returnStoredSource If true, the search returns only the stored source fields configured on the index directly from the index and skips a full document lookup. If omitted, the default value is false.
      * @param Optional|Document|Serializable|array|stdClass $nestedOptions Configure how MongoDB Vector Search scores documents that contain nested arrays.
      * @param Optional|QueryInterface|array $parentFilter Any match query that compares an indexed top-level field with a boolean, date, objectId, number, string, or UUID to use as a pre-filter. Only valid if `nestedRoot` is specified in the index definition.
+     * @param Optional|string $query Natural language text query for automated embedding. MongoDB automatically
+     * generates a vector embedding for this text at query time using the embedding model
+     * configured in the index, or the `model` argument if specified.
+     * Required if `queryVector` is not specified.
+     *
+     * New in MongoDB 8.2
+     * @param Optional|string $model The embedding model used to generate the query vector from the query text. If omitted,
+     * the model configured in the index definition is used. Must be compatible with the model
+     * used at index time. Only valid when `query` is specified.
+     *
+     * New in MongoDB 8.2
      */
     public function vectorSearch(
         string $index,
         int $limit,
         string $path,
-        Binary|PackedArray|BSONArray|array|string $queryVector,
+        Optional|Binary|PackedArray|BSONArray|array|string $queryVector = Optional::Undefined,
         Optional|bool $exact = Optional::Undefined,
         Optional|QueryInterface|array $filter = Optional::Undefined,
         Optional|int $numCandidates = Optional::Undefined,
         Optional|bool $returnStoredSource = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $nestedOptions = Optional::Undefined,
         Optional|QueryInterface|array $parentFilter = Optional::Undefined,
+        Optional|string $query = Optional::Undefined,
+        Optional|string $model = Optional::Undefined,
     ): static {
-        $this->pipeline[] = Stage::vectorSearch($index, $limit, $path, $queryVector, $exact, $filter, $numCandidates, $returnStoredSource, $nestedOptions, $parentFilter);
+        $this->pipeline[] = Stage::vectorSearch($index, $limit, $path, $queryVector, $exact, $filter, $numCandidates, $returnStoredSource, $nestedOptions, $parentFilter, $query, $model);
 
         return $this;
     }

@@ -116,8 +116,8 @@ class OperatorTestGenerator extends OperatorGenerator
         $class->setComment('Test ' . $operator->name . ' ' . basename($definition->configFiles));
 
         foreach ($operator->tests as $test) {
-            $testName = 'test' . str_replace([' ', '-'], '', ucwords(str_replace('$', '', $test->name)));
-            $caseName = str_replace([' ', '-'], '', ucwords(str_replace('$', '', $operator->name . ' ' . $test->name)));
+            $testName = 'test' . str_replace([' ', '-', ','], '', ucwords(str_replace('$', '', $test->name)));
+            $caseName = str_replace([' ', '-', ','], '', ucwords(str_replace('$', '', $operator->name . ' ' . $test->name)));
 
             // Handle update tests (filter + update)
             if ($test->filter !== null && $test->update !== null) {

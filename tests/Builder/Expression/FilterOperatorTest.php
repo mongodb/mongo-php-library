@@ -51,6 +51,29 @@ class FilterOperatorTest extends PipelineTestCase
         $this->assertSamePipeline(Pipelines::FilterLimitGreaterThanPossibleMatches, $pipeline);
     }
 
+    public function testUseTheArrayIndexAsField(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project(
+                _id: 0,
+                name: 1,
+                secondaryHobbies: Expression::filter(
+                    input: Expression::arrayFieldPath('hobbies'),
+                    arrayIndexAs: 'myIndex',
+                    cond: Expression::eq(
+                        Expression::mod(
+                            Expression::variable('myIndex'),
+                            2,
+                        ),
+                        0,
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FilterUseTheArrayIndexAsField, $pipeline);
+    }
+
     public function testUsingTheLimitField(): void
     {
         $pipeline = new Pipeline(

@@ -2180,6 +2180,47 @@ enum Pipelines: string
     ]
     EXTENDED_JSON;
 
+    /**
+     * Use the arrayIndexAs Field
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#use-the-arrayindexas-field
+     */
+    case FilterUseTheArrayIndexAsField = <<<'EXTENDED_JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "name": {
+                    "$numberInt": "1"
+                },
+                "secondaryHobbies": {
+                    "$filter": {
+                        "input": "$hobbies",
+                        "arrayIndexAs": "myIndex",
+                        "cond": {
+                            "$eq": [
+                                {
+                                    "$mod": [
+                                        "$$myIndex",
+                                        {
+                                            "$numberInt": "2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "$numberInt": "0"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
     /** Use in $addFields Stage */
     case FirstUseInAddFieldsStage = <<<'EXTENDED_JSON'
     [
@@ -4207,6 +4248,53 @@ enum Pipelines: string
                                 "$$this"
                             ]
                         }
+                    }
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Use as, valueAs, and arrayIndexAs
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/#use-as--valueas--and-arrayindexas
+     */
+    case ReduceUseAsValueAsAndArrayIndexAs = <<<'EXTENDED_JSON'
+    [
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "name": {
+                    "$numberInt": "1"
+                },
+                "text": {
+                    "$reduce": {
+                        "input": "$hobbies",
+                        "initialValue": "My hobbies include:",
+                        "in": {
+                            "$concat": [
+                                "$$accumulatedText",
+                                " ",
+                                {
+                                    "$toString": {
+                                        "$add": [
+                                            "$$myIndex",
+                                            {
+                                                "$numberInt": "1"
+                                            }
+                                        ]
+                                    }
+                                },
+                                ") ",
+                                "$$hobby"
+                            ]
+                        },
+                        "as": "hobby",
+                        "valueAs": "accumulatedText",
+                        "arrayIndexAs": "myIndex"
                     }
                 }
             }

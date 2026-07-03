@@ -800,18 +800,25 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input
-     * @param ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
+     * @param ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as, and the element index with the variable name specified in arrayIndexAs (MongoDB 8.3+).
      * @param Optional|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+     * @param Optional|string $arrayIndexAs A name for the variable that represents the index of the current element in
+     * the input array. If specified, this variable is available within the cond expression.
+     *
+     * New in MongoDB 8.3
      * @param Optional|ResolvesToInt|int|string $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
      * If the specified limit is greater than the number of matching array elements, $filter returns all matching array elements. If the limit is null, $filter returns all matching array elements.
+     *
+     * New in MongoDB 8.3
      */
     public static function filter(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         ResolvesToBool|bool|string $cond,
         Optional|string $as = Optional::Undefined,
+        Optional|string $arrayIndexAs = Optional::Undefined,
         Optional|ResolvesToInt|int|string $limit = Optional::Undefined,
     ): FilterOperator {
-        return new FilterOperator($input, $cond, $as, $limit);
+        return new FilterOperator($input, $cond, $as, $arrayIndexAs, $limit);
     }
 
     /**
@@ -1606,15 +1613,30 @@ trait FactoryTrait
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $initialValue The initial cumulative value set before in is applied to the first element of the input array.
      * @param DateTimeInterface|Document|ExpressionInterface|Serializable|Type|array|bool|float|int|null|stdClass|string $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
      * During evaluation of the in expression, two variables will be available:
-     * - value is the variable that represents the cumulative value of the expression.
-     * - this is the variable that refers to the element being processed.
+     * - value is the variable that represents the cumulative value of the expression. Use valueAs (MongoDB 8.3+) to specify a custom name.
+     * - this is the variable that refers to the element being processed. Use as (MongoDB 8.3+) to specify a custom name.
+     * @param Optional|string $as A name for the variable that represents each individual element of the input array.
+     * If no name is specified, the variable name defaults to this.
+     *
+     * New in MongoDB 8.3
+     * @param Optional|string $valueAs A name for the variable that represents the cumulative value of the expression.
+     * If no name is specified, the variable name defaults to value.
+     *
+     * New in MongoDB 8.3
+     * @param Optional|string $arrayIndexAs A name for the variable that represents the index of the current element in
+     * the input array. If specified, this variable is available within the in expression.
+     *
+     * New in MongoDB 8.3
      */
     public static function reduce(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $initialValue,
         DateTimeInterface|Document|Serializable|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
+        Optional|string $as = Optional::Undefined,
+        Optional|string $valueAs = Optional::Undefined,
+        Optional|string $arrayIndexAs = Optional::Undefined,
     ): ReduceOperator {
-        return new ReduceOperator($input, $initialValue, $in);
+        return new ReduceOperator($input, $initialValue, $in, $as, $valueAs, $arrayIndexAs);
     }
 
     /**

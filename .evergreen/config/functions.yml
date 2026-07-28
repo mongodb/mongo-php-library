@@ -219,9 +219,10 @@ functions:
           export AWS_TEMP_ACCESS_KEY_ID="${client_side_encryption_aws_temp_access_key_id}"
           export AWS_TEMP_SECRET_ACCESS_KEY="${client_side_encryption_aws_temp_secret_access_key_key}"
           export AWS_TEMP_SESSION_TOKEN="${client_side_encryption_aws_temp_session_token}"
-          export AZURE_TENANT_ID="${client_side_encryption_azure_tenant_id}"
-          export AZURE_CLIENT_ID="${client_side_encryption_azure_client_id}"
-          export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
+          . ${DRIVERS_TOOLS}/.evergreen/csfle/secrets-export.sh
+          export AZURE_TENANT_ID="$FLE_AZURE_TENANTID"
+          export AZURE_CLIENT_ID="$FLE_AZURE_CLIENTID"
+          export AZURE_CLIENT_SECRET="$FLE_AZURE_CLIENTSECRET"
           export GCP_EMAIL="${client_side_encryption_gcp_email}"
           export GCP_PRIVATE_KEY="${client_side_encryption_gcp_privatekey}"
           export KMIP_ENDPOINT="${client_side_encryption_kmip_endpoint}"
@@ -299,6 +300,19 @@ functions:
           fi
 
   "start kms servers":
+    # Fetch KMS credentials from the drivers/csfle AWS vault into secrets-export.sh
+    - command: ec2.assume_role
+      params:
+        role_arn: ${aws_test_secrets_role}
+    - command: subprocess.exec
+      params:
+        working_dir: ${DRIVERS_TOOLS}/.evergreen/csfle
+        binary: bash
+        include_expansions_in_env: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]
+        env:
+          FLE_AZURE_USE_CORPORATE: "YES"
+        args:
+          - ./setup-secrets.sh
     - command: shell.exec
       # Init venv without background:true to install dependencies
       params:

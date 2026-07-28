@@ -381,8 +381,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'azure' => [
                 'providerName' => 'azure',
                 'masterKey' => [
-                    'keyVaultEndpoint' => 'key-vault-csfle.vault.azure.net',
-                    'keyName' => 'key-name-csfle',
+                    'keyVaultEndpoint' => 'drivers-3392-key-vault.vault.azure.net',
+                    'keyName' => 'drivers-3392-keyname',
                 ],
             ],
             'gcp' => [
@@ -765,7 +765,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     public static function customEndpointProvider()
     {
         $awsMasterKey = ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0'];
-        $azureMasterKey = ['keyVaultEndpoint' => 'key-vault-csfle.vault.azure.net', 'keyName' => 'key-name-csfle'];
+        $azureMasterKey = ['keyVaultEndpoint' => 'drivers-3392-key-vault.vault.azure.net', 'keyName' => 'drivers-3392-keyname'];
         $gcpMasterKey = [
             'projectId' => 'devprod-drivers',
             'location' => 'global',
@@ -1781,7 +1781,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     {
         $providerMasterKeys = [
             'aws' => ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0'],
-            'azure' => ['keyVaultEndpoint' => 'key-vault-csfle.vault.azure.net', 'keyName' => 'key-name-csfle'],
+            'azure' => ['keyVaultEndpoint' => 'drivers-3392-key-vault.vault.azure.net', 'keyName' => 'drivers-3392-keyname'],
             'gcp' => ['projectId' => 'devprod-drivers', 'location' => 'global', 'keyRing' => 'key-ring-csfle', 'keyName' => 'key-name-csfle'],
             'kmip' => [],
         ];

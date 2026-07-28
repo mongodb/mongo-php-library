@@ -8,7 +8,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "latest"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -22,7 +21,6 @@ tasks:
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "latest"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -37,8 +35,7 @@ tasks:
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"
   - name: "test-mongodb-rapid-crypt-shared"
     tags: ["replicaset", "local", "rapid", "csfle", "tag"]
@@ -48,7 +45,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "rapid"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -62,7 +58,6 @@ tasks:
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "rapid"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -77,8 +72,7 @@ tasks:
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"
   - name: "test-mongodb-8.0-crypt-shared"
     tags: ["replicaset", "local", "8.0", "csfle", "tag"]
@@ -88,7 +82,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "8.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -102,7 +95,6 @@ tasks:
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "8.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -117,8 +109,7 @@ tasks:
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"
   - name: "test-mongodb-7.0-crypt-shared"
     tags: ["replicaset", "local", "7.0", "csfle", "tag"]
@@ -128,7 +119,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "7.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -142,7 +132,6 @@ tasks:
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "7.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -157,8 +146,7 @@ tasks:
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"
   - name: "test-mongodb-6.0-crypt-shared"
     tags: ["replicaset", "local", "6.0", "csfle", "tag"]
@@ -168,7 +156,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "6.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -182,7 +169,6 @@ tasks:
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "6.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -197,8 +183,7 @@ tasks:
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"
   - name: "test-mongodb-5.0-crypt-shared"
     tags: ["replicaset", "local", "5.0", "csfle", "tag"]
@@ -208,7 +193,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "5.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -222,7 +206,6 @@ tasks:
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "5.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -237,8 +220,7 @@ tasks:
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"
   - name: "test-mongodb-4.4-crypt-shared"
     tags: ["replicaset", "local", "4.4", "csfle", "tag"]
@@ -248,7 +230,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "4.4"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -262,7 +243,6 @@ tasks:
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "4.4"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -277,8 +257,7 @@ tasks:
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"
   - name: "test-mongodb-4.2-crypt-shared"
     tags: ["replicaset", "local", "4.2", "csfle", "tag"]
@@ -288,7 +267,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "4.2"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -302,7 +280,6 @@ tasks:
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "4.2"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -317,6 +294,5 @@ tasks:
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"

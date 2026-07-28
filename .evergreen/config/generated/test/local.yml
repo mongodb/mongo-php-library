@@ -8,7 +8,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "latest"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-latest-replicaset-noauth-nossl"
@@ -19,7 +18,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "latest"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-latest-sharded-noauth-nossl"
@@ -30,7 +28,6 @@ tasks:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "latest"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
   - name: "test-mongodb-rapid-standalone-noauth-nossl"
     tags: ["standalone", "local", "rapid", "tag"]
@@ -40,7 +37,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "rapid"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-rapid-replicaset-noauth-nossl"
@@ -51,7 +47,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "rapid"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-rapid-sharded-noauth-nossl"
@@ -62,7 +57,6 @@ tasks:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "rapid"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
   - name: "test-mongodb-8.0-standalone-noauth-nossl"
     tags: ["standalone", "local", "8.0", "tag"]
@@ -72,7 +66,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "8.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-8.0-replicaset-noauth-nossl"
@@ -83,7 +76,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "8.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-8.0-sharded-noauth-nossl"
@@ -94,7 +86,6 @@ tasks:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "8.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
   - name: "test-mongodb-7.0-standalone-noauth-nossl"
     tags: ["standalone", "local", "7.0", "tag"]
@@ -104,7 +95,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "7.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-7.0-replicaset-noauth-nossl"
@@ -115,7 +105,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "7.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-7.0-sharded-noauth-nossl"
@@ -126,7 +115,6 @@ tasks:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "7.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
   - name: "test-mongodb-6.0-standalone-noauth-nossl"
     tags: ["standalone", "local", "6.0", "tag"]
@@ -136,7 +124,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "6.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-6.0-replicaset-noauth-nossl"
@@ -147,7 +134,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "6.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-6.0-sharded-noauth-nossl"
@@ -158,7 +144,6 @@ tasks:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "6.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
   - name: "test-mongodb-5.0-standalone-noauth-nossl"
     tags: ["standalone", "local", "5.0", "tag"]
@@ -168,7 +153,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "5.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-5.0-replicaset-noauth-nossl"
@@ -179,7 +163,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "5.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-5.0-sharded-noauth-nossl"
@@ -190,7 +173,6 @@ tasks:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "5.0"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
   - name: "test-mongodb-4.4-standalone-noauth-nossl"
     tags: ["standalone", "local", "4.4", "tag"]
@@ -200,7 +182,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "4.4"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-4.4-replicaset-noauth-nossl"
@@ -211,7 +192,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "4.4"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-4.4-sharded-noauth-nossl"
@@ -222,7 +202,6 @@ tasks:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "4.4"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
   - name: "test-mongodb-4.2-standalone-noauth-nossl"
     tags: ["standalone", "local", "4.2", "tag"]
@@ -232,7 +211,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "4.2"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-4.2-replicaset-noauth-nossl"
@@ -243,7 +221,6 @@ tasks:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "4.2"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
 
   - name: "test-mongodb-4.2-sharded-noauth-nossl"
@@ -254,5 +231,4 @@ tasks:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "4.2"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"

@@ -11,7 +11,6 @@ tasks:
           SSL: "yes"
       - func: "start load balancer"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
@@ -27,7 +26,6 @@ tasks:
           SSL: "yes"
       - func: "start load balancer"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
@@ -43,7 +41,6 @@ tasks:
           SSL: "yes"
       - func: "start load balancer"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
@@ -59,7 +56,6 @@ tasks:
           SSL: "yes"
       - func: "start load balancer"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
@@ -75,7 +71,6 @@ tasks:
           SSL: "yes"
       - func: "start load balancer"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
@@ -91,7 +86,6 @@ tasks:
           SSL: "yes"
       - func: "start load balancer"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"

@@ -104,6 +104,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
+        'valid-pass/expectedEventsForClient-topologyDescriptionChangedEvent: can assert on values of newDescription and previousDescription fields' => 'SDAM events are not observed by the unified test runner',
         // libmongoc always adds readConcern to aggregate command
         'index-management/search index operations ignore read and write concern: listSearchIndexes ignores read and write concern' => 'libmongoc appends readConcern to aggregate command',
         // Uses an invalid object name

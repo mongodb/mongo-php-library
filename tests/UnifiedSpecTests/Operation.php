@@ -87,9 +87,7 @@ final class Operation
     private ?string $saveResultAsEntity = null;
 
     private static array $unsupportedOperations = [
-        self::OBJECT_TEST_RUNNER => [
-            'assertNumberConnectionsCheckedOut' => 'PHP does not implement CMAP',
-        ],
+        self::OBJECT_TEST_RUNNER => ['assertNumberConnectionsCheckedOut' => 'PHP does not implement CMAP'],
         Client::class => ['listDatabaseObjects' => 'listDatabaseObjects is not implemented'],
         Cursor::class => ['iterateOnce' => 'iterateOnce is not implemented (PHPC-1760)'],
         Database::class => [

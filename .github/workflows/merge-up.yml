@@ -30,4 +30,6 @@ jobs:
           branchNamePattern: 'v<major>.<minor>'
           devBranchNamePattern: 'v<major>.x'
           ignoredBranches: ${{ vars.IGNORED_MERGE_UP_BRANCHES }}
+          labels: merge-up
           enableAutoMerge: true
+          assignApprover: true

@@ -4,10 +4,10 @@ use PhpParser\Node\Expr\Cast\Bool_;
 use PhpParser\Node\Expr\Cast\Double;
 use PhpParser\Node\Expr\Cast\Int_;
 use Rector\Config\RectorConfig;
-use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
+use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Renaming\Rector\Cast\RenameCastRector;
 use Rector\Renaming\ValueObject\RenameCast;
 
@@ -23,11 +23,6 @@ return RectorConfig::configure()
     // Error with StaticCallOnNonStaticToInstanceCallRector
     // https://github.com/rectorphp/rector/issues/9608
     ->withSkipPath(__DIR__ . '/tests/Builder/BuilderEncoderTest.php')
-    ->withRules([
-        ChangeSwitchToMatchRector::class,
-    ])
-    // All classes are public API by default, unless marked with @internal.
-    ->withConfiguredRule(RemoveAnnotationRector::class, ['api'])
     // Fix PHP 8.5 deprecations
     ->withConfiguredRule(
         RenameCastRector::class,
@@ -45,6 +40,7 @@ return RectorConfig::configure()
         ChangeSwitchToMatchRector::class => [
             __DIR__ . '/tests/SpecTests/Operation.php',
         ],
+        AddDoesNotPerformAssertionToNonAssertingTestRector::class,
     ])
     // phpcs:enable
     ->withImportNames(importNames: false, removeUnusedImports: true);

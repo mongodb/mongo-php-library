@@ -95,11 +95,16 @@ final class CollectionWrapper
 
     /**
      * Deletes a GridFS file and related chunks by ID.
+     *
+     * @return int|null Number of deleted files (i.e. 0 or 1), or null if the
+     *                   write was not acknowledged
      */
-    public function deleteFileAndChunksById(mixed $id): void
+    public function deleteFileAndChunksById(mixed $id): ?int
     {
-        $this->filesCollection->deleteOne(['_id' => $id]);
+        $result = $this->filesCollection->deleteOne(['_id' => $id]);
         $this->chunksCollection->deleteMany(['files_id' => $id]);
+
+        return $result->isAcknowledged() ? $result->getDeletedCount() : null;
     }
 
     /**
@@ -119,11 +124,14 @@ final class CollectionWrapper
      */
     public function findChunksByFileId(mixed $id, int $fromChunk = 0): CursorInterface
     {
+        $filter = ['files_id' => $id];
+
+        if ($fromChunk > 0) {
+            $filter['n'] = ['$gte' => $fromChunk];
+        }
+
         return $this->chunksCollection->find(
-            [
-                'files_id' => $id,
-                'n' => ['$gte' => $fromChunk],
-            ],
+            $filter,
             [
                 'sort' => ['n' => 1],
                 'typeMap' => ['root' => 'stdClass'],

@@ -210,10 +210,9 @@ class Bucket
      */
     public function delete(mixed $id): void
     {
-        $file = $this->collectionWrapper->findFileById($id);
-        $this->collectionWrapper->deleteFileAndChunksById($id);
+        $deletedCount = $this->collectionWrapper->deleteFileAndChunksById($id);
 
-        if ($file === null) {
+        if ($deletedCount === 0) {
             throw FileNotFoundException::byId($id, $this->getFilesNamespace());
         }
     }

@@ -893,10 +893,7 @@
   <file src="src/Operation/WithTransaction.php">
     <InvalidOperand>
       <code><![CDATA[$backoffMs * 1e6]]></code>
-      <code><![CDATA[$this->getJitter() * min(self::BACKOFF_INITIAL * (1.5 ** ($transactionAttempt - 1)), self::BACKOFF_MAX)]]></code>
-      <code><![CDATA[1.5 ** ($transactionAttempt - 1)]]></code>
       <code><![CDATA[hrtime(true) + ($backoffMs * 1e6)]]></code>
-      <code><![CDATA[self::BACKOFF_INITIAL * (1.5 ** ($transactionAttempt - 1))]]></code>
       <code><![CDATA[self::MAX_TIME * 1e9]]></code>
     </InvalidOperand>
   </file>

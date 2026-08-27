@@ -35,7 +35,7 @@ class Prose4_RetryBackoffIsEnforcedTest extends FunctionalTestCase
         Util::setFixedJitter($operation, 1);
         $withBackoffTime = $this->runOperationWithTiming($operation, $session);
 
-        self::assertEqualsWithDelta($noBackoffTime + 1.8, $withBackoffTime, 0.5);
+        self::assertEqualsWithDelta($noBackoffTime + 2.3, $withBackoffTime, 0.5);
     }
 
     private function runOperationWithTiming(WithTransaction $operation, Session $session): float

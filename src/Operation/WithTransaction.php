@@ -19,10 +19,10 @@ use function usleep;
 final class WithTransaction
 {
     /** Initial backoff time in ms */
-    private const BACKOFF_INITIAL = 5;
+    private const BACKOFF_INITIAL = 5.0;
 
     /** Maximum backoff time in ms */
-    private const BACKOFF_MAX = 500;
+    private const BACKOFF_MAX = 500.0;
 
     /** Default transaction timeout in seconds */
     private const MAX_TIME = 120;
@@ -202,7 +202,7 @@ final class WithTransaction
 
     private function computeBackoffMs(int $transactionAttempt): int
     {
-        return (int) floor($this->getJitter() * min(self::BACKOFF_INITIAL * (1.5 ** ($transactionAttempt - 1)), self::BACKOFF_MAX));
+        return (int) floor($this->getJitter() * min(self::BACKOFF_INITIAL * (1.5 ** (float) $transactionAttempt), self::BACKOFF_MAX));
     }
 
     private function getJitter(): float

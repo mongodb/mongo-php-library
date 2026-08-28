@@ -559,9 +559,7 @@ class Database implements Stringable
      */
     public function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = []): void
     {
-        if (! isset($toDatabaseName)) {
-            $toDatabaseName = $this->databaseName;
-        }
+        $toDatabaseName ??= $this->databaseName;
 
         $server = select_server_for_write($this->manager, $options);
 

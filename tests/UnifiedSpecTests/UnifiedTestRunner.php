@@ -244,15 +244,13 @@ final class UnifiedTestRunner
         assertNotEmpty($runOnRequirements);
         assertContainsOnly('object', $runOnRequirements);
 
-        if (! isset($cachedIsSatisfiedArgs)) {
-            $cachedIsSatisfiedArgs = [
-                $this->getServerVersion(),
-                $this->getTopology(),
-                $this->serverParameterHelper,
-                $this->isAuthenticated(),
-                $this->isClientSideEncryptionSupported(),
-            ];
-        }
+        $cachedIsSatisfiedArgs ??= [
+            $this->getServerVersion(),
+            $this->getTopology(),
+            $this->serverParameterHelper,
+            $this->isAuthenticated(),
+            $this->isClientSideEncryptionSupported(),
+        ];
 
         foreach ($runOnRequirements as $o) {
             $runOnRequirement = new RunOnRequirement($o);

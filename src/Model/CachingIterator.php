@@ -30,7 +30,7 @@ use function reset;
 /**
  * Iterator for wrapping a Traversable and caching its results.
  *
- * By caching results, this iterators allows a Traversable to be counted and
+ * By caching results, this iterator allows a Traversable to be counted and
  * rewound multiple times, even if the wrapped object does not natively support
  * those operations (e.g. MongoDB\Driver\Cursor).
  *

@@ -64,9 +64,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
                 foreach ($expectedDocuments as $i => $expectedDocument) {
                     // Replace _id placeholder if necessary
-                    if ($expectedDocument->_id === null) {
-                        $expectedDocument->_id = $insertedIds[$i];
-                    }
+                    $expectedDocument->_id ??= $insertedIds[$i];
                 }
             },
             function (array $event) use ($expectedDocuments): void {

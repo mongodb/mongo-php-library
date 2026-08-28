@@ -22,7 +22,7 @@ use MongoDB\Exception\BadMethodCallException;
 use Stringable;
 
 use function array_key_exists;
-use function array_search;
+use function in_array;
 
 /**
  * Index information model class.
@@ -93,7 +93,7 @@ class IndexInfo implements ArrayAccess, Stringable
      */
     public function is2dSphere(): bool
     {
-        return array_search('2dsphere', $this->getKey(), true) !== false;
+        return in_array('2dsphere', $this->getKey(), true);
     }
 
     /**
@@ -111,7 +111,7 @@ class IndexInfo implements ArrayAccess, Stringable
      */
     public function isText(): bool
     {
-        return array_search('text', $this->getKey(), true) !== false;
+        return in_array('text', $this->getKey(), true);
     }
 
     /**

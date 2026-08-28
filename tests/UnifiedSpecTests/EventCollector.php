@@ -134,9 +134,7 @@ final class EventCollector implements CommandSubscriber
     {
         static $eventNamesByClass = null;
 
-        if ($eventNamesByClass === null) {
-            $eventNamesByClass = array_flip(array_filter(self::$supportedEvents));
-        }
+        $eventNamesByClass ??= array_flip(array_filter(self::$supportedEvents));
 
         return $eventNamesByClass[$event::class];
     }

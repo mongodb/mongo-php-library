@@ -54,4 +54,4 @@ jobs:
         run: "php .evergreen/config/generate-config.php"
 
       - name: "Check file diff"
-        run: git diff --exit-code .evergreen/config/generated
+        run: git add .evergreen/config/generated -N && git diff --exit-code .evergreen/config/generated

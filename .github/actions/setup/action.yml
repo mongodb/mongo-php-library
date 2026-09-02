@@ -41,7 +41,14 @@ runs:
           echo "version=mongodb/mongo-php-driver@${EXTENSION_DEV_BRANCH}" >> "$GITHUB_OUTPUT"
           echo "cacheable=false" >> "$GITHUB_OUTPUT"
         elif [ "${{ inputs.driver-version }}" = "lowest" ]; then
-          CONSTRAINT=$(jq -er '.require["ext-mongodb"]' composer.json)
+          WORKING_DIRECTORY="${{ inputs.working-directory }}"
+          CONSTRAINT=$(jq -er '.require["ext-mongodb"]' "${WORKING_DIRECTORY:-.}/composer.json")
+
+          if [[ ! "$CONSTRAINT" =~ ^\^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            echo "::error::Unsupported ext-mongodb constraint: $CONSTRAINT"
+            exit 1
+          fi
+
           VERSION=${CONSTRAINT#^}
           case "$VERSION" in
             *.*.*) ;;

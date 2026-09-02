@@ -15,20 +15,13 @@ the extension version matches the library version number. For example:
 }
 ```
 
-After bumping the extension version in `composer.json`, the `vars` for calling
-`compile extension` from `.evergreen/config/templates/build/build-extension.yml`
-in the Evergreen configuration must be updated. Edit the template file and
-regenerate the config:
-
-* The `stable` task should specify no vars.
-* The `lowest` task should specify `EXTENSION_VERSION` with the version that
-  was just released.
-* The `next-stable` task should specify `EXTENSION_BRANCH` with the branch that
-  was just created.
-* The `next-minor` task should specify `EXTENSION_BRANCH: v2.x`.
-
-The `DRIVER_VERSION` environment variable for any GitHub Actions should also be
-set to `stable`.
+This constraint drives the extension versions used in CI, so nothing else has
+to be edited unless the release was developed against an unreleased extension.
+In that case, follow the revert steps of the "Testing against an unreleased
+extension" section of [CONTRIBUTING.md](CONTRIBUTING.md): reset the dev branch
+variables and update `EXTENSION_STABLE_BRANCH` in
+`.evergreen/compile-extension.sh` to the branch of the newly released extension
+minor version.
 
 After making changes, create a pull request targeting the default branch and
 wait for this PR to be merged before proceeding with the release.

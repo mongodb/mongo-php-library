@@ -19,7 +19,6 @@ on:
 
 env:
   PHP_VERSION: "8.5"
-  DRIVER_VERSION: "stable"
 
 jobs:
   psalm:
@@ -41,7 +40,6 @@ jobs:
         uses: "./.github/actions/setup"
         with:
           php-version: ${{ env.PHP_VERSION }}
-          driver-version: ${{ env.DRIVER_VERSION }}
 
       - name: "Run Psalm"
         run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc) --report=psalm.sarif"

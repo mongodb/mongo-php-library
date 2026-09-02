@@ -13,7 +13,6 @@ on:
 
 env:
   PHP_VERSION: "8.2"
-  DRIVER_VERSION: "stable"
 
 jobs:
   phpcs:
@@ -28,7 +27,6 @@ jobs:
         uses: "./.github/actions/setup"
         with:
           php-version: ${{ env.PHP_VERSION }}
-          driver-version: ${{ env.DRIVER_VERSION }}
 
       # The -q option is required until phpcs v4 is released
       - name: "Run PHP_CodeSniffer"
@@ -46,7 +44,6 @@ jobs:
         uses: "./.github/actions/setup"
         with:
           php-version: ${{ env.PHP_VERSION }}
-          driver-version: ${{ env.DRIVER_VERSION }}
 
       - name: "Run Rector"
         run: "vendor/bin/rector --ansi --dry-run"

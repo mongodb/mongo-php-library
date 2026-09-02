@@ -7,6 +7,8 @@ tasks:
         vars:
           PHP_VERSION: "8.5"
       - func: "compile extension"
+        vars:
+          EXTENSION_TARGET: "stable"
       - func: "upload extension"
   - name: "build-php-8.5-lowest"
     tags: ["build", "php8.5", "lowest", "pr", "tag"]
@@ -16,7 +18,7 @@ tasks:
           PHP_VERSION: "8.5"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "2.5.0"
+          EXTENSION_TARGET: "lowest"
       - func: "upload extension"
   - name: "build-php-8.5-next-stable"
     tags: ["build", "php8.5", "next-stable", "pr", "tag"]
@@ -26,7 +28,7 @@ tasks:
           PHP_VERSION: "8.5"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.5"
+          EXTENSION_TARGET: "next-stable"
       - func: "upload extension"
   - name: "build-php-8.5-next-minor"
     tags: ["build", "php8.5", "next-minor"]
@@ -36,7 +38,7 @@ tasks:
           PHP_VERSION: "8.5"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.x"
+          EXTENSION_TARGET: "next-minor"
       - func: "upload extension"
   - name: "build-php-8.4"
     tags: ["build", "php8.4", "stable", "pr", "tag"]
@@ -45,6 +47,8 @@ tasks:
         vars:
           PHP_VERSION: "8.4"
       - func: "compile extension"
+        vars:
+          EXTENSION_TARGET: "stable"
       - func: "upload extension"
   - name: "build-php-8.4-lowest"
     tags: ["build", "php8.4", "lowest", "pr", "tag"]
@@ -54,7 +58,7 @@ tasks:
           PHP_VERSION: "8.4"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "2.5.0"
+          EXTENSION_TARGET: "lowest"
       - func: "upload extension"
   - name: "build-php-8.4-next-stable"
     tags: ["build", "php8.4", "next-stable", "pr", "tag"]
@@ -64,7 +68,7 @@ tasks:
           PHP_VERSION: "8.4"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.5"
+          EXTENSION_TARGET: "next-stable"
       - func: "upload extension"
   - name: "build-php-8.4-next-minor"
     tags: ["build", "php8.4", "next-minor"]
@@ -74,7 +78,7 @@ tasks:
           PHP_VERSION: "8.4"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.x"
+          EXTENSION_TARGET: "next-minor"
       - func: "upload extension"
   - name: "build-php-8.3"
     tags: ["build", "php8.3", "stable", "pr", "tag"]
@@ -83,6 +87,8 @@ tasks:
         vars:
           PHP_VERSION: "8.3"
       - func: "compile extension"
+        vars:
+          EXTENSION_TARGET: "stable"
       - func: "upload extension"
   - name: "build-php-8.3-lowest"
     tags: ["build", "php8.3", "lowest", "pr", "tag"]
@@ -92,7 +98,7 @@ tasks:
           PHP_VERSION: "8.3"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "2.5.0"
+          EXTENSION_TARGET: "lowest"
       - func: "upload extension"
   - name: "build-php-8.3-next-stable"
     tags: ["build", "php8.3", "next-stable", "pr", "tag"]
@@ -102,7 +108,7 @@ tasks:
           PHP_VERSION: "8.3"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.5"
+          EXTENSION_TARGET: "next-stable"
       - func: "upload extension"
   - name: "build-php-8.3-next-minor"
     tags: ["build", "php8.3", "next-minor"]
@@ -112,7 +118,7 @@ tasks:
           PHP_VERSION: "8.3"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.x"
+          EXTENSION_TARGET: "next-minor"
       - func: "upload extension"
   - name: "build-php-8.2"
     tags: ["build", "php8.2", "stable", "pr", "tag"]
@@ -121,6 +127,8 @@ tasks:
         vars:
           PHP_VERSION: "8.2"
       - func: "compile extension"
+        vars:
+          EXTENSION_TARGET: "stable"
       - func: "upload extension"
   - name: "build-php-8.2-lowest"
     tags: ["build", "php8.2", "lowest", "pr", "tag"]
@@ -130,7 +138,7 @@ tasks:
           PHP_VERSION: "8.2"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "2.5.0"
+          EXTENSION_TARGET: "lowest"
       - func: "upload extension"
   - name: "build-php-8.2-next-stable"
     tags: ["build", "php8.2", "next-stable", "pr", "tag"]
@@ -140,7 +148,7 @@ tasks:
           PHP_VERSION: "8.2"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.5"
+          EXTENSION_TARGET: "next-stable"
       - func: "upload extension"
   - name: "build-php-8.2-next-minor"
     tags: ["build", "php8.2", "next-minor"]
@@ -150,7 +158,7 @@ tasks:
           PHP_VERSION: "8.2"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.x"
+          EXTENSION_TARGET: "next-minor"
       - func: "upload extension"
   - name: "build-php-8.1"
     tags: ["build", "php8.1", "stable", "pr", "tag"]
@@ -159,6 +167,8 @@ tasks:
         vars:
           PHP_VERSION: "8.1"
       - func: "compile extension"
+        vars:
+          EXTENSION_TARGET: "stable"
       - func: "upload extension"
   - name: "build-php-8.1-lowest"
     tags: ["build", "php8.1", "lowest", "pr", "tag"]
@@ -168,7 +178,7 @@ tasks:
           PHP_VERSION: "8.1"
       - func: "compile extension"
         vars:
-          EXTENSION_VERSION: "2.5.0"
+          EXTENSION_TARGET: "lowest"
       - func: "upload extension"
   - name: "build-php-8.1-next-stable"
     tags: ["build", "php8.1", "next-stable", "pr", "tag"]
@@ -178,7 +188,7 @@ tasks:
           PHP_VERSION: "8.1"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.5"
+          EXTENSION_TARGET: "next-stable"
       - func: "upload extension"
   - name: "build-php-8.1-next-minor"
     tags: ["build", "php8.1", "next-minor"]
@@ -188,5 +198,5 @@ tasks:
           PHP_VERSION: "8.1"
       - func: "compile extension"
         vars:
-          EXTENSION_BRANCH: "v2.x"
+          EXTENSION_TARGET: "next-minor"
       - func: "upload extension"

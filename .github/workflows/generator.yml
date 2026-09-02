@@ -13,7 +13,6 @@ on:
 
 env:
   PHP_VERSION: "8.2"
-  DRIVER_VERSION: "stable"
 
 jobs:
   diff:
@@ -30,7 +29,6 @@ jobs:
         uses: "./.github/actions/setup"
         with:
           php-version: ${{ env.PHP_VERSION }}
-          driver-version: ${{ env.DRIVER_VERSION }}
           working-directory: "generator"
 
       - name: "Run Generator"
@@ -38,3 +36,32 @@ jobs:
 
       - name: "Check file diff"
         run: git add . -N && git diff --exit-code
+
+  evergreen-config:
+    name: "Evergreen config diff check"
+    runs-on: "ubuntu-24.04"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v7"
+
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+
+      - name: "Generate Evergreen config"
+        run: "php .evergreen/config/generate-config.php"
+
+      - name: "Check file diff"
+        run: git diff --exit-code .evergreen/config/generated
+
+      # Building the extension from source is only acceptable while a feature
+      # depends on an unreleased version. It must be reverted before a release.
+      - name: "Check the extension dev branch is not enabled"
+        if: github.base_ref != '' && github.base_ref != 'v2.x'
+        run: |
+          if ! grep -q '^EXTENSION_DEV_BRANCH=""$' .evergreen/compile-extension.sh || ! grep -q '^        DEV_BRANCH=""$' .github/actions/setup/action.yml; then
+            echo "::error::The extension dev branch is enabled. Bump ext-mongodb in composer.json and reset the dev branch, see CONTRIBUTING.md."
+            exit 1
+          fi

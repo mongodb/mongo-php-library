@@ -123,6 +123,73 @@ The goal is that the library passes tests with the latest spec version at all
 times, either by implementing small changes quickly, or by skipping tests as
 necessary.
 
+## Continuous integration
+
+Two systems run the test suite:
+
+ * GitHub Actions runs the fast checks on every pull request: unit tests
+   against a small matrix, coding standards, static analysis and the
+   aggregation builder generator. The workflows live in `.github/workflows/`
+   and share the `.github/actions/setup` action, which installs PHP, the
+   extension and the Composer dependencies.
+ * Evergreen runs the full matrix: every supported PHP version, every supported
+   server version, several topologies, CSFLE and load balanced tests. The
+   configuration lives in `.evergreen/config/`.
+
+Part of the Evergreen configuration is generated from templates to avoid
+repeating a block for each PHP or server version. Edit the files in
+`.evergreen/config/templates/`, never the ones in
+`.evergreen/config/generated/`, then regenerate and commit the result:
+
+```console
+$ php .evergreen/config/generate-config.php
+```
+
+### Extension version
+
+The `ext-mongodb` constraint in `composer.json` is the only place where the
+required extension version is declared. CI derives everything else from it, so
+bumping the constraint is enough to move the whole matrix.
+
+Evergreen builds the extension in four flavours, selected with the
+`EXTENSION_TARGET` variable of the build tasks and resolved by
+`.evergreen/compile-extension.sh`:
+
+ * `stable`: latest release from PECL, that is the highest version allowed by
+   the `composer.json` constraint.
+ * `lowest`: the lowest version allowed by the constraint, installed from PECL.
+   This variant also installs the lowest Composer dependencies.
+ * `next-stable`: the maintenance branch of the current extension minor
+   version, to catch regressions before the next patch release.
+ * `next-minor`: the development branch of the next extension minor version,
+   to catch incompatibilities before the next minor release.
+
+GitHub Actions covers the two ends of the constraint only. The
+`driver-version` input of the setup action accepts `stable`, which is the
+default, and `lowest`, which resolves the minimum version from
+`composer.json`.
+
+### Testing against an unreleased extension
+
+A feature can require an extension version that is not released yet. In that
+case CI must build the extension from source, which is a temporary state
+enabled in two places:
+
+ * `EXTENSION_DEV_BRANCH` in `.evergreen/compile-extension.sh`
+ * `DEV_BRANCH` in the "Resolve extension version" step of
+   `.github/actions/setup/action.yml`
+
+Set both to the extension branch to build, usually `v2.x`, and mention in the
+pull request that this has to be reverted. While the dev branch is enabled, the
+lowest extension version is no longer tested, because the library code cannot
+run on it.
+
+Once the extension is released, bump the `ext-mongodb` constraint in
+`composer.json`, reset both variables to an empty value, and update
+`EXTENSION_STABLE_BRANCH` in `.evergreen/compile-extension.sh` to the branch of
+the newly released minor version. A check in the `Generator` workflow fails if
+the dev branch is still enabled on a maintenance branch.
+
 ## Backward compatibility
 
 When submitting a PR, be mindful of our backward compatibility guarantees. Our 

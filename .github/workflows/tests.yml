@@ -13,6 +13,8 @@ on:
 
 env:
   DRIVER_VERSION: "stable"
+  # Lowest version of the extension required in composer.json
+  DRIVER_VERSION_LOWEST: "2.5.0"
 
 jobs:
   phpunit:
@@ -44,19 +46,22 @@ jobs:
             php-version: "8.4"
             mongodb-version: "9.0"
             topology: "sharded_cluster"
-          # Test lowest server/php versions
+          # Test lowest server/php/extension versions
           - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "server"
+            driver-lowest: true
           - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "replica_set"
+            driver-lowest: true
           - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "sharded_cluster"
+            driver-lowest: true
 
     steps:
       - name: "Checkout"
@@ -80,7 +85,7 @@ jobs:
         uses: "./.github/actions/setup"
         with:
           php-version: ${{ matrix.php-version }}
-          driver-version: ${{ env.DRIVER_VERSION }}
+          driver-version: ${{ matrix.driver-lowest && env.DRIVER_VERSION_LOWEST || env.DRIVER_VERSION }}
           php-ini-values: "zend.assertions=1"
           ignore-platform-req: ${{ matrix.php-version == '8.5' && 'true' || 'false' }}
 

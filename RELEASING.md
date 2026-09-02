@@ -1,27 +1,26 @@
 # Releasing
 
-## Update extension requirement (new minor versions only)
+## Check that CI uses released versions of the extension
 
-In `composer.json`, ensure that the version of `ext-mongodb` is correct for
-the library version being released. Set the constraint to the minimum
-extension/driver version required for that library release; do not assume that
-the extension version matches the library version number. For example:
+A feature may have been developed against an extension version that was not
+released yet. In that case the `ext-mongodb` constraint in `composer.json` was
+updated during development, and CI was configured to compile the extension from
+a development branch of the `mongodb/mongo-php-driver` repository. A library
+release must not ship in that state, because the extension it requires is
+released first.
 
-```json
-{
-    "require": {
-        "ext-mongodb": "^2.3"
-    }
-}
-```
+Two variables control this, both named `EXTENSION_DEV_BRANCH`:
 
-This constraint drives the extension versions used in CI, so nothing else has
-to be edited unless the release was developed against an unreleased extension.
-In that case, follow the revert steps of the "Testing against an unreleased
-extension" section of [CONTRIBUTING.md](CONTRIBUTING.md): reset the dev branch
-variables and update `EXTENSION_STABLE_BRANCH` in
-`.evergreen/compile-extension.sh` to the branch of the newly released extension
-minor version.
+ * in `.evergreen/compile-extension.sh`, for the Evergreen build tasks
+ * in `.github/actions/setup/action.yml`, for the GitHub Actions workflows
+
+Both must hold an empty value. If either one holds a branch name, reset it, and
+set `EXTENSION_STABLE_BRANCH` in `.evergreen/compile-extension.sh` to the branch
+of the latest released extension minor version, for example `v2.5`. The
+"Continuous integration" section of [CONTRIBUTING.md](CONTRIBUTING.md) explains
+how these variables are used.
+
+If this is missed, the release workflow fails before creating the release tag.
 
 After making changes, create a pull request targeting the default branch and
 wait for this PR to be merged before proceeding with the release.

@@ -55,13 +55,3 @@ jobs:
 
       - name: "Check file diff"
         run: git diff --exit-code .evergreen/config/generated
-
-      # Building the extension from source is only acceptable while a feature
-      # depends on an unreleased version. It must be reverted before a release.
-      - name: "Check the extension dev branch is not enabled"
-        if: github.base_ref != '' && github.base_ref != 'v2.x'
-        run: |
-          if ! grep -q '^EXTENSION_DEV_BRANCH=""$' .evergreen/compile-extension.sh || ! grep -q '^        DEV_BRANCH=""$' .github/actions/setup/action.yml; then
-            echo "::error::The extension dev branch is enabled. Bump ext-mongodb in composer.json and reset the dev branch, see CONTRIBUTING.md."
-            exit 1
-          fi

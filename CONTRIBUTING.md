@@ -176,7 +176,7 @@ case CI must build the extension from source, which is a temporary state
 enabled in two places:
 
  * `EXTENSION_DEV_BRANCH` in `.evergreen/compile-extension.sh`
- * `DEV_BRANCH` in the "Resolve extension version" step of
+ * `EXTENSION_DEV_BRANCH` in the "Resolve extension version" step of
    `.github/actions/setup/action.yml`
 
 Set both to the extension branch to build, usually `v2.x`, and mention in the
@@ -184,11 +184,11 @@ pull request that this has to be reverted. While the dev branch is enabled, the
 lowest extension version is no longer tested, because the library code cannot
 run on it.
 
-Once the extension is released, bump the `ext-mongodb` constraint in
-`composer.json`, reset both variables to an empty value, and update
-`EXTENSION_STABLE_BRANCH` in `.evergreen/compile-extension.sh` to the branch of
-the newly released minor version. A check in the `Generator` workflow fails if
-the dev branch is still enabled on a maintenance branch.
+Once the extension is released, reset both variables to an empty value and
+update `EXTENSION_STABLE_BRANCH` in `.evergreen/compile-extension.sh` to the
+branch of the newly released minor version. The release workflow fails if the
+dev branch is still enabled, so a release cannot ship with CI building the
+extension from source.
 
 ## Backward compatibility
 

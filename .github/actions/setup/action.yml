@@ -26,18 +26,19 @@ runs:
     - name: Resolve extension version
       id: driver
       shell: bash
-      # Set DEV_BRANCH to a branch name (e.g. "v2.x") to build the extension
-      # from source while the library depends on an unreleased version. This
-      # also overrides the "lowest" version. Reset it to an empty value once the
-      # extension is released. See the "Continuous integration" section of
-      # CONTRIBUTING.md.
+      # Set EXTENSION_DEV_BRANCH to a branch name (e.g. "v2.x") to build the
+      # extension from source while the library depends on an unreleased
+      # version. This also overrides the "lowest" version. Reset it to an empty
+      # value once the extension is released. See the "Continuous integration"
+      # section of CONTRIBUTING.md.
       run: |
-        DEV_BRANCH=""
+        EXTENSION_DEV_BRANCH=""
+        # EXTENSION_DEV_BRANCH="v2.x"
 
-        if [ -n "$DEV_BRANCH" ]; then
+        if [ -n "$EXTENSION_DEV_BRANCH" ]; then
           # Source builds cannot be cached, and caching a moving branch under a
           # stable key would freeze an outdated extension.
-          echo "version=mongodb/mongo-php-driver@${DEV_BRANCH}" >> "$GITHUB_OUTPUT"
+          echo "version=mongodb/mongo-php-driver@${EXTENSION_DEV_BRANCH}" >> "$GITHUB_OUTPUT"
           echo "cacheable=false" >> "$GITHUB_OUTPUT"
         elif [ "${{ inputs.driver-version }}" = "lowest" ]; then
           CONSTRAINT=$(jq -er '.require["ext-mongodb"]' composer.json)

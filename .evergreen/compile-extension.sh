@@ -15,6 +15,7 @@ EXTENSION_NEXT_MINOR_BRANCH="v2.x"
 # the library code in that case. Reset to an empty value once the extension is
 # released. See the "Continuous integration" section of CONTRIBUTING.md.
 EXTENSION_DEV_BRANCH=""
+# EXTENSION_DEV_BRANCH="v2.x"
 
 # Lowest version of the extension allowed by the composer.json constraint.
 lowest_extension_version ()

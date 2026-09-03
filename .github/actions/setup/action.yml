@@ -48,7 +48,7 @@ runs:
         else
           # Source builds cannot be cached, and caching a moving branch under
           # a stable key would freeze an outdated extension.
-          echo "ext-spec=mongodb/mongo-php-driver@${EXTENSION_BRANCH}" >> "$GITHUB_OUTPUT"
+          echo "ext-spec=mongodb-mongodb/mongo-php-driver@${EXTENSION_BRANCH}" >> "$GITHUB_OUTPUT"
           echo "ext-cachable=false" >> "$GITHUB_OUTPUT"
         fi
 

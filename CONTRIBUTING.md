@@ -141,14 +141,23 @@ $ php .evergreen/config/generate-config.php
 
 ### Extension version
 
-When you change the `ext-mongodb` constraint in `composer.json`, there is
-nothing else to update: both CI systems resolve the extension version from that
-constraint at build time.
+The lowest version tested by CI is read from the `ext-mongodb` constraint in
+`composer.json`. When you change that constraint, review the branches declared
+in `.extension-version`:
+
+ * `EXTENSION_STABLE_BRANCH`: maintenance branch of the latest released
+   extension minor version, to update when a new minor version is released
+ * `EXTENSION_NEXT_MINOR_BRANCH`: development branch of the next minor version,
+   which only changes for a new major version
+
+Bumping the constraint to a version that is not released yet also requires
+`EXTENSION_REQUIRE_NEXT_MINOR=true`, see below.
 
 Evergreen builds four targets, resolved by `.evergreen/compile-extension.sh`
-from the branches declared in `.extension-version`:
+from these branches:
 
- * `stable`: latest PECL release, the highest version the constraint allows
+ * `stable`: highest version the constraint allows, taken from the releases
+   published on PECL
  * `lowest`: lowest version the constraint allows, with lowest Composer
    dependencies
  * `next-stable`: maintenance branch of the current extension minor version
@@ -159,8 +168,8 @@ input of the setup action.
 
 ### If you need an extension version that is not released yet
 
-Set `EXTENSION_REQUIRE_NEXT_MINOR=true` in `.extension-version`. Every job of both CI
-systems then builds the extension from its development branch.
+Set `EXTENSION_REQUIRE_NEXT_MINOR=true` in `.extension-version`. Every job of
+both CI systems then builds the extension from its development branch.
 
 The lowest version is no longer tested while this is enabled, and the release
 workflow refuses to run. Once the extension is released, set it back to `false`

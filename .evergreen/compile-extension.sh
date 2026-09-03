@@ -5,19 +5,50 @@ PATH="$PHP_PATH/bin:$PATH"
 
 source ${PROJECT_DIRECTORY}/.extension-version
 
-# Lowest version of the extension allowed by the composer.json constraint.
-lowest_extension_version ()
+# Lowest or highest version of the extension allowed by the composer.json
+# constraint. The lowest version is the lower bound of the constraint, the
+# highest one is the latest matching release published on PECL.
+extension_version ()
 {
    php -r '
-      $constraint = json_decode(file_get_contents($argv[1]), true)["require"]["ext-mongodb"];
+      $constraint = json_decode(file_get_contents($argv[2]), true)["require"]["ext-mongodb"];
 
       if (!preg_match("/^\^(\d+)\.(\d+)(?:\.(\d+))?$/", $constraint, $matches)) {
          fwrite(STDERR, sprintf("Unsupported ext-mongodb constraint: %s\n", $constraint));
          exit(1);
       }
 
-      printf("%d.%d.%d", $matches[1], $matches[2], $matches[3] ?? 0);
-   ' ${PROJECT_DIRECTORY}/composer.json
+      $lowest = sprintf("%d.%d.%d", $matches[1], $matches[2], $matches[3] ?? 0);
+
+      if ($argv[1] === "lowest") {
+         echo $lowest;
+         exit(0);
+      }
+
+      $releases = @simplexml_load_file("https://pecl.php.net/rest/r/mongodb/allreleases.xml");
+
+      if ($releases === false) {
+         fwrite(STDERR, "Cannot read the list of mongodb releases from PECL\n");
+         exit(1);
+      }
+
+      // Releases are listed from the most recent one
+      foreach ($releases->r as $release) {
+         $version = (string) $release->v;
+
+         if ((string) $release->s !== "stable") {
+            continue;
+         }
+
+         if (version_compare($version, $lowest, ">=") && version_compare($version, ($matches[1] + 1) . ".0.0", "<")) {
+            echo $version;
+            exit(0);
+         }
+      }
+
+      fwrite(STDERR, sprintf("No release matching %s found on PECL\n", $constraint));
+      exit(1);
+   ' "$1" ${PROJECT_DIRECTORY}/composer.json
 }
 
 # Turn EXTENSION_TARGET into the EXTENSION_BRANCH or EXTENSION_VERSION expected
@@ -35,10 +66,10 @@ resolve_extension_target ()
 
    case "${EXTENSION_TARGET:-stable}" in
       stable)
-         # Latest release from PECL, i.e. the highest version allowed by composer.json
+         EXTENSION_VERSION=$(extension_version highest)
          ;;
       lowest)
-         EXTENSION_VERSION=$(lowest_extension_version)
+         EXTENSION_VERSION=$(extension_version lowest)
          ;;
       next-stable)
          EXTENSION_BRANCH="${EXTENSION_STABLE_BRANCH}"

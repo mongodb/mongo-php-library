@@ -23,7 +23,18 @@ function fail(string $message): never
 /** @return array{0: int, 1: string} Major version and lowest version allowed by the constraint */
 function parseConstraint(string $composerJson): array
 {
-    $composer = json_decode(file_get_contents($composerJson), true);
+    $contents = @file_get_contents($composerJson);
+
+    if ($contents === false) {
+        fail(sprintf('Cannot read %s', $composerJson));
+    }
+
+    try {
+        $composer = json_decode($contents, true, flags: JSON_THROW_ON_ERROR);
+    } catch (JsonException $exception) {
+        fail(sprintf('Cannot parse %s: %s', $composerJson, $exception->getMessage()));
+    }
+
     $constraint = $composer['require']['ext-mongodb'] ?? fail(sprintf('No ext-mongodb constraint in %s', $composerJson));
 
     if (! preg_match('/^\^(\d+)\.(\d+)(?:\.(\d+))?$/', $constraint, $matches)) {
@@ -48,7 +59,9 @@ function releasedVersions(int $major, string $lowest): array
         fail(sprintf('Cannot read the list of mongodb releases from %s', ALL_RELEASES_URL));
     }
 
-    if (! preg_match_all('#<v>([^<]+)</v>\s*<s>([^<]+)</s>#', $document, $matches, PREG_SET_ORDER)) {
+    // Only version numbers are matched, so that the output of this script stays
+    // safe to evaluate in a shell
+    if (! preg_match_all('#<v>([\d.]+)</v>\s*<s>(\w+)</s>#', $document, $matches, PREG_SET_ORDER)) {
         fail(sprintf('No release found in %s', ALL_RELEASES_URL));
     }
 

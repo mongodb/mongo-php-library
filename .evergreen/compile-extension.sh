@@ -13,7 +13,7 @@ resolve_extension_target ()
    fi
 
    # Assign before eval, so that a failure of the script stops the build
-   RESOLVED=$(php ${PROJECT_DIRECTORY}/tools/extension-version.php ${EXTENSION_TARGET:-stable})
+   RESOLVED=$(php "${PROJECT_DIRECTORY}/tools/extension-version.php" "${EXTENSION_TARGET:-stable}")
 
    eval "${RESOLVED}"
 }

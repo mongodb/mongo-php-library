@@ -23,63 +23,59 @@ inputs:
 runs:
   using: composite
   steps:
+    # The extension version is resolved by a PHP script, so PHP is installed
+    # first, without the extension. The second call below adds it.
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: "${{ inputs.php-version }}"
+
     - name: Resolve extension version
       id: driver
       shell: bash
       run: |
-        source .extension-version
+        # The ext-mongodb constraint is only declared in the composer.json of
+        # the library, at the root of the repository.
+        RESOLVED=$(php tools/extension-version.php "${{ inputs.driver-version }}")
 
-        TARGET="${{ inputs.driver-version }}"
+        eval "$RESOLVED"
 
-        if [ "$EXTENSION_REQUIRE_NEXT_MINOR" = "true" ]; then
-          TARGET="next-minor"
+        if [ "$EXTENSION_VERSION" != "" ]; then
+          echo "ext-spec=mongodb-${EXTENSION_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "ext-expected=${EXTENSION_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "ext-cachable=true" >> "$GITHUB_OUTPUT"
+        else
+          # Source builds cannot be cached, and caching a moving branch under
+          # a stable key would freeze an outdated extension.
+          echo "ext-spec=mongodb/mongo-php-driver@${EXTENSION_BRANCH}" >> "$GITHUB_OUTPUT"
+          echo "ext-cachable=false" >> "$GITHUB_OUTPUT"
         fi
-
-        case "$TARGET" in
-          next-minor)
-            # Source builds cannot be cached, and caching a moving branch under
-            # a stable key would freeze an outdated extension.
-            echo "version=mongodb/mongo-php-driver@${EXTENSION_NEXT_MINOR_BRANCH}" >> "$GITHUB_OUTPUT"
-            echo "cacheable=false" >> "$GITHUB_OUTPUT"
-            ;;
-          lowest | stable)
-            WORKING_DIRECTORY="${{ inputs.working-directory }}"
-            VERSION=$(python3 "$GITHUB_ACTION_PATH/extension-version.py" "$TARGET" "${WORKING_DIRECTORY:-.}/composer.json")
-
-            echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-            echo "expected=${VERSION}" >> "$GITHUB_OUTPUT"
-            echo "cacheable=true" >> "$GITHUB_OUTPUT"
-            ;;
-          *)
-            echo "::error::Unsupported extension target: $TARGET"
-            exit 1
-            ;;
-        esac
 
     - name: Setup cache environment
       id: extcache
-      if: steps.driver.outputs.cacheable == 'true'
+      if: steps.driver.outputs.ext-cachable == 'true'
       uses: shivammathur/cache-extensions@v1
       with:
         php-version: ${{ inputs.php-version }}
-        extensions: "mongodb-${{ steps.driver.outputs.version }}"
+        extensions: "${{ steps.driver.outputs.ext-spec }}"
         # The requested extension version is part of the key computed by the
         # action. This value is only there to invalidate the cache by hand.
         key: "extcache-v1"
 
     - name: Cache extensions
-      if: steps.driver.outputs.cacheable == 'true'
+      if: steps.driver.outputs.ext-cachable == 'true'
       uses: actions/cache@v4
       with:
         path: ${{ steps.extcache.outputs.dir }}
         key: ${{ steps.extcache.outputs.key }}
         restore-keys: ${{ steps.extcache.outputs.key }}
 
-    - name: Install PHP
+    - name: Install the mongodb extension
       uses: shivammathur/setup-php@v2
       with:
         coverage: xdebug
-        extensions: "mongodb-${{ steps.driver.outputs.version }}"
+        extensions: "${{ steps.driver.outputs.ext-spec }}"
         php-version: "${{ inputs.php-version }}"
         tools: cs2pr
         ini-values: "${{ inputs.php-ini-values }}"
@@ -89,11 +85,11 @@ runs:
       shell: bash
 
     - name: Check the expected driver version is installed
-      if: steps.driver.outputs.expected != ''
+      if: steps.driver.outputs.ext-expected != ''
       shell: bash
       run: |
         INSTALLED=$(php -r 'echo phpversion("mongodb");')
-        EXPECTED="${{ steps.driver.outputs.expected }}"
+        EXPECTED="${{ steps.driver.outputs.ext-expected }}"
 
         if [ "$INSTALLED" != "$EXPECTED" ]; then
           echo "::error::Expected extension version $EXPECTED, got $INSTALLED"

@@ -1,21 +1,18 @@
 # Releasing
 
-## Check that CI uses released versions of the extension
+## Check that the required extension version is released
 
-Check that the version required by the `ext-mongodb` constraint in
-`composer.json` is [released on PECL](https://pecl.php.net/package/mongodb).
-The extension is always released before the library that requires it.
+The version required by the `ext-mongodb` constraint in `composer.json` must be
+[released on PECL](https://pecl.php.net/package/mongodb). The extension is
+always released before the library that requires it. Until then, CI builds the
+extension from its development branch, and the release workflow refuses to run.
 
-Then, in `.extension-version`, check that `EXTENSION_REQUIRE_NEXT_MINOR` is `false`,
-and set it back if it is not. Set `EXTENSION_STABLE_BRANCH` to the branch of the
-latest released extension minor version, for example `v2.5`.
+```console
+$ php tools/extension-version.php lowest
+```
 
-Nothing to bump in `composer.json`: the `ext-mongodb` constraint is updated
-during development. The release workflow fails while `EXTENSION_REQUIRE_NEXT_MINOR` is
-enabled.
-
-If you changed something, create a pull request targeting the default branch and
-wait for it to be merged before proceeding with the release.
+Nothing to bump here: the `ext-mongodb` constraint is updated during
+development, never at release time.
 
 ## Transition JIRA issues and version
 

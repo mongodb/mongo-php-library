@@ -125,21 +125,15 @@ necessary.
 
 ## Continuous integration
 
-Two systems run the test suite:
+ * GitHub Actions (`.github/workflows/`) runs the fast checks on pull requests:
+   tests on a small matrix of local servers, coding standards, static analysis
+   and the generator diff.
+ * Evergreen (`.evergreen/config/`) runs the full matrix: all supported PHP and
+   server versions, all topologies, CSFLE, load balancer, and the `atlas` group
+   on a provisioned Atlas cluster.
 
- * GitHub Actions runs the fast checks on every pull request: unit tests
-   against a small matrix, coding standards, static analysis and the
-   aggregation builder generator. The workflows live in `.github/workflows/`
-   and share the `.github/actions/setup` action, which installs PHP, the
-   extension and the Composer dependencies.
- * Evergreen runs the full matrix: every supported PHP version, every supported
-   server version, several topologies, CSFLE and load balanced tests. The
-   configuration lives in `.evergreen/config/`.
-
-Part of the Evergreen configuration is generated from templates to avoid
-repeating a block for each PHP or server version. Edit the files in
-`.evergreen/config/templates/`, never the ones in
-`.evergreen/config/generated/`, then regenerate and commit the result:
+When you edit a file in `.evergreen/config/templates/`, never edit
+`.evergreen/config/generated/` by hand: regenerate it and commit the result.
 
 ```console
 $ php .evergreen/config/generate-config.php
@@ -147,48 +141,30 @@ $ php .evergreen/config/generate-config.php
 
 ### Extension version
 
-The `ext-mongodb` constraint in `composer.json` is the only place where the
-required extension version is declared. CI derives everything else from it, so
-bumping the constraint is enough to move the whole matrix.
+When you change the `ext-mongodb` constraint in `composer.json`, there is
+nothing else to update: both CI systems resolve the extension version from that
+constraint at build time.
 
-Evergreen builds the extension in four flavours, selected with the
-`EXTENSION_TARGET` variable of the build tasks and resolved by
-`.evergreen/compile-extension.sh`:
+Evergreen builds four targets, resolved by `.evergreen/compile-extension.sh`
+from the branches declared in `.extension-version`:
 
- * `stable`: latest release from PECL, that is the highest version allowed by
-   the `composer.json` constraint.
- * `lowest`: the lowest version allowed by the constraint, installed from PECL.
-   This variant also installs the lowest Composer dependencies.
- * `next-stable`: the maintenance branch of the current extension minor
-   version, to catch regressions before the next patch release.
- * `next-minor`: the development branch of the next extension minor version,
-   to catch incompatibilities before the next minor release.
+ * `stable`: latest PECL release, the highest version the constraint allows
+ * `lowest`: lowest version the constraint allows, with lowest Composer
+   dependencies
+ * `next-stable`: maintenance branch of the current extension minor version
+ * `next-minor`: development branch of the next extension minor version
 
-GitHub Actions covers the two ends of the constraint only. The
-`driver-version` input of the setup action accepts `stable`, which is the
-default, and `lowest`, which resolves the minimum version from
-`composer.json`.
+GitHub Actions only covers `stable` and `lowest`, through the `driver-version`
+input of the setup action.
 
-### Testing against an unreleased extension
+### If you need an extension version that is not released yet
 
-A feature can require an extension version that is not released yet. In that
-case CI must build the extension from source, which is a temporary state
-enabled in two places:
+Set `EXTENSION_REQUIRE_NEXT_MINOR=true` in `.extension-version`. Every job of both CI
+systems then builds the extension from its development branch.
 
- * `EXTENSION_DEV_BRANCH` in `.evergreen/compile-extension.sh`
- * `EXTENSION_DEV_BRANCH` in the "Resolve extension version" step of
-   `.github/actions/setup/action.yml`
-
-Set both to the extension branch to build, usually `v2.x`, and mention in the
-pull request that this has to be reverted. While the dev branch is enabled, the
-lowest extension version is no longer tested, because the library code cannot
-run on it.
-
-Once the extension is released, reset both variables to an empty value and
-update `EXTENSION_STABLE_BRANCH` in `.evergreen/compile-extension.sh` to the
-branch of the newly released minor version. The release workflow fails if the
-dev branch is still enabled, so a release cannot ship with CI building the
-extension from source.
+The lowest version is no longer tested while this is enabled, and the release
+workflow refuses to run. Once the extension is released, set it back to `false`
+and point `EXTENSION_STABLE_BRANCH` to the branch of the new minor version.
 
 ## Backward compatibility
 

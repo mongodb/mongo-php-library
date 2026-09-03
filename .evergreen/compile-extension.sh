@@ -3,19 +3,7 @@ set -o errexit  # Exit the script with error if any of the commands fail
 
 PATH="$PHP_PATH/bin:$PATH"
 
-# Branch of the latest stable minor version of the extension.
-EXTENSION_STABLE_BRANCH="v2.5"
-
-# Branch of the next minor version of the extension, still in development.
-EXTENSION_NEXT_MINOR_BRANCH="v2.x"
-
-# Set this to a branch name (e.g. "v2.x") to compile every task from source
-# while the library depends on an unreleased version of the extension. This
-# also overrides the "lowest" target, as the lowest released version cannot run
-# the library code in that case. Reset to an empty value once the extension is
-# released. See the "Continuous integration" section of CONTRIBUTING.md.
-EXTENSION_DEV_BRANCH=""
-# EXTENSION_DEV_BRANCH="v2.x"
+source ${PROJECT_DIRECTORY}/.extension-version
 
 # Lowest version of the extension allowed by the composer.json constraint.
 lowest_extension_version ()
@@ -41,10 +29,8 @@ resolve_extension_target ()
       return
    fi
 
-   if [ "x${EXTENSION_DEV_BRANCH}" != "x" ]; then
-      EXTENSION_BRANCH="${EXTENSION_DEV_BRANCH}"
-
-      return
+   if [ "${EXTENSION_REQUIRE_NEXT_MINOR}" = "true" ]; then
+      EXTENSION_TARGET="next-minor"
    fi
 
    case "${EXTENSION_TARGET:-stable}" in
@@ -61,7 +47,7 @@ resolve_extension_target ()
          EXTENSION_BRANCH="${EXTENSION_NEXT_MINOR_BRANCH}"
          ;;
       *)
-         echo "Unknown EXTENSION_TARGET: ${EXTENSION_TARGET}" >&2
+         echo "Unknown extension target: ${EXTENSION_TARGET}" >&2
          exit 1
          ;;
    esac

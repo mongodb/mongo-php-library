@@ -98,7 +98,9 @@ jobs:
       # integration" section of CONTRIBUTING.md.
       - name: "Fail if CI builds the extension from a development branch"
         run: |
-          if grep -qE '^[[:space:]]*EXTENSION_DEV_BRANCH="[^"]+"' .evergreen/compile-extension.sh .github/actions/setup/action.yml; then
+          source .extension-version
+
+          if [ "$EXTENSION_REQUIRE_NEXT_MINOR" = "true" ]; then
             echo '❌ Release failed: CI builds the extension from a development branch instead of a released version' >> $GITHUB_STEP_SUMMARY
             exit 1
           fi

@@ -2,28 +2,20 @@
 
 ## Check that CI uses released versions of the extension
 
-A feature may have been developed against an extension version that was not
-released yet. In that case the `ext-mongodb` constraint in `composer.json` was
-updated during development, and CI was configured to compile the extension from
-a development branch of the `mongodb/mongo-php-driver` repository. A library
-release must not ship in that state, because the extension it requires is
-released first.
+Check that the version required by the `ext-mongodb` constraint in
+`composer.json` is [released on PECL](https://pecl.php.net/package/mongodb).
+The extension is always released before the library that requires it.
 
-Two variables control this, both named `EXTENSION_DEV_BRANCH`:
+Then, in `.extension-version`, check that `EXTENSION_REQUIRE_NEXT_MINOR` is `false`,
+and set it back if it is not. Set `EXTENSION_STABLE_BRANCH` to the branch of the
+latest released extension minor version, for example `v2.5`.
 
- * in `.evergreen/compile-extension.sh`, for the Evergreen build tasks
- * in `.github/actions/setup/action.yml`, for the GitHub Actions workflows
+Nothing to bump in `composer.json`: the `ext-mongodb` constraint is updated
+during development. The release workflow fails while `EXTENSION_REQUIRE_NEXT_MINOR` is
+enabled.
 
-Both must hold an empty value. If either one holds a branch name, reset it, and
-set `EXTENSION_STABLE_BRANCH` in `.evergreen/compile-extension.sh` to the branch
-of the latest released extension minor version, for example `v2.5`. The
-"Continuous integration" section of [CONTRIBUTING.md](CONTRIBUTING.md) explains
-how these variables are used.
-
-If this is missed, the release workflow fails before creating the release tag.
-
-After making changes, create a pull request targeting the default branch and
-wait for this PR to be merged before proceeding with the release.
+If you changed something, create a pull request targeting the default branch and
+wait for it to be merged before proceeding with the release.
 
 ## Transition JIRA issues and version
 

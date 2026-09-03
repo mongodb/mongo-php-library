@@ -26,40 +26,49 @@ runs:
     - name: Resolve extension version
       id: driver
       shell: bash
-      # Set EXTENSION_DEV_BRANCH to a branch name (e.g. "v2.x") to build the
-      # extension from source while the library depends on an unreleased
-      # version. This also overrides the "lowest" version. Reset it to an empty
-      # value once the extension is released. See the "Continuous integration"
-      # section of CONTRIBUTING.md.
       run: |
-        EXTENSION_DEV_BRANCH=""
-        # EXTENSION_DEV_BRANCH="v2.x"
+        source .extension-version
 
-        if [ -n "$EXTENSION_DEV_BRANCH" ]; then
-          # Source builds cannot be cached, and caching a moving branch under a
-          # stable key would freeze an outdated extension.
-          echo "version=mongodb/mongo-php-driver@${EXTENSION_DEV_BRANCH}" >> "$GITHUB_OUTPUT"
-          echo "cacheable=false" >> "$GITHUB_OUTPUT"
-        elif [ "${{ inputs.driver-version }}" = "lowest" ]; then
-          WORKING_DIRECTORY="${{ inputs.working-directory }}"
-          CONSTRAINT=$(jq -er '.require["ext-mongodb"]' "${WORKING_DIRECTORY:-.}/composer.json")
+        TARGET="${{ inputs.driver-version }}"
 
-          if [[ ! "$CONSTRAINT" =~ ^\^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
-            echo "::error::Unsupported ext-mongodb constraint: $CONSTRAINT"
-            exit 1
-          fi
-
-          VERSION=${CONSTRAINT#^}
-          case "$VERSION" in
-            *.*.*) ;;
-            *) VERSION="${VERSION}.0" ;;
-          esac
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "cacheable=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "version=${{ inputs.driver-version }}" >> "$GITHUB_OUTPUT"
-          echo "cacheable=true" >> "$GITHUB_OUTPUT"
+        if [ "$EXTENSION_REQUIRE_NEXT_MINOR" = "true" ]; then
+          TARGET="next-minor"
         fi
+
+        case "$TARGET" in
+          next-minor)
+            # Source builds cannot be cached, and caching a moving branch under
+            # a stable key would freeze an outdated extension.
+            echo "version=mongodb/mongo-php-driver@${EXTENSION_NEXT_MINOR_BRANCH}" >> "$GITHUB_OUTPUT"
+            echo "cacheable=false" >> "$GITHUB_OUTPUT"
+            ;;
+          lowest)
+            WORKING_DIRECTORY="${{ inputs.working-directory }}"
+            CONSTRAINT=$(jq -er '.require["ext-mongodb"]' "${WORKING_DIRECTORY:-.}/composer.json")
+
+            if [[ ! "$CONSTRAINT" =~ ^\^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+              echo "::error::Unsupported ext-mongodb constraint: $CONSTRAINT"
+              exit 1
+            fi
+
+            VERSION=${CONSTRAINT#^}
+            case "$VERSION" in
+              *.*.*) ;;
+              *) VERSION="${VERSION}.0" ;;
+            esac
+            echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+            echo "expected=${VERSION}" >> "$GITHUB_OUTPUT"
+            echo "cacheable=true" >> "$GITHUB_OUTPUT"
+            ;;
+          stable)
+            echo "version=stable" >> "$GITHUB_OUTPUT"
+            echo "cacheable=true" >> "$GITHUB_OUTPUT"
+            ;;
+          *)
+            echo "::error::Unsupported extension target: $TARGET"
+            exit 1
+            ;;
+        esac
 
     - name: Setup cache environment
       id: extcache
@@ -92,11 +101,11 @@ runs:
       shell: bash
 
     - name: Check the expected driver version is installed
-      if: inputs.driver-version == 'lowest'
+      if: steps.driver.outputs.expected != ''
       shell: bash
       run: |
         INSTALLED=$(php -r 'echo phpversion("mongodb");')
-        EXPECTED="${{ steps.driver.outputs.version }}"
+        EXPECTED="${{ steps.driver.outputs.expected }}"
 
         if [ "$INSTALLED" != "$EXPECTED" ]; then
           echo "::error::Expected extension version $EXPECTED, got $INSTALLED"

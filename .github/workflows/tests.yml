@@ -11,11 +11,6 @@ on:
       - "v*.*"
       - "feature/*"
 
-env:
-  # TODO: change to "stable" once 2.5.0 is released
-  # DRIVER_VERSION: "stable"
-  DRIVER_VERSION: "mongodb/mongo-php-driver@v2.x"
-
 jobs:
   phpunit:
     name: "PHPUnit tests"
@@ -46,19 +41,30 @@ jobs:
             php-version: "8.4"
             mongodb-version: "9.0"
             topology: "sharded_cluster"
+          # Test the lowest supported extension version on a recent PHP version.
+          # This combination must differ from the ones above, otherwise GitHub
+          # merges it into an existing job instead of adding one.
+          - os: "ubuntu-24.04"
+            php-version: "8.3"
+            mongodb-version: "9.0"
+            topology: "server"
+            driver-version: "lowest"
           # Test lowest server/php versions
           - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "server"
+            driver-version: "lowest"
           - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "replica_set"
+            driver-version: "lowest"
           - os: "ubuntu-22.04"
             php-version: "8.1"
             mongodb-version: "6.0"
             topology: "sharded_cluster"
+            driver-version: "lowest"
 
     steps:
       - name: "Checkout"
@@ -82,7 +88,7 @@ jobs:
         uses: "./.github/actions/setup"
         with:
           php-version: ${{ matrix.php-version }}
-          driver-version: ${{ env.DRIVER_VERSION }}
+          driver-version: ${{ matrix.driver-version || 'stable' }}
           php-ini-values: "zend.assertions=1"
           ignore-platform-req: ${{ matrix.php-version == '8.5' && 'true' || 'false' }}
 

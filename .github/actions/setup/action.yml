@@ -5,8 +5,9 @@ inputs:
     description: "PHP version to install"
     required: true
   driver-version:
-    description: "MongoDB extension version to install"
-    required: true
+    description: "MongoDB extension version to install: \"stable\" for the highest version allowed by composer.json, \"lowest\" for the minimum required version"
+    required: false
+    default: "stable"
   php-ini-values:
     description: "INI values to pass along to setup-php action"
     required: false
@@ -22,26 +23,59 @@ inputs:
 runs:
   using: composite
   steps:
+    # The extension version is resolved by a PHP script, so PHP is installed
+    # first, without the extension. The second call below adds it.
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        coverage: none
+        php-version: "${{ inputs.php-version }}"
+
+    - name: Resolve extension version
+      id: driver
+      shell: bash
+      run: |
+        # The ext-mongodb constraint is only declared in the composer.json of
+        # the library, at the root of the repository.
+        RESOLVED=$(php tools/extension-version.php "${{ inputs.driver-version }}")
+
+        eval "$RESOLVED"
+
+        if [ "$EXTENSION_VERSION" != "" ]; then
+          echo "ext-spec=mongodb-${EXTENSION_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "ext-expected=${EXTENSION_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "ext-cachable=true" >> "$GITHUB_OUTPUT"
+        else
+          # Source builds cannot be cached, and caching a moving branch under
+          # a stable key would freeze an outdated extension.
+          echo "ext-spec=mongodb-mongodb/mongo-php-driver@${EXTENSION_BRANCH}" >> "$GITHUB_OUTPUT"
+          echo "ext-cachable=false" >> "$GITHUB_OUTPUT"
+        fi
+
     - name: Setup cache environment
       id: extcache
+      if: steps.driver.outputs.ext-cachable == 'true'
       uses: shivammathur/cache-extensions@v1
       with:
         php-version: ${{ inputs.php-version }}
-        extensions: "mongodb-${{ inputs.driver-version }}"
-        key: "extcache-${{ inputs.driver-version }}-${{ hashFiles('composer.json') }}"
+        extensions: "${{ steps.driver.outputs.ext-spec }}"
+        # The requested extension version is part of the key computed by the
+        # action. This value is only there to invalidate the cache by hand.
+        key: "extcache-v1"
 
     - name: Cache extensions
+      if: steps.driver.outputs.ext-cachable == 'true'
       uses: actions/cache@v4
       with:
         path: ${{ steps.extcache.outputs.dir }}
         key: ${{ steps.extcache.outputs.key }}
         restore-keys: ${{ steps.extcache.outputs.key }}
 
-    - name: Install PHP
+    - name: Install the mongodb extension
       uses: shivammathur/setup-php@v2
       with:
         coverage: xdebug
-        extensions: "mongodb-${{ inputs.driver-version }}"
+        extensions: "${{ steps.driver.outputs.ext-spec }}"
         php-version: "${{ inputs.php-version }}"
         tools: cs2pr
         ini-values: "${{ inputs.php-ini-values }}"
@@ -49,6 +83,18 @@ runs:
     - name: Show driver information
       run: "php --ri mongodb"
       shell: bash
+
+    - name: Check the expected driver version is installed
+      if: steps.driver.outputs.ext-expected != ''
+      shell: bash
+      run: |
+        INSTALLED=$(php -r 'echo phpversion("mongodb");')
+        EXPECTED="${{ steps.driver.outputs.ext-expected }}"
+
+        if [ "$INSTALLED" != "$EXPECTED" ]; then
+          echo "::error::Expected extension version $EXPECTED, got $INSTALLED"
+          exit 1
+        fi
 
     - name: Install dependencies with Composer
       uses: ramsey/composer-install@3.0.0

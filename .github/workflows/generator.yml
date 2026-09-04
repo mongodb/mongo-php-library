@@ -13,9 +13,6 @@ on:
 
 env:
   PHP_VERSION: "8.2"
-  # TODO: change to "stable" once 2.5.0 is released
-  # DRIVER_VERSION: "stable"
-  DRIVER_VERSION: "mongodb/mongo-php-driver@v2.x"
 
 jobs:
   diff:
@@ -32,7 +29,6 @@ jobs:
         uses: "./.github/actions/setup"
         with:
           php-version: ${{ env.PHP_VERSION }}
-          driver-version: ${{ env.DRIVER_VERSION }}
           working-directory: "generator"
 
       - name: "Run Generator"
@@ -40,3 +36,22 @@ jobs:
 
       - name: "Check file diff"
         run: git add . -N && git diff --exit-code
+
+  evergreen-config:
+    name: "Evergreen config diff check"
+    runs-on: "ubuntu-24.04"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v7"
+
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+
+      - name: "Generate Evergreen config"
+        run: "php .evergreen/config/generate-config.php"
+
+      - name: "Check file diff"
+        run: git add .evergreen/config/generated -N && git diff --exit-code .evergreen/config/generated

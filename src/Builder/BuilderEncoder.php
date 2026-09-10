@@ -14,6 +14,7 @@ use MongoDB\Builder\Encoder\OperatorEncoder;
 use MongoDB\Builder\Encoder\OutputWindowEncoder;
 use MongoDB\Builder\Encoder\PipelineEncoder;
 use MongoDB\Builder\Encoder\QueryEncoder;
+use MongoDB\Builder\Encoder\UpdateEncoder;
 use MongoDB\Builder\Encoder\VariableEncoder;
 use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Type\CombinedFieldQuery;
@@ -32,7 +33,9 @@ use stdClass;
 use WeakReference;
 
 use function array_key_exists;
+use function is_array;
 use function is_object;
+use function iterator_to_array;
 
 /** @template-implements Encoder<Type|stdClass|array|string|int, Pipeline|StageInterface|ExpressionInterface|QueryInterface> */
 final class BuilderEncoder implements Encoder
@@ -46,13 +49,19 @@ final class BuilderEncoder implements Encoder
     /** @var array<class-string, Encoder|null> */
     private array $cachedEncoders = [];
 
-    /** @param array<class-string, Encoder> $encoders */
-    public function __construct(array $encoders = [])
+    /** @param iterable<class-string, Encoder> $encoders */
+    public function __construct(iterable $encoders = [])
     {
         $self = WeakReference::create($this);
 
+        if (! is_array($encoders)) {
+            $encoders = iterator_to_array($encoders);
+        }
+
         $this->encoders = $encoders + [
             Pipeline::class => new PipelineEncoder($self),
+            UpdatePipeline::class => new PipelineEncoder($self),
+            Update::class => new UpdateEncoder($self),
             Variable::class => new VariableEncoder(),
             DictionaryInterface::class => new DictionaryEncoder(),
             FieldPathInterface::class => new FieldPathEncoder(),

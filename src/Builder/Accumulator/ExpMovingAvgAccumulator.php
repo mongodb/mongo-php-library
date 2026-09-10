@@ -22,7 +22,8 @@ use function str_starts_with;
 
 /**
  * Returns the exponential moving average for the numeric expression.
- * New in MongoDB 5.0.
+ *
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/
  * @internal

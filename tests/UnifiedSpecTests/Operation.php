@@ -3,11 +3,11 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use Error;
-use MongoDB\BSON\Javascript;
 use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
+use MongoDB\Driver\BulkWriteCommand;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Server;
@@ -34,6 +34,7 @@ use function fwrite;
 use function hex2bin;
 use function iterator_to_array;
 use function key;
+use function microtime;
 use function MongoDB\with_transaction;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContains;
@@ -65,6 +66,8 @@ final class Operation
 {
     public const OBJECT_TEST_RUNNER = 'testRunner';
 
+    private const ITERATE_UNTIL_DOCUMENT_OR_ERROR_TIMEOUT = 10;
+
     private bool $isTestRunnerOperation;
 
     private string $name;
@@ -84,14 +87,8 @@ final class Operation
     private ?string $saveResultAsEntity = null;
 
     private static array $unsupportedOperations = [
-        self::OBJECT_TEST_RUNNER => [
-            'assertNumberConnectionsCheckedOut' => 'PHP does not implement CMAP',
-            'createEntities' => 'createEntities is not implemented (PHPC-1760)',
-        ],
-        Client::class => [
-            'clientBulkWrite' => 'clientBulkWrite is not implemented (PHPLIB-847)',
-            'listDatabaseObjects' => 'listDatabaseObjects is not implemented',
-        ],
+        self::OBJECT_TEST_RUNNER => ['assertNumberConnectionsCheckedOut' => 'PHP does not implement CMAP'],
+        Client::class => ['listDatabaseObjects' => 'listDatabaseObjects is not implemented'],
         Cursor::class => ['iterateOnce' => 'iterateOnce is not implemented (PHPC-1760)'],
         Database::class => [
             'createCommandCursor' => 'commandCursor API is not yet implemented (PHPLIB-1077)',
@@ -226,26 +223,7 @@ final class Operation
 
         switch ($this->name) {
             case 'iterateUntilDocumentOrError':
-                /* Note: the first iteration should use rewind, otherwise we may
-                 * miss a document from the initial batch (possible if using a
-                 * resume token). We can infer this from a null key; however,
-                 * if a test ever calls this operation consecutively to expect
-                 * multiple errors from the same ChangeStream we will need a
-                 * different approach (e.g. examining internal hasAdvanced
-                 * property on the ChangeStream). */
-                if ($changeStream->key() === null) {
-                    $changeStream->rewind();
-
-                    if ($changeStream->valid()) {
-                        return $changeStream->current();
-                    }
-                }
-
-                do {
-                    $changeStream->next();
-                } while (! $changeStream->valid());
-
-                return $changeStream->current();
+                return $this->iterateUntilDocumentOrError($changeStream);
 
             default:
                 Assert::fail('Unsupported change stream operation: ' . $this->name);
@@ -258,6 +236,18 @@ final class Operation
         Util::assertArgumentsBySchema(Client::class, $this->name, $args);
 
         switch ($this->name) {
+            case 'clientBulkWrite':
+                assertArrayHasKey('models', $args);
+                assertIsArray($args['models']);
+
+                // Options for ClientBulkWriteCommand and Server::executeBulkWriteCommand() will be mixed
+                $options = array_diff_key($args, ['models' => 1]);
+
+                return $client->bulkWrite(
+                    self::prepareBulkWriteCommand($args['models'], $options),
+                    $options,
+                );
+
             case 'createChangeStream':
                 assertArrayHasKey('pipeline', $args);
                 assertIsArray($args['pipeline']);
@@ -526,19 +516,8 @@ final class Operation
                 );
 
             case 'mapReduce':
-                assertArrayHasKey('map', $args);
-                assertArrayHasKey('reduce', $args);
-                assertArrayHasKey('out', $args);
-                assertInstanceOf(Javascript::class, $args['map']);
-                assertInstanceOf(Javascript::class, $args['reduce']);
-                assertThat($args['out'], logicalOr(new IsType('string'), new IsType('array'), new IsType('object')));
-
-                return iterator_to_array($collection->mapReduce(
-                    $args['map'],
-                    $args['reduce'],
-                    $args['out'],
-                    array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1]),
-                ));
+                Assert::markTestSkipped('mapReduce operation is not supported');
+                break;
 
             case 'rename':
                 assertArrayHasKey('to', $args);
@@ -619,31 +598,7 @@ final class Operation
                 assertFalse($this->entityMap->offsetExists($this->object));
                 break;
             case 'iterateUntilDocumentOrError':
-                /* Note: the first iteration should use rewind, otherwise we may
-                 * miss a document from the initial batch (possible if using a
-                 * resume token). We can infer this from a null key; however,
-                 * if a test ever calls this operation consecutively to expect
-                 * multiple errors from the same ChangeStream we will need a
-                 * different approach (e.g. examining internal hasAdvanced
-                 * property on the ChangeStream). */
-
-                /* Note: similar to iterateUntilDocumentOrError for ChangeStream
-                 * entities, a different approach will be needed if a test ever
-                 * calls this operation consecutively to expect multiple errors.
-                 */
-                if ($cursor->key() === null) {
-                    $cursor->rewind();
-
-                    if ($cursor->valid()) {
-                        return $cursor->current();
-                    }
-                }
-
-                do {
-                    $cursor->next();
-                } while (! $cursor->valid());
-
-                return $cursor->current();
+                return $this->iterateUntilDocumentOrError($cursor);
 
             default:
                 Assert::fail('Unsupported cursor operation: ' . $this->name);
@@ -985,6 +940,36 @@ final class Operation
         );
     }
 
+    private function iterateUntilDocumentOrError(ChangeStream|Cursor $cursorOrChangeStream): array|object|null
+    {
+        /* Note: the first iteration should use rewind, otherwise we may
+         * miss a document from the initial batch (possible if using a
+         * resume token). We can infer this from a null key; however,
+         * if a test ever calls this operation consecutively to expect
+         * multiple errors from the same ChangeStream we will need a
+         * different approach (e.g. examining internal hasAdvanced
+         * property on the ChangeStream). */
+        if ($cursorOrChangeStream->key() === null) {
+            $cursorOrChangeStream->rewind();
+
+            if ($cursorOrChangeStream->valid()) {
+                return $cursorOrChangeStream->current();
+            }
+        }
+
+        $start = microtime(true);
+
+        do {
+            $cursorOrChangeStream->next();
+
+            if (microtime(true) - $start > self::ITERATE_UNTIL_DOCUMENT_OR_ERROR_TIMEOUT) {
+                Assert::fail('iterateUntilDocumentOrError timed out');
+            }
+        } while (! $cursorOrChangeStream->valid());
+
+        return $cursorOrChangeStream->current();
+    }
+
     private function prepareArguments(): array
     {
         $args = $this->arguments;
@@ -1013,6 +998,82 @@ final class Operation
         Assert::markTestSkipped($skipReason);
     }
 
+    private static function prepareBulkWriteCommand(array $models, array $options): BulkWriteCommand
+    {
+        $bulk = new BulkWriteCommand($options);
+
+        foreach ($models as $model) {
+            $model = (array) $model;
+            assertCount(1, $model);
+
+            $type = key($model);
+            $args = current($model);
+            assertIsObject($args);
+            $args = (array) $args;
+
+            assertArrayHasKey('namespace', $args);
+            assertIsString($args['namespace']);
+
+            switch ($type) {
+                case 'deleteMany':
+                case 'deleteOne':
+                    assertArrayHasKey('filter', $args);
+                    assertInstanceOf(stdClass::class, $args['filter']);
+
+                    $bulk->{$type}(
+                        $args['namespace'],
+                        $args['filter'],
+                        array_diff_key($args, ['namespace' => 1, 'filter' => 1]),
+                    );
+                    break;
+
+                case 'insertOne':
+                    assertArrayHasKey('document', $args);
+                    assertInstanceOf(stdClass::class, $args['document']);
+
+                    $bulk->insertOne(
+                        $args['namespace'],
+                        $args['document'],
+                    );
+                    break;
+
+                case 'replaceOne':
+                    assertArrayHasKey('filter', $args);
+                    assertArrayHasKey('replacement', $args);
+                    assertInstanceOf(stdClass::class, $args['filter']);
+                    assertInstanceOf(stdClass::class, $args['replacement']);
+
+                    $bulk->replaceOne(
+                        $args['namespace'],
+                        $args['filter'],
+                        $args['replacement'],
+                        array_diff_key($args, ['namespace' => 1, 'filter' => 1, 'replacement' => 1]),
+                    );
+                    break;
+
+                case 'updateMany':
+                case 'updateOne':
+                    assertArrayHasKey('filter', $args);
+                    assertArrayHasKey('update', $args);
+                    assertInstanceOf(stdClass::class, $args['filter']);
+                    assertThat($args['update'], logicalOr(new IsType('array'), new IsType('object')));
+
+                    $bulk->{$type}(
+                        $args['namespace'],
+                        $args['filter'],
+                        $args['update'],
+                        array_diff_key($args, ['namespace' => 1, 'filter' => 1, 'update' => 1]),
+                    );
+                    break;
+
+                default:
+                    Assert::fail('Unsupported bulk write model: ' . $type);
+            }
+        }
+
+        return $bulk;
+    }
+
     private static function prepareBulkWriteRequest(stdClass $request): array
     {
         $request = (array) $request;
@@ -1038,6 +1099,7 @@ final class Operation
 
             case 'insertOne':
                 assertArrayHasKey('document', $args);
+                assertInstanceOf(stdClass::class, $args['document']);
 
                 return ['insertOne' => [$args['document']]];
 

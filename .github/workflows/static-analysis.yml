@@ -18,8 +18,8 @@ on:
         required: true
 
 env:
-  PHP_VERSION: "8.2"
-  DRIVER_VERSION: "mongodb/mongo-php-driver@v1.21"
+  PHP_VERSION: "8.5"
+  DRIVER_VERSION: "stable"
 
 jobs:
   psalm:
@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v7"
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
 
@@ -48,13 +48,13 @@ jobs:
 
       - name: "Upload SARIF report"
         if: ${{ github.event_name != 'workflow_dispatch' }}
-        uses: "github/codeql-action/upload-sarif@v3"
+        uses: "github/codeql-action/upload-sarif@v4"
         with:
           sarif_file: psalm.sarif
 
       - name: "Upload SARIF report"
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        uses: "github/codeql-action/upload-sarif@v3"
+        uses: "github/codeql-action/upload-sarif@v4"
         with:
           sarif_file: psalm.sarif
           ref: ${{ inputs.ref }}

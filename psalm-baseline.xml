@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.5.1@3f17a6b24a2dbe543e21408c2b19108cf6a355ef">
+<files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
   <file src="examples/atlas_search.php">
     <MixedArgument>
       <code><![CDATA[$document['name']]]></code>
       <code><![CDATA[$index->name]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$document['name']]]></code>
-    </MixedArrayAccess>
     <MixedAssignment>
-      <code><![CDATA[$document]]></code>
       <code><![CDATA[$index]]></code>
       <code><![CDATA[$index]]></code>
       <code><![CDATA[$index]]></code>
@@ -23,6 +19,14 @@
     <PossiblyFalseArgument>
       <code><![CDATA[$uri]]></code>
     </PossiblyFalseArgument>
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$document['name']]]></code>
+    </PossiblyInvalidArrayAccess>
+  </file>
+  <file src="examples/gridfs_stream.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[$id]]></code>
+    </ImplicitToStringCast>
   </file>
   <file src="examples/persistable.php">
     <LessSpecificReturnStatement>
@@ -104,6 +108,12 @@
       <code><![CDATA[$value[$key]]]></code>
     </MixedAssignment>
   </file>
+  <file src="src/Builder/Encoder/UpdateEncoder.php">
+    <MixedAssignment>
+      <code><![CDATA[$operator]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+  </file>
   <file src="src/Builder/Query.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$query]]></code>
@@ -180,6 +190,7 @@
   <file src="src/Builder/Stage/VectorSearchStage.php">
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$filter]]></code>
+      <code><![CDATA[$parentFilter]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Builder/Type/CombinedFieldQuery.php">
@@ -206,46 +217,148 @@
       <code><![CDATA[$queries[$fieldPath]]]></code>
       <code><![CDATA[$query]]></code>
     </MixedAssignment>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[count($queriesOrArrayOfQueries) === 1 &&
-            isset($queriesOrArrayOfQueries[0]) &&
-            is_array($queriesOrArrayOfQueries[0]) &&
-            count($queriesOrArrayOfQueries[0]) > 0]]></code>
-    </RedundantConditionGivenDocblockType>
     <UndefinedConstant>
       <code><![CDATA[$query::NAME]]></code>
       <code><![CDATA[$query::NAME]]></code>
       <code><![CDATA[$query::NAME]]></code>
     </UndefinedConstant>
   </file>
-  <file src="src/ChangeStream.php">
-    <DeprecatedConstant>
-      <code><![CDATA[self::CURSOR_NOT_FOUND]]></code>
-    </DeprecatedConstant>
-    <TooManyArguments>
-      <code><![CDATA[getId]]></code>
-    </TooManyArguments>
+  <file src="src/Builder/Update.php">
+    <MixedReturnStatement>
+      <code><![CDATA[$field->name]]></code>
+    </MixedReturnStatement>
+    <NoInterfaceProperties>
+      <code><![CDATA[$field->name]]></code>
+    </NoInterfaceProperties>
   </file>
-  <file src="src/Client.php">
-    <MixedArgument>
-      <code><![CDATA[$driverOptions['driver'] ?? []]]></code>
-      <code><![CDATA[$pipeline]]></code>
-    </MixedArgument>
-    <MixedArrayAssignment>
-      <code><![CDATA[$options['kmsProviders'][$name]]]></code>
-    </MixedArrayAssignment>
-    <MixedAssignment>
-      <code><![CDATA[$mergedDriver['platform']]]></code>
-      <code><![CDATA[$provider]]></code>
-    </MixedAssignment>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$driverOptions['builderEncoder'] ?? new BuilderEncoder()]]></code>
-    </MixedPropertyTypeCoercion>
-    <NamedArgumentNotAllowed>
-      <code><![CDATA[$pipeline]]></code>
-    </NamedArgumentNotAllowed>
+  <file src="src/Builder/Update/AddToSetOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/BitOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/CurrentDateOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/IncOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/MaxOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/MinOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/MulOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/PopOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/PullAllOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/PullOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/PushOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/RenameOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/SetOnInsertOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/SetOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Builder/Update/UnsetOperator.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </PropertyTypeCoercion>
+    <TooManyTemplateParams>
+      <code><![CDATA[stdClass]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/ClientBulkWrite.php">
+    <InvalidAttribute>
+      <code><![CDATA[NoDiscard]]></code>
+      <code><![CDATA[NoDiscard]]></code>
+    </InvalidAttribute>
     <PossiblyInvalidArgument>
-      <code><![CDATA[$pipeline]]></code>
+      <code><![CDATA[$document]]></code>
+      <code><![CDATA[$replacement]]></code>
     </PossiblyInvalidArgument>
   </file>
   <file src="src/Codec/EncodeIfSupported.php">
@@ -253,6 +366,7 @@
       <code><![CDATA[$value]]></code>
     </ArgumentTypeCoercion>
     <InvalidReturnType>
+      <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
       <code><![CDATA[($value is NativeType ? BSONType : $value)]]></code>
@@ -328,20 +442,9 @@
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/GridFS/CollectionWrapper.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[int]]></code>
-      <code><![CDATA[int]]></code>
-    </InvalidNullableReturnType>
     <MixedAssignment>
       <code><![CDATA[$ids[]]]></code>
     </MixedAssignment>
-    <NullableReturnStatement>
-      <code><![CDATA[$count]]></code>
-      <code><![CDATA[$this->filesCollection->updateMany(
-            ['filename' => $filename],
-            ['$set' => ['filename' => $newFilename]],
-        )->getMatchedCount()]]></code>
-    </NullableReturnStatement>
   </file>
   <file src="src/GridFS/ReadableStream.php">
     <MixedArgument>
@@ -379,12 +482,14 @@
     </InvalidParamDefault>
     <LessSpecificReturnStatement>
       <code><![CDATA[(object) $this->getArrayCopy()]]></code>
+      <code><![CDATA[(object) $this->getArrayCopy()]]></code>
     </LessSpecificReturnStatement>
     <MixedAssignment>
       <code><![CDATA[$this[$key]]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MoreSpecificReturnType>
+      <code><![CDATA[stdClass]]></code>
       <code><![CDATA[stdClass]]></code>
     </MoreSpecificReturnType>
   </file>
@@ -394,6 +499,12 @@
     </MixedArgument>
   </file>
   <file src="src/Model/ChangeStreamIterator.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$cursor]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[CursorInterface<TValue>]]></code>
+    </InvalidReturnType>
     <MixedArgument>
       <code><![CDATA[$reply->cursor->nextBatch]]></code>
     </MixedArgument>
@@ -408,34 +519,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$this->current()]]></code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/Model/CollectionInfoCommandIterator.php">
-    <DeprecatedInterface>
-      <code><![CDATA[CollectionInfoCommandIterator]]></code>
-    </DeprecatedInterface>
-    <MixedArrayAssignment>
-      <code><![CDATA[$info['idIndex']['ns']]]></code>
-    </MixedArrayAssignment>
-    <MixedOperand>
-      <code><![CDATA[$info['name']]]></code>
-    </MixedOperand>
-  </file>
-  <file src="src/Model/DatabaseInfoLegacyIterator.php">
-    <DeprecatedInterface>
-      <code><![CDATA[DatabaseInfoLegacyIterator]]></code>
-    </DeprecatedInterface>
-    <MixedArgument>
-      <code><![CDATA[current($this->databases)]]></code>
-    </MixedArgument>
-    <MixedReturnTypeCoercion>
-      <code><![CDATA[int]]></code>
-      <code><![CDATA[key($this->databases)]]></code>
-    </MixedReturnTypeCoercion>
-  </file>
-  <file src="src/Model/IndexInfoIteratorIterator.php">
-    <DeprecatedInterface>
-      <code><![CDATA[IndexInfoIteratorIterator]]></code>
-    </DeprecatedInterface>
   </file>
   <file src="src/Model/IndexInput.php">
     <LessSpecificReturnStatement>
@@ -485,95 +568,16 @@
   </file>
   <file src="src/Operation/BulkWrite.php">
     <MixedArgument>
-      <code><![CDATA[$args]]></code>
-      <code><![CDATA[$args]]></code>
-      <code><![CDATA[$args]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[2]]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[0]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]['upsert']]]></code>
-      <code><![CDATA[$args[2]['upsert']]]></code>
-      <code><![CDATA[$args[2]['upsert']]]></code>
-      <code><![CDATA[$args[2]['upsert']]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[1]['limit']]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]['multi']]]></code>
-      <code><![CDATA[$args[2]['multi']]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][2]]]></code>
-      <code><![CDATA[$operations[$i][$type][2]]]></code>
-    </MixedArrayAssignment>
     <MixedAssignment>
-      <code><![CDATA[$args]]></code>
-      <code><![CDATA[$args]]></code>
       <code><![CDATA[$args[1]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
       <code><![CDATA[$insertedIds[$i]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][0]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][1]]]></code>
-      <code><![CDATA[$operations[$i][$type][2]]]></code>
-      <code><![CDATA[$operations[$i][$type][2]]]></code>
+      <code><![CDATA[$operation[$type][0]]]></code>
+      <code><![CDATA[$operation[$type][0]]]></code>
+      <code><![CDATA[$operation[$type][0]]]></code>
+      <code><![CDATA[$operation[$type][1]]]></code>
       <code><![CDATA[$options[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
       <code><![CDATA[$options['writeConcern']]]></code>
@@ -581,10 +585,28 @@
     <MixedMethodCall>
       <code><![CDATA[isInTransaction]]></code>
     </MixedMethodCall>
-    <MixedOperand>
+    <NullArgument>
+      <code><![CDATA[$type]]></code>
+    </NullArgument>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[1]]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[1]]]></code>
+    </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$args[1]]]></code>
+      <code><![CDATA[$args[1]]]></code>
       <code><![CDATA[$args[2]]]></code>
-      <code><![CDATA[$args[2]]]></code>
-    </MixedOperand>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="src/Operation/ClientBulkWriteCommand.php">
+    <MixedMethodCall>
+      <code><![CDATA[isInTransaction]]></code>
+    </MixedMethodCall>
   </file>
   <file src="src/Operation/Count.php">
     <MixedAssignment>
@@ -600,9 +622,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/CreateCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -674,9 +693,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DropCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['comment']]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -687,9 +703,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DropDatabase.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['comment']]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -702,9 +715,6 @@
     </MixedArgument>
   </file>
   <file src="src/Operation/DropIndexes.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -734,11 +744,7 @@
       <code><![CDATA[$this->options['codec']]]></code>
       <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$options['modifiers'][$modifier[1]]]]></code>
-    </MixedArrayAccess>
     <MixedAssignment>
-      <code><![CDATA[$options[$modifier[0]]]]></code>
       <code><![CDATA[$options[$option]]]></code>
       <code><![CDATA[$options['readPreference']]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -769,15 +775,6 @@
       <code><![CDATA[$value === null ? $value : $this->options['codec']->decode($value)]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
-    </MixedReturnStatement>
-  </file>
-  <file src="src/Operation/FindOne.php">
-    <MixedAssignment>
-      <code><![CDATA[$document]]></code>
-    </MixedAssignment>
-    <MixedReturnStatement>
-      <code><![CDATA[$document === false ? null : $document]]></code>
-      <code><![CDATA[$document === false ? null : $document]]></code>
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/FindOneAndDelete.php">
@@ -829,43 +826,11 @@
       <code><![CDATA[$document]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="src/Operation/ListCollections.php">
-    <DeprecatedClass>
-      <code><![CDATA[new CollectionInfoCommandIterator($this->listCollections->execute($server), $this->databaseName)]]></code>
-    </DeprecatedClass>
-  </file>
-  <file src="src/Operation/ListDatabases.php">
-    <DeprecatedClass>
-      <code><![CDATA[new DatabaseInfoLegacyIterator($this->listDatabases->execute($server))]]></code>
-    </DeprecatedClass>
-  </file>
   <file src="src/Operation/ListIndexes.php">
-    <DeprecatedClass>
-      <code><![CDATA[IndexInfoIteratorIterator]]></code>
-      <code><![CDATA[new IndexInfoIteratorIterator($iterator, $this->databaseName . '.' . $this->collectionName)]]></code>
-      <code><![CDATA[new IndexInfoIteratorIterator(new EmptyIterator())]]></code>
-    </DeprecatedClass>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
-  </file>
-  <file src="src/Operation/MapReduce.php">
-    <MixedArgument>
-      <code><![CDATA[$result->result->collection]]></code>
-      <code><![CDATA[$result->result->db]]></code>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$cmd[$option]]]></code>
-      <code><![CDATA[$options['readConcern']]]></code>
-      <code><![CDATA[$options['readPreference']]]></code>
-      <code><![CDATA[$options['session']]]></code>
-      <code><![CDATA[$options['writeConcern']]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[isInTransaction]]></code>
-    </MixedMethodCall>
   </file>
   <file src="src/Operation/ModifyCollection.php">
     <MixedArgument>
@@ -878,9 +843,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/RenameCollection.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['typeMap']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd[$option]]]></code>
       <code><![CDATA[$options['session']]]></code>
@@ -896,9 +858,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/Update.php">
-    <MixedArgument>
-      <code><![CDATA[$this->options['writeConcern']]]></code>
-    </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmd['bypassDocumentValidation']]]></code>
       <code><![CDATA[$options[$option]]]></code>
@@ -930,6 +889,16 @@
       <code><![CDATA[$this->changeStreamOptions['resumeAfter']]]></code>
       <code><![CDATA[$this->changeStreamOptions['startAfter']]]></code>
     </MixedReturnStatement>
+  </file>
+  <file src="src/Operation/WithTransaction.php">
+    <InvalidOperand>
+      <code><![CDATA[$backoffMs * 1e6]]></code>
+      <code><![CDATA[$this->getJitter() * min(self::BACKOFF_INITIAL * (1.5 ** ($transactionAttempt - 1)), self::BACKOFF_MAX)]]></code>
+      <code><![CDATA[1.5 ** ($transactionAttempt - 1)]]></code>
+      <code><![CDATA[hrtime(true) + ($backoffMs * 1e6)]]></code>
+      <code><![CDATA[self::BACKOFF_INITIAL * (1.5 ** ($transactionAttempt - 1))]]></code>
+      <code><![CDATA[self::MAX_TIME * 1e9]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/UpdateResult.php">
     <MixedAssignment>

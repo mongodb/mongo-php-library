@@ -17,7 +17,8 @@ use function array_is_list;
 
 /**
  * Returns the result of a bitwise or operation on an array of int or long values.
- * New in MongoDB 6.3.
+ *
+ * New in MongoDB 6.3
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/
  * @internal

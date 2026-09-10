@@ -8,7 +8,6 @@
           REQUIRE_API_VERSION: "yes"
           MONGODB_VERSION: "%mongodbVersion%"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           API_VERSION: "1"
@@ -22,7 +21,6 @@
           ORCHESTRATION_FILE: "versioned-api-testing.json"
           MONGODB_VERSION: "%mongodbVersion%"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "versioned-api"

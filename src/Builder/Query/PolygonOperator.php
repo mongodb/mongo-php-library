@@ -33,9 +33,7 @@ final class PolygonOperator implements GeometryInterface, OperatorInterface
     /** @var BSONArray|PackedArray|array $points */
     public readonly PackedArray|BSONArray|array $points;
 
-    /**
-     * @param BSONArray|PackedArray|array $points
-     */
+    /** @param BSONArray|PackedArray|array $points */
     public function __construct(PackedArray|BSONArray|array $points)
     {
         if (is_array($points) && ! array_is_list($points)) {

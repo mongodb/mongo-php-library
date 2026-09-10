@@ -15,6 +15,36 @@ use MongoDB\Tests\Builder\PipelineTestCase;
  */
 class ConvertOperatorTest extends PipelineTestCase
 {
+    public function testConvertHexadecimalStringToInteger(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project(
+                decimalValue: Expression::convert(
+                    input: Expression::stringFieldPath('hexString'),
+                    to: 'int',
+                    base: 16,
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::ConvertConvertHexadecimalStringToInteger, $pipeline);
+    }
+
+    public function testConvertIntegerToBinaryString(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project(
+                binaryString: Expression::convert(
+                    input: Expression::intFieldPath('value'),
+                    to: 'string',
+                    base: 2,
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::ConvertConvertIntegerToBinaryString, $pipeline);
+    }
+
     public function testExample(): void
     {
         $pipeline = new Pipeline(

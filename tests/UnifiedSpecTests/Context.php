@@ -476,7 +476,7 @@ final class Context
             $options = self::prepareBucketOptions((array) $o->bucketOptions);
         }
 
-        $this->entityMap->set($id, $database->selectGridFSBucket($options), $databaseId);
+        $this->entityMap->set($id, $database->getGridFSBucket($options), $databaseId);
     }
 
     private static function getEnv(string $name): string
@@ -492,6 +492,10 @@ final class Context
 
     private static function prepareCollectionOrDatabaseOptions(array $options): array
     {
+        if (array_key_exists('timeoutMS', $options)) {
+            Assert::markTestIncomplete('CSOT is not yet implemented (PHPC-1760)');
+        }
+
         Util::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
 
         return Util::prepareCommonOptions($options);
@@ -507,10 +511,6 @@ final class Context
 
         if (array_key_exists('chunkSizeBytes', $options)) {
             assertIsInt($options['chunkSizeBytes']);
-        }
-
-        if (array_key_exists('disableMD5', $options)) {
-            assertIsBool($options['disableMD5']);
         }
 
         return Util::prepareCommonOptions($options);

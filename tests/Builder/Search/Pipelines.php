@@ -15,7 +15,7 @@ enum Pipelines: string
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#basic-example
      */
-    case AutocompleteBasic = <<<'JSON'
+    case AutocompleteBasic = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -41,14 +41,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fuzzy
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#fuzzy-example
      */
-    case AutocompleteFuzzy = <<<'JSON'
+    case AutocompleteFuzzy = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -85,14 +85,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Token Order any
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#simple-any-example
      */
-    case AutocompleteTokenOrderAny = <<<'JSON'
+    case AutocompleteTokenOrderAny = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -119,14 +119,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Token Order sequential
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#simple-sequential-example
      */
-    case AutocompleteTokenOrderSequential = <<<'JSON'
+    case AutocompleteTokenOrderSequential = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -153,14 +153,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Highlighting
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#highlighting-example
      */
-    case AutocompleteHighlighting = <<<'JSON'
+    case AutocompleteHighlighting = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -195,14 +195,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Across Multiple Fields
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#search-across-multiple-fields
      */
-    case AutocompleteAcrossMultipleFields = <<<'JSON'
+    case AutocompleteAcrossMultipleFields = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -246,14 +246,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * must and mustNot
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/#must-and-mustnot-example
      */
-    case CompoundMustAndMustNot = <<<'JSON'
+    case CompoundMustAndMustNot = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -278,14 +278,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * must and should
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/#must-and-should-example
      */
-    case CompoundMustAndShould = <<<'JSON'
+    case CompoundMustAndShould = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -317,14 +317,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * minimumShouldMatch
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/#minimumshouldmatch-example
      */
-    case CompoundMinimumShouldMatch = <<<'JSON'
+    case CompoundMinimumShouldMatch = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -358,14 +358,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Filter
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/#filter-examples
      */
-    case CompoundFilter = <<<'JSON'
+    case CompoundFilter = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -398,14 +398,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Nested
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/#nested-example
      */
-    case CompoundNested = <<<'JSON'
+    case CompoundNested = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -443,14 +443,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Basic
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/embedded-document/#index-definition
      */
-    case EmbeddedDocumentBasic = <<<'JSON'
+    case EmbeddedDocumentBasic = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -506,14 +506,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Facet
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/embedded-document/#facet-query
      */
-    case EmbeddedDocumentFacet = <<<'JSON'
+    case EmbeddedDocumentFacet = <<<'EXTENDED_JSON'
     [
         {
             "$searchMeta": {
@@ -553,14 +553,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Query and Sort
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/embedded-document/#query-and-sort
      */
-    case EmbeddedDocumentQueryAndSort = <<<'JSON'
+    case EmbeddedDocumentQueryAndSort = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -602,14 +602,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Query for Matching Embedded Documents Only
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/embedded-document/#query-for-matching-embedded-documents-only
      */
-    case EmbeddedDocumentQueryForMatchingEmbeddedDocumentsOnly = <<<'JSON'
+    case EmbeddedDocumentQueryForMatchingEmbeddedDocumentsOnly = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -688,14 +688,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Boolean
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/#boolean-examples
      */
-    case EqualsBoolean = <<<'JSON'
+    case EqualsBoolean = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -719,14 +719,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * ObjectId
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/#objectid-example
      */
-    case EqualsObjectId = <<<'JSON'
+    case EqualsObjectId = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -739,14 +739,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Date
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/#date-example
      */
-    case EqualsDate = <<<'JSON'
+    case EqualsDate = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -761,14 +761,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Number
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/#number-example
      */
-    case EqualsNumber = <<<'JSON'
+    case EqualsNumber = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -781,14 +781,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * String
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/#string-example
      */
-    case EqualsString = <<<'JSON'
+    case EqualsString = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -799,14 +799,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * UUID
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/#uuid-example
      */
-    case EqualsUUID = <<<'JSON'
+    case EqualsUUID = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -822,14 +822,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Null
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/#null-example
      */
-    case EqualsNull = <<<'JSON'
+    case EqualsNull = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -840,14 +840,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Basic
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/exists/#basic-example
      */
-    case ExistsBasic = <<<'JSON'
+    case ExistsBasic = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -857,14 +857,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Embedded
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/exists/#embedded-example
      */
-    case ExistsEmbedded = <<<'JSON'
+    case ExistsEmbedded = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -874,14 +874,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Compound
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/exists/#compound-example
      */
-    case ExistsCompound = <<<'JSON'
+    case ExistsCompound = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -909,14 +909,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Facet
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/#examples
      */
-    case FacetFacet = <<<'JSON'
+    case FacetFacet = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -987,14 +987,144 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Multi-Select Faceting Example
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/#multi-select-faceting-example
+     */
+    case FacetMultiSelectFacetingExample = <<<'EXTENDED_JSON'
+    [
+        {
+            "$searchMeta": {
+                "facet": {
+                    "operator": {
+                        "compound": {
+                            "must": [
+                                {
+                                    "text": {
+                                        "path": "description",
+                                        "query": "new york city"
+                                    }
+                                }
+                            ],
+                            "filter": [
+                                {
+                                    "equals": {
+                                        "path": "cancellation_policy",
+                                        "value": "moderate",
+                                        "doesNotAffect": "cancellationFacet"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "facets": {
+                        "accommodatesFacet": {
+                            "path": "accommodates",
+                            "type": "number",
+                            "boundaries": [
+                                {
+                                    "$numberInt": "1"
+                                },
+                                {
+                                    "$numberInt": "2"
+                                },
+                                {
+                                    "$numberInt": "4"
+                                },
+                                {
+                                    "$numberInt": "8"
+                                }
+                            ]
+                        },
+                        "cancellationFacet": {
+                            "path": "cancellation_policy",
+                            "type": "string"
+                        },
+                        "roomTypeFacet": {
+                            "path": "room_type",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Inter-Facet Filter Exclusion Example
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/#inter-facet-filter-exclusion-example
+     */
+    case FacetInterFacetFilterExclusionExample = <<<'EXTENDED_JSON'
+    [
+        {
+            "$searchMeta": {
+                "facet": {
+                    "operator": {
+                        "compound": {
+                            "must": [
+                                {
+                                    "text": {
+                                        "path": "description",
+                                        "query": "new york city"
+                                    }
+                                }
+                            ],
+                            "filter": [
+                                {
+                                    "equals": {
+                                        "path": "cancellation_policy",
+                                        "value": "moderate",
+                                        "doesNotAffect": "accommodatesFacet"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "facets": {
+                        "accommodatesFacet": {
+                            "path": "accommodates",
+                            "type": "number",
+                            "boundaries": [
+                                {
+                                    "$numberInt": "1"
+                                },
+                                {
+                                    "$numberInt": "2"
+                                },
+                                {
+                                    "$numberInt": "4"
+                                },
+                                {
+                                    "$numberInt": "8"
+                                }
+                            ]
+                        },
+                        "cancellationFacet": {
+                            "path": "cancellation_policy",
+                            "type": "string"
+                        },
+                        "roomTypeFacet": {
+                            "path": "room_type",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Disjoint
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#disjoint-example
      */
-    case GeoShapeDisjoint = <<<'JSON'
+    case GeoShapeDisjoint = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1065,14 +1195,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Intersect
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#intersects-example
      */
-    case GeoShapeIntersect = <<<'JSON'
+    case GeoShapeIntersect = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1213,14 +1343,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Within
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoShape/#within-example
      */
-    case GeoShapeWithin = <<<'JSON'
+    case GeoShapeWithin = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1323,14 +1453,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * box
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#box-example
      */
-    case GeoWithinBox = <<<'JSON'
+    case GeoWithinBox = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1382,14 +1512,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * circle
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#circle-example
      */
-    case GeoWithinCircle = <<<'JSON'
+    case GeoWithinCircle = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1433,14 +1563,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * geometry
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/#geometry-examples
      */
-    case GeoWithinGeometry = <<<'JSON'
+    case GeoWithinGeometry = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1507,14 +1637,150 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasAncestor/#sample-query
+     */
+    case HasAncestorExample = <<<'EXTENDED_JSON'
+    [
+        {
+            "$search": {
+                "returnStoredSource": true,
+                "returnScope": {
+                    "path": "funding_rounds.investments"
+                },
+                "hasAncestor": {
+                    "ancestorPath": "funding_rounds",
+                    "operator": {
+                        "equals": {
+                            "path": "funding_rounds.funded_year",
+                            "value": {
+                                "$numberInt": "2005"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Simple Query
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasRoot/#simple-query
+     */
+    case HasRootSimpleQuery = <<<'EXTENDED_JSON'
+    [
+        {
+            "$search": {
+                "returnStoredSource": true,
+                "returnScope": {
+                    "path": "products"
+                },
+                "hasRoot": {
+                    "operator": {
+                        "range": {
+                            "path": "founded_year",
+                            "gte": {
+                                "$numberInt": "2005"
+                            },
+                            "lte": {
+                                "$numberInt": "2010"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Multi-Level Query
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasRoot/#multi-level-query
+     */
+    case HasRootMultiLevelQuery = <<<'EXTENDED_JSON'
+    [
+        {
+            "$search": {
+                "returnStoredSource": true,
+                "returnScope": {
+                    "path": "funding_rounds"
+                },
+                "hasRoot": {
+                    "operator": {
+                        "text": {
+                            "path": "name",
+                            "query": "Facebook"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Compound Query
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasRoot/#compound-query
+     */
+    case HasRootCompoundQuery = <<<'EXTENDED_JSON'
+    [
+        {
+            "$search": {
+                "compound": {
+                    "should": [
+                        {
+                            "embeddedDocument": {
+                                "path": "funding_rounds.investments",
+                                "operator": {
+                                    "wildcard": {
+                                        "path": "funding_rounds.investments.financial_org.name",
+                                        "query": "*Ventures*",
+                                        "allowAnalyzedField": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "hasRoot": {
+                                "operator": {
+                                    "wildcard": {
+                                        "path": "description",
+                                        "query": "*network*",
+                                        "allowAnalyzedField": true
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "returnScope": {
+                    "path": "funding_rounds"
+                },
+                "returnStoredSource": true
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "5"
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Single Value Field Match
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/in/#examples
      */
-    case InSingleValueFieldMatch = <<<'JSON'
+    case InSingleValueFieldMatch = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1554,14 +1820,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Array Value Field Match
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/in/#examples
      */
-    case InArrayValueFieldMatch = <<<'JSON'
+    case InArrayValueFieldMatch = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1595,14 +1861,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Compound Query Match
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/in/#examples
      */
-    case InCompoundQueryMatch = <<<'JSON'
+    case InCompoundQueryMatch = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1655,14 +1921,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Single Document with Multiple Fields
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-1--single-document-with-multiple-fields
      */
-    case MoreLikeThisSingleDocumentWithMultipleFields = <<<'JSON'
+    case MoreLikeThisSingleDocumentWithMultipleFields = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1696,14 +1962,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Input Document Excluded in Results
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-2--input-document-excluded-in-results
      */
-    case MoreLikeThisInputDocumentExcludedInResults = <<<'JSON'
+    case MoreLikeThisInputDocumentExcludedInResults = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1759,14 +2025,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Multiple Analyzers
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/morelikethis/#example-3--multiple-analyzers
      */
-    case MoreLikeThisMultipleAnalyzers = <<<'JSON'
+    case MoreLikeThisMultipleAnalyzers = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1819,14 +2085,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Number
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/near/#number-example
      */
-    case NearNumber = <<<'JSON'
+    case NearNumber = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1864,14 +2130,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Date
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/near/#date-example
      */
-    case NearDate = <<<'JSON'
+    case NearDate = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1911,14 +2177,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * GeoJSON Point
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/near/#geojson-point-examples
      */
-    case NearGeoJSONPoint = <<<'JSON'
+    case NearGeoJSONPoint = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -1963,14 +2229,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Compound
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/near/#compound-example
      */
-    case NearCompound = <<<'JSON'
+    case NearCompound = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2025,14 +2291,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Single Phrase
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/phrase/#single-phrase-example
      */
-    case PhraseSinglePhrase = <<<'JSON'
+    case PhraseSinglePhrase = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2061,14 +2327,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Multiple Phrase
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/phrase/#multiple-phrases-example
      */
-    case PhraseMultiplePhrase = <<<'JSON'
+    case PhraseMultiplePhrase = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2100,14 +2366,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Phrase Slop
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/phrase/#slop-example
      */
-    case PhrasePhraseSlop = <<<'JSON'
+    case PhrasePhraseSlop = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2134,14 +2400,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Phrase Synonyms
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/phrase/#synonyms-example
      */
-    case PhrasePhraseSynonyms = <<<'JSON'
+    case PhrasePhraseSynonyms = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2177,14 +2443,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Boolean Operator Queries
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/queryString/#boolean-operator-queries
      */
-    case QueryStringBooleanOperatorQueries = <<<'JSON'
+    case QueryStringBooleanOperatorQueries = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2205,14 +2471,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Number gte lte
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/range/#number-example
      */
-    case RangeNumberGteLte = <<<'JSON'
+    case RangeNumberGteLte = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2246,14 +2512,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Number lte
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/range/#number-example
      */
-    case RangeNumberLte = <<<'JSON'
+    case RangeNumberLte = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2287,14 +2553,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Date
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/range/#date-example
      */
-    case RangeDate = <<<'JSON'
+    case RangeDate = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2332,14 +2598,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * ObjectId
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/range/#objectid-example
      */
-    case RangeObjectId = <<<'JSON'
+    case RangeObjectId = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2368,14 +2634,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * String
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/range/#string-example
      */
-    case RangeString = <<<'JSON'
+    case RangeString = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2402,14 +2668,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Regex
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/regex/#examples
      */
-    case RegexRegex = <<<'JSON'
+    case RegexRegex = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2430,14 +2696,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Basic
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/#basic-example
      */
-    case TextBasic = <<<'JSON'
+    case TextBasic = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2461,14 +2727,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fuzzy Default
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples
      */
-    case TextFuzzyDefault = <<<'JSON'
+    case TextFuzzyDefault = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2498,14 +2764,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fuzzy maxExpansions
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples
      */
-    case TextFuzzyMaxExpansions = <<<'JSON'
+    case TextFuzzyMaxExpansions = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2542,14 +2808,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fuzzy prefixLength
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/#fuzzy-examples
      */
-    case TextFuzzyPrefixLength = <<<'JSON'
+    case TextFuzzyPrefixLength = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2586,14 +2852,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match any Using equivalent Mapping
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/#match-any-using-equivalent-mapping
      */
-    case TextMatchAnyUsingEquivalentMapping = <<<'JSON'
+    case TextMatchAnyUsingEquivalentMapping = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2627,14 +2893,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match any Using explicit Mapping
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/#match-any-using-explicit-mapping
      */
-    case TextMatchAnyUsingExplicitMapping = <<<'JSON'
+    case TextMatchAnyUsingExplicitMapping = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2668,14 +2934,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match all Using Synonyms
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/#match-all-using-synonyms
      */
-    case TextMatchAllUsingSynonyms = <<<'JSON'
+    case TextMatchAllUsingSynonyms = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2709,14 +2975,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Wildcard Path
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/
      */
-    case TextWildcardPath = <<<'JSON'
+    case TextWildcardPath = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2742,14 +3008,173 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * ANN Basic
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/vector-search/#basic-example
+     */
+    case VectorSearchANNBasic = <<<'EXTENDED_JSON'
+    [
+        {
+            "$search": {
+                "vectorSearch": {
+                    "path": "plot_embedding",
+                    "queryVector": [
+                        {
+                            "$numberDouble": "-0.0016261311999999999121"
+                        },
+                        {
+                            "$numberDouble": "-0.028070756999999998266"
+                        },
+                        {
+                            "$numberDouble": "-0.011342932000000000015"
+                        }
+                    ],
+                    "numCandidates": {
+                        "$numberInt": "150"
+                    },
+                    "limit": {
+                        "$numberInt": "10"
+                    }
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "searchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * ANN Filter
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/vector-search/#filter-example
+     */
+    case VectorSearchANNFilter = <<<'EXTENDED_JSON'
+    [
+        {
+            "$search": {
+                "vectorSearch": {
+                    "path": "plot_embedding",
+                    "queryVector": [
+                        {
+                            "$numberDouble": "0.024210530000000000939"
+                        },
+                        {
+                            "$numberDouble": "-0.022372592000000000173"
+                        },
+                        {
+                            "$numberDouble": "-0.0062311370000000003075"
+                        }
+                    ],
+                    "filter": {
+                        "range": {
+                            "path": "year",
+                            "lt": {
+                                "$numberInt": "1975"
+                            }
+                        }
+                    },
+                    "numCandidates": {
+                        "$numberInt": "150"
+                    },
+                    "limit": {
+                        "$numberInt": "10"
+                    }
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "year": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "searchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * ENN
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/vector-search/#enn-example
+     */
+    case VectorSearchENN = <<<'EXTENDED_JSON'
+    [
+        {
+            "$search": {
+                "vectorSearch": {
+                    "path": "plot_embedding",
+                    "queryVector": [
+                        {
+                            "$numberDouble": "-0.0069540970000000002296"
+                        },
+                        {
+                            "$numberDouble": "-0.009932498999999999148"
+                        },
+                        {
+                            "$numberDouble": "-0.0013114739999999999731"
+                        }
+                    ],
+                    "exact": true,
+                    "limit": {
+                        "$numberInt": "10"
+                    }
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "searchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Wildcard Path
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/wildcard/#index-definition
      */
-    case WildcardWildcardPath = <<<'JSON'
+    case WildcardWildcardPath = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2777,14 +3202,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Escape Character Example
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/wildcard/#escape-character-example
      */
-    case WildcardEscapeCharacterExample = <<<'JSON'
+    case WildcardEscapeCharacterExample = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2810,5 +3235,5 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 }

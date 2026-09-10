@@ -97,7 +97,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      *
      * Note: this method may modify the $expected object.
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#null-values
+     * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.md#null-values
      * @see https://github.com/mongodb/specifications/blob/09ee1ebc481f1502e3246971a9419e484d736207/source/command-monitoring/tests/README.rst#additional-values
      */
     protected static function assertCommandOmittedFields(stdClass $expected, stdClass $actual): void

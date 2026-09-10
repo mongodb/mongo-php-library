@@ -17,7 +17,6 @@ use stdClass;
 
 /**
  * Converts value to a boolean.
- * New in MongoDB 4.0.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/
  * @internal
@@ -31,9 +30,7 @@ final class ToBoolOperator implements ResolvesToBool, OperatorInterface
     /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression */
     public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
-    /**
-     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
-     */
+    /** @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression */
     public function __construct(
         DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ) {

@@ -33,8 +33,6 @@ use function MongoDB\create_namespace;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
-use function MongoDB\is_write_concern_acknowledged;
-use function MongoDB\server_supports_feature;
 
 /**
  * Operation for the update command.
@@ -45,10 +43,8 @@ use function MongoDB\server_supports_feature;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */
-class Update implements Executable, Explainable
+final class Update implements Explainable
 {
-    private const WIRE_VERSION_FOR_HINT = 8;
-
     private array $options;
 
     private string $namespace;
@@ -176,22 +172,11 @@ class Update implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return UpdateResult
      * @throws UnsupportedException if hint or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): UpdateResult
     {
-        /* CRUD spec requires a client-side error when using "hint" with an
-         * unacknowledged write concern on an unsupported server. */
-        if (
-            isset($this->options['writeConcern']) && ! is_write_concern_acknowledged($this->options['writeConcern']) &&
-            isset($this->options['hint']) && ! server_supports_feature($server, self::WIRE_VERSION_FOR_HINT)
-        ) {
-            throw UnsupportedException::hintNotSupported();
-        }
-
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
@@ -209,9 +194,8 @@ class Update implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
 

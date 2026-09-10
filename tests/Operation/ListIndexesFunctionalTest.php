@@ -2,8 +2,8 @@
 
 namespace MongoDB\Tests\Operation;
 
+use Iterator;
 use MongoDB\Model\IndexInfo;
-use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
@@ -21,14 +21,13 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
         $indexes = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf(IndexInfoIterator::class, $indexes);
+        $this->assertInstanceOf(Iterator::class, $indexes);
 
         $this->assertCount(1, $indexes);
 
         foreach ($indexes as $index) {
             $this->assertInstanceOf(IndexInfo::class, $index);
             $this->assertEquals(['_id' => 1], $index->getKey());
-            $this->assertSame($this->getNamespace(), $index->getNamespace());
         }
     }
 

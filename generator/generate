@@ -9,9 +9,14 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
     exit(1);
 }
 
+if (!file_exists(__DIR__ . '/mql-specifications')) {
+    echo "The `mql-specifications` submodule is not initialized. Run `git submodule update --init`.\n";
+    exit(1);
+}
+
 require __DIR__ . '/vendor/autoload.php';
 
 $application = new Application();
-$application->add(new GenerateCommand(__DIR__ . '/../', __DIR__ . '/config'));
-$application->setDefaultCommand('generate');
+$application->add(new GenerateCommand(__DIR__ . '/../', __DIR__));
+$application->setDefaultCommand('generate', true);
 $application->run();

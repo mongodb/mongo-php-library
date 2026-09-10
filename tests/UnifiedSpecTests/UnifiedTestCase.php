@@ -20,7 +20,7 @@ use function PHPUnit\Framework\assertIsString;
  * within a JSON object conforming to the unified test format's JSON schema.
  * This test case may be executed by UnifiedTestRunner::run().
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst
+ * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.md
  */
 final class UnifiedTestCase implements IteratorAggregate
 {

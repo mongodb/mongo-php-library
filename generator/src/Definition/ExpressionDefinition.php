@@ -21,6 +21,7 @@ final class ExpressionDefinition
         public array $implements = [],
         public array $values = [],
         public PhpObject|null $generate = null,
+        mixed ...$ignoredOtherArgs,
     ) {
         assert($generate === PhpObject::PhpClass || ! $extends, $name . ': Cannot specify "extends" when "generate" is not "class"');
         assert($generate === PhpObject::PhpEnum || ! $this->values, $name . ': Cannot specify "values" when "generate" is not "enum"');

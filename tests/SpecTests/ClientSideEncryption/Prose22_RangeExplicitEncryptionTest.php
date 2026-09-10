@@ -125,7 +125,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         // TODO: skip DecimalNoPrecision test on mongos
         yield 'DecimalNoPrecision' => [
             'DecimalNoPrecision',
-            ['sparsity' => 1],
+            ['trimFactor' => 1, 'sparsity' => 1],
         ];
 
         yield 'DecimalPrecision' => [
@@ -133,6 +133,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             [
                 'min' => new Decimal128('0'),
                 'max' => new Decimal128('200'),
+                'trimFactor' => 1,
                 'sparsity' => 1,
                 'precision' => 2,
             ],
@@ -140,7 +141,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
         yield 'DoubleNoPrecision' => [
             'DoubleNoPrecision',
-            ['sparsity' => 1],
+            ['trimFactor' => 1, 'sparsity' => 1],
         ];
 
         yield 'DoublePrecision' => [
@@ -148,6 +149,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             [
                 'min' => 0.0,
                 'max' => 200.0,
+                'trimFactor' => 1,
                 'sparsity' => 1,
                 'precision' => 2,
             ],
@@ -158,6 +160,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             [
                 'min' => new UTCDateTime(0),
                 'max' => new UTCDateTime(200),
+                'trimFactor' => 1,
                 'sparsity' => 1,
             ],
         ];
@@ -167,6 +170,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             [
                 'min' => 0,
                 'max' => 200,
+                'trimFactor' => 1,
                 'sparsity' => 1,
             ],
         ];
@@ -176,6 +180,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             [
                 'min' => new Int64(0),
                 'max' => new Int64(200),
+                'trimFactor' => 1,
                 'sparsity' => 1,
             ],
         ];

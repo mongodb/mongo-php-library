@@ -8,12 +8,14 @@ use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\CommandException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\ServerApi;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
+use MongoDB\Operation\CreateEncryptedCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\ListCollections;
 use stdClass;
@@ -50,8 +52,6 @@ use const PATH_SEPARATOR;
 
 abstract class FunctionalTestCase extends TestCase
 {
-    private const ATLAS_TLD = '/\.(mongodb\.net|mongodb-dev\.net)/';
-
     protected Manager $manager;
 
     private array $configuredFailPoints = [];
@@ -83,7 +83,7 @@ abstract class FunctionalTestCase extends TestCase
         return new Client(
             $uri ?? static::getUri(),
             static::appendAuthenticationOptions($options),
-            static::appendServerApiOption($driverOptions),
+            static::appendDriverOptions($driverOptions),
         );
     }
 
@@ -92,7 +92,7 @@ abstract class FunctionalTestCase extends TestCase
         return new Manager(
             $uri ?? static::getUri(),
             static::appendAuthenticationOptions($options),
-            static::appendServerApiOption($driverOptions),
+            static::appendDriverOptions($driverOptions),
         );
     }
 
@@ -213,10 +213,6 @@ abstract class FunctionalTestCase extends TestCase
      */
     public function configureFailPoint(array|stdClass $command, ?Server $server = null): void
     {
-        if (! $this->isFailCommandSupported()) {
-            $this->markTestSkipped('failCommand is only supported on mongod >= 4.0.0 and mongos >= 4.1.5.');
-        }
-
         if (! $this->isFailCommandEnabled()) {
             $this->markTestSkipped('The enableTestCommands parameter is not enabled.');
         }
@@ -236,10 +232,7 @@ abstract class FunctionalTestCase extends TestCase
         $failPointServer = $server ?: $this->getPrimaryServer();
 
         $operation = new DatabaseCommand('admin', $command);
-        $cursor = $operation->execute($failPointServer);
-        $result = $cursor->toArray()[0];
-
-        $this->assertCommandSucceeded($result);
+        $operation->execute($failPointServer);
 
         // Record the fail point so it can be disabled during tearDown()
         $this->configuredFailPoints[] = [$command->configureFailPoint, $failPointServer];
@@ -265,6 +258,9 @@ abstract class FunctionalTestCase extends TestCase
      * dropped again during tearDown(). If the collection already exists, it
      * is dropped and recreated.
      *
+     * This method supports creation of encrypted collections (as indicated by
+     * the "encryptedFields" option).
+     *
      * A majority write concern is applied by default to ensure that the
      * transaction can acquire the required locks.
      * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
@@ -273,17 +269,14 @@ abstract class FunctionalTestCase extends TestCase
      */
     protected function createCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        // See: https://jira.mongodb.org/browse/PHPLIB-1145
-        if (isset($options['encryptedFields'])) {
-            throw new InvalidArgumentException('The "encryptedFields" option is not supported by createCollection(). Time to refactor!');
-        }
-
         // Pass only relevant options to drop the collection in case it already exists
         $dropOptions = array_intersect_key($options, ['writeConcern' => 1, 'encryptedFields' => 1]);
         $collection = $this->dropCollection($databaseName, $collectionName, $dropOptions);
 
         $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
-        $operation = new CreateCollection($databaseName, $collectionName, $options);
+        $operation = isset($options['encryptedFields'])
+            ? new CreateEncryptedCollection($databaseName, $collectionName, $options)
+            : new CreateCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
 
         return $collection;
@@ -441,13 +434,22 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    protected function skipIfAtlasSearchIndexIsNotSupported(): void
+    protected function skipIfSearchIndexIsNotSupported(): void
     {
-        if (! self::isAtlas()) {
-            self::markTestSkipped('Search Indexes are only supported on MongoDB Atlas 7.0+');
-        }
+        try {
+            $this->createCollection($this->getDatabaseName(), __METHOD__);
+            $this->manager->executeWriteCommand($this->getDatabaseName(), new Command([
+                'dropSearchIndex' => __METHOD__,
+                'name' => 'nonexistent-index',
+            ]));
+        } catch (ServerException $exception) {
+            // Code 27 = Search index does not exist, which indicates that the feature is supported
+            if ($exception->getCode() === 27) {
+                return;
+            }
 
-        $this->skipIfServerVersion('<', '7.0', 'Search Indexes are only supported on MongoDB Atlas 7.0+');
+            self::markTestSkipped($exception->getMessage());
+        }
     }
 
     protected function skipIfChangeStreamIsNotSupported(): void
@@ -476,10 +478,6 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function skipIfClientSideEncryptionIsNotSupported(): void
     {
-        if (version_compare($this->getFeatureCompatibilityVersion(), '4.2', '<')) {
-            $this->markTestSkipped('Client Side Encryption only supported on FCV 4.2 or higher');
-        }
-
         if (static::getModuleInfo('libmongocrypt') === 'disabled') {
             $this->markTestSkipped('Client Side Encryption is not enabled in the MongoDB extension');
         }
@@ -498,24 +496,18 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function skipIfTransactionsAreNotSupported(): void
     {
-        if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
-            $this->markTestSkipped('Transactions are not supported on standalone servers');
-        }
+        switch ($this->getPrimaryServer()->getType()) {
+            case Server::TYPE_STANDALONE:
+                $this->markTestSkipped('Transactions are not supported on standalone servers');
+                break;
 
-        if ($this->isShardedCluster()) {
-            if (version_compare($this->getFeatureCompatibilityVersion(), '4.2', '<')) {
-                $this->markTestSkipped('Transactions are only supported on FCV 4.2 or higher');
-            }
+            case Server::TYPE_RS_PRIMARY:
+                // Note: mongos does not report storage engine information
+                if ($this->getServerStorageEngine() !== 'wiredTiger') {
+                    $this->markTestSkipped('Transactions require WiredTiger storage engine');
+                }
 
-            return;
-        }
-
-        if (version_compare($this->getFeatureCompatibilityVersion(), '4.0', '<')) {
-            $this->markTestSkipped('Transactions are only supported on FCV 4.0 or higher');
-        }
-
-        if ($this->getServerStorageEngine() !== 'wiredTiger') {
-            $this->markTestSkipped('Transactions require WiredTiger storage engine');
+                break;
         }
     }
 
@@ -531,11 +523,6 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         throw new UnexpectedValueException('Could not determine server modules');
-    }
-
-    public static function isAtlas(?string $uri = null): bool
-    {
-        return preg_match(self::ATLAS_TLD, $uri ?? static::getUri());
     }
 
     /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/ */
@@ -584,8 +571,12 @@ abstract class FunctionalTestCase extends TestCase
         return $options;
     }
 
-    private static function appendServerApiOption(array $driverOptions): array
+    private static function appendDriverOptions(array $driverOptions): array
     {
+        if (isset($driverOptions['autoEncryption']) && getenv('CRYPT_SHARED_LIB_PATH')) {
+            $driverOptions['autoEncryption']['extraOptions']['cryptSharedLibPath'] = getenv('CRYPT_SHARED_LIB_PATH');
+        }
+
         if (getenv('API_VERSION') && ! isset($driverOptions['serverApi'])) {
             $driverOptions['serverApi'] = new ServerApi(getenv('API_VERSION'));
         }
@@ -673,16 +664,6 @@ abstract class FunctionalTestCase extends TestCase
         $uri = implode('', $parts);
 
         return $uri;
-    }
-
-    /**
-     * Checks if the failCommand command is supported on this server version
-     */
-    private function isFailCommandSupported(): bool
-    {
-        $minVersion = $this->isShardedCluster() ? '4.1.5' : '4.0.0';
-
-        return version_compare($this->getServerVersion(), $minVersion, '>=');
     }
 
     /**

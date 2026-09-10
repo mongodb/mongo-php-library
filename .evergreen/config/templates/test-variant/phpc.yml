@@ -1,6 +1,23 @@
   # Variants with different PHPC versions
+  - name: test-debian12-php-%phpVersion%-phpc-next-stable
+    tags: ["test", "debian", "x64", "php%phpVersion%", "pr", "tag"]
+    display_name: "Test: Debian 12, PHP %phpVersion%, PHPC next-stable"
+    run_on: debian12-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian12"
+      FETCH_BUILD_TASK: "build-php-%phpVersion%-next-stable"
+      PHP_VERSION: "%phpVersion%"
+    depends_on:
+      - variant: "build-debian12"
+        name: "build-php-%phpVersion%-next-stable"
+    tasks:
+      - ".standalone .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".replicaset .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".sharded .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".loadbalanced .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
+
   - name: test-debian12-php-%phpVersion%-phpc-next-minor
-    tags: ["test", "debian", "x64", "php%phpVersion%"]
+    tags: ["test", "debian", "x64", "php%phpVersion%", "csfle-next-minor"]
     display_name: "Test: Debian 12, PHP %phpVersion%, PHPC next-minor"
     run_on: debian12-small
     expansions:
@@ -11,7 +28,10 @@
       - variant: "build-debian12"
         name: "build-php-%phpVersion%-next-minor"
     tasks:
-      - ".standalone .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
-      - ".replicaset .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
-      - ".sharded .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
-      - ".loadbalanced .local !.csfle !.4.0 !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".standalone .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".replicaset .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".sharded .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
+      - ".loadbalanced .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
+      # Run csfle tests against MongoDB latest so that QE string query tests
+      # (Prose 27) get coverage on the upcoming extension version.
+      - "test-mongodb-latest-crypt-shared"

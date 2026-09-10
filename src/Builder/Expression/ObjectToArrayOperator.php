@@ -33,9 +33,7 @@ final class ObjectToArrayOperator implements ResolvesToArray, OperatorInterface
     /** @var Document|ResolvesToObject|Serializable|array|stdClass|string $object Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields. */
     public readonly Document|Serializable|ResolvesToObject|stdClass|array|string $object;
 
-    /**
-     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $object Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields.
-     */
+    /** @param Document|ResolvesToObject|Serializable|array|stdClass|string $object Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields. */
     public function __construct(Document|Serializable|ResolvesToObject|stdClass|array|string $object)
     {
         if (is_string($object) && ! str_starts_with($object, '$')) {

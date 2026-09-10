@@ -32,6 +32,7 @@ use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotFalse;
+use function preg_match;
 use function preg_replace;
 use function sprintf;
 use function str_starts_with;
@@ -43,7 +44,7 @@ use function version_compare;
 /**
  * Unified test runner.
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst
+ * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.md
  */
 final class UnifiedTestRunner
 {
@@ -55,13 +56,18 @@ final class UnifiedTestRunner
     /**
      * Support for the following schema versions is incomplete:
      *
-     *   - 1.9: Only createEntities operation is implemented
+     *   - 1.9: collectionOrDatabaseOptions.timeoutMS and expectedError.isTimeoutError are not implemented
      *   - 1.10: Not implemented
      *   - 1.11: Not implemented, but CMAP is not applicable
      *   - 1.13: Only $$matchAsDocument and $$matchAsRoot is implemented
      *   - 1.14: Not implemented
+     *   - 1.16: Not implemented
+     *   - 1.17: Not implemented
+     *   - 1.18: Not implemented
+     *   - 1.19: Not implemented
+     *   - 1.20: Not implemented
      */
-    public const MAX_SCHEMA_VERSION = '1.15';
+    public const MAX_SCHEMA_VERSION = '1.21';
 
     private Client $internalClient;
 
@@ -84,7 +90,7 @@ final class UnifiedTestRunner
          *
          * Atlas Data Lake also does not support killAllSessions.
          */
-        if (FunctionalTestCase::isAtlas($internalClientUri) || $this->isAtlasDataLake()) {
+        if ($this->isAtlas($internalClientUri) || $this->isAtlasDataLake()) {
             $this->allowKillAllSessions = false;
         }
 
@@ -183,7 +189,7 @@ final class UnifiedTestRunner
         $context = $this->createContext();
 
         if (isset($initialData)) {
-            $this->prepareInitialData($initialData, $context, $this->isAdvanceClusterTimeNeeded($test->operations));
+            $this->prepareInitialData($initialData, $context, $this->isAdvanceClusterTimeNeeded($test->operations, $createEntities));
         }
 
         /* If an EntityMap observer has been configured, assign the Context's
@@ -302,6 +308,11 @@ final class UnifiedTestRunner
         };
     }
 
+    private function isAtlas(string $internalClientUri): bool
+    {
+        return preg_match('/\.(mongodb\.net|mongodb-dev\.net)/', $internalClientUri);
+    }
+
     private function isAtlasDataLake(): bool
     {
         $database = $this->internalClient->selectDatabase('admin');
@@ -332,12 +343,6 @@ final class UnifiedTestRunner
      */
     private function isClientSideEncryptionSupported(): bool
     {
-        /* CSFLE technically requires FCV 4.2+ but this is sufficient since we
-         * do not test on mixed-version clusters. */
-        if (version_compare($this->getServerVersion(), '4.2', '<')) {
-            return false;
-        }
-
         if (FunctionalTestCase::getModuleInfo('libmongocrypt') === 'disabled') {
             return false;
         }
@@ -430,8 +435,12 @@ final class UnifiedTestRunner
 
     /**
      * Work around potential MigrationConflict errors on sharded clusters.
+     *
+     * Cluster time advancement is also needed for snapshot sessions, since initialData uses an internal client that
+     * does not gossip its cluster time to test entities. Without advancement, a snapshot session may establish its
+     * atClusterTime before the initial data is visible, causing snapshot reads to return no results.
      */
-    private function isAdvanceClusterTimeNeeded(array $operations): bool
+    private function isAdvanceClusterTimeNeeded(array $operations, ?array $createEntities = null): bool
     {
         if (! in_array($this->getPrimaryServer()->getType(), [Server::TYPE_MONGOS, Server::TYPE_LOAD_BALANCER], true)) {
             return false;
@@ -445,13 +454,24 @@ final class UnifiedTestRunner
             }
         }
 
+        foreach ($createEntities ?? [] as $entity) {
+            $session = $entity->session ?? null;
+            if ($session === null) {
+                continue;
+            }
+
+            if (($session->sessionOptions?->snapshot ?? false) === true) {
+                return true;
+            }
+        }
+
         return false;
     }
 
     /**
      * Work around potential error executing distinct on sharded clusters.
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#staledbversion-errors-on-sharded-clusters
+     * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.md#staledbversion-errors-on-sharded-clusters
      */
     private function preventStaleDbVersionError(array $operations, Context $context): void
     {

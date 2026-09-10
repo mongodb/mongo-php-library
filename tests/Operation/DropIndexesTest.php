@@ -26,7 +26,6 @@ class DropIndexesTest extends TestCase
         return self::createOptionDataProvider([
             'maxTimeMS' => self::getInvalidIntegerValues(),
             'session' => self::getInvalidSessionValues(),
-            'typeMap' => self::getInvalidArrayValues(),
             'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }

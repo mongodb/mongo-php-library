@@ -15,7 +15,7 @@ enum Pipelines: string
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#using-two--addfields-stages
      */
-    case AddFieldsUsingTwoAddFieldsStages = <<<'JSON'
+    case AddFieldsUsingTwoAddFieldsStages = <<<'EXTENDED_JSON'
     [
         {
             "$addFields": {
@@ -43,14 +43,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Adding Fields to an Embedded Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#adding-fields-to-an-embedded-document
      */
-    case AddFieldsAddingFieldsToAnEmbeddedDocument = <<<'JSON'
+    case AddFieldsAddingFieldsToAnEmbeddedDocument = <<<'EXTENDED_JSON'
     [
         {
             "$addFields": {
@@ -58,14 +58,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Overwriting an existing field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#overwriting-an-existing-field
      */
-    case AddFieldsOverwritingAnExistingField = <<<'JSON'
+    case AddFieldsOverwritingAnExistingField = <<<'EXTENDED_JSON'
     [
         {
             "$addFields": {
@@ -75,14 +75,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Add Element to an Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#add-element-to-an-array
      */
-    case AddFieldsAddElementToAnArray = <<<'JSON'
+    case AddFieldsAddElementToAnArray = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -106,14 +106,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Bucket by Year and Filter by Bucket Results
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/#bucket-by-year-and-filter-by-bucket-results
      */
-    case BucketBucketByYearAndFilterByBucketResults = <<<'JSON'
+    case BucketBucketByYearAndFilterByBucketResults = <<<'EXTENDED_JSON'
     [
         {
             "$bucket": {
@@ -167,14 +167,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use $bucket with $facet to Bucket by Multiple Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/#use--bucket-with--facet-to-bucket-by-multiple-fields
      */
-    case BucketUseBucketWithFacetToBucketByMultipleFields = <<<'JSON'
+    case BucketUseBucketWithFacetToBucketByMultipleFields = <<<'EXTENDED_JSON'
     [
         {
             "$facet": {
@@ -251,14 +251,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Single Facet Aggregation
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/#single-facet-aggregation
      */
-    case BucketAutoSingleFacetAggregation = <<<'JSON'
+    case BucketAutoSingleFacetAggregation = <<<'EXTENDED_JSON'
     [
         {
             "$bucketAuto": {
@@ -269,40 +269,40 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/#examples
      */
-    case ChangeStreamExample = <<<'JSON'
+    case ChangeStreamExample = <<<'EXTENDED_JSON'
     [
         {
             "$changeStream": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/#example
      */
-    case ChangeStreamSplitLargeEventExample = <<<'JSON'
+    case ChangeStreamSplitLargeEventExample = <<<'EXTENDED_JSON'
     [
         {
             "$changeStreamSplitLargeEvent": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * latencyStats Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#latencystats-document
      */
-    case CollStatsLatencyStatsDocument = <<<'JSON'
+    case CollStatsLatencyStatsDocument = <<<'EXTENDED_JSON'
     [
         {
             "$collStats": {
@@ -312,14 +312,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * storageStats Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#storagestats-document
      */
-    case CollStatsStorageStatsDocument = <<<'JSON'
+    case CollStatsStorageStatsDocument = <<<'EXTENDED_JSON'
     [
         {
             "$collStats": {
@@ -327,14 +327,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * count Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#count-field
      */
-    case CollStatsCountField = <<<'JSON'
+    case CollStatsCountField = <<<'EXTENDED_JSON'
     [
         {
             "$collStats": {
@@ -342,14 +342,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * queryExecStats Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/#queryexecstats-document
      */
-    case CollStatsQueryExecStatsDocument = <<<'JSON'
+    case CollStatsQueryExecStatsDocument = <<<'EXTENDED_JSON'
     [
         {
             "$collStats": {
@@ -357,14 +357,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/#example
      */
-    case CountExample = <<<'JSON'
+    case CountExample = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -379,14 +379,14 @@ enum Pipelines: string
             "$count": "passing_scores"
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Inactive Sessions
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#inactive-sessions
      */
-    case CurrentOpInactiveSessions = <<<'JSON'
+    case CurrentOpInactiveSessions = <<<'EXTENDED_JSON'
     [
         {
             "$currentOp": {
@@ -403,14 +403,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Sampled Queries
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/#sampled-queries
      */
-    case CurrentOpSampledQueries = <<<'JSON'
+    case CurrentOpSampledQueries = <<<'EXTENDED_JSON'
     [
         {
             "$currentOp": {
@@ -424,14 +424,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Densify Time Series Data
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densify-time-series-data
      */
-    case DensifyDensifyTimeSeriesData = <<<'JSON'
+    case DensifyDensifyTimeSeriesData = <<<'EXTENDED_JSON'
     [
         {
             "$densify": {
@@ -457,14 +457,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Densifiction with Partitions
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/#densifiction-with-partitions
      */
-    case DensifyDensifictionWithPartitions = <<<'JSON'
+    case DensifyDensifictionWithPartitions = <<<'EXTENDED_JSON'
     [
         {
             "$densify": {
@@ -481,14 +481,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Test a Pipeline Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/#test-a-pipeline-stage
      */
-    case DocumentsTestAPipelineStage = <<<'JSON'
+    case DocumentsTestAPipelineStage = <<<'EXTENDED_JSON'
     [
         {
             "$documents": [
@@ -518,14 +518,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use a $documents Stage in a $lookup Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/#use-a--documents-stage-in-a--lookup-stage
      */
-    case DocumentsUseADocumentsStageInALookupStage = <<<'JSON'
+    case DocumentsUseADocumentsStageInALookupStage = <<<'EXTENDED_JSON'
     [
         {
             "$match": {}
@@ -556,14 +556,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/#example
      */
-    case FacetExample = <<<'JSON'
+    case FacetExample = <<<'EXTENDED_JSON'
     [
         {
             "$facet": {
@@ -632,14 +632,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fill Missing Field Values with a Constant Value
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-a-constant-value
      */
-    case FillFillMissingFieldValuesWithAConstantValue = <<<'JSON'
+    case FillFillMissingFieldValuesWithAConstantValue = <<<'EXTENDED_JSON'
     [
         {
             "$fill": {
@@ -663,14 +663,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fill Missing Field Values with Linear Interpolation
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-with-linear-interpolation
      */
-    case FillFillMissingFieldValuesWithLinearInterpolation = <<<'JSON'
+    case FillFillMissingFieldValuesWithLinearInterpolation = <<<'EXTENDED_JSON'
     [
         {
             "$fill": {
@@ -687,14 +687,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fill Missing Field Values Based on the Last Observed Value
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-missing-field-values-based-on-the-last-observed-value
      */
-    case FillFillMissingFieldValuesBasedOnTheLastObservedValue = <<<'JSON'
+    case FillFillMissingFieldValuesBasedOnTheLastObservedValue = <<<'EXTENDED_JSON'
     [
         {
             "$fill": {
@@ -711,14 +711,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fill Data for Distinct Partitions
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#fill-data-for-distinct-partitions
      */
-    case FillFillDataForDistinctPartitions = <<<'JSON'
+    case FillFillDataForDistinctPartitions = <<<'EXTENDED_JSON'
     [
         {
             "$fill": {
@@ -738,14 +738,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Indicate if a Field was Populated Using $fill
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/#indicate-if-a-field-was-populated-using--fill
      */
-    case FillIndicateIfAFieldWasPopulatedUsingFill = <<<'JSON'
+    case FillIndicateIfAFieldWasPopulatedUsingFill = <<<'EXTENDED_JSON'
     [
         {
             "$set": {
@@ -776,14 +776,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Maximum Distance
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#maximum-distance
      */
-    case GeoNearMaximumDistance = <<<'JSON'
+    case GeoNearMaximumDistance = <<<'EXTENDED_JSON'
     [
         {
             "$geoNear": {
@@ -810,14 +810,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Minimum Distance
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#minimum-distance
      */
-    case GeoNearMinimumDistance = <<<'JSON'
+    case GeoNearMinimumDistance = <<<'EXTENDED_JSON'
     [
         {
             "$geoNear": {
@@ -844,14 +844,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * with the let option
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-the-let-option
      */
-    case GeoNearWithTheLetOption = <<<'JSON'
+    case GeoNearWithTheLetOption = <<<'EXTENDED_JSON'
     [
         {
             "$geoNear": {
@@ -868,14 +868,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * with Bound let Option
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#-geonear-with-bound-let-option
      */
-    case GeoNearWithBoundLetOption = <<<'JSON'
+    case GeoNearWithBoundLetOption = <<<'EXTENDED_JSON'
     [
         {
             "$lookup": {
@@ -900,14 +900,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Specify Which Geospatial Index to Use
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#specify-which-geospatial-index-to-use
      */
-    case GeoNearSpecifyWhichGeospatialIndexToUse = <<<'JSON'
+    case GeoNearSpecifyWhichGeospatialIndexToUse = <<<'EXTENDED_JSON'
     [
         {
             "$geoNear": {
@@ -935,14 +935,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Within a Single Collection
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#within-a-single-collection
      */
-    case GraphLookupWithinASingleCollection = <<<'JSON'
+    case GraphLookupWithinASingleCollection = <<<'EXTENDED_JSON'
     [
         {
             "$graphLookup": {
@@ -954,14 +954,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Across Multiple Collections
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#across-multiple-collections
      */
-    case GraphLookupAcrossMultipleCollections = <<<'JSON'
+    case GraphLookupAcrossMultipleCollections = <<<'EXTENDED_JSON'
     [
         {
             "$graphLookup": {
@@ -977,14 +977,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * With a Query Filter
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/#with-a-query-filter
      */
-    case GraphLookupWithAQueryFilter = <<<'JSON'
+    case GraphLookupWithAQueryFilter = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1015,14 +1015,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Count the Number of Documents in a Collection
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#count-the-number-of-documents-in-a-collection
      */
-    case GroupCountTheNumberOfDocumentsInACollection = <<<'JSON'
+    case GroupCountTheNumberOfDocumentsInACollection = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1033,14 +1033,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Retrieve Distinct Values
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#retrieve-distinct-values
      */
-    case GroupRetrieveDistinctValues = <<<'JSON'
+    case GroupRetrieveDistinctValues = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1048,14 +1048,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Group by Item Having
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-by-item-having
      */
-    case GroupGroupByItemHaving = <<<'JSON'
+    case GroupGroupByItemHaving = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1080,14 +1080,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Calculate Count Sum and Average
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#calculate-count--sum--and-average
      */
-    case GroupCalculateCountSumAndAverage = <<<'JSON'
+    case GroupCalculateCountSumAndAverage = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1139,14 +1139,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Group by null
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-by-null
      */
-    case GroupGroupByNull = <<<'JSON'
+    case GroupGroupByNull = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1170,14 +1170,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Pivot Data
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#pivot-data
      */
-    case GroupPivotData = <<<'JSON'
+    case GroupPivotData = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1188,14 +1188,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Group Documents by author
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/#group-documents-by-author
      */
-    case GroupGroupDocumentsByAuthor = <<<'JSON'
+    case GroupGroupDocumentsByAuthor = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1215,27 +1215,27 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/#example
      */
-    case IndexStatsExample = <<<'JSON'
+    case IndexStatsExample = <<<'EXTENDED_JSON'
     [
         {
             "$indexStats": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/#example
      */
-    case LimitExample = <<<'JSON'
+    case LimitExample = <<<'EXTENDED_JSON'
     [
         {
             "$limit": {
@@ -1243,14 +1243,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * List All Local Sessions
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/#list-all-local-sessions
      */
-    case ListLocalSessionsListAllLocalSessions = <<<'JSON'
+    case ListLocalSessionsListAllLocalSessions = <<<'EXTENDED_JSON'
     [
         {
             "$listLocalSessions": {
@@ -1258,14 +1258,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * List All Local Sessions for the Specified Users
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/#list-all-local-sessions-for-the-specified-users
      */
-    case ListLocalSessionsListAllLocalSessionsForTheSpecifiedUsers = <<<'JSON'
+    case ListLocalSessionsListAllLocalSessionsForTheSpecifiedUsers = <<<'EXTENDED_JSON'
     [
         {
             "$listLocalSessions": {
@@ -1278,40 +1278,40 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * List All Local Sessions for the Current User
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/#list-all-local-sessions-for-the-current-user
      */
-    case ListLocalSessionsListAllLocalSessionsForTheCurrentUser = <<<'JSON'
+    case ListLocalSessionsListAllLocalSessionsForTheCurrentUser = <<<'EXTENDED_JSON'
     [
         {
             "$listLocalSessions": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * List Sampled Queries for All Collections
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/#list-sampled-queries-for-all-collections
      */
-    case ListSampledQueriesListSampledQueriesForAllCollections = <<<'JSON'
+    case ListSampledQueriesListSampledQueriesForAllCollections = <<<'EXTENDED_JSON'
     [
         {
             "$listSampledQueries": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * List Sampled Queries for A Specific Collection
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/#list-sampled-queries-for-a-specific-collection
      */
-    case ListSampledQueriesListSampledQueriesForASpecificCollection = <<<'JSON'
+    case ListSampledQueriesListSampledQueriesForASpecificCollection = <<<'EXTENDED_JSON'
     [
         {
             "$listSampledQueries": {
@@ -1319,27 +1319,27 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Return All Search Indexes
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-all-search-indexes
      */
-    case ListSearchIndexesReturnAllSearchIndexes = <<<'JSON'
+    case ListSearchIndexesReturnAllSearchIndexes = <<<'EXTENDED_JSON'
     [
         {
             "$listSearchIndexes": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Return a Single Search Index by Name
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-a-single-search-index-by-name
      */
-    case ListSearchIndexesReturnASingleSearchIndexByName = <<<'JSON'
+    case ListSearchIndexesReturnASingleSearchIndexByName = <<<'EXTENDED_JSON'
     [
         {
             "$listSearchIndexes": {
@@ -1347,14 +1347,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Return a Single Search Index by id
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/#return-a-single-search-index-by-id
      */
-    case ListSearchIndexesReturnASingleSearchIndexById = <<<'JSON'
+    case ListSearchIndexesReturnASingleSearchIndexById = <<<'EXTENDED_JSON'
     [
         {
             "$listSearchIndexes": {
@@ -1362,14 +1362,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * List All Sessions
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/#list-all-sessions
      */
-    case ListSessionsListAllSessions = <<<'JSON'
+    case ListSessionsListAllSessions = <<<'EXTENDED_JSON'
     [
         {
             "$listSessions": {
@@ -1377,14 +1377,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * List All Sessions for the Specified Users
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/#list-all-sessions-for-the-specified-users
      */
-    case ListSessionsListAllSessionsForTheSpecifiedUsers = <<<'JSON'
+    case ListSessionsListAllSessionsForTheSpecifiedUsers = <<<'EXTENDED_JSON'
     [
         {
             "$listSessions": {
@@ -1397,27 +1397,27 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * List All Sessions for the Current User
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/#list-all-sessions-for-the-current-user
      */
-    case ListSessionsListAllSessionsForTheCurrentUser = <<<'JSON'
+    case ListSessionsListAllSessionsForTheCurrentUser = <<<'EXTENDED_JSON'
     [
         {
             "$listSessions": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Perform a Single Equality Join with $lookup
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-a-single-equality-join-with--lookup
      */
-    case LookupPerformASingleEqualityJoinWithLookup = <<<'JSON'
+    case LookupPerformASingleEqualityJoinWithLookup = <<<'EXTENDED_JSON'
     [
         {
             "$lookup": {
@@ -1428,14 +1428,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use $lookup with an Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with-an-array
      */
-    case LookupUseLookupWithAnArray = <<<'JSON'
+    case LookupUseLookupWithAnArray = <<<'EXTENDED_JSON'
     [
         {
             "$lookup": {
@@ -1446,14 +1446,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use $lookup with $mergeObjects
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with--mergeobjects
      */
-    case LookupUseLookupWithMergeObjects = <<<'JSON'
+    case LookupUseLookupWithMergeObjects = <<<'EXTENDED_JSON'
     [
         {
             "$lookup": {
@@ -1488,14 +1488,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Perform Multiple Joins and a Correlated Subquery with $lookup
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-multiple-joins-and-a-correlated-subquery-with--lookup
      */
-    case LookupPerformMultipleJoinsAndACorrelatedSubqueryWithLookup = <<<'JSON'
+    case LookupPerformMultipleJoinsAndACorrelatedSubqueryWithLookup = <<<'EXTENDED_JSON'
     [
         {
             "$lookup": {
@@ -1540,14 +1540,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Perform an Uncorrelated Subquery with $lookup
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-an-uncorrelated-subquery-with--lookup
      */
-    case LookupPerformAnUncorrelatedSubqueryWithLookup = <<<'JSON'
+    case LookupPerformAnUncorrelatedSubqueryWithLookup = <<<'EXTENDED_JSON'
     [
         {
             "$lookup": {
@@ -1581,14 +1581,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Perform a Concise Correlated Subquery with $lookup
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-a-concise-correlated-subquery-with--lookup
      */
-    case LookupPerformAConciseCorrelatedSubqueryWithLookup = <<<'JSON'
+    case LookupPerformAConciseCorrelatedSubqueryWithLookup = <<<'EXTENDED_JSON'
     [
         {
             "$lookup": {
@@ -1614,14 +1614,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Equality Match
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#equality-match
      */
-    case MatchEqualityMatch = <<<'JSON'
+    case MatchEqualityMatch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1629,14 +1629,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Perform a Count
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#perform-a-count
      */
-    case MatchPerformACount = <<<'JSON'
+    case MatchPerformACount = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1672,14 +1672,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * On-Demand Materialized View Initial Creation
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#on-demand-materialized-view--initial-creation
      */
-    case MergeOnDemandMaterializedViewInitialCreation = <<<'JSON'
+    case MergeOnDemandMaterializedViewInitialCreation = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1704,14 +1704,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * On-Demand Materialized View Update Replace Data
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#on-demand-materialized-view--update-replace-data
      */
-    case MergeOnDemandMaterializedViewUpdateReplaceData = <<<'JSON'
+    case MergeOnDemandMaterializedViewUpdateReplaceData = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1745,14 +1745,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Only Insert New Data
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#only-insert-new-data
      */
-    case MergeOnlyInsertNewData = <<<'JSON'
+    case MergeOnlyInsertNewData = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1798,14 +1798,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Merge Results from Multiple Collections
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#merge-results-from-multiple-collections
      */
-    case MergeMergeResultsFromMultipleCollections = <<<'JSON'
+    case MergeMergeResultsFromMultipleCollections = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1824,14 +1824,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use the Pipeline to Customize the Merge
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#use-the-pipeline-to-customize-the-merge
      */
-    case MergeUseThePipelineToCustomizeTheMerge = <<<'JSON'
+    case MergeUseThePipelineToCustomizeTheMerge = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1891,14 +1891,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use Variables to Customize the Merge
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/#use-variables-to-customize-the-merge
      */
-    case MergeUseVariablesToCustomizeTheMerge = <<<'JSON'
+    case MergeUseVariablesToCustomizeTheMerge = <<<'EXTENDED_JSON'
     [
         {
             "$merge": {
@@ -1916,14 +1916,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Output to Same Database
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-same-database
      */
-    case OutOutputToSameDatabase = <<<'JSON'
+    case OutOutputToSameDatabase = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1934,17 +1934,19 @@ enum Pipelines: string
             }
         },
         {
-            "$out": "authors"
+            "$out": {
+                "coll": "authors"
+            }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Output to a Different Database
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-a-different-database
      */
-    case OutOutputToADifferentDatabase = <<<'JSON'
+    case OutOutputToADifferentDatabase = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1961,27 +1963,48 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Output to a Time Series Collection
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/#output-to-a-time-series-collection
+     */
+    case OutOutputToATimeSeriesCollection = <<<'EXTENDED_JSON'
+    [
+        {
+            "$out": {
+                "db": "reporting",
+                "coll": "sensorData",
+                "timeseries": {
+                    "timeField": "timestamp",
+                    "metaField": "sensorId",
+                    "granularity": "hours"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Return Information for All Entries in the Query Cache
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/#return-information-for-all-entries-in-the-query-cache
      */
-    case PlanCacheStatsReturnInformationForAllEntriesInTheQueryCache = <<<'JSON'
+    case PlanCacheStatsReturnInformationForAllEntriesInTheQueryCache = <<<'EXTENDED_JSON'
     [
         {
             "$planCacheStats": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find Cache Entry Details for a Query Hash
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/#find-cache-entry-details-for-a-query-hash
      */
-    case PlanCacheStatsFindCacheEntryDetailsForAQueryHash = <<<'JSON'
+    case PlanCacheStatsFindCacheEntryDetailsForAQueryHash = <<<'EXTENDED_JSON'
     [
         {
             "$planCacheStats": {}
@@ -1992,14 +2015,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Include Specific Fields in Output Documents
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-in-output-documents
      */
-    case ProjectIncludeSpecificFieldsInOutputDocuments = <<<'JSON'
+    case ProjectIncludeSpecificFieldsInOutputDocuments = <<<'EXTENDED_JSON'
     [
         {
             "$project": {
@@ -2012,14 +2035,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Suppress id Field in the Output Documents
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#suppress-_id-field-in-the-output-documents
      */
-    case ProjectSuppressIdFieldInTheOutputDocuments = <<<'JSON'
+    case ProjectSuppressIdFieldInTheOutputDocuments = <<<'EXTENDED_JSON'
     [
         {
             "$project": {
@@ -2035,14 +2058,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Exclude Fields from Output Documents
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-output-documents
      */
-    case ProjectExcludeFieldsFromOutputDocuments = <<<'JSON'
+    case ProjectExcludeFieldsFromOutputDocuments = <<<'EXTENDED_JSON'
     [
         {
             "$project": {
@@ -2052,14 +2075,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Exclude Fields from Embedded Documents
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#exclude-fields-from-embedded-documents
      */
-    case ProjectExcludeFieldsFromEmbeddedDocuments = <<<'JSON'
+    case ProjectExcludeFieldsFromEmbeddedDocuments = <<<'EXTENDED_JSON'
     [
         {
             "$project": {
@@ -2084,14 +2107,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Conditionally Exclude Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#conditionally-exclude-fields
      */
-    case ProjectConditionallyExcludeFields = <<<'JSON'
+    case ProjectConditionallyExcludeFields = <<<'EXTENDED_JSON'
     [
         {
             "$project": {
@@ -2119,14 +2142,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Include Specific Fields from Embedded Documents
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-specific-fields-from-embedded-documents
      */
-    case ProjectIncludeSpecificFieldsFromEmbeddedDocuments = <<<'JSON'
+    case ProjectIncludeSpecificFieldsFromEmbeddedDocuments = <<<'EXTENDED_JSON'
     [
         {
             "$project": {
@@ -2145,14 +2168,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Include Computed Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-computed-fields
      */
-    case ProjectIncludeComputedFields = <<<'JSON'
+    case ProjectIncludeComputedFields = <<<'EXTENDED_JSON'
     [
         {
             "$project": {
@@ -2221,14 +2244,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Project New Array Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#project-new-array-fields
      */
-    case ProjectProjectNewArrayFields = <<<'JSON'
+    case ProjectProjectNewArrayFields = <<<'EXTENDED_JSON'
     [
         {
             "$project": {
@@ -2239,14 +2262,72 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rankFusion/#examples
+     */
+    case RankFusionExample = <<<'EXTENDED_JSON'
+    [
+        {
+            "$rankFusion": {
+                "input": {
+                    "pipelines": {
+                        "searchPlot": [
+                            {
+                                "$search": {
+                                    "index": "default",
+                                    "text": {
+                                        "query": "space",
+                                        "path": "plot"
+                                    }
+                                }
+                            }
+                        ],
+                        "searchGenre": [
+                            {
+                                "$search": {
+                                    "index": "default",
+                                    "text": {
+                                        "query": "adventure",
+                                        "path": "genres"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "combination": {
+                    "weights": {
+                        "searchPlot": {
+                            "$numberDouble": "0.5999999999999999778"
+                        },
+                        "searchGenre": {
+                            "$numberDouble": "0.4000000000000000222"
+                        }
+                    }
+                },
+                "scoreDetails": true
+            }
+        },
+        {
+            "$addFields": {
+                "scoreDetails": {
+                    "$meta": "searchScoreDetails"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Evaluate Access at Every Document Level
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#evaluate-access-at-every-document-level
      */
-    case RedactEvaluateAccessAtEveryDocumentLevel = <<<'JSON'
+    case RedactEvaluateAccessAtEveryDocumentLevel = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -2282,14 +2363,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Exclude All Fields at a Given Level
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/#exclude-all-fields-at-a-given-level
      */
-    case RedactExcludeAllFieldsAtAGivenLevel = <<<'JSON'
+    case RedactExcludeAllFieldsAtAGivenLevel = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -2313,14 +2394,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * with an Embedded Document Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-an-embedded-document-field
      */
-    case ReplaceRootWithAnEmbeddedDocumentField = <<<'JSON'
+    case ReplaceRootWithAnEmbeddedDocumentField = <<<'EXTENDED_JSON'
     [
         {
             "$replaceRoot": {
@@ -2346,14 +2427,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * with a Document Nested in an Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-document-nested-in-an-array
      */
-    case ReplaceRootWithADocumentNestedInAnArray = <<<'JSON'
+    case ReplaceRootWithADocumentNestedInAnArray = <<<'EXTENDED_JSON'
     [
         {
             "$unwind": {
@@ -2375,14 +2456,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * with a newly created document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-newly-created-document
      */
-    case ReplaceRootWithANewlyCreatedDocument = <<<'JSON'
+    case ReplaceRootWithANewlyCreatedDocument = <<<'EXTENDED_JSON'
     [
         {
             "$replaceRoot": {
@@ -2398,14 +2479,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * with a New Document Created from $$ROOT and a Default Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/#-replaceroot-with-a-new-document-created-from---root-and-a-default-document
      */
-    case ReplaceRootWithANewDocumentCreatedFromROOTAndADefaultDocument = <<<'JSON'
+    case ReplaceRootWithANewDocumentCreatedFromROOTAndADefaultDocument = <<<'EXTENDED_JSON'
     [
         {
             "$replaceRoot": {
@@ -2424,14 +2505,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * an Embedded Document Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-an-embedded-document-field
      */
-    case ReplaceWithAnEmbeddedDocumentField = <<<'JSON'
+    case ReplaceWithAnEmbeddedDocumentField = <<<'EXTENDED_JSON'
     [
         {
             "$replaceWith": {
@@ -2455,14 +2536,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * a Document Nested in an Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-document-nested-in-an-array
      */
-    case ReplaceWithADocumentNestedInAnArray = <<<'JSON'
+    case ReplaceWithADocumentNestedInAnArray = <<<'EXTENDED_JSON'
     [
         {
             "$unwind": {
@@ -2482,14 +2563,14 @@ enum Pipelines: string
             "$replaceWith": "$grades"
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * a Newly Created Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-newly-created-document
      */
-    case ReplaceWithANewlyCreatedDocument = <<<'JSON'
+    case ReplaceWithANewlyCreatedDocument = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -2511,14 +2592,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * a New Document Created from $$ROOT and a Default Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/#-replacewith-a-new-document-created-from---root-and-a-default-document
      */
-    case ReplaceWithANewDocumentCreatedFromROOTAndADefaultDocument = <<<'JSON'
+    case ReplaceWithANewDocumentCreatedFromROOTAndADefaultDocument = <<<'EXTENDED_JSON'
     [
         {
             "$replaceWith": {
@@ -2535,14 +2616,84 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/vector-search/query/aggregation-stages/rerank/#examples
+     */
+    case RerankExample = <<<'EXTENDED_JSON'
+    [
+        {
+            "$match": {
+                "plot": {
+                    "$exists": true,
+                    "$type": [
+                        "string"
+                    ]
+                }
+            }
+        },
+        {
+            "$sort": {
+                "released": {
+                    "$numberInt": "-1"
+                }
+            }
+        },
+        {
+            "$rerank": {
+                "model": "rerank-2.5",
+                "query": {
+                    "text": "a group of heroes band together to stop a powerful enemy and save the world"
+                },
+                "numDocsToRerank": {
+                    "$numberInt": "100"
+                },
+                "path": [
+                    "title",
+                    "plot"
+                ]
+            }
+        },
+        {
+            "$addFields": {
+                "rerankScore": {
+                    "$meta": "score"
+                }
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "10"
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "rerankScore": {
+                    "$numberInt": "1"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/#example
      */
-    case SampleExample = <<<'JSON'
+    case SampleExample = <<<'EXTENDED_JSON'
     [
         {
             "$sample": {
@@ -2552,14 +2703,124 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/score/
+     */
+    case ScoreExample = <<<'EXTENDED_JSON'
+    [
+        {
+            "$score": {
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Example
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/scoreFusion/#examples
+     */
+    case ScoreFusionExample = <<<'EXTENDED_JSON'
+    [
+        {
+            "$scoreFusion": {
+                "input": {
+                    "pipelines": {
+                        "searchOne": [
+                            {
+                                "$vectorSearch": {
+                                    "index": "vector_index",
+                                    "path": "plot_embedding",
+                                    "queryVector": [
+                                        {
+                                            "$numberDouble": "-0.0016261311999999999121"
+                                        },
+                                        {
+                                            "$numberDouble": "-0.028070756999999998266"
+                                        },
+                                        {
+                                            "$numberDouble": "-0.011342932000000000015"
+                                        }
+                                    ],
+                                    "numCandidates": {
+                                        "$numberInt": "150"
+                                    },
+                                    "limit": {
+                                        "$numberInt": "10"
+                                    }
+                                }
+                            }
+                        ],
+                        "searchTwo": [
+                            {
+                                "$search": {
+                                    "index": "<INDEX_NAME>",
+                                    "text": {
+                                        "query": "<QUERY_TERM>",
+                                        "path": "<FIELD_NAME>"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "normalization": "sigmoid"
+                },
+                "combination": {
+                    "method": "expression",
+                    "expression": {
+                        "$sum": [
+                            {
+                                "$multiply": [
+                                    "$$searchOne",
+                                    {
+                                        "$numberInt": "10"
+                                    }
+                                ]
+                            },
+                            "$$searchTwo"
+                        ]
+                    }
+                },
+                "scoreDetails": true
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "scoreDetails": {
+                    "$meta": "scoreDetails"
+                }
+            }
+        },
+        {
+            "$limit": {
+                "$numberInt": "20"
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#aggregation-variable
      */
-    case SearchExample = <<<'JSON'
+    case SearchExample = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2610,14 +2871,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Date Search and Sort
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/sort/#date-search-and-sort
      */
-    case SearchDateSearchAndSort = <<<'JSON'
+    case SearchDateSearchAndSort = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2660,14 +2921,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Number Search and Sort
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/sort/#number-search-and-sort
      */
-    case SearchNumberSearchAndSort = <<<'JSON'
+    case SearchNumberSearchAndSort = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2703,14 +2964,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Sort by score
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/sort/#sort-by-score
      */
-    case SearchSortByScore = <<<'JSON'
+    case SearchSortByScore = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2747,14 +3008,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Paginate results after a token
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/paginate-results/#search-after-the-reference-point
      */
-    case SearchPaginateResultsAfterAToken = <<<'JSON'
+    case SearchPaginateResultsAfterAToken = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2774,14 +3035,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Paginate results before a token
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/paginate-results/#search-before-the-reference-point
      */
-    case SearchPaginateResultsBeforeAToken = <<<'JSON'
+    case SearchPaginateResultsBeforeAToken = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2801,14 +3062,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Count results
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/counting/#count-results
      */
-    case SearchCountResults = <<<'JSON'
+    case SearchCountResults = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2845,14 +3106,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Track Search terms
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/tracking/#examples
      */
-    case SearchTrackSearchTerms = <<<'JSON'
+    case SearchTrackSearchTerms = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2881,14 +3142,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Return Stored Source Fields
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/return-stored-source/#examples
      */
-    case SearchReturnStoredSourceFields = <<<'JSON'
+    case SearchReturnStoredSourceFields = <<<'EXTENDED_JSON'
     [
         {
             "$search": {
@@ -2928,14 +3189,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#example
      */
-    case SearchMetaExample = <<<'JSON'
+    case SearchMetaExample = <<<'EXTENDED_JSON'
     [
         {
             "$searchMeta": {
@@ -2954,14 +3215,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Year Facet
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/#example-1
      */
-    case SearchMetaYearFacet = <<<'JSON'
+    case SearchMetaYearFacet = <<<'EXTENDED_JSON'
     [
         {
             "$searchMeta": {
@@ -2999,14 +3260,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Date Facet
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/#example-2
      */
-    case SearchMetaDateFacet = <<<'JSON'
+    case SearchMetaDateFacet = <<<'EXTENDED_JSON'
     [
         {
             "$searchMeta": {
@@ -3059,14 +3320,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Metadata Results
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/#examples
      */
-    case SearchMetaMetadataResults = <<<'JSON'
+    case SearchMetaMetadataResults = <<<'EXTENDED_JSON'
     [
         {
             "$searchMeta": {
@@ -3117,14 +3378,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Autocomplete Bucket Results through Facet Queries
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/#bucket-results-through-facet-queries
      */
-    case SearchMetaAutocompleteBucketResultsThroughFacetQueries = <<<'JSON'
+    case SearchMetaAutocompleteBucketResultsThroughFacetQueries = <<<'EXTENDED_JSON'
     [
         {
             "$searchMeta": {
@@ -3145,14 +3406,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Using Two $set Stages
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#using-two--set-stages
      */
-    case SetUsingTwoSetStages = <<<'JSON'
+    case SetUsingTwoSetStages = <<<'EXTENDED_JSON'
     [
         {
             "$set": {
@@ -3180,14 +3441,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Adding Fields to an Embedded Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#adding-fields-to-an-embedded-document
      */
-    case SetAddingFieldsToAnEmbeddedDocument = <<<'JSON'
+    case SetAddingFieldsToAnEmbeddedDocument = <<<'EXTENDED_JSON'
     [
         {
             "$set": {
@@ -3195,14 +3456,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Overwriting an existing field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#overwriting-an-existing-field
      */
-    case SetOverwritingAnExistingField = <<<'JSON'
+    case SetOverwritingAnExistingField = <<<'EXTENDED_JSON'
     [
         {
             "$set": {
@@ -3212,14 +3473,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Add Element to an Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#add-element-to-an-array
      */
-    case SetAddElementToAnArray = <<<'JSON'
+    case SetAddElementToAnArray = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -3243,14 +3504,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Creating a New Field with Existing Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#creating-a-new-field-with-existing-fields
      */
-    case SetCreatingANewFieldWithExistingFields = <<<'JSON'
+    case SetCreatingANewFieldWithExistingFields = <<<'EXTENDED_JSON'
     [
         {
             "$set": {
@@ -3262,14 +3523,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use Documents Window to Obtain Cumulative Quantity for Each State
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-quantity-for-each-state
      */
-    case SetWindowFieldsUseDocumentsWindowToObtainCumulativeQuantityForEachState = <<<'JSON'
+    case SetWindowFieldsUseDocumentsWindowToObtainCumulativeQuantityForEachState = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -3293,14 +3554,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use Documents Window to Obtain Cumulative Quantity for Each Year
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-quantity-for-each-year
      */
-    case SetWindowFieldsUseDocumentsWindowToObtainCumulativeQuantityForEachYear = <<<'JSON'
+    case SetWindowFieldsUseDocumentsWindowToObtainCumulativeQuantityForEachYear = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -3328,14 +3589,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use Documents Window to Obtain Moving Average Quantity for Each Year
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-moving-average-quantity-for-each-year
      */
-    case SetWindowFieldsUseDocumentsWindowToObtainMovingAverageQuantityForEachYear = <<<'JSON'
+    case SetWindowFieldsUseDocumentsWindowToObtainMovingAverageQuantityForEachYear = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -3367,14 +3628,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use Documents Window to Obtain Cumulative and Maximum Quantity for Each Year
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-and-maximum-quantity-for-each-year
      */
-    case SetWindowFieldsUseDocumentsWindowToObtainCumulativeAndMaximumQuantityForEachYear = <<<'JSON'
+    case SetWindowFieldsUseDocumentsWindowToObtainCumulativeAndMaximumQuantityForEachYear = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -3411,14 +3672,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Range Window Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#range-window-example
      */
-    case SetWindowFieldsRangeWindowExample = <<<'JSON'
+    case SetWindowFieldsRangeWindowExample = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -3446,14 +3707,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use a Time Range Window with a Positive Upper Bound
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-a-time-range-window-with-a-positive-upper-bound
      */
-    case SetWindowFieldsUseATimeRangeWindowWithAPositiveUpperBound = <<<'JSON'
+    case SetWindowFieldsUseATimeRangeWindowWithAPositiveUpperBound = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -3480,14 +3741,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use a Time Range Window with a Negative Upper Bound
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-a-time-range-window-with-a-negative-upper-bound
      */
-    case SetWindowFieldsUseATimeRangeWindowWithANegativeUpperBound = <<<'JSON'
+    case SetWindowFieldsUseATimeRangeWindowWithANegativeUpperBound = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -3514,27 +3775,27 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/#examples
      */
-    case ShardedDataDistributionExample = <<<'JSON'
+    case ShardedDataDistributionExample = <<<'EXTENDED_JSON'
     [
         {
             "$shardedDataDistribution": {}
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/#example
      */
-    case SkipExample = <<<'JSON'
+    case SkipExample = <<<'EXTENDED_JSON'
     [
         {
             "$skip": {
@@ -3542,14 +3803,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Ascending Descending Sort
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/#ascending-descending-sort
      */
-    case SortAscendingDescendingSort = <<<'JSON'
+    case SortAscendingDescendingSort = <<<'EXTENDED_JSON'
     [
         {
             "$sort": {
@@ -3562,14 +3823,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Text Score Metadata Sort
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/#text-score-metadata-sort
      */
-    case SortTextScoreMetadataSort = <<<'JSON'
+    case SortTextScoreMetadataSort = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -3589,14 +3850,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/#example
      */
-    case SortByCountExample = <<<'JSON'
+    case SortByCountExample = <<<'EXTENDED_JSON'
     [
         {
             "$unwind": {
@@ -3607,14 +3868,14 @@ enum Pipelines: string
             "$sortByCount": "$tags"
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Report 1 All Sales by Year and Stores and Items
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/#report-1--all-sales-by-year-and-stores-and-items
      */
-    case UnionWithReport1AllSalesByYearAndStoresAndItems = <<<'JSON'
+    case UnionWithReport1AllSalesByYearAndStoresAndItems = <<<'EXTENDED_JSON'
     [
         {
             "$set": {
@@ -3671,14 +3932,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Report 2 Aggregated Sales by Items
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/#report-2--aggregated-sales-by-items
      */
-    case UnionWithReport2AggregatedSalesByItems = <<<'JSON'
+    case UnionWithReport2AggregatedSalesByItems = <<<'EXTENDED_JSON'
     [
         {
             "$unionWith": {
@@ -3711,14 +3972,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Remove a Single Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-a-single-field
      */
-    case UnsetRemoveASingleField = <<<'JSON'
+    case UnsetRemoveASingleField = <<<'EXTENDED_JSON'
     [
         {
             "$unset": [
@@ -3726,14 +3987,14 @@ enum Pipelines: string
             ]
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Remove Top-Level Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-top-level-fields
      */
-    case UnsetRemoveTopLevelFields = <<<'JSON'
+    case UnsetRemoveTopLevelFields = <<<'EXTENDED_JSON'
     [
         {
             "$unset": [
@@ -3742,14 +4003,14 @@ enum Pipelines: string
             ]
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Remove Embedded Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/#remove-embedded-fields
      */
-    case UnsetRemoveEmbeddedFields = <<<'JSON'
+    case UnsetRemoveEmbeddedFields = <<<'EXTENDED_JSON'
     [
         {
             "$unset": [
@@ -3759,14 +4020,14 @@ enum Pipelines: string
             ]
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Unwind Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-array
      */
-    case UnwindUnwindArray = <<<'JSON'
+    case UnwindUnwindArray = <<<'EXTENDED_JSON'
     [
         {
             "$unwind": {
@@ -3774,14 +4035,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * preserveNullAndEmptyArrays
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#preservenullandemptyarrays
      */
-    case UnwindPreserveNullAndEmptyArrays = <<<'JSON'
+    case UnwindPreserveNullAndEmptyArrays = <<<'EXTENDED_JSON'
     [
         {
             "$unwind": {
@@ -3790,14 +4051,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * includeArrayIndex
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#includearrayindex
      */
-    case UnwindIncludeArrayIndex = <<<'JSON'
+    case UnwindIncludeArrayIndex = <<<'EXTENDED_JSON'
     [
         {
             "$unwind": {
@@ -3806,14 +4067,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Group by Unwound Values
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#group-by-unwound-values
      */
-    case UnwindGroupByUnwoundValues = <<<'JSON'
+    case UnwindGroupByUnwoundValues = <<<'EXTENDED_JSON'
     [
         {
             "$unwind": {
@@ -3837,14 +4098,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Unwind Embedded Arrays
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#unwind-embedded-arrays
      */
-    case UnwindUnwindEmbeddedArrays = <<<'JSON'
+    case UnwindUnwindEmbeddedArrays = <<<'EXTENDED_JSON'
     [
         {
             "$unwind": {
@@ -3870,14 +4131,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * ANN Basic
      *
-     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#ann-examples
+     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#examples
      */
-    case VectorSearchANNBasic = <<<'JSON'
+    case VectorSearchANNBasic = <<<'EXTENDED_JSON'
     [
         {
             "$vectorSearch": {
@@ -3919,14 +4180,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * ANN Filter
      *
-     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#ann-examples
+     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#examples
      */
-    case VectorSearchANNFilter = <<<'JSON'
+    case VectorSearchANNFilter = <<<'EXTENDED_JSON'
     [
         {
             "$vectorSearch": {
@@ -3982,14 +4243,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * ENN
      *
-     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#enn-examples
+     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#examples
      */
-    case VectorSearchENN = <<<'JSON'
+    case VectorSearchENN = <<<'EXTENDED_JSON'
     [
         {
             "$vectorSearch": {
@@ -4029,5 +4290,258 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Stored Source
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#examples
+     */
+    case VectorSearchStoredSource = <<<'EXTENDED_JSON'
+    [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "path": "plot_embedding",
+                "queryVector": [
+                    {
+                        "$numberDouble": "-0.039948012679815292358"
+                    },
+                    {
+                        "$numberDouble": "-0.016522614285349845886"
+                    },
+                    {
+                        "$numberDouble": "-0.0087753441184759140015"
+                    }
+                ],
+                "filter": {
+                    "$and": [
+                        {
+                            "year": {
+                                "$gt": {
+                                    "$numberInt": "1970"
+                                }
+                            }
+                        },
+                        {
+                            "year": {
+                                "$lt": {
+                                    "$numberInt": "2020"
+                                }
+                            }
+                        },
+                        {
+                            "genres": {
+                                "$in": [
+                                    "Action",
+                                    "Drama",
+                                    "Comedy"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "limit": {
+                    "$numberInt": "10"
+                },
+                "numCandidates": {
+                    "$numberInt": "1000"
+                },
+                "returnStoredSource": true
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "genres": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Nested field
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#examples
+     */
+    case VectorSearchNestedField = <<<'EXTENDED_JSON'
+    [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "filter": {
+                    "reviews.date": {
+                        "$gte": {
+                            "$date": {
+                                "$numberLong": "946684800000"
+                            }
+                        }
+                    }
+                },
+                "parentFilter": {
+                    "address.country": {
+                        "$in": [
+                            "United States"
+                        ]
+                    },
+                    "bedrooms": {
+                        "$gte": {
+                            "$numberInt": "2"
+                        },
+                        "$lte": {
+                            "$numberInt": "3"
+                        }
+                    },
+                    "property_type": {
+                        "$in": [
+                            "House",
+                            "Apartment"
+                        ]
+                    }
+                },
+                "path": "reviews.comments_embedding",
+                "queryVector": [
+                    {
+                        "$numberDouble": "0.01074588485062122345"
+                    },
+                    {
+                        "$numberDouble": "-0.03567341342568397522"
+                    },
+                    {
+                        "$numberDouble": "-0.092984795570373535156"
+                    }
+                ],
+                "numCandidates": {
+                    "$numberInt": "100"
+                },
+                "limit": {
+                    "$numberInt": "5"
+                },
+                "nestedOptions": {
+                    "scoreMode": "avg"
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "name": {
+                    "$numberInt": "1"
+                },
+                "address": {
+                    "$numberInt": "1"
+                },
+                "neighborhood_overview": {
+                    "$numberInt": "1"
+                },
+                "bedrooms": {
+                    "$numberInt": "1"
+                },
+                "property_type": {
+                    "$numberInt": "1"
+                },
+                "reviews.comments": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Automated Embedding
+     *
+     * @see https://www.mongodb.com/docs/vector-search/crud-embeddings/automated-embedding/
+     */
+    case VectorSearchAutomatedEmbedding = <<<'EXTENDED_JSON'
+    [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "path": "plot_embedding",
+                "query": "time travel",
+                "numCandidates": {
+                    "$numberInt": "150"
+                },
+                "limit": {
+                    "$numberInt": "10"
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * Automated Embedding with model override
+     *
+     * @see https://www.mongodb.com/docs/vector-search/crud-embeddings/automated-embedding/
+     */
+    case VectorSearchAutomatedEmbeddingWithModelOverride = <<<'EXTENDED_JSON'
+    [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "path": "plot_embedding",
+                "query": "time travel",
+                "model": "voyage-3-lite",
+                "numCandidates": {
+                    "$numberInt": "150"
+                },
+                "limit": {
+                    "$numberInt": "10"
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 }

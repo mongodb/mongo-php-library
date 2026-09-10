@@ -49,7 +49,7 @@ use const STREAM_IS_URL;
  * @see Bucket::openDownloadStream()
  * @psalm-type ContextOptions = array{collectionWrapper: CollectionWrapper, file: object}|array{collectionWrapper: CollectionWrapper, filename: string, options: array}
  */
-class StreamWrapper
+final class StreamWrapper
 {
     /** @var resource|null Stream context (set by PHP) */
     public $context;
@@ -89,7 +89,7 @@ class StreamWrapper
             stream_wrapper_unregister($protocol);
         }
 
-        stream_wrapper_register($protocol, static::class, STREAM_IS_URL);
+        stream_wrapper_register($protocol, self::class, STREAM_IS_URL);
     }
 
     /**
@@ -315,8 +315,7 @@ class StreamWrapper
         return true;
     }
 
-    /** @return false|array */
-    public function url_stat(string $path, int $flags)
+    public function url_stat(string $path, int $flags): false|array
     {
         assert($this->stream === null);
 

@@ -12,7 +12,7 @@ on:
       - "feature/*"
 
 env:
-  DRIVER_VERSION: "mongodb/mongo-php-driver@v1.21"
+  DRIVER_VERSION: "stable"
 
 jobs:
   phpunit:
@@ -23,50 +23,53 @@ jobs:
       fail-fast: true
       matrix:
         os:
-          - "ubuntu-22.04"
+          - "ubuntu-24.04"
         php-version:
           - "8.1"
           - "8.2"
           - "8.3"
           - "8.4"
+          - "8.5"
         mongodb-version:
-          - "6.0"
+          - "9.0"
         topology:
-          - "server"
+          - "replica_set"
         include:
-          - os: "ubuntu-22.04"
-            php-version: "8.1"
-            mongodb-version: "6.0"
-            topology: "replica_set"
-          - os: "ubuntu-22.04"
-            php-version: "8.1"
-            mongodb-version: "6.0"
-            topology: "sharded_cluster"
+          # Test additional topologies for MongoDB 9.0
           - os: "ubuntu-24.04"
-            php-version: "8.1"
-            mongodb-version: "8.0"
+            php-version: "8.4"
+            mongodb-version: "9.0"
             topology: "server"
           - os: "ubuntu-24.04"
+            php-version: "8.4"
+            mongodb-version: "9.0"
+            topology: "sharded_cluster"
+          # Test lowest server/php versions
+          - os: "ubuntu-22.04"
             php-version: "8.1"
-            mongodb-version: "8.0"
+            mongodb-version: "6.0"
+            topology: "server"
+          - os: "ubuntu-22.04"
+            php-version: "8.1"
+            mongodb-version: "6.0"
             topology: "replica_set"
-          - os: "ubuntu-24.04"
+          - os: "ubuntu-22.04"
             php-version: "8.1"
-            mongodb-version: "8.0"
+            mongodb-version: "6.0"
             topology: "sharded_cluster"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v7"
         with:
           fetch-depth: 2
           submodules: true
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
 
-      - name: "Setup MongoDB"
+      - name: "Set up MongoDB"
         id: setup-mongodb
         uses: ./tests/drivers-evergreen-tools
         with:
@@ -79,8 +82,26 @@ jobs:
           php-version: ${{ matrix.php-version }}
           driver-version: ${{ env.DRIVER_VERSION }}
           php-ini-values: "zend.assertions=1"
+          ignore-platform-req: ${{ matrix.php-version == '8.5' && 'true' || 'false' }}
 
       - name: "Run PHPUnit"
-        run: "vendor/bin/phpunit"
+        run: "vendor/bin/phpunit --configuration phpunit.evergreen.xml --coverage-clover coverage.xml"
         env:
+          XDEBUG_MODE: "coverage"
           MONGODB_URI: ${{ steps.setup-mongodb.outputs.cluster-uri }}
+
+      - name: "Upload coverage report"
+        uses: codecov/codecov-action@v7
+        with:
+          disable_search: true
+          files: coverage.xml
+          flags: "${{ matrix.mongodb-version }}-${{ matrix.topology }}"
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test results to Codecov
+        uses: codecov/test-results-action@v1
+        with:
+          disable_search: true
+          files: test-results.xml
+          flags: "${{ matrix.mongodb-version }}-${{ matrix.topology }}"
+          token: ${{ secrets.CODECOV_TOKEN }}

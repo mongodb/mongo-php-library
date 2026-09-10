@@ -437,6 +437,8 @@ trait FactoryTrait
     /**
      * Generates a random float between 0 and 1.
      *
+     * New in MongoDB 4.4
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/rand/
      */
     public static function rand(): RandOperator
@@ -457,6 +459,8 @@ trait FactoryTrait
 
     /**
      * Randomly select documents at a given rate. Although the exact number of documents selected varies on each run, the quantity chosen approximates the sample rate expressed as a percentage of the total number of documents.
+     *
+     * New in MongoDB 5.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/
      * @param Int64|ResolvesToDouble|float|int|string $rate The selection process uses a uniform random distribution. The sample rate is a floating point number between 0 and 1, inclusive, which represents the probability that a given document will be selected as it passes through the pipeline.

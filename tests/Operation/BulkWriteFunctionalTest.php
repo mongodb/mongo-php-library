@@ -7,8 +7,8 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\BulkWriteResult;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite as Bulk;
+use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
@@ -17,8 +17,6 @@ use MongoDB\Tests\Fixtures\Document\TestObject;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use stdClass;
-
-use function is_array;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
@@ -198,10 +196,6 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     #[DataProvider('provideUpdatePipelines')]
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
-        if (is_array($expectedUpdate)) {
-            $this->skipIfServerVersion('<', '4.2.0', 'Pipeline-style updates are not supported');
-        }
-
         (new CommandObserver())->observe(
             function () use ($update): void {
                 $operation = new BulkWrite(
@@ -318,48 +312,48 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesDeletedCount(BulkWriteResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getDeletedCount();
     }
 
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesInsertCount(BulkWriteResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getInsertedCount();
     }
 
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesMatchedCount(BulkWriteResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getMatchedCount();
     }
 
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesModifiedCount(BulkWriteResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getModifiedCount();
     }
 
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesUpsertedCount(BulkWriteResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedCount();
     }
 
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesUpsertedIds(BulkWriteResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedIds();
     }
 
@@ -423,8 +417,6 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
     public function testBulkWriteWithPipelineUpdates(): void
     {
-        $this->skipIfServerVersion('<', '4.2.0', 'Pipeline-style updates are not supported');
-
         $this->createFixtures(4);
 
         $ops = [

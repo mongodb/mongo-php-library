@@ -16,6 +16,8 @@ use MongoDB\Builder\Type\StageInterface;
 /**
  * Lists sampled queries for all collections or a specific collection.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/
  * @internal
  */
@@ -28,9 +30,7 @@ final class ListSampledQueriesStage implements StageInterface, OperatorInterface
     /** @var Optional|string $namespace */
     public readonly Optional|string $namespace;
 
-    /**
-     * @param Optional|string $namespace
-     */
+    /** @param Optional|string $namespace */
     public function __construct(Optional|string $namespace = Optional::Undefined)
     {
         $this->namespace = $namespace;

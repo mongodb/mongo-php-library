@@ -58,21 +58,21 @@ The test suite references the following environment variables:
    `username` URI option for clients constructed by the test suite, which will
    override any credentials in the connection string itself.
 
-The following environment variable is used for [stable API testing](https://github.com/mongodb/specifications/blob/master/source/versioned-api/tests/README.rst):
+The following environment variable is used for [stable API testing](https://github.com/mongodb/specifications/blob/master/source/versioned-api/tests/README.md):
 
  * `API_VERSION`: If defined, this value will be used to construct a
    [`MongoDB\Driver\ServerApi`](https://www.php.net/manual/en/mongodb-driver-serverapi.construct.php),
    which will then be specified as the `serverApi` driver option for clients
    created by the test suite.
 
-The following environment variables are used for [load balancer testing](https://github.com/mongodb/specifications/blob/master/source/load-balancers/tests/README.rst):
+The following environment variables are used for [load balancer testing](https://github.com/mongodb/specifications/blob/master/source/load-balancers/tests/README.md):
 
  * `MONGODB_SINGLE_MONGOS_LB_URI`: Connection string to a load balancer backed
    by a single mongos host.
  * `MONGODB_MULTI_MONGOS_LB_URI`: Connection string to a load balancer backed by
    multiple mongos hosts.
 
-The following environment variables are used for [CSFLE testing](https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst):
+The following environment variables are used for [CSFLE testing](https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md):
 
  * `AWS_ACCESS_KEY_ID`
  * `AWS_SECRET_ACCESS_KEY`
@@ -123,6 +123,15 @@ The goal is that the library passes tests with the latest spec version at all
 times, either by implementing small changes quickly, or by skipping tests as
 necessary.
 
+## Backward compatibility
+
+When submitting a PR, be mindful of our backward compatibility guarantees. Our 
+BC policy follows [Symfony's Backward Compatibility Promise](https://symfony.com/doc/current/contributing/code/bc.html).
+
+In short, this means we use semantic versioning and guarantee backward 
+compatibility on all minor releases. For a more detailed definition, refer to 
+the Symfony docs linked above.
+
 ## Code quality
 
 Before submitting a pull request, please ensure that your code adheres to the
@@ -134,7 +143,7 @@ $ composer run checks
 
 ### Coding standards
 
-The library's code is checked using [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer),
+The library's code is checked using [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer),
 which is installed as a development dependency by Composer. To check the code
 for style errors, run the `phpcs` binary:
 
@@ -152,8 +161,12 @@ $ vendor/bin/phpcbf
 
 The library uses [psalm](https://psalm.dev) to run static analysis on the code
 and ensure an additional level of type safety. New code is expected to adhere
-to level 1, with a baseline covering existing issues. To run static analysis
-checks, run the `psalm` binary:
+to level 1, with a baseline covering existing issues.
+
+Psalm array shape types defined with `@psalm-type` must be suffixed with `Shape`
+(e.g. `SearchIndexShape`, `OperationShape`).
+
+To run static analysis checks, run the `psalm` binary:
 
 ```console
 $ vendor/bin/psalm

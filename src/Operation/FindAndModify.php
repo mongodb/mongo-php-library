@@ -51,11 +51,9 @@ use function MongoDB\server_supports_feature;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */
-class FindAndModify implements Executable, Explainable
+final class FindAndModify implements Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 9;
-
-    private const WIRE_VERSION_FOR_UNSUPPORTED_OPTION_SERVER_SIDE_ERROR = 8;
 
     private array $options;
 
@@ -221,20 +219,12 @@ class FindAndModify implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return array|object|null
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if hint or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object|null
     {
-        /* Server versions >= 4.2.0 raise errors for unsupported update options.
-         * For previous versions, the CRUD spec requires a client-side error. */
-        if (isset($this->options['hint']) && ! server_supports_feature($server, self::WIRE_VERSION_FOR_UNSUPPORTED_OPTION_SERVER_SIDE_ERROR)) {
-            throw UnsupportedException::hintNotSupported();
-        }
-
         /* CRUD spec requires a client-side error when using "hint" with an
          * unacknowledged write concern on an unsupported server. */
         if (
@@ -274,9 +264,8 @@ class FindAndModify implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         return $this->createCommandDocument();
     }

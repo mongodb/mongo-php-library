@@ -123,10 +123,9 @@ function all_servers_support_write_stage_on_secondary(array $servers): bool
  * @internal
  * @param array|object $document Document to which the type map will be applied
  * @param array        $typeMap  Type map for BSON deserialization.
- * @return array|object
  * @throws InvalidArgumentException
  */
-function apply_type_map_to_document(array|object $document, array $typeMap)
+function apply_type_map_to_document(array|object $document, array $typeMap): array|object
 {
     if (! is_document($document)) {
         throw InvalidArgumentException::expectedDocumentType('$document', $document);
@@ -180,13 +179,12 @@ function document_to_array(array|object $document): array
  * autoEncryption driver option (if available).
  *
  * @internal
- * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#collection-encryptedfields-lookup-getencryptedfields
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.md#collection-encryptedfields-lookup-getencryptedfields
  * @see Collection::drop()
  * @see Database::createCollection()
  * @see Database::dropCollection()
- * @return array|object|null
  */
-function get_encrypted_fields_from_driver(string $databaseName, string $collectionName, Manager $manager)
+function get_encrypted_fields_from_driver(string $databaseName, string $collectionName, Manager $manager): array|object|null
 {
     $encryptedFieldsMap = (array) $manager->getEncryptedFieldsMap();
 
@@ -197,12 +195,11 @@ function get_encrypted_fields_from_driver(string $databaseName, string $collecti
  * Return a collection's encryptedFields option from the server (if any).
  *
  * @internal
- * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#collection-encryptedfields-lookup-getencryptedfields
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.md#collection-encryptedfields-lookup-getencryptedfields
  * @see Collection::drop()
  * @see Database::dropCollection()
- * @return array|object|null
  */
-function get_encrypted_fields_from_server(string $databaseName, string $collectionName, Server $server)
+function get_encrypted_fields_from_server(string $databaseName, string $collectionName, Server $server): array|object|null
 {
     $collectionInfoIterator = (new ListCollections($databaseName, ['filter' => ['name' => $collectionName]]))->execute($server);
 
@@ -387,24 +384,6 @@ function is_last_pipeline_operator_write(array $pipeline): bool
 }
 
 /**
- * Return whether the "out" option for a mapReduce operation is "inline".
- *
- * This is used to determine if a mapReduce command requires a primary.
- *
- * @internal
- * @see https://mongodb.com/docs/manual/reference/command/mapReduce/#output-inline
- * @param string|array|object $out Output specification
- */
-function is_mapreduce_output_inline(string|array|object $out): bool
-{
-    if (! is_array($out) && ! is_object($out)) {
-        return false;
-    }
-
-    return array_key_first(document_to_array($out)) === 'inline';
-}
-
-/**
  * Return whether the write concern is acknowledged.
  *
  * This function is similar to mongoc_write_concern_is_acknowledged but does not
@@ -489,10 +468,9 @@ function create_namespace(string $databaseName, string $collectionName): string
  * @internal
  * @see https://bugs.php.net/bug.php?id=49664
  * @param mixed $element Value to be copied
- * @return mixed
  * @throws ReflectionException
  */
-function recursive_copy(mixed $element)
+function recursive_copy(mixed $element): mixed
 {
     if (is_array($element)) {
         foreach ($element as $key => $value) {
@@ -653,7 +631,7 @@ function select_server(Manager $manager, array $options): Server
  * must be forced due to the existence of pre-5.0 servers in the topology.
  *
  * @internal
- * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst#aggregation-pipelines-with-write-stages
+ * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.md#aggregation-pipelines-with-write-stages
  */
 function select_server_for_aggregate_write_stage(Manager $manager, array &$options): Server
 {

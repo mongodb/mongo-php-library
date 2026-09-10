@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Collection;
 
 use Closure;
-use MongoDB\BSON\Javascript;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Codec\Encoder;
 use MongoDB\Collection;
@@ -15,11 +14,9 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use ReflectionClass;
 use TypeError;
 
@@ -30,7 +27,6 @@ use function iterator_to_array;
 use function json_encode;
 use function str_contains;
 use function usort;
-use function version_compare;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -98,6 +94,22 @@ class CollectionFunctionalTest extends FunctionalTestCase
             'typeMap' => self::getInvalidArrayValues(),
             'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
+    }
+
+    public function testGetBuilderEncoder(): void
+    {
+        $collectionOptions = ['builderEncoder' => $this->createMock(Encoder::class)];
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
+
+        $this->assertSame($collectionOptions['builderEncoder'], $collection->getBuilderEncoder());
+    }
+
+    public function testGetCodec(): void
+    {
+        $collectionOptions = ['codec' => $this->createMock(DocumentCodec::class)];
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
+
+        $this->assertSame($collectionOptions['codec'], $collection->getCodec());
     }
 
     public function testGetManager(): void
@@ -277,8 +289,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['x' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->drop();
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->drop();
         $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
@@ -354,8 +365,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['_id' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->rename($toCollectionName, null, ['dropTarget' => true]);
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->rename($toCollectionName, null, ['dropTarget' => true]);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName);
 
@@ -383,8 +393,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $writeResult = $this->collection->insertOne(['_id' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->rename($toCollectionName, $toDatabaseName);
-        $this->assertCommandSucceeded($commandResult);
+        $this->collection->rename($toCollectionName, $toDatabaseName);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName, $toDatabaseName);
 
@@ -451,35 +460,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $rp = $rc->getProperty('autoEncryptionEnabled');
 
         $this->assertSame(true, $rp->getValue($clone));
-    }
-
-    #[Group('matrix-testing-exclude-server-4.4-driver-4.0')]
-    #[Group('matrix-testing-exclude-server-4.4-driver-4.2')]
-    #[Group('matrix-testing-exclude-server-5.0-driver-4.0')]
-    #[Group('matrix-testing-exclude-server-5.0-driver-4.2')]
-    public function testMapReduce(): void
-    {
-        $this->createFixtures(3);
-
-        $map = new Javascript('function() { emit(1, this.x); }');
-        $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
-        $out = ['inline' => 1];
-
-        $result = $this->assertDeprecated(
-            fn () => $this->collection->mapReduce($map, $reduce, $out),
-        );
-
-        $this->assertInstanceOf(MapReduceResult::class, $result);
-        $expected = [
-            [ '_id' => 1.0, 'value' => 66.0 ],
-        ];
-
-        $this->assertSameDocuments($expected, $result);
-
-        if (version_compare($this->getServerVersion(), '4.3.0', '<')) {
-            $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
-            $this->assertNotEmpty($result->getCounts());
-        }
     }
 
     public static function collectionMethodClosures()
@@ -694,19 +674,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
             */
 
-            /* Disabled, as it's illegal to use mapReduce command in transactions
-            'mapReduce' => [
-                function($collection, $session, $options = []) {
-                    $collection->mapReduce(
-                        new \MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }'),
-                        new \MongoDB\BSON\Javascript('function(key, values) { return Array.sum(values) }'),
-                        ['inline' => 1],
-                        ['session' => $session] + $options
-                    );
-                }, 'rw'
-            ],
-            */
-
             'replaceOne' => [
                 function ($collection, $session, $options = []): void {
                     $collection->replaceOne(
@@ -803,7 +770,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $session->startTransaction();
 
         $this->expectException(UnsupportedException::class);
-        $this->expectExceptionMessage('"writeConcern" option cannot be specified within a transaction');
+        $this->expectExceptionMessage('Cannot set write concern after starting a transaction');
 
         try {
             call_user_func($method, $this->collection, $session, ['writeConcern' => new WriteConcern(1)]);
@@ -823,7 +790,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $session->startTransaction();
 
         $this->expectException(UnsupportedException::class);
-        $this->expectExceptionMessage('"readConcern" option cannot be specified within a transaction');
+        $this->expectExceptionMessage('Cannot set read concern after starting a transaction');
 
         try {
             call_user_func($method, $this->collection, $session, ['readConcern' => new ReadConcern(ReadConcern::LOCAL)]);
@@ -834,7 +801,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function testListSearchIndexesInheritTypeMap(): void
     {
-        $this->skipIfAtlasSearchIndexIsNotSupported();
+        $this->skipIfSearchIndexIsNotSupported();
 
         $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), ['typeMap' => ['root' => 'array']]);
 

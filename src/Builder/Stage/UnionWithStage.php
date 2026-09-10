@@ -22,7 +22,8 @@ use function is_array;
 
 /**
  * Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
- * New in MongoDB 4.4.
+ *
+ * New in MongoDB 4.4
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/
  * @internal

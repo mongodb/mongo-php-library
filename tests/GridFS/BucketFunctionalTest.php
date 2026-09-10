@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\MinKey;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Collection;
 use MongoDB\Driver\ReadConcern;
@@ -17,6 +18,7 @@ use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Codec\TestFileCodec;
 use MongoDB\Tests\Fixtures\Document\TestFile;
@@ -160,6 +162,46 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertCollectionCount($this->chunksCollection, 0);
     }
 
+    public function testDeleteUsesEqOperatorForId(): void
+    {
+        $id = $this->bucket->uploadFromStream('filename', self::createStream('foobar'));
+
+        (new CommandObserver())->observe(
+            function () use ($id): void {
+                $this->bucket->delete($id);
+            },
+            function (array $event) use ($id): void {
+                if ($event['started']->getCommandName() !== 'delete') {
+                    return;
+                }
+
+                $query = $event['started']->getCommand()->deletes[0]->q;
+                $field = isset($query->_id) ? '_id' : 'files_id';
+
+                $this->assertEquals(['$eq' => $id], (array) $query->$field);
+            },
+        );
+    }
+
+    public function testDeleteWithQueryOperatorIdDoesNotDeleteAnyFile(): void
+    {
+        $this->skipIfServerVersion('>=', '8.1', 'Delete filters with query-operator file IDs are rejected by SERVER-92488');
+
+        $id = $this->bucket->uploadFromStream('filename', self::createStream('foobar'));
+
+        $this->assertCollectionCount($this->filesCollection, 1);
+        $this->assertCollectionCount($this->chunksCollection, 1);
+
+        $this->expectException(FileNotFoundException::class);
+
+        try {
+            $this->bucket->delete(['$gt' => new MinKey()]);
+        } finally {
+            $this->assertCollectionCount($this->filesCollection, 1);
+            $this->assertCollectionCount($this->chunksCollection, 1);
+        }
+    }
+
     public function testDeleteByName(): void
     {
         $this->bucket->uploadFromStream('filename', self::createStream('foobar1'));
@@ -235,6 +277,34 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->downloadToStream($id, $destination);
 
         $this->assertStreamContents($input, $destination);
+    }
+
+    public function testDownloadToStreamUsesEqOperatorForId(): void
+    {
+        $id = $this->bucket->uploadFromStream('filename', self::createStream('foobar'));
+        $destination = self::createStream();
+
+        (new CommandObserver())->observe(
+            function () use ($id, $destination): void {
+                $this->bucket->downloadToStream($id, $destination);
+            },
+            function (array $event) use ($id): void {
+                $this->assertEquals('find', $event['started']->getCommandName());
+
+                $filter = $event['started']->getCommand()->filter;
+                $field = isset($filter->_id) ? '_id' : 'files_id';
+
+                $this->assertEquals(['$eq' => $id], (array) $filter->$field);
+            },
+        );
+    }
+
+    public function testDownloadToStreamWithQueryOperatorIdDoesNotMatchAnyFile(): void
+    {
+        $this->bucket->uploadFromStream('filename', self::createStream('foobar'));
+
+        $this->expectException(FileNotFoundException::class);
+        $this->bucket->downloadToStream(['$gt' => new MinKey()], self::createStream());
     }
 
     #[DataProvider('provideInvalidStreamValues')]
@@ -729,6 +799,39 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->assertSameDocument(['filename' => 'b'], $fileDocument);
         $this->assertStreamContents('foo', $this->bucket->openDownloadStreamByName('b'));
+    }
+
+    public function testRenameUsesEqOperatorForId(): void
+    {
+        $id = $this->bucket->uploadFromStream('a', self::createStream('foo'));
+
+        (new CommandObserver())->observe(
+            function () use ($id): void {
+                $this->bucket->rename($id, 'b');
+            },
+            function (array $event) use ($id): void {
+                $this->assertEquals('update', $event['started']->getCommandName());
+                $this->assertEquals(
+                    ['$eq' => $id],
+                    (array) $event['started']->getCommand()->updates[0]->q->_id,
+                );
+            },
+        );
+    }
+
+    public function testRenameWithQueryOperatorIdDoesNotRenameAnyFile(): void
+    {
+        $this->skipIfServerVersion('>=', '8.1', 'Update filters with query-operator file IDs are rejected by SERVER-92488');
+
+        $this->bucket->uploadFromStream('a', self::createStream('foo'));
+
+        $this->expectException(FileNotFoundException::class);
+
+        try {
+            $this->bucket->rename(['$gt' => new MinKey()], 'injected');
+        } finally {
+            $this->assertNull($this->bucket->findOne(['filename' => 'injected']));
+        }
     }
 
     public function testRenameShouldNotRequireFileToBeModified(): void

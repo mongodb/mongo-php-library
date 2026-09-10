@@ -68,7 +68,7 @@ class CollectionWrapper
      */
     public function deleteChunksByFilesId(mixed $id): void
     {
-        $this->chunksCollection->deleteMany(['files_id' => $id]);
+        $this->chunksCollection->deleteMany(['files_id' => ['$eq' => $id]]);
     }
 
     /**
@@ -99,8 +99,8 @@ class CollectionWrapper
      */
     public function deleteFileAndChunksById(mixed $id): void
     {
-        $this->filesCollection->deleteOne(['_id' => $id]);
-        $this->chunksCollection->deleteMany(['files_id' => $id]);
+        $this->filesCollection->deleteOne(['_id' => ['$eq' => $id]]);
+        $this->chunksCollection->deleteMany(['files_id' => ['$eq' => $id]]);
     }
 
     /**
@@ -123,7 +123,7 @@ class CollectionWrapper
     {
         return $this->chunksCollection->find(
             [
-                'files_id' => $id,
+                'files_id' => ['$eq' => $id],
                 'n' => ['$gte' => $fromChunk],
             ],
             [
@@ -177,7 +177,7 @@ class CollectionWrapper
     public function findFileById(mixed $id): ?object
     {
         $file = $this->filesCollection->findOne(
-            ['_id' => $id],
+            ['_id' => ['$eq' => $id]],
             ['typeMap' => ['root' => 'stdClass']],
         );
         assert(is_object($file) || $file === null);
@@ -277,7 +277,7 @@ class CollectionWrapper
     public function updateFilenameForId(mixed $id, string $filename): UpdateResult
     {
         return $this->filesCollection->updateOne(
-            ['_id' => $id],
+            ['_id' => ['$eq' => $id]],
             ['$set' => ['filename' => $filename]],
         );
     }

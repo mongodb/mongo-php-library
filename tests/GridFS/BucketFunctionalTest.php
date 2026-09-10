@@ -185,6 +185,8 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testDeleteWithQueryOperatorIdDoesNotDeleteAnyFile(): void
     {
+        $this->skipIfServerVersion('>=', '8.1', 'Delete filters with query-operator file IDs are rejected by SERVER-92488');
+
         $id = $this->bucket->uploadFromStream('filename', self::createStream('foobar'));
 
         $this->assertCollectionCount($this->filesCollection, 1);
@@ -819,6 +821,8 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testRenameWithQueryOperatorIdDoesNotRenameAnyFile(): void
     {
+        $this->skipIfServerVersion('>=', '8.1', 'Update filters with query-operator file IDs are rejected by SERVER-92488');
+
         $this->bucket->uploadFromStream('a', self::createStream('foo'));
 
         $this->expectException(FileNotFoundException::class);

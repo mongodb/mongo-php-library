@@ -44,6 +44,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         'retryable-reads/retryable reads handshake failures' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures' => 'Handshakes are not retried (CDRIVER-4532)',
         'crud/bypassDocumentValidation' => 'bypassDocumentValidation is handled by libmongoc (PHPLIB-1576)',
+        // GridFS download now wraps file IDs in $eq; the upstream specifications do not expect this yet
+        'retryable-reads/gridfs-download:' => 'Upstream specifications not yet updated for $eq-wrapped file IDs (PHPLIB-1929)',
+        'retryable-reads/gridfs-download-serverErrors:' => 'Upstream specifications not yet updated for $eq-wrapped file IDs (PHPLIB-1929)',
         // The rawData option will not be implemented
         'collection-management/listCollections-rawData' => 'rawData option will not be implemented',
         'crud/aggregate-rawData' => 'rawData option will not be implemented',

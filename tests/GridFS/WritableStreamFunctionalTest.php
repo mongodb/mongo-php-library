@@ -2,11 +2,13 @@
 
 namespace MongoDB\Tests\GridFS;
 
+use MongoDB\BSON\MinKey;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\WritableStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use ReflectionMethod;
 
 use function str_repeat;
 
@@ -70,5 +72,23 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
 
         $stream->close();
         $this->assertSame(1536, $stream->getSize());
+    }
+
+    public function testAbortWithQueryOperatorIdDoesNotDeleteOtherFilesChunks(): void
+    {
+        $otherId = $this->bucket->uploadFromStream('file1', self::createStream('foobar'));
+
+        $stream = new WritableStream($this->collectionWrapper, 'file2', [
+            '_id' => ['$gt' => new MinKey()],
+            'chunkSizeBytes' => 2,
+        ]);
+        $stream->writeBytes('abcd');
+
+        (new ReflectionMethod($stream, 'abort'))->invoke($stream);
+
+        $this->assertCollectionCount($this->chunksCollection, 1);
+
+        $chunk = $this->chunksCollection->findOne([], ['typeMap' => ['root' => 'array']]);
+        $this->assertSameObjectId($otherId, $chunk['files_id']);
     }
 }

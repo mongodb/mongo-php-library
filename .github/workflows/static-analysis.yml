@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
 
@@ -38,7 +38,7 @@ jobs:
           echo CHECKED_OUT_SHA=$(git rev-parse HEAD) >> $GITHUB_ENV
 
       - name: "Setup"
-        uses: "./.github/actions/setup"
+        uses: ./.github/actions/setup
         with:
           php-version: ${{ env.PHP_VERSION }}
           driver-version: ${{ env.DRIVER_VERSION }}
@@ -48,13 +48,13 @@ jobs:
 
       - name: "Upload SARIF report"
         if: ${{ github.event_name != 'workflow_dispatch' }}
-        uses: "github/codeql-action/upload-sarif@v3"
+        uses: github/codeql-action/upload-sarif@1190a975f95ce23525efb6a3fc21ea29567c1b52  # v3.38.2
         with:
           sarif_file: psalm.sarif
 
       - name: "Upload SARIF report"
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        uses: "github/codeql-action/upload-sarif@v3"
+        uses: github/codeql-action/upload-sarif@1190a975f95ce23525efb6a3fc21ea29567c1b52  # v3.38.2
         with:
           sarif_file: psalm.sarif
           ref: ${{ inputs.ref }}

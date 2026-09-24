@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
         with:
           # fetch-depth 0 is required to fetch all branches, not just the branch being built
           fetch-depth: 0
@@ -24,7 +24,7 @@ jobs:
 
       - name: Create pull request
         id: create-pull-request
-        uses: alcaeus/automatic-merge-up-action@1.1.0
+        uses: alcaeus/automatic-merge-up-action@874dd723d79cb95bb2360bfeb46b6964060aa515  # 1.1.0
         with:
           ref: ${{ github.ref_name }}
           branchNamePattern: 'v<major>.<minor>'

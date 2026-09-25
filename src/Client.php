@@ -41,13 +41,56 @@ use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Operation\Watch;
-use stdClass;
 use Stringable;
 
 use function array_diff_key;
 
 /**
+ * @phpstan-import-type AutoEncryptionOptionsArray from Model\AutoEncryptionOptions
+ * @phpstan-import-type DriverOptionsArray from Model\DriverOptions
+ * @phpstan-type UriOptionsArray = array{
+ *     readPreference?: string,
+ *     readConcernLevel?: string,
+ *     w?: string|int,
+ *     wtimeoutMS?: int,
+ *     journal?: bool,
+ *     retryWrites?: bool,
+ *     retryReads?: bool,
+ *     ssl?: bool,
+ *     tls?: bool,
+ *     authSource?: string,
+ *     authMechanism?: string,
+ *     replicaSet?: string,
+ *     appname?: string,
+ *     loadBalanced?: bool,
+ *     directConnection?: bool,
+ *     serverSelectionTimeoutMS?: int,
+ *     maxPoolSize?: int,
+ *     minPoolSize?: int,
+ * } & array<string, mixed>
  * @psalm-import-type stage from Builder\Pipeline
+ * @psalm-import-type AutoEncryptionOptionsArray from Model\AutoEncryptionOptions
+ * @psalm-import-type DriverOptionsArray from Model\DriverOptions
+ * @psalm-type UriOptionsArray = array{
+ *     readPreference?: string,
+ *     readConcernLevel?: string,
+ *     w?: string|int,
+ *     wtimeoutMS?: int,
+ *     journal?: bool,
+ *     retryWrites?: bool,
+ *     retryReads?: bool,
+ *     ssl?: bool,
+ *     tls?: bool,
+ *     authSource?: string,
+ *     authMechanism?: string,
+ *     replicaSet?: string,
+ *     appname?: string,
+ *     loadBalanced?: bool,
+ *     directConnection?: bool,
+ *     serverSelectionTimeoutMS?: int,
+ *     maxPoolSize?: int,
+ *     minPoolSize?: int,
+ * } & array<string, mixed>
  * @psalm-no-seal-properties
  */
 class Client implements Stringable
@@ -85,9 +128,9 @@ class Client implements Stringable
      * @see https://mongodb.com/docs/manual/reference/connection-string/
      * @see https://php.net/manual/en/mongodb-driver-manager.construct.php
      * @see https://php.net/manual/en/mongodb.persistence.php#mongodb.persistence.typemaps
-     * @param string|null $uri           MongoDB connection string. If none is provided, this defaults to self::DEFAULT_URI.
-     * @param array       $uriOptions    Additional connection string options
-     * @param array       $driverOptions Driver-specific options
+     * @param string|null        $uri           MongoDB connection string. If none is provided, this defaults to self::DEFAULT_URI.
+     * @param UriOptionsArray    $uriOptions    Additional connection string options
+     * @param DriverOptionsArray $driverOptions Driver-specific options
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverInvalidArgumentException for parameter/option parsing errors in the driver
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -186,7 +229,7 @@ class Client implements Stringable
     /**
      * Returns a ClientEncryption instance for explicit encryption and decryption
      *
-     * @param array{kmsProviders?: stdClass|array<string, array>, keyVaultClient?: Client|Manager} $options
+     * @param AutoEncryptionOptionsArray $options
      */
     public function createClientEncryption(array $options): ClientEncryption
     {

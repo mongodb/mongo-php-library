@@ -123,6 +123,51 @@ The goal is that the library passes tests with the latest spec version at all
 times, either by implementing small changes quickly, or by skipping tests as
 necessary.
 
+## Continuous integration
+
+ * GitHub Actions (`.github/workflows/`) runs the fast checks on pull requests:
+   tests on a small matrix of local servers, coding standards, static analysis
+   and the generator diff.
+ * Evergreen (`.evergreen/config/`) runs the full matrix: all supported PHP and
+   server versions, all topologies, CSFLE, load balancer, and the `atlas` group
+   on a provisioned Atlas cluster.
+
+When you edit a file in `.evergreen/config/templates/`, never edit
+`.evergreen/config/generated/` by hand: regenerate it and commit the result.
+
+```console
+$ php .evergreen/config/generate-config.php
+```
+
+### Extension version
+
+The `ext-mongodb` constraint in `composer.json` is the only thing to maintain.
+Everything else is deduced from it and from the versions published on PECL by
+`tools/extension-version.php`, used by both CI systems:
+
+```console
+$ php tools/extension-version.php stable
+```
+
+Four targets are available:
+
+ * `stable`: highest version the constraint allows
+ * `lowest`: lowest version the constraint allows, with lowest Composer
+   dependencies
+ * `next-stable`: maintenance branch of the latest released extension minor
+   version
+ * `next-minor`: development branch of the next extension minor version
+
+Evergreen builds all four, selected with `EXTENSION_TARGET` in
+`.evergreen/config/templates/build/build-extension.yml`. GitHub Actions covers
+`stable` and `lowest`, through the `driver-version` input of the setup action.
+
+When you need an extension version that is not released yet, bump the
+`ext-mongodb` constraint to it. No version published on PECL then satisfies the
+constraint, so every job of both CI systems builds the extension from its
+development branch, and the release workflow refuses to run. Both go back to
+released versions on their own once the extension is published.
+
 ## Backward compatibility
 
 When submitting a PR, be mindful of our backward compatibility guarantees. Our 

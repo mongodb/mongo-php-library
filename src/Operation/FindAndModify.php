@@ -92,7 +92,7 @@ final class FindAndModify implements Explainable
      *
      *  * new (boolean): When true, returns the modified document rather than
      *    the original. This option is ignored for remove operations. The
-     *    The default is false.
+     *    default is false.
      *
      *  * query (document): Query by which to filter documents.
      *

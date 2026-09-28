@@ -3,6 +3,21 @@ set -o errexit  # Exit the script with error if any of the commands fail
 
 PATH="$PHP_PATH/bin:$PATH"
 
+# Turn EXTENSION_TARGET into the EXTENSION_BRANCH or EXTENSION_VERSION expected
+# by install_extension. Both variables can also be set explicitly, e.g. in a
+# patch build, in which case they take precedence over EXTENSION_TARGET.
+resolve_extension_target ()
+{
+   if [ "x${EXTENSION_BRANCH}" != "x" ] || [ "x${EXTENSION_VERSION}" != "x" ]; then
+      return
+   fi
+
+   # Assign before eval, so that a failure of the script stops the build
+   RESOLVED=$(php "${PROJECT_DIRECTORY}/tools/extension-version.php" "${EXTENSION_TARGET:-stable}")
+
+   eval "${RESOLVED}"
+}
+
 install_extension ()
 {
    rm -f ${PHP_PATH}/lib/php.ini
@@ -45,4 +60,5 @@ install_extension ()
    php --ri mongodb
 }
 
+resolve_extension_target
 install_extension

@@ -75,9 +75,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                 $result = $operation->execute($this->getPrimaryServer());
 
                 // Replace _id placeholder if necessary
-                if ($expectedDocument->_id === null) {
-                    $expectedDocument->_id = $result->getInsertedIds()[0];
-                }
+                $expectedDocument->_id ??= $result->getInsertedIds()[0];
             },
             function (array $event) use ($expectedDocument): void {
                 $this->assertEquals($expectedDocument, $event['started']->getCommand()->documents[0] ?? null);

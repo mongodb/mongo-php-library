@@ -55,7 +55,7 @@ final class Explain
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * typeMap (array): Type map for BSON deserialization. This will be used
-     *    used for the returned command result document.
+     *    for the returned command result document.
      *
      *  * verbosity (string): The mode in which the explain command will be run.
      *

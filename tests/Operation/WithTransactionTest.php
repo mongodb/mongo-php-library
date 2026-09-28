@@ -19,16 +19,16 @@ class WithTransactionTest extends TestCase
 {
     public static function provideComputeBackoffMSValues(): Generator
     {
-        yield [5, 1];
-        yield [7, 2];
-        yield [11, 3];
-        yield [16, 4];
-        yield [25, 5];
-        yield [192, 10];
-        yield [432, 12];
+        yield [7, 1];
+        yield [11, 2];
+        yield [16, 3];
+        yield [25, 4];
+        yield [37, 5];
+        yield [288, 10];
+        yield [432, 11];
 
-        // We run into the 500 ms maximum after 13 attempts
-        yield [500, 13];
+        // We run into the 500 ms maximum after 12 attempts
+        yield [500, 12];
         yield [500, 20];
     }
 

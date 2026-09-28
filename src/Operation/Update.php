@@ -50,7 +50,7 @@ final class Update implements Explainable
     private string $namespace;
 
     /**
-     * Constructs a update command.
+     * Constructs an update command.
      *
      * Supported options:
      *

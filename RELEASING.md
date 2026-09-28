@@ -1,37 +1,18 @@
 # Releasing
 
-## Update extension requirement (new minor versions only)
+## Check that the required extension version is released
 
-In `composer.json`, ensure that the version of `ext-mongodb` is correct for
-the library version being released. Set the constraint to the minimum
-extension/driver version required for that library release; do not assume that
-the extension version matches the library version number. For example:
+The version required by the `ext-mongodb` constraint in `composer.json` must be
+[released on PECL](https://pecl.php.net/package/mongodb). The extension is
+always released before the library that requires it. Until then, CI builds the
+extension from its development branch, and the release workflow refuses to run.
 
-```json
-{
-    "require": {
-        "ext-mongodb": "^2.3"
-    }
-}
+```console
+$ php tools/extension-version.php lowest
 ```
 
-After bumping the extension version in `composer.json`, the `vars` for calling
-`compile extension` from `.evergreen/config/templates/build/build-extension.yml`
-in the Evergreen configuration must be updated. Edit the template file and
-regenerate the config:
-
-* The `stable` task should specify no vars.
-* The `lowest` task should specify `EXTENSION_VERSION` with the version that
-  was just released.
-* The `next-stable` task should specify `EXTENSION_BRANCH` with the branch that
-  was just created.
-* The `next-minor` task should specify `EXTENSION_BRANCH: v2.x`.
-
-The `DRIVER_VERSION` environment variable for any GitHub Actions should also be
-set to `stable`.
-
-After making changes, create a pull request targeting the default branch and
-wait for this PR to be merged before proceeding with the release.
+Nothing to bump here: the `ext-mongodb` constraint is updated during
+development, never at release time.
 
 ## Transition JIRA issues and version
 

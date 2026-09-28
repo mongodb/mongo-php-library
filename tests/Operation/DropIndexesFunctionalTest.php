@@ -48,7 +48,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         $this->assertIndexExists('x_1');
 
         $operation = new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), 'x_1');
-        $this->assertCommandSucceeded($operation->execute($this->getPrimaryServer()));
+        $operation->execute($this->getPrimaryServer());
 
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
         $indexes = $operation->execute($this->getPrimaryServer());
@@ -76,7 +76,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         $this->assertIndexExists('y_1');
 
         $operation = new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), '*');
-        $this->assertCommandSucceeded($operation->execute($this->getPrimaryServer()));
+        $operation->execute($this->getPrimaryServer());
 
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
         $indexes = $operation->execute($this->getPrimaryServer());
@@ -108,7 +108,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         $this->assertIndexExists('x_1');
 
         $operation = new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), $info);
-        $this->assertCommandSucceeded($operation->execute($this->getPrimaryServer()));
+        $operation->execute($this->getPrimaryServer());
 
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
         $indexes = $operation->execute($this->getPrimaryServer());

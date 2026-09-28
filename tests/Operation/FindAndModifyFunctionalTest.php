@@ -126,22 +126,6 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function testHintOptionUnsupportedClientSideError(): void
-    {
-        $this->skipIfServerVersion('>=', '4.2.0', 'server reports error for unsupported findAndModify options');
-
-        $operation = new FindAndModify(
-            $this->getDatabaseName(),
-            $this->getCollectionName(),
-            ['remove' => true, 'hint' => '_id_'],
-        );
-
-        $this->expectException(UnsupportedException::class);
-        $this->expectExceptionMessage('Hint is not supported by the server executing this operation');
-
-        $operation->execute($this->getPrimaryServer());
-    }
-
     public function testHintOptionAndUnacknowledgedWriteConcernUnsupportedClientSideError(): void
     {
         $this->skipIfServerVersion('>=', '4.4.0', 'hint is supported');

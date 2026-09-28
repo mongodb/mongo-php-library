@@ -160,6 +160,42 @@ class OperatorClassGenerator extends OperatorGenerator
                     PHP);
                 }
 
+                if ($argument->minItems !== null || $argument->maxItems !== null) {
+                    $namespace->addUseFunction('count');
+                    $namespace->addUseFunction('is_countable');
+                    $namespace->addUseFunction('sprintf');
+                    $namespace->addUse(InvalidArgumentException::class);
+                    if ($argument->minItems !== null && $argument->minItems === $argument->maxItems) {
+                        $constructor->addBody(<<<PHP
+                        /** @psalm-suppress RedundantCondition */
+                        if (is_countable(\${$argument->propertyName}) && count(\${$argument->propertyName}) !== {$argument->minItems}) {
+                            throw new InvalidArgumentException(sprintf('Expected exactly %d items for \${$argument->propertyName}, got %d.', {$argument->minItems}, count(\${$argument->propertyName})));
+                        }
+
+                        PHP);
+                    } else {
+                        if ($argument->minItems !== null) {
+                            $constructor->addBody(<<<PHP
+                            /** @psalm-suppress RedundantCondition */
+                            if (is_countable(\${$argument->propertyName}) && count(\${$argument->propertyName}) < {$argument->minItems}) {
+                                throw new InvalidArgumentException(sprintf('Expected at least %d items for \${$argument->propertyName}, got %d.', {$argument->minItems}, count(\${$argument->propertyName})));
+                            }
+
+                            PHP);
+                        }
+
+                        if ($argument->maxItems !== null) {
+                            $constructor->addBody(<<<PHP
+                            /** @psalm-suppress RedundantCondition */
+                            if (is_countable(\${$argument->propertyName}) && count(\${$argument->propertyName}) > {$argument->maxItems}) {
+                                throw new InvalidArgumentException(sprintf('Expected at most %d items for \${$argument->propertyName}, got %d.', {$argument->maxItems}, count(\${$argument->propertyName})));
+                            }
+
+                            PHP);
+                        }
+                    }
+                }
+
                 if ($type->query) {
                     $namespace->addUseFunction('is_array');
                     $namespace->addUse(QueryObject::class);

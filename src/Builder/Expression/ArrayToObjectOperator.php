@@ -34,9 +34,7 @@ final class ArrayToObjectOperator implements ResolvesToObject, OperatorInterface
     /** @var BSONArray|PackedArray|ResolvesToArray|array|string $array */
     public readonly PackedArray|ResolvesToArray|BSONArray|array|string $array;
 
-    /**
-     * @param BSONArray|PackedArray|ResolvesToArray|array|string $array
-     */
+    /** @param BSONArray|PackedArray|ResolvesToArray|array|string $array */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array|string $array)
     {
         if (is_string($array) && ! str_starts_with($array, '$')) {

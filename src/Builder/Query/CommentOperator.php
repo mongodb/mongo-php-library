@@ -27,9 +27,7 @@ final class CommentOperator implements QueryInterface, OperatorInterface
     /** @var string $comment */
     public readonly string $comment;
 
-    /**
-     * @param string $comment
-     */
+    /** @param string $comment */
     public function __construct(string $comment)
     {
         $this->comment = $comment;

@@ -14,11 +14,11 @@ use MongoDB\BSON\Int64;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\InputStageInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
-use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
@@ -32,7 +32,7 @@ use function str_starts_with;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
  * @internal
  */
-final class GeoNearStage implements StageInterface, OperatorInterface
+final class GeoNearStage implements InputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$geoNear';

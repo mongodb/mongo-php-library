@@ -98,6 +98,15 @@ functions:
       params:
         destination: src
         path: build.tar.gz
+    # Ensure extension directory exists
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: "src"
+        binary: bash
+        args:
+          - -c
+          - mkdir -p `${PHP_PATH}/bin/php -r "echo ini_get('extension_dir');"`
     # Move compiled extension to correct ini path
     - command: subprocess.exec
       type: setup
@@ -126,6 +135,26 @@ functions:
     - command: attach.results
       params:
         file_location: "${DRIVERS_TOOLS}/results.json"
+    - command: shell.exec
+      params:
+        working_dir: src
+        script: |
+          ${PREPARE_SHELL}
+          if [ -f test-results.xml ]; then
+            curl -Os https://cli.codecov.io/latest/linux/codecov
+            curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+            shasum -a 256 -c codecov.SHA256SUM
+            sudo chmod +x codecov
+            ./codecov upload-process \
+              --report-type test_results \
+              --disable-search \
+              --fail-on-error \
+              --token ${CODECOV_TOKEN} \
+              --flag "${MONGODB_VERSION}-${TOPOLOGY}" \
+              --file test-results.xml
+          else
+            echo "Skipping codecov test result upload"
+          fi
 
   "bootstrap mongo-orchestration":
     - command: shell.exec
@@ -143,6 +172,12 @@ functions:
           LOAD_BALANCER=${LOAD_BALANCER} \
           REQUIRE_API_VERSION=${REQUIRE_API_VERSION} \
           bash ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+    - command: shell.exec
+      params:
+        script: |
+          printf "\n" >> mo-expansion.yml
+          printf "MONGODB_VERSION: '%s'\n" "${MONGODB_VERSION}" >> mo-expansion.yml
+          printf "TOPOLOGY: '%s'\n" "${TOPOLOGY}" >> mo-expansion.yml
     # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:
@@ -179,22 +214,32 @@ functions:
         working_dir: "src"
         script: |
           ${PREPARE_SHELL}
-          export AWS_ACCESS_KEY_ID="${client_side_encryption_aws_access_key_id}"
-          export AWS_SECRET_ACCESS_KEY="${client_side_encryption_aws_secret_access_key}"
-          export AWS_TEMP_ACCESS_KEY_ID="${client_side_encryption_aws_temp_access_key_id}"
-          export AWS_TEMP_SECRET_ACCESS_KEY="${client_side_encryption_aws_temp_secret_access_key_key}"
-          export AWS_TEMP_SESSION_TOKEN="${client_side_encryption_aws_temp_session_token}"
-          export AZURE_TENANT_ID="${client_side_encryption_azure_tenant_id}"
-          export AZURE_CLIENT_ID="${client_side_encryption_azure_client_id}"
-          export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
-          export GCP_EMAIL="${client_side_encryption_gcp_email}"
-          export GCP_PRIVATE_KEY="${client_side_encryption_gcp_privatekey}"
+          # KMS credentials are fetched from AWS Secrets Manager by "start kms servers".
+          . ${DRIVERS_TOOLS}/.evergreen/csfle/secrets-export.sh
+
+          if [ "${SKIP_AWS_CREDS}" != "yes" ]; then
+            export AWS_ACCESS_KEY_ID="$FLE_AWS_KEY"
+            export AWS_SECRET_ACCESS_KEY="$FLE_AWS_SECRET"
+          else
+            # Tests expect AWS credentials to be absent. secrets-export.sh exports them.
+            unset AWS_ACCESS_KEY_ID
+            unset AWS_SECRET_ACCESS_KEY
+          fi
+
+          export AWS_TEMP_ACCESS_KEY_ID="$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
+          export AWS_TEMP_SECRET_ACCESS_KEY="$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
+          export AWS_TEMP_SESSION_TOKEN="$CSFLE_AWS_TEMP_SESSION_TOKEN"
+          export AZURE_TENANT_ID="$FLE_AZURE_TENANTID"
+          export AZURE_CLIENT_ID="$FLE_AZURE_CLIENTID"
+          export AZURE_CLIENT_SECRET="$FLE_AZURE_CLIENTSECRET"
+          export GCP_EMAIL="$FLE_GCP_EMAIL"
+          export GCP_PRIVATE_KEY="$FLE_GCP_PRIVATEKEY"
           export KMIP_ENDPOINT="${client_side_encryption_kmip_endpoint}"
           export KMS_ENDPOINT_EXPIRED="${client_side_encryption_kms_endpoint_expired}"
           export KMS_ENDPOINT_WRONG_HOST="${client_side_encryption_kms_endpoint_wrong_host}"
           export KMS_ENDPOINT_REQUIRE_CLIENT_CERT="${client_side_encryption_kms_endpoint_require_client_cert}"
-          export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
-          export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
+          export KMS_TLS_CA_FILE="$CSFLE_TLS_CA_FILE"
+          export KMS_TLS_CERTIFICATE_KEY_FILE="$CSFLE_TLS_CLIENT_CERT_FILE"
           export PATH="${PHP_PATH}/bin:$PATH"
 
           API_VERSION=${API_VERSION} \
@@ -264,6 +309,19 @@ functions:
           fi
 
   "start kms servers":
+    # Fetch KMS credentials from the drivers/csfle AWS vault into secrets-export.sh
+    - command: ec2.assume_role
+      params:
+        role_arn: ${aws_test_secrets_role}
+    - command: subprocess.exec
+      params:
+        working_dir: ${DRIVERS_TOOLS}/.evergreen/csfle
+        binary: bash
+        include_expansions_in_env: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]
+        env:
+          FLE_AZURE_USE_CORPORATE: "YES"
+        args:
+          - ./setup-secrets.sh
     - command: shell.exec
       # Init venv without background:true to install dependencies
       params:
@@ -288,10 +346,6 @@ functions:
     - command: expansions.update
       params:
         updates:
-          - key: client_side_encryption_kms_tls_ca_file
-            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/ca.pem
-          - key: client_side_encryption_kms_tls_certificate_key_file
-            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/client.pem
           - key: client_side_encryption_kms_endpoint_expired
             value: 127.0.0.1:8100
           - key: client_side_encryption_kms_endpoint_wrong_host
@@ -300,36 +354,6 @@ functions:
             value: 127.0.0.1:8102
           - key: client_side_encryption_kmip_endpoint
             value: localhost:5698
-
-  "set aws temp creds":
-    - command: shell.exec
-      params:
-        shell: bash
-        script: |-
-          set -o errexit
-
-          export AWS_ACCESS_KEY_ID="${client_side_encryption_aws_access_key_id}"
-          export AWS_SECRET_ACCESS_KEY="${client_side_encryption_aws_secret_access_key}"
-          export AWS_DEFAULT_REGION="us-east-1"
-
-          pushd ${DRIVERS_TOOLS}/.evergreen/csfle
-          . ./activate-kmstlsvenv.sh
-          . ./set-temp-creds.sh
-          popd
-
-          if [ -z "$CSFLE_AWS_TEMP_ACCESS_KEY_ID" ]; then
-            echo "Failed to set AWS temporary credentials!"
-            exit 1
-          fi
-
-          cat <<EOT > aws-expansion.yml
-          client_side_encryption_aws_temp_access_key_id: "$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
-          client_side_encryption_aws_temp_secret_access_key_key: "$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
-          client_side_encryption_aws_temp_session_token: "$CSFLE_AWS_TEMP_SESSION_TOKEN"
-          EOT
-    - command: expansions.update
-      params:
-        file: aws-expansion.yml
 
   "locate PHP binaries":
     - command: shell.exec

@@ -55,7 +55,7 @@ runs:
     - name: Setup cache environment
       id: extcache
       if: steps.driver.outputs.ext-cachable == 'true'
-      uses: shivammathur/cache-extensions@v1
+      uses: shivammathur/cache-extensions@de3c642a5fce0ef91581a1c9831e229f525196d6  # 1.15.1
       with:
         php-version: ${{ inputs.php-version }}
         extensions: "${{ steps.driver.outputs.ext-spec }}"
@@ -65,14 +65,14 @@ runs:
 
     - name: Cache extensions
       if: steps.driver.outputs.ext-cachable == 'true'
-      uses: actions/cache@v4
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
       with:
         path: ${{ steps.extcache.outputs.dir }}
         key: ${{ steps.extcache.outputs.key }}
         restore-keys: ${{ steps.extcache.outputs.key }}
 
     - name: Install the mongodb extension
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240  # 2.37.2
       with:
         coverage: xdebug
         extensions: "${{ steps.driver.outputs.ext-spec }}"
@@ -97,7 +97,7 @@ runs:
         fi
 
     - name: Install dependencies with Composer
-      uses: ramsey/composer-install@3.0.0
+      uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda  # 4.0.0
       with:
         composer-options: "--no-suggest ${{ inputs.ignore-platform-req == 'true' && '--ignore-platform-req=php+' || '' }}"
         working-directory: "${{ inputs.working-directory }}"

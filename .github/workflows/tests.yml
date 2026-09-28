@@ -68,12 +68,12 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v7"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           fetch-depth: 2
           submodules: true
 
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: '3.13'
 
@@ -85,7 +85,7 @@ jobs:
           topology: ${{ matrix.topology }}
 
       - name: "Setup PHP"
-        uses: "./.github/actions/setup"
+        uses: ./.github/actions/setup
         with:
           php-version: ${{ matrix.php-version }}
           driver-version: ${{ matrix.driver-version || 'stable' }}

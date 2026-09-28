@@ -27,7 +27,7 @@ runs:
         key: "extcache-${{ inputs.driver-version }}"
 
     - name: Cache extensions
-      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
       with:
         path: ${{ steps.extcache.outputs.dir }}
         key: ${{ steps.extcache.outputs.key }}
@@ -47,7 +47,7 @@ runs:
       shell: bash
 
     - name: Install dependencies with Composer
-      uses: ramsey/composer-install@57532f8be5bda426838819c5ee9afb8af389d51a  # 3.0.0
+      uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda  # 4.0.0
       with:
         composer-options: "--no-suggest"
         working-directory: "${{ inputs.working-directory }}"

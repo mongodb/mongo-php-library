@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
 
@@ -48,13 +48,13 @@ jobs:
 
       - name: "Upload SARIF report"
         if: ${{ github.event_name != 'workflow_dispatch' }}
-        uses: github/codeql-action/upload-sarif@1190a975f95ce23525efb6a3fc21ea29567c1b52  # v3.38.2
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2  # v4.38.2
         with:
           sarif_file: psalm.sarif
 
       - name: "Upload SARIF report"
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        uses: github/codeql-action/upload-sarif@1190a975f95ce23525efb6a3fc21ea29567c1b52  # v3.38.2
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2  # v4.38.2
         with:
           sarif_file: psalm.sarif
           ref: ${{ inputs.ref }}

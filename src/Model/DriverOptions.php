@@ -16,24 +16,24 @@ use function sprintf;
 use function trim;
 
 /**
- * The "driver" shape is inlined in DriverOptionsArray rather than referencing the
- * DriverInfoArray alias: under the open-shape intersection, Psalm widens locally
+ * The "driver" shape is inlined in DriverOptionsShape rather than referencing the
+ * DriverInfoShape alias: under the open-shape intersection, Psalm widens locally
  * defined alias value types to mixed.
  *
- * @phpstan-import-type AutoEncryptionOptionsArray from AutoEncryptionOptions
- * @phpstan-type DriverInfoArray = array{name?: string, version?: string, platform?: string}
- * @phpstan-type DriverOptionsArray = array{
+ * @phpstan-import-type AutoEncryptionOptionsShape from AutoEncryptionOptions
+ * @phpstan-type DriverInfoShape = array{name?: string, version?: string, platform?: string}
+ * @phpstan-type DriverOptionsShape = array{
  *     typeMap?: array<string, mixed>,
  *     builderEncoder?: Encoder,
- *     autoEncryption?: AutoEncryptionOptionsArray,
+ *     autoEncryption?: AutoEncryptionOptionsShape,
  *     driver?: array{name?: string, version?: string, platform?: string},
  * } & array<string, mixed>
- * @psalm-import-type AutoEncryptionOptionsArray from AutoEncryptionOptions
- * @psalm-type DriverInfoArray = array{name?: string, version?: string, platform?: string}
- * @psalm-type DriverOptionsArray = array{
+ * @psalm-import-type AutoEncryptionOptionsShape from AutoEncryptionOptions
+ * @psalm-type DriverInfoShape = array{name?: string, version?: string, platform?: string}
+ * @psalm-type DriverOptionsShape = array{
  *     typeMap?: array<string, mixed>,
  *     builderEncoder?: Encoder,
- *     autoEncryption?: AutoEncryptionOptionsArray,
+ *     autoEncryption?: AutoEncryptionOptionsShape,
  *     driver?: array{name?: string, version?: string, platform?: string},
  * } & array<string, mixed>
  * @internal
@@ -58,7 +58,7 @@ final class DriverOptions
 
     /**
      * @param array|null      $autoEncryption
-     * @param DriverInfoArray $driver
+     * @param DriverInfoShape $driver
      */
     private function __construct(
         public readonly array $typeMap,
@@ -70,7 +70,7 @@ final class DriverOptions
         $this->driver = $this->mergeDriverInfo($driver);
     }
 
-    /** @param DriverOptionsArray $options */
+    /** @param DriverOptionsShape $options */
     public static function fromArray(array $options): self
     {
         $options += [self::KEY_TYPE_MAP => self::DEFAULT_TYPE_MAP];
@@ -144,7 +144,7 @@ final class DriverOptions
         return self::$version;
     }
 
-    /** @param DriverInfoArray $driver */
+    /** @param DriverInfoShape $driver */
     private function mergeDriverInfo(array $driver): array
     {
         if (isset($driver['name'])) {

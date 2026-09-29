@@ -2,6 +2,8 @@
 
 namespace MongoDB\Tests\Type;
 
+use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Client;
 use MongoDB\Model\AutoEncryptionOptions;
 use MongoDB\Model\DriverOptions;
@@ -14,10 +16,11 @@ use MongoDB\Model\DriverOptions;
  * AutoEncryptionOptions are accepted by their methods and can be imported by
  * downstream consumers.
  *
- * @psalm-import-type AutoEncryptionOptionsArray from AutoEncryptionOptions
- * @psalm-import-type EncryptedFieldsArray from AutoEncryptionOptions
- * @psalm-import-type DriverOptionsArray from DriverOptions
- * @psalm-import-type UriOptionsArray from Client
+ * @psalm-import-type AutoEncryptionOptionsShape from AutoEncryptionOptions
+ * @psalm-import-type EncryptedFieldsShape from AutoEncryptionOptions
+ * @psalm-import-type KmsProvidersShape from AutoEncryptionOptions
+ * @psalm-import-type DriverOptionsShape from DriverOptions
+ * @psalm-import-type UriOptionsShape from Client
  */
 final class AutoEncryptionShapes
 {
@@ -64,9 +67,9 @@ final class AutoEncryptionShapes
         $client->createClientEncryption([
             'keyVaultNamespace' => 'encryption.__keyVault',
             'kmsProviders' => ['local' => ['key' => 'local-master-key']],
-            'keyExpirationMS' => 60000,
-            'tlsProviders' => [['foo' => 'bar']],
-            'disableClientPersistence' => false,
+            'tlsOptions' => ['kmip' => ['tlsCAFile' => '/path/to/ca.pem']],
+            'schemaMap' => ['db.collection' => ['bsonType' => 'object']],
+            'bypassAutoEncryption' => true,
         ]);
     }
 
@@ -119,13 +122,13 @@ final class AutoEncryptionShapes
         ]);
     }
 
-    /** Exercises the imported UriOptionsArray alias. */
+    /** Exercises the imported UriOptionsShape alias. */
     public function constructClientWithImportedUriOptions(): void
     {
         new Client(null, $this->uriOptions(), []);
     }
 
-    /** @return AutoEncryptionOptionsArray */
+    /** @return AutoEncryptionOptionsShape */
     public function autoEncryptionOptions(): array
     {
         return [
@@ -135,17 +138,57 @@ final class AutoEncryptionShapes
         ];
     }
 
-    /** @return EncryptedFieldsArray */
+    /**
+     * Keys may be a provider name or a provider name suffixed with ":<name>".
+     *
+     * @return KmsProvidersShape
+     */
+    public function kmsProviders(): array
+    {
+        return [
+            'local' => ['key' => 'local-master-key'],
+            'aws' => ['accessKeyId' => 'abc', 'secretAccessKey' => 'def'],
+            'aws:name2' => ['accessKeyId' => 'foo2', 'secretAccessKey' => 'bar2'],
+            'local:name1' => ['key' => 'another-master-key'],
+        ];
+    }
+
+    /** @return EncryptedFieldsShape */
     public function encryptedFields(): array
     {
         return [
             'fields' => [
                 ['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null],
+                [
+                    'path' => 'balance',
+                    'bsonType' => 'decimal',
+                    'queries' => [
+                        [
+                            'queryType' => 'range',
+                            'min' => new Decimal128('0'),
+                            'max' => new Decimal128('1000000'),
+                            'trimFactor' => 1,
+                            'precision' => 2,
+                            'contention' => 0,
+                        ],
+                    ],
+                ],
+                [
+                    'path' => 'birthday',
+                    'bsonType' => 'date',
+                    'queries' => [
+                        [
+                            'queryType' => 'range',
+                            'min' => new UTCDateTime(0),
+                            'max' => new UTCDateTime(200),
+                        ],
+                    ],
+                ],
             ],
         ];
     }
 
-    /** @return DriverOptionsArray */
+    /** @return DriverOptionsShape */
     public function driverOptions(): array
     {
         return [
@@ -154,7 +197,7 @@ final class AutoEncryptionShapes
         ];
     }
 
-    /** @return UriOptionsArray */
+    /** @return UriOptionsShape */
     public function uriOptions(): array
     {
         return [

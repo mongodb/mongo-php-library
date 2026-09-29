@@ -46,9 +46,9 @@ use Stringable;
 use function array_diff_key;
 
 /**
- * @phpstan-import-type AutoEncryptionOptionsArray from Model\AutoEncryptionOptions
- * @phpstan-import-type DriverOptionsArray from Model\DriverOptions
- * @phpstan-type UriOptionsArray = array{
+ * @phpstan-import-type AutoEncryptionOptionsShape from Model\AutoEncryptionOptions
+ * @phpstan-import-type DriverOptionsShape from Model\DriverOptions
+ * @phpstan-type UriOptionsShape = array{
  *     readPreference?: string,
  *     readConcernLevel?: string,
  *     w?: string|int,
@@ -69,9 +69,9 @@ use function array_diff_key;
  *     minPoolSize?: int,
  * } & array<string, mixed>
  * @psalm-import-type stage from Builder\Pipeline
- * @psalm-import-type AutoEncryptionOptionsArray from Model\AutoEncryptionOptions
- * @psalm-import-type DriverOptionsArray from Model\DriverOptions
- * @psalm-type UriOptionsArray = array{
+ * @psalm-import-type AutoEncryptionOptionsShape from Model\AutoEncryptionOptions
+ * @psalm-import-type DriverOptionsShape from Model\DriverOptions
+ * @psalm-type UriOptionsShape = array{
  *     readPreference?: string,
  *     readConcernLevel?: string,
  *     w?: string|int,
@@ -129,8 +129,8 @@ class Client implements Stringable
      * @see https://php.net/manual/en/mongodb-driver-manager.construct.php
      * @see https://php.net/manual/en/mongodb.persistence.php#mongodb.persistence.typemaps
      * @param string|null        $uri           MongoDB connection string. If none is provided, this defaults to self::DEFAULT_URI.
-     * @param UriOptionsArray    $uriOptions    Additional connection string options
-     * @param DriverOptionsArray $driverOptions Driver-specific options
+     * @param UriOptionsShape    $uriOptions    Additional connection string options
+     * @param DriverOptionsShape $driverOptions Driver-specific options
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverInvalidArgumentException for parameter/option parsing errors in the driver
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -229,7 +229,7 @@ class Client implements Stringable
     /**
      * Returns a ClientEncryption instance for explicit encryption and decryption
      *
-     * @param AutoEncryptionOptionsArray $options
+     * @param AutoEncryptionOptionsShape $options
      */
     public function createClientEncryption(array $options): ClientEncryption
     {

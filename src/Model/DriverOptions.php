@@ -4,11 +4,8 @@ namespace MongoDB\Model;
 
 use Composer\InstalledVersions;
 use MongoDB\Builder\BuilderEncoder;
-use MongoDB\Client;
 use MongoDB\Codec\Encoder;
-use MongoDB\Driver\Manager;
 use MongoDB\Exception\InvalidArgumentException;
-use stdClass;
 use Throwable;
 
 use function array_diff_key;
@@ -18,7 +15,29 @@ use function is_string;
 use function sprintf;
 use function trim;
 
-/** @internal */
+/**
+ * The "driver" shape is inlined in DriverOptionsShape rather than referencing the
+ * DriverInfoShape alias: under the open-shape intersection, Psalm widens locally
+ * defined alias value types to mixed.
+ *
+ * @phpstan-import-type AutoEncryptionOptionsShape from AutoEncryptionOptions
+ * @phpstan-type DriverInfoShape = array{name?: string, version?: string, platform?: string}
+ * @phpstan-type DriverOptionsShape = array{
+ *     typeMap?: array<string, mixed>,
+ *     builderEncoder?: Encoder,
+ *     autoEncryption?: AutoEncryptionOptionsShape,
+ *     driver?: array{name?: string, version?: string, platform?: string},
+ * } & array<string, mixed>
+ * @psalm-import-type AutoEncryptionOptionsShape from AutoEncryptionOptions
+ * @psalm-type DriverInfoShape = array{name?: string, version?: string, platform?: string}
+ * @psalm-type DriverOptionsShape = array{
+ *     typeMap?: array<string, mixed>,
+ *     builderEncoder?: Encoder,
+ *     autoEncryption?: AutoEncryptionOptionsShape,
+ *     driver?: array{name?: string, version?: string, platform?: string},
+ * } & array<string, mixed>
+ * @internal
+ */
 final class DriverOptions
 {
     private const KEY_TYPE_MAP = 'typeMap';
@@ -38,8 +57,8 @@ final class DriverOptions
     public array $driver;
 
     /**
-     * @param array|null                                                $autoEncryption
-     * @param array{name?: string, version?: string, platform?: string} $driver
+     * @param array|null      $autoEncryption
+     * @param DriverInfoShape $driver
      */
     private function __construct(
         public readonly array $typeMap,
@@ -51,6 +70,7 @@ final class DriverOptions
         $this->driver = $this->mergeDriverInfo($driver);
     }
 
+    /** @param DriverOptionsShape $options */
     public static function fromArray(array $options): self
     {
         $options += [self::KEY_TYPE_MAP => self::DEFAULT_TYPE_MAP];
@@ -71,13 +91,12 @@ final class DriverOptions
             );
         }
 
-        /** @var array{kmsProviders?: stdClass|array<string, array>, keyVaultClient?: Client|Manager} $autoEncryptionOptions */
         $autoEncryptionOptions = $options[self::KEY_AUTO_ENCRYPTION] ?? [];
         $autoEncryption = ! empty($autoEncryptionOptions)
             ? AutoEncryptionOptions::fromArray($autoEncryptionOptions)->toArray()
             : null;
 
-        /** @var array{name?: string, version?: string, platform?: string} $driver $driver */
+        /** @var array{name?: string, version?: string, platform?: string} $driver */
         $driver = $options[self::KEY_DRIVER] ?? [];
 
         return new self(
@@ -125,7 +144,7 @@ final class DriverOptions
         return self::$version;
     }
 
-    /** @param array{name?: string, version?: string, platform?: string} $driver */
+    /** @param DriverInfoShape $driver */
     private function mergeDriverInfo(array $driver): array
     {
         if (isset($driver['name'])) {

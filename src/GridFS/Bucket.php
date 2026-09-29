@@ -662,6 +662,7 @@ class Bucket
 
             return $this->getFileIdForStream($destination);
         } finally {
+            // Closing flushes the last chunk and writes the file document, so do not rely on garbage collection.
             fclose($destination);
         }
     }

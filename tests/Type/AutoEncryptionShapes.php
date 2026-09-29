@@ -158,7 +158,7 @@ final class AutoEncryptionShapes
     public function createClientEncryptionWithObjectKmsProviders(Client $client): void
     {
         $kmsProviders = new stdClass();
-        $kmsProviders->local = [];
+        $kmsProviders->aws = new stdClass();
 
         $client->createClientEncryption(['kmsProviders' => $kmsProviders]);
     }

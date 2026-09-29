@@ -927,7 +927,11 @@ class WatchFunctionalTest extends FunctionalTestCase
             ['resumeAfter' => $resumeToken] + $options + $this->defaultOptions,
         );
         $changeStream = $operation->execute($this->getPrimaryServer());
-        $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
+
+        if (! $this->isShardedCluster()) {
+            // On a sharded cluster the initial batch may be empty: getResumeToken() is the postBatchResumeToken.
+            $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
+        }
 
         $changeStream->rewind();
 
@@ -981,7 +985,11 @@ class WatchFunctionalTest extends FunctionalTestCase
             ['resumeAfter' => $resumeToken] + $options + $this->defaultOptions,
         );
         $changeStream = $operation->execute($this->getPrimaryServer());
-        $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
+
+        if (! $this->isShardedCluster()) {
+            // On a sharded cluster the initial batch may be empty: getResumeToken() is the postBatchResumeToken.
+            $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
+        }
 
         $changeStream->rewind();
 
@@ -1029,7 +1037,11 @@ class WatchFunctionalTest extends FunctionalTestCase
             ['startAfter' => $resumeToken] + $options + $this->defaultOptions,
         );
         $changeStream = $operation->execute($this->getPrimaryServer());
-        $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
+
+        if (! $this->isShardedCluster()) {
+            // On a sharded cluster the initial batch may be empty: getResumeToken() is the postBatchResumeToken.
+            $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
+        }
 
         $changeStream->rewind();
 

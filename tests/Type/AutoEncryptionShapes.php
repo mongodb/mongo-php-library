@@ -7,6 +7,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Client;
 use MongoDB\Model\AutoEncryptionOptions;
 use MongoDB\Model\DriverOptions;
+use stdClass;
 
 /**
  * Psalm type tests for the URI, driver, and autoEncryption option shapes.
@@ -151,6 +152,12 @@ final class AutoEncryptionShapes
             'aws:name2' => ['accessKeyId' => 'foo2', 'secretAccessKey' => 'bar2'],
             'local:name1' => ['key' => 'another-master-key'],
         ];
+    }
+
+    /** Object-form KMS providers are valid for on-demand credentials. */
+    public function createClientEncryptionWithObjectKmsProviders(Client $client): void
+    {
+        $client->createClientEncryption(['kmsProviders' => new stdClass()]);
     }
 
     /** @return EncryptedFieldsShape */

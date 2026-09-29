@@ -65,7 +65,7 @@ use function sprintf;
  * }
  * @phpstan-type AutoEncryptionOptionsShape = array{
  *     keyVaultNamespace?: string,
- *     kmsProviders?: KmsProvidersShape,
+ *     kmsProviders?: KmsProvidersShape|stdClass,
  *     schemaMap?: array<string, array<string, mixed>>,
  *     encryptedFieldsMap?: array<string, EncryptedFieldsShape>,
  *     extraOptions?: ExtraOptionsShape,
@@ -119,7 +119,7 @@ use function sprintf;
  * }
  * @psalm-type AutoEncryptionOptionsShape = array{
  *     keyVaultNamespace?: string,
- *     kmsProviders?: KmsProvidersShape,
+ *     kmsProviders?: KmsProvidersShape|stdClass,
  *     schemaMap?: array<string, array<string, mixed>>,
  *     encryptedFieldsMap?: array<string, EncryptedFieldsShape>,
  *     extraOptions?: ExtraOptionsShape,

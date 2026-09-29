@@ -47,6 +47,7 @@ use function sprintf;
  *     path: string,
  *     bsonType: string,
  *     keyId?: Binary|null,
+ *     keyAltName?: string,
  *     queries?: list<array{
  *         queryType: 'equality'|'range',
  *         contention?: int,
@@ -100,6 +101,7 @@ use function sprintf;
  *     path: string,
  *     bsonType: string,
  *     keyId?: Binary|null,
+ *     keyAltName?: string,
  *     queries?: list<array{
  *         queryType: 'equality'|'range',
  *         contention?: int,

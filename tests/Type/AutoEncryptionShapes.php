@@ -159,6 +159,7 @@ final class AutoEncryptionShapes
         return [
             'fields' => [
                 ['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null],
+                ['path' => 'indexed', 'bsonType' => 'string', 'keyAltName' => 'altname'],
                 [
                     'path' => 'balance',
                     'bsonType' => 'decimal',

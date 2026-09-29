@@ -20,7 +20,7 @@ use function sprintf;
  * several sets of credentials for the same provider (e.g. "aws:name2"). TlsOptionsShape keys
  * follow the same convention.
  *
- * @phpstan-type KmsProvidersShape = array<string,
+ * @phpstan-type KmsProvidersShape = non-empty-array<string,
  *     array{key: string|Binary}
  *     |array{accessKeyId?: string, secretAccessKey?: string, sessionToken?: string}
  *     |array{tenantId?: string, clientId?: string, clientSecret?: string, identityPlatformEndpoint?: string}
@@ -74,7 +74,7 @@ use function sprintf;
  *     bypassAutoEncryption?: bool,
  *     bypassQueryAnalysis?: bool,
  * }
- * @psalm-type KmsProvidersShape = array<string,
+ * @psalm-type KmsProvidersShape = non-empty-array<string,
  *     array{key: string|Binary}
  *     |array{accessKeyId?: string, secretAccessKey?: string, sessionToken?: string}
  *     |array{tenantId?: string, clientId?: string, clientSecret?: string, identityPlatformEndpoint?: string}

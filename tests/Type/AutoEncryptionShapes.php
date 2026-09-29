@@ -157,7 +157,10 @@ final class AutoEncryptionShapes
     /** Object-form KMS providers are valid for on-demand credentials. */
     public function createClientEncryptionWithObjectKmsProviders(Client $client): void
     {
-        $client->createClientEncryption(['kmsProviders' => new stdClass()]);
+        $kmsProviders = new stdClass();
+        $kmsProviders->aws = new stdClass();
+
+        $client->createClientEncryption(['kmsProviders' => $kmsProviders]);
     }
 
     /** @return EncryptedFieldsShape */

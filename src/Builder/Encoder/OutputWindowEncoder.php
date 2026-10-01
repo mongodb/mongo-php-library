@@ -57,6 +57,8 @@ final class OutputWindowEncoder implements Encoder
         }
 
         if ($value->window !== Optional::Undefined) {
+            // Do not modify an stdClass operator provided by the user, as it may be shared with other windows
+            $result = clone $result;
             $result->window = $this->recursiveEncode($value->window);
         }
 

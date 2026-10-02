@@ -5,7 +5,8 @@ changelog:
       - merge-up
     authors:
       - mongodb-php-bot
-      - dependabot
+      - mongodb-drivers-pr-bot[bot]
+      - dependabot[bot]
   categories:
     - title: Breaking Changes 🛠
       labels:

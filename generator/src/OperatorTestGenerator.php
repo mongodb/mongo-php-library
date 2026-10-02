@@ -32,9 +32,11 @@ use function hex2bin;
 use function is_array;
 use function is_numeric;
 use function is_object;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use function ksort;
+use function rtrim;
 use function sprintf;
 use function str_replace;
 use function ucwords;
@@ -168,6 +170,10 @@ class OperatorTestGenerator extends OperatorGenerator
             }
 
             return $object;
+        }
+
+        if (is_string($object)) {
+            return rtrim($object, "\n");
         }
 
         return $object;

@@ -7,7 +7,12 @@ namespace MongoDB\CodeGenerator\Definition;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
+use function array_walk_recursive;
 use function get_object_vars;
+use function is_array;
+use function is_object;
+use function is_string;
+use function rtrim;
 
 final class YamlReader
 {

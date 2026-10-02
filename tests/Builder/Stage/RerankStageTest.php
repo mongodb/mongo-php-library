@@ -28,7 +28,7 @@ class RerankStageTest extends PipelineTestCase
             Stage::sort(released: -1),
             Stage::rerank(
                 model: 'rerank-2.5',
-                query: object(text: 'a group of heroes band together to stop a powerful enemy and save the world'),
+                query: object(text: "a group of heroes band together to stop a powerful enemy and save the world\n"),
                 path: ['title', 'plot'],
                 numDocsToRerank: 100,
             ),

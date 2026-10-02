@@ -2646,7 +2646,7 @@ enum Pipelines: string
             "$rerank": {
                 "model": "rerank-2.5",
                 "query": {
-                    "text": "a group of heroes band together to stop a powerful enemy and save the world"
+                    "text": "a group of heroes band together to stop a powerful enemy and save the world\n"
                 },
                 "numDocsToRerank": {
                     "$numberInt": "100"

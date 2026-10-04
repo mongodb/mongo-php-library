@@ -160,7 +160,7 @@ class Delete implements Executable, Explainable
      */
     public function getCommandDocument()
     {
-        $cmd = ['delete' => $this->collectionName, 'deletes' => [['q' => $this->filter] + $this->createDeleteOptions()]];
+        $cmd = ['delete' => $this->collectionName, 'deletes' => [['q' => (object) $this->filter] + $this->createDeleteOptions()]];
 
         if (isset($this->options['comment'])) {
             $cmd['comment'] = $this->options['comment'];

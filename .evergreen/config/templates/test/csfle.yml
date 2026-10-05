@@ -1,7 +1,7 @@
   - name: "test-mongodb-%mongodbVersion%-crypt-shared"
     tags: ["replicaset", "local", "%mongodbVersion%", "csfle", "tag"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "%mongodbVersion%"
@@ -14,7 +14,7 @@
   - name: "test-mongodb-%mongodbVersion%-mongocryptd"
     tags: ["replicaset", "local", "%mongodbVersion%", "csfle", "pr", "tag"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "replica_set"
           SKIP_CRYPT_SHARED: "yes"
@@ -28,7 +28,7 @@
   - name: "test-mongodb-%mongodbVersion%-no-aws-creds"
     tags: ["replicaset", "local", "%mongodbVersion%", "csfle", "tag"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "%mongodbVersion%"

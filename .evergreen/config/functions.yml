@@ -115,7 +115,6 @@ functions:
         script: |
           ${PREPARE_SHELL}
           git submodule update --init
-          echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
 
   "upload test results":
     - command: attach.xunit_results
@@ -127,7 +126,7 @@ functions:
       params:
         file_location: "${DRIVERS_TOOLS}/results.json"
 
-  "bootstrap mongo-orchestration":
+  "bootstrap mongodb-runner":
     - command: shell.exec
       params:
         script: |
@@ -142,18 +141,18 @@ functions:
           STORAGE_ENGINE=${STORAGE_ENGINE} \
           LOAD_BALANCER=${LOAD_BALANCER} \
           REQUIRE_API_VERSION=${REQUIRE_API_VERSION} \
-          bash ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
-    # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
+          bash ${DRIVERS_TOOLS}/.evergreen/run-mongodb.sh start
+    # run-mongodb generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:
         file: mo-expansion.yml
 
-  "stop mongo-orchestration":
+  "stop mongodb-runner":
     - command: shell.exec
       params:
         script: |
           ${PREPARE_SHELL}
-          bash ${DRIVERS_TOOLS}/.evergreen/stop-orchestration.sh
+          bash ${DRIVERS_TOOLS}/.evergreen/run-mongodb.sh stop
 
   "bootstrap mongohoused":
     - command: shell.exec

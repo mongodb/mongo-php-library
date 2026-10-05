@@ -10,7 +10,7 @@ tasks:
   - name: "run-benchmark"
     exec_timeout_secs: 3600
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "server"
           MONGODB_VERSION: "v6.0-perf"

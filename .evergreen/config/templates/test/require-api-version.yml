@@ -1,7 +1,7 @@
   - name: "test-mongodb-%mongodbVersion%-requireApiVersion"
     tags: ["standalone", "local", "%mongodbVersion%", "versioned_api", "pr", "tag"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "server"
           AUTH: "auth"
@@ -16,7 +16,7 @@
   - name: "test-mongodb-%mongodbVersion%-acceptApiVersion2"
     tags: ["standalone", "local", "%mongodbVersion%", "versioned_api"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "server"
           ORCHESTRATION_FILE: "versioned-api-testing.json"

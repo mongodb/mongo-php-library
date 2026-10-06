@@ -302,7 +302,20 @@ final class Context
             );
         }
 
-        $this->entityMap->set($id, FunctionalTestCase::createTestClient($uri, $uriOptions, $driverOptions));
+        $client = FunctionalTestCase::createTestClient($uri, $uriOptions, $driverOptions);
+        $this->entityMap->set($id, $client);
+
+        /* Advance the client's cluster time so that operations using an
+         * implicit session observe the cluster time captured from initialData.
+         * initialData uses an internal client that does not gossip its cluster
+         * time to test entities, so a snapshot read may otherwise be served by
+         * a mongos that has not yet seen the initialData (DRIVERS-2816). This
+         * runs before event observers are started, so it is not observed. */
+        if ($this->advanceClusterTime !== null) {
+            $session = $client->startSession();
+            $session->advanceClusterTime($this->advanceClusterTime);
+            $client->getDatabase('admin')->command(['ping' => 1], ['session' => $session]);
+        }
     }
 
     private function createClientEncryption(string $id, stdClass $o): void

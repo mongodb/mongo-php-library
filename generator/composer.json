@@ -18,7 +18,7 @@
         "nikic/php-parser": "^5",
         "symfony/console": "^7",
         "symfony/finder": "^7",
-        "symfony/yaml": "^7"
+        "symfony/yaml": "^7.4.20"
     },
     "license": "Apache-2.0",
     "autoload": {

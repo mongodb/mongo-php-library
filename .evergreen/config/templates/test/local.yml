@@ -1,7 +1,7 @@
   - name: "test-mongodb-%mongodbVersion%-standalone-noauth-nossl"
     tags: ["standalone", "local", "%mongodbVersion%", "tag"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "server"
           MONGODB_VERSION: "%mongodbVersion%"
@@ -12,7 +12,7 @@
   - name: "test-mongodb-%mongodbVersion%-replicaset-noauth-nossl"
     tags: ["replicaset", "local", "%mongodbVersion%", "pr", "tag"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "%mongodbVersion%"
@@ -23,7 +23,7 @@
   - name: "test-mongodb-%mongodbVersion%-sharded-noauth-nossl"
     tags: ["sharded", "local", "%mongodbVersion%", "tag"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "%mongodbVersion%"

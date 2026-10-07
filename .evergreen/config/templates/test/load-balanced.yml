@@ -1,7 +1,7 @@
   - name: "test-mongodb-%mongodbVersion%-loadbalanced"
     tags: ["loadbalanced", "local", "%mongodbVersion%", "tag"]
     commands:
-      - func: "bootstrap mongo-orchestration"
+      - func: "bootstrap mongodb-runner"
         vars:
           TOPOLOGY: "sharded_cluster"
           MONGODB_VERSION: "%mongodbVersion%"

@@ -6,7 +6,6 @@
           TOPOLOGY: "replica_set"
           MONGODB_VERSION: "%mongodbVersion%"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -20,7 +19,6 @@
           SKIP_CRYPT_SHARED: "yes"
           MONGODB_VERSION: "%mongodbVersion%"
       - func: "start kms servers"
-      - func: "set aws temp creds"
       - func: "run tests"
         vars:
           TESTS: "csfle"
@@ -35,6 +33,5 @@
       - func: "start kms servers"
       - func: "run tests"
         vars:
-          client_side_encryption_aws_access_key_id: ""
-          client_side_encryption_aws_secret_access_key: ""
+          SKIP_AWS_CREDS: "yes"
           TESTS: "csfle-without-aws-creds"

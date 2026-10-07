@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\Printer;
-use Nette\PhpGenerator\PsrPrinter;
 
 use function array_pop;
 use function assert;
@@ -34,7 +33,7 @@ abstract class AbstractGenerator
     public function __construct(
         private string $rootDir,
     ) {
-        $this->printer = new PsrPrinter();
+        $this->printer = new ClassPrinter();
     }
 
     /**
@@ -55,7 +54,7 @@ abstract class AbstractGenerator
         $classes = $namespace->getClasses();
         assert(count($classes) === 1, sprintf('Expected exactly one class in namespace "%s", got %d.', $namespace->getName(), count($classes)));
 
-        $filename = $this->rootDir . $this->getFileName($namespace->getName(), current($classes)->getName());
+        $filename = $this->rootDir . '/' . $this->getFileName($namespace->getName(), current($classes)->getName());
 
         $dirname = dirname($filename);
         if (! is_dir($dirname)) {

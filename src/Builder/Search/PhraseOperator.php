@@ -25,6 +25,8 @@ use function is_array;
 /**
  * The phrase operator performs search for documents containing an ordered sequence of terms using the analyzer specified in the index configuration.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/phrase/
  * @internal
  */

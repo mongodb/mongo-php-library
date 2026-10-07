@@ -15,13 +15,19 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\SearchOperatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * The compound operator combines two or more operators into a single query.
  * Each element of a compound query is called a clause, and each clause
  * consists of one or more sub-queries.
+ *
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/
  * @internal
@@ -38,6 +44,7 @@ final class CompoundOperator implements SearchOperatorInterface, OperatorInterfa
         'filter' => 'filter',
         'minimumShouldMatch' => 'minimumShouldMatch',
         'score' => 'score',
+        'doesNotAffect' => 'doesNotAffect',
     ];
 
     /** @var Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $must */
@@ -58,6 +65,9 @@ final class CompoundOperator implements SearchOperatorInterface, OperatorInterfa
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
 
+    /** @var Optional|BSONArray|PackedArray|array|string $doesNotAffect */
+    public readonly Optional|PackedArray|BSONArray|array|string $doesNotAffect;
+
     /**
      * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $must
      * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $mustNot
@@ -65,6 +75,7 @@ final class CompoundOperator implements SearchOperatorInterface, OperatorInterfa
      * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $filter
      * @param Optional|int $minimumShouldMatch
      * @param Optional|Document|Serializable|array|stdClass $score
+     * @param Optional|BSONArray|PackedArray|array|string $doesNotAffect
      */
     public function __construct(
         Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $must = Optional::Undefined,
@@ -73,6 +84,7 @@ final class CompoundOperator implements SearchOperatorInterface, OperatorInterfa
         Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $filter = Optional::Undefined,
         Optional|int $minimumShouldMatch = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array|string $doesNotAffect = Optional::Undefined,
     ) {
         $this->must = $must;
         $this->mustNot = $mustNot;
@@ -80,5 +92,10 @@ final class CompoundOperator implements SearchOperatorInterface, OperatorInterfa
         $this->filter = $filter;
         $this->minimumShouldMatch = $minimumShouldMatch;
         $this->score = $score;
+        if (is_array($doesNotAffect) && ! array_is_list($doesNotAffect)) {
+            throw new InvalidArgumentException('Expected $doesNotAffect argument to be a list, got an associative array.');
+        }
+
+        $this->doesNotAffect = $doesNotAffect;
     }
 }

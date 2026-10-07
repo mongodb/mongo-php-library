@@ -25,6 +25,8 @@ use function str_starts_with;
 /**
  * Subtracts a number of time units from a date object.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/
  * @internal
  */

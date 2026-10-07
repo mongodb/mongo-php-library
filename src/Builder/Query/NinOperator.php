@@ -33,9 +33,7 @@ final class NinOperator implements FieldQueryInterface, OperatorInterface
     /** @var BSONArray|PackedArray|array $value */
     public readonly PackedArray|BSONArray|array $value;
 
-    /**
-     * @param BSONArray|PackedArray|array $value
-     */
+    /** @param BSONArray|PackedArray|array $value */
     public function __construct(PackedArray|BSONArray|array $value)
     {
         if (is_array($value) && ! array_is_list($value)) {

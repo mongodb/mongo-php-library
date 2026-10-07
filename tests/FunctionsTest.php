@@ -18,7 +18,6 @@ use function MongoDB\document_to_array;
 use function MongoDB\is_builder_pipeline;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_last_pipeline_operator_write;
-use function MongoDB\is_mapreduce_output_inline;
 use function MongoDB\is_pipeline;
 use function MongoDB\is_write_concern_acknowledged;
 
@@ -159,20 +158,6 @@ class FunctionsTest extends TestCase
     {
         $this->expectException(TypeError::class);
         is_first_key_operator($document);
-    }
-
-    #[DataProvider('provideDocumentCasts')]
-    public function testIsMapReduceOutputInlineWithDocumentValues(callable $cast): void
-    {
-        $this->assertTrue(is_mapreduce_output_inline($cast(['inline' => 1])));
-        // Note: only the key is significant
-        $this->assertTrue(is_mapreduce_output_inline($cast(['inline' => 0])));
-        $this->assertFalse(is_mapreduce_output_inline($cast(['replace' => 'collectionName'])));
-    }
-
-    public function testIsMapReduceOutputInlineWithStringValue(): void
-    {
-        $this->assertFalse(is_mapreduce_output_inline('collectionName'));
     }
 
     #[DataProvider('provideTypeMapValues')]

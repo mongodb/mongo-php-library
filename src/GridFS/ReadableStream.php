@@ -17,7 +17,6 @@
 
 namespace MongoDB\GridFS;
 
-use Iterator;
 use MongoDB\BSON\Binary;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
@@ -38,7 +37,7 @@ use function substr;
  *
  * @internal
  */
-class ReadableStream
+final class ReadableStream
 {
     private ?string $buffer = null;
 
@@ -48,8 +47,7 @@ class ReadableStream
 
     private int $chunkOffset = 0;
 
-    /** @var (CursorInterface&Iterator)|null */
-    private ?Iterator $chunksIterator = null;
+    private ?CursorInterface $chunksIterator = null;
 
     private int $expectedLastChunkSize = 0;
 

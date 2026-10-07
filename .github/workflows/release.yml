@@ -133,7 +133,7 @@ jobs:
           EOL
 
       - name: "Create draft release"
-        run: echo "RELEASE_URL=$(gh release create ${{ inputs.version }} --target ${{ env.RELEASE_BRANCH }} --title "${{ inputs.version }}" --notes-file release-message --draft)" >> "$GITHUB_ENV"
+        run: echo "RELEASE_URL=$(gh release create ${{ inputs.version }} --target ${{ env.RELEASE_BRANCH }} --title "${{ inputs.version }}" --generate-notes --notes-file release-message --draft)" >> "$GITHUB_ENV"
 
       - name: "Create release tag"
         uses: mongodb-labs/drivers-github-tools/tag-version@4089c3eb27d7a5101d987088c3345013858d65f8  # v3.0.6

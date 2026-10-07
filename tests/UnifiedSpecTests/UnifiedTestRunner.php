@@ -5,6 +5,7 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\ServerException;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
 use MongoDB\Model\BSONArray;
 use MongoDB\Operation\DatabaseCommand;
@@ -434,9 +435,15 @@ final class UnifiedTestRunner
     /**
      * Work around potential MigrationConflict errors on sharded clusters.
      *
-     * Cluster time advancement is also needed for snapshot sessions, since initialData uses an internal client that
-     * does not gossip its cluster time to test entities. Without advancement, a snapshot session may establish its
-     * atClusterTime before the initial data is visible, causing snapshot reads to return no results.
+     * Cluster time advancement is also needed for snapshot reads. initialData
+     * uses an internal client that does not gossip its cluster time to test
+     * entities, so a snapshot may otherwise be established before the
+     * initialData is visible, causing reads to return no results. Snapshot
+     * reads may be requested through a snapshot session or through a snapshot
+     * readConcern on a client URI option, database, collection, or bucket.
+     *
+     * @param list<stdClass>      $operations
+     * @param list<stdClass>|null $createEntities
      */
     private function isAdvanceClusterTimeNeeded(array $operations, ?array $createEntities = null): bool
     {
@@ -444,21 +451,55 @@ final class UnifiedTestRunner
             return false;
         }
 
+        return $this->isAdvanceClusterTimeNeededForOperations($operations)
+            || $this->isAdvanceClusterTimeNeededForEntities($createEntities ?? []);
+    }
+
+    /** @param list<stdClass> $operations */
+    private function isAdvanceClusterTimeNeededForOperations(array $operations): bool
+    {
         foreach ($operations as $operation) {
             switch ($operation->name) {
                 case 'startTransaction':
                 case 'withTransaction':
                     return true;
+
+                /* Entities may also be created by a testRunner.createEntities
+                 * operation, so they must be inspected here as well. */
+                case 'createEntities':
+                    if ($this->isAdvanceClusterTimeNeededForEntities($operation->arguments->entities ?? [])) {
+                        return true;
+                    }
+
+                    break;
+
+                case 'loop':
+                    if ($this->isAdvanceClusterTimeNeededForOperations($operation->arguments->operations ?? [])) {
+                        return true;
+                    }
+
+                    break;
             }
         }
 
-        foreach ($createEntities ?? [] as $entity) {
-            $session = $entity->session ?? null;
-            if ($session === null) {
-                continue;
+        return false;
+    }
+
+    /** @param list<stdClass> $entities */
+    private function isAdvanceClusterTimeNeededForEntities(array $entities): bool
+    {
+        foreach ($entities as $entity) {
+            if (($entity->session->sessionOptions->snapshot ?? false) === true) {
+                return true;
             }
 
-            if (($session->sessionOptions?->snapshot ?? false) === true) {
+            $readConcernLevel = $entity->collection->collectionOptions->readConcern->level
+                ?? $entity->database->databaseOptions->readConcern->level
+                ?? $entity->bucket->bucketOptions->readConcern->level
+                ?? $entity->client->uriOptions->readConcernLevel
+                ?? null;
+
+            if ($readConcernLevel === ReadConcern::SNAPSHOT) {
                 return true;
             }
         }

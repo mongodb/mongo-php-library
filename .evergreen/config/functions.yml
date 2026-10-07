@@ -157,8 +157,15 @@ functions:
           fi
 
   "bootstrap mongo-orchestration":
+    # Assume the drivers test secrets role so the "latest" nightly server
+    # binaries can be downloaded from the private S3 bucket (DRIVERS-3628).
+    - command: ec2.assume_role
+      params:
+        role_arn: ${aws_test_secrets_role}
+        duration_seconds: 3600
     - command: shell.exec
       params:
+        include_expansions_in_env: [AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_SESSION_TOKEN]
         script: |
           ${PREPARE_SHELL}
           SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} \

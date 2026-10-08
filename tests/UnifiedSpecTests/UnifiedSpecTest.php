@@ -41,6 +41,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         // GridFS download now wraps file IDs in $eq; the upstream specifications do not expect this yet
         'retryable-reads/gridfs-download:' => 'Upstream specifications not yet updated for $eq-wrapped file IDs (PHPLIB-1929)',
         'retryable-reads/gridfs-download-serverErrors:' => 'Upstream specifications not yet updated for $eq-wrapped file IDs (PHPLIB-1929)',
+        // Fails (and previously hung) on MongoDB 9.0+ (PHPLIB-1836)
+        'change-streams/change-streams-nsType: nsType is present when creating timeseries' => 'Failing on MongoDB 9.0 (PHPLIB-1836)',
     ];
 
     /** @var array<string, string> */

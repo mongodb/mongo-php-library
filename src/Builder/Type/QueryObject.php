@@ -9,6 +9,7 @@ use MongoDB\BSON\Type;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
+use function array_any;
 use function array_is_list;
 use function array_key_first;
 use function count;
@@ -90,13 +91,6 @@ final class QueryObject implements QueryInterface
             return false;
         }
 
-        /** @var mixed $value */
-        foreach ($values as $value) {
-            if ($value instanceof FieldQueryInterface) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($values, static fn ($value): bool => $value instanceof FieldQueryInterface);
     }
 }

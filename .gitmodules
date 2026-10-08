@@ -1,6 +1,12 @@
 [submodule "drivers-evergreen-tools"]
 	path = tests/drivers-evergreen-tools
 	url = https://github.com/mongodb-labs/drivers-evergreen-tools
+	branch = master
 [submodule "specifications"]
 	path = tests/specifications
 	url = https://github.com/mongodb/specifications
+	branch = master
+[submodule "generator/mql-specifications"]
+	path = generator/mql-specifications
+	url = https://github.com/mongodb/mql-specifications
+	branch = main

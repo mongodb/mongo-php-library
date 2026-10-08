@@ -19,8 +19,10 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnsupportedException;
 
 use function MongoDB\is_document;
@@ -30,10 +32,8 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::updateSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/updateSearchIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class UpdateSearchIndex implements Executable
+final class UpdateSearchIndex
 {
     private object $definition;
 
@@ -63,7 +63,6 @@ class UpdateSearchIndex implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -79,6 +78,14 @@ class UpdateSearchIndex implements Executable
             $cmd['comment'] = $this->options['comment'];
         }
 
-        $server->executeCommand($this->databaseName, new Command($cmd));
+        try {
+            $server->executeCommand($this->databaseName, new Command($cmd));
+        } catch (ServerException $e) {
+            if (SearchNotSupportedException::isSearchNotSupportedError($e)) {
+                throw SearchNotSupportedException::create($e);
+            }
+
+            throw $e;
+        }
     }
 }

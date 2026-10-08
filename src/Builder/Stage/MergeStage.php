@@ -15,7 +15,7 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
-use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Builder\Type\OutputStageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -25,12 +25,11 @@ use function is_array;
 
 /**
  * Writes the resulting documents of the aggregation pipeline to a collection. The stage can incorporate (insert new documents, merge documents, replace documents, keep existing documents, fail the operation, process documents with a custom update pipeline) the results into an output collection. To use the $merge stage, it must be the last stage in the pipeline.
- * New in MongoDB 4.2.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
  * @internal
  */
-final class MergeStage implements StageInterface, OperatorInterface
+final class MergeStage implements OutputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$merge';

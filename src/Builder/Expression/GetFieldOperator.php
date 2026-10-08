@@ -18,7 +18,8 @@ use stdClass;
 
 /**
  * Returns the value of a specified field from a document. You can use $getField to retrieve the value of fields with names that contain periods (.) or start with dollar signs ($).
- * New in MongoDB 5.0.
+ *
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/
  * @internal

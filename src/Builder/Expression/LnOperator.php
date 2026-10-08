@@ -33,9 +33,7 @@ final class LnOperator implements ResolvesToDouble, OperatorInterface
     /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions. */
     public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $number;
 
-    /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions.
-     */
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int|string $number Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions. */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $number)
     {
         if (is_string($number) && ! str_starts_with($number, '$')) {

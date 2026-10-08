@@ -5,8 +5,8 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Collection;
+use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\BadMethodCallException;
 use MongoDB\InsertManyResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertMany;
@@ -64,9 +64,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
                 foreach ($expectedDocuments as $i => $expectedDocument) {
                     // Replace _id placeholder if necessary
-                    if ($expectedDocument->_id === null) {
-                        $expectedDocument->_id = $insertedIds[$i];
-                    }
+                    $expectedDocument->_id ??= $insertedIds[$i];
                 }
             },
             function (array $event) use ($expectedDocuments): void {
@@ -193,8 +191,8 @@ class InsertManyFunctionalTest extends FunctionalTestCase
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertManyResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getInsertedCount();
     }
 

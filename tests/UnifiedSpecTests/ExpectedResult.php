@@ -4,6 +4,7 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use MongoDB\BulkWriteResult;
 use MongoDB\DeleteResult;
+use MongoDB\Driver\BulkWriteCommandResult;
 use MongoDB\Driver\WriteResult;
 use MongoDB\InsertManyResult;
 use MongoDB\InsertOneResult;
@@ -11,6 +12,7 @@ use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MongoDB\UpdateResult;
 use stdClass;
 
+use function array_filter;
 use function is_object;
 use function PHPUnit\Framework\assertThat;
 use function property_exists;
@@ -57,6 +59,10 @@ final class ExpectedResult
             return $value;
         }
 
+        if ($value instanceof BulkWriteCommandResult) {
+            return self::prepareBulkWriteCommandResult($value);
+        }
+
         if (
             $value instanceof BulkWriteResult ||
             $value instanceof WriteResult ||
@@ -71,7 +77,37 @@ final class ExpectedResult
         return $value;
     }
 
-    private static function prepareWriteResult($value)
+    private static function prepareBulkWriteCommandResult(BulkWriteCommandResult $result): array
+    {
+        $retval = ['acknowledged' => $result->isAcknowledged()];
+
+        if (! $retval['acknowledged']) {
+            return $retval;
+        }
+
+        $retval = [
+            'deletedCount' => $result->getDeletedCount(),
+            'insertedCount' => $result->getInsertedCount(),
+            'matchedCount' => $result->getMatchedCount(),
+            'modifiedCount' => $result->getModifiedCount(),
+            'upsertedCount' => $result->getUpsertedCount(),
+        ];
+
+        /* Tests use $$unsetOrMatches to expect either no key or an empty
+         * document when verboseResults=false, so filter out null values. */
+        $retval += array_filter(
+            [
+                'deleteResults' => $result->getDeleteResults()?->toPHP(),
+                'insertResults' => $result->getInsertResults()?->toPHP(),
+                'updateResults' => $result->getUpdateResults()?->toPHP(),
+            ],
+            fn ($value) => $value !== null,
+        );
+
+        return $retval;
+    }
+
+    private static function prepareWriteResult($value): array
     {
         $result = ['acknowledged' => $value->isAcknowledged()];
 

@@ -20,7 +20,6 @@ namespace MongoDB\Model;
 use Countable;
 use Iterator;
 use IteratorIterator;
-use ReturnTypeWillChange;
 use Traversable;
 
 use function count;
@@ -31,7 +30,7 @@ use function reset;
 /**
  * Iterator for wrapping a Traversable and caching its results.
  *
- * By caching results, this iterators allows a Traversable to be counted and
+ * By caching results, this iterator allows a Traversable to be counted and
  * rewound multiple times, even if the wrapped object does not natively support
  * those operations (e.g. MongoDB\Driver\Cursor).
  *
@@ -40,7 +39,7 @@ use function reset;
  * @template TValue
  * @template-implements Iterator<TKey, TValue>
  */
-class CachingIterator implements Countable, Iterator
+final class CachingIterator implements Countable, Iterator
 {
     private const FIELD_KEY = 0;
     private const FIELD_VALUE = 1;
@@ -79,12 +78,8 @@ class CachingIterator implements Countable, Iterator
         return count($this->items);
     }
 
-    /**
-     * @see https://php.net/iterator.current
-     * @return mixed
-     */
-    #[ReturnTypeWillChange]
-    public function current()
+    /** @see https://php.net/iterator.current */
+    public function current(): mixed
     {
         $currentItem = current($this->items);
 
@@ -93,11 +88,9 @@ class CachingIterator implements Countable, Iterator
 
     /**
      * @see https://php.net/iterator.key
-     * @return mixed
      * @psalm-return TKey|null
      */
-    #[ReturnTypeWillChange]
-    public function key()
+    public function key(): mixed
     {
         $currentItem = current($this->items);
 

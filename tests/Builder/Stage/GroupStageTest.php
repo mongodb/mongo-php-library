@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Stage;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\Expression;
@@ -24,8 +25,8 @@ class GroupStageTest extends PipelineTestCase
         $pipeline = new Pipeline(
             Stage::match(
                 date: [
-                    Query::gte(new UTCDateTime(new DateTimeImmutable('2014-01-01'))),
-                    Query::lt(new UTCDateTime(new DateTimeImmutable('2015-01-01'))),
+                    Query::gte(new UTCDateTime(new DateTimeImmutable('2014-01-01', new DateTimeZone('UTC')))),
+                    Query::lt(new UTCDateTime(new DateTimeImmutable('2015-01-01', new DateTimeZone('UTC')))),
                 ],
             ),
             Stage::group(

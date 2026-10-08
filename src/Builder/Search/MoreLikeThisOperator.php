@@ -23,6 +23,8 @@ use stdClass;
  * The moreLikeThis operator allows you to build features for your applications
  * that display similar or alternative results based on one or more given documents.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/moreLikeThis/
  * @internal
  */

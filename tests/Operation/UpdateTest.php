@@ -90,13 +90,68 @@ class UpdateTest extends TestCase
             'bypassDocumentValidation' => true,
             'updates' => [
                 [
-                    'q' => ['x' => 1],
-                    'u' => ['$set' => ['x' => 2]],
+                    'q' => (object) ['x' => 1],
+                    'u' => (object) ['$set' => ['x' => 2]],
                     'multi' => true,
                     'upsert' => true,
                     'arrayFilters' => [['x' => 1]],
                     'hint' => '_id_',
                     'collation' => (object) ['locale' => 'fr'],
+                ],
+            ],
+        ];
+        $this->assertEquals($expected, $operation->getCommandDocument());
+    }
+
+    public function testExplainableCommandDocumentWithEmptyFilter(): void
+    {
+        $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), [], ['$set' => ['x' => 2]]);
+
+        $expected = [
+            'update' => $this->getCollectionName(),
+            'updates' => [
+                [
+                    'q' => (object) [],
+                    'u' => (object) ['$set' => ['x' => 2]],
+                    'multi' => false,
+                    'upsert' => false,
+                ],
+            ],
+        ];
+        $this->assertEquals($expected, $operation->getCommandDocument());
+    }
+
+    public function testExplainableCommandDocumentWithEmptyReplacement(): void
+    {
+        $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], []);
+
+        $expected = [
+            'update' => $this->getCollectionName(),
+            'updates' => [
+                [
+                    'q' => (object) ['x' => 1],
+                    'u' => (object) [],
+                    'multi' => false,
+                    'upsert' => false,
+                ],
+            ],
+        ];
+        $this->assertEquals($expected, $operation->getCommandDocument());
+    }
+
+    public function testExplainableCommandDocumentWithPipeline(): void
+    {
+        $pipeline = [['$set' => ['x' => 2]]];
+        $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $pipeline);
+
+        $expected = [
+            'update' => $this->getCollectionName(),
+            'updates' => [
+                [
+                    'q' => (object) ['x' => 1],
+                    'u' => $pipeline,
+                    'multi' => false,
+                    'upsert' => false,
                 ],
             ],
         ];

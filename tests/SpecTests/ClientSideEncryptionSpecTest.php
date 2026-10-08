@@ -34,7 +34,6 @@ use UnexpectedValueException;
 
 use function base64_decode;
 use function basename;
-use function count;
 use function file_get_contents;
 use function getenv;
 use function glob;
@@ -1338,6 +1337,12 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         // Test setup
         $encryptedFields = $this->decodeJson(file_get_contents(self::$specDir . '/etc/data/encryptedFields.json'));
+        /* Case 2 uses a collection whose indexed field is configured with
+         * contention 10. The specifications submodule pinned by this branch
+         * predates encryptedFields-c10.json (DRIVERS-3547), so derive it from
+         * the contention-0 file. */
+        $encryptedFieldsC10 = $this->decodeJson(file_get_contents(self::$specDir . '/etc/data/encryptedFields.json'));
+        $encryptedFieldsC10->fields[0]->queries->contention = new Int64(10);
         $key1Document = $this->decodeJson(file_get_contents(self::$specDir . '/etc/data/keys/key1-document.json'));
         $key1Id = $key1Document->_id;
 
@@ -1346,6 +1351,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $database = $client->selectDatabase('db');
         $database->dropCollection('explicit_encryption', ['encryptedFields' => $encryptedFields]);
         $database->createCollection('explicit_encryption', ['encryptedFields' => $encryptedFields]);
+        $database->dropCollection('explicit_encryption_c10', ['encryptedFields' => $encryptedFieldsC10]);
+        $database->createCollection('explicit_encryption_c10', ['encryptedFields' => $encryptedFieldsC10]);
 
         $database = $client->selectDatabase('keyvault');
         $database->dropCollection('datakeys');
@@ -1407,7 +1414,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             static function (self $test, ClientEncryption $clientEncryption, Client $encryptedClient, Client $keyVaultClient, Binary $key1Id): void {
                 $value = 'encrypted indexed value';
 
-                $collection = $encryptedClient->selectCollection('db', 'explicit_encryption');
+                $collection = $encryptedClient->selectCollection('db', 'explicit_encryption_c10');
 
                 for ($i = 0; $i < 10; $i++) {
                     $insertPayload = $clientEncryption->encrypt($value, [
@@ -1423,25 +1430,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     'keyId' => $key1Id,
                     'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
                     'queryType' => ClientEncryption::QUERY_TYPE_EQUALITY,
-                    'contentionFactor' => 0,
-                ]);
-
-                $results = $collection->find(['encryptedIndexed' => $findPayload])->toArray();
-
-                $test->assertLessThan(10, count($results));
-
-                foreach ($results as $result) {
-                    $test->assertSame($value, $result['encryptedIndexed']);
-                }
-
-                $findPayload2 = $clientEncryption->encrypt($value, [
-                    'keyId' => $key1Id,
-                    'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
-                    'queryType' => ClientEncryption::QUERY_TYPE_EQUALITY,
                     'contentionFactor' => 10,
                 ]);
 
-                $results = $collection->find(['encryptedIndexed' => $findPayload2])->toArray();
+                $results = $collection->find(['encryptedIndexed' => $findPayload])->toArray();
 
                 $test->assertCount(10, $results);
 

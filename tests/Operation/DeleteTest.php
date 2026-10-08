@@ -84,7 +84,7 @@ class DeleteTest extends TestCase
             'delete' => $this->getCollectionName(),
             'deletes' => [
                 [
-                    'q' => ['x' => 1],
+                    'q' => (object) ['x' => 1],
                     'limit' => 0,
                     'collation' => (object) ['locale' => 'fr'],
                     'hint' => '_id_',
@@ -92,6 +92,22 @@ class DeleteTest extends TestCase
             ],
             'comment' => 'explain me',
             'let' => (object) ['a' => 1],
+        ];
+        $this->assertEquals($expected, $operation->getCommandDocument());
+    }
+
+    public function testExplainableCommandDocumentWithEmptyFilter(): void
+    {
+        $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), [], 1);
+
+        $expected = [
+            'delete' => $this->getCollectionName(),
+            'deletes' => [
+                [
+                    'q' => (object) [],
+                    'limit' => 1,
+                ],
+            ],
         ];
         $this->assertEquals($expected, $operation->getCommandDocument());
     }

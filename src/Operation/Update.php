@@ -213,7 +213,11 @@ class Update implements Executable, Explainable
      */
     public function getCommandDocument()
     {
-        $cmd = ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
+        /* A non-empty pipeline will encode as a BSON array, so leave it as-is.
+         * Other values (including an empty array) must encode as a document. */
+        $update = is_pipeline($this->update) ? $this->update : (object) $this->update;
+
+        $cmd = ['update' => $this->collectionName, 'updates' => [['q' => (object) $this->filter, 'u' => $update] + $this->createUpdateOptions()]];
 
         if (isset($this->options['bypassDocumentValidation'])) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

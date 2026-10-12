@@ -41,13 +41,13 @@ final class QueryObject implements QueryInterface
     /** @param array<DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $queriesOrArrayOfQueries */
     private function __construct(array $queriesOrArrayOfQueries)
     {
-        // If the first element is an array and not an operator, we assume variadic arguments were not used
+        // If the first element is an array and not an operator, we assume variadic arguments were not used.
+        // An empty array is unwrapped as well, so that it results in an empty query instead of a "0" field.
         if (
             count($queriesOrArrayOfQueries) === 1 &&
             isset($queriesOrArrayOfQueries[0]) &&
             is_array($queriesOrArrayOfQueries[0]) &&
-            count($queriesOrArrayOfQueries[0]) > 0 &&
-            ! str_starts_with((string) array_key_first($queriesOrArrayOfQueries[0]), '$')
+            (count($queriesOrArrayOfQueries[0]) === 0 || ! str_starts_with((string) array_key_first($queriesOrArrayOfQueries[0]), '$'))
         ) {
             $queriesOrArrayOfQueries = $queriesOrArrayOfQueries[0];
         }

@@ -6,15 +6,19 @@ namespace MongoDB\Tests\Builder\Type;
 
 use Generator;
 use MongoDB\BSON;
+use MongoDB\Builder\BuilderEncoder;
+use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query\CommentOperator;
 use MongoDB\Builder\Query\EqOperator;
 use MongoDB\Builder\Query\GtOperator;
 use MongoDB\Builder\Query\LtOperator;
+use MongoDB\Builder\Stage;
 use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class QueryObjectTest extends TestCase
 {
@@ -23,6 +27,28 @@ class QueryObjectTest extends TestCase
         $queryObject = QueryObject::create([]);
 
         $this->assertSame([], $queryObject->queries);
+    }
+
+    public function testEmptyArrayIsUnwrapped(): void
+    {
+        // An empty array given as a single argument must not become a "0" field
+        $queryObject = QueryObject::create([[]]);
+
+        $this->assertSame([], $queryObject->queries);
+    }
+
+    public function testEmptyArrayEncodesAsEmptyQuery(): void
+    {
+        $encoder = new BuilderEncoder();
+
+        $this->assertEquals(
+            [(object) ['$match' => new stdClass()]],
+            $encoder->encode(new Pipeline(Stage::match([]))),
+        );
+        $this->assertEquals(
+            new stdClass(),
+            $encoder->encode(QueryObject::create([[]])),
+        );
     }
 
     public function testShortCutQueryObject(): void

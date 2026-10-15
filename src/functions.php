@@ -447,6 +447,13 @@ function create_namespace(string $databaseName, string $collectionName): string
  */
 function recursive_copy(mixed $element): mixed
 {
+    /* Whether a class can be cloned is fixed when the class is declared, so the
+     * answer is cached per class name. A deep copy of a document visits one
+     * object per nested document and array, and instantiating a ReflectionClass
+     * for each of them costs more than the clone itself. */
+    /** @var array<class-string, bool> $cloneable */
+    static $cloneable = [];
+
     if (is_array($element)) {
         foreach ($element as $key => $value) {
             $element[$key] = recursive_copy($value);
@@ -459,7 +466,7 @@ function recursive_copy(mixed $element): mixed
         return $element;
     }
 
-    if (! (new ReflectionClass($element))->isCloneable()) {
+    if (! ($cloneable[$element::class] ??= (new ReflectionClass($element))->isCloneable())) {
         return $element;
     }
 

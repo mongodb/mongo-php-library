@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Type;
 
 use Generator;
+use LogicException;
 use MongoDB\BSON;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Pipeline;
@@ -16,6 +17,7 @@ use MongoDB\Builder\Stage;
 use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
+use MongoDB\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -49,6 +51,56 @@ class QueryObjectTest extends TestCase
             new stdClass(),
             $encoder->encode(QueryObject::create([[]])),
         );
+    }
+
+    /** @param list<mixed> $queries */
+    #[DataProvider('providePositionalQueries')]
+    public function testPositionalQueriesAreMerged(array $queries, stdClass $expected): void
+    {
+        $encoder = new BuilderEncoder();
+
+        $this->assertEquals($expected, $encoder->encode(QueryObject::create($queries)));
+    }
+
+    public static function providePositionalQueries(): Generator
+    {
+        yield 'empty object' => [[new stdClass()], new stdClass()];
+        yield 'object' => [[(object) ['foo' => 1]], (object) ['foo' => 1]];
+        yield 'multiple arrays' => [[['foo' => 1], ['bar' => 2]], (object) ['foo' => 1, 'bar' => 2]];
+        yield 'multiple objects' => [[(object) ['foo' => 1], (object) ['bar' => 2]], (object) ['foo' => 1, 'bar' => 2]];
+        yield 'array with query operator' => [[['$comment' => 'foo']], (object) ['$comment' => 'foo']];
+        yield 'query operator and array' => [[new CommentOperator('foo'), ['bar' => 2]], (object) ['$comment' => 'foo', 'bar' => 2]];
+        yield 'array and named argument' => [[['foo' => 1], 'bar' => 2], (object) ['foo' => 1, 'bar' => 2]];
+    }
+
+    public function testPositionalQueriesEncodeInStage(): void
+    {
+        $encoder = new BuilderEncoder();
+
+        $this->assertEquals(
+            [(object) ['$match' => new stdClass()]],
+            $encoder->encode(new Pipeline(Stage::match(new stdClass()))),
+        );
+        $this->assertEquals(
+            [(object) ['$match' => (object) ['foo' => 1, 'bar' => 2]]],
+            $encoder->encode(new Pipeline(Stage::match(['foo' => 1], ['bar' => 2]))),
+        );
+    }
+
+    public function testPositionalScalarIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected query to be a query operator, an array or a stdClass, int given');
+
+        QueryObject::create([1]);
+    }
+
+    public function testDuplicateFieldInPositionalQueries(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Duplicate key "foo" in query object');
+
+        (new BuilderEncoder())->encode(QueryObject::create([['foo' => 1], ['foo' => 2]]));
     }
 
     public function testShortCutQueryObject(): void

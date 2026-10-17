@@ -82,7 +82,9 @@ final class QueryObject implements QueryInterface
                     throw new InvalidArgumentException(sprintf('Expected query to be a query operator, an array or a stdClass, %s given', get_debug_type($query)));
                 }
 
-                $queries[] = new self((array) $query, true);
+                /** @var array<DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $fields */
+                $fields = (array) $query;
+                $queries[] = new self($fields, true);
                 continue;
             }
 

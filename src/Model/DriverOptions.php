@@ -54,7 +54,7 @@ final class DriverOptions
 
     private static ?string $version = null;
 
-    public array $driver;
+    public readonly array $driver;
 
     /**
      * @param array|null      $autoEncryption
@@ -88,6 +88,22 @@ final class DriverOptions
                 sprintf('"%s" option', self::KEY_BUILDER_ENCODER),
                 $options[self::KEY_BUILDER_ENCODER],
                 Encoder::class,
+            );
+        }
+
+        if (isset($options[self::KEY_AUTO_ENCRYPTION]) && ! is_array($options[self::KEY_AUTO_ENCRYPTION])) {
+            throw InvalidArgumentException::invalidType(
+                sprintf('"%s" driver option', self::KEY_AUTO_ENCRYPTION),
+                $options[self::KEY_AUTO_ENCRYPTION],
+                'array',
+            );
+        }
+
+        if (isset($options[self::KEY_DRIVER]) && ! is_array($options[self::KEY_DRIVER])) {
+            throw InvalidArgumentException::invalidType(
+                sprintf('"%s" driver option', self::KEY_DRIVER),
+                $options[self::KEY_DRIVER],
+                'array',
             );
         }
 
@@ -160,6 +176,12 @@ final class DriverOptions
         if (isset($driver['version'])) {
             if (! is_string($driver['version'])) {
                 throw InvalidArgumentException::invalidType('"version" handshake option', $driver['version'], 'string');
+            }
+        }
+
+        if (isset($driver['platform'])) {
+            if (! is_string($driver['platform'])) {
+                throw InvalidArgumentException::invalidType('"platform" handshake option', $driver['platform'], 'string');
             }
         }
 

@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Model;
 
+use Error;
 use Generator;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Exception\InvalidArgumentException;
@@ -65,6 +66,16 @@ class DriverOptionsTest extends TestCase
         $this->assertEquals($name, $options->driver['name']);
         $this->assertMatchesRegularExpression($versionRegex, $options->driver['version']);
         $this->assertEquals($platform, $options->driver['platform']);
+    }
+
+    public function testDriverInfoIsReadonly(): void
+    {
+        $options = DriverOptions::fromArray([]);
+
+        $this->expectException(Error::class);
+        $this->expectExceptionMessage('Cannot modify readonly property');
+
+        $options->driver = ['name' => 'foo'];
     }
 
     public static function provideOptions(): Generator
@@ -153,6 +164,26 @@ class DriverOptionsTest extends TestCase
             [
                 'builderEncoder' => new StdClass(),
             ],
+        ];
+
+        yield 'invalid type for auto encryption' => [
+            ['autoEncryption' => true],
+        ];
+
+        yield 'invalid type for driver' => [
+            ['driver' => 'foo'],
+        ];
+
+        yield 'invalid type for driver name' => [
+            ['driver' => ['name' => 1]],
+        ];
+
+        yield 'invalid type for driver version' => [
+            ['driver' => ['version' => 1]],
+        ];
+
+        yield 'invalid type for driver platform' => [
+            ['driver' => ['platform' => 5]],
         ];
     }
 

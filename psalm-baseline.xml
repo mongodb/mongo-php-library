@@ -908,12 +908,10 @@
       <code><![CDATA[$typeMap['fieldPaths'][substr($fieldPath, 0, -2)]]]></code>
     </MixedArrayAssignment>
     <MixedAssignment>
-      <code><![CDATA[$element[$key]]]></code>
       <code><![CDATA[$stage]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath]]]></code>
       <code><![CDATA[$typeMap['fieldPaths'][$fieldPath]]]></code>
-      <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MixedReturnStatement>
       <code><![CDATA[$collectionInfo['options']['encryptedFields'] ?? null]]></code>

@@ -80,6 +80,39 @@ class BSONDocumentTest extends TestCase
         $this->assertSame($document['b']['a'], $documentClone['b']['a']);
     }
 
+    public function testCloneDoesNotWriteThroughReferences(): void
+    {
+        /* The reference survives into the internal storage, so the clone must
+         * replace the entry instead of writing the copy back through it. */
+        $value = new stdClass();
+        $fields = ['a' => &$value];
+
+        $document = new BSONDocument($fields);
+        $source = $document['a'];
+        $documentClone = clone $document;
+
+        $this->assertSame($source, $document['a']);
+        $this->assertNotSame($source, $documentClone['a']);
+    }
+
+    public function testCloneDoesNotWriteThroughNestedReferences(): void
+    {
+        $value = new stdClass();
+        $fields = ['a' => &$value];
+
+        $document = new BSONDocument([
+            'array' => $fields,
+            'document' => new BSONDocument($fields),
+        ]);
+        $source = $document['array']['a'];
+        $documentClone = clone $document;
+
+        $this->assertSame($source, $document['array']['a']);
+        $this->assertNotSame($source, $documentClone['array']['a']);
+        $this->assertSame($source, $document['document']['a']);
+        $this->assertNotSame($source, $documentClone['document']['a']);
+    }
+
     public function testCloneSupportsBSONTypes(): void
     {
         /* Note: this test does not check that the BSON type itself is cloned,

@@ -97,7 +97,7 @@ jobs:
       # Until then, CI builds it from a development branch. See the "Continuous
       # integration" section of CONTRIBUTING.md.
       - name: "Setup PHP"
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962  # 2.40.0
         with:
           php-version: "8.4"
           coverage: none

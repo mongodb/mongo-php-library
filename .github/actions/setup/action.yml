@@ -26,7 +26,7 @@ runs:
     # The extension version is resolved by a PHP script, so PHP is installed
     # first, without the extension. The second call below adds it.
     - name: Install PHP
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962  # 2.40.0
       with:
         coverage: none
         php-version: "${{ inputs.php-version }}"
@@ -55,7 +55,7 @@ runs:
     - name: Setup cache environment
       id: extcache
       if: steps.driver.outputs.ext-cachable == 'true'
-      uses: shivammathur/cache-extensions@de3c642a5fce0ef91581a1c9831e229f525196d6  # 1.15.1
+      uses: shivammathur/cache-extensions@38b47b5568926cb949d3c946e30cf8eab5326c39  # 1.15.5
       with:
         php-version: ${{ inputs.php-version }}
         extensions: "${{ steps.driver.outputs.ext-spec }}"
@@ -72,7 +72,11 @@ runs:
         restore-keys: ${{ steps.extcache.outputs.key }}
 
     - name: Install the mongodb extension
-      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240  # 2.37.2
+      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962  # 2.40.0
+      # Fail fast (rather than fail open) if the extension install fails, so a
+      # PECL outage does not silently enable a different version.
+      env:
+        FAIL_FAST: true
       with:
         coverage: xdebug
         extensions: "${{ steps.driver.outputs.ext-spec }}"

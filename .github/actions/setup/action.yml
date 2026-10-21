@@ -73,6 +73,10 @@ runs:
 
     - name: Install the mongodb extension
       uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962  # 2.40.0
+      # Fail fast (rather than fail open) if the extension install fails, so a
+      # PECL outage does not silently enable a different version.
+      env:
+        FAIL_FAST: true
       with:
         coverage: xdebug
         extensions: "${{ steps.driver.outputs.ext-spec }}"

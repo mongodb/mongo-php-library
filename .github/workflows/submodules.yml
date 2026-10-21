@@ -14,6 +14,6 @@ jobs:
 
     steps:
       - name: "Validate submodule commits"
-        uses: "mongodb-labs/drivers-github-tools/validate-submodules@v3"
+        uses: "mongodb-labs/drivers-github-tools/validate-submodules@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b"  # v3.1.1
         with:
           token: ${{ github.token }}

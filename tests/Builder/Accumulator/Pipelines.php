@@ -15,7 +15,7 @@ enum Pipelines: string
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/#use--accumulator-to-implement-the--avg-operator
      */
-    case AccumulatorUseAccumulatorToImplementTheAvgOperator = <<<'JSON'
+    case AccumulatorUseAccumulatorToImplementTheAvgOperator = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -43,14 +43,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use initArgs to Vary the Initial State by Group
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/#use-initargs-to-vary-the-initial-state-by-group
      */
-    case AccumulatorUseInitArgsToVaryTheInitialStateByGroup = <<<'JSON'
+    case AccumulatorUseInitArgsToVaryTheInitialStateByGroup = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -84,14 +84,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--group-stage
      */
-    case AddToSetUseInGroupStage = <<<'JSON'
+    case AddToSetUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -113,14 +113,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/#use-in--setwindowfields-stage
      */
-    case AddToSetUseInSetWindowFieldsStage = <<<'JSON'
+    case AddToSetUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -144,14 +144,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--group-stage
      */
-    case AvgUseInGroupStage = <<<'JSON'
+    case AvgUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -170,14 +170,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/#use-in--setwindowfields-stage
      */
-    case AvgUseInSetWindowFieldsStage = <<<'JSON'
+    case AvgUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -201,14 +201,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find the Bottom Score
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/#find-the-bottom-score
      */
-    case BottomFindTheBottomScore = <<<'JSON'
+    case BottomFindTheBottomScore = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -234,14 +234,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Finding the Bottom Score Across Multiple Games
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/#finding-the-bottom-score-across-multiple-games
      */
-    case BottomFindingTheBottomScoreAcrossMultipleGames = <<<'JSON'
+    case BottomFindingTheBottomScoreAcrossMultipleGames = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -262,14 +262,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find the Three Lowest Scores
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#find-the-three-lowest-scores
      */
-    case BottomNFindTheThreeLowestScores = <<<'JSON'
+    case BottomNFindTheThreeLowestScores = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -298,14 +298,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Finding the Three Lowest Score Documents Across Multiple Games
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#finding-the-three-lowest-score-documents-across-multiple-games
      */
-    case BottomNFindingTheThreeLowestScoreDocumentsAcrossMultipleGames = <<<'JSON'
+    case BottomNFindingTheThreeLowestScoreDocumentsAcrossMultipleGames = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -329,14 +329,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Computing n Based on the Group Key for $group
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/#computing-n-based-on-the-group-key-for--group
      */
-    case BottomNComputingNBasedOnTheGroupKeyForGroup = <<<'JSON'
+    case BottomNComputingNBasedOnTheGroupKeyForGroup = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -372,14 +372,34 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Warehouse collection
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/#example
+     */
+    case ConcatArraysWarehouseCollection = <<<'EXTENDED_JSON'
+    [
+        {
+            "$project": {
+                "items": {
+                    "$concatArrays": [
+                        "$instock",
+                        "$ordered"
+                    ]
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--group-stage
      */
-    case CountUseInGroupStage = <<<'JSON'
+    case CountUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -390,14 +410,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--setwindowfields-stage
      */
-    case CountUseInSetWindowFieldsStage = <<<'JSON'
+    case CountUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -421,14 +441,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/#example
      */
-    case CovariancePopExample = <<<'JSON'
+    case CovariancePopExample = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -459,14 +479,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/#example
      */
-    case CovarianceSampExample = <<<'JSON'
+    case CovarianceSampExample = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -497,14 +517,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Dense Rank Partitions by an Integer Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-an-integer-field
      */
-    case DenseRankDenseRankPartitionsByAnIntegerField = <<<'JSON'
+    case DenseRankDenseRankPartitionsByAnIntegerField = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -522,14 +542,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Dense Rank Partitions by a Date Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/#dense-rank-partitions-by-a-date-field
      */
-    case DenseRankDenseRankPartitionsByADateField = <<<'JSON'
+    case DenseRankDenseRankPartitionsByADateField = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -547,14 +567,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/#example
      */
-    case DerivativeExample = <<<'JSON'
+    case DerivativeExample = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -595,14 +615,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Document Number for Each State
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/#document-number-for-each-state
      */
-    case DocumentNumberDocumentNumberForEachState = <<<'JSON'
+    case DocumentNumberDocumentNumberForEachState = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -620,14 +640,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Exponential Moving Average Using N
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/#exponential-moving-average-using-n
      */
-    case ExpMovingAvgExponentialMovingAverageUsingN = <<<'JSON'
+    case ExpMovingAvgExponentialMovingAverageUsingN = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -650,14 +670,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Exponential Moving Average Using alpha
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/#exponential-moving-average-using-alpha
      */
-    case ExpMovingAvgExponentialMovingAverageUsingAlpha = <<<'JSON'
+    case ExpMovingAvgExponentialMovingAverageUsingAlpha = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -680,14 +700,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--group-stage
      */
-    case FirstUseInGroupStage = <<<'JSON'
+    case FirstUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$sort": {
@@ -708,14 +728,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/#use-in--setwindowfields-stage
      */
-    case FirstUseInSetWindowFieldsStage = <<<'JSON'
+    case FirstUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -739,14 +759,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Null and Missing Values
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#null-and-missing-values
      */
-    case FirstNNullAndMissingValues = <<<'JSON'
+    case FirstNNullAndMissingValues = <<<'EXTENDED_JSON'
     [
         {
             "$documents": [
@@ -796,14 +816,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find the First Three Player Scores for a Single Game
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#find-the-first-three-player-scores-for-a-single-game
      */
-    case FirstNFindTheFirstThreePlayerScoresForASingleGame = <<<'JSON'
+    case FirstNFindTheFirstThreePlayerScoresForASingleGame = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -827,14 +847,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Finding the First Three Player Scores Across Multiple Games
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#finding-the-first-three-player-scores-across-multiple-games
      */
-    case FirstNFindingTheFirstThreePlayerScoresAcrossMultipleGames = <<<'JSON'
+    case FirstNFindingTheFirstThreePlayerScoresAcrossMultipleGames = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -853,14 +873,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Using $sort With $firstN
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#using--sort-with--firstn
      */
-    case FirstNUsingSortWithFirstN = <<<'JSON'
+    case FirstNUsingSortWithFirstN = <<<'EXTENDED_JSON'
     [
         {
             "$sort": {
@@ -886,14 +906,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Computing n Based on the Group Key for $group
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#computing-n-based-on-the-group-key-for--group
      */
-    case FirstNComputingNBasedOnTheGroupKeyForGroup = <<<'JSON'
+    case FirstNComputingNBasedOnTheGroupKeyForGroup = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -924,14 +944,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/#example
      */
-    case IntegralExample = <<<'JSON'
+    case IntegralExample = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -959,14 +979,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--group-stage
      */
-    case LastUseInGroupStage = <<<'JSON'
+    case LastUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$sort": {
@@ -987,14 +1007,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/#use-in--setwindowfields-stage
      */
-    case LastUseInSetWindowFieldsStage = <<<'JSON'
+    case LastUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1018,14 +1038,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find the Last Three Player Scores for a Single Game
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#find-the-last-three-player-scores-for-a-single-game
      */
-    case LastNFindTheLastThreePlayerScoresForASingleGame = <<<'JSON'
+    case LastNFindTheLastThreePlayerScoresForASingleGame = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1049,14 +1069,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Finding the Last Three Player Scores Across Multiple Games
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#finding-the-last-three-player-scores-across-multiple-games
      */
-    case LastNFindingTheLastThreePlayerScoresAcrossMultipleGames = <<<'JSON'
+    case LastNFindingTheLastThreePlayerScoresAcrossMultipleGames = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1075,14 +1095,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Using $sort With $lastN
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#using--sort-with--lastn
      */
-    case LastNUsingSortWithLastN = <<<'JSON'
+    case LastNUsingSortWithLastN = <<<'EXTENDED_JSON'
     [
         {
             "$sort": {
@@ -1108,14 +1128,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Computing n Based on the Group Key for $group
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#computing-n-based-on-the-group-key-for--group
      */
-    case LastNComputingNBasedOnTheGroupKeyForGroup = <<<'JSON'
+    case LastNComputingNBasedOnTheGroupKeyForGroup = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1146,14 +1166,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fill Missing Values with Linear Interpolation
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#fill-missing-values-with-linear-interpolation
      */
-    case LinearFillFillMissingValuesWithLinearInterpolation = <<<'JSON'
+    case LinearFillFillMissingValuesWithLinearInterpolation = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1170,14 +1190,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use Multiple Fill Methods in a Single Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/#use-multiple-fill-methods-in-a-single-stage
      */
-    case LinearFillUseMultipleFillMethodsInASingleStage = <<<'JSON'
+    case LinearFillUseMultipleFillMethodsInASingleStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1197,14 +1217,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Fill Missing Values with the Last Observed Value
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/#fill-missing-values-with-the-last-observed-value
      */
-    case LocfFillMissingValuesWithTheLastObservedValue = <<<'JSON'
+    case LocfFillMissingValuesWithTheLastObservedValue = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1221,14 +1241,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/#use-in--group-stage
      */
-    case MaxUseInGroupStage = <<<'JSON'
+    case MaxUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1247,14 +1267,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/#use-in--setwindowfields-stage
      */
-    case MaxUseInSetWindowFieldsStage = <<<'JSON'
+    case MaxUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1278,14 +1298,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find the Maximum Three Scores for a Single Game
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/#find-the-maximum-three-scores-for-a-single-game
      */
-    case MaxNFindTheMaximumThreeScoresForASingleGame = <<<'JSON'
+    case MaxNFindTheMaximumThreeScoresForASingleGame = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1309,14 +1329,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Finding the Maximum Three Scores Across Multiple Games
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/#finding-the-maximum-three-scores-across-multiple-games
      */
-    case MaxNFindingTheMaximumThreeScoresAcrossMultipleGames = <<<'JSON'
+    case MaxNFindingTheMaximumThreeScoresAcrossMultipleGames = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1335,14 +1355,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Computing n Based on the Group Key for $group
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/#computing-n-based-on-the-group-key-for--group
      */
-    case MaxNComputingNBasedOnTheGroupKeyForGroup = <<<'JSON'
+    case MaxNComputingNBasedOnTheGroupKeyForGroup = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1376,14 +1396,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use $median as an Accumulator
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-as-an-accumulator
      */
-    case MedianUseMedianAsAnAccumulator = <<<'JSON'
+    case MedianUseMedianAsAnAccumulator = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1397,14 +1417,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use $median in a $setWindowField Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/#use-operatorname-in-a--setwindowfield-stage
      */
-    case MedianUseMedianInASetWindowFieldStage = <<<'JSON'
+    case MedianUseMedianInASetWindowFieldStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1447,14 +1467,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * $mergeObjects as an Accumulator
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/#-mergeobjects-as-an-accumulator
      */
-    case MergeObjectsMergeObjectsAsAnAccumulator = <<<'JSON'
+    case MergeObjectsMergeObjectsAsAnAccumulator = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1465,14 +1485,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--group-stage
      */
-    case MinUseInGroupStage = <<<'JSON'
+    case MinUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1483,14 +1503,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/#use-in--setwindowfields-stage
      */
-    case MinUseInSetWindowFieldsStage = <<<'JSON'
+    case MinUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1514,14 +1534,51 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Normalize values with custom range
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minMaxScaler/#examples
+     */
+    case MinMaxScalerNormalizeValuesWithCustomRange = <<<'EXTENDED_JSON'
+    [
+        {
+            "$setWindowFields": {
+                "sortBy": {
+                    "a": {
+                        "$numberInt": "1"
+                    }
+                },
+                "output": {
+                    "scaled": {
+                        "$minMaxScaler": {
+                            "input": "$a"
+                        }
+                    },
+                    "scaledTo100": {
+                        "$minMaxScaler": {
+                            "input": "$a",
+                            "min": {
+                                "$numberInt": "0"
+                            },
+                            "max": {
+                                "$numberInt": "100"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Find the Minimum Three Scores for a Single Game
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#find-the-minimum-three-scores-for-a-single-game
      */
-    case MinNFindTheMinimumThreeScoresForASingleGame = <<<'JSON'
+    case MinNFindTheMinimumThreeScoresForASingleGame = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1545,14 +1602,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Finding the Minimum Three Documents Across Multiple Games
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#finding-the-minimum-three-documents-across-multiple-games
      */
-    case MinNFindingTheMinimumThreeDocumentsAcrossMultipleGames = <<<'JSON'
+    case MinNFindingTheMinimumThreeDocumentsAcrossMultipleGames = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1571,14 +1628,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Computing n Based on the Group Key for $group
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN/#computing-n-based-on-the-group-key-for--group
      */
-    case MinNComputingNBasedOnTheGroupKeyForGroup = <<<'JSON'
+    case MinNComputingNBasedOnTheGroupKeyForGroup = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1612,14 +1669,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Calculate a Single Value as an Accumulator
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#calculate-a-single-value-as-an-accumulator
      */
-    case PercentileCalculateASingleValueAsAnAccumulator = <<<'JSON'
+    case PercentileCalculateASingleValueAsAnAccumulator = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1638,14 +1695,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Calculate Multiple Values as an Accumulator
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#calculate-multiple-values-as-an-accumulator
      */
-    case PercentileCalculateMultipleValuesAsAnAccumulator = <<<'JSON'
+    case PercentileCalculateMultipleValuesAsAnAccumulator = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1733,14 +1790,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use $percentile in a $setWindowField Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/#use-operatorname-in-a--setwindowfield-stage
      */
-    case PercentileUsePercentileInASetWindowFieldStage = <<<'JSON'
+    case PercentileUsePercentileInASetWindowFieldStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1788,14 +1845,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/#use-in--group-stage
      */
-    case PushUseInGroupStage = <<<'JSON'
+    case PushUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$sort": {
@@ -1830,14 +1887,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/#use-in--setwindowfields-stage
      */
-    case PushUseInSetWindowFieldsStage = <<<'JSON'
+    case PushUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1861,14 +1918,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Rank Partitions by an Integer Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/#rank-partitions-by-an-integer-field
      */
-    case RankRankPartitionsByAnIntegerField = <<<'JSON'
+    case RankRankPartitionsByAnIntegerField = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1886,14 +1943,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Rank Partitions by a Date Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/#rank-partitions-by-a-date-field
      */
-    case RankRankPartitionsByADateField = <<<'JSON'
+    case RankRankPartitionsByADateField = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1911,14 +1968,43 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
+
+    /**
+     * Flowers collection
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/#example
+     */
+    case SetUnionFlowersCollection = <<<'EXTENDED_JSON'
+    [
+        {
+            "$project": {
+                "flowerFieldA": {
+                    "$numberInt": "1"
+                },
+                "flowerFieldB": {
+                    "$numberInt": "1"
+                },
+                "allValues": {
+                    "$setUnion": [
+                        "$flowerFieldA",
+                        "$flowerFieldB"
+                    ]
+                },
+                "_id": {
+                    "$numberInt": "0"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
 
     /**
      * Shift Using a Positive Integer
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-positive-integer
      */
-    case ShiftShiftUsingAPositiveInteger = <<<'JSON'
+    case ShiftShiftUsingAPositiveInteger = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1942,14 +2028,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Shift Using a Negative Integer
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/#shift-using-a-negative-integer
      */
-    case ShiftShiftUsingANegativeInteger = <<<'JSON'
+    case ShiftShiftUsingANegativeInteger = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -1973,14 +2059,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--group-stage
      */
-    case StdDevPopUseInGroupStage = <<<'JSON'
+    case StdDevPopUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -1991,14 +2077,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/#use-in--setwindowfields-stage
      */
-    case StdDevPopUseInSetWindowFieldsStage = <<<'JSON'
+    case StdDevPopUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -2022,14 +2108,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/#use-in--group-stage
      */
-    case StdDevSampUseInGroupStage = <<<'JSON'
+    case StdDevSampUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$sample": {
@@ -2047,14 +2133,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/#use-in--setwindowfields-stage
      */
-    case StdDevSampUseInSetWindowFieldsStage = <<<'JSON'
+    case StdDevSampUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -2078,14 +2164,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $group Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#use-in--group-stage
      */
-    case SumUseInGroupStage = <<<'JSON'
+    case SumUseInGroupStage = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -2117,14 +2203,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use in $setWindowFields Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#use-in--setwindowfields-stage
      */
-    case SumUseInSetWindowFieldsStage = <<<'JSON'
+    case SumUseInSetWindowFieldsStage = <<<'EXTENDED_JSON'
     [
         {
             "$setWindowFields": {
@@ -2148,14 +2234,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find the Top Score
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score
      */
-    case TopFindTheTopScore = <<<'JSON'
+    case TopFindTheTopScore = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -2181,14 +2267,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find the Top Score Across Multiple Games
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/#find-the-top-score-across-multiple-games
      */
-    case TopFindTheTopScoreAcrossMultipleGames = <<<'JSON'
+    case TopFindTheTopScoreAcrossMultipleGames = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -2209,14 +2295,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Find the Three Highest Scores
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/#find-the-three-highest-scores
      */
-    case TopNFindTheThreeHighestScores = <<<'JSON'
+    case TopNFindTheThreeHighestScores = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -2245,14 +2331,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Finding the Three Highest Score Documents Across Multiple Games
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/#finding-the-three-highest-score-documents-across-multiple-games
      */
-    case TopNFindingTheThreeHighestScoreDocumentsAcrossMultipleGames = <<<'JSON'
+    case TopNFindingTheThreeHighestScoreDocumentsAcrossMultipleGames = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -2276,14 +2362,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Computing n Based on the Group Key for $group
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/#computing-n-based-on-the-group-key-for--group
      */
-    case TopNComputingNBasedOnTheGroupKeyForGroup = <<<'JSON'
+    case TopNComputingNBasedOnTheGroupKeyForGroup = <<<'EXTENDED_JSON'
     [
         {
             "$group": {
@@ -2319,5 +2405,5 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 }

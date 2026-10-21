@@ -19,7 +19,6 @@ class DropDatabaseTest extends TestCase
     {
         return self::createOptionDataProvider([
             'session' => self::getInvalidSessionValues(),
-            'typeMap' => self::getInvalidArrayValues(),
             'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
     }

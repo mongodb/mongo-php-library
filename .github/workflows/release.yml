@@ -93,6 +93,28 @@ jobs:
           git checkout -b ${RELEASE_BRANCH}
           git push origin ${RELEASE_BRANCH}
 
+      # The extension is always released before the library that requires it.
+      # Until then, CI builds it from a development branch. See the "Continuous
+      # integration" section of CONTRIBUTING.md.
+      - name: "Setup PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+
+      - name: "Fail if the required extension version is not released"
+        run: |
+          RESOLVED=$(php tools/extension-version.php lowest)
+
+          eval "$RESOLVED"
+
+          if [ "$EXTENSION_VERSION" = "" ]; then
+            echo '❌ Release failed: no version of the extension published on PECL matches the ext-mongodb constraint of composer.json' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+          echo "✅ Extension version $EXTENSION_VERSION is published on PECL" >> $GITHUB_STEP_SUMMARY
+
       #
       # Preliminary checks done - commence the release process
       #

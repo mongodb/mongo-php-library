@@ -230,6 +230,8 @@ trait FactoryTrait
     /**
      * Returns the size of a given string or binary data value's content in bytes.
      *
+     * New in MongoDB 4.4
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/
      * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression
      */
@@ -241,7 +243,8 @@ trait FactoryTrait
 
     /**
      * Returns the result of a bitwise and operation on an array of int or long values.
-     * New in MongoDB 6.3.
+     *
+     * New in MongoDB 6.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/
      * @no-named-arguments
@@ -254,7 +257,8 @@ trait FactoryTrait
 
     /**
      * Returns the result of a bitwise not operation on a single argument or an array that contains a single int or long value.
-     * New in MongoDB 6.3.
+     *
+     * New in MongoDB 6.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/
      * @param Int64|ResolvesToInt|ResolvesToLong|int|string $expression
@@ -266,7 +270,8 @@ trait FactoryTrait
 
     /**
      * Returns the result of a bitwise or operation on an array of int or long values.
-     * New in MongoDB 6.3.
+     *
+     * New in MongoDB 6.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/
      * @no-named-arguments
@@ -279,7 +284,8 @@ trait FactoryTrait
 
     /**
      * Returns the result of a bitwise xor (exclusive or) operation on an array of int and long values.
-     * New in MongoDB 6.3.
+     *
+     * New in MongoDB 6.3
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/
      * @no-named-arguments
@@ -291,7 +297,48 @@ trait FactoryTrait
     }
 
     /**
+     * Returns the bottom element within an array according to the specified sort order.
+     *
+     * New in MongoDB 7.0
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom-array-operator/
+     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the input array and can be any expression.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the bottom element.
+     */
+    public static function bottom(
+        Document|Serializable|stdClass|array $sortBy,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+    ): BottomOperator {
+        return new BottomOperator($sortBy, $output, $input);
+    }
+
+    /**
+     * Returns an aggregation of the bottom n elements within an array, according to the specified sort order.
+     * If the array contains fewer than n elements, $bottomN returns all elements in the array.
+     *
+     * New in MongoDB 7.0
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN-array-operator/
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $bottomN returns.
+     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the input array and can be any expression.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the bottom n elements.
+     */
+    public static function bottomN(
+        ResolvesToInt|int|string $n,
+        Document|Serializable|stdClass|array $sortBy,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+    ): BottomNOperator {
+        return new BottomNOperator($n, $sortBy, $output, $input);
+    }
+
+    /**
      * Returns the size in bytes of a given document (i.e. BSON type Object) when encoded as BSON.
+     *
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/
      * @param Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass|string $object
@@ -383,8 +430,11 @@ trait FactoryTrait
     }
 
     /**
-     * Converts a value to a specified type.
-     * New in MongoDB 4.0.
+     * Converts a value to a specified type. Any type can be converted to string.
+     * If the optional base argument is specified, $convert interprets the input string as a
+     * number in the given base and converts it to a decimal, or converts a numeric value to a
+     * string representation in that base. Supported bases are 2 (binary), 8 (octal), 10
+     * (decimal), and 16 (hexadecimal).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input
@@ -393,14 +443,24 @@ trait FactoryTrait
      * If unspecified, the operation throws an error upon encountering an error and stops.
      * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull The value to return if the input is null or missing. The arguments can be any valid expression.
      * If unspecified, $convert returns null if the input is null or missing.
+     * @param Optional|ResolvesToInt|int|string $base The numeric base to use when converting between strings and integers. Must be one of
+     * 2 (binary), 8 (octal), 10 (decimal), or 16 (hexadecimal).
+     * When converting a string to a number, $convert interprets the string as a number in
+     * the given base and returns the decimal equivalent.
+     * When converting a number to a string, $convert returns the string representation of
+     * the number in the given base.
+     * If unspecified, $convert uses base 10.
+     *
+     * New in MongoDB 8.3
      */
     public static function convert(
         DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
         ResolvesToInt|ResolvesToString|int|string $to,
         Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onError = Optional::Undefined,
         Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
+        Optional|ResolvesToInt|int|string $base = Optional::Undefined,
     ): ConvertOperator {
-        return new ConvertOperator($input, $to, $onError, $onNull);
+        return new ConvertOperator($input, $to, $onError, $onNull, $base);
     }
 
     /**
@@ -428,7 +488,21 @@ trait FactoryTrait
     }
 
     /**
+     * Returns a random object ID
+     *
+     * New in MongoDB 4.4
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/createObjectId/
+     */
+    public static function createObjectId(): CreateObjectIdOperator
+    {
+        return new CreateObjectIdOperator();
+    }
+
+    /**
      * Adds a number of time units to a date object.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/
      * @param DateTimeInterface|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
@@ -447,6 +521,8 @@ trait FactoryTrait
 
     /**
      * Returns the difference between two dates.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/
      * @param DateTimeInterface|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The start of the time period. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
@@ -509,6 +585,8 @@ trait FactoryTrait
      * If you do not specify onError, $dateFromString throws an error if it cannot parse dateString.
      * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
      * If you do not specify onNull and dateString is null or missing, then $dateFromString outputs null.
+     *
+     * New in MongoDB 5.0
      */
     public static function dateFromString(
         ResolvesToString|string $dateString,
@@ -522,6 +600,8 @@ trait FactoryTrait
 
     /**
      * Subtracts a number of time units from a date object.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/
      * @param DateTimeInterface|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
@@ -564,6 +644,8 @@ trait FactoryTrait
      * @param Optional|ResolvesToString|string $timezone The time zone to use to format the date.
      * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull The value to return if the date is null or missing.
      * If unspecified, $dateToString returns null if the date is null or missing.
+     *
+     * New in MongoDB 5.0
      */
     public static function dateToString(
         DateTimeInterface|ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,
@@ -576,6 +658,8 @@ trait FactoryTrait
 
     /**
      * Truncates a date.
+     *
+     * New in MongoDB 5.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/
      * @param DateTimeInterface|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int|string $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
@@ -653,6 +737,26 @@ trait FactoryTrait
     }
 
     /**
+     * Converts Extended JSON (EJSON) format to native BSON values. Use this expression to
+     * transform EJSON type wrappers into their corresponding BSON types after parsing a JSON
+     * string with $convert.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/deserializeEJSON/
+     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $input The Extended JSON value to convert to native BSON format. This should be a BSON
+     * document containing EJSON type wrappers.
+     * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onError The value to return if the operation encounters an error during conversion.
+     * If unspecified, the operation throws an error and stops.
+     */
+    public static function deserializeEJSON(
+        Document|Serializable|ResolvesToObject|stdClass|array|string $input,
+        Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onError = Optional::Undefined,
+    ): DeserializeEJSONOperator {
+        return new DeserializeEJSONOperator($input, $onError);
+    }
+
+    /**
      * Returns the result of dividing the first number by the second. Accepts two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/
@@ -696,22 +800,31 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input
-     * @param ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
+     * @param ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as, and the element index with the variable name specified in arrayIndexAs (MongoDB 8.3+).
      * @param Optional|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+     * @param Optional|string $arrayIndexAs A name for the variable that represents the index of the current element in
+     * the input array. If specified, this variable is available within the cond expression.
+     *
+     * New in MongoDB 8.3
      * @param Optional|ResolvesToInt|int|string $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
      * If the specified limit is greater than the number of matching array elements, $filter returns all matching array elements. If the limit is null, $filter returns all matching array elements.
+     *
+     * New in MongoDB 8.3
      */
     public static function filter(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         ResolvesToBool|bool|string $cond,
         Optional|string $as = Optional::Undefined,
+        Optional|string $arrayIndexAs = Optional::Undefined,
         Optional|ResolvesToInt|int|string $limit = Optional::Undefined,
     ): FilterOperator {
-        return new FilterOperator($input, $cond, $as, $limit);
+        return new FilterOperator($input, $cond, $as, $arrayIndexAs, $limit);
     }
 
     /**
      * Returns the result of an expression for the first document in an array.
+     *
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression
@@ -723,6 +836,8 @@ trait FactoryTrait
 
     /**
      * Returns a specified number of elements from the beginning of an array.
+     *
+     * New in MongoDB 5.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/
      * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
@@ -748,7 +863,8 @@ trait FactoryTrait
 
     /**
      * Defines a custom function.
-     * New in MongoDB 4.4.
+     *
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
      * @param Javascript|string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
@@ -766,7 +882,8 @@ trait FactoryTrait
 
     /**
      * Returns the value of a specified field from a document. You can use $getField to retrieve the value of fields with names that contain periods (.) or start with dollar signs ($).
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/
      * @param ResolvesToString|string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
@@ -807,6 +924,42 @@ trait FactoryTrait
         DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ): GteOperator {
         return new GteOperator($expression1, $expression2);
+    }
+
+    /**
+     * Generates and returns a binary hash value (BinData) from a UTF-8 string or binary data. Use $hash in an aggregation
+     * pipeline to compute binary hashes for storage, verification, or comparison. To get a hexadecimal string instead of
+     * binary data, use $hexHash.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hash/
+     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $input
+     * @param string $algorithm
+     */
+    public static function hash(
+        Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $input,
+        string $algorithm,
+    ): HashOperator {
+        return new HashOperator($input, $algorithm);
+    }
+
+    /**
+     * Generates and returns an uppercase hexadecimal string representation of a hash value from a UTF-8 string or binary
+     * data. Use $hexHash in an aggregation pipeline to compute hex-encoded hashes for storage, verification, or comparison.
+     * To get binary data instead of a hexadecimal string, use $hash.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hexHash/
+     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $input
+     * @param string $algorithm
+     */
+    public static function hexHash(
+        Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $input,
+        string $algorithm,
+    ): HexHashOperator {
+        return new HexHashOperator($input, $algorithm);
     }
 
     /**
@@ -919,6 +1072,8 @@ trait FactoryTrait
     /**
      * Determines if the operand is an array. Returns a boolean.
      *
+     * New in MongoDB 4.4
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
      */
@@ -931,7 +1086,8 @@ trait FactoryTrait
     /**
      * Returns boolean true if the specified expression resolves to an integer, decimal, double, or long.
      * Returns boolean false if the expression resolves to any other BSON type, null, or a missing field.
-     * New in MongoDB 4.4.
+     *
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -987,6 +1143,8 @@ trait FactoryTrait
     /**
      * Returns the result of an expression for the last document in an array.
      *
+     * New in MongoDB 4.4
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $expression
      */
@@ -998,7 +1156,9 @@ trait FactoryTrait
     /**
      * Returns a specified number of elements from the end of an array.
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/
+     * New in MongoDB 5.1
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator
      * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return n elements.
      */
@@ -1104,7 +1264,6 @@ trait FactoryTrait
 
     /**
      * Removes whitespace or the specified characters from the beginning of a string.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/
      * @param ResolvesToString|string $input The string to trim. The argument can be any valid expression that resolves to a string.
@@ -1125,14 +1284,19 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to an array.
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
-     * @param Optional|ResolvesToString|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+     * @param Optional|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+     * @param Optional|string $arrayIndexAs A name for the variable that represents the index of the current element in
+     * the input array. If specified, this variable is available within the in expression.
+     *
+     * New in MongoDB 8.3
      */
     public static function map(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
-        Optional|ResolvesToString|string $as = Optional::Undefined,
+        Optional|string $as = Optional::Undefined,
+        Optional|string $arrayIndexAs = Optional::Undefined,
     ): MapOperator {
-        return new MapOperator($input, $in, $as);
+        return new MapOperator($input, $in, $as, $arrayIndexAs);
     }
 
     /**
@@ -1152,6 +1316,8 @@ trait FactoryTrait
     /**
      * Returns the n largest values in an array. Distinct from the $maxN accumulator.
      *
+     * New in MongoDB 5.1
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the maximal n elements.
      * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
@@ -1165,11 +1331,12 @@ trait FactoryTrait
 
     /**
      * Returns an approximation of the median, the 50th percentile, as a scalar value.
-     * New in MongoDB 7.0.
      * This operator is available as an accumulator in these stages:
      * $group
      * $setWindowFields
      * It is also available as an aggregation expression.
+     *
+     * New in MongoDB 7.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
      * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int|string $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
@@ -1197,6 +1364,8 @@ trait FactoryTrait
 
     /**
      * Access available per-document metadata related to the aggregation operation.
+     *
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/
      * @param string $keyword
@@ -1236,6 +1405,8 @@ trait FactoryTrait
 
     /**
      * Returns the n smallest values in an array. Distinct from the $minN accumulator.
+     *
+     * New in MongoDB 5.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the maximal n elements.
@@ -1357,14 +1528,12 @@ trait FactoryTrait
 
     /**
      * Returns an array of scalar values that correspond to specified percentile values.
-     * New in MongoDB 7.0.
-     *
      * This operator is available as an accumulator in these stages:
      * $group
-     *
      * $setWindowFields
-     *
      * It is also available as an aggregation expression.
+     *
+     * New in MongoDB 7.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
      * @param BSONArray|Decimal128|Int64|PackedArray|ResolvesToNumber|array|float|int|string $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
@@ -1409,6 +1578,8 @@ trait FactoryTrait
     /**
      * Returns a random float between 0 and 1
      *
+     * New in MongoDB 4.4
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/
      */
     public static function rand(): RandOperator
@@ -1440,22 +1611,36 @@ trait FactoryTrait
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $initialValue The initial cumulative value set before in is applied to the first element of the input array.
-     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
+     * @param DateTimeInterface|Document|ExpressionInterface|Serializable|Type|array|bool|float|int|null|stdClass|string $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
      * During evaluation of the in expression, two variables will be available:
-     * - value is the variable that represents the cumulative value of the expression.
-     * - this is the variable that refers to the element being processed.
+     * - value is the variable that represents the cumulative value of the expression. Use valueAs (MongoDB 8.3+) to specify a custom name.
+     * - this is the variable that refers to the element being processed. Use as (MongoDB 8.3+) to specify a custom name.
+     * @param Optional|string $as A name for the variable that represents each individual element of the input array.
+     * If no name is specified, the variable name defaults to this.
+     *
+     * New in MongoDB 8.3
+     * @param Optional|string $valueAs A name for the variable that represents the cumulative value of the expression.
+     * If no name is specified, the variable name defaults to value.
+     *
+     * New in MongoDB 8.3
+     * @param Optional|string $arrayIndexAs A name for the variable that represents the index of the current element in
+     * the input array. If specified, this variable is available within the in expression.
+     *
+     * New in MongoDB 8.3
      */
     public static function reduce(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $initialValue,
-        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
+        DateTimeInterface|Document|Serializable|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
+        Optional|string $as = Optional::Undefined,
+        Optional|string $valueAs = Optional::Undefined,
+        Optional|string $arrayIndexAs = Optional::Undefined,
     ): ReduceOperator {
-        return new ReduceOperator($input, $initialValue, $in);
+        return new ReduceOperator($input, $initialValue, $in, $as, $valueAs, $arrayIndexAs);
     }
 
     /**
      * Applies a regular expression (regex) to a string and returns information on the first matched substring.
-     * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/
      * @param ResolvesToString|string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
@@ -1472,7 +1657,6 @@ trait FactoryTrait
 
     /**
      * Applies a regular expression (regex) to a string and returns information on the all matched substrings.
-     * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/
      * @param ResolvesToString|string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
@@ -1489,7 +1673,6 @@ trait FactoryTrait
 
     /**
      * Applies a regular expression (regex) to a string and returns a boolean that indicates if a match is found or not.
-     * New in MongoDB 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/
      * @param ResolvesToString|string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
@@ -1507,16 +1690,17 @@ trait FactoryTrait
     /**
      * Replaces all instances of a search string in an input string with a replacement string.
      * $replaceAll is both case-sensitive and diacritic-sensitive, and ignores any collation present on a collection.
-     * New in MongoDB 4.4.
+     *
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/
      * @param ResolvesToNull|ResolvesToString|null|string $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|null|string $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
+     * @param Regex|ResolvesToNull|ResolvesToRegex|ResolvesToString|null|string $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
      * @param ResolvesToNull|ResolvesToString|null|string $replacement The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
      */
     public static function replaceAll(
         ResolvesToNull|ResolvesToString|null|string $input,
-        ResolvesToNull|ResolvesToString|null|string $find,
+        Regex|ResolvesToNull|ResolvesToRegex|ResolvesToString|null|string $find,
         ResolvesToNull|ResolvesToString|null|string $replacement,
     ): ReplaceAllOperator {
         return new ReplaceAllOperator($input, $find, $replacement);
@@ -1524,16 +1708,17 @@ trait FactoryTrait
 
     /**
      * Replaces the first instance of a matched string in a given input.
-     * New in MongoDB 4.4.
+     *
+     * New in MongoDB 4.4
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/
-     * @param ResolvesToNull|ResolvesToString|null|string $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|null|string $find The string to search for within the given input. Can be any valid expression that resolves to a string or a null. If find refers to a field that is missing, $replaceAll returns null.
-     * @param ResolvesToNull|ResolvesToString|null|string $replacement The string to use to replace all matched instances of find in input. Can be any valid expression that resolves to a string or a null.
+     * @param ResolvesToNull|ResolvesToString|null|string $input The string on which you wish to apply the find. Can be any valid expression that resolves to a string or a null. If input refers to a field that is missing, $replaceOne returns null.
+     * @param Regex|ResolvesToNull|ResolvesToRegex|ResolvesToString|null|string $find The string or regex to search for within the given input. Can be any valid expression that resolves to a string, a regex, or a null. If find refers to a field that is missing, $replaceOne returns null.
+     * @param ResolvesToNull|ResolvesToString|null|string $replacement The string to use to replace the first matched instance of find in input. Can be any valid expression that resolves to a string or a null.
      */
     public static function replaceOne(
         ResolvesToNull|ResolvesToString|null|string $input,
-        ResolvesToNull|ResolvesToString|null|string $find,
+        Regex|ResolvesToNull|ResolvesToRegex|ResolvesToString|null|string $find,
         ResolvesToNull|ResolvesToString|null|string $replacement,
     ): ReplaceOneOperator {
         return new ReplaceOneOperator($input, $find, $replacement);
@@ -1597,6 +1782,30 @@ trait FactoryTrait
     }
 
     /**
+     * Converts BSON values to Extended JSON (EJSON) format. The result is a
+     * BSON document with EJSON type wrappers that can then be converted to
+     * a JSON string using $toString.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/serializeEJSON/
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $input The BSON value to convert to Extended JSON format.
+     * @param Optional|ResolvesToBool|bool|string $relaxed Specifies whether to use Relaxed Extended JSON format. If true, numeric types
+     * (Int32, Int64, Double) are represented as native JSON numbers for better readability.
+     * If false or unspecified, uses Canonical Extended JSON format which preserves type
+     * information for all BSON types. Defaults to false.
+     * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onError The value to return if the operation encounters an error during conversion.
+     * If unspecified, the operation throws an error and stops.
+     */
+    public static function serializeEJSON(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
+        Optional|ResolvesToBool|bool|string $relaxed = Optional::Undefined,
+        Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onError = Optional::Undefined,
+    ): SerializeEJSONOperator {
+        return new SerializeEJSONOperator($input, $relaxed, $onError);
+    }
+
+    /**
      * Returns a set with elements that appear in the first set but not in the second set; i.e. performs a relative complement of the second set relative to the first. Accepts exactly two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/
@@ -1625,7 +1834,8 @@ trait FactoryTrait
 
     /**
      * Adds, updates, or removes a specified field in a document. You can use $setField to add, update, or remove fields with names that contain periods (.) or start with dollar signs ($).
-     * New in MongoDB 5.0.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/
      * @param ResolvesToString|string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
@@ -1679,6 +1889,73 @@ trait FactoryTrait
         PackedArray|ResolvesToArray|BSONArray|array|string ...$expression,
     ): SetUnionOperator {
         return new SetUnionOperator(...$expression);
+    }
+
+    /**
+     * Returns the sigmoid of a value, defined as 1 / (1 + e^(-x)). The result is a value between 0 and 1.
+     *
+     * New in MongoDB 8.1
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sigmoid/
+     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression $sigmoid takes any valid expression that resolves to a number.
+     */
+    public static function sigmoid(Decimal128|Int64|ResolvesToNumber|float|int|string $expression): SigmoidOperator
+    {
+        return new SigmoidOperator($expression);
+    }
+
+    /**
+     * Returns the cosine similarity between two vectors. If the score argument is true, the result
+     * is normalized to a value between 0 and 1 for use as a vector search score.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/similarityCosine/
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $vectors An array of exactly two expressions that each resolve to an array of numbers.
+     * Both arrays must have the same length.
+     * @param Optional|bool $score If true, normalizes the result to a value between 0 and 1 for use as a vector search score. Defaults to false.
+     */
+    public static function similarityCosine(
+        PackedArray|ResolvesToArray|BSONArray|array|string $vectors,
+        Optional|bool $score = Optional::Undefined,
+    ): SimilarityCosineOperator {
+        return new SimilarityCosineOperator($vectors, $score);
+    }
+
+    /**
+     * Returns the dot product similarity between two vectors. If the score argument is true, the result
+     * is normalized to a value between 0 and 1 for use as a vector search score.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/similarityDotProduct/
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $vectors An array of exactly two expressions that each resolve to an array of numbers.
+     * Both arrays must have the same length.
+     * @param Optional|bool $score If true, normalizes the result to a value between 0 and 1 for use as a vector search score. Defaults to false.
+     */
+    public static function similarityDotProduct(
+        PackedArray|ResolvesToArray|BSONArray|array|string $vectors,
+        Optional|bool $score = Optional::Undefined,
+    ): SimilarityDotProductOperator {
+        return new SimilarityDotProductOperator($vectors, $score);
+    }
+
+    /**
+     * Returns the Euclidean similarity between two vectors. If the score argument is true, the result
+     * is normalized to a value between 0 and 1 for use as a vector search score.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/similarityEuclidean/
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $vectors An array of exactly two expressions that each resolve to an array of numbers.
+     * Both arrays must have the same length.
+     * @param Optional|bool $score If true, normalizes the result to a value between 0 and 1 for use as a vector search score. Defaults to false.
+     */
+    public static function similarityEuclidean(
+        PackedArray|ResolvesToArray|BSONArray|array|string $vectors,
+        Optional|bool $score = Optional::Undefined,
+    ): SimilarityEuclideanOperator {
+        return new SimilarityEuclideanOperator($vectors, $score);
     }
 
     /**
@@ -1739,6 +2016,8 @@ trait FactoryTrait
     /**
      * Sorts the elements of an array.
      *
+     * New in MongoDB 5.2
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input The array to be sorted.
      * The result is null if the expression: is missing, evaluates to null, or evaluates to undefined
@@ -1757,10 +2036,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/
      * @param ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
-     * @param ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
+     * @param Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string or a regular expression.
      */
-    public static function split(ResolvesToString|string $string, ResolvesToString|string $delimiter): SplitOperator
-    {
+    public static function split(
+        ResolvesToString|string $string,
+        Regex|ResolvesToRegex|ResolvesToString|string $delimiter,
+    ): SplitOperator {
         return new SplitOperator($string, $delimiter);
     }
 
@@ -1780,6 +2061,8 @@ trait FactoryTrait
      * If the values represent only a sample of a population of data from which to generalize about the population, use $stdDevSamp instead.
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
      * @no-named-arguments
      * @param Decimal128|Int64|ResolvesToNumber|float|int|string ...$expression
@@ -1793,6 +2076,8 @@ trait FactoryTrait
     /**
      * Calculates the sample standard deviation of the input values. Use if the values encompass a sample of a population of data from which to generalize about the population. $stdDevSamp ignores non-numeric values.
      * If the values represent the entire population of data or you do not wish to generalize about a larger population, use $stdDevPop instead.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
      * @no-named-arguments
@@ -1903,6 +2188,20 @@ trait FactoryTrait
     }
 
     /**
+     * Returns the subtype of a given value as an integer. In MongoDB 8.3, the only expression
+     * that contains a subtype is a BinData expression.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtype/
+     * @param Binary|ResolvesToBinData|string $expression An expression that resolves to a BinData value.
+     */
+    public static function subtype(Binary|ResolvesToBinData|string $expression): SubtypeOperator
+    {
+        return new SubtypeOperator($expression);
+    }
+
+    /**
      * Returns a sum of numerical values. Ignores non-numeric values.
      * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
      *
@@ -1959,8 +2258,22 @@ trait FactoryTrait
     }
 
     /**
+     * Converts a value to an array. If the value cannot be converted, $toArray errors.
+     * If the value is null or missing, $toArray returns null.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toArray/
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
+     */
+    public static function toArray(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
+    ): ToArrayOperator {
+        return new ToArrayOperator($expression);
+    }
+
+    /**
      * Converts value to a boolean.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -1973,7 +2286,6 @@ trait FactoryTrait
 
     /**
      * Converts value to a Date.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -1986,7 +2298,6 @@ trait FactoryTrait
 
     /**
      * Converts value to a Decimal128.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -1999,7 +2310,6 @@ trait FactoryTrait
 
     /**
      * Converts value to a double.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -2013,6 +2323,8 @@ trait FactoryTrait
     /**
      * Computes and returns the hash value of the input expression using the same hash function that MongoDB uses to create a hashed index. A hash function maps a key or string to a fixed-size numeric value.
      *
+     * New in MongoDB 4.4
+     *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toHashedIndexKey/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value key or string to hash
      */
@@ -2024,7 +2336,6 @@ trait FactoryTrait
 
     /**
      * Converts value to an integer.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -2037,7 +2348,6 @@ trait FactoryTrait
 
     /**
      * Converts value to a long.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -2060,8 +2370,22 @@ trait FactoryTrait
     }
 
     /**
+     * Converts a string to an object. If the value cannot be converted, $toObject errors.
+     * If the value is null or missing, $toObject returns null.
+     *
+     * New in MongoDB 8.3
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObject/
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
+     */
+    public static function toObject(
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
+    ): ToObjectOperator {
+        return new ToObjectOperator($expression);
+    }
+
+    /**
      * Converts value to an ObjectId.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -2073,8 +2397,46 @@ trait FactoryTrait
     }
 
     /**
+     * Returns the top element within an array according to the specified sort order.
+     *
+     * New in MongoDB 7.0
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top-array-operator/
+     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the input array and can be any expression.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the top element.
+     */
+    public static function top(
+        Document|Serializable|stdClass|array $sortBy,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+    ): TopOperator {
+        return new TopOperator($sortBy, $output, $input);
+    }
+
+    /**
+     * Returns an aggregation of the top n elements within an array, according to the specified sort order.
+     * If the array contains fewer than n elements, $topN returns all elements in the array.
+     *
+     * New in MongoDB 7.0
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN-array-operator/
+     * @param ResolvesToInt|int|string $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $topN returns.
+     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $output Represents the output for each element in the input array and can be any expression.
+     * @param BSONArray|PackedArray|ResolvesToArray|array|string $input An expression that resolves to the array from which to return the top n elements.
+     */
+    public static function topN(
+        ResolvesToInt|int|string $n,
+        Document|Serializable|stdClass|array $sortBy,
+        DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $output,
+        PackedArray|ResolvesToArray|BSONArray|array|string $input,
+    ): TopNOperator {
+        return new TopNOperator($n, $sortBy, $output, $input);
+    }
+
+    /**
      * Converts value to a string.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/
      * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $expression
@@ -2098,7 +2460,6 @@ trait FactoryTrait
 
     /**
      * Removes whitespace or the specified characters from the beginning and end of a string.
-     * New in MongoDB 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/
      * @param ResolvesToString|string $input The string to trim. The argument can be any valid expression that resolves to a string.
@@ -2130,7 +2491,8 @@ trait FactoryTrait
 
     /**
      * Returns the incrementing ordinal from a timestamp as a long.
-     * New in MongoDB 5.1.
+     *
+     * New in MongoDB 5.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/
      * @param ResolvesToTimestamp|Timestamp|int|string $expression
@@ -2142,7 +2504,8 @@ trait FactoryTrait
 
     /**
      * Returns the seconds from a timestamp as a long.
-     * New in MongoDB 5.1.
+     *
+     * New in MongoDB 5.1
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/
      * @param ResolvesToTimestamp|Timestamp|int|string $expression
@@ -2167,6 +2530,8 @@ trait FactoryTrait
     /**
      * You can use $unsetField to remove fields with names that contain periods (.) or that start with dollar signs ($).
      * $unsetField is an alias for $setField using $$REMOVE to remove fields.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/
      * @param ResolvesToString|string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.

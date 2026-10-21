@@ -25,6 +25,12 @@
         </testsuite>
     </testsuites>
 
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </source>
+
     <logging>
         <junit outputFile="test-results.xml" />
     </logging>

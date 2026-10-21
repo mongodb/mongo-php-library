@@ -27,9 +27,7 @@ final class SampleStage implements StageInterface, OperatorInterface
     /** @var int $size The number of documents to randomly select. */
     public readonly int $size;
 
-    /**
-     * @param int $size The number of documents to randomly select.
-     */
+    /** @param int $size The number of documents to randomly select. */
     public function __construct(int $size)
     {
         $this->size = $size;

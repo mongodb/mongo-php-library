@@ -34,9 +34,7 @@ final class FacetStage implements StageInterface, OperatorInterface
     /** @var stdClass<BSONArray|PackedArray|Pipeline|array> $facet */
     public readonly stdClass $facet;
 
-    /**
-     * @param BSONArray|PackedArray|Pipeline|array ...$facet
-     */
+    /** @param BSONArray|PackedArray|Pipeline|array ...$facet */
     public function __construct(PackedArray|Pipeline|BSONArray|array ...$facet)
     {
         if (\count($facet) < 1) {

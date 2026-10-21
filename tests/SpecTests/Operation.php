@@ -12,9 +12,9 @@ use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
-use MongoDB\MapReduceResult;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
+use PHPUnit\Framework\Assert;
 use stdClass;
 
 use function array_diff_key;
@@ -183,10 +183,6 @@ final class Operation
              * is not used (e.g. Command Monitoring spec). */
             if ($result instanceof Cursor) {
                 $result = $result->toArray();
-            } elseif ($result instanceof MapReduceResult) {
-                /* For mapReduce operations, we ignore the mapReduce metadata
-                 * and only return the result iterator for evaluation. */
-                $result = iterator_to_array($result->getIterator());
             }
         } catch (Exception $e) {
             $exception = $e;
@@ -411,12 +407,8 @@ final class Operation
                 return $collection->listIndexes($args);
 
             case 'mapReduce':
-                return $collection->mapReduce(
-                    $args['map'],
-                    $args['reduce'],
-                    $args['out'],
-                    array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1]),
-                );
+                Assert::markTestSkipped('mapReduce is not supported');
+                break;
 
             case 'watch':
                 return $collection->watch(

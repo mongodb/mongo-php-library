@@ -30,34 +30,58 @@ final class FilterOperator implements ResolvesToArray, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$filter';
-    public const PROPERTIES = ['input' => 'input', 'cond' => 'cond', 'as' => 'as', 'limit' => 'limit'];
+
+    public const PROPERTIES = [
+        'input' => 'input',
+        'cond' => 'cond',
+        'as' => 'as',
+        'arrayIndexAs' => 'arrayIndexAs',
+        'limit' => 'limit',
+    ];
 
     /** @var BSONArray|PackedArray|ResolvesToArray|array|string $input */
     public readonly PackedArray|ResolvesToArray|BSONArray|array|string $input;
 
-    /** @var ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as. */
+    /** @var ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as, and the element index with the variable name specified in arrayIndexAs (MongoDB 8.3+). */
     public readonly ResolvesToBool|bool|string $cond;
 
     /** @var Optional|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this. */
     public readonly Optional|string $as;
 
     /**
+     * @var Optional|string $arrayIndexAs A name for the variable that represents the index of the current element in
+     * the input array. If specified, this variable is available within the cond expression.
+     *
+     * New in MongoDB 8.3
+     */
+    public readonly Optional|string $arrayIndexAs;
+
+    /**
      * @var Optional|ResolvesToInt|int|string $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
      * If the specified limit is greater than the number of matching array elements, $filter returns all matching array elements. If the limit is null, $filter returns all matching array elements.
+     *
+     * New in MongoDB 8.3
      */
     public readonly Optional|ResolvesToInt|int|string $limit;
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|array|string $input
-     * @param ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
+     * @param ResolvesToBool|bool|string $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as, and the element index with the variable name specified in arrayIndexAs (MongoDB 8.3+).
      * @param Optional|string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+     * @param Optional|string $arrayIndexAs A name for the variable that represents the index of the current element in
+     * the input array. If specified, this variable is available within the cond expression.
+     *
+     * New in MongoDB 8.3
      * @param Optional|ResolvesToInt|int|string $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
      * If the specified limit is greater than the number of matching array elements, $filter returns all matching array elements. If the limit is null, $filter returns all matching array elements.
+     *
+     * New in MongoDB 8.3
      */
     public function __construct(
         PackedArray|ResolvesToArray|BSONArray|array|string $input,
         ResolvesToBool|bool|string $cond,
         Optional|string $as = Optional::Undefined,
+        Optional|string $arrayIndexAs = Optional::Undefined,
         Optional|ResolvesToInt|int|string $limit = Optional::Undefined,
     ) {
         if (is_string($input) && ! str_starts_with($input, '$')) {
@@ -75,6 +99,7 @@ final class FilterOperator implements ResolvesToArray, OperatorInterface
 
         $this->cond = $cond;
         $this->as = $as;
+        $this->arrayIndexAs = $arrayIndexAs;
         if (is_string($limit) && ! str_starts_with($limit, '$')) {
             throw new InvalidArgumentException('Argument $limit can be an expression, field paths and variable names must be prefixed by "$" or "$$".');
         }

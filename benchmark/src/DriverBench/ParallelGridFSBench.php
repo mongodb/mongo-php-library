@@ -48,7 +48,7 @@ final class ParallelGridFSBench
         foreach (self::getFileNames() as $file) {
             $pid = pcntl_fork();
             if ($pid === 0) {
-                Utils::getDatabase()->selectGridFSBucket()->uploadFromStream(basename($file), fopen($file, 'r'));
+                Utils::getDatabase()->getGridFSBucket()->uploadFromStream(basename($file), fopen($file, 'r'));
 
                 // Exit the child process
                 exit(0);
@@ -78,7 +78,7 @@ final class ParallelGridFSBench
         $database = Utils::getDatabase();
         $database->drop();
 
-        $bucket = $database->selectGridFSBucket();
+        $bucket = $database->getGridFSBucket();
         $bucket->uploadFromStream('init', Data::getStream(1));
 
         Utils::reset();
@@ -97,7 +97,7 @@ final class ParallelGridFSBench
             $pid = pcntl_fork();
             if ($pid === 0) {
                 $stream = Utils::getDatabase()
-                    ->selectGridFSBucket()
+                    ->getGridFSBucket()
                     ->openDownloadStreamByName(basename($file));
                 stream_copy_to_stream($stream, fopen($file, 'w'));
 

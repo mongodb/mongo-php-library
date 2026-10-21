@@ -16,12 +16,15 @@ use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\TraitType;
 use ReflectionClass;
 use stdClass;
+use Throwable;
 
 use function array_key_last;
 use function array_map;
 use function assert;
+use function class_implements;
 use function file_get_contents;
 use function implode;
+use function in_array;
 use function sprintf;
 
 /**
@@ -127,6 +130,11 @@ class FluentStageFactoryGenerator extends OperatorGenerator
 
         foreach ($file->getNamespaces() as $ns) {
             foreach ($ns->getUses() as $use) {
+                // Skip classes used in the method body only.
+                if (in_array(Throwable::class, class_implements($use), true)) {
+                    continue;
+                }
+
                 $namespace->addUse($use);
             }
         }

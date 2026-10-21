@@ -10,8 +10,6 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\Builder\PipelineTestCase;
 
-use function MongoDB\object;
-
 /**
  * Test $out stage
  */
@@ -26,15 +24,27 @@ class OutStageTest extends PipelineTestCase
                     Expression::stringFieldPath('title'),
                 ),
             ),
-            Stage::out(
-                object(
-                    db: 'reporting',
-                    coll: 'authors',
-                ),
-            ),
+            Stage::out(coll: 'authors', db: 'reporting'),
         );
 
         $this->assertSamePipeline(Pipelines::OutOutputToADifferentDatabase, $pipeline);
+    }
+
+    public function testOutputToATimeSeriesCollection(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::out(
+                db: 'reporting',
+                coll: 'sensorData',
+                timeseries: [
+                    'timeField' => 'timestamp',
+                    'metaField' => 'sensorId',
+                    'granularity' => 'hours',
+                ],
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::OutOutputToATimeSeriesCollection, $pipeline);
     }
 
     public function testOutputToSameDatabase(): void

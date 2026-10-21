@@ -32,25 +32,6 @@ class FilterOperatorTest extends PipelineTestCase
         $this->assertSamePipeline(Pipelines::FilterExample, $pipeline);
     }
 
-    public function testLimitAsANumericExpression(): void
-    {
-        $pipeline = new Pipeline(
-            Stage::project(
-                items: Expression::filter(
-                    input: Expression::arrayFieldPath('items'),
-                    cond: Expression::lte(
-                        Expression::variable('item.price'),
-                        150,
-                    ),
-                    as: 'item',
-                    limit: 2,
-                ),
-            ),
-        );
-
-        $this->assertSamePipeline(Pipelines::FilterLimitAsANumericExpression, $pipeline);
-    }
-
     public function testLimitGreaterThanPossibleMatches(): void
     {
         $pipeline = new Pipeline(
@@ -68,6 +49,29 @@ class FilterOperatorTest extends PipelineTestCase
         );
 
         $this->assertSamePipeline(Pipelines::FilterLimitGreaterThanPossibleMatches, $pipeline);
+    }
+
+    public function testUseTheArrayIndexAsField(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project(
+                _id: 0,
+                name: 1,
+                secondaryHobbies: Expression::filter(
+                    input: Expression::arrayFieldPath('hobbies'),
+                    arrayIndexAs: 'myIndex',
+                    cond: Expression::eq(
+                        Expression::mod(
+                            Expression::variable('myIndex'),
+                            2,
+                        ),
+                        0,
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FilterUseTheArrayIndexAsField, $pipeline);
     }
 
     public function testUsingTheLimitField(): void

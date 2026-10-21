@@ -33,7 +33,7 @@ final class GridFSBench
         $database = Utils::getDatabase();
         $database->drop();
 
-        $this->bucket = $database->selectGridFSBucket();
+        $this->bucket = $database->getGridFSBucket();
         // Init the GridFS bucket
         $this->bucket->uploadFromStream('init', Data::getStream(1));
         // Prepare the 50MB stream to upload
@@ -52,7 +52,7 @@ final class GridFSBench
         $database = Utils::getDatabase();
         $database->drop();
 
-        $this->bucket = $database->selectGridFSBucket();
+        $this->bucket = $database->getGridFSBucket();
         // Upload a 50MB file
         $this->id = $this->bucket->uploadFromStream('init', Data::getStream(50 * 1024 * 1024));
         // Prepare the stream to receive the download

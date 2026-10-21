@@ -28,9 +28,7 @@ final class CountStage implements StageInterface, OperatorInterface
     /** @var string $field Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character. */
     public readonly string $field;
 
-    /**
-     * @param string $field Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character.
-     */
+    /** @param string $field Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character. */
     public function __construct(string $field)
     {
         $this->field = $field;

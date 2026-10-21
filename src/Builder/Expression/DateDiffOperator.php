@@ -24,6 +24,8 @@ use function str_starts_with;
 /**
  * Returns the difference between two dates.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/
  * @internal
  */

@@ -35,9 +35,7 @@ final class MergeObjectsAccumulator implements AccumulatorInterface, OperatorInt
     /** @var Document|ResolvesToObject|Serializable|array|stdClass|string $document Any valid expression that resolves to a document. */
     public readonly Document|Serializable|ResolvesToObject|stdClass|array|string $document;
 
-    /**
-     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $document Any valid expression that resolves to a document.
-     */
+    /** @param Document|ResolvesToObject|Serializable|array|stdClass|string $document Any valid expression that resolves to a document. */
     public function __construct(Document|Serializable|ResolvesToObject|stdClass|array|string $document)
     {
         if (is_string($document) && ! str_starts_with($document, '$')) {

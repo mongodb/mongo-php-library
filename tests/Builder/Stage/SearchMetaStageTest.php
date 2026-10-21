@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Stage;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Search;
@@ -47,18 +48,18 @@ class SearchMetaStageTest extends PipelineTestCase
                 Search::facet(
                     operator: Search::range(
                         path: 'released',
-                        gte: new UTCDateTime(new DateTimeImmutable('2000-01-01')),
-                        lte: new UTCDateTime(new DateTimeImmutable('2015-01-31')),
+                        gte: new UTCDateTime(new DateTimeImmutable('2000-01-01', new DateTimeZone('UTC'))),
+                        lte: new UTCDateTime(new DateTimeImmutable('2015-01-31', new DateTimeZone('UTC'))),
                     ),
                     facets: object(
                         yearFacet: object(
                             type: 'date',
                             path: 'released',
                             boundaries: [
-                                new UTCDateTime(new DateTimeImmutable('2000-01-01')),
-                                new UTCDateTime(new DateTimeImmutable('2005-01-01')),
-                                new UTCDateTime(new DateTimeImmutable('2010-01-01')),
-                                new UTCDateTime(new DateTimeImmutable('2015-01-01')),
+                                new UTCDateTime(new DateTimeImmutable('2000-01-01', new DateTimeZone('UTC'))),
+                                new UTCDateTime(new DateTimeImmutable('2005-01-01', new DateTimeZone('UTC'))),
+                                new UTCDateTime(new DateTimeImmutable('2010-01-01', new DateTimeZone('UTC'))),
+                                new UTCDateTime(new DateTimeImmutable('2015-01-01', new DateTimeZone('UTC'))),
                             ],
                             default: 'other',
                         ),
@@ -93,8 +94,8 @@ class SearchMetaStageTest extends PipelineTestCase
                 Search::facet(
                     operator: Search::range(
                         path: 'released',
-                        gte: new UTCDateTime(new DateTimeImmutable('2000-01-01')),
-                        lte: new UTCDateTime(new DateTimeImmutable('2015-01-31')),
+                        gte: new UTCDateTime(new DateTimeImmutable('2000-01-01', new DateTimeZone('UTC'))),
+                        lte: new UTCDateTime(new DateTimeImmutable('2015-01-31', new DateTimeZone('UTC'))),
                     ),
                     facets: object(
                         directorsFacet: object(

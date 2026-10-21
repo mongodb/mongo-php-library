@@ -65,9 +65,8 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->toCollectionName,
         );
-        $commandResult = $operation->execute($server);
+        $operation->execute($server);
 
-        $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($this->toCollectionName);
 

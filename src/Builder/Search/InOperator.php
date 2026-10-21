@@ -27,6 +27,8 @@ use function is_array;
 /**
  * The in operator performs a search for an array of BSON values in a field.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/in/
  * @internal
  */
@@ -34,7 +36,7 @@ final class InOperator implements SearchOperatorInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = 'in';
-    public const PROPERTIES = ['path' => 'path', 'value' => 'value', 'score' => 'score'];
+    public const PROPERTIES = ['path' => 'path', 'value' => 'value', 'score' => 'score', 'doesNotAffect' => 'doesNotAffect'];
 
     /** @var array|string $path */
     public readonly array|string $path;
@@ -45,15 +47,20 @@ final class InOperator implements SearchOperatorInterface, OperatorInterface
     /** @var Optional|Document|Serializable|array|stdClass $score */
     public readonly Optional|Document|Serializable|stdClass|array $score;
 
+    /** @var Optional|BSONArray|PackedArray|array|string $doesNotAffect */
+    public readonly Optional|PackedArray|BSONArray|array|string $doesNotAffect;
+
     /**
      * @param array|string $path
      * @param BSONArray|DateTimeInterface|PackedArray|Type|array|bool|float|int|null|stdClass|string $value
      * @param Optional|Document|Serializable|array|stdClass $score
+     * @param Optional|BSONArray|PackedArray|array|string $doesNotAffect
      */
     public function __construct(
         array|string $path,
         DateTimeInterface|PackedArray|Type|BSONArray|stdClass|array|bool|float|int|null|string $value,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array|string $doesNotAffect = Optional::Undefined,
     ) {
         $this->path = $path;
         if (is_array($value) && ! array_is_list($value)) {
@@ -62,5 +69,10 @@ final class InOperator implements SearchOperatorInterface, OperatorInterface
 
         $this->value = $value;
         $this->score = $score;
+        if (is_array($doesNotAffect) && ! array_is_list($doesNotAffect)) {
+            throw new InvalidArgumentException('Expected $doesNotAffect argument to be a list, got an associative array.');
+        }
+
+        $this->doesNotAffect = $doesNotAffect;
     }
 }

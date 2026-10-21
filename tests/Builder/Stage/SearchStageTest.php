@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Stage;
 
 use DateTime;
+use DateTimeZone;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
@@ -27,7 +28,7 @@ class SearchStageTest extends PipelineTestCase
             Stage::search(
                 Search::near(
                     path: 'released',
-                    origin: new UTCDateTime(new DateTime('2011-09-01T00:00:00.000+00:00')),
+                    origin: new UTCDateTime(new DateTime('2011-09-01T00:00:00.000+00:00', new DateTimeZone('UTC'))),
                     pivot: 7776000000,
                 ),
                 count: object(type: 'total'),
@@ -49,8 +50,8 @@ class SearchStageTest extends PipelineTestCase
             Stage::search(
                 Search::range(
                     path: 'released',
-                    gt: new UTCDateTime(new DateTime('2010-01-01')),
-                    lt: new UTCDateTime(new DateTime('2015-01-01')),
+                    gt: new UTCDateTime(new DateTime('2010-01-01', new DateTimeZone('UTC'))),
+                    lt: new UTCDateTime(new DateTime('2015-01-01', new DateTimeZone('UTC'))),
                 ),
                 sort: object(
                     released: -1,
@@ -73,7 +74,7 @@ class SearchStageTest extends PipelineTestCase
             Stage::search(
                 Search::near(
                     path: 'released',
-                    origin: new UTCDateTime(new DateTime('2011-09-01T00:00:00.000+00:00')),
+                    origin: new UTCDateTime(new DateTime('2011-09-01T00:00:00.000+00:00', new DateTimeZone('UTC'))),
                     pivot: 7776000000,
                 ),
             ),

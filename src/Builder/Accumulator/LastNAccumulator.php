@@ -28,6 +28,8 @@ use function str_starts_with;
  * The elements returned are meaningful only if in a specified sort order.
  * If the group contains fewer than n elements, $lastN returns all elements in the group.
  *
+ * New in MongoDB 5.2
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
  * @internal
  */

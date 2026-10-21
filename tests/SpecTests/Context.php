@@ -105,11 +105,6 @@ final class Context
 
                 $autoEncryptionOptions['tlsOptions']->kmip = self::getKmsTlsOptions();
             }
-
-            // Intentionally ignore empty values for CRYPT_SHARED_LIB_PATH
-            if (getenv('CRYPT_SHARED_LIB_PATH')) {
-                $autoEncryptionOptions['extraOptions']['cryptSharedLibPath'] = getenv('CRYPT_SHARED_LIB_PATH');
-            }
         }
 
         if (isset($test->outcome->collection->name)) {
@@ -403,7 +398,7 @@ final class Context
 
     public function selectGridFSBucket($databaseName, $bucketName, array $bucketOptions = [])
     {
-        return $this->selectDatabase($databaseName)->selectGridFSBucket($this->prepareGridFSBucketOptions($bucketOptions, $bucketName));
+        return $this->selectDatabase($databaseName)->getGridFSBucket($this->prepareGridFSBucketOptions($bucketOptions, $bucketName));
     }
 
     private static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client

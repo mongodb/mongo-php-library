@@ -29,9 +29,7 @@ final class MaxDistanceOperator implements FieldQueryInterface, OperatorInterfac
     /** @var Decimal128|Int64|float|int $value */
     public readonly Decimal128|Int64|float|int $value;
 
-    /**
-     * @param Decimal128|Int64|float|int $value
-     */
+    /** @param Decimal128|Int64|float|int $value */
     public function __construct(Decimal128|Int64|float|int $value)
     {
         $this->value = $value;

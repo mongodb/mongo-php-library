@@ -18,7 +18,6 @@
 namespace MongoDB\GridFS;
 
 use ArrayIterator;
-use Iterator;
 use MongoDB\Collection;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Manager;
@@ -39,7 +38,7 @@ use function sprintf;
  *
  * @internal
  */
-class CollectionWrapper
+final class CollectionWrapper
 {
     private Collection $chunksCollection;
 
@@ -96,11 +95,16 @@ class CollectionWrapper
 
     /**
      * Deletes a GridFS file and related chunks by ID.
+     *
+     * @return int|null Number of deleted files (i.e. 0 or 1), or null if the
+     *                   write was not acknowledged
      */
-    public function deleteFileAndChunksById(mixed $id): void
+    public function deleteFileAndChunksById(mixed $id): ?int
     {
-        $this->filesCollection->deleteOne(['_id' => ['$eq' => $id]]);
+        $result = $this->filesCollection->deleteOne(['_id' => ['$eq' => $id]]);
         $this->chunksCollection->deleteMany(['files_id' => ['$eq' => $id]]);
+
+        return $result->isAcknowledged() ? $result->getDeletedCount() : null;
     }
 
     /**
@@ -117,15 +121,17 @@ class CollectionWrapper
      *
      * @param mixed   $id        File ID
      * @param integer $fromChunk Starting chunk (inclusive)
-     * @return CursorInterface&Iterator
      */
-    public function findChunksByFileId(mixed $id, int $fromChunk = 0)
+    public function findChunksByFileId(mixed $id, int $fromChunk = 0): CursorInterface
     {
+        $filter = ['files_id' => ['$eq' => $id]];
+
+        if ($fromChunk > 0) {
+            $filter['n'] = ['$gte' => $fromChunk];
+        }
+
         return $this->chunksCollection->find(
-            [
-                'files_id' => ['$eq' => $id],
-                'n' => ['$gte' => $fromChunk],
-            ],
+            $filter,
             [
                 'sort' => ['n' => 1],
                 'typeMap' => ['root' => 'stdClass'],
@@ -191,9 +197,8 @@ class CollectionWrapper
      * @see Find::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return CursorInterface&Iterator
      */
-    public function findFiles(array|object $filter, array $options = [])
+    public function findFiles(array|object $filter, array $options = []): CursorInterface
     {
         return $this->filesCollection->find($filter, $options);
     }
@@ -203,9 +208,8 @@ class CollectionWrapper
      *
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return array|object|null
      */
-    public function findOneFile(array|object $filter, array $options = [])
+    public function findOneFile(array|object $filter, array $options = []): array|object|null
     {
         return $this->filesCollection->findOne($filter, $options);
     }

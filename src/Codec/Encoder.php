@@ -37,11 +37,10 @@ interface Encoder
      * should throw an exception.
      *
      * @psalm-param NativeType $value
-     * @return mixed
      * @psalm-return BSONType
      * @throws UnsupportedValueException if the encoder does not support the value
      */
-    public function encode(mixed $value);
+    public function encode(mixed $value): mixed;
 
     /**
      * Encodes a given value if supported, otherwise returns the value as-is.
@@ -49,8 +48,7 @@ interface Encoder
      * The EncodeIfSupported trait provides a default implementation of this
      * method.
      *
-     * @return mixed
      * @psalm-return ($value is NativeType ? BSONType : $value)
      */
-    public function encodeIfSupported(mixed $value);
+    public function encodeIfSupported(mixed $value): mixed;
 }

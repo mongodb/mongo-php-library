@@ -40,6 +40,10 @@ github_pr_aliases: &github_pr_aliases
   # Run PR tasks for all PR variants (only MongoDB 7.0)
   - variant_tags: ["pr"]
     task_tags: ["pr 7.0"]
+  # Run csfle tests against MongoDB latest on the next-minor extension so
+  # that QE string query tests (Prose 27) get PR coverage
+  - variant_tags: ["csfle-next-minor"]
+    task: "^test-mongodb-latest-crypt-shared$"
 
 commit_queue_aliases: *github_pr_aliases
 

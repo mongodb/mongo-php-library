@@ -20,14 +20,15 @@ namespace MongoDB\Operation;
 use EmptyIterator;
 use Iterator;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
+use MongoDB\Model\CallbackIterator;
 use MongoDB\Model\IndexInfo;
-use MongoDB\Model\IndexInfoIteratorIterator;
 
 use function is_integer;
 
@@ -36,10 +37,8 @@ use function is_integer;
  *
  * @see \MongoDB\Collection::listIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/listIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class ListIndexes implements Executable
+final class ListIndexes
 {
     private const ERROR_CODE_DATABASE_NOT_FOUND = 60;
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
@@ -77,13 +76,41 @@ class ListIndexes implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return Iterator<int, IndexInfo>
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): Iterator
     {
-        return $this->executeCommand($server);
+        $cmd = ['listIndexes' => $this->collectionName];
+
+        foreach (['comment', 'maxTimeMS'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
+        }
+
+        try {
+            /** @var CursorInterface<array> $cursor */
+            $cursor = $server->executeReadCommand($this->databaseName, new Command($cmd), $this->createOptions());
+            $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
+        } catch (CommandException $e) {
+            /* The server may return an error if the collection does not exist.
+             * Check for possible error codes (see: SERVER-20463) and return an
+             * empty iterator instead of throwing.
+             */
+            if ($e->getCode() === self::ERROR_CODE_NAMESPACE_NOT_FOUND || $e->getCode() === self::ERROR_CODE_DATABASE_NOT_FOUND) {
+                return new EmptyIterator();
+            }
+
+            throw $e;
+        }
+
+        return new CachingIterator(
+            new CallbackIterator(
+                $cursor,
+                fn (array $indexInfo): IndexInfo => new IndexInfo($indexInfo),
+            ),
+        );
     }
 
     /**
@@ -103,43 +130,5 @@ class ListIndexes implements Executable
         }
 
         return $options;
-    }
-
-    /**
-     * Returns information for all indexes for this collection using the
-     * listIndexes command.
-     *
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     */
-    private function executeCommand(Server $server): IndexInfoIteratorIterator
-    {
-        $cmd = ['listIndexes' => $this->collectionName];
-
-        foreach (['comment', 'maxTimeMS'] as $option) {
-            if (isset($this->options[$option])) {
-                $cmd[$option] = $this->options[$option];
-            }
-        }
-
-        try {
-            $cursor = $server->executeReadCommand($this->databaseName, new Command($cmd), $this->createOptions());
-        } catch (CommandException $e) {
-            /* The server may return an error if the collection does not exist.
-             * Check for possible error codes (see: SERVER-20463) and return an
-             * empty iterator instead of throwing.
-             */
-            if ($e->getCode() === self::ERROR_CODE_NAMESPACE_NOT_FOUND || $e->getCode() === self::ERROR_CODE_DATABASE_NOT_FOUND) {
-                return new IndexInfoIteratorIterator(new EmptyIterator());
-            }
-
-            throw $e;
-        }
-
-        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
-
-        /** @var CachingIterator<int, array> $iterator */
-        $iterator = new CachingIterator($cursor);
-
-        return new IndexInfoIteratorIterator($iterator, $this->databaseName . '.' . $this->collectionName);
     }
 }

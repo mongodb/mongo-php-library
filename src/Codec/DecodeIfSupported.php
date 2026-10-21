@@ -30,17 +30,13 @@ trait DecodeIfSupported
 
     /**
      * @psalm-param BSONType $value
-     * @return mixed
      * @psalm-return NativeType
      * @throws UnsupportedValueException if the decoder does not support the value
      */
-    abstract public function decode(mixed $value);
+    abstract public function decode(mixed $value): mixed;
 
-    /**
-     * @return mixed
-     * @psalm-return ($value is BSONType ? NativeType : $value)
-     */
-    public function decodeIfSupported(mixed $value)
+    /** @psalm-return ($value is BSONType ? NativeType : $value) */
+    public function decodeIfSupported(mixed $value): mixed
     {
         return $this->canDecode($value) ? $this->decode($value) : $value;
     }

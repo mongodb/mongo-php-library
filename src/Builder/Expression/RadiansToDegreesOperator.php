@@ -32,9 +32,7 @@ final class RadiansToDegreesOperator implements ResolvesToDouble, ResolvesToDeci
     /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $expression */
     public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $expression;
 
-    /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression
-     */
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int|string $expression */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $expression)
     {
         if (is_string($expression) && ! str_starts_with($expression, '$')) {

@@ -34,10 +34,8 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::findOneAndReplace()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class FindOneAndReplace implements Executable, Explainable
+final class FindOneAndReplace implements Explainable
 {
     public const RETURN_DOCUMENT_BEFORE = 1;
     public const RETURN_DOCUMENT_AFTER = 2;
@@ -152,12 +150,10 @@ class FindOneAndReplace implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return array|object|null
      * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array|object|null
     {
         return $this->findAndModify->execute($server);
     }
@@ -166,15 +162,13 @@ class FindOneAndReplace implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         return $this->findAndModify->getCommandDocument();
     }
 
-    /** @return array|object */
-    private function validateReplacement(array|object $replacement, ?DocumentCodec $codec)
+    private function validateReplacement(array|object $replacement, ?DocumentCodec $codec): array|object
     {
         if (isset($codec)) {
             $replacement = $codec->encode($replacement);

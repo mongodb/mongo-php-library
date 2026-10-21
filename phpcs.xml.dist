@@ -13,13 +13,14 @@
     <file>src</file>
     <file>examples</file>
     <file>generator/src</file>
-    <file>generator/config</file>
+    <file>generator/definitions.php</file>
+    <file>generator/expressions.php</file>
     <file>tests</file>
     <file>tools</file>
     <file>rector.php</file>
 
     <!-- Ignore auto-generated code -->
-    <exclude-pattern>src/Builder/(Accumulator|Expression|Query|Projection|Search|Stage)/*\.php</exclude-pattern>
+    <exclude-pattern>src/Builder/(Accumulator|Expression|Query|Search|Stage|Update)/*\.php</exclude-pattern>
 
     <!-- Target minimum supported PHP version -->
     <config name="php_version" value="80100"/>
@@ -130,14 +131,6 @@
     </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint">
         <exclude-pattern>tests</exclude-pattern>
-    </rule>
-
-
-    <!-- *********************************************************** -->
-    <!-- Require native type hints for all code without a BC promise -->
-    <!-- *********************************************************** -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint">
-        <exclude-pattern>src</exclude-pattern>
     </rule>
 
 

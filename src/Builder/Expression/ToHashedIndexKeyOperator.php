@@ -18,6 +18,8 @@ use stdClass;
 /**
  * Computes and returns the hash value of the input expression using the same hash function that MongoDB uses to create a hashed index. A hash function maps a key or string to a fixed-size numeric value.
  *
+ * New in MongoDB 4.4
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toHashedIndexKey/
  * @internal
  */
@@ -30,9 +32,7 @@ final class ToHashedIndexKeyOperator implements ResolvesToLong, OperatorInterfac
     /** @var DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value key or string to hash */
     public readonly DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value;
 
-    /**
-     * @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value key or string to hash
-     */
+    /** @param DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $value key or string to hash */
     public function __construct(
         DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value,
     ) {

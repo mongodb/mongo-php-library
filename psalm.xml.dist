@@ -14,10 +14,20 @@
     <projectFiles>
         <directory name="src" />
         <directory name="examples" />
+        <directory name="tests/Type" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+
+    <stubs>
+        <file name="stubs/Driver/BulkWriteCommand.stub.php"/>
+        <file name="stubs/Driver/BulkWriteCommandException.stub.php"/>
+        <file name="stubs/Driver/BulkWriteCommandResult.stub.php"/>
+        <file name="stubs/Driver/Cursor.stub.php"/>
+        <file name="stubs/Driver/CursorInterface.stub.php"/>
+        <file name="stubs/Driver/WriteResult.stub.php"/>
+    </stubs>
 
     <issueHandlers>
         <!-- Class is meant to be Unserialized by the extension only -->
@@ -30,11 +40,17 @@
         <!-- This is often the result of type checks due to missing native types -->
         <DocblockTypeContradiction errorLevel="info" />
 
+        <!-- We still want to check types at runtime for users not using Psalm -->
+        <RedundantConditionGivenDocblockType errorLevel="info" />
+
         <!-- If the result of getenv is falsy, using the default URI is fine -->
         <RiskyTruthyFalsyComparison>
             <errorLevel type="suppress">
                 <directory name="examples" />
             </errorLevel>
         </RiskyTruthyFalsyComparison>
+
+        <MissingOverrideAttribute errorLevel="suppress" />
+        <ClassMustBeFinal errorLevel="info" />
     </issueHandlers>
 </psalm>

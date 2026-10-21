@@ -10,7 +10,7 @@ use function count;
 /**
  * Transactions spec prose tests.
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#mongos-pinning-prose-tests
+ * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.md#mongos-pinning-prose-tests
  */
 class TransactionsSpecTest extends FunctionalTestCase
 {

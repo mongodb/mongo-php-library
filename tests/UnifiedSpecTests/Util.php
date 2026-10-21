@@ -13,6 +13,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
+use MongoDB\Operation\WithTransaction;
+use ReflectionProperty;
 use stdClass;
 
 use function array_diff_key;
@@ -58,6 +60,7 @@ final class Util
             'loop' => ['operations', 'storeErrorsAsEntity', 'storeFailuresAsEntity', 'storeSuccessesAsEntity', 'storeIterationsAsEntity'],
         ],
         Client::class => [
+            'clientBulkWrite' => ['models', 'bypassDocumentValidation', 'comment', 'let', 'ordered', 'session', 'verboseResults', 'writeConcern'],
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS', 'showExpandedEvents'],
             'listDatabaseNames' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
             'listDatabases' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
@@ -75,7 +78,7 @@ final class Util
         Database::class => [
             'aggregate' => ['pipeline', 'session', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS', 'showExpandedEvents'],
-            'createCollection' => ['collection', 'session', 'autoIndexId', 'capped', 'changeStreamPreAndPostImages', 'clusteredIndex', 'collation', 'expireAfterSeconds', 'flags', 'indexOptionDefaults', 'max', 'maxTimeMS', 'pipeline', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator', 'viewOn'],
+            'createCollection' => ['collection', 'session', 'capped', 'changeStreamPreAndPostImages', 'clusteredIndex', 'collation', 'expireAfterSeconds', 'indexOptionDefaults', 'max', 'maxTimeMS', 'pipeline', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator', 'viewOn'],
             'dropCollection' => ['collection', 'session'],
             'listCollectionNames' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
@@ -87,7 +90,7 @@ final class Util
             'aggregate' => ['pipeline', 'session', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
             'bulkWrite' => ['let', 'requests', 'session', 'ordered', 'bypassDocumentValidation', 'comment'],
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'fullDocumentBeforeChange', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS', 'comment', 'showExpandedEvents'],
-            'createFindCursor' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
+            'createFindCursor' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxTimeMS', 'min', 'noCursorTimeout', 'projection', 'returnKey', 'showRecordId', 'skip', 'sort'],
             'createIndex' => ['keys', 'comment', 'commitQuorum', 'maxTimeMS', 'name', 'session', 'unique'],
             'createSearchIndex' => ['model'],
             'createSearchIndexes' => ['models'],
@@ -101,8 +104,8 @@ final class Util
             'distinct' => ['fieldName', 'filter', 'session', 'collation', 'maxTimeMS', 'comment', 'hint'],
             'drop' => ['session', 'comment'],
             'dropSearchIndex' => ['name'],
-            'find' => ['let', 'filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
-            'findOne' => ['let', 'filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
+            'find' => ['let', 'filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxTimeMS', 'min', 'noCursorTimeout', 'projection', 'returnKey', 'showRecordId', 'skip', 'sort'],
+            'findOne' => ['let', 'filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'max', 'maxAwaitTimeMS', 'maxTimeMS', 'min', 'noCursorTimeout', 'projection', 'returnKey', 'showRecordId', 'skip', 'sort'],
             'findOneAndReplace' => ['let', 'returnDocument', 'filter', 'replacement', 'session', 'projection', 'returnDocument', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'remove', 'sort', 'comment'],
             'rename' => ['to', 'comment', 'dropTarget'],
             'replaceOne' => ['let', 'filter', 'replacement', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'comment', 'sort'],
@@ -137,8 +140,9 @@ final class Util
             'download' => ['id'],
             'rename' => ['id', 'newFilename'],
             'renameByName' => ['filename', 'newFilename'],
-            'uploadWithId' => ['id', 'filename', 'source', 'chunkSizeBytes', 'disableMD5', 'contentType', 'metadata'],
-            'upload' => ['filename', 'source', 'chunkSizeBytes', 'disableMD5', 'contentType', 'metadata'],
+            // "disableMD5" is ignored but allowed for backward compatibility
+            'uploadWithId' => ['id', 'filename', 'source', 'chunkSizeBytes', 'disableMD5', 'metadata'],
+            'upload' => ['filename', 'source', 'chunkSizeBytes', 'disableMD5', 'metadata'],
         ],
     ];
 
@@ -236,5 +240,14 @@ final class Util
         }
 
         return $options;
+    }
+
+    public static function setFixedJitter(WithTransaction $operation, float $jitter): void
+    {
+        (new ReflectionProperty($operation, 'jitterGenerator'))
+            ->setValue(
+                $operation,
+                static fn (): float => $jitter,
+            );
     }
 }

@@ -199,6 +199,7 @@ class Database implements Stringable
      * @see Aggregate::__construct() for supported options
      * @param array|Pipeline $pipeline Aggregation pipeline
      * @param array          $options  Command options
+     * @psalm-taint-sink nosql $pipeline
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -253,6 +254,7 @@ class Database implements Stringable
      * @see DatabaseCommand::__construct() for supported options
      * @param array|object $command Command document
      * @param array        $options Options for command execution
+     * @psalm-taint-sink nosql $command
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -603,6 +605,7 @@ class Database implements Stringable
      * @see Watch::__construct() for supported options
      * @param array|Pipeline $pipeline Aggregation pipeline
      * @param array          $options  Command options
+     * @psalm-taint-sink nosql $pipeline
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function watch(array|Pipeline $pipeline = [], array $options = []): ChangeStream

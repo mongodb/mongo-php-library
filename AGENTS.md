@@ -97,6 +97,25 @@ you can pass each tool's own options. Run a single test file or filter with, e.g
 - `.github/copilot-instructions.md` documents the review expectations for PHP
   version, typing, and BSON handling.
 
+## Taint Analysis Annotations
+
+Applications find NoSQL injection with Psalm's
+[taint analysis](https://psalm.dev/docs/security_analysis/), which doesn't look
+inside `vendor/`: it only sees the annotations on the methods they call. So every
+public method of `Client`, `Database`, `Collection`, `ClientBulkWrite` and GridFS
+`Bucket` that sends a parameter to the server as a query document marks it with
+`@psalm-taint-sink nosql $param`.
+
+- Mark filters, update documents and pipelines, aggregation pipelines, database
+  commands and lists of bulk write operations. A request like `?name[$ne]=` turns a
+  value into an operator document, so any of these built from user input is an
+  injection.
+- Don't mark `$options`, documents to insert or replace, names (database,
+  collection, index, field), or a value the library puts into a query under
+  `$eq`, such as the `$id` of the GridFS methods: none of them can change which
+  documents a query matches.
+- Add the annotation when adding such a method or parameter.
+
 ## Code Comments
 
 Comments are the exception, not the default — well-named classes, methods, and

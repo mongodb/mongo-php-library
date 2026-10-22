@@ -5,6 +5,12 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Cooldown only applies to third-party actions. Actions owned by MongoDB
+    # (mongodb-labs/*) are trusted and can be updated without delay.
+    cooldown:
+      default-days: 7
+      exclude:
+        - "mongodb-labs/*"
     groups:
       github-actions:
         patterns:

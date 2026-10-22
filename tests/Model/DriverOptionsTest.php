@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\Model;
 
-use Error;
 use Generator;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Exception\InvalidArgumentException;
@@ -11,6 +10,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Model\DriverOptions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use stdClass;
 
 class DriverOptionsTest extends TestCase
@@ -65,17 +65,14 @@ class DriverOptionsTest extends TestCase
 
         $this->assertEquals($name, $options->driver['name']);
         $this->assertMatchesRegularExpression($versionRegex, $options->driver['version']);
-        $this->assertEquals($platform, $options->driver['platform']);
+        $this->assertEquals($platform, $options->driver['platform'] ?? null);
     }
 
     public function testDriverInfoIsReadonly(): void
     {
-        $options = DriverOptions::fromArray([]);
+        $property = new ReflectionProperty(DriverOptions::class, 'driver');
 
-        $this->expectException(Error::class);
-        $this->expectExceptionMessage('Cannot modify readonly property');
-
-        $options->driver = ['name' => 'foo'];
+        $this->assertTrue($property->isReadOnly());
     }
 
     public static function provideOptions(): Generator

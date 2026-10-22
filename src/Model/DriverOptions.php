@@ -54,6 +54,7 @@ final class DriverOptions
 
     private static ?string $version = null;
 
+    /** @var array{name: string, version: string, platform?: string} */
     public readonly array $driver;
 
     /**
@@ -91,6 +92,7 @@ final class DriverOptions
             );
         }
 
+        /** @phpstan-ignore booleanNot.alwaysFalse, booleanAnd.alwaysFalse (runtime check for users not using static analysis) */
         if (isset($options[self::KEY_AUTO_ENCRYPTION]) && ! is_array($options[self::KEY_AUTO_ENCRYPTION])) {
             throw InvalidArgumentException::invalidType(
                 sprintf('"%s" driver option', self::KEY_AUTO_ENCRYPTION),
@@ -99,6 +101,7 @@ final class DriverOptions
             );
         }
 
+        /** @phpstan-ignore booleanNot.alwaysFalse, booleanAnd.alwaysFalse (runtime check for users not using static analysis) */
         if (isset($options[self::KEY_DRIVER]) && ! is_array($options[self::KEY_DRIVER])) {
             throw InvalidArgumentException::invalidType(
                 sprintf('"%s" driver option', self::KEY_DRIVER),
@@ -160,7 +163,11 @@ final class DriverOptions
         return self::$version;
     }
 
-    /** @param DriverInfoShape $driver */
+    /**
+     * @param DriverInfoShape $driver
+     *
+     * @return array{name: string, version: string, platform?: string}
+     */
     private function mergeDriverInfo(array $driver): array
     {
         if (isset($driver['name'])) {
@@ -180,6 +187,7 @@ final class DriverOptions
         }
 
         if (isset($driver['platform'])) {
+            /** @phpstan-ignore booleanNot.alwaysFalse (runtime check for users not using static analysis) */
             if (! is_string($driver['platform'])) {
                 throw InvalidArgumentException::invalidType('"platform" handshake option', $driver['platform'], 'string');
             }

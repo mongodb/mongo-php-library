@@ -34,10 +34,12 @@ runs:
     - name: Resolve extension version
       id: driver
       shell: bash
+      env:
+        DRIVER_VERSION: "${{ inputs.driver-version }}"
       run: |
         # The ext-mongodb constraint is only declared in the composer.json of
         # the library, at the root of the repository.
-        RESOLVED=$(php tools/extension-version.php "${{ inputs.driver-version }}")
+        RESOLVED=$(php tools/extension-version.php "$DRIVER_VERSION")
 
         eval "$RESOLVED"
 
@@ -91,9 +93,11 @@ runs:
     - name: Check the expected driver version is installed
       if: steps.driver.outputs.ext-expected != ''
       shell: bash
+      env:
+        EXPECTED_VERSION: "${{ steps.driver.outputs.ext-expected }}"
       run: |
         INSTALLED=$(php -r 'echo phpversion("mongodb");')
-        EXPECTED="${{ steps.driver.outputs.ext-expected }}"
+        EXPECTED="$EXPECTED_VERSION"
 
         if [ "$INSTALLED" != "$EXPECTED" ]; then
           echo "::error::Expected extension version $EXPECTED, got $INSTALLED"

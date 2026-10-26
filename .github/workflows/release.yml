@@ -196,8 +196,7 @@ jobs:
         env:
           RELEASE_VERSION: ${{ inputs.version }}
           S3_ASSETS: ${{ env.S3_ASSETS }}
-        run: |
-          gh release upload "$RELEASE_VERSION" "$S3_ASSETS/cyclonedx.sbom.json"
+        run: gh release upload "$RELEASE_VERSION" "$S3_ASSETS/cyclonedx.sbom.json"
         continue-on-error: true
 
       - name: Upload S3 assets

@@ -46,7 +46,11 @@ jobs:
 
     steps:
       - name: "Create release output"
-        run: echo '🎬 Release process for version ${{ inputs.version }} started by @${{ github.triggering_actor }}' >> $GITHUB_STEP_SUMMARY
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+        run: |
+          echo "🎬 Release process for version $RELEASE_VERSION started by @$TRIGGERING_ACTOR" >> "$GITHUB_STEP_SUMMARY"
 
       - name: "Generate token and checkout repository"
         uses: mongodb-labs/drivers-github-tools/secure-checkout@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
@@ -55,16 +59,18 @@ jobs:
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: "Store version numbers in env variables"
+        env:
+          RELEASE_VERSION_INPUT: ${{ inputs.version }}
         run: |
-          echo RELEASE_VERSION=${{ inputs.version }} >> $GITHUB_ENV
-          echo RELEASE_VERSION_WITHOUT_STABILITY=$(echo ${{ inputs.version }} | awk -F- '{print $1}') >> $GITHUB_ENV
-          echo RELEASE_BRANCH=v$(echo ${{ inputs.version }} | cut -d '.' -f-2) >> $GITHUB_ENV
-          echo DEV_BRANCH=v$(echo ${{ inputs.version }} | cut -d '.' -f-1).x >> $GITHUB_ENV
+          echo "RELEASE_VERSION=$RELEASE_VERSION_INPUT" >> "$GITHUB_ENV"
+          echo "RELEASE_VERSION_WITHOUT_STABILITY=$(echo "$RELEASE_VERSION_INPUT" | awk -F- '{print $1}')" >> "$GITHUB_ENV"
+          echo "RELEASE_BRANCH=v$(echo "$RELEASE_VERSION_INPUT" | cut -d '.' -f-2)" >> "$GITHUB_ENV"
+          echo "DEV_BRANCH=v$(echo "$RELEASE_VERSION_INPUT" | cut -d '.' -f-1).x" >> "$GITHUB_ENV"
 
       - name: "Ensure release tag does not already exist"
         run: |
-          if [[ $(git tag -l ${RELEASE_VERSION}) == ${RELEASE_VERSION} ]]; then
-            echo '❌ Release failed: tag for version ${{ inputs.version }} already exists' >> $GITHUB_STEP_SUMMARY
+          if [[ $(git tag -l "$RELEASE_VERSION") == "$RELEASE_VERSION" ]]; then
+            echo "❌ Release failed: tag for version $RELEASE_VERSION already exists" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 
@@ -72,26 +78,32 @@ jobs:
       # triggered from the A.B maintenance branch
       - name: "Fail if patch release is created from wrong release branch"
         if: ${{ !endsWith(env.RELEASE_VERSION_WITHOUT_STABILITY, '.0') && env.RELEASE_BRANCH != github.ref_name }}
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          echo '❌ Release failed due to branch mismatch: expected ${{ inputs.version }} to be released from ${{ env.RELEASE_BRANCH }}, got ${{ github.ref_name }}' >> $GITHUB_STEP_SUMMARY
+          echo "❌ Release failed due to branch mismatch: expected $RELEASE_VERSION to be released from $RELEASE_BRANCH, got $REF_NAME" >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
       # For non-patch releases (A.B.C where C == 0), we expect the release to
       # be triggered from the A.B maintenance branch or A.x development branch
       - name: "Fail if non-patch release is created from wrong release branch"
         if: ${{ endsWith(env.RELEASE_VERSION_WITHOUT_STABILITY, '.0') && env.RELEASE_BRANCH != github.ref_name && env.DEV_BRANCH != github.ref_name }}
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          echo '❌ Release failed due to branch mismatch: expected ${{ inputs.version }} to be released from ${{ env.RELEASE_BRANCH }} or ${{ env.DEV_BRANCH }}, got ${{ github.ref_name }}' >> $GITHUB_STEP_SUMMARY
+          echo "❌ Release failed due to branch mismatch: expected $RELEASE_VERSION to be released from $RELEASE_BRANCH or $DEV_BRANCH, got $REF_NAME" >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
       # If a non-patch release is created from its A.x development branch,
       # create the A.B maintenance branch from the current one and push it
       - name: "Create and push new release branch for non-patch release"
         if: ${{ endsWith(env.RELEASE_VERSION_WITHOUT_STABILITY, '.0') && env.DEV_BRANCH == github.ref_name }}
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          echo '🆕 Creating new release branch ${{ env.RELEASE_BRANCH }} from ${{ github.ref_name }}' >> $GITHUB_STEP_SUMMARY
-          git checkout -b ${RELEASE_BRANCH}
-          git push origin ${RELEASE_BRANCH}
+          echo "🆕 Creating new release branch $RELEASE_BRANCH from $REF_NAME" >> "$GITHUB_STEP_SUMMARY"
+          git checkout -b "$RELEASE_BRANCH"
+          git push origin "$RELEASE_BRANCH"
 
       #
       # Preliminary checks done - commence the release process
@@ -105,13 +117,19 @@ jobs:
           aws_secret_id: ${{ secrets.AWS_SECRET_ID }}
 
       - name: "Prepare release message"
+        env:
+          RELEASE_MESSAGE: ${{ format(env.default-release-message, inputs.version, inputs.jira-version-number) }}
         run: |
-          cat > release-message <<'EOL'
-          ${{ format(env.default-release-message, inputs.version, inputs.jira-version-number) }}
-          EOL
+          printf '%s\n' "$RELEASE_MESSAGE" > release-message
 
       - name: "Create draft release"
-        run: echo "RELEASE_URL=$(gh release create ${{ inputs.version }} --target ${{ env.RELEASE_BRANCH }} --title "${{ inputs.version }}" --generate-notes --notes-file release-message --draft)" >> "$GITHUB_ENV"
+        run: |
+          echo "RELEASE_URL=$(gh release create "$RELEASE_VERSION" \
+            --target "$RELEASE_BRANCH" \
+            --title "$RELEASE_VERSION" \
+            --generate-notes \
+            --notes-file release-message \
+            --draft)" >> "$GITHUB_ENV"
 
       - name: "Create release tag"
         uses: mongodb-labs/drivers-github-tools/tag-version@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
@@ -128,8 +146,8 @@ jobs:
 
       - name: "Set summary"
         run: |
-          echo '🚀 Created tag and drafted release for version [${{ inputs.version }}](${{ env.RELEASE_URL }})' >> $GITHUB_STEP_SUMMARY
-          echo '✍️ You may now update the release notes and publish the release when ready' >> $GITHUB_STEP_SUMMARY
+          echo "🚀 Created tag and drafted release for version [$RELEASE_VERSION]($RELEASE_URL)" >> "$GITHUB_STEP_SUMMARY"
+          echo "✍️ You may now update the release notes and publish the release when ready" >> "$GITHUB_STEP_SUMMARY"
 
   static-analysis:
     needs: prepare-release
@@ -175,7 +193,10 @@ jobs:
           silk_asset_group: mongodb-php-driver-library
 
       - name: "Upload SBOM as release artifact"
-        run: gh release upload ${{ inputs.version }} ${{ env.S3_ASSETS }}/cyclonedx.sbom.json
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          S3_ASSETS: ${{ env.S3_ASSETS }}
+        run: gh release upload "$RELEASE_VERSION" "$S3_ASSETS/cyclonedx.sbom.json"
         continue-on-error: true
 
       - name: Upload S3 assets

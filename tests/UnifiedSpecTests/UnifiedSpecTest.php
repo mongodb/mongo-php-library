@@ -43,6 +43,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         // mongoc_cluster_stream_for_server does not retry handshakes (CDRIVER-4532, PHPLIB-1033, PHPLIB-1042)
         'retryable-reads/retryable reads handshake failures' => 'Handshakes are not retried (CDRIVER-4532)',
         'retryable-writes/retryable writes handshake failures' => 'Handshakes are not retried (CDRIVER-4532)',
+        // Failpoints omit errmsg, which libmongoc requires to report a writeConcernError; some operations are unsupported by the runner
+        'write-concern-errors/' => 'Write concern error tests are pending the specifications update (PHPLIB-1977, DRIVERS-3684)',
         'crud/bypassDocumentValidation' => 'bypassDocumentValidation is handled by libmongoc (PHPLIB-1576)',
         // GridFS download now wraps file IDs in $eq; the upstream specifications do not expect this yet
         'retryable-reads/gridfs-download:' => 'Upstream specifications not yet updated for $eq-wrapped file IDs (PHPLIB-1929)',
@@ -261,6 +263,17 @@ class UnifiedSpecTest extends FunctionalTestCase
     public static function provideReadWriteConcernTests(): Generator
     {
         return self::provideTests('read-write-concern/tests/operation', 'read-write-concern');
+    }
+
+    #[DataProvider('provideWriteConcernErrorsTests')]
+    public function testWriteConcernErrors(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public static function provideWriteConcernErrorsTests(): Generator
+    {
+        return self::provideTests('read-write-concern/tests/write-concern-errors', 'write-concern-errors');
     }
 
     #[DataProvider('provideRetryableReadsTests')]

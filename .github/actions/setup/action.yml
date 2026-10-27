@@ -94,10 +94,9 @@ runs:
       if: steps.driver.outputs.ext-expected != ''
       shell: bash
       env:
-        EXPECTED_VERSION: "${{ steps.driver.outputs.ext-expected }}"
+        EXPECTED: "${{ steps.driver.outputs.ext-expected }}"
       run: |
         INSTALLED=$(php -r 'echo phpversion("mongodb");')
-        EXPECTED="$EXPECTED_VERSION"
 
         if [ "$INSTALLED" != "$EXPECTED" ]; then
           echo "::error::Expected extension version $EXPECTED, got $INSTALLED"

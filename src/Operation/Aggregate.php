@@ -338,6 +338,12 @@ final class Aggregate implements Explainable
             return $server->executeReadCommand($this->databaseName, $command, $options);
         }
 
+        /* A primary read preference is the default for executeReadWriteCommand(),
+         * which also reports a writeConcernError from the server reply. */
+        if (isset($this->options['readPreference']) && $this->options['readPreference'] instanceof ReadPreference && $this->options['readPreference']->getModeString() === ReadPreference::PRIMARY) {
+            unset($options['readPreference']);
+        }
+
         /* Server::executeReadWriteCommand() does not support a "readPreference"
          * option, so fall back to executeCommand(). This means that libmongoc
          * will not apply any client-level options (e.g. writeConcern), but that

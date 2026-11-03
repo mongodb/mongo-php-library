@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use MongoDB\BSON\Regex;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 
@@ -26,15 +27,17 @@ final class SplitOperator implements ResolvesToArray, OperatorInterface
     /** @var ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string. */
     public readonly ResolvesToString|string $string;
 
-    /** @var ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string. */
-    public readonly ResolvesToString|string $delimiter;
+    /** @var Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string or a regular expression. */
+    public readonly Regex|ResolvesToRegex|ResolvesToString|string $delimiter;
 
     /**
      * @param ResolvesToString|string $string The string to be split. string expression can be any valid expression as long as it resolves to a string.
-     * @param ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string.
+     * @param Regex|ResolvesToRegex|ResolvesToString|string $delimiter The delimiter to use when splitting the string expression. delimiter can be any valid expression as long as it resolves to a string or a regular expression.
      */
-    public function __construct(ResolvesToString|string $string, ResolvesToString|string $delimiter)
-    {
+    public function __construct(
+        ResolvesToString|string $string,
+        Regex|ResolvesToRegex|ResolvesToString|string $delimiter,
+    ) {
         $this->string = $string;
         $this->delimiter = $delimiter;
     }

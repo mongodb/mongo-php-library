@@ -6,6 +6,9 @@ use PhpParser\Node\Expr\Cast\Int_;
 use Rector\Config\RectorConfig;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
+use Rector\Php74\Rector\If_\IfToNullCoalescingAssignRector;
+use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\Php80\Rector\Class_\StringableForToStringRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Renaming\Rector\Cast\RenameCastRector;
@@ -18,11 +21,11 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
         __DIR__ . '/tools',
     ])
-    ->withPhpSets(php74: true)
-    ->withComposerBased(phpunit: true)
     // Error with StaticCallOnNonStaticToInstanceCallRector
     // https://github.com/rectorphp/rector/issues/9608
     ->withSkipPath(__DIR__ . '/tests/Builder/BuilderEncoderTest.php')
+    ->withPhpSets(php80: true)
+    ->withComposerBased(phpunit: true)
     // Fix PHP 8.5 deprecations
     ->withConfiguredRule(
         RenameCastRector::class,
@@ -41,6 +44,17 @@ return RectorConfig::configure()
             __DIR__ . '/tests/SpecTests/Operation.php',
         ],
         AddDoesNotPerformAssertionToNonAssertingTestRector::class,
+        ClassPropertyAssignToConstructorPromotionRector::class,
+        StringableForToStringRector::class => [
+            __DIR__ . '/src/Model/IndexInput.php',
+        ],
+        // Psalm cannot infer the type of $options['key'] ??= $value on a plain array,
+        // unlike the equivalent if (! isset($options['key'])) { ... } form
+        IfToNullCoalescingAssignRector::class => [
+            __DIR__ . '/src/Client.php',
+            __DIR__ . '/src/Collection.php',
+            __DIR__ . '/src/Database.php',
+        ],
     ])
     // phpcs:enable
     ->withImportNames(importNames: false, removeUnusedImports: true);

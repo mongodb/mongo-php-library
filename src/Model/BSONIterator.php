@@ -21,7 +21,6 @@ use Iterator;
 use MongoDB\BSON\Document;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
-use ReturnTypeWillChange;
 
 use function assert;
 use function is_array;
@@ -50,44 +49,28 @@ class BSONIterator implements Iterator
 
     private int $position = 0;
 
-    /**
-     * @see https://php.net/iterator.current
-     * @return mixed
-     */
-    #[ReturnTypeWillChange]
-    public function current()
+    /** @see https://php.net/iterator.current */
+    public function current(): mixed
     {
         return $this->current;
     }
 
-    /**
-     * @see https://php.net/iterator.key
-     * @return int
-     */
-    #[ReturnTypeWillChange]
-    public function key()
+    /** @see https://php.net/iterator.key */
+    public function key(): int
     {
         return $this->key;
     }
 
-    /**
-     * @see https://php.net/iterator.next
-     * @return void
-     */
-    #[ReturnTypeWillChange]
-    public function next()
+    /** @see https://php.net/iterator.next */
+    public function next(): void
     {
         $this->key++;
         $this->current = null;
         $this->advance();
     }
 
-    /**
-     * @see https://php.net/iterator.rewind
-     * @return void
-     */
-    #[ReturnTypeWillChange]
-    public function rewind()
+    /** @see https://php.net/iterator.rewind */
+    public function rewind(): void
     {
         $this->key = 0;
         $this->position = 0;
@@ -96,7 +79,6 @@ class BSONIterator implements Iterator
     }
 
     /** @see https://php.net/iterator.valid */
-    #[ReturnTypeWillChange]
     public function valid(): bool
     {
         return $this->current !== null;

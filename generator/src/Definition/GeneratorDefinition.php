@@ -25,6 +25,7 @@ final class GeneratorDefinition
         public string $classNameSuffix = '',
         public array $interfaces = [],
         public string|null $parentClass = null,
+        mixed ...$ignoredOtherArgs,
     ) {
         assert(str_starts_with($namespace, 'MongoDB\\'), sprintf('Namespace must start with "MongoDB\\". Got "%s"', $namespace));
         assert(! str_ends_with($namespace, '\\'), sprintf('Namespace must not end with "\\". Got "%s"', $namespace));

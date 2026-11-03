@@ -18,7 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -31,10 +31,8 @@ use function MongoDB\is_document;
  * Operation for executing a database command.
  *
  * @see \MongoDB\Database::command()
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class DatabaseCommand implements Executable
+final class DatabaseCommand
 {
     private Command $command;
 
@@ -80,13 +78,7 @@ class DatabaseCommand implements Executable
         $this->command = $command instanceof Command ? $command : new Command($command);
     }
 
-    /**
-     * Execute the operation.
-     *
-     * @see Executable::execute()
-     * @return Cursor
-     */
-    public function execute(Server $server)
+    public function execute(Server $server): CursorInterface
     {
         $cursor = $server->executeCommand($this->databaseName, $this->command, $this->createOptions());
 

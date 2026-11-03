@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples;
 
+use Closure;
+use Exception;
 use MongoDB\BSON\Document;
 use MongoDB\Client;
 use MongoDB\Driver\Monitoring\SDAMSubscriber;
@@ -28,102 +30,54 @@ function toJSON(array|object $document): string
 
 class SDAMLogger implements SDAMSubscriber
 {
+    /** @param Closure(object):void $handleOutput */
+    public function __construct(private readonly Closure $handleOutput)
+    {
+    }
+
     public function serverChanged(ServerChangedEvent $event): void
     {
-        printf(
-            "serverChanged: %s:%d changed from %s to %s\n",
-            $event->getHost(),
-            $event->getPort(),
-            $event->getPreviousDescription()->getType(),
-            $event->getNewDescription()->getType(),
-        );
-
-        printf("previous hello response: %s\n", toJson($event->getPreviousDescription()->getHelloResponse()));
-        printf("new hello response: %s\n", toJson($event->getNewDescription()->getHelloResponse()));
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function serverClosed(ServerClosedEvent $event): void
     {
-        printf(
-            "serverClosed: %s:%d was removed from topology %s\n",
-            $event->getHost(),
-            $event->getPort(),
-            (string) $event->getTopologyId(),
-        );
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function serverHeartbeatFailed(ServerHeartbeatFailedEvent $event): void
     {
-        printf(
-            "serverHeartbeatFailed: %s:%d heartbeat failed after %dµs\n",
-            $event->getHost(),
-            $event->getPort(),
-            $event->getDurationMicros(),
-        );
-
-        $error = $event->getError();
-
-        printf("error: %s(%d): %s\n", $error::class, $error->getCode(), $error->getMessage());
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function serverHeartbeatStarted(ServerHeartbeatStartedEvent $event): void
     {
-        printf(
-            "serverHeartbeatStarted: %s:%d heartbeat started\n",
-            $event->getHost(),
-            $event->getPort(),
-        );
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function serverHeartbeatSucceeded(ServerHeartbeatSucceededEvent $event): void
     {
-        printf(
-            "serverHeartbeatSucceeded: %s:%d heartbeat succeeded after %dµs\n",
-            $event->getHost(),
-            $event->getPort(),
-            $event->getDurationMicros(),
-        );
-
-        printf("reply: %s\n", toJson($event->getReply()));
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function serverOpening(ServerOpeningEvent $event): void
     {
-        printf(
-            "serverOpening: %s:%d was added to topology %s\n",
-            $event->getHost(),
-            $event->getPort(),
-            (string) $event->getTopologyId(),
-        );
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function topologyChanged(TopologyChangedEvent $event): void
     {
-        printf(
-            "topologyChanged: %s changed from %s to %s\n",
-            (string) $event->getTopologyId(),
-            $event->getPreviousDescription()->getType(),
-            $event->getNewDescription()->getType(),
-        );
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function topologyClosed(TopologyClosedEvent $event): void
     {
-        printf("topologyClosed: %s was closed\n", (string) $event->getTopologyId());
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function topologyOpening(TopologyOpeningEvent $event): void
     {
-        printf("topologyOpening: %s was opened\n", (string) $event->getTopologyId());
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 }
 
@@ -132,7 +86,87 @@ class SDAMLogger implements SDAMSubscriber
  * (including subscribers) are freed. */
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/', [], ['disableClientPersistence' => true]);
 
-$client->getManager()->addSubscriber(new SDAMLogger());
+$handleOutput = function (object $event): void {
+    switch ($event::class) {
+        case ServerChangedEvent::class:
+            printf(
+                "serverChanged: %s:%d changed from %s to %s\n",
+                $event->getHost(),
+                $event->getPort(),
+                $event->getPreviousDescription()->getType(),
+                $event->getNewDescription()->getType(),
+            );
+
+            printf("previous hello response: %s\n", toJson($event->getPreviousDescription()->getHelloResponse()));
+            printf("new hello response: %s\n", toJson($event->getNewDescription()->getHelloResponse()));
+            break;
+        case ServerClosedEvent::class:
+            printf(
+                "serverClosed: %s:%d was removed from topology %s\n",
+                $event->getHost(),
+                $event->getPort(),
+                $event->getTopologyId()->__toString(),
+            );
+            break;
+        case ServerHeartbeatFailedEvent::class:
+            printf(
+                "serverHeartbeatFailed: %s:%d heartbeat failed after %dµs\n",
+                $event->getHost(),
+                $event->getPort(),
+                $event->getDurationMicros(),
+            );
+
+            $error = $event->getError();
+
+            printf("error: %s(%d): %s\n", $error::class, $error->getCode(), $error->getMessage());
+            break;
+        case ServerHeartbeatStartedEvent::class:
+            printf(
+                "serverHeartbeatStarted: %s:%d heartbeat started\n",
+                $event->getHost(),
+                $event->getPort(),
+            );
+            break;
+        case ServerHeartbeatSucceededEvent::class:
+            printf(
+                "serverHeartbeatSucceeded: %s:%d heartbeat succeeded after %dµs\n",
+                $event->getHost(),
+                $event->getPort(),
+                $event->getDurationMicros(),
+            );
+
+            printf("reply: %s\n", toJson($event->getReply()));
+            break;
+        case ServerOpeningEvent::class:
+            printf(
+                "serverOpening: %s:%d was added to topology %s\n",
+                $event->getHost(),
+                $event->getPort(),
+                $event->getTopologyId()->__toString(),
+            );
+            break;
+        case TopologyChangedEvent::class:
+            printf(
+                "topologyChanged: %s changed from %s to %s\n",
+                $event->getTopologyId()->__toString(),
+                $event->getPreviousDescription()->getType(),
+                $event->getNewDescription()->getType(),
+            );
+            break;
+        case TopologyClosedEvent::class:
+            printf("topologyClosed: %s was closed\n", $event->getTopologyId()->__toString());
+            break;
+        case TopologyOpeningEvent::class:
+            printf("topologyOpening: %s was opened\n", $event->getTopologyId()->__toString());
+            break;
+        default:
+            throw new Exception('Event type not supported');
+    }
+
+    echo "\n";
+};
+
+$client->getManager()->addSubscriber(new SDAMLogger($handleOutput));
 
 $client->test->command(['ping' => 1]);
 

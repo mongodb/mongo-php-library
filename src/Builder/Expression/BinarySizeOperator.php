@@ -15,6 +15,8 @@ use MongoDB\Builder\Type\OperatorInterface;
 /**
  * Returns the size of a given string or binary data value's content in bytes.
  *
+ * New in MongoDB 4.4
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/
  * @internal
  */
@@ -27,9 +29,7 @@ final class BinarySizeOperator implements ResolvesToInt, OperatorInterface
     /** @var Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression */
     public readonly Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression;
 
-    /**
-     * @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression
-     */
+    /** @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression */
     public function __construct(Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression)
     {
         $this->expression = $expression;

@@ -17,18 +17,18 @@
 
 namespace MongoDB\Operation;
 
-use Iterator;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Cursor;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\CodecCursor;
@@ -47,10 +47,8 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::aggregate()
  * @see https://mongodb.com/docs/manual/reference/command/aggregate/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class Aggregate implements Executable, Explainable
+final class Aggregate implements Explainable
 {
     private bool $isWrite;
 
@@ -215,13 +213,11 @@ class Aggregate implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return CursorInterface&Iterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): CursorInterface
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction) {
@@ -239,7 +235,15 @@ class Aggregate implements Executable, Explainable
             $this->createCommandOptions(),
         );
 
-        $cursor = $this->executeCommand($server, $command);
+        try {
+            $cursor = $this->executeCommand($server, $command);
+        } catch (ServerException $exception) {
+            if (SearchNotSupportedException::isSearchNotSupportedError($exception)) {
+                throw SearchNotSupportedException::create($exception);
+            }
+
+            throw $exception;
+        }
 
         if (isset($this->options['codec'])) {
             return CodecCursor::fromCursor($cursor, $this->options['codec']);
@@ -256,9 +260,8 @@ class Aggregate implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = $this->createCommandDocument();
 
@@ -321,7 +324,7 @@ class Aggregate implements Executable, Explainable
      * @see https://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @see https://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
      */
-    private function executeCommand(Server $server, Command $command): Cursor
+    private function executeCommand(Server $server, Command $command): CursorInterface
     {
         $options = [];
 

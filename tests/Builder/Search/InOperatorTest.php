@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Search;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Pipeline;
@@ -83,9 +84,9 @@ class InOperatorTest extends PipelineTestCase
                 Search::in(
                     path: 'birthdate',
                     value: [
-                        new UTCDateTime(new DateTimeImmutable('1977-03-02T02:20:31')),
-                        new UTCDateTime(new DateTimeImmutable('1977-03-01T00:00:00')),
-                        new UTCDateTime(new DateTimeImmutable('1977-05-06T21:57:35')),
+                        new UTCDateTime(new DateTimeImmutable('1977-03-02T02:20:31', new DateTimeZone('UTC'))),
+                        new UTCDateTime(new DateTimeImmutable('1977-03-01T00:00:00', new DateTimeZone('UTC'))),
+                        new UTCDateTime(new DateTimeImmutable('1977-05-06T21:57:35', new DateTimeZone('UTC'))),
                     ],
                 ),
             ),

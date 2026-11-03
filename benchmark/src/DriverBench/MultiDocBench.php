@@ -20,7 +20,7 @@ use function file_get_contents;
 final class MultiDocBench
 {
     /**
-     * @see https://github.com/mongodb/specifications/blob/master/source/benchmarking/benchmarking.rst#find-many-and-empty-the-cursor
+     * @see https://github.com/mongodb/specifications/blob/master/source/benchmarking/benchmarking.md#find-many-and-empty-the-cursor
      * @param array{options: array} $params
      */
     #[BeforeMethods('beforeFindMany')]

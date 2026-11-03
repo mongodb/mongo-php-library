@@ -28,9 +28,7 @@ final class MinDistanceOperator implements FieldQueryInterface, OperatorInterfac
     /** @var Int64|float|int $value */
     public readonly Int64|float|int $value;
 
-    /**
-     * @param Int64|float|int $value
-     */
+    /** @param Int64|float|int $value */
     public function __construct(Int64|float|int $value)
     {
         $this->value = $value;

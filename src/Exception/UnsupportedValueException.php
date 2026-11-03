@@ -24,8 +24,7 @@ use function sprintf;
 
 class UnsupportedValueException extends InvalidArgumentException implements Exception
 {
-    /** @return mixed */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }

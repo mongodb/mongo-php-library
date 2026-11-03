@@ -138,4 +138,35 @@ class ReduceOperatorTest extends PipelineTestCase
 
         $this->assertSamePipeline(Pipelines::ReduceStringConcatenation, $pipeline);
     }
+
+    public function testUseAsValueAsAndArrayIndexAs(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project(
+                _id: 0,
+                name: 1,
+                text: Expression::reduce(
+                    input: Expression::arrayFieldPath('hobbies'),
+                    initialValue: 'My hobbies include:',
+                    in: Expression::concat(
+                        Expression::variable('accumulatedText'),
+                        ' ',
+                        Expression::toString(
+                            Expression::add(
+                                Expression::variable('myIndex'),
+                                1,
+                            ),
+                        ),
+                        ') ',
+                        Expression::variable('hobby'),
+                    ),
+                    as: 'hobby',
+                    valueAs: 'accumulatedText',
+                    arrayIndexAs: 'myIndex',
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::ReduceUseAsValueAsAndArrayIndexAs, $pipeline);
+    }
 }

@@ -21,6 +21,8 @@ use stdClass;
  * The geoShape operator supports querying shapes with a relation to a given
  * geometry if indexShapes is set to true in the index definition.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/geoShape/
  * @internal
  */

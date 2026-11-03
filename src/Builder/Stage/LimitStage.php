@@ -27,9 +27,7 @@ final class LimitStage implements StageInterface, OperatorInterface
     /** @var int $limit */
     public readonly int $limit;
 
-    /**
-     * @param int $limit
-     */
+    /** @param int $limit */
     public function __construct(int $limit)
     {
         $this->limit = $limit;

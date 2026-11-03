@@ -15,7 +15,6 @@ use MongoDB\Builder\Type\Optional;
 
 /**
  * Applies a regular expression (regex) to a string and returns a boolean that indicates if a match is found or not.
- * New in MongoDB 4.2.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/
  * @internal

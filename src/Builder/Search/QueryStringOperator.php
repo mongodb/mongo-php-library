@@ -13,6 +13,8 @@ use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\SearchOperatorInterface;
 
 /**
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/queryString/
  * @internal
  */

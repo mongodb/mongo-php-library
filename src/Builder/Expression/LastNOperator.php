@@ -22,7 +22,9 @@ use function str_starts_with;
 /**
  * Returns a specified number of elements from the end of an array.
  *
- * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN-array-element/
+ * New in MongoDB 5.1
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator
  * @internal
  */
 final class LastNOperator implements ResolvesToArray, OperatorInterface

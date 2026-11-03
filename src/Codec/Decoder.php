@@ -37,11 +37,10 @@ interface Decoder
      * should throw an exception.
      *
      * @psalm-param BSONType $value
-     * @return mixed
      * @psalm-return NativeType
      * @throws UnsupportedValueException if the decoder does not support the value
      */
-    public function decode(mixed $value);
+    public function decode(mixed $value): mixed;
 
     /**
      * Decodes a given value if supported, otherwise returns the value as-is.
@@ -49,8 +48,7 @@ interface Decoder
      * The DecodeIfSupported trait provides a default implementation of this
      * method.
      *
-     * @return mixed
      * @psalm-return ($value is BSONType ? NativeType : $value)
      */
-    public function decodeIfSupported(mixed $value);
+    public function decodeIfSupported(mixed $value): mixed;
 }

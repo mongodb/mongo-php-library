@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Search;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
@@ -33,7 +34,7 @@ class FacetOperatorTest extends PipelineTestCase
                     ),
                     operator:  Search::near(
                         path: 'released',
-                        origin: new UTCDateTime(new DateTimeImmutable('1999-07-01T00:00:00')),
+                        origin: new UTCDateTime(new DateTimeImmutable('1999-07-01T00:00:00', new DateTimeZone('UTC'))),
                         pivot: 7776000000,
                     ),
                 ),
@@ -57,5 +58,89 @@ class FacetOperatorTest extends PipelineTestCase
         );
 
         $this->assertSamePipeline(Pipelines::FacetFacet, $pipeline);
+    }
+
+    public function testInterFacetFilterExclusionExample(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::searchMeta(
+                Search::facet(
+                    facets: object(
+                        accommodatesFacet: object(
+                            path: 'accommodates',
+                            type: 'number',
+                            boundaries: [1, 2, 4, 8],
+                        ),
+                        cancellationFacet: object(
+                            path: 'cancellation_policy',
+                            type: 'string',
+                        ),
+                        roomTypeFacet: object(
+                            path: 'room_type',
+                            type: 'string',
+                        ),
+                    ),
+                    operator: Search::compound(
+                        must: [
+                            Search::text(
+                                path: 'description',
+                                query: 'new york city',
+                            ),
+                        ],
+                        filter: [
+                            Search::equals(
+                                path: 'cancellation_policy',
+                                value: 'moderate',
+                                doesNotAffect: 'accommodatesFacet',
+                            ),
+                        ],
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FacetInterFacetFilterExclusionExample, $pipeline);
+    }
+
+    public function testMultiSelectFacetingExample(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::searchMeta(
+                Search::facet(
+                    facets: object(
+                        accommodatesFacet: object(
+                            path: 'accommodates',
+                            type: 'number',
+                            boundaries: [1, 2, 4, 8],
+                        ),
+                        cancellationFacet: object(
+                            path: 'cancellation_policy',
+                            type: 'string',
+                        ),
+                        roomTypeFacet: object(
+                            path: 'room_type',
+                            type: 'string',
+                        ),
+                    ),
+                    operator: Search::compound(
+                        must: [
+                            Search::text(
+                                path: 'description',
+                                query: 'new york city',
+                            ),
+                        ],
+                        filter: [
+                            Search::equals(
+                                path: 'cancellation_policy',
+                                value: 'moderate',
+                                doesNotAffect: 'cancellationFacet',
+                            ),
+                        ],
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::FacetMultiSelectFacetingExample, $pipeline);
     }
 }

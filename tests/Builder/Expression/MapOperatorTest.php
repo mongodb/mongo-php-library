@@ -72,4 +72,23 @@ class MapOperatorTest extends PipelineTestCase
 
         $this->assertSamePipeline(Pipelines::MapTruncateEachArrayElement, $pipeline);
     }
+
+    public function testUseArrayIndex(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project(
+                result: Expression::map(
+                    input: Expression::arrayFieldPath('scores'),
+                    as: 'score',
+                    arrayIndexAs: 'idx',
+                    in: Expression::add(
+                        Expression::variable('score'),
+                        Expression::variable('idx'),
+                    ),
+                ),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::MapUseArrayIndex, $pipeline);
+    }
 }

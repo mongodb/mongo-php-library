@@ -32,9 +32,7 @@ final class SqrtOperator implements ResolvesToDouble, OperatorInterface
     /** @var Decimal128|Int64|ResolvesToNumber|float|int|string $number The argument can be any valid expression as long as it resolves to a non-negative number. */
     public readonly Decimal128|Int64|ResolvesToNumber|float|int|string $number;
 
-    /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int|string $number The argument can be any valid expression as long as it resolves to a non-negative number.
-     */
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int|string $number The argument can be any valid expression as long as it resolves to a non-negative number. */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int|string $number)
     {
         if (is_string($number) && ! str_starts_with($number, '$')) {

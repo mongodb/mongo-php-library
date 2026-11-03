@@ -14,6 +14,7 @@ use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Builder\Type\UpdateStageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
@@ -27,7 +28,7 @@ use function str_starts_with;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/
  * @internal
  */
-final class ReplaceWithStage implements StageInterface, OperatorInterface
+final class ReplaceWithStage implements StageInterface, UpdateStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
     public const NAME = '$replaceWith';
@@ -36,9 +37,7 @@ final class ReplaceWithStage implements StageInterface, OperatorInterface
     /** @var Document|ResolvesToObject|Serializable|array|stdClass|string $expression */
     public readonly Document|Serializable|ResolvesToObject|stdClass|array|string $expression;
 
-    /**
-     * @param Document|ResolvesToObject|Serializable|array|stdClass|string $expression
-     */
+    /** @param Document|ResolvesToObject|Serializable|array|stdClass|string $expression */
     public function __construct(Document|Serializable|ResolvesToObject|stdClass|array|string $expression)
     {
         if (is_string($expression) && ! str_starts_with($expression, '$')) {

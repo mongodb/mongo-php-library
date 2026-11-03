@@ -25,6 +25,8 @@ use function is_array;
 /**
  * Populates null and missing field values within documents.
  *
+ * New in MongoDB 5.3
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/
  * @internal
  */

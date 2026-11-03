@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Search;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Search;
@@ -58,7 +59,7 @@ class NearOperatorTest extends PipelineTestCase
             Stage::search(
                 Search::near(
                     path: 'released',
-                    origin: new UTCDateTime(new DateTimeImmutable('1915-09-13T00:00:00.000+00:00')),
+                    origin: new UTCDateTime(new DateTimeImmutable('1915-09-13T00:00:00.000+00:00', new DateTimeZone('UTC'))),
                     pivot: 7776000000,
                 ),
                 index: 'releaseddate',

@@ -8,14 +8,47 @@ function getHosts(string $uri): array
 
     $parsed = parse_url($uri);
 
-    if (isset($parsed['scheme']) && $parsed['scheme'] !== 'mongodb') {
-        // TODO: Resolve SRV records (https://github.com/mongodb/specifications/blob/master/source/initial-dns-seedlist-discovery/initial-dns-seedlist-discovery.rst)
+    if (! isset($parsed['scheme'])) {
+        throw new RuntimeException('URI must contain a scheme');
+    }
+
+    if ($parsed['scheme'] === 'mongodb+srv') {
+        return getHostsFromSrv($uri);
+    }
+
+    if ($parsed['scheme'] !== 'mongodb') {
         throw new RuntimeException('Unsupported scheme: ' . $parsed['scheme']);
     }
 
     $hosts = sprintf('%s:%d', $parsed['host'], $parsed['port'] ?? 27017);
 
     return explode(',', $hosts);
+}
+
+/**
+ * Resolves SRV records for a MongoDB+SRV URI according to the specification:
+ * https://github.com/mongodb/specifications/blob/master/source/initial-dns-seedlist-discovery/initial-dns-seedlist-discovery.md
+ *
+ * @return list<string> List of host:port strings
+ */
+function getHostsFromSrv(string $uri): array
+{
+    $parsed = parse_url($uri);
+    if (! isset($parsed['host'])) {
+        throw new RuntimeException('SRV URI must contain a host');
+    }
+
+    $srvRecord = '_mongodb._tcp.' . $parsed['host'];
+
+    $records = dns_get_record($srvRecord, DNS_SRV);
+    if ($records === false || count($records) === 0) {
+        throw new RuntimeException('No SRV records found for ' . $srvRecord);
+    }
+
+    return array_map(
+        static fn (array $record) => $record['target'] . ':' . ($record['port'] ?? 27017),
+        $records,
+    );
 }
 
 /** @param resource $stream */
@@ -127,7 +160,14 @@ function connect(string $host, bool $ssl): void
 $uri = $argv[1] ?? 'mongodb://127.0.0.1';
 printf("Looking up MongoDB at %s\n", $uri);
 $hosts = getHosts($uri);
-$ssl = stripos(parse_url($uri, PHP_URL_QUERY) ?? '', 'ssl=true') !== false;
+
+if (str_starts_with($uri, 'mongodb+srv://')) {
+    // For mongodb+srv, SSL is always true unless explicitly set to false
+    $ssl = stripos(parse_url($uri, PHP_URL_QUERY) ?? '', 'ssl=false') === false;
+} else {
+    // For other connection strings, SSL is true if indicated
+    $ssl = stripos(parse_url($uri, PHP_URL_QUERY) ?? '', 'ssl=true') !== false;
+}
 
 printf("Found %d host(s) in the URI. Will attempt to connect to each.\n", count($hosts));
 

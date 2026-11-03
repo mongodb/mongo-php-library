@@ -2,10 +2,8 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\BSON\Document;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
@@ -14,7 +12,6 @@ use MongoDB\Tests\Fixtures\Document\TestObject;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
-use function is_array;
 use function microtime;
 
 class FindFunctionalTest extends FunctionalTestCase
@@ -36,45 +33,6 @@ class FindFunctionalTest extends FunctionalTestCase
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->filter ?? null);
             },
         );
-    }
-
-    #[DataProvider('provideModifierDocuments')]
-    public function testModifierDocuments($modifiers, stdClass $expectedSort): void
-    {
-        (new CommandObserver())->observe(
-            function () use ($modifiers): void {
-                // @todo revert this lines after PHPC-2457
-                if (is_array($modifiers)) {
-                    $modifiers = [...$modifiers];
-                }
-
-                $operation = new Find(
-                    $this->getDatabaseName(),
-                    $this->getCollectionName(),
-                    [],
-                    ['modifiers' => $modifiers],
-                );
-
-                $this->assertDeprecated(
-                    fn () => $operation->execute($this->getPrimaryServer()),
-                );
-            },
-            function (array $event) use ($expectedSort): void {
-                $this->assertEquals($expectedSort, $event['started']->getCommand()->sort ?? null);
-            },
-        );
-    }
-
-    public static function provideModifierDocuments(): array
-    {
-        $expectedSort = (object) ['x' => 1];
-
-        return [
-            'array' => [['$orderby' => ['x' => 1]], $expectedSort],
-            'object' => [(object) ['$orderby' => ['x' => 1]], $expectedSort],
-            'Serializable' => [new BSONDocument(['$orderby' => ['x' => 1]]), $expectedSort],
-            'Document' => [Document::fromPHP(['$orderby' => ['x' => 1]]), $expectedSort],
-        ];
     }
 
     public function testDefaultReadConcernIsOmitted(): void

@@ -2,8 +2,8 @@
 
 namespace MongoDB\Tests\Operation;
 
+use Iterator;
 use MongoDB\Model\CollectionInfo;
-use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
@@ -26,7 +26,7 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $operation = new ListCollections($this->getDatabaseName(), ['filter' => ['name' => $this->getCollectionName()]]);
         $collections = $operation->execute($server);
 
-        $this->assertInstanceOf(CollectionInfoIterator::class, $collections);
+        $this->assertInstanceOf(Iterator::class, $collections);
 
         $this->assertCount(1, $collections);
 
@@ -51,12 +51,14 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $operation = new ListCollections($this->getDatabaseName(), ['filter' => ['name' => $this->getCollectionName()]]);
         $collections = $operation->execute($server);
 
-        $this->assertInstanceOf(CollectionInfoIterator::class, $collections);
+        $this->assertInstanceOf(Iterator::class, $collections);
 
         foreach ($collections as $collection) {
             $this->assertInstanceOf(CollectionInfo::class, $collection);
             $this->assertArrayHasKey('readOnly', $collection['info']);
-            $this->assertEquals(['v' => 2, 'key' => ['_id' => 1], 'name' => '_id_', 'ns' => $this->getNamespace()], $collection['idIndex']);
+            // Use assertMatchesDocument as MongoDB 4.0 and 4.2 include a ns field
+            // TODO: change to assertEquals when dropping support for MongoDB 4.2
+            $this->assertMatchesDocument(['v' => 2, 'key' => ['_id' => 1], 'name' => '_id_'], $collection['idIndex']);
         }
     }
 

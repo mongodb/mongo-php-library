@@ -17,19 +17,16 @@
 
 namespace MongoDB;
 
+use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\WriteResult;
-use MongoDB\Exception\BadMethodCallException;
 
 /**
  * Result class for a delete operation.
  */
 class DeleteResult
 {
-    private bool $isAcknowledged;
-
     public function __construct(private WriteResult $writeResult)
     {
-        $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 
     /**
@@ -38,16 +35,11 @@ class DeleteResult
      * This method should only be called if the write was acknowledged.
      *
      * @see DeleteResult::isAcknowledged()
-     * @return integer|null
-     * @throws BadMethodCallException if the write result is unacknowledged
+     * @throws LogicException if the write result is unacknowledged
      */
-    public function getDeletedCount()
+    public function getDeletedCount(): int
     {
-        if ($this->isAcknowledged) {
-            return $this->writeResult->getDeletedCount();
-        }
-
-        throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
+        return $this->writeResult->getDeletedCount();
     }
 
     /**
@@ -55,11 +47,9 @@ class DeleteResult
      *
      * If the delete was not acknowledged, other fields from the WriteResult
      * (e.g. deletedCount) will be undefined.
-     *
-     * @return boolean
      */
-    public function isAcknowledged()
+    public function isAcknowledged(): bool
     {
-        return $this->isAcknowledged;
+        return $this->writeResult->isAcknowledged();
     }
 }

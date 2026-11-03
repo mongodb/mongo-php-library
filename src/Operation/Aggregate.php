@@ -38,6 +38,7 @@ use function is_array;
 use function is_bool;
 use function is_integer;
 use function is_string;
+use function MongoDB\extract_read_preference_from_options;
 use function MongoDB\is_document;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\is_pipeline;
@@ -338,13 +339,18 @@ final class Aggregate implements Explainable
             return $server->executeReadCommand($this->databaseName, $command, $options);
         }
 
-        /* Server::executeReadWriteCommand() does not support a "readPreference"
-         * option, so fall back to executeCommand(). This means that libmongoc
-         * will not apply any client-level options (e.g. writeConcern), but that
-         * should not be an issue as PHPLIB handles inheritance on its own. */
-        if (isset($options['readPreference'])) {
+        /* Server::executeReadWriteCommand() does not accept a "readPreference"
+         * option, but it is the only method that reports a writeConcernError.
+         * Use it for a primary read preference (its default) and fall back to
+         * executeCommand() otherwise; libmongoc then skips client-level options
+         * that PHPLIB applies itself. */
+        $readPreference = extract_read_preference_from_options($options);
+
+        if ($readPreference !== null && $readPreference->getModeString() !== ReadPreference::PRIMARY) {
             return $server->executeCommand($this->databaseName, $command, $options);
         }
+
+        unset($options['readPreference']);
 
         return $server->executeReadWriteCommand($this->databaseName, $command, $options);
     }

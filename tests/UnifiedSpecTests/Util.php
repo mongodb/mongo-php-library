@@ -62,6 +62,7 @@ final class Util
         Client::class => [
             'clientBulkWrite' => ['models', 'bypassDocumentValidation', 'comment', 'let', 'ordered', 'session', 'verboseResults', 'writeConcern'],
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS', 'showExpandedEvents'],
+            'dropDatabase' => ['comment', 'database', 'session', 'writeConcern'],
             'listDatabaseNames' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
             'listDatabases' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
         ],
@@ -95,6 +96,7 @@ final class Util
             'createSearchIndex' => ['model'],
             'createSearchIndexes' => ['models'],
             'dropIndex' => ['name', 'session', 'maxTimeMS', 'comment'],
+            'dropIndexes' => ['session', 'maxTimeMS', 'comment', 'writeConcern'],
             'count' => ['filter', 'session', 'collation', 'hint', 'limit', 'maxTimeMS', 'skip', 'comment'],
             'countDocuments' => ['filter', 'session', 'limit', 'skip', 'collation', 'hint', 'maxTimeMS', 'comment'],
             'estimatedDocumentCount' => ['session', 'maxTimeMS', 'comment'],

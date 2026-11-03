@@ -10,6 +10,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Model\DriverOptions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use stdClass;
 
 class DriverOptionsTest extends TestCase
@@ -64,7 +65,14 @@ class DriverOptionsTest extends TestCase
 
         $this->assertEquals($name, $options->driver['name']);
         $this->assertMatchesRegularExpression($versionRegex, $options->driver['version']);
-        $this->assertEquals($platform, $options->driver['platform']);
+        $this->assertEquals($platform, $options->driver['platform'] ?? null);
+    }
+
+    public function testDriverInfoIsReadonly(): void
+    {
+        $property = new ReflectionProperty(DriverOptions::class, 'driver');
+
+        $this->assertTrue($property->isReadOnly());
     }
 
     public static function provideOptions(): Generator
@@ -153,6 +161,26 @@ class DriverOptionsTest extends TestCase
             [
                 'builderEncoder' => new StdClass(),
             ],
+        ];
+
+        yield 'invalid type for auto encryption' => [
+            ['autoEncryption' => true],
+        ];
+
+        yield 'invalid type for driver' => [
+            ['driver' => 'foo'],
+        ];
+
+        yield 'invalid type for driver name' => [
+            ['driver' => ['name' => 1]],
+        ];
+
+        yield 'invalid type for driver version' => [
+            ['driver' => ['version' => 1]],
+        ];
+
+        yield 'invalid type for driver platform' => [
+            ['driver' => ['platform' => 5]],
         ];
     }
 

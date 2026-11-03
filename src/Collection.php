@@ -256,6 +256,7 @@ class Collection implements Stringable
      * @see Aggregate::__construct() for supported options
      * @param array|Pipeline $pipeline Aggregation pipeline
      * @param array          $options  Command options
+     * @psalm-taint-sink nosql $pipeline
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -294,6 +295,7 @@ class Collection implements Stringable
      * @param list<array{deleteMany: list<array|object>}|array{deleteOne: list<array|object>}|array{insertOne: list<array|object>}|array{replaceOne: list<array|object>}|array{updateMany: list<array|object>}|array{updateOne: list<array|object>}> $operations List of write operations
      * @psalm-param list<OperationShape> $operations List of write operations
      * @param array                                                                                                                                                                                                                                  $options    Command options
+     * @psalm-taint-sink nosql $operations
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -316,6 +318,7 @@ class Collection implements Stringable
      * @see Count::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
+     * @psalm-taint-sink nosql $filter
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -339,6 +342,7 @@ class Collection implements Stringable
      * @see CountDocuments::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
+     * @psalm-taint-sink nosql $filter
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -479,6 +483,7 @@ class Collection implements Stringable
      * @see https://mongodb.com/docs/manual/reference/command/delete/
      * @param array|object $filter  Query by which to delete documents
      * @param array        $options Command options
+     * @psalm-taint-sink nosql $filter
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -500,6 +505,7 @@ class Collection implements Stringable
      * @see https://mongodb.com/docs/manual/reference/command/delete/
      * @param array|object $filter  Query by which to delete documents
      * @param array        $options Command options
+     * @psalm-taint-sink nosql $filter
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -521,6 +527,7 @@ class Collection implements Stringable
      * @param string       $fieldName Field for which to return distinct values
      * @param array|object $filter    Query by which to filter documents
      * @param array        $options   Command options
+     * @psalm-taint-sink nosql $filter
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -672,6 +679,7 @@ class Collection implements Stringable
      * @see https://mongodb.com/docs/manual/crud/#read-operations
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
+     * @psalm-taint-sink nosql $filter
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -694,6 +702,7 @@ class Collection implements Stringable
      * @see https://mongodb.com/docs/manual/crud/#read-operations
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
+     * @psalm-taint-sink nosql $filter
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -718,6 +727,7 @@ class Collection implements Stringable
      * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
+     * @psalm-taint-sink nosql $filter
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -748,6 +758,7 @@ class Collection implements Stringable
      * @param array|object $filter      Query by which to filter documents
      * @param array|object $replacement Replacement document
      * @param array        $options     Command options
+     * @psalm-taint-sink nosql $filter
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -778,6 +789,8 @@ class Collection implements Stringable
      * @param array|object $filter  Query by which to filter documents
      * @param array|object $update  Update to apply to the matched document
      * @param array        $options Command options
+     * @psalm-taint-sink nosql $filter
+     * @psalm-taint-sink nosql $update
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -981,6 +994,7 @@ class Collection implements Stringable
      * @param array|object $filter      Query by which to filter documents
      * @param array|object $replacement Replacement document
      * @param array        $options     Command options
+     * @psalm-taint-sink nosql $filter
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -1004,6 +1018,8 @@ class Collection implements Stringable
      * @param array|object $filter  Query by which to filter documents
      * @param array|object $update  Update to apply to the matched documents
      * @param array        $options Command options
+     * @psalm-taint-sink nosql $filter
+     * @psalm-taint-sink nosql $update
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -1027,6 +1043,8 @@ class Collection implements Stringable
      * @param array|object $filter  Query by which to filter documents
      * @param array|object $update  Update to apply to the matched document
      * @param array        $options Command options
+     * @psalm-taint-sink nosql $filter
+     * @psalm-taint-sink nosql $update
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -1067,6 +1085,7 @@ class Collection implements Stringable
      * @see Watch::__construct() for supported options
      * @param array|Pipeline $pipeline Aggregation pipeline
      * @param array          $options  Command options
+     * @psalm-taint-sink nosql $pipeline
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function watch(array|Pipeline $pipeline = [], array $options = []): ChangeStream

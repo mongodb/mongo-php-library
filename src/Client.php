@@ -432,6 +432,7 @@ class Client implements Stringable
      * @see Watch::__construct() for supported options
      * @psalm-param list<stage> $pipeline Aggregation pipeline
      * @param array $options Command options
+     * @psalm-taint-sink nosql $pipeline
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function watch(array $pipeline = [], array $options = []): ChangeStream

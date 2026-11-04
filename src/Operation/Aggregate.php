@@ -339,18 +339,16 @@ final class Aggregate implements Explainable
             return $server->executeReadCommand($this->databaseName, $command, $options);
         }
 
-        /* Server::executeReadWriteCommand() does not accept a "readPreference"
-         * option, but it is the only method that reports a writeConcernError.
-         * Use it for a primary read preference (its default) and fall back to
-         * executeCommand() otherwise; libmongoc then skips client-level options
-         * that PHPLIB applies itself. */
+        /* Server::executeReadWriteCommand() is the only method that reports a
+         * writeConcernError, and it ignores the "readPreference" option. Keep
+         * the generic command path when the read preference must be forwarded
+         * or when the server is a secondary: on a direct connection, libmongoc
+         * rewrites a primary read preference to primaryPreferred there. */
         $readPreference = extract_read_preference_from_options($options);
 
-        if ($readPreference !== null && $readPreference->getModeString() !== ReadPreference::PRIMARY) {
+        if ($server->isSecondary() || ($readPreference !== null && $readPreference->getModeString() !== ReadPreference::PRIMARY)) {
             return $server->executeCommand($this->databaseName, $command, $options);
         }
-
-        unset($options['readPreference']);
 
         return $server->executeReadWriteCommand($this->databaseName, $command, $options);
     }

@@ -314,6 +314,7 @@ class Bucket
      * @see Find::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
+     * @psalm-taint-sink nosql $filter
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -334,6 +335,7 @@ class Bucket
      * @see FindOne::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
+     * @psalm-taint-sink nosql $filter
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

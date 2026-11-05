@@ -263,6 +263,17 @@ class UnifiedSpecTest extends FunctionalTestCase
         return self::provideTests('read-write-concern/tests/operation', 'read-write-concern');
     }
 
+    #[DataProvider('provideWriteConcernErrorsTests')]
+    public function testWriteConcernErrors(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public static function provideWriteConcernErrorsTests(): Generator
+    {
+        return self::provideTests('read-write-concern/tests/write-concern-errors', 'write-concern-errors');
+    }
+
     #[DataProvider('provideRetryableReadsTests')]
     public function testRetryableReads(UnifiedTestCase $test): void
     {

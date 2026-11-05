@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -199,6 +200,44 @@ class AggregateFunctionalTest extends FunctionalTestCase
             $this->arrayHasKey('stages'),
             $this->arrayHasKey('queryPlanner'),
         ));
+    }
+
+    #[DataProvider('provideWriteStages')]
+    public function testWriteConcernErrorIsReportedForWriteStage(array $writeStage): void
+    {
+        $this->createFixtures(3);
+
+        $this->configureFailPoint([
+            'configureFailPoint' => 'failCommand',
+            'mode' => ['times' => 1],
+            'data' => [
+                'failCommands' => ['aggregate'],
+                'writeConcernError' => [
+                    'code' => 79,
+                    'codeName' => 'UnknownReplWriteConcern',
+                    'errmsg' => 'unknown write concern',
+                ],
+            ],
+        ]);
+
+        $pipeline = [['$match' => ['_id' => ['$gt' => 1]]], $writeStage];
+        $options = ['readPreference' => new ReadPreference(ReadPreference::PRIMARY)];
+        $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), $pipeline, $options);
+
+        try {
+            $operation->execute($this->getPrimaryServer());
+            $this->fail('Expected a write concern error to be reported');
+        } catch (CommandException $e) {
+            $this->assertSame(79, $e->getCode());
+        }
+    }
+
+    public static function provideWriteStages(): array
+    {
+        return [
+            '$out' => [['$out' => 'aggregate_write_concern_out']],
+            '$merge' => [['$merge' => ['into' => 'aggregate_write_concern_merge']]],
+        ];
     }
 
     public function testExplainOptionWithWriteConcern(): void

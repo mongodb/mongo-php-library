@@ -257,6 +257,15 @@ final class Operation
                     array_diff_key($args, ['pipeline' => 1]),
                 );
 
+            case 'dropDatabase':
+                assertArrayHasKey('database', $args);
+                assertIsString($args['database']);
+
+                return $client->dropDatabase(
+                    $args['database'],
+                    array_diff_key($args, ['database' => 1]),
+                );
+
             case 'listDatabaseNames':
                 return iterator_to_array($client->listDatabaseNames($args));
 
@@ -388,6 +397,9 @@ final class Operation
                     $args['name'],
                     array_diff_key($args, ['name' => 1]),
                 );
+
+            case 'dropIndexes':
+                return $collection->dropIndexes($args);
 
             case 'count':
             case 'countDocuments':

@@ -9,6 +9,7 @@ use LogicException;
 use MongoDB\BSON;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Pipeline;
+use MongoDB\Builder\Query;
 use MongoDB\Builder\Query\CommentOperator;
 use MongoDB\Builder\Query\EqOperator;
 use MongoDB\Builder\Query\GtOperator;
@@ -90,9 +91,49 @@ class QueryObjectTest extends TestCase
     public function testPositionalScalarIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected query to be a query operator, an array or a stdClass, int given');
+        $this->expectExceptionMessage('Expected a query object, an array or a stdClass, int given');
 
         QueryObject::create([1]);
+    }
+
+    public function testPositionalFieldQueryOperatorIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected a query object, an array or a stdClass, MongoDB\Builder\Query\EqOperator given');
+
+        Query::query(Query::eq(1));
+    }
+
+    public function testPositionalBsonValueIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected a query object, an array or a stdClass, MongoDB\BSON\Int64 given');
+
+        Query::query(new BSON\Int64(1));
+    }
+
+    public function testNumericFieldNamesArePreserved(): void
+    {
+        $encoder = new BuilderEncoder();
+
+        $this->assertEquals(
+            (object) ['1' => ['$eq' => 2]],
+            $encoder->encode(Query::query([1 => ['$eq' => 2]])),
+        );
+        $this->assertEquals(
+            (object) ['0' => 'x'],
+            $encoder->encode(Query::query([0 => 'x'])),
+        );
+    }
+
+    public function testQueryOperatorAndFieldInSingleArray(): void
+    {
+        $encoder = new BuilderEncoder();
+
+        $this->assertEquals(
+            (object) ['$and' => [['x' => 1]], 'status' => 'active'],
+            $encoder->encode(Query::query(['$and' => [['x' => 1]], 'status' => 'active'])),
+        );
     }
 
     public function testDuplicateFieldInPositionalQueries(): void

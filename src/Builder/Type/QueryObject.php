@@ -56,8 +56,8 @@ final class QueryObject implements QueryInterface
             $isFieldMap = true;
         }
 
-        // Integer keys produced by variadic arguments are positions, not field names
-        $isFieldMap = $isFieldMap || ! self::hasPositionalKeys($queriesOrArrayOfQueries);
+        // Variadic arguments always start at key 0, so another first key means a field map
+        $isFieldMap = $isFieldMap || array_key_first($queriesOrArrayOfQueries) !== 0;
 
         $seenQueryOperators = [];
         $queries = [];
@@ -79,7 +79,7 @@ final class QueryObject implements QueryInterface
             // A positional argument that is not a query operator is a query document, its fields are merged
             if (! $isFieldMap && is_int($fieldPath)) {
                 if (! is_array($query) && ! $query instanceof stdClass) {
-                    throw new InvalidArgumentException(sprintf('Expected query to be a query operator, an array or a stdClass, %s given', get_debug_type($query)));
+                    throw new InvalidArgumentException(sprintf('Expected a query object, an array or a stdClass, %s given', get_debug_type($query)));
                 }
 
                 /** @var array<DateTimeInterface|QueryInterface|FieldQueryInterface|Type|stdClass|array|bool|float|int|string|null> $fields */
@@ -101,27 +101,6 @@ final class QueryObject implements QueryInterface
         }
 
         $this->queries = $queries;
-    }
-
-    /**
-     * Variadic arguments always produce integer keys starting from 0, followed by string keys for named arguments.
-     */
-    private static function hasPositionalKeys(array $queries): bool
-    {
-        $position = 0;
-        foreach ($queries as $key => $query) {
-            if (! is_int($key)) {
-                continue;
-            }
-
-            if ($key !== $position) {
-                return false;
-            }
-
-            $position++;
-        }
-
-        return true;
     }
 
     /** @psalm-assert-if-true list<FieldQueryInterface> $values */

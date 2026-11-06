@@ -73,6 +73,7 @@ final class ClientBulkWrite
         );
     }
 
+    /** @psalm-taint-sink nosql $filter */
     public function deleteMany(array|object $filter, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
@@ -90,6 +91,7 @@ final class ClientBulkWrite
         return $this;
     }
 
+    /** @psalm-taint-sink nosql $filter */
     public function deleteOne(array|object $filter, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
@@ -120,6 +122,7 @@ final class ClientBulkWrite
         return $this;
     }
 
+    /** @psalm-taint-sink nosql $filter */
     public function replaceOne(array|object $filter, array|object $replacement, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
@@ -162,6 +165,10 @@ final class ClientBulkWrite
         return $this;
     }
 
+    /**
+     * @psalm-taint-sink nosql $filter
+     * @psalm-taint-sink nosql $update
+     */
     public function updateMany(array|object $filter, array|object $update, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);
@@ -192,6 +199,10 @@ final class ClientBulkWrite
         return $this;
     }
 
+    /**
+     * @psalm-taint-sink nosql $filter
+     * @psalm-taint-sink nosql $update
+     */
     public function updateOne(array|object $filter, array|object $update, array $options = []): self
     {
         $filter = $this->builderEncoder->encodeIfSupported($filter);

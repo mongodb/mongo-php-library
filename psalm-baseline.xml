@@ -215,7 +215,6 @@
     </MixedArrayOffset>
     <MixedAssignment>
       <code><![CDATA[$queries[$fieldPath]]]></code>
-      <code><![CDATA[$query]]></code>
     </MixedAssignment>
     <UndefinedConstant>
       <code><![CDATA[$query::NAME]]></code>

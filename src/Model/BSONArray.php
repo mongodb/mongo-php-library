@@ -40,9 +40,7 @@ class BSONArray extends ArrayObject implements JsonSerializable, Serializable, U
      */
     public function __clone()
     {
-        foreach ($this as $key => $value) {
-            $this[$key] = recursive_copy($value);
-        }
+        $this->exchangeArray(recursive_copy($this->getArrayCopy()));
     }
 
     /**

@@ -40,6 +40,7 @@ use stdClass;
 use function array_any;
 use function array_is_list;
 use function array_key_first;
+use function array_map;
 use function assert;
 use function end;
 use function get_object_vars;
@@ -448,11 +449,7 @@ function create_namespace(string $databaseName, string $collectionName): string
 function recursive_copy(mixed $element): mixed
 {
     if (is_array($element)) {
-        foreach ($element as $key => $value) {
-            $element[$key] = recursive_copy($value);
-        }
-
-        return $element;
+        return array_map('MongoDB\recursive_copy', $element);
     }
 
     if (! is_object($element)) {

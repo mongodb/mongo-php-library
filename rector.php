@@ -12,7 +12,6 @@ use Rector\Php80\Rector\Class_\StringableForToStringRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Renaming\Rector\Cast\RenameCastRector;
-use Rector\Renaming\Rector\FuncCall\RenameFunctionRector;
 use Rector\Renaming\ValueObject\RenameCast;
 
 return RectorConfig::configure()
@@ -27,7 +26,6 @@ return RectorConfig::configure()
     ->withSkipPath(__DIR__ . '/tests/Builder/BuilderEncoderTest.php')
     ->withPhpSets(php80: true)
     ->withComposerBased(phpunit: true)
-    ->withConfiguredRule(RenameFunctionRector::class, ['is_integer' => 'is_int'])
     // Fix PHP 8.5 deprecations
     ->withConfiguredRule(
         RenameCastRector::class,

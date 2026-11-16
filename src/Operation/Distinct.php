@@ -29,7 +29,7 @@ use MongoDB\Exception\UnsupportedException;
 
 use function current;
 use function is_array;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function is_string;
 use function MongoDB\create_field_path_type_map;
@@ -92,7 +92,7 @@ final class Distinct implements Explainable
             throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $this->options['hint']);
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 

@@ -25,7 +25,7 @@ use MongoDB\GridFS\Exception\CorruptFileException;
 use function assert;
 use function ceil;
 use function floor;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function property_exists;
 use function sprintf;
@@ -64,11 +64,11 @@ final class ReadableStream
      */
     public function __construct(private CollectionWrapper $collectionWrapper, private object $file)
     {
-        if (! isset($file->chunkSize) || ! is_integer($file->chunkSize) || $file->chunkSize < 1) {
+        if (! isset($file->chunkSize) || ! is_int($file->chunkSize) || $file->chunkSize < 1) {
             throw new CorruptFileException('file.chunkSize is not an integer >= 1');
         }
 
-        if (! isset($file->length) || ! is_integer($file->length) || $file->length < 0) {
+        if (! isset($file->length) || ! is_int($file->length) || $file->length < 0) {
             throw new CorruptFileException('file.length is not an integer > 0');
         }
 

@@ -44,7 +44,7 @@ use function fopen;
 use function get_resource_type;
 use function in_array;
 use function is_array;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function is_resource;
 use function is_string;
@@ -128,7 +128,7 @@ class Bucket
             throw InvalidArgumentException::invalidType('"bucketName" option', $options['bucketName'], 'string');
         }
 
-        if (! is_integer($options['chunkSizeBytes'])) {
+        if (! is_int($options['chunkSizeBytes'])) {
             throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 

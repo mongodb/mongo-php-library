@@ -27,7 +27,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_intersect_key;
-use function is_integer;
+use function is_int;
 
 /**
  * Operation for obtaining an estimated count of documents in a collection
@@ -65,7 +65,7 @@ final class EstimatedDocumentCount implements Explainable
      */
     public function __construct(private string $databaseName, private string $collectionName, array $options = [])
     {
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
+        if (isset($options['maxTimeMS']) && ! is_int($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 

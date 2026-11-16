@@ -27,7 +27,7 @@ use function array_intersect_key;
 use function count;
 use function current;
 use function is_float;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function MongoDB\is_document;
 
@@ -86,11 +86,11 @@ final class CountDocuments
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
-        if (isset($options['limit']) && ! is_integer($options['limit'])) {
+        if (isset($options['limit']) && ! is_int($options['limit'])) {
             throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
         }
 
-        if (isset($options['skip']) && ! is_integer($options['skip'])) {
+        if (isset($options['skip']) && ! is_int($options['skip'])) {
             throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
         }
 
@@ -120,7 +120,7 @@ final class CountDocuments
         }
 
         $result = current($allResults);
-        if (! is_object($result) || ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
+        if (! is_object($result) || ! isset($result->n) || ! (is_int($result->n) || is_float($result->n))) {
             throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }
 

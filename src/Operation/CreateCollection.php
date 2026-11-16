@@ -26,7 +26,7 @@ use MongoDB\Exception\InvalidArgumentException;
 
 use function is_array;
 use function is_bool;
-use function is_integer;
+use function is_int;
 use function is_string;
 use function MongoDB\is_document;
 use function MongoDB\is_pipeline;
@@ -132,7 +132,7 @@ final class CreateCollection
             throw InvalidArgumentException::expectedDocumentType('"encryptedFields" option', $this->options['encryptedFields']);
         }
 
-        if (isset($this->options['expireAfterSeconds']) && ! is_integer($this->options['expireAfterSeconds'])) {
+        if (isset($this->options['expireAfterSeconds']) && ! is_int($this->options['expireAfterSeconds'])) {
             throw InvalidArgumentException::invalidType('"expireAfterSeconds" option', $this->options['expireAfterSeconds'], 'integer');
         }
 
@@ -140,11 +140,11 @@ final class CreateCollection
             throw InvalidArgumentException::expectedDocumentType('"indexOptionDefaults" option', $this->options['indexOptionDefaults']);
         }
 
-        if (isset($this->options['max']) && ! is_integer($this->options['max'])) {
+        if (isset($this->options['max']) && ! is_int($this->options['max'])) {
             throw InvalidArgumentException::invalidType('"max" option', $this->options['max'], 'integer');
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
@@ -156,7 +156,7 @@ final class CreateCollection
             throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($this->options['size']) && ! is_integer($this->options['size'])) {
+        if (isset($this->options['size']) && ! is_int($this->options['size'])) {
             throw InvalidArgumentException::invalidType('"size" option', $this->options['size'], 'integer');
         }
 

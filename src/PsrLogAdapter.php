@@ -80,7 +80,7 @@ final class PsrLogAdapter implements LogSubscriber
     {
         $instance = self::getInstance();
 
-        $instance->loggers->attach($logger);
+        $instance->loggers->offsetSet($logger);
 
         addSubscriber($instance);
     }
@@ -115,7 +115,7 @@ final class PsrLogAdapter implements LogSubscriber
     public static function removeLogger(LoggerInterface $logger): void
     {
         $instance = self::getInstance();
-        $instance->loggers->detach($logger);
+        $instance->loggers->offsetUnset($logger);
 
         if ($instance->loggers->count() === 0) {
             removeSubscriber($instance);

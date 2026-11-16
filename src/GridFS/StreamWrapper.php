@@ -161,6 +161,19 @@ final class StreamWrapper
     }
 
     /**
+     * Flushes the stream.
+     *
+     * Buffered data stays in memory until a full chunk is accumulated or the
+     * stream is closed, because only the last chunk of a file may be partial.
+     *
+     * @see https://php.net/manual/en/streamwrapper.stream-flush.php
+     */
+    public function stream_flush(): bool
+    {
+        return true;
+    }
+
+    /**
      * Opens the stream.
      *
      * @see https://php.net/manual/en/streamwrapper.stream-open.php

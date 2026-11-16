@@ -28,7 +28,7 @@ use function explode;
 use function implode;
 use function in_array;
 use function is_array;
-use function is_integer;
+use function is_int;
 use function is_resource;
 use function str_starts_with;
 use function stream_context_get_options;
@@ -260,7 +260,7 @@ final class StreamWrapper
             $stat[10] = $stat['ctime'] = $timestamp;
         }
 
-        if (isset($file->chunkSize) && is_integer($file->chunkSize)) {
+        if (isset($file->chunkSize) && is_int($file->chunkSize)) {
             $stat[11] = $stat['blksize'] = $file->chunkSize;
         }
 

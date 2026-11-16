@@ -32,7 +32,7 @@ use MongoDB\Model\CodecCursor;
 use function assert;
 use function is_array;
 use function is_bool;
-use function is_integer;
+use function is_int;
 use function is_string;
 use function MongoDB\create_namespace;
 use function MongoDB\is_document;
@@ -149,7 +149,7 @@ final class Find implements Explainable
             throw InvalidArgumentException::invalidType('"allowPartialResults" option', $this->options['allowPartialResults'], 'boolean');
         }
 
-        if (isset($this->options['batchSize']) && ! is_integer($this->options['batchSize'])) {
+        if (isset($this->options['batchSize']) && ! is_int($this->options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $this->options['batchSize'], 'integer');
         }
 
@@ -162,7 +162,7 @@ final class Find implements Explainable
         }
 
         if (isset($this->options['cursorType'])) {
-            if (! is_integer($this->options['cursorType'])) {
+            if (! is_int($this->options['cursorType'])) {
                 throw InvalidArgumentException::invalidType('"cursorType" option', $this->options['cursorType'], 'integer');
             }
 
@@ -179,7 +179,7 @@ final class Find implements Explainable
             throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $this->options['hint']);
         }
 
-        if (isset($this->options['limit']) && ! is_integer($this->options['limit'])) {
+        if (isset($this->options['limit']) && ! is_int($this->options['limit'])) {
             throw InvalidArgumentException::invalidType('"limit" option', $this->options['limit'], 'integer');
         }
 
@@ -187,11 +187,11 @@ final class Find implements Explainable
             throw InvalidArgumentException::expectedDocumentType('"max" option', $this->options['max']);
         }
 
-        if (isset($this->options['maxAwaitTimeMS']) && ! is_integer($this->options['maxAwaitTimeMS'])) {
+        if (isset($this->options['maxAwaitTimeMS']) && ! is_int($this->options['maxAwaitTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $this->options['maxAwaitTimeMS'], 'integer');
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
@@ -227,7 +227,7 @@ final class Find implements Explainable
             throw InvalidArgumentException::invalidType('"showRecordId" option', $this->options['showRecordId'], 'boolean');
         }
 
-        if (isset($this->options['skip']) && ! is_integer($this->options['skip'])) {
+        if (isset($this->options['skip']) && ! is_int($this->options['skip'])) {
             throw InvalidArgumentException::invalidType('"skip" option', $this->options['skip'], 'integer');
         }
 
@@ -354,7 +354,7 @@ final class Find implements Explainable
 
         // Ensure no cursor is left behind when limit == batchSize by increasing batchSize
         if (isset($options['limit'], $options['batchSize']) && $options['limit'] === $options['batchSize']) {
-            assert(is_integer($options['batchSize']));
+            assert(is_int($options['batchSize']));
             $options['batchSize']++;
         }
 

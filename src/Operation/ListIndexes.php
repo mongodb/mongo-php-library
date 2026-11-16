@@ -30,7 +30,7 @@ use MongoDB\Model\CachingIterator;
 use MongoDB\Model\CallbackIterator;
 use MongoDB\Model\IndexInfo;
 
-use function is_integer;
+use function is_int;
 
 /**
  * Operation for the listIndexes command.
@@ -64,7 +64,7 @@ final class ListIndexes
      */
     public function __construct(private string $databaseName, private string $collectionName, private array $options = [])
     {
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 

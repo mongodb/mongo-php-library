@@ -36,7 +36,7 @@ use stdClass;
 
 use function is_array;
 use function is_bool;
-use function is_integer;
+use function is_int;
 use function is_string;
 use function MongoDB\extract_read_preference_from_options;
 use function MongoDB\is_document;
@@ -128,7 +128,7 @@ final class Aggregate implements Explainable
             throw InvalidArgumentException::invalidType('"allowDiskUse" option', $this->options['allowDiskUse'], 'boolean');
         }
 
-        if (isset($this->options['batchSize']) && ! is_integer($this->options['batchSize'])) {
+        if (isset($this->options['batchSize']) && ! is_int($this->options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $this->options['batchSize'], 'integer');
         }
 
@@ -156,11 +156,11 @@ final class Aggregate implements Explainable
             throw InvalidArgumentException::expectedDocumentType('"let" option', $this->options['let']);
         }
 
-        if (isset($this->options['maxAwaitTimeMS']) && ! is_integer($this->options['maxAwaitTimeMS'])) {
+        if (isset($this->options['maxAwaitTimeMS']) && ! is_int($this->options['maxAwaitTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $this->options['maxAwaitTimeMS'], 'integer');
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 

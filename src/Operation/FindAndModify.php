@@ -33,7 +33,7 @@ use function assert;
 use function current;
 use function is_array;
 use function is_bool;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function is_string;
 use function MongoDB\create_field_path_type_map;
@@ -153,7 +153,7 @@ final class FindAndModify implements Explainable
             throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $options['hint']);
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
+        if (isset($options['maxTimeMS']) && ! is_int($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 

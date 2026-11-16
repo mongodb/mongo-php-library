@@ -24,7 +24,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function array_intersect_key;
-use function is_integer;
+use function is_int;
 use function MongoDB\is_document;
 use function sprintf;
 use function strlen;
@@ -76,7 +76,7 @@ final class WritableStream
             'chunkSizeBytes' => self::DEFAULT_CHUNK_SIZE_BYTES,
         ];
 
-        if (! is_integer($options['chunkSizeBytes'])) {
+        if (! is_int($options['chunkSizeBytes'])) {
             throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 

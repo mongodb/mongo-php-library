@@ -23,7 +23,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_key_exists;
-use function is_integer;
+use function is_int;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
@@ -118,7 +118,7 @@ final class FindOneAndUpdate implements Explainable
             throw InvalidArgumentException::expectedDocumentType('"projection" option', $options['projection']);
         }
 
-        if (array_key_exists('returnDocument', $options) && ! is_integer($options['returnDocument'])) {
+        if (array_key_exists('returnDocument', $options) && ! is_int($options['returnDocument'])) {
             throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
         }
 

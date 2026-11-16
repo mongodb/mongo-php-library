@@ -30,7 +30,7 @@ use MongoDB\Exception\UnsupportedException;
 use function current;
 use function is_array;
 use function is_float;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function is_string;
 use function MongoDB\is_document;
@@ -92,11 +92,11 @@ final class Count implements Explainable
             throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $this->options['hint']);
         }
 
-        if (isset($this->options['limit']) && ! is_integer($this->options['limit'])) {
+        if (isset($this->options['limit']) && ! is_int($this->options['limit'])) {
             throw InvalidArgumentException::invalidType('"limit" option', $this->options['limit'], 'integer');
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
@@ -112,7 +112,7 @@ final class Count implements Explainable
             throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($this->options['skip']) && ! is_integer($this->options['skip'])) {
+        if (isset($this->options['skip']) && ! is_int($this->options['skip'])) {
             throw InvalidArgumentException::invalidType('"skip" option', $this->options['skip'], 'integer');
         }
 
@@ -139,7 +139,7 @@ final class Count implements Explainable
         $result = current($cursor->toArray());
 
         // Older server versions may return a float
-        if (! is_object($result) || ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
+        if (! is_object($result) || ! isset($result->n) || ! (is_int($result->n) || is_float($result->n))) {
             throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }
 

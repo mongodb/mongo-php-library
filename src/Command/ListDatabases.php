@@ -27,7 +27,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use function current;
 use function is_array;
 use function is_bool;
-use function is_integer;
+use function is_int;
 use function MongoDB\is_document;
 
 /**
@@ -76,7 +76,7 @@ final class ListDatabases
             throw InvalidArgumentException::expectedDocumentType('"filter" option', $options['filter']);
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
+        if (isset($options['maxTimeMS']) && ! is_int($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 

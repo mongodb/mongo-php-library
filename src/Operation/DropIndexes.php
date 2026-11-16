@@ -25,7 +25,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
-use function is_integer;
+use function is_int;
 
 /**
  * Operation for the dropIndexes command.
@@ -63,7 +63,7 @@ final class DropIndexes
             throw new InvalidArgumentException('$indexName cannot be empty');
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 

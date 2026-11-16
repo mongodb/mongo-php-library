@@ -28,7 +28,7 @@ use function explode;
 use function implode;
 use function in_array;
 use function is_array;
-use function is_integer;
+use function is_int;
 use function is_resource;
 use function str_starts_with;
 use function stream_context_get_options;
@@ -161,6 +161,19 @@ final class StreamWrapper
     }
 
     /**
+     * Flushes the stream.
+     *
+     * Buffered data stays in memory until a full chunk is accumulated or the
+     * stream is closed, because only the last chunk of a file may be partial.
+     *
+     * @see https://php.net/manual/en/streamwrapper.stream-flush.php
+     */
+    public function stream_flush(): bool
+    {
+        return true;
+    }
+
+    /**
      * Opens the stream.
      *
      * @see https://php.net/manual/en/streamwrapper.stream-open.php
@@ -260,7 +273,7 @@ final class StreamWrapper
             $stat[10] = $stat['ctime'] = $timestamp;
         }
 
-        if (isset($file->chunkSize) && is_integer($file->chunkSize)) {
+        if (isset($file->chunkSize) && is_int($file->chunkSize)) {
             $stat[11] = $stat['blksize'] = $file->chunkSize;
         }
 

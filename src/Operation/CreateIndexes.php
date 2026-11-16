@@ -29,7 +29,7 @@ use MongoDB\Model\IndexInput;
 use function array_is_list;
 use function array_map;
 use function is_array;
-use function is_integer;
+use function is_int;
 use function is_string;
 use function MongoDB\server_supports_feature;
 use function sprintf;
@@ -92,11 +92,11 @@ final class CreateIndexes
             $this->indexes[] = new IndexInput($index);
         }
 
-        if (isset($this->options['commitQuorum']) && ! is_string($this->options['commitQuorum']) && ! is_integer($this->options['commitQuorum'])) {
+        if (isset($this->options['commitQuorum']) && ! is_string($this->options['commitQuorum']) && ! is_int($this->options['commitQuorum'])) {
             throw InvalidArgumentException::invalidType('"commitQuorum" option', $this->options['commitQuorum'], ['integer', 'string']);
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 

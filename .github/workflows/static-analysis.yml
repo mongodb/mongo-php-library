@@ -21,8 +21,12 @@ env:
   PHP_VERSION: "8.5"
 
 jobs:
+  # Static analysis findings are surfaced via SARIF upload, which requires Code
+  # Security (GitHub Advanced Security). Limit to the public repo to avoid
+  # failing GitHub Actions on mirrors.
   psalm:
     name: "Psalm"
+    if: github.repository == 'mongodb/mongo-php-library'
     runs-on: "ubuntu-24.04"
 
     steps:

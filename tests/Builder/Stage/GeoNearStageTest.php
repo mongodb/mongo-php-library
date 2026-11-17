@@ -17,6 +17,28 @@ use function MongoDB\object;
  */
 class GeoNearStageTest extends PipelineTestCase
 {
+    public function testDistanceAsAConstantExpression(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::geoNear(
+                near: object(
+                    type: 'Point',
+                    coordinates: [-73.99279, 40.719296],
+                ),
+                distanceField: 'dist.calculated',
+                minDistance: Expression::add(0, 1),
+                maxDistance: Expression::add(1, 1),
+                query: Query::query(
+                    category: 'Parks',
+                ),
+                includeLocs: 'dist.location',
+                spherical: true,
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::GeoNearDistanceAsAConstantExpression, $pipeline);
+    }
+
     public function testMaximumDistance(): void
     {
         $pipeline = new Pipeline(

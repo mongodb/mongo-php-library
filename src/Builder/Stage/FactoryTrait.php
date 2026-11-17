@@ -19,6 +19,7 @@ use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\Type;
 use MongoDB\Builder\Expression\ArrayFieldPath;
 use MongoDB\Builder\Expression\ResolvesToArray;
+use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type\AccumulatorInterface;
@@ -263,9 +264,11 @@ trait FactoryTrait
      * @param Optional|Decimal128|Int64|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
      * @param Optional|string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
      * @param Optional|string $key Specify the geospatial indexed field to use when calculating the distance.
-     * @param Optional|Decimal128|Int64|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
+     * Starting in version 7.2, you can specify a valid constant expression that resolves to a number.
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
-     * @param Optional|Decimal128|Int64|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
+     * Starting in version 7.2, you can specify a valid constant expression that resolves to a number.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
      * @param Optional|QueryInterface|array $query Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
@@ -280,8 +283,8 @@ trait FactoryTrait
         Optional|Decimal128|Int64|float|int $distanceMultiplier = Optional::Undefined,
         Optional|string $includeLocs = Optional::Undefined,
         Optional|string $key = Optional::Undefined,
-        Optional|Decimal128|Int64|float|int $maxDistance = Optional::Undefined,
-        Optional|Decimal128|Int64|float|int $minDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $maxDistance = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int|string $minDistance = Optional::Undefined,
         Optional|QueryInterface|array $query = Optional::Undefined,
         Optional|bool $spherical = Optional::Undefined,
     ): GeoNearStage {

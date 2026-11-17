@@ -903,6 +903,57 @@ enum Pipelines: string
     EXTENDED_JSON;
 
     /**
+     * Distance as a Constant Expression
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
+     */
+    case GeoNearDistanceAsAConstantExpression = <<<'EXTENDED_JSON'
+    [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point",
+                    "coordinates": [
+                        {
+                            "$numberDouble": "-73.992789999999999395"
+                        },
+                        {
+                            "$numberDouble": "40.719295999999999935"
+                        }
+                    ]
+                },
+                "distanceField": "dist.calculated",
+                "minDistance": {
+                    "$add": [
+                        {
+                            "$numberInt": "0"
+                        },
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                },
+                "maxDistance": {
+                    "$add": [
+                        {
+                            "$numberInt": "1"
+                        },
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                },
+                "query": {
+                    "category": "Parks"
+                },
+                "includeLocs": "dist.location",
+                "spherical": true
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
      * Specify Which Geospatial Index to Use
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#specify-which-geospatial-index-to-use

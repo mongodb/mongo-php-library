@@ -903,6 +903,57 @@ enum Pipelines: string
     EXTENDED_JSON;
 
     /**
+     * Distance as a Constant Expression
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
+     */
+    case GeoNearDistanceAsAConstantExpression = <<<'EXTENDED_JSON'
+    [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point",
+                    "coordinates": [
+                        {
+                            "$numberDouble": "-73.992789999999999395"
+                        },
+                        {
+                            "$numberDouble": "40.719295999999999935"
+                        }
+                    ]
+                },
+                "distanceField": "dist.calculated",
+                "minDistance": {
+                    "$add": [
+                        {
+                            "$numberInt": "0"
+                        },
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                },
+                "maxDistance": {
+                    "$add": [
+                        {
+                            "$numberInt": "1"
+                        },
+                        {
+                            "$numberInt": "1"
+                        }
+                    ]
+                },
+                "query": {
+                    "category": "Parks"
+                },
+                "includeLocs": "dist.location",
+                "spherical": true
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
      * Specify Which Geospatial Index to Use
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/#specify-which-geospatial-index-to-use
@@ -4158,6 +4209,52 @@ enum Pipelines: string
                 "numCandidates": {
                     "$numberInt": "150"
                 },
+                "limit": {
+                    "$numberInt": "10"
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
+     * ANN without numCandidates
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/#examples
+     */
+    case VectorSearchANNWithoutNumCandidates = <<<'EXTENDED_JSON'
+    [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",
+                "path": "plot_embedding",
+                "queryVector": [
+                    {
+                        "$numberDouble": "-0.0016261311999999999121"
+                    },
+                    {
+                        "$numberDouble": "-0.028070756999999998266"
+                    },
+                    {
+                        "$numberDouble": "-0.011342932000000000015"
+                    }
+                ],
                 "limit": {
                     "$numberInt": "10"
                 }

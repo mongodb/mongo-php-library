@@ -3061,6 +3061,53 @@ enum Pipelines: string
     EXTENDED_JSON;
 
     /**
+     * ANN without numCandidates
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/vector-search/#basic-example
+     */
+    case VectorSearchANNWithoutNumCandidates = <<<'EXTENDED_JSON'
+    [
+        {
+            "$search": {
+                "vectorSearch": {
+                    "path": "plot_embedding",
+                    "queryVector": [
+                        {
+                            "$numberDouble": "-0.0016261311999999999121"
+                        },
+                        {
+                            "$numberDouble": "-0.028070756999999998266"
+                        },
+                        {
+                            "$numberDouble": "-0.011342932000000000015"
+                        }
+                    ],
+                    "limit": {
+                        "$numberInt": "10"
+                    }
+                }
+            }
+        },
+        {
+            "$project": {
+                "_id": {
+                    "$numberInt": "0"
+                },
+                "plot": {
+                    "$numberInt": "1"
+                },
+                "title": {
+                    "$numberInt": "1"
+                },
+                "score": {
+                    "$meta": "searchScore"
+                }
+            }
+        }
+    ]
+    EXTENDED_JSON;
+
+    /**
      * ANN Filter
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/vector-search/#filter-example

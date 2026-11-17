@@ -64,6 +64,27 @@ class VectorSearchOperatorTest extends PipelineTestCase
         $this->assertSamePipeline(Pipelines::VectorSearchANNFilter, $pipeline);
     }
 
+    public function testANNWithoutNumCandidates(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::search(
+                Search::vectorSearch(
+                    path: 'plot_embedding',
+                    queryVector: [-0.0016261312, -0.028070757, -0.011342932],
+                    limit: 10,
+                ),
+            ),
+            Stage::project(
+                _id: 0,
+                plot: 1,
+                title: 1,
+                score: Expression::meta('searchScore'),
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::VectorSearchANNWithoutNumCandidates, $pipeline);
+    }
+
     public function testENN(): void
     {
         $pipeline = new Pipeline(

@@ -64,6 +64,26 @@ class VectorSearchStageTest extends PipelineTestCase
         $this->assertSamePipeline(Pipelines::VectorSearchANNFilter, $pipeline);
     }
 
+    public function testANNWithoutNumCandidates(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::vectorSearch(
+                index: 'vector_index',
+                limit: 10,
+                path: 'plot_embedding',
+                queryVector: [-0.0016261312, -0.028070757, -0.011342932],
+            ),
+            Stage::project(
+                _id: 0,
+                plot: 1,
+                title: 1,
+                score: ['$meta' => 'vectorSearchScore'],
+            ),
+        );
+
+        $this->assertSamePipeline(Pipelines::VectorSearchANNWithoutNumCandidates, $pipeline);
+    }
+
     public function testAutomatedEmbedding(): void
     {
         $pipeline = new Pipeline(

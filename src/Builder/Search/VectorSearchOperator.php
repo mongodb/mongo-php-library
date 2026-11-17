@@ -63,16 +63,16 @@ final class VectorSearchOperator implements SearchOperatorInterface, OperatorInt
      */
     public readonly int $limit;
 
-    /**
-     * @var Optional|bool $exact If false, runs an ANN search. If true, runs an ENN search. Defaults to false.
-     * This parameter is required if numCandidates is omitted.
-     */
+    /** @var Optional|bool $exact If false, runs an ANN search. If true, runs an ENN search. Defaults to false. */
     public readonly Optional|bool $exact;
 
     /**
-     * @var Optional|int $numCandidates The number of nearest neighbors to use during the search. Value must be less than or
-     * equal to 10000 and cannot be less than limit. This field is required if exact is false
-     * or omitted.
+     * @var Optional|int $numCandidates The number of nearest neighbors to use during the search. If you omit this
+     * field for an ANN search, MongoDB computes a value based on the limit, the
+     * index size, the vector quantization, and the filter selectivity. The way
+     * MongoDB computes this value might change in future releases. This field
+     * must be omitted when exact is true. Value must be less than or equal to
+     * 10000 and cannot be less than limit.
      */
     public readonly Optional|int $numCandidates;
 
@@ -89,10 +89,12 @@ final class VectorSearchOperator implements SearchOperatorInterface, OperatorInt
      * @param int $limit The integer number of documents to return in the results. This value cannot exceed
      * numCandidates if numCandidates is specified.
      * @param Optional|bool $exact If false, runs an ANN search. If true, runs an ENN search. Defaults to false.
-     * This parameter is required if numCandidates is omitted.
-     * @param Optional|int $numCandidates The number of nearest neighbors to use during the search. Value must be less than or
-     * equal to 10000 and cannot be less than limit. This field is required if exact is false
-     * or omitted.
+     * @param Optional|int $numCandidates The number of nearest neighbors to use during the search. If you omit this
+     * field for an ANN search, MongoDB computes a value based on the limit, the
+     * index size, the vector quantization, and the filter selectivity. The way
+     * MongoDB computes this value might change in future releases. This field
+     * must be omitted when exact is true. Value must be less than or equal to
+     * 10000 and cannot be less than limit.
      * @param Optional|Document|SearchOperatorInterface|Serializable|array|stdClass $filter Any Atlas Search operator to filter documents based on metadata or specific search criteria.
      * @param Optional|Document|Serializable|array|stdClass $score Score assigned to matching search results.
      */

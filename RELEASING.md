@@ -17,7 +17,7 @@ is left as an exercise to the reader.
 
 Ensure that the library test suite completes on supported versions of PHP.
 
-## Transition JIRA issues and version
+## Transition Jira issues and version
 
 All issues associated with the release version should be in the "Closed" state
 and have a resolution of "Fixed". Issues with other resolutions (e.g.
@@ -154,7 +154,7 @@ The PHP team is happy to announce that version X.Y.Z of the MongoDB PHP library 
 
 <one or more paragraphs describing important changes in this release>
 
-A complete list of resolved issues in this release may be found in [JIRA](https://jira.mongodb.org/issues/?jql=project%3DPHPLIB%20and%20fixVersion%3DX.Y.Z).
+A complete list of resolved issues in this release may be found in [Jira](https://jira.mongodb.org/issues/?jql=project%3DPHPLIB%20and%20fixVersion%3DX.Y.Z).
 
 **Documentation**
 

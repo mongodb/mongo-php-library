@@ -17,7 +17,7 @@ env:
 
     TODO: one or more paragraphs describing important changes in this release
 
-    A complete list of resolved issues in this release may be found in [JIRA](https://jira.mongodb.org/issues/?jql=project%3DPHPLIB%20and%20fixVersion%3D{0}).
+    A complete list of resolved issues in this release may be found in [Jira](https://jira.mongodb.org/issues/?jql=project%3DPHPLIB%20and%20fixVersion%3D{0}).
 
     **Documentation**
 

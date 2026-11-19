@@ -68,7 +68,7 @@ git show --show-signature 1.19.0
 
 Issues pertaining to the library should be reported in the
 [PHPLIB](https://jira.mongodb.org/secure/CreateIssue!default.jspa?project-field=PHPLIB)
-project in MongoDB's JIRA. Extension-related issues should be reported in the
+project in MongoDB's Jira. Extension-related issues should be reported in the
 [PHPC](https://jira.mongodb.org/secure/CreateIssue!default.jspa?project-field=PHPC)
 project.
 
@@ -85,5 +85,5 @@ project, please report it according to the instructions in
 
 Development is tracked in the
 [PHPLIB](https://jira.mongodb.org/projects/PHPLIB/summary) project in MongoDB's
-JIRA. Documentation for contributing to this project may be found in
+Jira. Documentation for contributing to this project may be found in
 [CONTRIBUTING.md](CONTRIBUTING.md).

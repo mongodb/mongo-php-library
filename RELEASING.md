@@ -154,7 +154,7 @@ The PHP team is happy to announce that version X.Y.Z of the MongoDB PHP library 
 
 <one or more paragraphs describing important changes in this release>
 
-A complete list of resolved issues in this release may be found in [JIRA]($JIRA_URL).
+A complete list of resolved issues in this release may be found in [JIRA](https://jira.mongodb.org/issues/?jql=project%3DPHPLIB%20and%20fixVersion%3DX.Y.Z).
 
 **Documentation**
 
@@ -168,10 +168,6 @@ This library may be installed or upgraded with:
 
 Installation instructions for the `mongodb` extension may be found in the [PHP.net documentation](https://php.net/manual/en/mongodb.installation.php).
 ```
-
-The URL for the list of resolved JIRA issues will need to be updated with each
-release. You may obtain the list from
-[this form](https://jira.mongodb.org/secure/ReleaseNote.jspa?projectId=12483).
 
 If commits from community contributors were included in this release, append the
 following section:

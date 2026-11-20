@@ -14,7 +14,7 @@ $ php tools/extension-version.php lowest
 Nothing to bump here: the `ext-mongodb` constraint is updated during
 development, never at release time.
 
-## Transition JIRA issues and version
+## Transition Jira issues and version
 
 All issues associated with the release version should be in the "Closed" state
 and have a resolution of "Fixed". Issues with other resolutions (e.g.
@@ -43,8 +43,6 @@ When triggering the workflow, fill in the following fields:
 * **Branch**: `vA.x` for a new minor release (e.g. `v2.x`), or `vA.B` for a
   new patch release (e.g. `v2.2`)
 * **Version**: the version to be released (e.g. `2.3.0` or `2.2.2`)
-* **Jira version**: the version ID obtained from a link in the "Version" column
-  on the [PHPLIB releases page](https://jira.mongodb.org/projects/PHPLIB?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased)
 
 The automation will create and push the necessary tag, create a draft release,
 and publish all required SSDLC assets. Wait for all SSDLC assets to be uploaded

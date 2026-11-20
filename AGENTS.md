@@ -20,7 +20,7 @@ Correctness, backwards compatibility, and conformance to the
 [MongoDB Driver Specifications](https://github.com/mongodb/specifications) are
 top priorities.
 
-- Issue tracker: [JIRA PHPLIB project](https://jira.mongodb.org/browse/PHPLIB). GitHub Issues is not used for bugs or features.
+- Issue tracker: [Jira PHPLIB project](https://jira.mongodb.org/browse/PHPLIB). GitHub Issues is not used for bugs or features.
 - Branches: `v2.x` is the default, where new features and optimisations land. The latest `vX.Y` minor branch takes bug fixes and maintenance tasks. `v1.21` receives only critical bug fixes.
 - Requires the `mongodb` extension — see `composer.json` for the PHP and `ext-mongodb` versions supported on this branch.
 
@@ -113,7 +113,7 @@ variables should carry the meaning. Add one only where the code cannot explain i
 
 ## Commit and PR Conventions
 
-- Prefix commit messages and PR titles with the JIRA key:
+- Prefix commit messages and PR titles with the Jira key:
   `PHPLIB-1234: Short description`.
 - Target the **oldest maintained branch** the change applies to — the latest
   `vX.Y` minor branch for bug fixes and maintenance, `v2.x` for features and

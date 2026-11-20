@@ -23,7 +23,7 @@ project, please create a vulnerability report[^2].
 
 <!--
 Briefly describe the issue. Feel free to cross-reference your report with any
-other related GitHub or JIRA issues for additional context. Before reporting an
+other related GitHub or Jira issues for additional context. Before reporting an
 issue, check that you are using the most recent version of the driver.
 -->
 

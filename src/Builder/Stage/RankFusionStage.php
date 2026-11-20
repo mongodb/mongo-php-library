@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * THIS FILE IS AUTO-GENERATED. ANY CHANGES WILL BE LOST!
+ */
+
+declare(strict_types=1);
+
+namespace MongoDB\Builder\Stage;
+
+use MongoDB\BSON\Document;
+use MongoDB\BSON\Serializable;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\OperatorInterface;
+use MongoDB\Builder\Type\Optional;
+use MongoDB\Builder\Type\StageInterface;
+use stdClass;
+
+/**
+ * Combines multiple pipelines using rank-based fusion to create hybrid search results.
+ *
+ * New in MongoDB 8.1
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rankFusion/
+ * @internal
+ */
+final class RankFusionStage implements StageInterface, OperatorInterface
+{
+    public const ENCODE = Encode::Object;
+    public const NAME = '$rankFusion';
+    public const PROPERTIES = ['input' => 'input', 'combination' => 'combination', 'scoreDetails' => 'scoreDetails'];
+
+    /** @var Document|Serializable|array|stdClass $input An object that specifies the pipelines to combine with rank fusion. */
+    public readonly Document|Serializable|stdClass|array $input;
+
+    /** @var Optional|Document|Serializable|array|stdClass $combination An object that specifies how to combine the ranked results. */
+    public readonly Optional|Document|Serializable|stdClass|array $combination;
+
+    /** @var Optional|bool $scoreDetails Set to true to include detailed scoring information. */
+    public readonly Optional|bool $scoreDetails;
+
+    /**
+     * @param Document|Serializable|array|stdClass $input An object that specifies the pipelines to combine with rank fusion.
+     * @param Optional|Document|Serializable|array|stdClass $combination An object that specifies how to combine the ranked results.
+     * @param Optional|bool $scoreDetails Set to true to include detailed scoring information.
+     */
+    public function __construct(
+        Document|Serializable|stdClass|array $input,
+        Optional|Document|Serializable|stdClass|array $combination = Optional::Undefined,
+        Optional|bool $scoreDetails = Optional::Undefined,
+    ) {
+        $this->input = $input;
+        $this->combination = $combination;
+        $this->scoreDetails = $scoreDetails;
+    }
+}

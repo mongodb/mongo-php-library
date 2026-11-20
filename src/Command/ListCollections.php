@@ -18,16 +18,14 @@
 namespace MongoDB\Command;
 
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Model\CachingIterator;
-use MongoDB\Operation\Executable;
 
 use function is_bool;
-use function is_integer;
+use function is_int;
 use function MongoDB\is_document;
 
 /**
@@ -36,7 +34,7 @@ use function MongoDB\is_document;
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
  */
-class ListCollections implements Executable
+final class ListCollections
 {
     /**
      * Constructs a listCollections command.
@@ -77,7 +75,7 @@ class ListCollections implements Executable
             throw InvalidArgumentException::expectedDocumentType('"filter" option', $options['filter']);
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
+        if (isset($options['maxTimeMS']) && ! is_int($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
@@ -93,17 +91,16 @@ class ListCollections implements Executable
     /**
      * Execute the operation.
      *
-     * @return CachingIterator<int, array>
-     * @see Executable::execute()
+     * @return CursorInterface<array>
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server): CachingIterator
+    public function execute(Server $server): CursorInterface
     {
-        /** @var Cursor<array> $cursor */
+        /** @var CursorInterface<array> $cursor */
         $cursor = $server->executeReadCommand($this->databaseName, $this->createCommand(), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 
-        return new CachingIterator($cursor);
+        return $cursor;
     }
 
     /**

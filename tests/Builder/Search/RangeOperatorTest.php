@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Search;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Pipeline;
@@ -23,8 +24,8 @@ class RangeOperatorTest extends PipelineTestCase
             Stage::search(
                 Search::range(
                     path: 'released',
-                    gt: new UTCDateTime(new DateTimeImmutable('2010-01-01T00:00:00.000Z')),
-                    lt: new UTCDateTime(new DateTimeImmutable('2015-01-01T00:00:00.000Z')),
+                    gt: new UTCDateTime(new DateTimeImmutable('2010-01-01T00:00:00.000Z', new DateTimeZone('UTC'))),
+                    lt: new UTCDateTime(new DateTimeImmutable('2015-01-01T00:00:00.000Z', new DateTimeZone('UTC'))),
                 ),
             ),
             Stage::limit(5),

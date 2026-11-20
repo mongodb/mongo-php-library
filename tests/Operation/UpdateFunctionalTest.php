@@ -5,17 +5,14 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\BadMethodCallException;
-use MongoDB\Exception\UnsupportedException;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\UpdateResult;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use stdClass;
-
-use function is_array;
 
 class UpdateFunctionalTest extends FunctionalTestCase
 {
@@ -54,10 +51,6 @@ class UpdateFunctionalTest extends FunctionalTestCase
     #[DataProvider('provideReplacementDocumentLikePipeline')]
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
-        if (is_array($expectedUpdate)) {
-            $this->skipIfServerVersion('<', '4.2.0', 'Pipeline-style updates are not supported');
-        }
-
         (new CommandObserver())->observe(
             function () use ($update): void {
                 $operation = new Update(
@@ -146,24 +139,6 @@ class UpdateFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasProperty('bypassDocumentValidation', $event['started']->getCommand());
             },
         );
-    }
-
-    public function testHintOptionAndUnacknowledgedWriteConcernUnsupportedClientSideError(): void
-    {
-        $this->skipIfServerVersion('>=', '4.2.0', 'hint is supported');
-
-        $operation = new Update(
-            $this->getDatabaseName(),
-            $this->getCollectionName(),
-            ['_id' => 1],
-            ['$inc' => ['x' => 1]],
-            ['hint' => '_id_', 'writeConcern' => new WriteConcern(0)],
-        );
-
-        $this->expectException(UnsupportedException::class);
-        $this->expectExceptionMessage('Hint is not supported by the server executing this operation');
-
-        $operation->execute($this->getPrimaryServer());
     }
 
     public function testUpdateOne(): void
@@ -287,32 +262,32 @@ class UpdateFunctionalTest extends FunctionalTestCase
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesMatchedCount(UpdateResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getMatchedCount();
     }
 
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesModifiedCount(UpdateResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getModifiedCount();
     }
 
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesUpsertedCount(UpdateResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedCount();
     }
 
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesUpsertedId(UpdateResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedId();
     }
 

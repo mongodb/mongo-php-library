@@ -58,21 +58,21 @@ The test suite references the following environment variables:
    `username` URI option for clients constructed by the test suite, which will
    override any credentials in the connection string itself.
 
-The following environment variable is used for [stable API testing](https://github.com/mongodb/specifications/blob/master/source/versioned-api/tests/README.rst):
+The following environment variable is used for [stable API testing](https://github.com/mongodb/specifications/blob/master/source/versioned-api/tests/README.md):
 
  * `API_VERSION`: If defined, this value will be used to construct a
    [`MongoDB\Driver\ServerApi`](https://www.php.net/manual/en/mongodb-driver-serverapi.construct.php),
    which will then be specified as the `serverApi` driver option for clients
    created by the test suite.
 
-The following environment variables are used for [load balancer testing](https://github.com/mongodb/specifications/blob/master/source/load-balancers/tests/README.rst):
+The following environment variables are used for [load balancer testing](https://github.com/mongodb/specifications/blob/master/source/load-balancers/tests/README.md):
 
  * `MONGODB_SINGLE_MONGOS_LB_URI`: Connection string to a load balancer backed
    by a single mongos host.
  * `MONGODB_MULTI_MONGOS_LB_URI`: Connection string to a load balancer backed by
    multiple mongos hosts.
 
-The following environment variables are used for [CSFLE testing](https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst):
+The following environment variables are used for [CSFLE testing](https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md):
 
  * `AWS_ACCESS_KEY_ID`
  * `AWS_SECRET_ACCESS_KEY`
@@ -123,6 +123,60 @@ The goal is that the library passes tests with the latest spec version at all
 times, either by implementing small changes quickly, or by skipping tests as
 necessary.
 
+## Continuous integration
+
+ * GitHub Actions (`.github/workflows/`) runs the fast checks on pull requests:
+   tests on a small matrix of local servers, coding standards, static analysis
+   and the generator diff.
+ * Evergreen (`.evergreen/config/`) runs the full matrix: all supported PHP and
+   server versions, all topologies, CSFLE, load balancer, and the `atlas` group
+   on a provisioned Atlas cluster.
+
+When you edit a file in `.evergreen/config/templates/`, never edit
+`.evergreen/config/generated/` by hand: regenerate it and commit the result.
+
+```console
+$ php .evergreen/config/generate-config.php
+```
+
+### Extension version
+
+The `ext-mongodb` constraint in `composer.json` is the only thing to maintain.
+Everything else is deduced from it and from the versions published on PECL by
+`tools/extension-version.php`, used by both CI systems:
+
+```console
+$ php tools/extension-version.php stable
+```
+
+Four targets are available:
+
+ * `stable`: highest version the constraint allows
+ * `lowest`: lowest version the constraint allows, with lowest Composer
+   dependencies
+ * `next-stable`: maintenance branch of the latest released extension minor
+   version
+ * `next-minor`: development branch of the next extension minor version
+
+Evergreen builds all four, selected with `EXTENSION_TARGET` in
+`.evergreen/config/templates/build/build-extension.yml`. GitHub Actions covers
+`stable` and `lowest`, through the `driver-version` input of the setup action.
+
+When you need an extension version that is not released yet, bump the
+`ext-mongodb` constraint to it. No version published on PECL then satisfies the
+constraint, so every job of both CI systems builds the extension from its
+development branch, and the release workflow refuses to run. Both go back to
+released versions on their own once the extension is published.
+
+## Backward compatibility
+
+When submitting a PR, be mindful of our backward compatibility guarantees. Our 
+BC policy follows [Symfony's Backward Compatibility Promise](https://symfony.com/doc/current/contributing/code/bc.html).
+
+In short, this means we use semantic versioning and guarantee backward 
+compatibility on all minor releases. For a more detailed definition, refer to 
+the Symfony docs linked above.
+
 ## Code quality
 
 Before submitting a pull request, please ensure that your code adheres to the
@@ -134,7 +188,7 @@ $ composer run checks
 
 ### Coding standards
 
-The library's code is checked using [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer),
+The library's code is checked using [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer),
 which is installed as a development dependency by Composer. To check the code
 for style errors, run the `phpcs` binary:
 
@@ -152,8 +206,12 @@ $ vendor/bin/phpcbf
 
 The library uses [psalm](https://psalm.dev) to run static analysis on the code
 and ensure an additional level of type safety. New code is expected to adhere
-to level 1, with a baseline covering existing issues. To run static analysis
-checks, run the `psalm` binary:
+to level 1, with a baseline covering existing issues.
+
+Psalm array shape types defined with `@psalm-type` must be suffixed with `Shape`
+(e.g. `SearchIndexShape`, `OperationShape`).
+
+To run static analysis checks, run the `psalm` binary:
 
 ```console
 $ vendor/bin/psalm

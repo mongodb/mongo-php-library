@@ -8,6 +8,7 @@ use MongoDB\Model\CachingIterator;
 use MongoDB\Tests\TestCase;
 use Throwable;
 
+use function count;
 use function iterator_to_array;
 
 class CachingIteratorTest extends TestCase
@@ -104,6 +105,42 @@ class CachingIteratorTest extends TestCase
 
         $iterator->next();
         $this->assertCount(3, $iterator);
+    }
+
+    public function testCountDoesNotMovePosition(): void
+    {
+        $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
+
+        $iterator->next();
+        $this->assertCount(3, $iterator);
+
+        $this->assertTrue($iterator->valid());
+        $this->assertSame(1, $iterator->key());
+        $this->assertSame(2, $iterator->current());
+
+        $iterator->next();
+        $this->assertSame(2, $iterator->key());
+        $this->assertSame(3, $iterator->current());
+
+        $iterator->next();
+        $this->assertFalse($iterator->valid());
+    }
+
+    public function testCountDuringIteration(): void
+    {
+        $iterator = new CachingIterator($this->getTraversable([1, 2, 3, 4]));
+
+        $items = [];
+        $counts = [];
+
+        foreach ($iterator as $key => $item) {
+            $items[$key] = $item;
+            $counts[] = count($iterator);
+        }
+
+        $this->assertSame([1, 2, 3, 4], $items);
+        $this->assertSame([4, 4, 4, 4], $counts);
+        $this->assertSame([1, 2, 3, 4], iterator_to_array($iterator));
     }
 
     public function testCountWithEmptySet(): void

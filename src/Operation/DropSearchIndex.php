@@ -22,6 +22,7 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnsupportedException;
 
 /**
@@ -29,10 +30,8 @@ use MongoDB\Exception\UnsupportedException;
  *
  * @see \MongoDB\Collection::dropSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/dropSearchIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class DropSearchIndex implements Executable
+final class DropSearchIndex
 {
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
 
@@ -55,7 +54,6 @@ class DropSearchIndex implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -75,6 +73,10 @@ class DropSearchIndex implements Executable
         } catch (CommandException $e) {
             // Drop operations are idempotent. The server may return an error if the collection does not exist.
             if ($e->getCode() !== self::ERROR_CODE_NAMESPACE_NOT_FOUND) {
+                if (SearchNotSupportedException::isSearchNotSupportedError($e)) {
+                    throw SearchNotSupportedException::create($e);
+                }
+
                 throw $e;
             }
         }

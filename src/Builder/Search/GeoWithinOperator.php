@@ -22,6 +22,8 @@ use stdClass;
  * geometry. Only points are returned, even if indexShapes value is true in
  * the index definition.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/
  * @internal
  */

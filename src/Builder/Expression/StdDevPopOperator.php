@@ -21,6 +21,8 @@ use function array_is_list;
  * If the values represent only a sample of a population of data from which to generalize about the population, use $stdDevSamp instead.
  * Changed in MongoDB 5.0: Available in the $setWindowFields stage.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
  * @internal
  */

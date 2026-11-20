@@ -22,6 +22,8 @@ use stdClass;
  * element of an array of embedded documents. embeddedDocument can be used only
  * for queries over fields of the embeddedDocuments
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/embedded-document/
  * @internal
  */

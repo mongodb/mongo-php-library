@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MongoDB\Tests\Builder\Search;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
@@ -45,7 +46,7 @@ class EqualsOperatorTest extends PipelineTestCase
             Stage::search(
                 Search::equals(
                     path: 'account_created',
-                    value: new UTCDateTime(new DateTimeImmutable('2022-05-04T05:01:08')),
+                    value: new UTCDateTime(new DateTimeImmutable('2022-05-04T05:01:08', new DateTimeZone('UTC'))),
                 ),
             ),
         );

@@ -25,19 +25,15 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
-use function current;
-use function is_array;
-use function is_integer;
+use function is_int;
 
 /**
  * Operation for the dropIndexes command.
  *
  * @see \MongoDB\Collection::dropIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/dropIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class DropIndexes implements Executable
+final class DropIndexes
 {
     /**
      * Constructs a dropIndexes command.
@@ -53,9 +49,6 @@ class DropIndexes implements Executable
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     *  * typeMap (array): Type map for BSON deserialization. This will be used
-     *    for the returned command result document.
-     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      * @param string $databaseName   Database name
@@ -70,16 +63,12 @@ class DropIndexes implements Executable
             throw new InvalidArgumentException('$indexName cannot be empty');
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
         if (isset($this->options['session']) && ! $this->options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
-        }
-
-        if (isset($this->options['typeMap']) && ! is_array($this->options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $this->options['typeMap'], 'array');
         }
 
         if (isset($this->options['writeConcern']) && ! $this->options['writeConcern'] instanceof WriteConcern) {
@@ -94,25 +83,17 @@ class DropIndexes implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return array|object Command result document
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): void
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
-
-        if (isset($this->options['typeMap'])) {
-            $cursor->setTypeMap($this->options['typeMap']);
-        }
-
-        return current($cursor->toArray());
+        $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
     }
 
     /**

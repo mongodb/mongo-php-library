@@ -12,6 +12,7 @@ use RegexIterator;
 
 use function array_filter;
 use function array_map;
+use function array_values;
 use function in_array;
 use function realpath;
 use function str_contains;
@@ -39,11 +40,12 @@ class PedantryTest extends TestCase
         $class = new ReflectionClass($className);
         $methods = $class->getMethods();
 
-        $methods = array_filter(
+        $methods = array_values(array_filter(
             $methods,
             fn (ReflectionMethod $method) => $method->getDeclaringClass() == $class // Exclude inherited methods
-                    && $method->getFileName() === $class->getFileName(), // Exclude methods inherited from traits
-        );
+                    && $method->getFileName() === $class->getFileName() // Exclude methods inherited from traits
+                    && ! ($method->isConstructor() && ! $method->isPublic()), // Exclude non-public constructors
+        ));
 
         $getSortValue = function (ReflectionMethod $method) {
             $prefix = $method->isPrivate() ? '2' : ($method->isProtected() ? '1' : '0');

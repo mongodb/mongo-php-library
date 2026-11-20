@@ -20,109 +20,43 @@ namespace MongoDB\Exception;
 class UnsupportedException extends RuntimeException
 {
     /**
-     * Thrown when a command's allowDiskUse option is not supported by a server.
-     *
-     * @return self
-     */
-    public static function allowDiskUseNotSupported()
-    {
-        return new self('The "allowDiskUse" option is not supported by the server executing this operation');
-    }
-
-    /**
-     * Thrown when array filters are not supported by a server.
-     *
-     * @deprecated 1.12
-     * @todo Remove this in 2.0 (see: PHPLIB-797)
-     *
-     * @return self
-     */
-    public static function arrayFiltersNotSupported()
-    {
-        return new self('Array filters are not supported by the server executing this operation');
-    }
-
-    /**
-     * Thrown when collations are not supported by a server.
-     *
-     * @deprecated 1.12
-     * @todo Remove this in 2.0 (see: PHPLIB-797)
-     *
-     * @return self
-     */
-    public static function collationNotSupported()
-    {
-        return new self('Collations are not supported by the server executing this operation');
-    }
-
-    /**
      * Thrown when the commitQuorum option for createIndexes is not supported
      * by a server.
      *
-     * @return self
+     * @internal
      */
-    public static function commitQuorumNotSupported()
+    public static function commitQuorumNotSupported(): self
     {
         return new self('The "commitQuorum" option is not supported by the server executing this operation');
     }
 
     /**
-     * Thrown when explain is not supported by a server.
-     *
-     * @return self
-     */
-    public static function explainNotSupported()
-    {
-        return new self('Explain is not supported by the server executing this operation');
-    }
-
-    /**
      * Thrown when a command's hint option is not supported by a server.
      *
-     * @return self
+     * @internal
      */
-    public static function hintNotSupported()
+    public static function hintNotSupported(): self
     {
         return new self('Hint is not supported by the server executing this operation');
     }
 
     /**
-     * Thrown when a command's readConcern option is not supported by a server.
-     *
-     * @return self
-     */
-    public static function readConcernNotSupported()
-    {
-        return new self('Read concern is not supported by the server executing this command');
-    }
-
-    /**
      * Thrown when a readConcern is used with a read operation in a transaction.
      *
-     * @return self
+     * @internal
      */
-    public static function readConcernNotSupportedInTransaction()
+    public static function readConcernNotSupportedInTransaction(): self
     {
-        return new self('The "readConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.');
-    }
-
-    /**
-     * Thrown when a command's writeConcern option is not supported by a server.
-     *
-     * @return self
-     */
-    public static function writeConcernNotSupported()
-    {
-        return new self('Write concern is not supported by the server executing this command');
+        return new self('Cannot set read concern after starting a transaction. Instead, specify the "readConcern" option when starting the transaction.');
     }
 
     /**
      * Thrown when a writeConcern is used with a write operation in a transaction.
      *
-     * @return self
+     * @internal
      */
-    public static function writeConcernNotSupportedInTransaction()
+    public static function writeConcernNotSupportedInTransaction(): self
     {
-        return new self('The "writeConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.');
+        return new self('Cannot set write concern after starting a transaction. Instead, specify the "writeConcern" option when starting the transaction.');
     }
 }

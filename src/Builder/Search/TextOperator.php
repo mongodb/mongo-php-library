@@ -20,6 +20,8 @@ use stdClass;
  * The text operator performs a full-text search using the analyzer that you specify in the index configuration.
  * If you omit an analyzer, the text operator uses the default standard analyzer.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/text/
  * @internal
  */

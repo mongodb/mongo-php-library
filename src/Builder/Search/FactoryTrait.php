@@ -35,6 +35,8 @@ trait FactoryTrait
      * fields that you intend to query with the autocomplete operator must be
      * indexed with the autocomplete data type in the collection's index definition.
      *
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/autocomplete/
      * @param array|string $path
      * @param string $query
@@ -57,6 +59,8 @@ trait FactoryTrait
      * Each element of a compound query is called a clause, and each clause
      * consists of one or more sub-queries.
      *
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/compound/
      * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $must
      * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $mustNot
@@ -64,6 +68,7 @@ trait FactoryTrait
      * @param Optional|BSONArray|Document|PackedArray|SearchOperatorInterface|Serializable|array|stdClass $filter
      * @param Optional|int $minimumShouldMatch
      * @param Optional|Document|Serializable|array|stdClass $score
+     * @param Optional|BSONArray|PackedArray|array|string $doesNotAffect
      */
     public static function compound(
         Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $must = Optional::Undefined,
@@ -72,8 +77,9 @@ trait FactoryTrait
         Optional|Document|PackedArray|Serializable|SearchOperatorInterface|BSONArray|stdClass|array $filter = Optional::Undefined,
         Optional|int $minimumShouldMatch = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array|string $doesNotAffect = Optional::Undefined,
     ): CompoundOperator {
-        return new CompoundOperator($must, $mustNot, $should, $filter, $minimumShouldMatch, $score);
+        return new CompoundOperator($must, $mustNot, $should, $filter, $minimumShouldMatch, $score, $doesNotAffect);
     }
 
     /**
@@ -81,6 +87,8 @@ trait FactoryTrait
      * It constrains multiple query predicates to be satisfied from a single
      * element of an array of embedded documents. embeddedDocument can be used only
      * for queries over fields of the embeddedDocuments
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/embedded-document/
      * @param array|string $path
@@ -98,21 +106,27 @@ trait FactoryTrait
     /**
      * The equals operator checks whether a field matches a value you specify.
      *
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/equals/
      * @param array|string $path
      * @param Binary|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value
      * @param Optional|Document|Serializable|array|stdClass $score
+     * @param Optional|BSONArray|PackedArray|array|string $doesNotAffect
      */
     public static function equals(
         array|string $path,
         DateTimeInterface|Binary|Decimal128|Int64|ObjectId|UTCDateTime|bool|float|int|null|string $value,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array|string $doesNotAffect = Optional::Undefined,
     ): EqualsOperator {
-        return new EqualsOperator($path, $value, $score);
+        return new EqualsOperator($path, $value, $score, $doesNotAffect);
     }
 
     /**
      * The exists operator tests if a path to a specified indexed field name exists in a document.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/exists/
      * @param array|string $path
@@ -129,6 +143,8 @@ trait FactoryTrait
      * The facet collector groups results by values or ranges in the specified
      * faceted fields and returns the count for each of those groups.
      *
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/
      * @param Document|Serializable|array|stdClass $facets
      * @param Optional|Document|SearchOperatorInterface|Serializable|array|stdClass $operator
@@ -143,6 +159,8 @@ trait FactoryTrait
     /**
      * The geoShape operator supports querying shapes with a relation to a given
      * geometry if indexShapes is set to true in the index definition.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoShape/
      * @param array|string $path
@@ -164,6 +182,8 @@ trait FactoryTrait
      * geometry. Only points are returned, even if indexShapes value is true in
      * the index definition.
      *
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/geoWithin/
      * @param array|string $path
      * @param Optional|Document|Serializable|array|stdClass $box
@@ -182,25 +202,61 @@ trait FactoryTrait
     }
 
     /**
+     * The `hasAncestor` operator queries an `embeddedDocuments` type field specified in the `ancestorPath`. The `ancestorPath` is a parent of the field specified in the `returnScope`.
+     *
+     * New in MongoDB 8.2
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasancestor/
+     * @param array|string $ancestorPath
+     * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator
+     */
+    public static function hasAncestor(
+        array|string $ancestorPath,
+        Document|Serializable|SearchOperatorInterface|stdClass|array $operator,
+    ): HasAncestorOperator {
+        return new HasAncestorOperator($ancestorPath, $operator);
+    }
+
+    /**
+     * The `hasRoot` operator can be used to query root-level fields when you specify the `returnScope` and `returnStoredSource` options.
+     *
+     * New in MongoDB 8.2
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/operators-collectors/hasroot/
+     * @param Document|SearchOperatorInterface|Serializable|array|stdClass $operator
+     */
+    public static function hasRoot(
+        Document|Serializable|SearchOperatorInterface|stdClass|array $operator,
+    ): HasRootOperator {
+        return new HasRootOperator($operator);
+    }
+
+    /**
      * The in operator performs a search for an array of BSON values in a field.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/in/
      * @param array|string $path
      * @param BSONArray|DateTimeInterface|PackedArray|Type|array|bool|float|int|null|stdClass|string $value
      * @param Optional|Document|Serializable|array|stdClass $score
+     * @param Optional|BSONArray|PackedArray|array|string $doesNotAffect
      */
     public static function in(
         array|string $path,
         DateTimeInterface|PackedArray|Type|BSONArray|stdClass|array|bool|float|int|null|string $value,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array|string $doesNotAffect = Optional::Undefined,
     ): InOperator {
-        return new InOperator($path, $value, $score);
+        return new InOperator($path, $value, $score, $doesNotAffect);
     }
 
     /**
      * The moreLikeThis operator returns documents similar to input documents.
      * The moreLikeThis operator allows you to build features for your applications
      * that display similar or alternative results based on one or more given documents.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/moreLikeThis/
      * @param BSONArray|Document|PackedArray|Serializable|array|stdClass $like
@@ -215,6 +271,8 @@ trait FactoryTrait
 
     /**
      * The near operator supports querying and scoring numeric, date, and GeoJSON point values.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/near/
      * @param array|string $path
@@ -234,6 +292,8 @@ trait FactoryTrait
     /**
      * The phrase operator performs search for documents containing an ordered sequence of terms using the analyzer specified in the index configuration.
      *
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/phrase/
      * @param array|string $path
      * @param BSONArray|PackedArray|array|string $query
@@ -252,6 +312,8 @@ trait FactoryTrait
     }
 
     /**
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/queryString/
      * @param array|string $defaultPath
      * @param string $query
@@ -265,6 +327,8 @@ trait FactoryTrait
      * The range operator supports querying and scoring numeric, date, and string values.
      * You can use this operator to find results that are within a given numeric, date, objectId, or letter (from the English alphabet) range.
      *
+     * New in MongoDB 5.0
+     *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/range/
      * @param array|string $path
      * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $gt
@@ -272,6 +336,7 @@ trait FactoryTrait
      * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt
      * @param Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte
      * @param Optional|Document|Serializable|array|stdClass $score
+     * @param Optional|BSONArray|PackedArray|array|string $doesNotAffect
      */
     public static function range(
         array|string $path,
@@ -280,13 +345,16 @@ trait FactoryTrait
         Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lt = Optional::Undefined,
         Optional|DateTimeInterface|Decimal128|Int64|ObjectId|UTCDateTime|float|int|string $lte = Optional::Undefined,
         Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array|string $doesNotAffect = Optional::Undefined,
     ): RangeOperator {
-        return new RangeOperator($path, $gt, $gte, $lt, $lte, $score);
+        return new RangeOperator($path, $gt, $gte, $lt, $lte, $score, $doesNotAffect);
     }
 
     /**
      * regex interprets the query field as a regular expression.
      * regex is a term-level operator, meaning that the query field isn't analyzed.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/regex/
      * @param array|string $path
@@ -306,6 +374,8 @@ trait FactoryTrait
     /**
      * The text operator performs a full-text search using the analyzer that you specify in the index configuration.
      * If you omit an analyzer, the text operator uses the default standard analyzer.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/text/
      * @param array|string $path
@@ -327,7 +397,42 @@ trait FactoryTrait
     }
 
     /**
+     * The vectorSearch operator performs an ANN or ENN search on a vector field. It can only be
+     * used as a top-level operator in a $search or $searchMeta query, not nested under compound
+     * or other operators.
+     *
+     * New in MongoDB 6.0
+     *
+     * @see https://www.mongodb.com/docs/atlas/atlas-search/vector-search/
+     * @param array|string $path The indexed vector field to search.
+     * @param BSONArray|Binary|PackedArray|array|string $queryVector Array of numbers or a BinData value that represents the query vector. The number type
+     * must match the indexed field value type.
+     * @param int $limit The integer number of documents to return in the results. This value cannot exceed
+     * numCandidates if numCandidates is specified.
+     * @param Optional|bool $exact If false, runs an ANN search. If true, runs an ENN search. Defaults to false.
+     * This parameter is required if numCandidates is omitted.
+     * @param Optional|int $numCandidates The number of nearest neighbors to use during the search. Value must be less than or
+     * equal to 10000 and cannot be less than limit. This field is required if exact is false
+     * or omitted.
+     * @param Optional|Document|SearchOperatorInterface|Serializable|array|stdClass $filter Any Atlas Search operator to filter documents based on metadata or specific search criteria.
+     * @param Optional|Document|Serializable|array|stdClass $score Score assigned to matching search results.
+     */
+    public static function vectorSearch(
+        array|string $path,
+        Binary|PackedArray|BSONArray|array|string $queryVector,
+        int $limit,
+        Optional|bool $exact = Optional::Undefined,
+        Optional|int $numCandidates = Optional::Undefined,
+        Optional|Document|Serializable|SearchOperatorInterface|stdClass|array $filter = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $score = Optional::Undefined,
+    ): VectorSearchOperator {
+        return new VectorSearchOperator($path, $queryVector, $limit, $exact, $numCandidates, $filter, $score);
+    }
+
+    /**
      * The wildcard operator enables queries which use special characters in the search string that can match any character.
+     *
+     * New in MongoDB 5.0
      *
      * @see https://www.mongodb.com/docs/atlas/atlas-search/wildcard/
      * @param array|string $path

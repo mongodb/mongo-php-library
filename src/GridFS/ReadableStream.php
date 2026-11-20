@@ -17,7 +17,6 @@
 
 namespace MongoDB\GridFS;
 
-use Iterator;
 use MongoDB\BSON\Binary;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
@@ -26,7 +25,7 @@ use MongoDB\GridFS\Exception\CorruptFileException;
 use function assert;
 use function ceil;
 use function floor;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function property_exists;
 use function sprintf;
@@ -38,7 +37,7 @@ use function substr;
  *
  * @internal
  */
-class ReadableStream
+final class ReadableStream
 {
     private ?string $buffer = null;
 
@@ -48,8 +47,7 @@ class ReadableStream
 
     private int $chunkOffset = 0;
 
-    /** @var (CursorInterface&Iterator)|null */
-    private ?Iterator $chunksIterator = null;
+    private ?CursorInterface $chunksIterator = null;
 
     private int $expectedLastChunkSize = 0;
 
@@ -66,11 +64,11 @@ class ReadableStream
      */
     public function __construct(private CollectionWrapper $collectionWrapper, private object $file)
     {
-        if (! isset($file->chunkSize) || ! is_integer($file->chunkSize) || $file->chunkSize < 1) {
+        if (! isset($file->chunkSize) || ! is_int($file->chunkSize) || $file->chunkSize < 1) {
             throw new CorruptFileException('file.chunkSize is not an integer >= 1');
         }
 
-        if (! isset($file->length) || ! is_integer($file->length) || $file->length < 0) {
+        if (! isset($file->length) || ! is_int($file->length) || $file->length < 0) {
             throw new CorruptFileException('file.length is not an integer > 0');
         }
 

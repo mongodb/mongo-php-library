@@ -15,7 +15,6 @@ use MongoDB\Builder\Type\Optional;
 
 /**
  * Applies a regular expression (regex) to a string and returns information on the all matched substrings.
- * New in MongoDB 4.2.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/
  * @internal

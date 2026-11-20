@@ -30,7 +30,7 @@ use MongoDB\Exception\UnsupportedException;
 use function current;
 use function is_array;
 use function is_float;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function is_string;
 use function MongoDB\is_document;
@@ -40,10 +40,8 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::count()
  * @see https://mongodb.com/docs/manual/reference/command/count/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class Count implements Executable, Explainable
+final class Count implements Explainable
 {
     /**
      * Constructs a count command.
@@ -94,11 +92,11 @@ class Count implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $this->options['hint']);
         }
 
-        if (isset($this->options['limit']) && ! is_integer($this->options['limit'])) {
+        if (isset($this->options['limit']) && ! is_int($this->options['limit'])) {
             throw InvalidArgumentException::invalidType('"limit" option', $this->options['limit'], 'integer');
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
@@ -114,7 +112,7 @@ class Count implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"session" option', $this->options['session'], Session::class);
         }
 
-        if (isset($this->options['skip']) && ! is_integer($this->options['skip'])) {
+        if (isset($this->options['skip']) && ! is_int($this->options['skip'])) {
             throw InvalidArgumentException::invalidType('"skip" option', $this->options['skip'], 'integer');
         }
 
@@ -126,13 +124,11 @@ class Count implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return integer
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): int
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['readConcern'])) {
@@ -143,7 +139,7 @@ class Count implements Executable, Explainable
         $result = current($cursor->toArray());
 
         // Older server versions may return a float
-        if (! is_object($result) || ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
+        if (! is_object($result) || ! isset($result->n) || ! (is_int($result->n) || is_float($result->n))) {
             throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }
 
@@ -154,9 +150,8 @@ class Count implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = $this->createCommandDocument();
 

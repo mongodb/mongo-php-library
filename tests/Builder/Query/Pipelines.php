@@ -15,7 +15,7 @@ enum Pipelines: string
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/#use--all-to-match-values
      */
-    case AllUseAllToMatchValues = <<<'JSON'
+    case AllUseAllToMatchValues = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -29,14 +29,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use $all with $elemMatch
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/#use--all-with--elemmatch
      */
-    case AllUseAllWithElemMatch = <<<'JSON'
+    case AllUseAllWithElemMatch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -65,14 +65,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * AND Queries With Multiple Expressions Specifying the Same Field
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-field
      */
-    case AndANDQueriesWithMultipleExpressionsSpecifyingTheSameField = <<<'JSON'
+    case AndANDQueriesWithMultipleExpressionsSpecifyingTheSameField = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -93,14 +93,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * AND Queries With Multiple Expressions Specifying the Same Operator
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/and/#and-queries-with-multiple-expressions-specifying-the-same-operator
      */
-    case AndANDQueriesWithMultipleExpressionsSpecifyingTheSameOperator = <<<'JSON'
+    case AndANDQueriesWithMultipleExpressionsSpecifyingTheSameOperator = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -141,14 +141,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Bit Position Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bit-position-array
      */
-    case BitsAllClearBitPositionArray = <<<'JSON'
+    case BitsAllClearBitPositionArray = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -165,14 +165,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Integer Bitmask
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#integer-bitmask
      */
-    case BitsAllClearIntegerBitmask = <<<'JSON'
+    case BitsAllClearIntegerBitmask = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -184,14 +184,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * BinData Bitmask
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/#bindata-bitmask
      */
-    case BitsAllClearBinDataBitmask = <<<'JSON'
+    case BitsAllClearBinDataBitmask = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -206,14 +206,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Bit Position Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#bit-position-array
      */
-    case BitsAllSetBitPositionArray = <<<'JSON'
+    case BitsAllSetBitPositionArray = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -230,14 +230,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Integer Bitmask
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#integer-bitmask
      */
-    case BitsAllSetIntegerBitmask = <<<'JSON'
+    case BitsAllSetIntegerBitmask = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -249,14 +249,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * BinData Bitmask
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/#bindata-bitmask
      */
-    case BitsAllSetBinDataBitmask = <<<'JSON'
+    case BitsAllSetBinDataBitmask = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -271,14 +271,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Bit Position Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bit-position-array
      */
-    case BitsAnyClearBitPositionArray = <<<'JSON'
+    case BitsAnyClearBitPositionArray = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -295,14 +295,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Integer Bitmask
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#integer-bitmask
      */
-    case BitsAnyClearIntegerBitmask = <<<'JSON'
+    case BitsAnyClearIntegerBitmask = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -314,14 +314,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * BinData Bitmask
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/#bindata-bitmask
      */
-    case BitsAnyClearBinDataBitmask = <<<'JSON'
+    case BitsAnyClearBinDataBitmask = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -336,14 +336,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Bit Position Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bit-position-array
      */
-    case BitsAnySetBitPositionArray = <<<'JSON'
+    case BitsAnySetBitPositionArray = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -360,14 +360,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Integer Bitmask
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#integer-bitmask
      */
-    case BitsAnySetIntegerBitmask = <<<'JSON'
+    case BitsAnySetIntegerBitmask = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -379,14 +379,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * BinData Bitmask
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/#bindata-bitmask
      */
-    case BitsAnySetBinDataBitmask = <<<'JSON'
+    case BitsAnySetBinDataBitmask = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -401,14 +401,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Attach a Comment to an Aggregation Expression
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/comment/#attach-a-comment-to-an-aggregation-expression
      */
-    case CommentAttachACommentToAnAggregationExpression = <<<'JSON'
+    case CommentAttachACommentToAnAggregationExpression = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -436,14 +436,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Element Match
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#element-match
      */
-    case ElemMatchElementMatch = <<<'JSON'
+    case ElemMatchElementMatch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -460,14 +460,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Array of Embedded Documents
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#array-of-embedded-documents
      */
-    case ElemMatchArrayOfEmbeddedDocuments = <<<'JSON'
+    case ElemMatchArrayOfEmbeddedDocuments = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -484,14 +484,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Single Query Condition
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/#single-query-condition
      */
-    case ElemMatchSingleQueryCondition = <<<'JSON'
+    case ElemMatchSingleQueryCondition = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -505,10 +505,10 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /** Using $or with $elemMatch */
-    case ElemMatchUsingOrWithElemMatch = <<<'JSON'
+    case ElemMatchUsingOrWithElemMatch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -535,10 +535,10 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /** Single field operator */
-    case ElemMatchSingleFieldOperator = <<<'JSON'
+    case ElemMatchSingleFieldOperator = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -552,14 +552,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Equals a Specified Value
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-a-specified-value
      */
-    case EqEqualsASpecifiedValue = <<<'JSON'
+    case EqEqualsASpecifiedValue = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -571,14 +571,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Field in Embedded Document Equals a Value
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/#field-in-embedded-document-equals-a-value
      */
-    case EqFieldInEmbeddedDocumentEqualsAValue = <<<'JSON'
+    case EqFieldInEmbeddedDocumentEqualsAValue = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -588,14 +588,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Equals an Array Value
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/#equals-an-array-value
      */
-    case EqEqualsAnArrayValue = <<<'JSON'
+    case EqEqualsAnArrayValue = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -608,14 +608,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Regex Match Behaviour
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/#regex-match-behaviour
      */
-    case EqRegexMatchBehaviour = <<<'JSON'
+    case EqRegexMatchBehaviour = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -652,14 +652,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Exists and Not Equal To
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/exists/#exists-and-not-equal-to
      */
-    case ExistsExistsAndNotEqualTo = <<<'JSON'
+    case ExistsExistsAndNotEqualTo = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -677,14 +677,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Null Values
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/exists/#null-values
      */
-    case ExistsNullValues = <<<'JSON'
+    case ExistsNullValues = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -694,10 +694,10 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /** Missing Field */
-    case ExistsMissingField = <<<'JSON'
+    case ExistsMissingField = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -707,14 +707,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Compare Two Fields from A Single Document
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/#compare-two-fields-from-a-single-document
      */
-    case ExprCompareTwoFieldsFromASingleDocument = <<<'JSON'
+    case ExprCompareTwoFieldsFromASingleDocument = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -727,14 +727,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Using $expr With Conditional Statements
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/#using--expr-with-conditional-statements
      */
-    case ExprUsingExprWithConditionalStatements = <<<'JSON'
+    case ExprUsingExprWithConditionalStatements = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -776,14 +776,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Intersects a Polygon
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#intersects-a-polygon
      */
-    case GeoIntersectsIntersectsAPolygon = <<<'JSON'
+    case GeoIntersectsIntersectsAPolygon = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -833,14 +833,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Intersects a Big Polygon
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#intersects-a--big--polygon
      */
-    case GeoIntersectsIntersectsABigPolygon = <<<'JSON'
+    case GeoIntersectsIntersectsABigPolygon = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -912,14 +912,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Within a Polygon
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a-polygon
      */
-    case GeoWithinWithinAPolygon = <<<'JSON'
+    case GeoWithinWithinAPolygon = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -969,14 +969,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Within a Big Polygon
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/#within-a--big--polygon
      */
-    case GeoWithinWithinABigPolygon = <<<'JSON'
+    case GeoWithinWithinABigPolygon = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1048,14 +1048,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match Document Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gt/#match-document-fields
      */
-    case GtMatchDocumentFields = <<<'JSON'
+    case GtMatchDocumentFields = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1067,14 +1067,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match Document Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gte/#match-document-fields
      */
-    case GteMatchDocumentFields = <<<'JSON'
+    case GteMatchDocumentFields = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1086,14 +1086,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use the $in Operator to Match Values in an Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-to-match-values
      */
-    case InUseTheInOperatorToMatchValuesInAnArray = <<<'JSON'
+    case InUseTheInOperatorToMatchValuesInAnArray = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1106,14 +1106,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use the $in Operator with a Regular Expression
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/#use-the--in-operator-with-a-regular-expression
      */
-    case InUseTheInOperatorWithARegularExpression = <<<'JSON'
+    case InUseTheInOperatorWithARegularExpression = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1136,14 +1136,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#syntax
      */
-    case JsonSchemaExample = <<<'JSON'
+    case JsonSchemaExample = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1178,14 +1178,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match Document Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lt/#match-document-fields
      */
-    case LtMatchDocumentFields = <<<'JSON'
+    case LtMatchDocumentFields = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1197,14 +1197,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match Document Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lte/#match-document-fields
      */
-    case LteMatchDocumentFields = <<<'JSON'
+    case LteMatchDocumentFields = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1216,14 +1216,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Use $mod to Select Documents
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/#use--mod-to-select-documents
      */
-    case ModUseModToSelectDocuments = <<<'JSON'
+    case ModUseModToSelectDocuments = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1240,14 +1240,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Floating Point Arguments
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/#floating-point-arguments
      */
-    case ModFloatingPointArguments = <<<'JSON'
+    case ModFloatingPointArguments = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1292,14 +1292,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match Document Fields
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/#match-document-fields
      */
-    case NeMatchDocumentFields = <<<'JSON'
+    case NeMatchDocumentFields = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1311,14 +1311,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Query on GeoJSON Data
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/#query-on-geojson-data
      */
-    case NearQueryOnGeoJSONData = <<<'JSON'
+    case NearQueryOnGeoJSONData = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1346,14 +1346,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Specify Center Point Using GeoJSON
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/#specify-center-point-using-geojson
      */
-    case NearSphereSpecifyCenterPointUsingGeoJSON = <<<'JSON'
+    case NearSphereSpecifyCenterPointUsingGeoJSON = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1381,14 +1381,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Select on Unmatching Documents
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/#select-on-unmatching-documents
      */
-    case NinSelectOnUnmatchingDocuments = <<<'JSON'
+    case NinSelectOnUnmatchingDocuments = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1405,14 +1405,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Select on Elements Not in an Array
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/#select-on-elements-not-in-an-array
      */
-    case NinSelectOnElementsNotInAnArray = <<<'JSON'
+    case NinSelectOnElementsNotInAnArray = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1424,14 +1424,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Query with Two Expressions
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-query-with-two-expressions
      */
-    case NorQueryWithTwoExpressions = <<<'JSON'
+    case NorQueryWithTwoExpressions = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1448,14 +1448,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Additional Comparisons
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and-additional-comparisons
      */
-    case NorAdditionalComparisons = <<<'JSON'
+    case NorAdditionalComparisons = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1479,14 +1479,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * $nor and $exists
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/#-nor-and--exists
      */
-    case NorNorAndExists = <<<'JSON'
+    case NorNorAndExists = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1513,14 +1513,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Syntax
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/#syntax
      */
-    case NotSyntax = <<<'JSON'
+    case NotSyntax = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1534,14 +1534,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Regular Expressions
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/#-not-and-regular-expressions
      */
-    case NotRegularExpressions = <<<'JSON'
+    case NotRegularExpressions = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1556,14 +1556,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * $or Clauses
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/or/#-or-clauses-and-indexes
      */
-    case OrOrClauses = <<<'JSON'
+    case OrOrClauses = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1584,14 +1584,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Error Handling
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/or/#error-handling
      */
-    case OrErrorHandling = <<<'JSON'
+    case OrErrorHandling = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1624,14 +1624,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Select Random Items From a Collection
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/rand/#select-random-items-from-a-collection
      */
-    case RandSelectRandomItemsFromACollection = <<<'JSON'
+    case RandSelectRandomItemsFromACollection = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1664,14 +1664,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Perform a LIKE Match
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-a-like-match
      */
-    case RegexPerformALIKEMatch = <<<'JSON'
+    case RegexPerformALIKEMatch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1686,14 +1686,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Perform Case-Insensitive Regular Expression Match
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/regex/#perform-case-insensitive-regular-expression-match
      */
-    case RegexPerformCaseInsensitiveRegularExpressionMatch = <<<'JSON'
+    case RegexPerformCaseInsensitiveRegularExpressionMatch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1708,14 +1708,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/#examples
      */
-    case SampleRateExample = <<<'JSON'
+    case SampleRateExample = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1728,14 +1728,14 @@ enum Pipelines: string
             "$count": "numMatches"
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Query an Array by Array Length
      *
      * @see https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length
      */
-    case SizeQueryAnArrayByArrayLength = <<<'JSON'
+    case SizeQueryAnArrayByArrayLength = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1747,14 +1747,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Search for a Single Word
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word
      */
-    case TextSearchForASingleWord = <<<'JSON'
+    case TextSearchForASingleWord = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1764,14 +1764,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Match Any of the Search Terms
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-for-a-single-word
      */
-    case TextMatchAnyOfTheSearchTerms = <<<'JSON'
+    case TextMatchAnyOfTheSearchTerms = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1781,14 +1781,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Search a Different Language
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#search-a-different-language
      */
-    case TextSearchADifferentLanguage = <<<'JSON'
+    case TextSearchADifferentLanguage = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1799,14 +1799,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Case and Diacritic Insensitive Search
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#case-and-diacritic-insensitive-search
      */
-    case TextCaseAndDiacriticInsensitiveSearch = <<<'JSON'
+    case TextCaseAndDiacriticInsensitiveSearch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1816,14 +1816,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Perform Case Sensitive Search
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
      */
-    case TextPerformCaseSensitiveSearch = <<<'JSON'
+    case TextPerformCaseSensitiveSearch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1842,14 +1842,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Diacritic Sensitive Search
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
      */
-    case TextDiacriticSensitiveSearch = <<<'JSON'
+    case TextDiacriticSensitiveSearch = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1860,14 +1860,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Text Search Score Examples
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/#perform-case-sensitive-search
      */
-    case TextTextSearchScoreExamples = <<<'JSON'
+    case TextTextSearchScoreExamples = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1897,14 +1897,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Querying by Data Type
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-data-type
      */
-    case TypeQueryingByDataType = <<<'JSON'
+    case TypeQueryingByDataType = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1956,14 +1956,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Querying by Multiple Data Type
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-multiple-data-type
      */
-    case TypeQueryingByMultipleDataType = <<<'JSON'
+    case TypeQueryingByMultipleDataType = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -1990,14 +1990,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Querying by MinKey and MaxKey
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-minkey-and-maxkey
      */
-    case TypeQueryingByMinKeyAndMaxKey = <<<'JSON'
+    case TypeQueryingByMinKeyAndMaxKey = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -2018,14 +2018,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Querying by Array Type
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/#querying-by-array-type
      */
-    case TypeQueryingByArrayType = <<<'JSON'
+    case TypeQueryingByArrayType = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -2037,14 +2037,14 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 
     /**
      * Example
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/where/#example
      */
-    case WhereExample = <<<'JSON'
+    case WhereExample = <<<'EXTENDED_JSON'
     [
         {
             "$match": {
@@ -2069,5 +2069,5 @@ enum Pipelines: string
             }
         }
     ]
-    JSON;
+    EXTENDED_JSON;
 }

@@ -14,7 +14,8 @@ use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Provides data and size distribution information on sharded collections.
- * New in MongoDB 6.0.3.
+ *
+ * New in MongoDB 6.0.3
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/
  * @internal

@@ -35,9 +35,7 @@ final class SortStage implements StageInterface, OperatorInterface
     /** @var stdClass<DateTimeInterface|ExpressionInterface|Sort|Type|array|bool|float|int|null|stdClass|string> $sort */
     public readonly stdClass $sort;
 
-    /**
-     * @param DateTimeInterface|ExpressionInterface|Sort|Type|array|bool|float|int|null|stdClass|string ...$sort
-     */
+    /** @param DateTimeInterface|ExpressionInterface|Sort|Type|array|bool|float|int|null|stdClass|string ...$sort */
     public function __construct(
         DateTimeInterface|Type|ExpressionInterface|Sort|stdClass|array|bool|float|int|null|string ...$sort,
     ) {

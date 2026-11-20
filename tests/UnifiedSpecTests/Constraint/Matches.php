@@ -4,6 +4,8 @@ namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 
 use LogicException;
 use MongoDB\BSON\Document;
+use MongoDB\BSON\Int64;
+use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
 use MongoDB\Model\BSONArray;
@@ -30,10 +32,12 @@ use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertIsBool;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertJson;
+use function PHPUnit\Framework\assertLessThanOrEqual;
 use function PHPUnit\Framework\assertMatchesRegularExpression;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertStringStartsWith;
 use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\containsOnly;
 use function PHPUnit\Framework\isInstanceOf;
 use function PHPUnit\Framework\isType;
@@ -352,6 +356,14 @@ class Matches extends Constraint
             return;
         }
 
+        if ($name === '$$lte') {
+            assertTrue(self::isNumeric($operator['$$lte']), '$$lte requires number');
+            assertTrue(self::isNumeric($actual), '$actual operand for $$lte should be a number');
+            assertLessThanOrEqual($operator['$$lte'], $actual);
+
+            return;
+        }
+
         throw new LogicException('unsupported operator: ' . $name);
     }
 
@@ -446,8 +458,14 @@ class Matches extends Constraint
             return self::prepare($bson->bsonSerialize());
         }
 
-        /* Serializable has already been handled, so any remaining instances of
-         * Type will not serialize as BSON arrays or objects */
+        // Recurse on the PHP representation of Document and PackedArray types
+        if ($bson instanceof Document || $bson instanceof PackedArray) {
+            return self::prepare($bson->toPHP());
+        }
+
+        /* Serializable, Document, and PackedArray have already been handled.
+         * Any remaining Type instances will not serialize as BSON arrays or
+         * objects. */
         if ($bson instanceof Type) {
             return $bson;
         }

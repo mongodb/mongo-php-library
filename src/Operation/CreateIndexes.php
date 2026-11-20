@@ -29,7 +29,7 @@ use MongoDB\Model\IndexInput;
 use function array_is_list;
 use function array_map;
 use function is_array;
-use function is_integer;
+use function is_int;
 use function is_string;
 use function MongoDB\server_supports_feature;
 use function sprintf;
@@ -40,10 +40,8 @@ use function sprintf;
  * @see \MongoDB\Collection::createIndex()
  * @see \MongoDB\Collection::createIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/createIndexes/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class CreateIndexes implements Executable
+final class CreateIndexes
 {
     private const WIRE_VERSION_FOR_COMMIT_QUORUM = 9;
 
@@ -94,11 +92,11 @@ class CreateIndexes implements Executable
             $this->indexes[] = new IndexInput($index);
         }
 
-        if (isset($this->options['commitQuorum']) && ! is_string($this->options['commitQuorum']) && ! is_integer($this->options['commitQuorum'])) {
+        if (isset($this->options['commitQuorum']) && ! is_string($this->options['commitQuorum']) && ! is_int($this->options['commitQuorum'])) {
             throw InvalidArgumentException::invalidType('"commitQuorum" option', $this->options['commitQuorum'], ['integer', 'string']);
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
@@ -118,12 +116,11 @@ class CreateIndexes implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
      * @return string[] The names of the created indexes
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {

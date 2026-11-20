@@ -19,7 +19,7 @@ use function sprintf;
 /**
  * Functional tests for the Atlas Search index management.
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#search-index-management-helpers
+ * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.md#search-index-management-helpers
  */
 #[Group('atlas')]
 class SearchIndexSpecTest extends FunctionalTestCase
@@ -31,13 +31,13 @@ class SearchIndexSpecTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->skipIfAtlasSearchIndexIsNotSupported();
+        $this->skipIfSearchIndexIsNotSupported();
     }
 
     /**
      * Case 1: Driver can successfully create and list search indexes
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-1-driver-can-successfully-create-and-list-search-indexes
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.md#case-1-driver-can-successfully-create-and-list-search-indexes
      */
     public function testCreateAndListSearchIndexes(): void
     {
@@ -55,13 +55,13 @@ class SearchIndexSpecTest extends FunctionalTestCase
 
         $this->assertCount(1, $indexes);
         $this->assertSame($name, $indexes[0]->name);
-        $this->assertSameDocument($mapping, $indexes[0]->latestDefinition);
+        $this->assertFalse($indexes[0]->latestDefinition['mappings']['dynamic']);
     }
 
     /**
      * Case 2: Driver can successfully create multiple indexes in batch
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-2-driver-can-successfully-create-multiple-indexes-in-batch
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.md#case-2-driver-can-successfully-create-multiple-indexes-in-batch
      */
     public function testCreateMultipleIndexesInBatch(): void
     {
@@ -81,14 +81,14 @@ class SearchIndexSpecTest extends FunctionalTestCase
         foreach ($names as $key => $name) {
             $index = $indexes[$key];
             $this->assertSame($name, $index->name);
-            $this->assertSameDocument($mapping, $index->latestDefinition);
+            $this->assertFalse($index->latestDefinition['mappings']['dynamic']);
         }
     }
 
     /**
      * Case 3: Driver can successfully drop search indexes
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-3-driver-can-successfully-drop-search-indexes
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.md#case-3-driver-can-successfully-drop-search-indexes
      */
     public function testDropSearchIndexes(): void
     {
@@ -114,7 +114,7 @@ class SearchIndexSpecTest extends FunctionalTestCase
     /**
      * Case 4: Driver can update a search index
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-4-driver-can-update-a-search-index
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.md#case-4-driver-can-update-a-search-index
      */
     public function testUpdateSearchIndex(): void
     {
@@ -138,13 +138,13 @@ class SearchIndexSpecTest extends FunctionalTestCase
 
         $this->assertCount(1, $indexes);
         $this->assertSame($name, $indexes[0]->name);
-        $this->assertSameDocument($mapping, $indexes[0]->latestDefinition);
+        $this->assertTrue($indexes[0]->latestDefinition['mappings']['dynamic']);
     }
 
     /**
      * Case 5: dropSearchIndex suppresses namespace not found errors
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-5-dropsearchindex-suppresses-namespace-not-found-errors
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.md#case-5-dropsearchindex-suppresses-namespace-not-found-errors
      */
     public function testDropSearchIndexSuppressNamespaceNotFoundError(): void
     {

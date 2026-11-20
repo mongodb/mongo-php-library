@@ -26,9 +26,7 @@ final class ToLowerOperator implements ResolvesToString, OperatorInterface
     /** @var ResolvesToString|string $expression */
     public readonly ResolvesToString|string $expression;
 
-    /**
-     * @param ResolvesToString|string $expression
-     */
+    /** @param ResolvesToString|string $expression */
     public function __construct(ResolvesToString|string $expression)
     {
         $this->expression = $expression;

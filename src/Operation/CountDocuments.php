@@ -27,7 +27,7 @@ use function array_intersect_key;
 use function count;
 use function current;
 use function is_float;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function MongoDB\is_document;
 
@@ -35,11 +35,9 @@ use function MongoDB\is_document;
  * Operation for obtaining an exact count of documents in a collection
  *
  * @see \MongoDB\Collection::countDocuments()
- * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst#countdocuments
- *
- * @final extending this class will not be supported in v2.0.0
+ * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.md#countdocuments
  */
-class CountDocuments implements Executable
+final class CountDocuments
 {
     private array $aggregateOptions;
 
@@ -88,11 +86,11 @@ class CountDocuments implements Executable
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
-        if (isset($options['limit']) && ! is_integer($options['limit'])) {
+        if (isset($options['limit']) && ! is_int($options['limit'])) {
             throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
         }
 
-        if (isset($options['skip']) && ! is_integer($options['skip'])) {
+        if (isset($options['skip']) && ! is_int($options['skip'])) {
             throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
         }
 
@@ -105,13 +103,11 @@ class CountDocuments implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return integer
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): int
     {
         $cursor = $this->aggregate->execute($server);
 
@@ -124,7 +120,7 @@ class CountDocuments implements Executable
         }
 
         $result = current($allResults);
-        if (! is_object($result) || ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
+        if (! is_object($result) || ! isset($result->n) || ! (is_int($result->n) || is_float($result->n))) {
             throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }
 

@@ -20,6 +20,8 @@ use stdClass;
  * regex interprets the query field as a regular expression.
  * regex is a term-level operator, meaning that the query field isn't analyzed.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/regex/
  * @internal
  */

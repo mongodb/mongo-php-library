@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples\CommandLogger;
 
+use Closure;
+use Exception;
 use MongoDB\BSON\Document;
 use MongoDB\Client;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
@@ -24,37 +26,56 @@ function toJSON(object $document): string
 
 class CommandLogger implements CommandSubscriber
 {
+    /** @param Closure(object):void $handleOutput */
+    public function __construct(private readonly Closure $handleOutput)
+    {
+    }
+
     public function commandStarted(CommandStartedEvent $event): void
     {
-        printf("%s command started\n", $event->getCommandName());
-
-        printf("command: %s\n", toJson($event->getCommand()));
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function commandSucceeded(CommandSucceededEvent $event): void
     {
-        printf("%s command succeeded\n", $event->getCommandName());
-        printf("reply: %s\n", toJson($event->getReply()));
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 
     public function commandFailed(CommandFailedEvent $event): void
     {
-        printf("%s command failed\n", $event->getCommandName());
-        printf("reply: %s\n", toJson($event->getReply()));
-
-        $exception = $event->getError();
-        printf("exception: %s\n", $exception::class);
-        printf("exception.code: %d\n", $exception->getCode());
-        printf("exception.message: %s\n", $exception->getMessage());
-        echo "\n";
+        $this->handleOutput->__invoke($event);
     }
 }
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
-$client->addSubscriber(new CommandLogger());
+$handleOutput = function (object $event): void {
+    switch ($event::class) {
+        case CommandStartedEvent::class:
+            printf("%s command started\n", $event->getCommandName());
+            printf("command: %s\n", toJson($event->getCommand()));
+            break;
+        case CommandSucceededEvent::class:
+            printf("%s command succeeded\n", $event->getCommandName());
+            printf("reply: %s\n", toJson($event->getReply()));
+            break;
+        case CommandFailedEvent::class:
+            printf("%s command failed\n", $event->getCommandName());
+            printf("reply: %s\n", toJson($event->getReply()));
+
+            $exception = $event->getError();
+            printf("exception: %s\n", $exception::class);
+            printf("exception.code: %d\n", $exception->getCode());
+            printf("exception.message: %s\n", $exception->getMessage());
+            break;
+        default:
+            throw new Exception('Event type not supported');
+    }
+
+    echo "\n";
+};
+
+$client->addSubscriber(new CommandLogger($handleOutput));
 
 $collection = $client->test->command_logger;
 $collection->drop();

@@ -14,7 +14,6 @@ use MongoDB\Builder\Type\Optional;
 
 /**
  * Removes whitespace or the specified characters from the beginning of a string.
- * New in MongoDB 4.0.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/
  * @internal

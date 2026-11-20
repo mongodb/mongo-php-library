@@ -11,4 +11,4 @@
       - variant: "build-rhel80"
         name: "build-php-%phpVersion%-lowest"
     tasks:
-      - ".replicaset .local .4.0 !.csfle"
+      - ".replicaset .local .4.2 !.csfle"

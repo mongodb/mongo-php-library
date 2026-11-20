@@ -5,8 +5,8 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Collection;
+use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\BadMethodCallException;
 use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertOne;
@@ -43,9 +43,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
                 $result = $operation->execute($this->getPrimaryServer());
 
                 // Replace _id placeholder if necessary
-                if ($expectedDocument->_id === null) {
-                    $expectedDocument->_id = $result->getInsertedId();
-                }
+                $expectedDocument->_id ??= $result->getInsertedId();
             },
             function (array $event) use ($expectedDocument): void {
                 $this->assertEquals($expectedDocument, $event['started']->getCommand()->documents[0] ?? null);
@@ -183,8 +181,8 @@ class InsertOneFunctionalTest extends FunctionalTestCase
     #[Depends('testUnacknowledgedWriteConcern')]
     public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertOneResult $result): void
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessageMatches('/[\w:\\\\\(\)]+ should not be called for an unacknowledged write result/');
         $result->getInsertedCount();
     }
 

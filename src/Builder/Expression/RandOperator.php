@@ -14,6 +14,8 @@ use MongoDB\Builder\Type\OperatorInterface;
 /**
  * Returns a random float between 0 and 1
  *
+ * New in MongoDB 4.4
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/
  * @internal
  */

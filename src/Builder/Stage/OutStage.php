@@ -12,7 +12,8 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
-use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Builder\Type\Optional;
+use MongoDB\Builder\Type\OutputStageInterface;
 use stdClass;
 
 /**
@@ -21,20 +22,41 @@ use stdClass;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
  * @internal
  */
-final class OutStage implements StageInterface, OperatorInterface
+final class OutStage implements OutputStageInterface, OperatorInterface
 {
-    public const ENCODE = Encode::Single;
+    public const ENCODE = Encode::Object;
     public const NAME = '$out';
-    public const PROPERTIES = ['coll' => 'coll'];
+    public const PROPERTIES = ['coll' => 'coll', 'db' => 'db', 'timeseries' => 'timeseries'];
 
-    /** @var Document|Serializable|array|stdClass|string $coll Target database name to write documents from $out to. */
-    public readonly Document|Serializable|stdClass|array|string $coll;
+    /** @var string $coll The output collection name. */
+    public readonly string $coll;
+
+    /** @var Optional|string $db The output database name. If omitted, defaults to the current database. */
+    public readonly Optional|string $db;
 
     /**
-     * @param Document|Serializable|array|stdClass|string $coll Target database name to write documents from $out to.
+     * @var Optional|Document|Serializable|array|stdClass $timeseries Specifies the configuration to use when writing to a time series collection.
+     * The timeField is required. All other fields are optional.
+     *
+     * New in MongoDB 7.0.3
      */
-    public function __construct(Document|Serializable|stdClass|array|string $coll)
-    {
+    public readonly Optional|Document|Serializable|stdClass|array $timeseries;
+
+    /**
+     * @param string $coll The output collection name.
+     * @param Optional|string $db The output database name. If omitted, defaults to the current database.
+     * @param Optional|Document|Serializable|array|stdClass $timeseries Specifies the configuration to use when writing to a time series collection.
+     * The timeField is required. All other fields are optional.
+     *
+     * New in MongoDB 7.0.3
+     */
+    public function __construct(
+        string $coll,
+        Optional|string $db = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $timeseries = Optional::Undefined,
+    ) {
         $this->coll = $coll;
+        $this->db = $db;
+        $this->timeseries = $timeseries;
     }
 }

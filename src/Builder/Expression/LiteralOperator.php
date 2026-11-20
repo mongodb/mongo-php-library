@@ -29,9 +29,7 @@ final class LiteralOperator implements ResolvesToAny, OperatorInterface
     /** @var DateTimeInterface|Type|array|bool|float|int|null|stdClass|string $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression. */
     public readonly DateTimeInterface|Type|stdClass|array|bool|float|int|null|string $value;
 
-    /**
-     * @param DateTimeInterface|Type|array|bool|float|int|null|stdClass|string $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression.
-     */
+    /** @param DateTimeInterface|Type|array|bool|float|int|null|stdClass|string $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression. */
     public function __construct(DateTimeInterface|Type|stdClass|array|bool|float|int|null|string $value)
     {
         $this->value = $value;

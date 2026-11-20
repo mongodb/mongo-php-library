@@ -25,14 +25,12 @@ class CreateCollectionTest extends TestCase
     public static function provideInvalidConstructorOptions()
     {
         return self::createOptionDataProvider([
-            'autoIndexId' => self::getInvalidBooleanValues(),
             'capped' => self::getInvalidBooleanValues(),
             'changeStreamPreAndPostImages' => self::getInvalidDocumentValues(),
             'clusteredIndex' => self::getInvalidDocumentValues(),
             'collation' => self::getInvalidDocumentValues(),
             'encryptedFields' => self::getInvalidDocumentValues(),
             'expireAfterSeconds' => self::getInvalidIntegerValues(),
-            'flags' => self::getInvalidIntegerValues(),
             'indexOptionDefaults' => self::getInvalidDocumentValues(),
             'max' => self::getInvalidIntegerValues(),
             'maxTimeMS' => self::getInvalidIntegerValues(),
@@ -41,30 +39,11 @@ class CreateCollectionTest extends TestCase
             'size' => self::getInvalidIntegerValues(),
             'storageEngine' => self::getInvalidDocumentValues(),
             'timeseries' => self::getInvalidDocumentValues(),
-            'typeMap' => self::getInvalidArrayValues(),
             'validationAction' => self::getInvalidStringValues(),
             'validationLevel' => self::getInvalidStringValues(),
             'validator' => self::getInvalidDocumentValues(),
             'viewOn' => self::getInvalidStringValues(),
             'writeConcern' => self::getInvalidWriteConcernValues(),
         ]);
-    }
-
-    public function testAutoIndexIdOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => true]);
-        });
-
-        $this->assertDeprecated(function (): void {
-            new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => false]);
-        });
-    }
-
-    public function testFlagsOptionIsDeprecated(): void
-    {
-        $this->assertDeprecated(function (): void {
-            new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['flags' => CreateCollection::USE_POWER_OF_2_SIZES]);
-        });
     }
 }

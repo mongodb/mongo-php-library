@@ -20,6 +20,8 @@ use stdClass;
  * The facet collector groups results by values or ranges in the specified
  * faceted fields and returns the count for each of those groups.
  *
+ * New in MongoDB 5.0
+ *
  * @see https://www.mongodb.com/docs/atlas/atlas-search/facet/
  * @internal
  */

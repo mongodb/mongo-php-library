@@ -17,18 +17,18 @@
 
 namespace MongoDB\Operation;
 
-use Iterator;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Cursor;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\CodecCursor;
@@ -36,8 +36,9 @@ use stdClass;
 
 use function is_array;
 use function is_bool;
-use function is_integer;
+use function is_int;
 use function is_string;
+use function MongoDB\extract_read_preference_from_options;
 use function MongoDB\is_document;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\is_pipeline;
@@ -47,10 +48,8 @@ use function MongoDB\is_pipeline;
  *
  * @see \MongoDB\Collection::aggregate()
  * @see https://mongodb.com/docs/manual/reference/command/aggregate/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class Aggregate implements Executable, Explainable
+final class Aggregate implements Explainable
 {
     private bool $isWrite;
 
@@ -129,7 +128,7 @@ class Aggregate implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"allowDiskUse" option', $this->options['allowDiskUse'], 'boolean');
         }
 
-        if (isset($this->options['batchSize']) && ! is_integer($this->options['batchSize'])) {
+        if (isset($this->options['batchSize']) && ! is_int($this->options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $this->options['batchSize'], 'integer');
         }
 
@@ -157,11 +156,11 @@ class Aggregate implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentType('"let" option', $this->options['let']);
         }
 
-        if (isset($this->options['maxAwaitTimeMS']) && ! is_integer($this->options['maxAwaitTimeMS'])) {
+        if (isset($this->options['maxAwaitTimeMS']) && ! is_int($this->options['maxAwaitTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $this->options['maxAwaitTimeMS'], 'integer');
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
@@ -215,13 +214,11 @@ class Aggregate implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return CursorInterface&Iterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): CursorInterface
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction) {
@@ -239,7 +236,15 @@ class Aggregate implements Executable, Explainable
             $this->createCommandOptions(),
         );
 
-        $cursor = $this->executeCommand($server, $command);
+        try {
+            $cursor = $this->executeCommand($server, $command);
+        } catch (ServerException $exception) {
+            if (SearchNotSupportedException::isSearchNotSupportedError($exception)) {
+                throw SearchNotSupportedException::create($exception);
+            }
+
+            throw $exception;
+        }
 
         if (isset($this->options['codec'])) {
             return CodecCursor::fromCursor($cursor, $this->options['codec']);
@@ -256,9 +261,8 @@ class Aggregate implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = $this->createCommandDocument();
 
@@ -321,7 +325,7 @@ class Aggregate implements Executable, Explainable
      * @see https://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @see https://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
      */
-    private function executeCommand(Server $server, Command $command): Cursor
+    private function executeCommand(Server $server, Command $command): CursorInterface
     {
         $options = [];
 
@@ -335,11 +339,14 @@ class Aggregate implements Executable, Explainable
             return $server->executeReadCommand($this->databaseName, $command, $options);
         }
 
-        /* Server::executeReadWriteCommand() does not support a "readPreference"
-         * option, so fall back to executeCommand(). This means that libmongoc
-         * will not apply any client-level options (e.g. writeConcern), but that
-         * should not be an issue as PHPLIB handles inheritance on its own. */
-        if (isset($options['readPreference'])) {
+        /* Server::executeReadWriteCommand() is the only method that reports a
+         * writeConcernError, and it ignores the "readPreference" option. Keep
+         * the generic command path when the read preference must be forwarded
+         * or when the server is a secondary: on a direct connection, libmongoc
+         * rewrites a primary read preference to primaryPreferred there. */
+        $readPreference = extract_read_preference_from_options($options);
+
+        if ($server->isSecondary() || ($readPreference !== null && $readPreference->getModeString() !== ReadPreference::PRIMARY)) {
             return $server->executeCommand($this->databaseName, $command, $options);
         }
 

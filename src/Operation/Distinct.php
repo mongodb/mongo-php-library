@@ -29,7 +29,7 @@ use MongoDB\Exception\UnsupportedException;
 
 use function current;
 use function is_array;
-use function is_integer;
+use function is_int;
 use function is_object;
 use function is_string;
 use function MongoDB\create_field_path_type_map;
@@ -40,10 +40,8 @@ use function MongoDB\is_document;
  *
  * @see \MongoDB\Collection::distinct()
  * @see https://mongodb.com/docs/manual/reference/command/distinct/
- *
- * @final extending this class will not be supported in v2.0.0
  */
-class Distinct implements Executable, Explainable
+final class Distinct implements Explainable
 {
     /**
      * Constructs a distinct command.
@@ -94,7 +92,7 @@ class Distinct implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentOrStringType('"hint" option', $this->options['hint']);
         }
 
-        if (isset($this->options['maxTimeMS']) && ! is_integer($this->options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS']) && ! is_int($this->options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $this->options['maxTimeMS'], 'integer');
         }
 
@@ -122,13 +120,11 @@ class Distinct implements Executable, Explainable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return array
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): array
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['readConcern'])) {
@@ -154,9 +150,8 @@ class Distinct implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @return array
      */
-    public function getCommandDocument()
+    public function getCommandDocument(): array
     {
         $cmd = $this->createCommandDocument();
 

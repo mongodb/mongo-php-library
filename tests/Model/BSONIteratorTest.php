@@ -19,7 +19,7 @@ class BSONIteratorTest extends TestCase
     #[DataProvider('provideTypeMapOptionsAndExpectedDocuments')]
     public function testValidValues(?array $typeMap, array $expectedDocuments): void
     {
-        $binaryString = implode(array_map(
+        $binaryString = implode('', array_map(
             fn ($input) => (string) Document::fromPHP($input),
             [
                 ['_id' => 1, 'x' => ['foo' => 'bar']],

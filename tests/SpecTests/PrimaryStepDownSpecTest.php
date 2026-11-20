@@ -72,43 +72,6 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $this->assertSame($totalConnectionsCreated, $this->getTotalConnectionsCreated());
     }
 
-    /** @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#not-primary-reset-connection-pool */
-    public function testNotPrimaryResetConnectionPool(): void
-    {
-        $runOn = [(object) ['minServerVersion' => '4.0.0', 'maxServerVersion' => '4.0.999', 'topology' => [self::TOPOLOGY_REPLICASET]]];
-        $this->checkServerRequirements($runOn);
-
-        // Set a fail point
-        $this->configureFailPoint([
-            'configureFailPoint' => 'failCommand',
-            'mode' => ['times' => 1],
-            'data' => [
-                'failCommands' => ['insert'],
-                'errorCode' => self::NOT_PRIMARY,
-            ],
-        ]);
-
-        $totalConnectionsCreated = $this->getTotalConnectionsCreated();
-
-        // Execute an insert into the test collection of a {test: 1} document.
-        try {
-            $this->insertDocuments(1);
-        } catch (BulkWriteException $e) {
-            // Verify that the insert failed with an operation failure with 10107 code.
-            $this->assertSame(self::NOT_PRIMARY, $e->getCode());
-        }
-
-        /* Verify that the connection pool has been cleared and that a new
-         * connection has been created. Use ">=" to allow for the possibility
-         * that the server created additional connections unrelated to this
-         * test. */
-        $this->assertGreaterThanOrEqual($totalConnectionsCreated + 1, $this->getTotalConnectionsCreated());
-
-        // Execute an insert into the test collection of a {test: 1} document and verify that it succeeds.
-        $result = $this->insertDocuments(1);
-        $this->assertSame(1, $result->getInsertedCount());
-    }
-
     /** @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#shutdown-in-progress-reset-connection-pool */
     public function testShutdownResetConnectionPool(): void
     {

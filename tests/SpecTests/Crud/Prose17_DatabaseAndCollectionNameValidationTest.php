@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\SpecTests\Crud;
 
+use MongoDB\ClientBulkWrite;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Tests\SpecTests\FunctionalTestCase;
 
@@ -44,6 +45,21 @@ class Prose17_DatabaseAndCollectionNameValidationTest extends FunctionalTestCase
         $client->getDatabase('db')->getCollection("foo\0bar")->insertOne([]);
     }
 
-    // testNulByteInBulkWriteDatabaseName and testNulByteInBulkWriteCollectionName
-    // are not implemented: MongoDB\ClientBulkWrite does not exist in this version.
+    public function testNulByteInBulkWriteDatabaseName(): void
+    {
+        $client = self::createTestClient();
+
+        $this->expectException(InvalidArgumentException::class);
+        ClientBulkWrite::createWithCollection($client->getCollection("foo\0bar", 'coll'))
+            ->insertOne([]);
+    }
+
+    public function testNulByteInBulkWriteCollectionName(): void
+    {
+        $client = self::createTestClient();
+
+        $this->expectException(InvalidArgumentException::class);
+        ClientBulkWrite::createWithCollection($client->getCollection('db', "foo\0bar"))
+            ->insertOne([]);
+    }
 }

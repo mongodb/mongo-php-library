@@ -10,9 +10,9 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\InputStageInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\Optional;
-use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -25,7 +25,7 @@ use function is_array;
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/
  * @internal
  */
-final class ListLocalSessionsStage implements StageInterface, OperatorInterface
+final class ListLocalSessionsStage implements InputStageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Object;
     public const NAME = '$listLocalSessions';

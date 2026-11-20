@@ -17,19 +17,16 @@
 
 namespace MongoDB;
 
+use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\WriteResult;
-use MongoDB\Exception\BadMethodCallException;
 
 /**
  * Result class for an update operation.
  */
 class UpdateResult
 {
-    private bool $isAcknowledged;
-
     public function __construct(private WriteResult $writeResult)
     {
-        $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 
     /**
@@ -38,16 +35,11 @@ class UpdateResult
      * This method should only be called if the write was acknowledged.
      *
      * @see UpdateResult::isAcknowledged()
-     * @return integer|null
-     * @throws BadMethodCallException if the write result is unacknowledged
+     * @throws LogicException if the write result is unacknowledged
      */
-    public function getMatchedCount()
+    public function getMatchedCount(): int
     {
-        if ($this->isAcknowledged) {
-            return $this->writeResult->getMatchedCount();
-        }
-
-        throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
+        return $this->writeResult->getMatchedCount();
     }
 
     /**
@@ -59,16 +51,11 @@ class UpdateResult
      * This method should only be called if the write was acknowledged.
      *
      * @see UpdateResult::isAcknowledged()
-     * @return integer|null
-     * @throws BadMethodCallException if the write result is unacknowledged
+     * @throws LogicException if the write result is unacknowledged
      */
-    public function getModifiedCount()
+    public function getModifiedCount(): int
     {
-        if ($this->isAcknowledged) {
-            return $this->writeResult->getModifiedCount();
-        }
-
-        throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
+        return $this->writeResult->getModifiedCount();
     }
 
     /**
@@ -77,16 +64,11 @@ class UpdateResult
      * This method should only be called if the write was acknowledged.
      *
      * @see UpdateResult::isAcknowledged()
-     * @return integer|null
-     * @throws BadMethodCallException if the write result is unacknowledged
+     * @throws LogicException if the write result is unacknowledged
      */
-    public function getUpsertedCount()
+    public function getUpsertedCount(): int
     {
-        if ($this->isAcknowledged) {
-            return $this->writeResult->getUpsertedCount();
-        }
-
-        throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
+        return $this->writeResult->getUpsertedCount();
     }
 
     /**
@@ -101,20 +83,15 @@ class UpdateResult
      * This method should only be called if the write was acknowledged.
      *
      * @see UpdateResult::isAcknowledged()
-     * @return mixed|null
-     * @throws BadMethodCallException if the write result is unacknowledged
+     * @throws LogicException if the write result is unacknowledged
      */
-    public function getUpsertedId()
+    public function getUpsertedId(): mixed
     {
-        if ($this->isAcknowledged) {
-            foreach ($this->writeResult->getUpsertedIds() as $id) {
-                return $id;
-            }
-
-            return null;
+        foreach ($this->writeResult->getUpsertedIds() as $id) {
+            return $id;
         }
 
-        throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
+        return null;
     }
 
     /**
@@ -123,11 +100,9 @@ class UpdateResult
      * If the update was not acknowledged, other fields from the WriteResult
      * (e.g. matchedCount) will be undefined and their getter methods should not
      * be invoked.
-     *
-     * @return boolean
      */
-    public function isAcknowledged()
+    public function isAcknowledged(): bool
     {
-        return $this->isAcknowledged;
+        return $this->writeResult->isAcknowledged();
     }
 }

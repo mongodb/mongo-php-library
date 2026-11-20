@@ -14,6 +14,8 @@ use MongoDB\Builder\Type\OperatorInterface;
 /**
  * Access available per-document metadata related to the aggregation operation.
  *
+ * New in MongoDB 4.4
+ *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/
  * @internal
  */
@@ -26,9 +28,7 @@ final class MetaOperator implements ResolvesToAny, OperatorInterface
     /** @var string $keyword */
     public readonly string $keyword;
 
-    /**
-     * @param string $keyword
-     */
+    /** @param string $keyword */
     public function __construct(string $keyword)
     {
         $this->keyword = $keyword;

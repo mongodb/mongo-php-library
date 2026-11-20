@@ -50,6 +50,8 @@ final class DateToStringOperator implements ResolvesToString, OperatorInterface
     /**
      * @var Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull The value to return if the date is null or missing.
      * If unspecified, $dateToString returns null if the date is null or missing.
+     *
+     * New in MongoDB 5.0
      */
     public readonly Optional|DateTimeInterface|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onNull;
 
@@ -60,6 +62,8 @@ final class DateToStringOperator implements ResolvesToString, OperatorInterface
      * @param Optional|ResolvesToString|string $timezone The time zone to use to format the date.
      * @param Optional|DateTimeInterface|ExpressionInterface|Type|array|bool|float|int|null|stdClass|string $onNull The value to return if the date is null or missing.
      * If unspecified, $dateToString returns null if the date is null or missing.
+     *
+     * New in MongoDB 5.0
      */
     public function __construct(
         DateTimeInterface|ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int|string $date,

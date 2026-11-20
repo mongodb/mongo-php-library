@@ -14,7 +14,8 @@ use MongoDB\Builder\Type\WindowInterface;
 
 /**
  * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.
- * New in MongoDB 5.0.
+ *
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/
  * @internal

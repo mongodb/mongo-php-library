@@ -14,8 +14,10 @@ use stdClass;
 
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertIsArray;
+use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotNull;
+use function PHPUnit\Framework\assertObjectNotHasProperty;
 use function PHPUnit\Framework\assertThat;
 use function sprintf;
 
@@ -26,6 +28,8 @@ class CollectionData
     private string $databaseName;
 
     private array $documents;
+
+    private array $createOptions = [];
 
     public function __construct(stdClass $o)
     {
@@ -38,6 +42,15 @@ class CollectionData
         assertIsArray($o->documents);
         assertContainsOnly('object', $o->documents);
         $this->documents = $o->documents;
+
+        if (isset($o->createOptions)) {
+            assertIsObject($o->createOptions);
+            /* The writeConcern option is prohibited here, as prepareInitialData() applies w:majority. Since a session
+             * option would be ignored by prepareInitialData() we can assert that it is also omitted. */
+            assertObjectNotHasProperty('writeConcern', $o->createOptions);
+            assertObjectNotHasProperty('session', $o->createOptions);
+            $this->createOptions = (array) $o->createOptions;
+        }
     }
 
     public function prepareInitialData(Client $client, ?Session $session = null): void
@@ -49,13 +62,13 @@ class CollectionData
 
         $database->dropCollection($this->collectionName, ['session' => $session]);
 
-        if (empty($this->documents)) {
-            $database->createCollection($this->collectionName, ['session' => $session]);
-
-            return;
+        if (empty($this->documents) || ! empty($this->createOptions)) {
+            $database->createCollection($this->collectionName, ['session' => $session] + $this->createOptions);
         }
 
-        $database->selectCollection($this->collectionName)->insertMany($this->documents, ['session' => $session]);
+        if (! empty($this->documents)) {
+            $database->selectCollection($this->collectionName)->insertMany($this->documents, ['session' => $session]);
+        }
     }
 
     public function assertOutcome(Client $client): void

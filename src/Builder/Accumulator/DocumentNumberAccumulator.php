@@ -14,7 +14,8 @@ use MongoDB\Builder\Type\WindowInterface;
 
 /**
  * Returns the position of a document (known as the document number) in the $setWindowFields stage partition. Ties result in different adjacent document numbers.
- * New in MongoDB 5.0.
+ *
+ * New in MongoDB 5.0
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/
  * @internal

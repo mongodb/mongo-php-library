@@ -26,8 +26,9 @@ use function str_starts_with;
 
 /**
  * Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer than n elements, $bottomN returns all elements in the group.
- * New in MongoDB 5.2.
  * Available in the $group and $setWindowFields stages.
+ *
+ * New in MongoDB 5.2
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/
  * @internal

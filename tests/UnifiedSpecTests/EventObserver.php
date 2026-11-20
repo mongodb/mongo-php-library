@@ -42,7 +42,7 @@ final class EventObserver implements CommandSubscriber
      * These commands are always considered sensitive (i.e. command and reply
      * documents should be redacted).
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
+     * @see https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.md#security
      */
     private static array $sensitiveCommands = [
         'authenticate' => 1,
@@ -60,7 +60,7 @@ final class EventObserver implements CommandSubscriber
      * These commands are only considered sensitive when the command or reply
      * document includes a speculativeAuthenticate field.
      *
-     * @see https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
+     * @see https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.md#security
      */
     private static array $sensitiveCommandsWithSpeculativeAuthenticate = [
         'ismaster' => 1,

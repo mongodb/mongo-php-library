@@ -8,10 +8,6 @@ on:
         description: "The version to be released. This is checked for consistency with the branch name and configuration"
         required: true
         type: "string"
-      jira-version-number:
-        description: "JIRA version ID (e.g. 54321)"
-        required: true
-        type: "string"
 
 env:
   default-release-message: |
@@ -21,7 +17,7 @@ env:
 
     TODO: one or more paragraphs describing important changes in this release
 
-    A complete list of resolved issues in this release may be found in [JIRA](https://jira.mongodb.org/secure/ReleaseNote.jspa?version={1}&projectId=12483).
+    A complete list of resolved issues in this release may be found in [Jira](https://jira.mongodb.org/issues/?jql=project%3DPHPLIB%20and%20fixVersion%3D{0}).
 
     **Documentation**
 
@@ -118,7 +114,7 @@ jobs:
 
       - name: "Prepare release message"
         env:
-          RELEASE_MESSAGE: ${{ format(env.default-release-message, inputs.version, inputs.jira-version-number) }}
+          RELEASE_MESSAGE: ${{ format(env.default-release-message, inputs.version) }}
         run: |
           printf '%s\n' "$RELEASE_MESSAGE" > release-message
 

@@ -65,6 +65,39 @@ class BSONArrayTest extends TestCase
         $this->assertSame($array[1][0], $arrayClone[1][0]);
     }
 
+    public function testCloneDoesNotWriteThroughReferences(): void
+    {
+        /* The reference survives into the internal storage, so the clone must
+         * replace the entry instead of writing the copy back through it. */
+        $value = new stdClass();
+        $values = [0 => &$value];
+
+        $array = new BSONArray($values);
+        $source = $array[0];
+        $arrayClone = clone $array;
+
+        $this->assertSame($source, $array[0]);
+        $this->assertNotSame($source, $arrayClone[0]);
+    }
+
+    public function testCloneDoesNotWriteThroughNestedReferences(): void
+    {
+        $value = new stdClass();
+        $values = [0 => &$value];
+
+        $array = new BSONArray([
+            $values,
+            new BSONArray($values),
+        ]);
+        $source = $array[0][0];
+        $arrayClone = clone $array;
+
+        $this->assertSame($source, $array[0][0]);
+        $this->assertNotSame($source, $arrayClone[0][0]);
+        $this->assertSame($source, $array[1][0]);
+        $this->assertNotSame($source, $arrayClone[1][0]);
+    }
+
     public function testCloneSupportsBSONTypes(): void
     {
         /* Note: this test does not check that the BSON type itself is cloned,

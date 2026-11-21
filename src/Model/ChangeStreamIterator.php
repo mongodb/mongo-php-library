@@ -17,6 +17,7 @@
 
 namespace MongoDB\Model;
 
+use ArrayObject;
 use IteratorIterator;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
@@ -228,16 +229,22 @@ final class ChangeStreamIterator extends IteratorIterator implements CommandSubs
             throw InvalidArgumentException::expectedDocumentType('$document', $document);
         }
 
-        if ($document instanceof Serializable) {
-            return $this->extractResumeToken($document->bsonSerialize());
-        }
-
         if ($document instanceof Document) {
             $resumeToken = $document->get('_id');
 
             if ($resumeToken instanceof Document) {
                 $resumeToken = $resumeToken->toPHP();
             }
+        } elseif ($document instanceof Serializable) {
+            /* BSONDocument is an ArrayObject. Its bsonSerialize() copies the
+             * top-level map into a stdClass that is read once and discarded, so
+             * read the field through the ArrayAccess interface instead. The
+             * value is the same and the copy is avoided. */
+            if (! $document instanceof ArrayObject) {
+                return $this->extractResumeToken($document->bsonSerialize());
+            }
+
+            $resumeToken = $document['_id'] ?? null;
         } else {
             $resumeToken = is_array($document)
                 ? ($document['_id'] ?? null)

@@ -1,34 +1,34 @@
 # This file is generated automatically - please edit the "templates/test-variant/phpc.yml" template file instead.
 buildvariants:
   # Variants with different PHPC versions
-  - name: test-debian12-php-8.5-phpc-next-stable
-    tags: ["test", "debian", "x64", "php8.5", "pr", "tag"]
-    display_name: "Test: Debian 12, PHP 8.5, PHPC next-stable"
+  - name: test-debian12-php-8.6-phpc-next-stable
+    tags: ["test", "debian", "x64", "php8.6", "pr", "tag"]
+    display_name: "Test: Debian 12, PHP 8.6, PHPC next-stable"
     run_on: debian12-small
     expansions:
       FETCH_BUILD_VARIANT: "build-debian12"
-      FETCH_BUILD_TASK: "build-php-8.5-next-stable"
-      PHP_VERSION: "8.5"
+      FETCH_BUILD_TASK: "build-php-8.6-next-stable"
+      PHP_VERSION: "8.6"
     depends_on:
       - variant: "build-debian12"
-        name: "build-php-8.5-next-stable"
+        name: "build-php-8.6-next-stable"
     tasks:
       - ".standalone .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
       - ".replicaset .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
       - ".sharded .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
       - ".loadbalanced .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
 
-  - name: test-debian12-php-8.5-phpc-next-minor
-    tags: ["test", "debian", "x64", "php8.5", "csfle-next-minor"]
-    display_name: "Test: Debian 12, PHP 8.5, PHPC next-minor"
+  - name: test-debian12-php-8.6-phpc-next-minor
+    tags: ["test", "debian", "x64", "php8.6", "csfle-next-minor"]
+    display_name: "Test: Debian 12, PHP 8.6, PHPC next-minor"
     run_on: debian12-small
     expansions:
       FETCH_BUILD_VARIANT: "build-debian12"
-      FETCH_BUILD_TASK: "build-php-8.5-next-minor"
-      PHP_VERSION: "8.5"
+      FETCH_BUILD_TASK: "build-php-8.6-next-minor"
+      PHP_VERSION: "8.6"
     depends_on:
       - variant: "build-debian12"
-        name: "build-php-8.5-next-minor"
+        name: "build-php-8.6-next-minor"
     tasks:
       - ".standalone .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"
       - ".replicaset .local !.csfle !.4.2 !.4.4 !.5.0 !.6.0"

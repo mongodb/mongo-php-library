@@ -49,7 +49,7 @@ jobs:
           echo "🎬 Release process for version $RELEASE_VERSION started by @$TRIGGERING_ACTOR" >> "$GITHUB_STEP_SUMMARY"
 
       - name: "Generate token and checkout repository"
-        uses: mongodb-labs/drivers-github-tools/secure-checkout@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
+        uses: mongodb-labs/drivers-github-tools/secure-checkout@93fbe45aa64cf4d57ea3198423eb0e46e8cd402d  # v3.1.2
         with:
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -106,7 +106,7 @@ jobs:
       #
 
       - name: "Set up drivers-github-tools"
-        uses: mongodb-labs/drivers-github-tools/setup@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
+        uses: mongodb-labs/drivers-github-tools/setup@93fbe45aa64cf4d57ea3198423eb0e46e8cd402d  # v3.1.2
         with:
           aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
           aws_region_name: ${{ vars.AWS_REGION_NAME }}
@@ -128,7 +128,7 @@ jobs:
             --draft)" >> "$GITHUB_ENV"
 
       - name: "Create release tag"
-        uses: mongodb-labs/drivers-github-tools/tag-version@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
+        uses: mongodb-labs/drivers-github-tools/tag-version@93fbe45aa64cf4d57ea3198423eb0e46e8cd402d  # v3.1.2
         with:
           version: ${{ inputs.version }}
           tag_message_template: 'Release ${VERSION}'
@@ -167,7 +167,7 @@ jobs:
 
     steps:
       - name: "Generate token and checkout repository"
-        uses: mongodb-labs/drivers-github-tools/secure-checkout@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
+        uses: mongodb-labs/drivers-github-tools/secure-checkout@93fbe45aa64cf4d57ea3198423eb0e46e8cd402d  # v3.1.2
         with:
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -175,14 +175,14 @@ jobs:
 
       # Sets the S3_ASSETS environment variable used later
       - name: "Set up drivers-github-tools"
-        uses: mongodb-labs/drivers-github-tools/setup@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
+        uses: mongodb-labs/drivers-github-tools/setup@93fbe45aa64cf4d57ea3198423eb0e46e8cd402d  # v3.1.2
         with:
           aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
           aws_region_name: ${{ vars.AWS_REGION_NAME }}
           aws_secret_id: ${{ secrets.AWS_SECRET_ID }}
 
       - name: "Generate SSDLC Reports"
-        uses: mongodb-labs/drivers-github-tools/full-report@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
+        uses: mongodb-labs/drivers-github-tools/full-report@93fbe45aa64cf4d57ea3198423eb0e46e8cd402d  # v3.1.2
         with:
           product_name: "MongoDB PHP Driver (library)"
           release_version: ${{ inputs.version }}
@@ -196,7 +196,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload S3 assets
-        uses: mongodb-labs/drivers-github-tools/upload-s3-assets@99b1cbd729bc83bf7fc74e1b2a97fffad3d65d7b  # v3.1.1
+        uses: mongodb-labs/drivers-github-tools/upload-s3-assets@93fbe45aa64cf4d57ea3198423eb0e46e8cd402d  # v3.1.2
         with:
           version: ${{ inputs.version }}
           product_name: mongo-php-library

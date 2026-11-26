@@ -10,6 +10,7 @@ use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Tests\Comparator\StrictNumericComparator;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -68,12 +69,15 @@ class Matches extends Constraint
 
     private Factory $comparatorFactory;
 
+    private StrictNumericComparator $strictNumericComparator;
+
     public function __construct($value, private ?EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
     {
         $this->value = self::prepare($value);
         $this->allowExtraRootKeys = $allowExtraRootKeys;
         $this->allowOperators = $allowOperators;
         $this->comparatorFactory = Factory::getInstance();
+        $this->strictNumericComparator = new StrictNumericComparator();
     }
 
     public function evaluate($other, $description = '', $returnResult = false): ?bool
@@ -128,7 +132,11 @@ class Matches extends Constraint
         }
 
         try {
-            $this->comparatorFactory->getComparatorFor($expected, $actual)->assertEquals($expected, $actual);
+            if ($this->strictNumericComparator->accepts($expected, $actual)) {
+                $this->strictNumericComparator->assertEquals($expected, $actual);
+            } else {
+                $this->comparatorFactory->getComparatorFor($expected, $actual)->assertEquals($expected, $actual);
+            }
         } catch (ComparisonFailure $e) {
             /* Disregard other ComparisonFailure fields, as evaluate() only uses
              * the message when creating its own ComparisonFailure. */

@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\Int64;
 use MongoDB\Tests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -24,18 +25,13 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(true, $c, ['y' => ['b' => 2, 'a' => 1], 'x' => 1], 'Root and embedded key order is not significant');
     }
 
-    public function testFlexibleNumericComparison(): void
+    public function testStrictNumericComparison(): void
     {
         $c = new Matches(['x' => 1, 'y' => 1.0]);
         $this->assertResult(true, $c, ['x' => 1.0, 'y' => 1.0], 'Float instead of expected int matches');
         $this->assertResult(true, $c, ['x' => 1, 'y' => 1], 'Int instead of expected float matches');
         $this->assertResult(false, $c, ['x' => 'foo', 'y' => 1.0], 'Different type does not match');
-
-        /* Matches uses PHPUnit's comparators, which follow PHP behavior. This
-         * is more liberal than the comparison logic called for by the unified
-         * test format. This test can be removed when PHPLIB-1577 is addressed.
-         */
-        $this->assertResult(true, $c, ['x' => '1.0', 'y' => '1'], 'Numeric strings may match ints and floats');
+        $this->assertResult(false, $c, ['x' => '1.0', 'y' => '1'], 'Numeric strings must not match ints and floats');
     }
 
     public function testDoNotAllowExtraRootKeys(): void
@@ -183,9 +179,15 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(true, $c, ['json' => '{"x": 1}'], 'JSON document matches');
         $this->assertResult(false, $c, ['json' => '{"x": 2}'], 'JSON document does not match');
         $this->assertResult(false, $c, ['json' => '{"x": 1, "y": 2}'], 'JSON document cannot contain extra fields');
+        $this->assertResult(false, $c, ['json' => '{"x": "1"}'], 'Constraint should never consider strings equal to numeric types');
+
+        $c = new Matches(['json' => ['$$matchAsDocument' => ['x' => new Int64('9223372036854775807')]]]);
+        $this->assertResult(true, $c, ['json' => '{"x": 9223372036854775807}'], 'JSON document matches');
+        $this->assertResult(false, $c, ['json' => '{"x": "9223372036854775807"}'], 'Constraint should never consider strings equal to numeric types');
 
         $c = new Matches(['json' => ['$$matchAsDocument' => ['x' => 1.0]]]);
         $this->assertResult(true, $c, ['json' => '{"x": 1}'], 'JSON document matches (flexible numeric comparison)');
+        $this->assertResult(false, $c, ['json' => '{"x": "1"}'], 'JSON document does not match (numeric types are never equal to strings)');
 
         $c = new Matches(['json' => ['$$matchAsDocument' => ['x' => ['$$exists' => true]]]]);
         $this->assertResult(true, $c, ['json' => '{"x": 1}'], 'JSON document matches (special operators)');
